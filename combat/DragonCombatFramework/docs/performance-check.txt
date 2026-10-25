@@ -1,0 +1,1 @@
+C:/Users/Nik/Documents/Codex/2026-10-19/wo/work/performance-current.lua => [true, IDLE 1000 updates: variableWrites=3 comboResets=0 keyBindingReads=0]

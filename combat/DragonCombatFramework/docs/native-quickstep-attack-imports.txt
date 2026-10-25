@@ -1,0 +1,24 @@
+FILE C:/Users/Nik/Documents/Codex/2026-10-19/wo/outputs/DragonCombatFramework/42/media/anims_X/Bob/DCF_DD_QuickstepAttack01.x
+meshes=1 materials=1 animations=1
+meshHasBones=true
+PROCESSED_CLIPS=[DCF_DD_QuickstepAttack01]
+clip=DCF_DD_QuickstepAttack01 seconds=1.4666666666666666 channels=35
+rightHandKeys=45
+FILE C:/Users/Nik/Documents/Codex/2026-10-19/wo/outputs/DragonCombatFramework/42/media/anims_X/Bob/DCF_DD_QuickstepAttack02.x
+meshes=1 materials=1 animations=1
+meshHasBones=true
+PROCESSED_CLIPS=[DCF_DD_QuickstepAttack02]
+clip=DCF_DD_QuickstepAttack02 seconds=2.3 channels=35
+rightHandKeys=70
+FILE C:/Users/Nik/Documents/Codex/2026-10-19/wo/outputs/DragonCombatFramework/42/media/anims_X/Bob/DCF_DD_QuickstepAttack03.x
+meshes=1 materials=1 animations=1
+meshHasBones=true
+PROCESSED_CLIPS=[DCF_DD_QuickstepAttack03]
+clip=DCF_DD_QuickstepAttack03 seconds=1.5666666666666667 channels=35
+rightHandKeys=48
+FILE C:/Users/Nik/Documents/Codex/2026-10-19/wo/outputs/DragonCombatFramework/42/media/anims_X/Bob/DCF_DD_QuickstepAttack04.x
+meshes=1 materials=1 animations=1
+meshHasBones=true
+PROCESSED_CLIPS=[DCF_DD_QuickstepAttack04]
+clip=DCF_DD_QuickstepAttack04 seconds=1.9 channels=35
+rightHandKeys=58

@@ -1,0 +1,11 @@
+/*
+!/.gitignore
+!/.gitattributes
+!/README.md
+!/AGENTS.md
+!/combat/
+/combat/*
+!/combat/DragonCombatFramework/
+!/tools/
+/tools/*
+!/tools/Publish-CombatRelease.ps1

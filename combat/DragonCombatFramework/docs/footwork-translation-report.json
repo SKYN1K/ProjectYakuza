@@ -1,0 +1,134 @@
+[
+  {
+    "clip": "DCF_DD_Footwork02",
+    "native_translation_source": "Bob_WalkAim1Hand",
+    "velocity": [
+      0.0,
+      0.0,
+      -0.7086612
+    ],
+    "duration": 1.5333333333333334,
+    "native_blend_speed": 0.8,
+    "target_blend_speed": 1.0
+  },
+  {
+    "clip": "DCF_DD_Footwork03",
+    "native_translation_source": "Bob_WalkBwdAim1Hand",
+    "velocity": [
+      0.0,
+      0.0,
+      0.7086612
+    ],
+    "duration": 1.5333333333333334,
+    "native_blend_speed": 0.8,
+    "target_blend_speed": 1.0
+  },
+  {
+    "clip": "DCF_DD_Footwork04",
+    "native_translation_source": "Bob_Strafe_Right",
+    "velocity": [
+      -0.5007876,
+      0.0,
+      0.0
+    ],
+    "duration": 1.5333333333333334,
+    "native_blend_speed": 0.8,
+    "target_blend_speed": 1.0
+  },
+  {
+    "clip": "DCF_DD_Footwork05",
+    "native_translation_source": "Bob_Strafe_Left",
+    "velocity": [
+      0.5007876,
+      0.0,
+      0.0
+    ],
+    "duration": 1.5333333333333334,
+    "native_blend_speed": 0.8,
+    "target_blend_speed": 1.0
+  },
+  {
+    "clip": "DCF_DD_Footwork06",
+    "native_translation_source": "Bob_WalkBwdAim1Hand_DiagL",
+    "velocity": [
+      0.4724412,
+      0.0,
+      0.4724412
+    ],
+    "duration": 1.5333333333333334,
+    "native_blend_speed": 0.8,
+    "target_blend_speed": 1.0
+  },
+  {
+    "clip": "DCF_DD_Footwork07",
+    "native_translation_source": "Bob_WalkBwdAim1Hand_DiagR",
+    "velocity": [
+      -0.4724412,
+      0.0,
+      0.4724412
+    ],
+    "duration": 1.5333333333333334,
+    "native_blend_speed": 0.8,
+    "target_blend_speed": 1.0
+  },
+  {
+    "clip": "DCF_DD_Footwork08",
+    "native_translation_source": "Bob_WalkAim1Hand_DiagR",
+    "velocity": [
+      -0.4724412,
+      0.0,
+      -0.4724412
+    ],
+    "duration": 1.5333333333333334,
+    "native_blend_speed": 0.8,
+    "target_blend_speed": 1.0
+  },
+  {
+    "clip": "DCF_DD_Footwork09",
+    "native_translation_source": "Bob_WalkAim1Hand_DiagL",
+    "velocity": [
+      0.4724412,
+      0.0,
+      -0.4724412
+    ],
+    "duration": 1.5333333333333334,
+    "native_blend_speed": 0.8,
+    "target_blend_speed": 1.0
+  },
+  {
+    "clip": "DCF_DD_Footwork10",
+    "native_translation_source": "Bob_WalkBwdAim1HandSlow",
+    "velocity": [
+      0.0,
+      0.0,
+      0.3543312
+    ],
+    "duration": 1.5333333333333334,
+    "native_blend_speed": 0.8,
+    "target_blend_speed": 1.0
+  },
+  {
+    "clip": "DCF_DD_Footwork11",
+    "native_translation_source": "Bob_WalkBwdAim1Hand_DiagLSlow",
+    "velocity": [
+      0.25039320000000004,
+      0.0,
+      0.25039320000000004
+    ],
+    "duration": 1.5333333333333334,
+    "native_blend_speed": 0.8,
+    "target_blend_speed": 1.0
+  },
+  {
+    "clip": "DCF_DD_Footwork12",
+    "native_translation_source": "Bob_WalkBwdAim1Hand_DiagRSlow",
+    "velocity": [
+      -0.25039320000000004,
+      0.0,
+      0.25039320000000004
+    ],
+    "duration": 1.5333333333333334,
+    "native_blend_speed": 0.8,
+    "target_blend_speed": 1.0
+  }
+]

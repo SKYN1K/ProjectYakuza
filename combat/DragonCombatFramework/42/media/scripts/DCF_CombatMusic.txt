@@ -1,0 +1,231 @@
+module Base
+{
+    sound DCF_FunkGoesOn
+    {
+        category = DCF_Music,
+        master = Music,
+        is3D = false,
+        loop = false,
+        clip
+        {
+            file = media/sound/DCF/FunkGoesOn.ogg,
+            volume = 0.80,
+        }
+    }
+    sound DCF_BringItOn
+    {
+        category = DCF_Music,
+        master = Music,
+        is3D = false,
+        loop = false,
+        clip
+        {
+            file = media/sound/DCF/BringItOn.ogg,
+            volume = 0.80,
+        }
+    }
+    sound DCF_ReceiveYouVer7
+    {
+        category = DCF_Music,
+        master = Music,
+        is3D = false,
+        loop = false,
+        clip
+        {
+            file = media/sound/DCF/ReceiveYouVer7.ogg,
+            volume = 0.80,
+        }
+    }
+    sound DCF_FlirtWithBomb
+    {
+        category = DCF_Music,
+        master = Music,
+        is3D = false,
+        loop = false,
+        clip
+        {
+            file = media/sound/DCF/FlirtWithBomb.ogg,
+            volume = 0.80,
+        }
+    }
+    sound DCF_SonOfAGun
+    {
+        category = DCF_Music,
+        master = Music,
+        is3D = false,
+        loop = false,
+        clip
+        {
+            file = media/sound/DCF/SonOfAGun.ogg,
+            volume = 0.80,
+        }
+    }
+    sound DCF_PushMeUnderWater
+    {
+        category = DCF_Music,
+        master = Music,
+        is3D = false,
+        loop = false,
+        clip
+        {
+            file = media/sound/DCF/PushMeUnderWater.ogg,
+            volume = 0.80,
+        }
+    }
+    sound DCF_OutlawsLullaby
+    {
+        category = DCF_Music,
+        master = Music,
+        is3D = false,
+        loop = false,
+        clip
+        {
+            file = media/sound/DCF/OutlawsLullaby.ogg,
+            volume = 0.80,
+        }
+    }
+    sound DCF_FunkGoesOnKiwami
+    {
+        category = DCF_Music,
+        master = Music,
+        is3D = false,
+        loop = false,
+        clip
+        {
+            file = media/sound/DCF/FunkGoesOnKiwami.ogg,
+            volume = 0.80,
+        }
+    }
+    sound DCF_PushMeDeepUnderwater
+    {
+        category = DCF_Music,
+        master = Music,
+        is3D = false,
+        loop = false,
+        clip
+        {
+            file = media/sound/DCF/PushMeDeepUnderwater.ogg,
+            volume = 0.80,
+        }
+    }
+    sound DCF_LullabyOfOutlaws
+    {
+        category = DCF_Music,
+        master = Music,
+        is3D = false,
+        loop = false,
+        clip
+        {
+            file = media/sound/DCF/LullabyOfOutlaws.ogg,
+            volume = 0.80,
+        }
+    }
+    sound DCF_ReceiveAndBelieveYou
+    {
+        category = DCF_Music,
+        master = Music,
+        is3D = false,
+        loop = false,
+        clip
+        {
+            file = media/sound/DCF/ReceiveAndBelieveYou.ogg,
+            volume = 0.80,
+        }
+    }
+    sound DCF_Bruise
+    {
+        category = DCF_Music,
+        master = Music,
+        is3D = false,
+        loop = false,
+        clip
+        {
+            file = media/sound/DCF/Bruise.ogg,
+            volume = 0.80,
+        }
+    }
+    sound DCF_CrushAndStrike
+    {
+        category = DCF_Music,
+        master = Music,
+        is3D = false,
+        loop = false,
+        clip
+        {
+            file = media/sound/DCF/CrushAndStrike.ogg,
+            volume = 0.80,
+        }
+    }
+    sound DCF_D2A
+    {
+        category = DCF_Music,
+        master = Music,
+        is3D = false,
+        loop = false,
+        clip
+        {
+            file = media/sound/DCF/D2A.ogg,
+            volume = 0.80,
+        }
+    }
+    sound DCF_RyuKyuHumming
+    {
+        category = DCF_Music,
+        master = Music,
+        is3D = false,
+        loop = false,
+        clip
+        {
+            file = media/sound/DCF/RyuKyuHumming.ogg,
+            volume = 0.80,
+        }
+    }
+    sound DCF_TheMyth
+    {
+        category = DCF_Music,
+        master = Music,
+        is3D = false,
+        loop = false,
+        clip
+        {
+            file = media/sound/DCF/TheMyth.ogg,
+            volume = 0.80,
+        }
+    }
+    sound DCF_IsolatedFight
+    {
+        category = DCF_Music,
+        master = Music,
+        is3D = false,
+        loop = false,
+        clip
+        {
+            file = media/sound/DCF/IsolatedFight.ogg,
+            volume = 0.80,
+        }
+    }
+    sound DCF_TownBully
+    {
+        category = DCF_Music,
+        master = Music,
+        is3D = false,
+        loop = false,
+        clip
+        {
+            file = media/sound/DCF/TownBully.ogg,
+            volume = 0.80,
+        }
+    }
+    sound DCF_KamuroAgain
+    {
+        category = DCF_Music,
+        master = Music,
+        is3D = false,
+        loop = false,
+        clip
+        {
+            file = media/sound/DCF/KamuroAgain.ogg,
+            volume = 0.80,
+        }
+    }
+}

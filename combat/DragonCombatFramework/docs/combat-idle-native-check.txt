@@ -1,0 +1,1 @@
+PASS: 12274 lower-body rotation/position keys match native idle; loop closes; upper-body animation varies; standing/moving use one loop; mask excludes hips, Spine and legs

@@ -1,0 +1,48 @@
+FILE C:\Users\Nik\Documents\Codex\2026-10-19\wo/outputs/DragonCombatFramework/42/media/anims_X/Bob/DCF_DD_DoubleFinisher01.x
+meshes=1 materials=1 animations=1
+meshHasBones=true
+PROCESSED_CLIPS=[DCF_DD_DoubleFinisher01]
+clip=DCF_DD_DoubleFinisher01 seconds=2.7333333333333334 channels=35
+rightHandKeys=83
+FILE C:\Users\Nik\Documents\Codex\2026-10-19\wo/outputs/DragonCombatFramework/42/media/anims_X/Bob/DCF_DD_DoubleFinisher02.x
+meshes=1 materials=1 animations=1
+meshHasBones=true
+PROCESSED_CLIPS=[DCF_DD_DoubleFinisher02]
+clip=DCF_DD_DoubleFinisher02 seconds=2.7 channels=35
+rightHandKeys=82
+FILE C:\Users\Nik\Documents\Codex\2026-10-19\wo/outputs/DragonCombatFramework/42/media/anims_X/Bob/DCF_DD_DoubleFinisher03.x
+meshes=1 materials=1 animations=1
+meshHasBones=true
+PROCESSED_CLIPS=[DCF_DD_DoubleFinisher03]
+clip=DCF_DD_DoubleFinisher03 seconds=2.033333333333333 channels=35
+rightHandKeys=62
+FILE C:\Users\Nik\Documents\Codex\2026-10-19\wo/outputs/DragonCombatFramework/42/media/anims_X/Bob/DCF_DD_DoubleFinisher04.x
+meshes=1 materials=1 animations=1
+meshHasBones=true
+PROCESSED_CLIPS=[DCF_DD_DoubleFinisher04]
+clip=DCF_DD_DoubleFinisher04 seconds=2.3666666666666667 channels=35
+rightHandKeys=72
+FILE C:\Users\Nik\Documents\Codex\2026-10-19\wo/outputs/DragonCombatFramework/42/media/anims_X/Bob/DCF_EnemyHit01.x
+meshes=1 materials=1 animations=1
+meshHasBones=true
+PROCESSED_CLIPS=[DCF_EnemyHit01]
+clip=DCF_EnemyHit01 seconds=1.0 channels=35
+rightHandKeys=31
+FILE C:\Users\Nik\Documents\Codex\2026-10-19\wo/outputs/DragonCombatFramework/42/media/anims_X/Bob/DCF_EnemyHit02.x
+meshes=1 materials=1 animations=1
+meshHasBones=true
+PROCESSED_CLIPS=[DCF_EnemyHit02]
+clip=DCF_EnemyHit02 seconds=1.0 channels=35
+rightHandKeys=31
+FILE C:\Users\Nik\Documents\Codex\2026-10-19\wo/outputs/DragonCombatFramework/42/media/anims_X/Bob/DCF_EnemyHit03.x
+meshes=1 materials=1 animations=1
+meshHasBones=true
+PROCESSED_CLIPS=[DCF_EnemyHit03]
+clip=DCF_EnemyHit03 seconds=1.0 channels=35
+rightHandKeys=31
+FILE C:\Users\Nik\Documents\Codex\2026-10-19\wo/outputs/DragonCombatFramework/42/media/anims_X/Bob/DCF_EnemyHit04.x
+meshes=1 materials=1 animations=1
+meshHasBones=true
+PROCESSED_CLIPS=[DCF_EnemyHit04]
+clip=DCF_EnemyHit04 seconds=1.3333333333333333 channels=35
+rightHandKeys=41

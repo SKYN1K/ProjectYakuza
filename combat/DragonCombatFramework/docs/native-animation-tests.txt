@@ -1,0 +1,24 @@
+FILE C:\Users\Nik\Documents\Codex\2026-10-19\wo/outputs/DragonCombatFramework/42/media/anims_X/Bob/DCF_DD_Light01.x
+meshes=1 materials=1 animations=1
+meshHasBones=true
+PROCESSED_CLIPS=[DCF_DD_Light01]
+clip=DCF_DD_Light01 seconds=1.0 channels=35
+rightHandKeys=31
+FILE C:\Users\Nik\Documents\Codex\2026-10-19\wo/outputs/DragonCombatFramework/42/media/anims_X/Bob/DCF_DD_Light02.x
+meshes=1 materials=1 animations=1
+meshHasBones=true
+PROCESSED_CLIPS=[DCF_DD_Light02]
+clip=DCF_DD_Light02 seconds=1.5666666666666667 channels=35
+rightHandKeys=48
+FILE C:\Users\Nik\Documents\Codex\2026-10-19\wo/outputs/DragonCombatFramework/42/media/anims_X/Bob/DCF_DD_Light03.x
+meshes=1 materials=1 animations=1
+meshHasBones=true
+PROCESSED_CLIPS=[DCF_DD_Light03]
+clip=DCF_DD_Light03 seconds=1.4 channels=35
+rightHandKeys=43
+FILE C:\Users\Nik\Documents\Codex\2026-10-19\wo/outputs/DragonCombatFramework/42/media/anims_X/Bob/DCF_DD_Light04.x
+meshes=1 materials=1 animations=1
+meshHasBones=true
+PROCESSED_CLIPS=[DCF_DD_Light04]
+clip=DCF_DD_Light04 seconds=1.5666666666666667 channels=35
+rightHandKeys=48

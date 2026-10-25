@@ -1,0 +1,11 @@
+FILE C:/Users/Nik/Documents/Codex/2026-10-19/wo/outputs/DragonCombatFramework/42/media/anims_X/Bob/DCF_DD_CombatIdleLoop.x
+meshes=1 materials=1 animations=1
+meshHasBones=true
+PROCESSED_CLIPS=[DCF_DD_CombatIdleLoop]
+clip=DCF_DD_CombatIdleLoop seconds=12.0 channels=35
+rightHandKeys=361
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::load has been called by AnimationProbe$1 in an unnamed module (file:/C:/Users/Nik/Documents/Codex/2026-10-19/wo/work/)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+

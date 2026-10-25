@@ -1,0 +1,20 @@
+PASS zombie.characters.action.ActionState
+{
+	name:run
+	transitions:
+	{
+	}
+	variables:
+	{
+	}
+}: native transition accepts an RMB-free DCF running melee request; rejects unequipped, unrequested, no attack, dead, knocked down, on floor, hit reaction, ranged and shove
+PASS zombie.characters.action.ActionState
+{
+	name:sprint
+	transitions:
+	{
+	}
+	variables:
+	{
+	}
+}: native transition accepts an RMB-free DCF running melee request; rejects unequipped, unrequested, no attack, dead, knocked down, on floor, hit reaction, ranged and shove

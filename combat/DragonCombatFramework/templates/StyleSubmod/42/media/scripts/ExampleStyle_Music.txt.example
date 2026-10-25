@@ -1,0 +1,15 @@
+module Base
+{
+    sound ExampleMod_MyTheme
+    {
+        category = Music,
+        master = Music,
+        is3D = false,
+        loop = false,
+        clip
+        {
+            file = media/sound/ExampleStyle/YourProvidedSong.ogg,
+            volume = 0.80,
+        }
+    }
+}

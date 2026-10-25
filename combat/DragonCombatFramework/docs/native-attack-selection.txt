@@ -1,0 +1,22 @@
+PASS step 1 selected=DCF_DD_Light01 exclusively; one native collision event; speed=1.6; expected body mask; Extreme speed=1.92
+PASS step 2 selected=DCF_DD_Light02 exclusively; one native collision event; speed=1.6; expected body mask; Extreme speed=1.92
+PASS step 3 selected=DCF_DD_Light03 exclusively; one native collision event; speed=1.6; expected body mask; Extreme speed=1.92
+PASS step 4 selected=DCF_DD_Light04 exclusively; one native collision event; speed=1.6; expected body mask; Extreme speed=1.92
+PASS step 5 selected=DCF_DD_Finisher01 exclusively; one native collision event; speed=1.6; expected body mask; Extreme speed=1.92
+PASS step 6 selected=DCF_DD_Finisher02 exclusively; one native collision event; speed=1.6; expected body mask; Extreme speed=1.92
+PASS step 7 selected=DCF_DD_Finisher03 exclusively; one native collision event; speed=1.6; expected body mask; Extreme speed=1.92
+PASS step 8 selected=DCF_DD_Finisher04 exclusively; one native collision event; speed=1.6; expected body mask; Extreme speed=1.92
+PASS step 9 selected=DCF_DD_DoubleFinisher01 exclusively; one native collision event; speed=1.6; expected body mask; Extreme speed=1.92
+PASS step 10 selected=DCF_DD_DoubleFinisher02 exclusively; one native collision event; speed=1.6; expected body mask; Extreme speed=1.92
+PASS step 11 selected=DCF_DD_DoubleFinisher03 exclusively; one native collision event; speed=1.6; expected body mask; Extreme speed=1.92
+PASS step 12 selected=DCF_DD_DoubleFinisher04 exclusively; one native collision event; speed=1.6; expected body mask; Extreme speed=1.92
+PASS step 13 selected=DCF_DD_QuickstepAttack01 exclusively; one native collision event; speed=1.6; expected body mask; Extreme speed=1.92
+PASS step 14 selected=DCF_DD_QuickstepAttack02 exclusively; one native collision event; speed=1.6; expected body mask; Extreme speed=1.92
+PASS step 15 selected=DCF_DD_QuickstepAttack03 exclusively; one native collision event; speed=1.6; expected body mask; Extreme speed=1.92
+PASS step 16 selected=DCF_DD_QuickstepAttack04 exclusively; one native collision event; speed=1.6; expected body mask; Extreme speed=1.92
+PASS step 17 selected=DCF_DD_RunningAttack01 exclusively; one native collision event; speed=1.6; expected body mask; Extreme speed=1.92
+PASS step 18 selected=DCF_DD_RunningAttack02 exclusively; one native collision event; speed=1.6; expected body mask; Extreme speed=1.92
+PASS step 19 selected=DCF_DD_RunningAttack03 exclusively; one native collision event; speed=1.6; expected body mask; Extreme speed=1.92
+PASS step 20 selected=DCF_DD_RunningAttack04 exclusively; one native collision event; speed=1.6; expected body mask; Extreme speed=1.92
+PASS unequipped: vanilla 1HDefault selected
+PASS ground attacks excluded from standing combo

@@ -1,0 +1,63 @@
+{
+  "installation": "F:/SteamLibrary/steamapps/common/Yakuza 6 - The Song of Life",
+  "source": "data/db/c/battle_param.bin and player_var.bin; read-only",
+  "format": "ARMP little-endian column arrays. Battle_param 66 rows: row name offsets at 0x5f0, integer value column at 0x728, float param column at 0x830. player_var heat_stock_base int=3.",
+  "parameters": [
+    {
+      "i": 1,
+      "name": "heat_up_damage_ratio",
+      "value": 0,
+      "param": 0.00019999999494757503
+    },
+    {
+      "i": 2,
+      "name": "heat_down_damage_ratio",
+      "value": 0,
+      "param": 0.00009999999747378752
+    },
+    {
+      "i": 4,
+      "name": "heat_time_down_ratio",
+      "value": 0,
+      "param": 0.10000000149011612
+    },
+    {
+      "i": 14,
+      "name": "heat_up_guard_success",
+      "value": 0,
+      "param": 0.10000000149011612
+    },
+    {
+      "i": 15,
+      "name": "heat_up_asset_break",
+      "value": 0,
+      "param": 0.10000000149011612
+    },
+    {
+      "i": 40,
+      "name": "heat_time_down_ratio_1",
+      "value": 0,
+      "param": 0.0949999988079071
+    },
+    {
+      "i": 41,
+      "name": "heat_time_down_ratio_2",
+      "value": 0,
+      "param": 0.09000000357627869
+    },
+    {
+      "i": 42,
+      "name": "heat_time_down_ratio_3",
+      "value": 0,
+      "param": 0.08500000089406967
+    },
+    {
+      "i": 56,
+      "name": "heat_time_down_action",
+      "value": 0,
+      "param": 0.10000000149011612
+    }
+  ],
+  "heat_stock_base": 3,
+  "limitations": "Names and stored coefficients were decoded; engine call-site semantics and units were not recovered. PZ rates are tuned approximations. Screenshots supplied for bar styling only. No Yakuza installation files changed."
+}

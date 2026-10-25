@@ -1,0 +1,11 @@
+{
+  "frames": 96,
+  "canvas": [
+    128,
+    256
+  ],
+  "symmetric_vertical_padding_added": 32,
+  "top_fade_rows": 24,
+  "lower_image_payload_unchanged": true,
+  "all_layout_scale_color_timing_values_unchanged": true
+}

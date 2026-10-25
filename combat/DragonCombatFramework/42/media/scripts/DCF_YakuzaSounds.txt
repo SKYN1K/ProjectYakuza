@@ -1,0 +1,414 @@
+module Base
+{
+    sound DCF_Y6_PunchImpact
+    {
+        category = DCF_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/DCF/Y6Combat/battle_se_kiryu_020.ogg,
+            volume = 0.44625,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+        clip
+        {
+            file = media/sound/DCF/Y6Combat/battle_se_kiryu_018.ogg,
+            volume = 0.44625,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+        clip
+        {
+            file = media/sound/DCF/Y6Combat/battle_se_kiryu_021.ogg,
+            volume = 0.44625,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+        clip
+        {
+            file = media/sound/DCF/Y6Combat/battle_se_kiryu_022.ogg,
+            volume = 0.44625,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+        clip
+        {
+            file = media/sound/DCF/Y6Combat/battle_se_kiryu_019.ogg,
+            volume = 0.44625,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+        clip
+        {
+            file = media/sound/DCF/Y6Combat/battle_se_kiryu_026.ogg,
+            volume = 0.44625,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+        clip
+        {
+            file = media/sound/DCF/Y6Combat/battle_se_kiryu_027.ogg,
+            volume = 0.44625,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+        clip
+        {
+            file = media/sound/DCF/Y6Combat/battle_se_kiryu_028.ogg,
+            volume = 0.44625,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+        clip
+        {
+            file = media/sound/DCF/Y6Combat/battle_se_kiryu_029.ogg,
+            volume = 0.44625,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+    }
+    sound DCF_Y6_KickImpact
+    {
+        category = DCF_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/DCF/Y6Combat/battle_se_kiryu_010.ogg,
+            volume = 0.5250,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+        clip
+        {
+            file = media/sound/DCF/Y6Combat/battle_se_kiryu_011.ogg,
+            volume = 0.5250,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+        clip
+        {
+            file = media/sound/DCF/Y6Combat/battle_se_kiryu_012.ogg,
+            volume = 0.5250,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+        clip
+        {
+            file = media/sound/DCF/Y6Combat/battle_se_kiryu_025.ogg,
+            volume = 0.5250,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+        clip
+        {
+            file = media/sound/DCF/Y6Combat/battle_se_kiryu_024.ogg,
+            volume = 0.5250,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+    }
+    sound DCF_Y6_HeatImpact
+    {
+        category = DCF_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/DCF/Y6Combat/battle_se_kiryu_000.ogg,
+            volume = 0.5250,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+        clip
+        {
+            file = media/sound/DCF/Y6Combat/battle_se_kiryu_004.ogg,
+            volume = 0.5250,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+        clip
+        {
+            file = media/sound/DCF/Y6Combat/battle_se_kiryu_001.ogg,
+            volume = 0.5250,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+        clip
+        {
+            file = media/sound/DCF/Y6Combat/battle_se_kiryu_003.ogg,
+            volume = 0.5250,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+    }
+    sound DCF_Y6_ThrowImpact
+    {
+        category = DCF_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/DCF/Y6Combat/battle_se_kiryu_013.ogg,
+            volume = 0.5250,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+        clip
+        {
+            file = media/sound/DCF/Y6Combat/battle_se_kiryu_014.ogg,
+            volume = 0.5250,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+        clip
+        {
+            file = media/sound/DCF/Y6Combat/battle_se_kiryu_015.ogg,
+            volume = 0.5250,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+        clip
+        {
+            file = media/sound/DCF/Y6Combat/battle_se_kiryu_016.ogg,
+            volume = 0.5250,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+        clip
+        {
+            file = media/sound/DCF/Y6Combat/battle_se_kiryu_017.ogg,
+            volume = 0.5250,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+        clip
+        {
+            file = media/sound/DCF/Y6Combat/battle_se_kiryu_007.ogg,
+            volume = 0.5250,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+        clip
+        {
+            file = media/sound/DCF/Y6Combat/battle_se_kiryu_008.ogg,
+            volume = 0.5250,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+        clip
+        {
+            file = media/sound/DCF/Y6Combat/battle_se_kiryu_009.ogg,
+            volume = 0.5250,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+    }
+    sound DCF_Y6_PunchSwing
+    {
+        category = DCF_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/DCF/Y6Combat/act_kiryu_015.ogg,
+            volume = 0.70,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+        clip
+        {
+            file = media/sound/DCF/Y6Combat/act_kiryu_016.ogg,
+            volume = 0.70,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+        clip
+        {
+            file = media/sound/DCF/Y6Combat/act_kiryu_018.ogg,
+            volume = 0.70,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+        clip
+        {
+            file = media/sound/DCF/Y6Combat/act_kiryu_017.ogg,
+            volume = 0.70,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+    }
+    sound DCF_Y6_KickSwing
+    {
+        category = DCF_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/DCF/Y6Combat/act_kiryu_019.ogg,
+            volume = 0.70,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+        clip
+        {
+            file = media/sound/DCF/Y6Combat/act_kiryu_020.ogg,
+            volume = 0.70,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+        clip
+        {
+            file = media/sound/DCF/Y6Combat/act_kiryu_021.ogg,
+            volume = 0.70,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+    }
+    sound DCF_Y6_Grab
+    {
+        category = DCF_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/DCF/Y6Combat/act_kiryu_000.ogg,
+            volume = 0.70,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+        clip
+        {
+            file = media/sound/DCF/Y6Combat/act_kiryu_001.ogg,
+            volume = 0.70,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+        clip
+        {
+            file = media/sound/DCF/Y6Combat/act_kiryu_002.ogg,
+            volume = 0.70,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+    }
+    sound DCF_Y6_Finisher
+    {
+        category = DCF_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/DCF/Y6Combat/battle_common_000.ogg,
+            volume = 0.5250,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+    }
+    sound DCF_Y6_GuardBreak
+    {
+        category = DCF_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/DCF/Y6Combat/battle_common_002.ogg,
+            volume = 0.5250,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+    }
+    sound DCF_Y6_HeatGain
+    {
+        category = DCF_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/DCF/Y6Combat/battle_common_023.ogg,
+            volume = 0.910,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+    }
+    sound DCF_Y6_HeatFull
+    {
+        category = DCF_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/DCF/Y6Combat/battle_common_018.ogg,
+            volume = 0.910,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+    }
+    sound DCF_Y6_HeatOnA
+    {
+        category = DCF_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/DCF/Y6Combat/battle_common_021.ogg,
+            volume = 0.70,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+    }
+    sound DCF_Y6_HeatOnB
+    {
+        category = DCF_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/DCF/Y6Combat/battle_common_019.ogg,
+            volume = 0.70,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+    }
+    sound DCF_Y6_HeatOff
+    {
+        category = DCF_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/DCF/Y6Combat/battle_common_020.ogg,
+            volume = 0.70,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+    }
+    sound DCF_Y6_ChargeStart
+    {
+        category = DCF_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/DCF/Y6Combat/act_kiryu_004.ogg,
+            volume = 0.70,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+    }
+    sound DCF_Y6_ChargeEnd
+    {
+        category = DCF_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/DCF/Y6Combat/act_kiryu_003.ogg,
+            volume = 0.70,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+    }
+}

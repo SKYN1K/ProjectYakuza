@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animNode>
+<m_Name>DCF_DD_Quickstep01</m_Name><m_AnimName>DCF_DD_Quickstep01</m_AnimName>
+<m_Priority>5</m_Priority><m_ConditionPriority>100</m_ConditionPriority>
+<m_Looped>false</m_Looped><m_SpeedScale>1.6875</m_SpeedScale>
+<m_BlendTime>0.06</m_BlendTime><m_BlendOutTime>0.08</m_BlendOutTime>
+<m_EarlyTransitionOut>true</m_EarlyTransitionOut><m_SyncTrackingEnabled>false</m_SyncTrackingEnabled>
+<m_Conditions><m_Name>PerformingAction</m_Name><m_Type>STRING</m_Type><m_Value>DCF_DD_Quickstep01</m_Value></m_Conditions>
+<m_Events><m_EventName>SetVariable</m_EventName><m_Time>Start</m_Time><m_ParameterValue>DCFQuickstepStarted=dd_quickstep_01</m_ParameterValue></m_Events>
+<m_Events><m_EventName>SetVariable</m_EventName><m_Time>End</m_Time><m_ParameterValue>DCFQuickstepDone=dd_quickstep_01</m_ParameterValue></m_Events>
+<m_SubStateBoneWeights><boneName>Bip01</boneName><weight>1.0</weight></m_SubStateBoneWeights>
+<m_Events><m_EventName>SetVariable</m_EventName><m_TimePc>0</m_TimePc><m_ParameterValue>DCFQuickstepProgress=0</m_ParameterValue></m_Events>
+<m_Events><m_EventName>SetVariable</m_EventName><m_TimePc>0.05</m_TimePc><m_ParameterValue>DCFQuickstepProgress=0.08333333333333333</m_ParameterValue></m_Events>
+<m_Events><m_EventName>SetVariable</m_EventName><m_TimePc>0.1</m_TimePc><m_ParameterValue>DCFQuickstepProgress=0.16666666666666666</m_ParameterValue></m_Events>
+<m_Events><m_EventName>SetVariable</m_EventName><m_TimePc>0.15</m_TimePc><m_ParameterValue>DCFQuickstepProgress=0.25</m_ParameterValue></m_Events>
+<m_Events><m_EventName>SetVariable</m_EventName><m_TimePc>0.2</m_TimePc><m_ParameterValue>DCFQuickstepProgress=0.3333333333333333</m_ParameterValue></m_Events>
+<m_Events><m_EventName>SetVariable</m_EventName><m_TimePc>0.25</m_TimePc><m_ParameterValue>DCFQuickstepProgress=0.4166666666666667</m_ParameterValue></m_Events>
+<m_Events><m_EventName>SetVariable</m_EventName><m_TimePc>0.3</m_TimePc><m_ParameterValue>DCFQuickstepProgress=0.5</m_ParameterValue></m_Events>
+<m_Events><m_EventName>SetVariable</m_EventName><m_TimePc>0.35</m_TimePc><m_ParameterValue>DCFQuickstepProgress=0.5833333333333334</m_ParameterValue></m_Events>
+<m_Events><m_EventName>SetVariable</m_EventName><m_TimePc>0.4</m_TimePc><m_ParameterValue>DCFQuickstepProgress=0.6666666666666666</m_ParameterValue></m_Events>
+<m_Events><m_EventName>SetVariable</m_EventName><m_TimePc>0.45</m_TimePc><m_ParameterValue>DCFQuickstepProgress=0.75</m_ParameterValue></m_Events>
+<m_Events><m_EventName>SetVariable</m_EventName><m_TimePc>0.5</m_TimePc><m_ParameterValue>DCFQuickstepProgress=0.8333333333333334</m_ParameterValue></m_Events>
+<m_Events><m_EventName>SetVariable</m_EventName><m_TimePc>0.55</m_TimePc><m_ParameterValue>DCFQuickstepProgress=0.9166666666666666</m_ParameterValue></m_Events>
+<m_Events><m_EventName>SetVariable</m_EventName><m_TimePc>0.6</m_TimePc><m_ParameterValue>DCFQuickstepProgress=1</m_ParameterValue></m_Events>
+</animNode>
