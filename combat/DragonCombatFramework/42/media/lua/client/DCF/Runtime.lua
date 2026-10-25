@@ -306,6 +306,7 @@ local function onUpdate(player)
         trace(player, "migrated saved style item to DCF_EmptyHand")
     end
     local style = DCF.getPlayerStyle(player)
+    if isClient() and DCF.Network and not DCF.Network.equipmentReady(player) then return end
     setReadyVariables(player, style, s)
     if DCF.styleInputHandlers[style.id] and DCF.handleStyleInput(player,{
         aiming=player:isAiming(),lightDown=B.down("light"),

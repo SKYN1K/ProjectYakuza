@@ -6,6 +6,11 @@ function R.remote(victim,clip)
     if type(clip)~="string" or clip=="" or victim:isDead() or victim:isOnFloor() or victim:isKnockedDown() then return end
     victim:setVariable("DCFEnemyReaction",true);victim:setVariable("DCFEnemyHitClip",clip)
     R.states[victim]={clip=clip,startedAt=getTimestampMs(),seenReaction=false}
+    -- Observer variables alone cannot select a node in the hitreaction group.
+    -- Enter the native reaction state without replaying Hit or damage.
+    victim:setHitFromBehind(false)
+    victim:setHitReaction("HeadLeft")
+    victim:reportEvent("wasHit")
 end
 function R.clear(zombie)
     if not R.states[zombie] then return end
@@ -39,7 +44,7 @@ function R.update(zombie, time)
     local reacting = string.find(string.lower(tostring(zombie:getCurrentStateName())), "hitreaction", 1, true) ~= nil
     if reacting then state.seenReaction = true end
     if zombie:isDead() or zombie:isOnFloor() or zombie:isKnockedDown()
-        or (not reacting and (state.seenReaction or elapsed > 250)) or elapsed > 5000 then R.clear(zombie) end
+        or (not reacting and (state.seenReaction or elapsed > 750)) or elapsed > 5000 then R.clear(zombie) end
 end
 Events.OnWeaponHitCharacter.Add(R.onHit)
 function R.tick()

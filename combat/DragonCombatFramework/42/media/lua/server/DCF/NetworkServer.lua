@@ -32,10 +32,15 @@ function S.release(p)
     S.fanout(p,"grabEnd",{player=p:getOnlineID(),zombie=z:getOnlineID(),useless=lease.useless,ignore=lease.ignore,deferred=lease.deferred})
 end
 function S.snapshot(p,a,s)
-    if not P.integer(a.seq,0,1000000000) or a.seq<=s.seq or now()<(s.nextState or 0) then return end
+    if not P.integer(a.seq,0,1000000000) or a.seq<=s.seq then return end
+    -- Short action/attack transitions can share a millisecond. Dropping the
+    -- second state leaves observers on an old clip until the idle heartbeat.
+    local t=now()
+    if t-(s.stateBucketAt or 0)>=1000 then s.stateBucketAt=t;s.stateBucket=0 end
+    s.stateBucket=(s.stateBucket or 0)+1;if s.stateBucket>80 then return end
     if type(a.style)~="string" or #a.style>100 or (a.style~="none" and not DCF.getStyle(a.style)) then return end
     if not P.number(a.heat,0,100) or not P.number(a.fuel,0,100) then return end
-    local equipped=a.equipped==true and alive(p) and token(p)~=nil
+    local equipped=a.equipped==true and DCF.getStyle(a.style)~=nil and alive(p) and token(p)~=nil
     local clip=equipped and type(a.clip)=="string" and P.clip(a.style,a.clip) or nil
     local style=DCF.getStyle(a.style)
     local kind,activation
@@ -52,14 +57,71 @@ function S.snapshot(p,a,s)
         heat=equipped and a.heat or 0,fuel=equipped and a.fuel or 0,extreme=equipped and a.extreme==true and style.heat==true,
         clip=clip and clip.id or "",move=equipped and type(a.move)=="string" and P.move(a.style,a.move) and a.move or "",
         swing=P.integer(a.swing,0,1000000000) and a.swing or 0,
+        action=P.integer(a.action,0,1000000000) and a.action or 0,
         taunt=equipped and style.actions.taunt and P.integer(a.taunt,0,1000000000) and a.taunt or 0,
         protected=s.protection~=nil,grabMoving=a.grabMoving==true,
         grabDirection=(a.grabDirection=="forward" or a.grabDirection=="backward" or a.grabDirection=="left" or a.grabDirection=="right") and a.grabDirection or "forward",
         linked=a.linked==true,ground=a.ground==true,phase=(a.phase=="enter" or a.phase=="hold" or a.phase=="hit" or a.phase=="throw" or a.phase=="exit") and a.phase or ""}
-    s.seq=a.seq;s.packet=packet;s.seen=now();s.nextState=now()+50
+    s.seq=a.seq;s.packet=packet;s.seen=now()
     p:getModData().DCFStyle=a.style;p:getModData().DCFHeat=packet.heat
     if not equipped then S.release(p) end
     S.fanout(p,"state",packet)
+end
+function S.equip(p,a,s)
+    if not alive(p) or not P.integer(a.request,1,1000000000) or type(a.style)~="string"
+        or (a.style~="none" and not DCF.getStyle(a.style)) then return end
+    if a.request<(s.equipRequest or 0) then return end
+    if now()<(s.nextEquip or 0) then return end
+    s.equipRequest=a.request;s.nextEquip=now()+200
+    local item
+    if a.style~="none" then
+        local inventory=p:getInventory();local items=inventory:getItems()
+        for i=0,items:size()-1 do
+            local candidate=items:get(i)
+            if candidate:getFullType()==DCF.TOKEN then item=candidate;break end
+        end
+        local created=not item
+        if not item then item=inventory:AddItem(DCF.TOKEN) end
+        if not item then return end
+        item:setMaxHitCount(DCF.MAX_HIT_COUNT)
+        item:setWeaponSprite("DCF_EmptyHand");item:setOriginalWeaponSprite("DCF_EmptyHand")
+        -- These B42 globals only send from a server. Native equip/hit packets
+        -- subsequently resolve this exact server inventory ID.
+        if created or a.item~=item:getID() then sendAddItemToContainer(inventory,item) end
+        p:setSecondaryHandItem(nil);p:setPrimaryHandItem(item)
+    elseif token(p) then p:setPrimaryHandItem(nil) end
+    p:getModData().DCFStyle=a.style
+    sendEquip(p)
+    reply(p,"equipReady",{player=p:getOnlineID(),request=a.request,style=a.style,item=item and item:getID() or -1})
+    if a.style=="none" then
+        S.restoreProtection(p,s);S.release(p)
+        if s.packet then s.packet.equipped=false;s.packet.clip="";S.fanout(p,"state",s.packet) end
+    end
+end
+function S.step(p,a,s)
+    if not P.integer(a.step,1,1000000000) or type(a.clip)~="string" then return end
+    local kind,move=P.kind(s.packet.style,a.clip)
+    if kind~="quickstep" or not move or not P.number(move.distance,0,3) then return end
+    if not P.number(a.x,p:getX()-2,p:getX()+2) or not P.number(a.y,p:getY()-2,p:getY()+2)
+        or not P.number(a.z,p:getZ()-.1,p:getZ()+.1) or not P.number(a.fx,-1,1) or not P.number(a.fy,-1,1) then return end
+    local t=now();local step=s.step
+    if not step or a.step~=step.id then
+        if a.step<=(s.lastStep or 0) then return end
+        local history={}
+        for _,stamp in ipairs(s.steps or {}) do if t-stamp<15000 then history[#history+1]=stamp end end
+        if #history>=3 then return end
+        history[#history+1]=t;s.steps=history
+        step={id=a.step,clip=a.clip,x=a.x,y=a.y,travel=0,expires=t+(move.duration or .5)*1000+750}
+        s.step=step;s.lastStep=a.step
+    end
+    if step.finished or step.clip~=a.clip or t>step.expires then return end
+    if not a.finished and t<(step.nextSample or 0) then return end
+    local dx,dy=a.x-step.x,a.y-step.y;local length=math.sqrt(dx*dx+dy*dy)
+    if step.travel+length>move.distance+.15 or not P.path(p,a.x,a.y) then return end
+    local f=math.sqrt(a.fx*a.fx+a.fy*a.fy);if f<.9 or f>1.1 then return end
+    step.travel=step.travel+length;step.x=a.x;step.y=a.y;step.nextSample=t+30;step.finished=a.finished==true
+    S.fanout(p,"step",{player=p:getOnlineID(),event=a.event,step=a.step,x=a.x,y=a.y,z=a.z,
+        fx=a.fx/f,fy=a.fy/f,finished=step.finished})
 end
 function S.validVictim(p,id,range,cone)
     local z=P.zombie(p,id)
@@ -86,6 +148,7 @@ end
 function S.command(module,command,p,a)
     if module~=P.module or type(a)~="table" or not p then return end
     local s=state(p);local t=now()
+    if command=="equip" then S.equip(p,a,s);return end
     if command=="hello" then
         if t<(s.nextHello or 0) then return end;s.nextHello=t+2000
         for _,other in pairs(S.players) do if other.packet and other.player~=p and P.near(p,other.player,P.range) then reply(p,"state",other.packet) end end
@@ -97,7 +160,8 @@ function S.command(module,command,p,a)
     s.event=a.event
     s.bucketAt=s.bucketAt or t;s.bucket=s.bucket or 0
     if t-s.bucketAt>=1000 then s.bucketAt=t;s.bucket=0 end
-    s.bucket=s.bucket+1;if s.bucket>30 then return end
+    s.bucket=s.bucket+1;if s.bucket>60 then return end
+    if command=="step" then S.step(p,a,s);return end
     if command=="grabRequest" then
         local slot=DCF.getStyle(s.packet.style).actions.grab
         local z=slot and slot.enabled and S.validVictim(p,a.zombie,1.3)

@@ -1,12 +1,22 @@
 require "DCF/Registry"
 require "DCF/NetworkCatalog"
 local DCF=DragonCombat
-local P={module="DragonCombatMP",version=1,range=60}
+local P={module="DragonCombatMP",version=2,range=60}
 DCF.NetworkProtocol=P
 function P.number(v,low,high)return type(v)=="number" and v==v and v>=low and v<=high end
 function P.integer(v,low,high)return P.number(v,low,high) and v==math.floor(v) end
 function P.clip(style,id)
     for _,entry in ipairs(DCF.NetworkCatalog[style] or {}) do if entry.id==id then return entry end end
+end
+function P.reaction(style,id)
+    if type(id)~="string" or id=="" then return false end
+    local s=DCF.getStyle(style);if not s or not s.enemyReactions then return false end
+    for _,move in ipairs(s.lightAttacks) do if move.reaction==id then return true end end
+    for _,slot in pairs(s.actions) do
+        if slot.reaction==id then return true end
+        for _,move in pairs(slot.variants or {}) do if move.reaction==id then return true end end
+    end
+    return false
 end
 function P.kind(style,id)
     local clip=P.clip(style,id);local s=DCF.getStyle(style)

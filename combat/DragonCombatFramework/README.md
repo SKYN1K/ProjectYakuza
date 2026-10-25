@@ -1,4 +1,12 @@
-# Dragon Combat Framework 0.27.0
+# Dragon Combat Framework 0.27.1
+
+## Multiplayer repairs 0.27.1
+
+Multiplayer style items now originate in the server inventory; combat waits for native item delivery and a matching ID acknowledgement. This repairs the null-weapon native attack/zombie-hit packets seen in the co-op log and also migrates already-equipped client-only tokens after reconnecting. Re-select the style once after installing if necessary.
+
+Quicksteps send bounded position/facing samples every 50 ms, including an unthrottled final sample. Observers interpolate these while native movement continues to synchronize. Server distance/path checks and the three-per-15-seconds quota also apply to this stream. Same-tick state transitions are retained, and alternating event-free observer nodes restart repeated animations correctly. Zombie reactions now enter the native hit state, cover its repeat-hit group, and briefly queue updates that precede zombie streaming.
+
+Install 0.27.1 on the server and every client, then restart them. Protocol v2 and the new observer conditions require matching versions. Validation is offline; real two-client latency and appearance still require a playtest.
 
 Project Zomboid Build 42.21. Dragon of Dojima uses Kiryu's four light attacks, four finishers and four double-finisher follow-ups from Yakuza 6. Common-enemy animations supply standing zombie hit reactions during this style's combat.
 
@@ -272,7 +280,7 @@ These are visual overrides for this style's ordinary standing hits. Rear hits, f
 
 ## Install and diagnostics
 
-Fully exit the game and load the updated mod after restarting. For manual installation, extract DragonCombatFramework-B42-v0.27.0.zip into C:/Users/Nik/Zomboid/mods. The required path is mods/DragonCombatFramework/42/mod.info. Enable DragonCombatFramework for the save and disable Y6LightAttackPrototype. Existing style items retain the valid invisible hand model introduced in 0.3.1.
+Fully exit the game and load the updated mod after restarting. For manual installation, extract DragonCombatFramework-B42-v0.27.1.zip into C:/Users/Nik/Zomboid/mods. The required path is mods/DragonCombatFramework/42/mod.info. Enable DragonCombatFramework for the save and disable Y6LightAttackPrototype. Existing style items retain the valid invisible hand model introduced in 0.3.1.
 
 Combat styles -> Toggle combat diagnostics shows move, queue, readiness and hit markers. With diagnostics enabled, logs include early recovery exit, queued double finisher, accepted swings and confirmed native hits. Warnings remain available without diagnostics. Clip/collision markers alone do not prove target contact.
 

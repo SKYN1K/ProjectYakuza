@@ -1,0 +1,22 @@
+# Offline multiplayer regression checks
+
+The fixture embeds the production registry/style, protocol, server, client and
+reaction modules. It models independent client/server inventories and delayed
+native delivery; it never starts Project Zomboid or a dedicated server.
+
+1. Run `python tools/combat-tests/build_mp_tests.py` from the repository root.
+2. Compile `LuaRunner.java` and `MPObserverProbe.java` with a Java 17+ JDK.
+   They use reflection and require no game classes at compile time.
+3. Obtain `stdlib.lua` from your installed Project Zomboid JAR and place it in
+   this directory. Do not commit the game's library or JAR.
+4. From this directory, run (Windows example, replace the install path):
+
+       java -cp ".;F:/SteamLibrary/steamapps/common/ProjectZomboid/projectzomboid.jar" LuaRunner mp-tests.lua
+
+5. `python validate_mp_nodes.py` additionally runs the native animation-node
+   parser/selector against both cycles of all 148 observer nodes. Its `game`
+   path defaults to the same local F: installation; adjust it if needed.
+
+The full local regression harness contains additional single-player, input,
+taunt, voice, sound and selector suites. Generated fixtures, compiled classes,
+engine-inspection outputs and game-supplied libraries are excluded from Git.

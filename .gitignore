@@ -9,3 +9,12 @@
 !/tools/
 /tools/*
 !/tools/Publish-CombatRelease.ps1
+!/tools/build_mp_visuals.py
+!/tools/combat-tests/
+/tools/combat-tests/*
+!/tools/combat-tests/build_mp_tests.py
+!/tools/combat-tests/mp-test-fixture.lua
+!/tools/combat-tests/validate_mp_nodes.py
+!/tools/combat-tests/MPObserverProbe.java
+!/tools/combat-tests/LuaRunner.java
+!/tools/combat-tests/README.md

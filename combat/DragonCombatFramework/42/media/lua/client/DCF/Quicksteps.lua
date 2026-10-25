@@ -70,6 +70,7 @@ function A:start()
     self:setActionAnim(self.context.action.animation)
     -- A native hand-model override also prevents native melee submission during the action.
     self.action:setOverrideHandModelsObject(p:getPrimaryHandItem(),nil,false)
+    if DCF.Network then DCF.Network.step(p,self,false) end
     if p:getModData().DCFDiagnostics then print("[DCF] quickstep "..self.context.action.direction) end
 end
 function A:cleanup(completed, reason)
@@ -77,6 +78,7 @@ function A:cleanup(completed, reason)
     self.cleaned=true
     local p=self.character
     if self.started then
+        if DCF.Network then DCF.Network.step(p,self,true) end
         p:setBlockMovement(self.oldBlock==true);p:setIgnoreMovement(self.oldIgnore==true)
         p:setVariable("DCFQuickstepProgress","")
         p:setVariable("DCFQuickstepStarted","")
@@ -118,6 +120,7 @@ function A:update()
             p:moveUnmodded(self.context.dx*moved,self.context.dy*moved)
             self.moved=self.moved+moved
         end
+        if DCF.Network then DCF.Network.step(p,self,false) end
     end
     if var(p,"DCFQuickstepDone")==move.nodeValue then self:forceComplete() end
 end
@@ -150,6 +153,7 @@ DCF.registerActionHandler("quickstep",{
             or p:hasTimedActions() or p:isAttackStarted() or p:isPerformingAttackAnimation()
             or p:isBlockMovement() or p:getIgnoreMovement() or (hit and hit~="") then return false,"not_ready" end
         if Q.quota(p)<=0 then return false,"quickstep_limit" end
+        if DCF.Network and isClient() and not DCF.Network.equipmentReady(p) then return false,"equipment_pending" end
         if now()<(Q.nextAllowed[p:getPlayerNum()] or 0) then return false,"cooldown" end
         return true
     end,

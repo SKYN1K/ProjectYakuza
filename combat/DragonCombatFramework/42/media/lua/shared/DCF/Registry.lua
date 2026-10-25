@@ -1,6 +1,6 @@
 DragonCombat = DragonCombat or {}
 local DCF = DragonCombat
-DCF.VERSION = "0.27.0"
+DCF.VERSION = "0.27.1"
 DCF.API_VERSION = 1
 DCF.styles = DCF.styles or {}
 DCF.styleOrder = DCF.styleOrder or {}
@@ -123,7 +123,11 @@ end
 function DCF.isEquipped(player)
     if DCF.Network and not player:isLocalPlayer() then return DCF.Network.remoteEquipped(player) end
     local item = player:getPrimaryHandItem()
-    return item ~= nil and item:getFullType() == DCF.TOKEN and DCF.getPlayerStyle(player) ~= nil
+    local equipped=item ~= nil and item:getFullType() == DCF.TOKEN and DCF.getPlayerStyle(player) ~= nil
+    if equipped and isClient and isClient() and DCF.Network and DCF.Network.equipmentReady then
+        return DCF.Network.equipmentReady(player)
+    end
+    return equipped
 end
 function DCF.selectStyle(player, id)
     if id ~= "none" and not DCF.styles[id] then return false, "unknown_style" end

@@ -1,11 +1,45 @@
 require "DCF/Runtime"
 require "DCF/NetworkProtocol"
 local DCF=DragonCombat;local P=DCF.NetworkProtocol
-local N={locals=setmetatable({}, {__mode="k"}),remote={},leases=setmetatable({}, {__mode="k"}),pending=setmetatable({}, {__mode="k"}),seen={},victims={},nextRemote=0}
+local N={locals=setmetatable({}, {__mode="k"}),remote={},leases=setmetatable({}, {__mode="k"}),pending=setmetatable({}, {__mode="k"}),seen={},victims={},deferred={},nextRemote=0}
 DCF.Network=N
 local function now()return getTimestampMs()end
 function N.localState(p)
     local s=N.locals[p];if not s then s={seq=0,event=0,swing=0};N.locals[p]=s end;return s
+end
+function N.equip(p,style)
+    if not isClient() or not p:isLocalPlayer() then return end
+    local s=N.localState(p)
+    s.equipWanted=style;s.equipReady=nil;s.equipReply=nil
+    s.equipRequest=(s.equipRequest or 0)+1;s.nextEquip=now()+1000
+    local item=p:getPrimaryHandItem()
+    if not item or item:getFullType()~=DCF.TOKEN then
+        local items=p:getInventory():getItems()
+        for i=0,items:size()-1 do if items:get(i):getFullType()==DCF.TOKEN then item=items:get(i);break end end
+    end
+    sendClientCommand(p,P.module,"equip",{style=style,request=s.equipRequest,
+        item=item and item:getFullType()==DCF.TOKEN and item:getID() or -1})
+end
+function N.finishEquipment(p,s)
+    local a=s.equipReply;if not a then return false end
+    local item=a.item~=-1 and p:getInventory():getItemWithID(a.item) or nil
+    if a.item~=-1 and (not item or item:getFullType()~=DCF.TOKEN) then return false end
+    if item then DCF.prepareToken(item) end
+    p:setSecondaryHandItem(nil);p:setPrimaryHandItem(item);p:resetModelNextFrame()
+    p:updateHandEquips()
+    s.equipReady=item;s.equipStyle=a.style;s.equipReply=nil;s.equipWanted=nil
+    return true
+end
+function N.ensureEquipment(p,style)
+    local s=N.localState(p)
+    if s.equipReply then N.finishEquipment(p,s) end
+    if s.equipReady==p:getPrimaryHandItem() and s.equipStyle==style then return true end
+    if now()>=(s.nextEquip or 0) then N.equip(p,style) end
+    return false
+end
+function N.equipmentReady(p)
+    local style=DCF.getPlayerStyle(p)
+    return style and N.ensureEquipment(p,style.id) or false
 end
 function N.remoteEquipped(p)
     if p:isLocalPlayer() then return nil end
@@ -34,20 +68,62 @@ end
 function N.capture(p,force)
     if not isClient() or not p or not p:isLocalPlayer() then return end
     local s=N.localState(p);local t=now()
-    if not force and t<(s.nextCapture or 0) then return end;s.nextCapture=t+100
+    if s.equipReply then N.finishEquipment(p,s) end
+    if s.equipWanted then
+        if t>=(s.nextEquip or 0) then N.equip(p,s.equipWanted) end
+        return
+    end
+    if not force and t<(s.nextCapture or 0) then return end;s.nextCapture=t+50
     local style=DCF.getPlayerStyle(p);local combo=DCF.stateFor(p);local equipped=DCF.isEquipped(p) and not p:isDead()
+    if s.equipWanted then return end
     local action=DCF.activeActions[p]
+    if equipped and not N.ensureEquipment(p,style.id) then return end
+    if action~=s.actionRef then
+        s.actionRef=action
+        if action then s.action=(s.action or 0)+1 end
+    end
     local move=combo.groundMove or combo.finisherMove or (style and style.lightAttacks[combo.step>0 and combo.step or 1])
     local packet={style=style and style.id or "none",equipped=equipped,heat=DCF.getHeat(p),fuel=DCF.Heat.display(p),extreme=DCF.Heat.isExtreme(p),
         clip=equipped and N.pickClip(p,style,combo) or "",move=equipped and move and move.nodeValue or "",
-        swing=s.swing,taunt=s.taunt or 0,linked=p:GetVariable("DCFLinkedDouble")=="true",ground=combo.groundMove~=nil,phase=p:GetVariable("DCFDefensePhase") or "",
+        swing=s.swing,action=s.action or 0,taunt=s.taunt or 0,linked=p:GetVariable("DCFLinkedDouble")=="true",ground=combo.groundMove~=nil,phase=p:GetVariable("DCFDefensePhase") or "",
         grabMoving=p:GetVariable("DCFGrabMoving")=="true",grabDirection=action and action.kind=="grab" and action.target:GetVariable("DCFGrabWalkDirection") or "forward"}
-    local key=packet.style..tostring(equipped)..math.floor(packet.heat)..math.floor(packet.fuel)..tostring(DCF.Heat.stocks(p))..tostring(packet.extreme)..packet.clip..packet.move..packet.phase..tostring(packet.linked)..tostring(packet.grabMoving)..packet.grabDirection..tostring(packet.taunt)
+    local key=packet.style..tostring(equipped)..math.floor(packet.heat)..math.floor(packet.fuel)..tostring(DCF.Heat.stocks(p))..tostring(packet.extreme)..packet.clip..packet.move..packet.phase..tostring(packet.linked)..tostring(packet.grabMoving)..packet.grabDirection..tostring(packet.taunt)..":"..packet.swing..":"..packet.action
     if force or key~=s.key or t>=(s.heartbeat or 0) then
         s.seq=s.seq+1;packet.seq=s.seq;sendClientCommand(p,P.module,"state",packet)
         s.key=key;s.heartbeat=t+1000
     end
     if not s.hello then sendClientCommand(p,P.module,"hello",{});s.hello=true end
+end
+function N.step(p,action,finished)
+    if not isClient() or not p:isLocalPlayer() or not action.started then return end
+    local t=now()
+    if not finished and t<(action.nextNetwork or 0) then return end
+    action.nextNetwork=t+50
+    local s=N.localState(p)
+    if not action.networkID then s.step=(s.step or 0)+1;action.networkID=s.step end
+    local fx,fy=DCF.Quicksteps.facing(p);if not fx then return end
+    N.send(p,"step",{step=action.networkID,clip=action.context.action.animation,
+        x=p:getX(),y=p:getY(),z=p:getZ(),fx=fx,fy=fy,finished=finished==true})
+    -- Scripted displacement while movement is blocked otherwise waits for the
+    -- native idle position interval. Keep native authority in step as well.
+    -- IsoPlayer.setIgnoreMovement(true) marks its NetworkPlayerAI for a
+    -- reliable update. NetworkPlayerAI itself is not exposed to Lua in B42.
+    -- Quickstep owns this already-true flag and restores it in cleanup.
+    p:setIgnoreMovement(true)
+end
+function N.updateStep(p,s)
+    local step=s.step
+    if not step then return end
+    local t=now()
+    if t>step.expires or not s.packet.equipped or p:isDead() or p:getVehicle() then s.step=nil;return end
+    local factor=math.max(0,math.min(1,(t-step.at)/50))
+    local x=step.fromX+(step.x-step.fromX)*factor
+    local y=step.fromY+(step.y-step.fromY)*factor
+    if math.abs(p:getZ()-step.z)>.5 or (p:getX()-x)^2+(p:getY()-y)^2>2.5^2 then s.step=nil;return end
+    -- Keep the square/object membership and previous coordinates consistent,
+    -- just as paired-action alignment does, when a sample crosses a tile.
+    DCF.Defense.snapActor(p,x,y)
+    p:setTargetAndCurrentDirection(step.fx,step.fy)
 end
 function N.send(p,command,args)
     if not isClient() or not p:isLocalPlayer() then return false end
@@ -96,6 +172,7 @@ function N.clearRemote(id)
         N.stopObserver(p,s)
         p:setVariable("DCFRemoteClip","");p:setVariable("DCFActive",false);p:setVariable("DCFStyle","")
         p:setVariable("DCFRemoteObserver",false)
+        p:setVariable("DCFRemoteCycle","")
         if DCF.HeatAura then DCF.HeatAura.clear(p) end
     end
     N.remote[id]=nil
@@ -111,9 +188,11 @@ function N.applyState(p,packet,s)
     p:setVariable("DCFMove",packet.move)
     p:setVariable("DCFRemoteObserver",packet.equipped)
     DCF.Heat.playback(p,packet.extreme)
-    if s.clip~=packet.clip or (packet.clip~="" and s.swing~=packet.swing) then
+    if s.style~=packet.style or s.clip~=packet.clip or (packet.clip~="" and (s.swing~=packet.swing or s.action~=(packet.action or 0))) then
         N.stopObserver(p,s)
         p:setVariable("DCFRemoteClip",packet.clip)
+        s.cycle=((s.cycle or 0)+1)%2
+        p:setVariable("DCFRemoteCycle",tostring(s.cycle))
         local clip=P.clip(packet.style,packet.clip)
         if clip and clip.group=="actions" then
             -- Match BaseAction.setActionAnim's actual native variables. The melee/stomp
@@ -121,7 +200,7 @@ function N.applyState(p,packet,s)
             p:setVariable("PerformingAction","DCF_MP");p:setVariable("IsPerformingAnAction",true)
             s.actionOverride=true
         end
-        s.clip=packet.clip;s.swing=packet.swing
+        s.style=packet.style;s.clip=packet.clip;s.swing=packet.swing;s.action=packet.action or 0
     end
     if DCF.HeatAura then
         if s.taunt~=nil and (packet.taunt or 0)>s.taunt then DCF.HeatAura.flash(p) end
@@ -130,13 +209,44 @@ function N.applyState(p,packet,s)
     s.taunt=packet.taunt or 0
     s.applied=packet.seq;s.actor=p
 end
+function N.defer(command,a)
+    if command~="impact" and command~="damage" then return end
+    if not P.integer(a.event,0,1000000000) or not P.integer(a.zombie,-32768,32767) then return end
+    local key=command..":"..a.player..":"..a.event
+    if N.seen[key] or N.deferred[key] then return end
+    local count=0;for _ in pairs(N.deferred) do count=count+1 end
+    if count<128 then N.deferred[key]={command=command,args=a,expires=now()+750} end
+end
 function N.command(module,command,a)
     if module~=P.module or type(a)~="table" then return end
+    if command=="equipReady" then
+        if not P.integer(a.player,0,32767) or not P.integer(a.item,-2147483648,2147483647) then return end
+        local p=getPlayerByOnlineID(a.player)
+        if not p or not p:isLocalPlayer() then return end
+        local s=N.localState(p)
+        if a.request~=s.equipRequest or a.style~=s.equipWanted then return end
+        s.equipReply=a;N.finishEquipment(p,s);return
+    end
     if command=="grabDenied" then
         for p in pairs(N.pending) do N.pending[p]=nil end;return
     end
     if not P.integer(a.player,0,32767) then return end
     local p=getPlayerByOnlineID(a.player)
+    if command=="step" then
+        if not p or p:isLocalPlayer() then return end
+        local s=N.remote[a.player];if not s or not s.packet.equipped then return end
+        if not P.integer(a.step,1,1000000000) or not P.integer(a.event,0,1000000000)
+            or not P.number(a.x,p:getX()-2.5,p:getX()+2.5) or not P.number(a.y,p:getY()-2.5,p:getY()+2.5)
+            or not P.number(a.z,p:getZ()-.1,p:getZ()+.1) or not P.number(a.fx,-1,1) or not P.number(a.fy,-1,1) then return end
+        local old=s.step
+        if (s.stepEvent or -1)>=a.event or (s.stepID or 0)>a.step then return end
+        s.stepEvent=a.event;s.stepID=a.step
+        local x,y=p:getX(),p:getY()
+        if old then N.updateStep(p,s);x,y=p:getX(),p:getY() end
+        s.step={id=a.step,at=now(),expires=now()+(a.finished and 100 or 350),
+            fromX=x,fromY=y,x=a.x,y=a.y,z=a.z,fx=a.fx,fy=a.fy}
+        return
+    end
     if command=="state" then
         if not P.integer(a.seq,0,1000000000) or not P.number(a.heat,0,100) or not P.number(a.fuel,0,100) then return end
         if a.taunt~=nil and not P.integer(a.taunt,0,1000000000) then return end
@@ -149,11 +259,12 @@ function N.command(module,command,a)
         if p then N.applyState(p,a,s) end
         return
     end
-    if not p then return end
+    if not p then N.defer(command,a);return end
     local z=P.zombie(p,a.zombie)
     local recent=N.victims[a.zombie]
     if not z and recent and now()-recent.time<1500 and P.near(p,recent.z,3) then z=recent.z end
-    if not z then return end
+    if not z then N.defer(command,a);return end
+    if command=="impact" or command=="damage" then N.deferred[command..":"..a.player..":"..tostring(a.event)]=nil end
     if command=="grabStart" then
         if p:isLocalPlayer() then
             N.leases[p]=a.zombie;N.pending[p]=nil
@@ -188,7 +299,7 @@ function N.command(module,command,a)
         local key="impact:"..a.player..":"..tostring(a.event)
         if N.seen[key] then return end;N.seen[key]=now()
         if DCF.HitEffects then DCF.HitEffects.spawn(p,z,a.strong) end
-        if DCF.Reactions then DCF.Reactions.remote(z,a.reaction) end
+        if DCF.Reactions and P.reaction(a.style,a.reaction) then DCF.Reactions.remote(z,a.reaction) end
     elseif command=="damage" then
         local key="damage:"..a.player..":"..tostring(a.event)
         if N.seen[key] then return end;N.seen[key]=now()
@@ -200,7 +311,7 @@ function N.command(module,command,a)
         if type(a.hitReaction)=="string" and #a.hitReaction<80 then z:setHitReaction(a.hitReaction);z:reportEvent("wasHit") end
         if a.kill then z:getHitDir():set(a.dx,a.dy);z:setHitForce(12);z:setUsePhysicHitReaction(true);z:setHitReaction("ShotBelly") end
         if a.knock then z:setKnockedDown(true);z:setFallOnFront(false) end
-        if not a.kill and not a.knock and DCF.Reactions then DCF.Reactions.remote(z,a.reaction) end
+        if not a.kill and not a.knock and DCF.Reactions and P.reaction(a.style,a.reaction) then DCF.Reactions.remote(z,a.reaction) end
         if p:isLocalPlayer() then
             N.replaying=true
             if a.kill then DCF.emit("tigerDrop",p,z)
@@ -217,10 +328,20 @@ function N.update(p)
     if not isClient() then return end
     if p:isLocalPlayer() then N.capture(p);return end
     local s=N.remote[p:getOnlineID()]
+    if s then N.updateStep(p,s) end
     if s and now()-s.last<4000 and (s.applied~=s.packet.seq or s.actor~=p) then N.applyState(p,s.packet,s) end
 end
 function N.tick()
-    if not isClient() or now()<N.nextRemote then return end;N.nextRemote=now()+500
+    if not isClient() then return end
+    if now()>=(N.nextDeferred or 0) then
+        N.nextDeferred=now()+50
+        local queued={};for key,entry in pairs(N.deferred) do queued[#queued+1]={key=key,entry=entry} end
+        for _,job in ipairs(queued) do
+            if now()>job.entry.expires then N.deferred[job.key]=nil
+            else N.command(P.module,job.entry.command,job.entry.args) end
+        end
+    end
+    if now()<N.nextRemote then return end;N.nextRemote=now()+500
     for id,s in pairs(N.remote) do if now()-s.last>4000 then N.clearRemote(id) end end
     for key,t in pairs(N.seen) do if now()-t>5000 then N.seen[key]=nil end end
     for key,entry in pairs(N.victims) do if now()-entry.time>1500 then N.victims[key]=nil end end
@@ -236,7 +357,7 @@ end
 function N.clear()
     for id in pairs(N.remote) do N.clearRemote(id) end
     for p in pairs(N.leases) do N.releaseGrab(p) end
-    N.locals=setmetatable({}, {__mode="k"});N.seen={};N.victims={};N.pending=setmetatable({}, {__mode="k"})
+    N.locals=setmetatable({}, {__mode="k"});N.seen={};N.victims={};N.deferred={};N.pending=setmetatable({}, {__mode="k"})
 end
 DCF.on("lightAttackStarted",N.swing)
 DCF.on("finisherStarted",N.swing)

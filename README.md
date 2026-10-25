@@ -2,7 +2,7 @@
 
 Project Zomboid Build 42 combat framework with the Dragon of Dojima style.
 
-Current version: **0.27.0**. Source mod folder: [combat/DragonCombatFramework](combat/DragonCombatFramework). See its [README](combat/DragonCombatFramework/README.md) and [release notes](combat/DragonCombatFramework/docs/RELEASE_NOTES.md) for controls, features and validation.
+Current version: **0.27.1**. Source mod folder: [combat/DragonCombatFramework](combat/DragonCombatFramework). See its [README](combat/DragonCombatFramework/README.md) and [release notes](combat/DragonCombatFramework/docs/RELEASE_NOTES.md) for controls, features and validation.
 
 Download the ZIP from this repository's Releases page. Extract its `DragonCombatFramework` folder into `Zomboid/mods`, enable the mod and restart PZ. Install the same version on server and clients. Custom Voice Framework and a compatible voice pack are optional; they are not bundled in the combat ZIP.
 

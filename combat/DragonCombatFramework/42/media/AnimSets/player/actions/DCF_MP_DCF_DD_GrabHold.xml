@@ -24,4 +24,4 @@
     <weight>1</weight>
     <includeDescendants>true</includeDescendants>
   </m_SubStateBoneWeights>
-<m_Conditions><m_Name>DCFRemoteObserver</m_Name><m_Type>BOOL</m_Type><m_Value>true</m_Value></m_Conditions><m_Conditions><m_Name>DCFRemoteClip</m_Name><m_Type>STRING</m_Type><m_Value>DCF_DD_GrabHold</m_Value></m_Conditions></animNode>
+<m_Conditions><m_Name>DCFRemoteObserver</m_Name><m_Type>BOOL</m_Type><m_Value>true</m_Value></m_Conditions><m_Conditions><m_Name>DCFRemoteClip</m_Name><m_Type>STRING</m_Type><m_Value>DCF_DD_GrabHold</m_Value></m_Conditions><m_Conditions><m_Name>DCFRemoteCycle</m_Name><m_Type>STRING</m_Type><m_Value>0</m_Value></m_Conditions></animNode>

@@ -14,6 +14,9 @@ local DCF = DragonCombat
 function DCF.equipStyle(player, styleId)
     local ok, reason = DCF.selectStyle(player, styleId)
     if not ok then player:Say("Cannot switch style: " .. tostring(reason)); return end
+    -- B42 hit packets carry an inventory item ID, not a serialized weapon.
+    -- A client-only AddItem produces a weapon the server can never resolve.
+    if isClient() then DCF.Network.equip(player,styleId);return end
     local items, token = player:getInventory():getItems(), nil
     for i = 0, items:size() - 1 do
         local item = items:get(i)
@@ -33,6 +36,7 @@ local function disable(player)
     if DCF.isBusy(player) then player:Say("Finish the current move first."); return end
     local item = player:getPrimaryHandItem()
     DCF.selectStyle(player, "none")
+    if isClient() then DCF.Network.equip(player,"none") end
     if item and item:getFullType() == DCF.TOKEN then player:setPrimaryHandItem(nil) end
 end
 local function diagnostics(player)
