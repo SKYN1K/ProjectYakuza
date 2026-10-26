@@ -25,7 +25,7 @@ function N.finishEquipment(p,s)
     local a=s.equipReply;if not a then return false end
     local item=a.item~=-1 and p:getInventory():getItemWithID(a.item) or nil
     if a.item~=-1 and (not item or not ProjectYakuza.isStyleToken(item)) then return false end
-    if item then ProjectYakuza.prepareToken(item) end
+    if item then ProjectYakuza.prepareToken(item,p) end
     p:setSecondaryHandItem(nil);p:setPrimaryHandItem(item);p:resetModelNextFrame()
     p:updateHandEquips()
     local entry=s.entryWanted;s.entryWanted=nil

@@ -25,7 +25,7 @@ function ProjectYakuza.equipStyle(player, styleId)
     end
     if not token then token = player:getInventory():AddItem(ProjectYakuza.TOKEN) end
     if not token then print("[ProjectYakuza] ERROR: style item could not be created"); return end
-    ProjectYakuza.prepareToken(token)
+    ProjectYakuza.prepareToken(token, player)
     player:setPrimaryHandItem(token)
     player:resetModelNextFrame()
     player:setSecondaryHandItem(nil)
