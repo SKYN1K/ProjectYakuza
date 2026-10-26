@@ -29,7 +29,7 @@ local style=P.getStyle(ID)
 check(style and P.validateStyle(style),"Mad Dog validates against production registry")
 check(#P.styleOrder==2,"addon registers one style without replacing DoD")
 check(#style.lightAttacks==4 and #style.groundAttacks==1,"four lights and ground slash registered")
-check(style.music==false and style.combatVoices==false and not style.tigerDrop and not style.heatAura,
+check(style.music==false and style.combatVoices==false and not style.tigerDrop and style.heatAura=="mad_dog_y0" and style.heatHud=="mad_dog_y0",
     "no Kiryu music, voices, counter or aura inherited")
 local bad={id="bad",name="Bad",lightAttacks=style.lightAttacks,weaponSprite=""}
 check(not P.validateStyle(bad),"empty weapon model rejected")

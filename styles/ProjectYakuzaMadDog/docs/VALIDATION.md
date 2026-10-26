@@ -1,4 +1,4 @@
-# Mad Dog 0.1.1 validation
+# Mad Dog 0.2.0 validation
 
 Based on current upstream **Project Yakuza 0.30.1 / API 2** (`f5bac37`), tested with the installed PZ Build 42.21.0 classes and native importer. This remains an unmerged PR, with no published framework release.
 
@@ -16,8 +16,8 @@ All **26 clips** were rebuilt from the same supplied source files. Original fram
 
 ## Framework and control regressions
 
-- **463 Kahlua assertions:** 153 addon/runtime checks, 21 Mad Dog entry checks, 96 existing multiplayer checks, 21 DoD entry checks, 42 upstream API-extension checks, 9 shipped-starter lifecycle checks and 121 upstream taunt/aura checks.
-- All **37 production Lua files** compile in the installed Kahlua compiler.
+- **619 Kahlua assertions:** 153 addon/runtime checks, 21 Mad Dog entry checks, 96 existing multiplayer checks, 21 DoD entry checks, 42 upstream API-extension checks, 9 shipped-starter lifecycle checks and 121 upstream taunt/aura checks and 156 addon presentation checks.
+- All **39 production Lua files** compile in the installed Kahlua compiler.
 - **28 owner nodes** pass native selection alongside the framework, including style isolation and priority conflict checks.
 - **82 observer nodes** pass both network cycles with no collision/animation events and no local-player leakage.
 - All clip references, exact style conditions and **15 single-collision nodes** pass asset validation, including native floor/stomp routing.
@@ -26,3 +26,12 @@ All **26 clips** were rebuilt from the same supplied source files. Original fram
 Reproduction commands are in [tools/mad-dog/README.md](../../../tools/mad-dog/README.md). Extraction folders, reference/runtime JSON, old files and logs stay outside Git.
 
 Project Zomboid was not launched for validation. Live mesh/knife alignment, transition feel and two-client latency behavior still require gameplay confirmation; the checks above verify source direction through actual engine transforms without claiming a live game test.
+
+## Addon-only presentation (0.2.0)
+
+- 68 PNG files are DDS decodes and exact native-pixel crops from five supplied Yakuza 0 sources. A separate checker re-extracts the original PAR members and compares all **113,820 RGBA pixels**, alpha, source hashes and output hashes. The Legend image/title and common aura textures are documented in `visual-provenance.json`; no generated or repainted artwork is shipped.
+- The original framework HUD/aura and private addon HUD/aura run together in PZ's Kahlua VM. Checks cover exact style isolation, switching both ways, split-screen viewport selection, heat/Extreme Heat display, pause, fade, one sprite advance per render, zero-heat completion flashes, the existing aura toggle, remote completion flashes/disconnect, death, save and main-menu cleanup. No core module or network-handler replacement is used.
+- HUD draw commands captured from the production Lua were rendered for offline layout inspection at half heat, full heat and Extreme Heat. Native in-game font/rendering and actual aura appearance still require gameplay confirmation.
+- `HeatUI.lua`, `HeatAura.lua`, `WorldEffects.lua`, `StyleSelector.lua` and other styles have no presentation changes. Installation updates only the separate Mad Dog addon and verifies every installed byte; existing framework bytes are checked before and after.
+
+The motion files are unchanged from the validated 0.1.1 rebuild. The aura adapts original pixels to PZ torso sprites; it does not claim to execute Yakuza's original MEP shader engine.

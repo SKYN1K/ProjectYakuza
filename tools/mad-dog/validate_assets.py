@@ -43,8 +43,14 @@ for path in (addon/'42/media/AnimSets/player').rglob('*.xml'):
     for e in events:
         if e.find('m_TimePc') is not None:assert 0<=float(e.findtext('m_TimePc'))<=1,path
 assert owner==28 and observer==82 and collisions==15,(owner,observer,collisions)
-# There are no newly authored textures/audio/models, extracted game archives or credentials.
+# Only declared, losslessly decoded/cropped original game textures are allowed.
+visuals=json.loads((addon/'docs/visual-provenance.json').read_text())['assets']
+visual_paths={v['file'] for v in visuals}
+assert len(visual_paths)==68
+for v in visuals:
+    assert hashlib.sha256((addon/v['file']).read_bytes()).hexdigest()==v['output_sha256'],v['file']
+assert {str(p.relative_to(addon)) for p in addon.rglob('*.png')}==visual_paths
 for path in addon.rglob('*'):
     if path.is_file():
-        assert path.suffix.lower() not in ('.par','.gmt','.gmd','.png','.dds','.ogg','.wav','.mp3','.jar','.blend'),path
-print(f'PASS: {len(clips)} verified clip hashes, {owner} owner nodes, {observer} event-free observers, {collisions} single-collision nodes; no raw archives/media added')
+        assert path.suffix.lower() not in ('.par','.gmt','.gmd','.dds','.ogg','.wav','.mp3','.jar','.blend'),path
+print(f'PASS: {len(clips)} verified clip hashes, {owner} owner nodes, {observer} event-free observers, {collisions} single-collision nodes; 68 declared original-pixel textures; no raw archives/audio/models added')

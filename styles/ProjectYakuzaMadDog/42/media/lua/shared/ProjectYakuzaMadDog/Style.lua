@@ -51,7 +51,9 @@ P.registerStyle({
     groundAttacks={ground},
     -- Shared heat rules; no implicit Kiryu aura, music, reactions or voices.
     heat=true,
-    heatHud="yakuza6",
+    heatHud="mad_dog_y0",
+    heatAura="mad_dog_y0",
+    selectorIcon="media/textures/ProjectYakuzaMadDog/LegendIcon.png",
     hitEffects="yakuza6",
     combatVoices=false,
     music=false,

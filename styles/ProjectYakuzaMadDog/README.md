@@ -1,4 +1,4 @@
-# Mad Dog of Shimano — addon 0.1.1
+# Mad Dog of Shimano — addon 0.2.0
 
 Adds Majima's Yakuza 0 legend style to Project Yakuza. The 26 playable clips are retargeted from the supplied local game's original `BattlePlayerMajimaL.par` motions. This addon contains its own registration, animation nodes and multiplayer catalogue; it does not bundle another copy of the framework.
 
@@ -24,7 +24,11 @@ Default inputs (the framework's rebinding settings still apply):
 
 Light attacks keep the original full-body turns, crouches and leg motions. A style-scoped movement lease restores the previous movement flag on completion, damage, death, unequip, save, timeout and world exit. Finishers, dodges and other actions use the framework's existing handlers. The style can be switched back to Dragon of Dojima when idle.
 
-The held knife and swing/impact sounds use Zomboid's existing `HuntingKnife` resources. No new model, texture, music or voice recordings are bundled. Character voices are disabled for this style to avoid using the separate Kiryu pack. The shared heat HUD and impact glint are explicitly enabled; Kiryu's aura, Tiger Drop, paired grabs and enemy reaction mappings are not enabled.
+The held knife and swing/impact sounds use Zomboid's existing `HuntingKnife` resources. No new model, music or voice recordings are bundled. Character voices are disabled for this style to avoid using the separate Kiryu pack. The framework's impact glint is enabled. Tiger Drop, paired grabs and enemy reaction mappings are not enabled.
+
+Mad Dog has its own six-stock heat HUD, original Yakuza 0 Legend selector image and original Mad Dog title artwork. A white/violet torso aura uses the supplied game's common aura rim, smoke and all 64 spark-sheet frames; Extreme Heat brightens the same emitters, and a completed flourish briefly flashes them. These are original decoded/cropped game pixels, with no ImageGen, repainting or generated animation frames. Yakuza's native MEP particle shaders are adapted to PZ sprite rendering rather than executed.
+
+The addon owns separate `MadDogHUD` and `MadDogAura` modules and exact style flags. It does not replace or edit the framework's `HeatUI`, `HeatAura`, selector renderer or other styles. Switching styles restores the original HUD/effects. The custom HUD supports local split-screen viewports; aura presentation reads existing remote actors without replacing network handlers. The existing aura-disable setting also applies to Mad Dog.
 
 ## Fidelity and testing limits
 
@@ -32,4 +36,4 @@ This is a Zomboid adaptation. Horizontal root travel is removed; bounded native 
 
 The shared heat/Extreme Heat system is not Yakuza 0's exact heat model. Both running triggers use the running slash. Continuous spinning double finishers, charged attacks, cinematic heat actions and synchronized counters are not implemented. Guard/idle retain native walking legs; attacking clips use the complete original body motion.
 
-All 28,824 original-source direction comparisons and 463 Lua assertions pass; Project Zomboid was not launched. Foot contact, blade alignment, blending, female-body proportions, controller feel and live two-client replication still need gameplay testing before merging. See [validation](docs/VALIDATION.md) and [motion provenance](docs/motion-provenance.json).
+All 28,824 original-source direction comparisons, 619 Lua assertions and 113,820 original texture-pixel comparisons pass; Project Zomboid was not launched. Foot contact, blade alignment, blending, female-body proportions, controller feel and live two-client replication still need gameplay testing before merging. See [validation](docs/VALIDATION.md) and [motion provenance](docs/motion-provenance.json) and [visual provenance](docs/visual-provenance.json).

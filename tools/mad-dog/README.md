@@ -92,3 +92,18 @@ Optional independent source-reader audit, using the pinned GMD Blender importer:
 The audit sets linear source key interpolation explicitly and removes only actor
 planar travel when comparing; the actual source limb motion and root heights must
 agree with GMTImporter to 0.0001 source units.
+
+## Original presentation assets and style isolation
+
+Use Pillow and the supplied original game, with PAR extraction outside Git:
+
+```sh
+python3 tools/mad-dog/export_visuals.py --game "$YAKUZA0" --par-tool "$PAR_TOOL" --output styles/ProjectYakuzaMadDog
+python3 tools/mad-dog/check_visuals.py --game "$YAKUZA0" --par-tool "$PAR_TOOL"
+python3 tools/mad-dog/validate_assets.py
+python3 tools/mad-dog/build_presentation_tests.py "$SCRATCH/presentation-tests.lua"
+```
+
+Run `LuaRunner presentation-tests.lua` from `SCRATCH` with the same PZ classpath as above. This embeds the production framework HUD/aura alongside the addon's modules, tests their independent lifecycle and verifies no framework HUD/aura or network handler is replaced. It checks local split-screen and observer cleanup as well as switching, pause, Extreme Heat and zero-heat completion flashes. The independent pixel check reopens the original archives and verifies all crops, RGBA pixels and hashes without importing the exporter.
+
+The exporter only decodes original DDS pixels and makes exact rectangular crops; it performs no scaling, tinting or frame generation on the stored PNGs. Runtime sprite sizing and white/violet tint belong to the addon renderer. Raw PAR/DDS files and offline layout previews stay outside Git.
