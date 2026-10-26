@@ -1,0 +1,535 @@
+[
+
+  {
+
+    "title": "Funk Goes On",
+
+    "style": "dragon_of_dojima",
+
+    "source": "C:/Users/Nik/Downloads/1-06. Funk Goes On.mp3",
+
+    "source_sha256": "f5c78691fa033d51ab6bff50838d8a4a2f790c7a8e3afb217555e2fcdc9c6af6",
+
+    "output": "42/media/sound/ProjectYakuza/FunkGoesOn.ogg",
+
+    "sha256": "a7f757198c73f419945c9d80dda0788d045279fb6eb778ba279b66e959a7887e",
+
+    "codec": "Vorbis",
+
+    "sample_rate": 44100,
+
+    "channels": 2,
+
+    "duration_seconds": 173.21,
+
+    "conversion": "Full supplied recording; ffmpeg libvorbis quality 5. No cuts or authored loop points.",
+
+    "sound": "ProjectYakuza_FunkGoesOn"
+
+  },
+
+  {
+
+    "title": "Bring It On",
+
+    "style": "dragon_of_dojima",
+
+    "source": "C:/Users/Nik/Downloads/1-10. Bring It On.mp3",
+
+    "sound": "ProjectYakuza_BringItOn",
+
+    "source_sha256": "1689446891634fe727bf688a15f520f26e1a0a987684a10f8ce1bacbe096bea9",
+
+    "output": "42/media/sound/ProjectYakuza/BringItOn.ogg",
+
+    "sha256": "dfba41e8a6fad2aa674278184df75ec9a11e725044f189ec5a5e10ee53819462",
+
+    "codec": "Vorbis",
+
+    "sample_rate": 44100,
+
+    "channels": 2,
+
+    "duration_seconds": 154.724331,
+
+    "conversion": "Full supplied recording; ffmpeg libvorbis quality 5. No cuts or authored loop points."
+
+  },
+
+  {
+
+    "title": "Receive You Ver. 7",
+
+    "style": "dragon_of_dojima",
+
+    "source": "C:/Users/Nik/Downloads/Receive You Ver. 7.mp3",
+
+    "sound": "ProjectYakuza_ReceiveYouVer7",
+
+    "source_sha256": "1f910c7359db34fc40bdb28c6c6dac39ed03d3dc69af34091bde361d61d11771",
+
+    "output": "42/media/sound/ProjectYakuza/ReceiveYouVer7.ogg",
+
+    "sha256": "f2bdb5d3a1efc19f3bbe54290204be7c160c9edb51a78ef089c6a79f72488ffc",
+
+    "codec": "Vorbis",
+
+    "sample_rate": 44100,
+
+    "channels": 2,
+
+    "duration_seconds": 313.652245,
+
+    "conversion": "Full supplied recording; ffmpeg libvorbis quality 5. No cuts or authored loop points."
+
+  },
+
+  {
+
+    "title": "Flirt With Bomb",
+
+    "style": "dragon_of_dojima",
+
+    "source": "C:\\Users\\Nik\\Downloads\\06. Flirt With Bomb.mp3",
+
+    "sound": "ProjectYakuza_FlirtWithBomb",
+
+    "source_sha256": "2040b9f05b0b7a145d5c030bc03fda618eb677c590953d3e6f88a90d1855c0e2",
+
+    "output": "42/media/sound/ProjectYakuza/FlirtWithBomb.ogg",
+
+    "sha256": "cd37a596dc217c4721484de60d77de145cca7ec66548ff235462d6379b753adb",
+
+    "codec": "Vorbis",
+
+    "sample_rate": 48000,
+
+    "channels": 2,
+
+    "duration_seconds": 227.160979,
+
+    "conversion": "Full supplied recording; ffmpeg libvorbis quality 5. No cuts, synthesis, normalization or authored loop points."
+
+  },
+
+  {
+
+    "title": "Son of a Gun",
+
+    "style": "dragon_of_dojima",
+
+    "source": "C:\\Users\\Nik\\Downloads\\1-07. son of a gun.mp3",
+
+    "sound": "ProjectYakuza_SonOfAGun",
+
+    "source_sha256": "d074394f397ae8d3bf96afc0e6f6139ecf08b397dcadbe24ce890da9c457abb8",
+
+    "output": "42/media/sound/ProjectYakuza/SonOfAGun.ogg",
+
+    "sha256": "8a65d7bc9d104faa4dad96969268ce2bf143fec508d7268f4b7324d111033a6e",
+
+    "codec": "Vorbis",
+
+    "sample_rate": 44100,
+
+    "channels": 2,
+
+    "duration_seconds": 164.441882,
+
+    "conversion": "Full supplied recording; ffmpeg libvorbis quality 5. No cuts, synthesis, normalization or authored loop points."
+
+  },
+
+  {
+
+    "title": "Push Me Under Water",
+
+    "style": "dragon_of_dojima",
+
+    "source": "C:\\Users\\Nik\\Downloads\\2-05. Push Me Under Water.mp3",
+
+    "sound": "ProjectYakuza_PushMeUnderWater",
+
+    "source_sha256": "611d8971643b148c32bb208e3bab8892421cf425b4289e10d1e502c9a4a07a9e",
+
+    "output": "42/media/sound/ProjectYakuza/PushMeUnderWater.ogg",
+
+    "sha256": "2ef3204d73c03e9a147b6d5597fe7e02403b8ad3d2d545c38b1aa8581f650d09",
+
+    "codec": "Vorbis",
+
+    "sample_rate": 44100,
+
+    "channels": 2,
+
+    "duration_seconds": 191.452494,
+
+    "conversion": "Full supplied recording; ffmpeg libvorbis quality 5. No cuts, synthesis, normalization or authored loop points."
+
+  },
+
+  {
+
+    "title": "Outlaw's Lullaby",
+
+    "style": "dragon_of_dojima",
+
+    "source": "C:\\Users\\Nik\\Downloads\\2-07. Outlaw's Lullaby.mp3",
+
+    "sound": "ProjectYakuza_OutlawsLullaby",
+
+    "source_sha256": "bc17a858be2b8e422a284d4d4f8c00e9468136f7b89bafb5bab6c49d9579dd53",
+
+    "output": "42/media/sound/ProjectYakuza/OutlawsLullaby.ogg",
+
+    "sha256": "b29287bdf878424c1ea98797a49643be4494254018ea042921726cb86477139a",
+
+    "codec": "Vorbis",
+
+    "sample_rate": 44100,
+
+    "channels": 2,
+
+    "duration_seconds": 200.229637,
+
+    "conversion": "Full supplied recording; ffmpeg libvorbis quality 5. No cuts, synthesis, normalization or authored loop points."
+
+  },
+
+  {
+
+    "title": "Funk Goes On \u6975",
+
+    "style": "dragon_of_dojima",
+
+    "source": "C:\\Users\\Nik\\Downloads\\05. Funk Goes On \u6975.mp3",
+
+    "sound": "ProjectYakuza_FunkGoesOnKiwami",
+
+    "source_sha256": "45234d6102f46073aa0b1a4c9f3ec0b63e98c8b06a11dd234597e8d8a3c1ca95",
+
+    "output": "42/media/sound/ProjectYakuza/FunkGoesOnKiwami.ogg",
+
+    "sha256": "faf3d77fe32f222ab85d01cb17bd5c324a46581b32af814281a1d52ca50155c4",
+
+    "codec": "Vorbis",
+
+    "sample_rate": 48000,
+
+    "channels": 2,
+
+    "duration_seconds": 181.152979,
+
+    "conversion": "Full supplied recording; ffmpeg libvorbis quality 5. No cuts, synthesis, normalization or authored loop points."
+
+  },
+
+  {
+
+    "title": "Push Me Deep Underwater",
+
+    "style": "dragon_of_dojima",
+
+    "source": "C:\\Users\\Nik\\Downloads\\1-09. Push Me Deep Underwater.mp3",
+
+    "sound": "ProjectYakuza_PushMeDeepUnderwater",
+
+    "source_sha256": "611284dbb8c6db8caa71ddc9aa34ac8557324bf65ca125508146dd00c27a9145",
+
+    "output": "42/media/sound/ProjectYakuza/PushMeDeepUnderwater.ogg",
+
+    "sha256": "ec8efaab63804a952a5ebfb18dde9023b01ee60c6c6bff7ad6e47b5d9b55be22",
+
+    "codec": "Vorbis",
+
+    "sample_rate": 48000,
+
+    "channels": 2,
+
+    "duration_seconds": 205.32,
+
+    "conversion": "Full supplied recording; ffmpeg libvorbis quality 5. No cuts, synthesis, normalization or authored loop points."
+
+  },
+
+  {
+
+    "title": "Lullaby of Outlaws",
+
+    "style": "dragon_of_dojima",
+
+    "source": "C:\\Users\\Nik\\Downloads\\1-13. Lullaby of Outlaws.mp3",
+
+    "sound": "ProjectYakuza_LullabyOfOutlaws",
+
+    "source_sha256": "a2fc42a046da923ec2ae91428916a331fa80682133fc569daabd92937006ff8c",
+
+    "output": "42/media/sound/ProjectYakuza/LullabyOfOutlaws.ogg",
+
+    "sha256": "b38ce2d1eb0e8edf8d08fdd647f74c2088b59d35e6a622004b4fb868c1364def",
+
+    "codec": "Vorbis",
+
+    "sample_rate": 44100,
+
+    "channels": 2,
+
+    "duration_seconds": 140.69551,
+
+    "conversion": "Full supplied recording; ffmpeg libvorbis quality 5. No cuts, synthesis, normalization or authored loop points."
+
+  },
+
+  {
+
+    "title": "Receive and Believe You",
+
+    "style": "dragon_of_dojima",
+
+    "source": "C:\\Users\\Nik\\Downloads\\3-10. Receive and Believe You.mp3",
+
+    "sound": "ProjectYakuza_ReceiveAndBelieveYou",
+
+    "source_sha256": "4dac29bc58b6cebcfeb3aa711f35a04a95cd6c6a14e3ba20fc21fff431ea7bab",
+
+    "output": "42/media/sound/ProjectYakuza/ReceiveAndBelieveYou.ogg",
+
+    "sha256": "31774cfd12625601d6ae0354669879a5ffdd9f41891afa381196c5e8eb25dd72",
+
+    "codec": "Vorbis",
+
+    "sample_rate": 44100,
+
+    "channels": 2,
+
+    "duration_seconds": 194.293333,
+
+    "conversion": "Full supplied recording; ffmpeg libvorbis quality 5. No cuts, synthesis, normalization or authored loop points."
+
+  },
+
+  {
+
+    "title": "Bruise",
+
+    "style": "dragon_of_dojima",
+
+    "source": "C:\\Users\\Nik\\Downloads\\06 Bruise.mp3",
+
+    "sound": "ProjectYakuza_Bruise",
+
+    "source_sha256": "38cc08bb3fd60f16fb281bf9271c60be1e89400433ffae3170ae4f451d80e7ca",
+
+    "output": "42/media/sound/ProjectYakuza/Bruise.ogg",
+
+    "sha256": "7f76e2f16890d7ffb72b2224beb27b97376d4baa6bc87335321088f593b0de73",
+
+    "codec": "Vorbis",
+
+    "sample_rate": 44100,
+
+    "channels": 2,
+
+    "duration_seconds": 101.748005,
+
+    "conversion": "Full supplied recording; ffmpeg libvorbis quality 5. No cuts, synthesis, normalization or authored loop points."
+
+  },
+
+  {
+
+    "title": "Crush & Strike",
+
+    "style": "dragon_of_dojima",
+
+    "source": "C:\\Users\\Nik\\Downloads\\08 Crush & Strike.mp3",
+
+    "sound": "ProjectYakuza_CrushAndStrike",
+
+    "source_sha256": "641c0b63a7851d3b0cba66164c69c7994d89f83dcbb521fff8c332ade34386e4",
+
+    "output": "42/media/sound/ProjectYakuza/CrushAndStrike.ogg",
+
+    "sha256": "38c467386747944afa74e7661e3b708d7994af7a995da7e627f03cbdd4b89a25",
+
+    "codec": "Vorbis",
+
+    "sample_rate": 44100,
+
+    "channels": 2,
+
+    "duration_seconds": 138.450045,
+
+    "conversion": "Full supplied recording; ffmpeg libvorbis quality 5. No cuts, synthesis, normalization or authored loop points."
+
+  },
+
+  {
+
+    "title": "D 2 A",
+
+    "style": "dragon_of_dojima",
+
+    "source": "C:\\Users\\Nik\\Downloads\\09 D 2 A.mp3",
+
+    "sound": "ProjectYakuza_D2A",
+
+    "source_sha256": "64caa71b4c6ebf5701055dfc5c8e07a9d0a6571c56173e2b8943aa8231800dcf",
+
+    "output": "42/media/sound/ProjectYakuza/D2A.ogg",
+
+    "sha256": "18714ac1289f6bdf84a40e938c9a460104c4961cec3ad4198383dc165d84b48f",
+
+    "codec": "Vorbis",
+
+    "sample_rate": 44100,
+
+    "channels": 2,
+
+    "duration_seconds": 179.279433,
+
+    "conversion": "Full supplied recording; ffmpeg libvorbis quality 5. No cuts, synthesis, normalization or authored loop points."
+
+  },
+
+  {
+
+    "title": "Ryu-Kyu Humming",
+
+    "style": "dragon_of_dojima",
+
+    "source": "C:\\Users\\Nik\\Downloads\\07 Ryu-Kyu Humming.mp3",
+
+    "sound": "ProjectYakuza_RyuKyuHumming",
+
+    "source_sha256": "0471d426a8e89f2129603fbe1af758995ba5ff7c8fdfb20c8f951ba2223914f9",
+
+    "output": "42/media/sound/ProjectYakuza/RyuKyuHumming.ogg",
+
+    "sha256": "1c3fc889510b57eff47de27e98ac4549f4dc02382ce6fb977a61e86a70f35839",
+
+    "codec": "Vorbis",
+
+    "sample_rate": 44100,
+
+    "channels": 2,
+
+    "duration_seconds": 112.980658,
+
+    "conversion": "Full supplied recording; ffmpeg libvorbis quality 5. No cuts, synthesis, normalization or authored loop points."
+
+  },
+
+  {
+
+    "title": "The Myth",
+
+    "style": "dragon_of_dojima",
+
+    "source": "C:\\Users\\Nik\\Downloads\\26 - The Myth.mp3",
+
+    "sound": "ProjectYakuza_TheMyth",
+
+    "source_sha256": "f90d970a7543eb6777bc6800e394b4f19903e28e724067d67d5e085a8c1c24ad",
+
+    "output": "42/media/sound/ProjectYakuza/TheMyth.ogg",
+
+    "sha256": "b5da8e69979433cd427d3e1a8b096808a44a580ad641b508abb2c002f716f0c2",
+
+    "codec": "Vorbis",
+
+    "sample_rate": 44100,
+
+    "channels": 2,
+
+    "duration_seconds": 170.981655,
+
+    "conversion": "Full supplied recording; ffmpeg libvorbis quality 5. No cuts, synthesis, normalization or authored loop points."
+
+  },
+
+  {
+
+    "title": "Isolated Fight",
+
+    "style": "dragon_of_dojima",
+
+    "source": "C:\\Users\\Nik\\Downloads\\04. Isolated Fight.mp3",
+
+    "sound": "ProjectYakuza_IsolatedFight",
+
+    "source_sha256": "e41b51cbd4b7d67547d4702a9b4fb020be02aad97a3efc7522e9703bf7e8b5ec",
+
+    "output": "42/media/sound/ProjectYakuza/IsolatedFight.ogg",
+
+    "sha256": "5fd7cdd1360a5e7e3a2ef46ff7190b327115384b370194fd297d3b89bff58835",
+
+    "codec": "Vorbis",
+
+    "sample_rate": 44100,
+
+    "channels": 2,
+
+    "duration_seconds": 146.653923,
+
+    "conversion": "Full supplied recording; ffmpeg libvorbis quality 5. No cuts, synthesis, normalization or authored loop points."
+
+  },
+
+  {
+
+    "title": "Town Bully",
+
+    "style": "dragon_of_dojima",
+
+    "source": "C:\\Users\\Nik\\Downloads\\1-14 Town Bully.mp3",
+
+    "sound": "ProjectYakuza_TownBully",
+
+    "source_sha256": "ef679a461869deb3ecd141961b64fee67ac0f208f0b44a30cd859e404eca7501",
+
+    "output": "42/media/sound/ProjectYakuza/TownBully.ogg",
+
+    "sha256": "42dee15ca0c41c025b33bc3e7255b0f5c0fd7ec90e4ca90e1cc3315c71c96d19",
+
+    "codec": "Vorbis",
+
+    "sample_rate": 44100,
+
+    "channels": 2,
+
+    "duration_seconds": 103.890045,
+
+    "conversion": "Full supplied recording; ffmpeg libvorbis quality 5. No cuts, synthesis, normalization or authored loop points."
+
+  },
+
+  {
+
+    "title": "KAMURO again",
+
+    "style": "dragon_of_dojima",
+
+    "source": "C:\\Users\\Nik\\Downloads\\1-06 KAMURO again.mp3",
+
+    "sound": "ProjectYakuza_KamuroAgain",
+
+    "source_sha256": "d04907921fdf4fb4b6245d02ceb8f9ea96e8d57a1d307d71b36664544a5f2053",
+
+    "output": "42/media/sound/ProjectYakuza/KamuroAgain.ogg",
+
+    "sha256": "2ffc9fa5513f6d8ed351a5729d5abec791a73299d7b43ecd53c8801581712a48",
+
+    "codec": "Vorbis",
+
+    "sample_rate": 44100,
+
+    "channels": 2,
+
+    "duration_seconds": 177.241882,
+
+    "conversion": "Full supplied recording; ffmpeg libvorbis quality 5. No cuts, synthesis, normalization or authored loop points."
+
+  }
+
+]

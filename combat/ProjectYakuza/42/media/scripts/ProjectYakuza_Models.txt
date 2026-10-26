@@ -1,0 +1,11 @@
+module Base
+{
+    model ProjectYakuza_EmptyHand
+    {
+        mesh = Static/ProjectYakuza_EmptyHand,
+        texture = ProjectYakuza_EmptyHand,
+        shader = basicEffect,
+        static = true,
+        scale = 1.0,
+    }
+}

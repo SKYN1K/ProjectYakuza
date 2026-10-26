@@ -1,0 +1,29 @@
+{
+
+  "source": "C:/Users/Nik/Documents/ChatGPT/Zomboid Yakuza Combat/extracted/kiwami2-deep-search/P_KRU_BTL_SUD_rct_pvk.gmt",
+
+  "sha256": "2cbe6c08a621e8edb8a4a5134a1598ac638d3dc34260d828601f41fcc49b8d5c",
+
+  "clip": "ProjectYakuza_DD_Taunt01",
+
+  "fps": 30.0,
+
+  "end_frame": 55,
+
+  "duration": 1.8333333333333333,
+
+  "game_archive": "F:/SteamLibrary/steamapps/common/Yakuza Kiwami 2/data/motion.par",
+
+  "archive_entry": "P_KRU_BTL_SUD_rct_pvk.gmt",
+
+  "skeleton_archive": "F:/SteamLibrary/steamapps/common/Yakuza Kiwami 2/data/chara.par",
+
+  "skeleton_entry": "c_man_bone.gmd",
+
+  "skeleton_sha256": "00638d8baeef2d4d761c3b8d59797ab8d1553bab4410790314aeea2030fc0632",
+
+  "conversion": "Original supplied Kiwami 2 motion retargeted at original timing; horizontal root movement discarded for locked-in-place taunt. No generative processing.",
+
+  "output_sha256": "b90035efa1777bf94e2675b1ba81305fce09bad8aa0b818c8cac3e8308825ed8"
+
+}

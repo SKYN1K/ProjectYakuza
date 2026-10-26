@@ -1,0 +1,3 @@
+PASS: actual Build 42 ActionTransition requires finishing event + AttackAnim false; both permit normal melee exit
+
+Event inserted directly into native ActionContextEvents to avoid network/bootstrap requirements in the isolated probe.

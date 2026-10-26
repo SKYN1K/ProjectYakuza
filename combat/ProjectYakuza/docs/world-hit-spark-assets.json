@@ -1,0 +1,515 @@
+[
+
+  {
+
+    "output": "media/textures/ProjectYakuza/WorldHit_normal_0.png",
+
+    "sha256": "e697ee8d0cb20c53eec4fefa95bdc7c31dd47566110fa2a8471ad60a780a84c9",
+
+    "size": [
+
+      64,
+
+      64
+
+    ]
+
+  },
+
+  {
+
+    "output": "media/textures/ProjectYakuza/WorldHit_normal_1.png",
+
+    "sha256": "f4083ea04772172f2a6d6a5ac80cef077b56120399f097c27fcaccaca83d91a6",
+
+    "size": [
+
+      64,
+
+      64
+
+    ]
+
+  },
+
+  {
+
+    "output": "media/textures/ProjectYakuza/WorldHit_normal_2.png",
+
+    "sha256": "78cdc9e6043dcee4c7a3b0c442d648bb5c396157f9cbfd6618d30f2bce1efd3a",
+
+    "size": [
+
+      64,
+
+      64
+
+    ]
+
+  },
+
+  {
+
+    "output": "media/textures/ProjectYakuza/WorldHit_normal_3.png",
+
+    "sha256": "4f1dda680671de146f24425646437c90caa86795a03ec42d6702b59ad3c68ddc",
+
+    "size": [
+
+      64,
+
+      64
+
+    ]
+
+  },
+
+  {
+
+    "output": "media/textures/ProjectYakuza/WorldHit_normal_4.png",
+
+    "sha256": "5dae0bbef34403a1d0da16a1ad88de3e25d3e01b7201d0ce80420c04d6fe7c5c",
+
+    "size": [
+
+      64,
+
+      64
+
+    ]
+
+  },
+
+  {
+
+    "output": "media/textures/ProjectYakuza/WorldHit_normal_5.png",
+
+    "sha256": "05cc8f35c0c847d42ed5e89c9d230d273bf7b3e36e04a7f22d5edecb1314df0e",
+
+    "size": [
+
+      64,
+
+      64
+
+    ]
+
+  },
+
+  {
+
+    "output": "media/textures/ProjectYakuza/WorldHit_normal_6.png",
+
+    "sha256": "ee7c0fba6ece63a9539dc5529512ff76240ecbf2b55b62de7976f27d6ee1842f",
+
+    "size": [
+
+      64,
+
+      64
+
+    ]
+
+  },
+
+  {
+
+    "output": "media/textures/ProjectYakuza/WorldHit_normal_7.png",
+
+    "sha256": "4dd13b8f9437a7821fc59fad0ca0885443cddd37d3b44b05bd07bb8bb36c20e3",
+
+    "size": [
+
+      64,
+
+      64
+
+    ]
+
+  },
+
+  {
+
+    "output": "media/textures/ProjectYakuza/WorldHit_normal_8.png",
+
+    "sha256": "7694371145c497636aab5b63c3b02f3aed3d1510d5fbf2bb49ec996dddd104a4",
+
+    "size": [
+
+      64,
+
+      64
+
+    ]
+
+  },
+
+  {
+
+    "output": "media/textures/ProjectYakuza/WorldHit_normal_9.png",
+
+    "sha256": "bd5dc96bf63a990d512b67f22197ecaa99af62e87761da5d47d53d37c7a990a3",
+
+    "size": [
+
+      64,
+
+      64
+
+    ]
+
+  },
+
+  {
+
+    "output": "media/textures/ProjectYakuza/WorldHit_normal_10.png",
+
+    "sha256": "d0a4af1bc1ac592f5e45be7a109c4dfc44bfa62d4ed2c0491d5384961ceba918",
+
+    "size": [
+
+      64,
+
+      64
+
+    ]
+
+  },
+
+  {
+
+    "output": "media/textures/ProjectYakuza/WorldHit_normal_11.png",
+
+    "sha256": "ec12f7ce0271319f4d4d504be7c6c65811dfc90d393bd60d9087d05e82a4d6f1",
+
+    "size": [
+
+      64,
+
+      64
+
+    ]
+
+  },
+
+  {
+
+    "output": "media/textures/ProjectYakuza/WorldHit_normal_12.png",
+
+    "sha256": "ae415836a8d865ebcc96382617195f8bb6988af1d1606426a8ae2831c0f60c76",
+
+    "size": [
+
+      64,
+
+      64
+
+    ]
+
+  },
+
+  {
+
+    "output": "media/textures/ProjectYakuza/WorldHit_normal_13.png",
+
+    "sha256": "4ed84408b851648e3411b58dec0d4e2016ec1acf0d0bed286e901cd9bff505c6",
+
+    "size": [
+
+      64,
+
+      64
+
+    ]
+
+  },
+
+  {
+
+    "output": "media/textures/ProjectYakuza/WorldHit_normal_14.png",
+
+    "sha256": "4ae15c2e3d66145f777d628d4ef515bebfd0b4717b548968abb9adb62fb4c6cc",
+
+    "size": [
+
+      64,
+
+      64
+
+    ]
+
+  },
+
+  {
+
+    "output": "media/textures/ProjectYakuza/WorldHit_normal_15.png",
+
+    "sha256": "052c48aa8b5e4f2c40bcd0d1bb7a4b93276276285dfa3e8a971b435dc88fdfee",
+
+    "size": [
+
+      64,
+
+      64
+
+    ]
+
+  },
+
+  {
+
+    "output": "media/textures/ProjectYakuza/WorldHit_strong_0.png",
+
+    "sha256": "df66ed6d473eb2eb14fe3f7fbc5ba1e1813ff5af4f790c08d62eeccff6f50af6",
+
+    "size": [
+
+      64,
+
+      64
+
+    ]
+
+  },
+
+  {
+
+    "output": "media/textures/ProjectYakuza/WorldHit_strong_1.png",
+
+    "sha256": "a6a18b5d04c328f4f3488833f3b1961f4747326d399fee0e1a72321f699e3075",
+
+    "size": [
+
+      64,
+
+      64
+
+    ]
+
+  },
+
+  {
+
+    "output": "media/textures/ProjectYakuza/WorldHit_strong_2.png",
+
+    "sha256": "5e089575c6cb4021706db3a3bf8bf5c986b1482a718cd88cf975bcfd2fcdfddb",
+
+    "size": [
+
+      64,
+
+      64
+
+    ]
+
+  },
+
+  {
+
+    "output": "media/textures/ProjectYakuza/WorldHit_strong_3.png",
+
+    "sha256": "b4ff514bc02c8dbd56e1a369a3390513f715c923b79396bdee73c22670cf38fd",
+
+    "size": [
+
+      64,
+
+      64
+
+    ]
+
+  },
+
+  {
+
+    "output": "media/textures/ProjectYakuza/WorldHit_strong_4.png",
+
+    "sha256": "08723b042256dbd44d9687e3fdfd602ad9247531f217b2b8e564042d640ea3c4",
+
+    "size": [
+
+      64,
+
+      64
+
+    ]
+
+  },
+
+  {
+
+    "output": "media/textures/ProjectYakuza/WorldHit_strong_5.png",
+
+    "sha256": "4bcff1ae26578dd94ae810f25247fc041ed0c01a43dc8300dff8b8506e36fec4",
+
+    "size": [
+
+      64,
+
+      64
+
+    ]
+
+  },
+
+  {
+
+    "output": "media/textures/ProjectYakuza/WorldHit_strong_6.png",
+
+    "sha256": "28b9fbb24715dd33c85c9b05db1ca7eaf60b9c21e374726077e985c57367eff0",
+
+    "size": [
+
+      64,
+
+      64
+
+    ]
+
+  },
+
+  {
+
+    "output": "media/textures/ProjectYakuza/WorldHit_strong_7.png",
+
+    "sha256": "72740a07b88a210588611d60cdaf65f14dcc1318e77af8fafbf5bc5e82744684",
+
+    "size": [
+
+      64,
+
+      64
+
+    ]
+
+  },
+
+  {
+
+    "output": "media/textures/ProjectYakuza/WorldHit_strong_8.png",
+
+    "sha256": "372babe1877fc5fa635c792289b7ea5836e6bbe92d87a39987ecb3e917408f6f",
+
+    "size": [
+
+      64,
+
+      64
+
+    ]
+
+  },
+
+  {
+
+    "output": "media/textures/ProjectYakuza/WorldHit_strong_9.png",
+
+    "sha256": "a3a7ddf6c2e6eba54ba8cfeae0d1b810afcef02f25b053e6ff26e03b18a2530c",
+
+    "size": [
+
+      64,
+
+      64
+
+    ]
+
+  },
+
+  {
+
+    "output": "media/textures/ProjectYakuza/WorldHit_strong_10.png",
+
+    "sha256": "7afc589186137414140031ebcbfda56384a7b2f46e3f7ecf5cfe9df494ddd7fa",
+
+    "size": [
+
+      64,
+
+      64
+
+    ]
+
+  },
+
+  {
+
+    "output": "media/textures/ProjectYakuza/WorldHit_strong_11.png",
+
+    "sha256": "68b913fbb44a1b3fb3cf5abc446ee8d60ff5987ec5a657b8a09d9846f725a894",
+
+    "size": [
+
+      64,
+
+      64
+
+    ]
+
+  },
+
+  {
+
+    "output": "media/textures/ProjectYakuza/WorldHit_strong_12.png",
+
+    "sha256": "ec9e913994448200e511d817705ab1b5e41afe230f9721a229879fe4d53b0fd5",
+
+    "size": [
+
+      64,
+
+      64
+
+    ]
+
+  },
+
+  {
+
+    "output": "media/textures/ProjectYakuza/WorldHit_strong_13.png",
+
+    "sha256": "32ef1f960412771ab1359b3a05974378f90bdacffc6a31a59f9565cfe988c5e5",
+
+    "size": [
+
+      64,
+
+      64
+
+    ]
+
+  },
+
+  {
+
+    "output": "media/textures/ProjectYakuza/WorldHit_strong_14.png",
+
+    "sha256": "2455b05e335f80d6a9c987f2e75a0855f98e8e8f4af950e88fc5e4465a76d654",
+
+    "size": [
+
+      64,
+
+      64
+
+    ]
+
+  },
+
+  {
+
+    "output": "media/textures/ProjectYakuza/WorldHit_strong_15.png",
+
+    "sha256": "052c48aa8b5e4f2c40bcd0d1bb7a4b93276276285dfa3e8a971b435dc88fdfee",
+
+    "size": [
+
+      64,
+
+      64
+
+    ]
+
+  }
+
+]

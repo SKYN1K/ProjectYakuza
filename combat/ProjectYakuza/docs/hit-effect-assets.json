@@ -1,0 +1,51 @@
+[
+
+  {
+
+    "archive": "Yakuza 6/data/particle.par",
+
+    "source": "raw\\e_j_0332_sparks_a.dds",
+
+    "source_sha256": "57ab9be627a4ebe91464740b05353d8b786046d28229ab5376cf6ec6b417d935",
+
+    "output": "media/textures/ProjectYakuza/HitSparks.png",
+
+    "output_sha256": "115586a2e9dc94a95b069d9b1e45eff901b41c44a49427053c60a5c9b7229eb9",
+
+    "size": [
+
+      128,
+
+      128
+
+    ],
+
+    "conversion": "DDS decode; additive brightness transferred to alpha with RGB unpremultiplication. Source shape and pixel resolution retained."
+
+  },
+
+  {
+
+    "archive": "Yakuza 6/data/particle.par",
+
+    "source": "arc\\cmn.par\\e_j_0171_kirari_b.dds",
+
+    "source_sha256": "e7023d31666e5b25bc26e72437f58f93b7d8685156506c7937f07d123b9fcf86",
+
+    "output": "media/textures/ProjectYakuza/HitGlint.png",
+
+    "output_sha256": "599e27ec206cfe4d4122a5f3c64c87cb2763039a3b7124aff50bc77391eaa9a9",
+
+    "size": [
+
+      64,
+
+      64
+
+    ],
+
+    "conversion": "DDS decode; additive brightness transferred to alpha with RGB unpremultiplication. Source shape and pixel resolution retained."
+
+  }
+
+]

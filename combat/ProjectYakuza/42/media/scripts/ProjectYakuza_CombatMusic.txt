@@ -1,0 +1,462 @@
+module Base
+
+{
+
+    sound ProjectYakuza_FunkGoesOn
+
+    {
+
+        category = ProjectYakuza_Music,
+
+        master = Music,
+
+        is3D = false,
+
+        loop = false,
+
+        clip
+
+        {
+
+            file = media/sound/ProjectYakuza/FunkGoesOn.ogg,
+
+            volume = 0.80,
+
+        }
+
+    }
+
+    sound ProjectYakuza_BringItOn
+
+    {
+
+        category = ProjectYakuza_Music,
+
+        master = Music,
+
+        is3D = false,
+
+        loop = false,
+
+        clip
+
+        {
+
+            file = media/sound/ProjectYakuza/BringItOn.ogg,
+
+            volume = 0.80,
+
+        }
+
+    }
+
+    sound ProjectYakuza_ReceiveYouVer7
+
+    {
+
+        category = ProjectYakuza_Music,
+
+        master = Music,
+
+        is3D = false,
+
+        loop = false,
+
+        clip
+
+        {
+
+            file = media/sound/ProjectYakuza/ReceiveYouVer7.ogg,
+
+            volume = 0.80,
+
+        }
+
+    }
+
+    sound ProjectYakuza_FlirtWithBomb
+
+    {
+
+        category = ProjectYakuza_Music,
+
+        master = Music,
+
+        is3D = false,
+
+        loop = false,
+
+        clip
+
+        {
+
+            file = media/sound/ProjectYakuza/FlirtWithBomb.ogg,
+
+            volume = 0.80,
+
+        }
+
+    }
+
+    sound ProjectYakuza_SonOfAGun
+
+    {
+
+        category = ProjectYakuza_Music,
+
+        master = Music,
+
+        is3D = false,
+
+        loop = false,
+
+        clip
+
+        {
+
+            file = media/sound/ProjectYakuza/SonOfAGun.ogg,
+
+            volume = 0.80,
+
+        }
+
+    }
+
+    sound ProjectYakuza_PushMeUnderWater
+
+    {
+
+        category = ProjectYakuza_Music,
+
+        master = Music,
+
+        is3D = false,
+
+        loop = false,
+
+        clip
+
+        {
+
+            file = media/sound/ProjectYakuza/PushMeUnderWater.ogg,
+
+            volume = 0.80,
+
+        }
+
+    }
+
+    sound ProjectYakuza_OutlawsLullaby
+
+    {
+
+        category = ProjectYakuza_Music,
+
+        master = Music,
+
+        is3D = false,
+
+        loop = false,
+
+        clip
+
+        {
+
+            file = media/sound/ProjectYakuza/OutlawsLullaby.ogg,
+
+            volume = 0.80,
+
+        }
+
+    }
+
+    sound ProjectYakuza_FunkGoesOnKiwami
+
+    {
+
+        category = ProjectYakuza_Music,
+
+        master = Music,
+
+        is3D = false,
+
+        loop = false,
+
+        clip
+
+        {
+
+            file = media/sound/ProjectYakuza/FunkGoesOnKiwami.ogg,
+
+            volume = 0.80,
+
+        }
+
+    }
+
+    sound ProjectYakuza_PushMeDeepUnderwater
+
+    {
+
+        category = ProjectYakuza_Music,
+
+        master = Music,
+
+        is3D = false,
+
+        loop = false,
+
+        clip
+
+        {
+
+            file = media/sound/ProjectYakuza/PushMeDeepUnderwater.ogg,
+
+            volume = 0.80,
+
+        }
+
+    }
+
+    sound ProjectYakuza_LullabyOfOutlaws
+
+    {
+
+        category = ProjectYakuza_Music,
+
+        master = Music,
+
+        is3D = false,
+
+        loop = false,
+
+        clip
+
+        {
+
+            file = media/sound/ProjectYakuza/LullabyOfOutlaws.ogg,
+
+            volume = 0.80,
+
+        }
+
+    }
+
+    sound ProjectYakuza_ReceiveAndBelieveYou
+
+    {
+
+        category = ProjectYakuza_Music,
+
+        master = Music,
+
+        is3D = false,
+
+        loop = false,
+
+        clip
+
+        {
+
+            file = media/sound/ProjectYakuza/ReceiveAndBelieveYou.ogg,
+
+            volume = 0.80,
+
+        }
+
+    }
+
+    sound ProjectYakuza_Bruise
+
+    {
+
+        category = ProjectYakuza_Music,
+
+        master = Music,
+
+        is3D = false,
+
+        loop = false,
+
+        clip
+
+        {
+
+            file = media/sound/ProjectYakuza/Bruise.ogg,
+
+            volume = 0.80,
+
+        }
+
+    }
+
+    sound ProjectYakuza_CrushAndStrike
+
+    {
+
+        category = ProjectYakuza_Music,
+
+        master = Music,
+
+        is3D = false,
+
+        loop = false,
+
+        clip
+
+        {
+
+            file = media/sound/ProjectYakuza/CrushAndStrike.ogg,
+
+            volume = 0.80,
+
+        }
+
+    }
+
+    sound ProjectYakuza_D2A
+
+    {
+
+        category = ProjectYakuza_Music,
+
+        master = Music,
+
+        is3D = false,
+
+        loop = false,
+
+        clip
+
+        {
+
+            file = media/sound/ProjectYakuza/D2A.ogg,
+
+            volume = 0.80,
+
+        }
+
+    }
+
+    sound ProjectYakuza_RyuKyuHumming
+
+    {
+
+        category = ProjectYakuza_Music,
+
+        master = Music,
+
+        is3D = false,
+
+        loop = false,
+
+        clip
+
+        {
+
+            file = media/sound/ProjectYakuza/RyuKyuHumming.ogg,
+
+            volume = 0.80,
+
+        }
+
+    }
+
+    sound ProjectYakuza_TheMyth
+
+    {
+
+        category = ProjectYakuza_Music,
+
+        master = Music,
+
+        is3D = false,
+
+        loop = false,
+
+        clip
+
+        {
+
+            file = media/sound/ProjectYakuza/TheMyth.ogg,
+
+            volume = 0.80,
+
+        }
+
+    }
+
+    sound ProjectYakuza_IsolatedFight
+
+    {
+
+        category = ProjectYakuza_Music,
+
+        master = Music,
+
+        is3D = false,
+
+        loop = false,
+
+        clip
+
+        {
+
+            file = media/sound/ProjectYakuza/IsolatedFight.ogg,
+
+            volume = 0.80,
+
+        }
+
+    }
+
+    sound ProjectYakuza_TownBully
+
+    {
+
+        category = ProjectYakuza_Music,
+
+        master = Music,
+
+        is3D = false,
+
+        loop = false,
+
+        clip
+
+        {
+
+            file = media/sound/ProjectYakuza/TownBully.ogg,
+
+            volume = 0.80,
+
+        }
+
+    }
+
+    sound ProjectYakuza_KamuroAgain
+
+    {
+
+        category = ProjectYakuza_Music,
+
+        master = Music,
+
+        is3D = false,
+
+        loop = false,
+
+        clip
+
+        {
+
+            file = media/sound/ProjectYakuza/KamuroAgain.ogg,
+
+            volume = 0.80,
+
+        }
+
+    }
+
+}
+

@@ -1,0 +1,121 @@
+require "ProjectYakuza/Runtime"
+local ProjectYakuza=ProjectYakuza
+local F={states=setmetatable({}, {__mode="k"}),pending=setmetatable({}, {__mode="k"}),stocks=setmetatable({}, {__mode="k"}),activationVoices=setmetatable({}, {__mode="k"})}
+ProjectYakuza.Feedback=F
+function F.sound(p,key)
+    local style=p and ProjectYakuza.getPlayerStyle(p)
+    return style and type(style.sounds)=="table" and style.sounds[key] or nil
+end
+function F.play(p,name,volume)
+    if type(name)~="string" or name=="" or not p or not p:isLocalPlayer() then return end
+    local id=p:playSound(name)
+    if type(id)=="number" and id~=0 then p:getEmitter():setVolume(id,volume or 1) end
+    return id
+end
+function F.notice(p,text)
+    if p and p:isLocalPlayer() then F.states[p]={text=text,untilAt=getTimestampMs()+1100} end
+end
+local function unhook()
+    local any=false;for _ in pairs(F.pending) do any=true;break end
+    if not any and F.ticking then Events.OnTick.Remove(F.tick);F.ticking=false end
+end
+function F.cancel(p)F.pending[p]=nil;unhook()end
+function F.stopActivation(p)
+    local voices=F.activationVoices[p]
+    if voices then for _,id in ipairs(voices) do p:getEmitter():stopSound(id) end end
+    F.activationVoices[p]=nil
+    if F.pending[p] and F.pending[p].kind=="heatLayer" then F.cancel(p) end
+end
+function F.activationSound(p,name,volume)
+    local id=F.play(p,name,volume)
+    if type(id)=="number" and id~=0 then
+        F.activationVoices[p]=F.activationVoices[p] or {};table.insert(F.activationVoices[p],id)
+    end
+end
+function F.swing(p,style,step,move)
+    local s=ProjectYakuza.stateFor(p);local kick=move.groundAttack or move.runningAttack or move.quickstepAttack or move.afterLight
+    local hit=ProjectYakuza.Heat.isExtreme(p) and F.sound(p,"heatImpact") or kick and F.sound(p,"kickImpact") or F.sound(p,"punchImpact") or "BareHandsHit"
+    -- This weapon belongs exclusively to the combat framework. Saved tokens are
+    -- migrated on their next swing; no global BareHands sound is changed.
+    local token=p:getPrimaryHandItem()
+    if token and ProjectYakuza.isStyleToken(token) then token:setZombieHitSound(hit) end
+    local swing=kick and F.sound(p,"kickSwing") or F.sound(p,"punchSwing")
+    if not swing then return end
+    local duration=move.duration/(ProjectYakuza.Heat.isExtreme(p) and ProjectYakuza.Heat.config.extremeSpeed or 1)
+    local delay=math.max(0,((move.impact or .2)*duration-.07)*1000)
+    local time=getTimestampMs()
+    F.pending[p]={stamp=s.multiHitToken or s.startedAt,due=time+delay,last=time,sound=swing}
+    if not F.ticking then Events.OnTick.Add(F.tick);F.ticking=true end
+end
+function F.tick()
+    local time=getTimestampMs();local paused=isGamePaused()
+    for p,job in pairs(F.pending) do
+        local dt=math.max(0,time-job.last);job.last=time
+        local s=ProjectYakuza.stateFor(p)
+        if job.kind=="heatLayer" then
+            if not F.activationVoices[p] or not ProjectYakuza.isEquipped(p) or p:isDead() then F.pending[p]=nil
+            elseif paused then job.due=job.due+dt
+            elseif time>=job.due then F.activationSound(p,job.sound,.5);F.pending[p]=nil end
+        elseif not ProjectYakuza.isEquipped(p) or p:isDead() or not s.active or (s.multiHitToken or s.startedAt)~=job.stamp
+            then F.pending[p]=nil
+        elseif paused then job.due=job.due+dt
+        elseif time>=job.due then F.play(p,job.sound,.65);F.pending[p]=nil end
+    end
+    unhook()
+end
+function F.hit(p,z,weapon,damage)
+    if not p or not ProjectYakuza.isEquipped(p) or type(damage)~="number" or damage<=0 then return end
+    local s=ProjectYakuza.stateFor(p);local move=s.groundMove or s.finisherMove
+    if not s.active or not move or (not move.afterLight and not move.groundAttack) then return end
+    local stamp=s.multiHitToken or s.startedAt
+    if s.feedbackStamp==stamp then return end
+    s.feedbackStamp=stamp
+    F.play(p,move.groundAttack and F.sound(p,"kickImpact") or F.sound(p,"finisher"),move.double and .65 or .45)
+end
+function F.heatChanged(p)
+    if not p or not p:isLocalPlayer() then return end
+    local current=ProjectYakuza.Heat.stocks(p);local previous=F.stocks[p];F.stocks[p]=current
+    if previous==nil or current<=previous or ProjectYakuza.Heat.isExtreme(p) or not ProjectYakuza.isEquipped(p) then return end
+    F.play(p,current>=ProjectYakuza.Heat.config.maxStocks and F.sound(p,"heatFull") or F.sound(p,"heatGain"),.55)
+end
+function F.initialise()
+    for i=0,3 do local p=getSpecificPlayer(i);if p then F.stocks[p]=ProjectYakuza.Heat.stocks(p) end end
+end
+function F.clear()
+    F.pending=setmetatable({}, {__mode="k"});unhook()
+    for p in pairs(F.activationVoices) do F.stopActivation(p) end
+end
+ProjectYakuza.on("lightAttackStarted",F.swing)
+ProjectYakuza.on("finisherStarted",F.swing)
+local function specialSwing(p,style,move)F.swing(p,style,0,move)end
+ProjectYakuza.on("quickstepAttackStarted",specialSwing)
+ProjectYakuza.on("runningAttackStarted",specialSwing)
+ProjectYakuza.on("groundAttackStarted",specialSwing)
+ProjectYakuza.on("comboCancelled",F.cancel)
+ProjectYakuza.on("combatHit",F.hit)
+ProjectYakuza.on("heatChanged",F.heatChanged)
+ProjectYakuza.on("grabHeld",function(p)F.play(p,F.sound(p,"grab"),.65);F.notice(p,"GRAB - G: release / MMB: throw")end)
+ProjectYakuza.on("throwHit",function(p)F.play(p,F.sound(p,"throwImpact"),.8);F.notice(p,"THROW")end)
+ProjectYakuza.on("guardHit",function(p)F.play(p,F.sound(p,"guardHit"),.4)end)
+ProjectYakuza.on("guardBroken",function(p)F.play(p,F.sound(p,"guardBreak"),.75);F.notice(p,"GUARD BROKEN")end)
+ProjectYakuza.on("tigerDrop",function(p)
+    local s=F.states[p];local time=getTimestampMs()
+    if s and s.text=="TIGER DROP" and time<s.untilAt then return end
+    F.play(p,F.sound(p,"finisher"),.9);F.notice(p,"TIGER DROP")
+end)
+ProjectYakuza.on("heatActivationStarted",function(p)F.activationSound(p,F.sound(p,"heatStart"),.4);F.notice(p,"EXTREME HEAT")end)
+ProjectYakuza.on("heatActivationFlare",function(p)
+    F.activationSound(p,F.sound(p,"heatOnA"),.65)
+    -- The original hactmode_on sequence delays its second layer by 300 ms.
+    local second=F.sound(p,"heatOnB")
+    if second then
+        F.activationVoices[p]=F.activationVoices[p] or {}
+        local time=getTimestampMs();F.pending[p]={kind="heatLayer",sound=second,due=time+300,last=time}
+        if not F.ticking then Events.OnTick.Add(F.tick);F.ticking=true end
+    end
+end)
+ProjectYakuza.on("heatActivationStopped",function(p,complete)if complete then F.activationVoices[p]=nil else F.stopActivation(p) end end)
+ProjectYakuza.on("extremeHeatEnded",function(p)F.play(p,F.sound(p,"heatOff"),.65)end)
+Events.OnGameStart.Add(F.initialise)
+Events.OnSave.Add(F.clear)
+Events.OnMainMenuEnter.Add(F.clear)

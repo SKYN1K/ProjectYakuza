@@ -10,7 +10,7 @@ local actors={}
 local function list(t)return {size=function()return #t end,get=function(_,i)return t[i+1]end}end
 local nextItem=1000
 local function tokenItem(id)
- return {getID=function()return id end,getFullType=function()return 'DragonCombat.StyleToken' end,
+ return {getID=function()return id end,getFullType=function()return 'ProjectYakuza.StyleToken' end,
  getMinDamage=function()return .3 end,getMaxDamage=function()return .5 end,
  setMaxHitCount=function(self,v)self.maxHit=v end,setWeaponSprite=function(self,v)self.sprite=v end,
  setOriginalWeaponSprite=function(self,v)self.originalSprite=v end}
@@ -92,11 +92,12 @@ sendEquip=function(who)nativeEquips[#nativeEquips+1]={player=who,item=who:getPri
 sendServerCommand=function(to,module,command,args)replies[#replies+1]={to=to,module=module,command=command,args=args}end
 sendClientCommand=function(from,module,command,args)outgoing[#outgoing+1]={from=from,module=module,command=command,args=args}end
 -- SHARED_AND_SERVER
-local DCF=DragonCombat;local P=DCF.NetworkProtocol;local server=DCF.NetworkServer
+ProjectYakuza.FEATURES.grab=true;ProjectYakuza.styles.dragon_of_dojima.actions.grab.enabled=true -- isolate dormant grab lifecycle tests
+local ProjectYakuza=ProjectYakuza;local P=ProjectYakuza.NetworkProtocol;local server=ProjectYakuza.NetworkServer
 local step=0;local seq=0;local eventID=0
 local function snapshot(who,extra)
  seq=math.max(seq,(server.players[who.id] and server.players[who.id].seq or 0))+1;clock=clock+60
- local a={seq=seq,style='dragon_of_dojima',equipped=true,heat=30,fuel=30,extreme=false,clip='DCF_DD_Light01',move='dd_light_01',swing=1}
+ local a={seq=seq,style='dragon_of_dojima',equipped=true,heat=30,fuel=30,extreme=false,clip='ProjectYakuza_DD_Light01',move='dd_light_01',swing=1}
  for k,v in pairs(extra or {})do a[k]=v end
  server.command(P.module,'state',who,a);return a
 end
@@ -104,10 +105,10 @@ local function command(name,args,who)
  eventID=eventID+1;args=args or {};args.event=eventID;server.command(P.module,name,who or p,args)
 end
 check(not P.number(0/0,0,1) and not P.integer(1.1,0,2),'reject NaN and fractional IDs')
-check(P.clip('dragon_of_dojima','DCF_DD_Light01')~=nil,'catalogue has known attack')
+check(P.clip('dragon_of_dojima','ProjectYakuza_DD_Light01')~=nil,'catalogue has known attack')
 check(P.clip('dragon_of_dojima','arbitrary_clip')==nil,'unknown animation rejected')
 snapshot(p);local s=server.players[1]
-check(s.packet.clip=='DCF_DD_Light01','known state accepted')
+check(s.packet.clip=='ProjectYakuza_DD_Light01','known state accepted')
 local accepted=s.seq;snapshot(p,{seq=accepted});check(s.seq==accepted,'stale state rejected')
 snapshot(p,{heat=math.huge});check(s.seq==accepted,'infinite heat rejected')
 snapshot(p,{style='missing'});check(s.seq==accepted,'unknown styles rejected')
@@ -123,13 +124,13 @@ clock=clock+1100;snapshot(p);command('impact',{swing=2,zombie=z1.id})
 z4.x=3;command('extra',{swing=2,zombie=z4.id});check(z4.hits==0,'out-of-range target rejected')
 z4.x=1.1;wall=true;command('extra',{swing=2,zombie=z4.id});wall=false
 check(z4.hits==0,'wall collision rejects extra damage')
-clock=clock+1100;snapshot(p,{phase='enter',clip='DCF_DD_GrabEnter'})
+clock=clock+1100;snapshot(p,{phase='enter',clip='ProjectYakuza_DD_GrabEnter'})
 command('grabRequest',{zombie=z1.id});check(s.grab and z1.useless and z1.ignore,'server grants and freezes one grab lease')
 snapshot(remote);command('grabRequest',{zombie=z1.id},remote)
 check(server.players[2].grab==nil,'second player cannot grab leased zombie')
-snapshot(p,{phase='hold',clip='DCF_DD_GrabHold'});server.tick()
+snapshot(p,{phase='hold',clip='ProjectYakuza_DD_GrabHold'});server.tick()
 check(z1.x==.7 and z1.nextX==.7,'server aligns paired current and next position')
-snapshot(p,{phase='throw',clip='DCF_DD_Throw'});command('throw',{zombie=z1.id})
+snapshot(p,{phase='throw',clip='ProjectYakuza_DD_Throw'});command('throw',{zombie=z1.id})
 check(z1.hits==1 and z1.knock and s.grab==nil and not z1.useless and not z1.ignore,'throw hits once and releases AI lease')
 command('throw',{zombie=z1.id});check(z1.hits==1,'repeated throw does not damage twice')
 z1.health=1;clock=clock+1100;snapshot(p);command('grabRequest',{zombie=z1.id})
@@ -141,56 +142,56 @@ command('counter',{zombie=z1.id});check(z1.kills==1,'counter victim deduplicated
 z2.health=1;z2.attacking=true;z2.target=p;clock=clock+500;snapshot(p)
 command('counter',{zombie=z2.id});check(not z2.kills,'counter cannot reopen within 60 second server cooldown')
 clock=clock+61000;snapshot(p);command('counter',{zombie=z2.id});check(z2.kills==1,'counter ready after server cooldown')
-z3.health=1;z3.target=p;snapshot(p,{clip='DCF_DD_GuardLoop',phase='hold'})
+z3.health=1;z3.target=p;snapshot(p,{clip='ProjectYakuza_DD_GuardLoop',phase='hold'})
 command('guard',{zombie=z3.id});check(z3.outcome=='fail','validated guard cancels bite outcome')
 clock=clock+1100;snapshot(p);z4.health=1;command('grabRequest',{zombie=z4.id});check(s.grab~=nil,'disconnect test owns lease')
 actors[1]=nil;server.tick();check(server.players[1]==nil and not z4.useless,'disconnect restores AI and removes session')
 actors[1]=p
-snapshot(p,{clip='DCF_DD_HeatActivate01',heat=40})
+snapshot(p,{clip='ProjectYakuza_DD_HeatActivate01',heat=40})
 check(p.ghost and p.invincible and server.players[1].packet.protected,'activation gets a bounded server protection lease')
 clock=clock+4000;server.tick();check(not p.ghost and not p.invincible,'expired activation restores original server flags')
-snapshot(p,{clip='DCF_DD_HeatActivate01',heat=40});check(not p.invincible,'same held activation cannot renew invulnerability')
-snapshot(p,{clip='',heat=40});snapshot(p,{clip='DCF_DD_HeatActivate01',heat=40})
+snapshot(p,{clip='ProjectYakuza_DD_HeatActivate01',heat=40});check(not p.invincible,'same held activation cannot renew invulnerability')
+snapshot(p,{clip='',heat=40});snapshot(p,{clip='ProjectYakuza_DD_HeatActivate01',heat=40})
 check(p.invincible,'a later distinct activation can acquire protection')
 snapshot(p,{clip='',heat=40});check(not p.ghost and not p.invincible,'activation completion restores flags immediately')
-DCF.stateFor=function(who)who.combo=who.combo or {active=true,step=1};return who.combo end
-DCF.Heat={states={},stocks=function(who)return math.floor((who.data.DCFHeat or 0)*6/100)end,display=function(who)return who.data.DCFHeat or 0 end,isExtreme=function()return false end,playback=function(who,e)who.speed=e and 1.92 or 1.6 end,onHit=function()end}
-DCF.HeatAura={flash=function(who)who.flashes=(who.flashes or 0)+1 end,update=function(who)who.auraUpdates=(who.auraUpdates or 0)+1 end,clear=function(who)who.auraCleared=true end}
-local effects=0;DCF.HitEffects={spawn=function()effects=effects+1 end}
+ProjectYakuza.stateFor=function(who)who.combo=who.combo or {active=true,step=1};return who.combo end
+ProjectYakuza.Heat={states={},stocks=function(who)return math.floor((who.data.ProjectYakuzaHeat or 0)*6/100)end,display=function(who)return who.data.ProjectYakuzaHeat or 0 end,isExtreme=function()return false end,playback=function(who,e)who.speed=e and 1.92 or 1.6 end,onHit=function()end}
+ProjectYakuza.HeatAura={flash=function(who)who.flashes=(who.flashes or 0)+1 end,update=function(who)who.auraUpdates=(who.auraUpdates or 0)+1 end,clear=function(who)who.auraCleared=true end}
+local effects=0;ProjectYakuza.HitEffects={spawn=function()effects=effects+1 end}
 -- REACTIONS_MODULE
-DCF.Defense={snapActor=function(z,x,y)z.x=x;z.y=y;z.nextX=x;z.nextY=y end}
-DCF.requestAction=function()return true end
-DCF.cancelAction=function()end
-DCF.prepareToken=function(item)item:setMaxHitCount(DCF.MAX_HIT_COUNT)end
+ProjectYakuza.Defense={snapActor=function(z,x,y)z.x=x;z.y=y;z.nextX=x;z.nextY=y end}
+ProjectYakuza.requestAction=function()return true end
+ProjectYakuza.cancelAction=function()end
+ProjectYakuza.prepareToken=function(item)item:setMaxHitCount(ProjectYakuza.MAX_HIT_COUNT)end
 -- CLIENT_MODULE
-local client=DCF.Network
-remote.data.DCFStyle='dragon_of_dojima';remote.equipped=false
-local packet={player=2,seq=1,style='dragon_of_dojima',equipped=true,heat=40,fuel=35,extreme=true,clip='DCF_DD_Light01',move='dd_light_01',swing=1}
+local client=ProjectYakuza.Network
+remote.data.ProjectYakuzaStyle='dragon_of_dojima';remote.equipped=false
+local packet={player=2,seq=1,style='dragon_of_dojima',equipped=true,heat=40,fuel=35,extreme=true,clip='ProjectYakuza_DD_Light01',move='dd_light_01',swing=1}
 client.command(P.module,'state',packet)
-check(DCF.isEquipped(remote) and remote.data.DCFHeat==40 and remote.vars.DCFRemoteClip=='DCF_DD_Light01','remote style heat and safe observer animation applied')
-check(remote.auraUpdates==1 and remote.vars.DCFRemoteObserver,'observer starts once')
+check(ProjectYakuza.isEquipped(remote) and remote.data.ProjectYakuzaHeat==40 and remote.vars.ProjectYakuzaRemoteClip=='ProjectYakuza_DD_Light01','remote style heat and safe observer animation applied')
+check(remote.auraUpdates==1 and remote.vars.ProjectYakuzaRemoteObserver,'observer starts once')
 for i=1,20 do client.update(remote)end
 check(remote.auraUpdates==1,'unchanged remote updates do not restart clips or poll aura repeatedly')
 local impact={player=2,zombie=z3.id,event=1,strong=true,reaction='enemy_01',style='dragon_of_dojima'}
 client.command(P.module,'impact',impact);client.command(P.module,'impact',impact)
-check(effects==1 and z3.vars.DCFEnemyHitClip=='enemy_01' and z3.reaction=='HeadLeft' and z3.lastEvent=='wasHit','remote impact renders once and enters actual native hit reaction state')
+check(effects==1 and z3.vars.ProjectYakuzaEnemyHitClip=='enemy_01' and z3.reaction=='HeadLeft' and z3.lastEvent=='wasHit','remote impact renders once and enters actual native hit reaction state')
 local damage={player=2,zombie=z3.id,event=1,health=.25,amount=.4,kill=false,knock=false}
 local hitsBefore=z3.hits
 client.command(P.module,'damage',damage);client.command(P.module,'damage',damage)
 check(z3.health==.25 and z3.hits==hitsBefore and effects==2,'server result mirrors absolute health without observer Hit calls')
-packet={player=2,seq=2,style='dragon_of_dojima',equipped=true,heat=40,fuel=35,extreme=true,clip='DCF_DD_Light01',move='dd_light_01',swing=2}
+packet={player=2,seq=2,style='dragon_of_dojima',equipped=true,heat=40,fuel=35,extreme=true,clip='ProjectYakuza_DD_Light01',move='dd_light_01',swing=2}
 client.command(P.module,'state',packet);check(client.remote[2].swing==2,'same clip tracks a new attack serial')
-packet.seq=3;packet.clip='DCF_DD_Quickstep01';client.command(P.module,'state',packet)
-check(remote.vars.PerformingAction=='DCF_MP' and remote.vars.IsPerformingAnAction,'timed observer uses BaseAction native action variables')
+packet.seq=3;packet.clip='ProjectYakuza_DD_Quickstep01';client.command(P.module,'state',packet)
+check(remote.vars.PerformingAction=='ProjectYakuza_MP' and remote.vars.IsPerformingAnAction,'timed observer uses BaseAction native action variables')
 packet.seq=4;packet.taunt=1;packet.clip='';client.command(P.module,'state',packet)
 check(remote.flashes==1,'new completion counter flashes remote aura')
 packet.seq=5;client.command(P.module,'state',packet);check(remote.flashes==1,'heartbeat does not repeat completion flash')
-packet.seq=6;packet.clip='DCF_DD_Taunt01';client.command(P.module,'state',packet)
+packet.seq=6;packet.clip='ProjectYakuza_DD_Taunt01';client.command(P.module,'state',packet)
 packet.seq=7;packet.clip='';client.command(P.module,'state',packet);check(remote.flashes==1,'interrupted taunt without completion never flashes')
 packet.seq=8;packet.taunt='invalid';client.command(P.module,'state',packet);check(remote.flashes==1,'malformed completion serial rejected')
-clock=clock+4100;client.tick();check(remote.auraCleared and remote.vars.PerformingAction=='' and not DCF.isEquipped(remote),'stale observer state clears animation and aura')
-p.equipped=true;p.data.DCFStyle='dragon_of_dojima';p.data.DCFHeat=20
-p.vars.DCFActive='true';p.vars.DCFMove='dd_light_01';p.vars.AimFloorAnim='false'
+clock=clock+4100;client.tick();check(remote.auraCleared and remote.vars.PerformingAction=='' and not ProjectYakuza.isEquipped(remote),'stale observer state clears animation and aura')
+p.equipped=true;p.data.ProjectYakuzaStyle='dragon_of_dojima';p.data.ProjectYakuzaHeat=20
+p.vars.ProjectYakuzaActive='true';p.vars.ProjectYakuzaMove='dd_light_01';p.vars.AimFloorAnim='false'
 client.localState(p).equipReady=p.token;client.localState(p).equipStyle='dragon_of_dojima'
 client.swing(p);check(#outgoing>0,'local attack sends snapshot without changing position')
 local outCount=#outgoing;client.capture(p);client.capture(p);check(#outgoing==outCount,'unchanged local snapshots throttle redundant sends')
@@ -213,19 +214,19 @@ client.hit(p,z1,p.token,.3);flush();client.extra(p,z2);flush()
 check(z2.hits==wireHits+1,'client supplemental request and server result perform exactly one Hit across the wire')
 check(z1.health==1,'native primary is not applied by command replay')
 -- Two different states in the same millisecond must both survive the relay.
-clock=clock+1100;snapshot(p,{clip='DCF_DD_Quickstep01',action=1})
+clock=clock+1100;snapshot(p,{clip='ProjectYakuza_DD_Quickstep01',action=1})
 local firstSeq=server.players[1].seq
 server.command(P.module,'state',p,{seq=firstSeq+1,style='dragon_of_dojima',equipped=true,heat=30,fuel=30,
- clip='DCF_DD_Quickstep02',move='dd_light_01',swing=2,action=2})
-check(server.players[1].packet.clip=='DCF_DD_Quickstep02' and server.players[1].packet.action==2,'same-tick action transition is not discarded by a 50ms gate')
+ clip='ProjectYakuza_DD_Quickstep02',move='dd_light_01',swing=2,action=2})
+check(server.players[1].packet.clip=='ProjectYakuza_DD_Quickstep02' and server.players[1].packet.action==2,'same-tick action transition is not discarded by a 50ms gate')
 
 -- Simulate a server with no copy of the saved client-only token. The two
 -- inventories are separate and native inventory delivery can lag the Lua ack.
 clock=clock+1100
 local serverActor=player(3,0);serverActor.inventoryItems={};serverActor.hand=nil;serverActor.equipped=false
-local owner=player(3,0);owner.localPlayer=true;owner.data.DCFStyle='dragon_of_dojima'
+local owner=player(3,0);owner.localPlayer=true;owner.data.ProjectYakuzaStyle='dragon_of_dojima'
 nativeAdds={};nativeEquips={};outgoing={};replies={}
-check(not DCF.isEquipped(owner),'unregistered client weapon cannot start combat')
+check(not ProjectYakuza.isEquipped(owner),'unregistered client weapon cannot start combat')
 check(#outgoing==1 and outgoing[1].command=='equip','saved client-only token requests a server-issued item')
 local request=outgoing[1].args
 server.command(P.module,'equip',serverActor,request)
@@ -234,9 +235,9 @@ check(issued and serverActor:getInventory():getItemWithID(issued:getID())==issue
 check(#nativeAdds==1 and #nativeEquips==1 and nativeEquips[1].item==issued,'server synchronizes inventory before native equip')
 local ack=replies[#replies].args
 client.command(P.module,'equipReady',ack)
-check(not DCF.isEquipped(owner) and owner:getPrimaryHandItem()~=issued,'early equip ack waits for native inventory delivery')
+check(not ProjectYakuza.isEquipped(owner) and owner:getPrimaryHandItem()~=issued,'early equip ack waits for native inventory delivery')
 owner.inventoryItems[#owner.inventoryItems+1]=issued
-check(DCF.isEquipped(owner) and owner:getPrimaryHandItem()==issued and owner.equipSent==1,'combat unlocks only after both peers resolve the same item ID')
+check(ProjectYakuza.isEquipped(owner) and owner:getPrimaryHandItem()==issued and owner.equipSent==1,'combat unlocks only after both peers resolve the same item ID')
 clock=clock+250;local adds=#nativeAdds;client.equip(owner,'dragon_of_dojima')
 server.command(P.module,'equip',serverActor,outgoing[#outgoing].args)
 check(#serverActor.inventoryItems==1 and #nativeAdds==adds,'reselecting a style reuses acknowledged item without duplicate inventory delivery')
@@ -255,27 +256,27 @@ actors[3]=nil;server.players[3]=nil
 -- A new serial must restart the same action without replaying gameplay events.
 clock=clock+1100
 local repeated={player=2,seq=100,style='dragon_of_dojima',equipped=true,heat=30,fuel=30,
- extreme=false,clip='DCF_DD_Quickstep01',move='',swing=8,action=10}
+ extreme=false,clip='ProjectYakuza_DD_Quickstep01',move='',swing=8,action=10}
 client.command(P.module,'state',repeated)
-local cycle=remote.vars.DCFRemoteCycle
+local cycle=remote.vars.ProjectYakuzaRemoteCycle
 repeated.seq=101;repeated.action=11;client.command(P.module,'state',repeated)
-check(remote.vars.DCFRemoteCycle~=cycle and client.remote[2].action==11,'same-direction quickstep selects a fresh observer cycle')
+check(remote.vars.ProjectYakuzaRemoteCycle~=cycle and client.remote[2].action==11,'same-direction quickstep selects a fresh observer cycle')
 local events=z3.events or 0
 client.command(P.module,'impact',{player=2,zombie=z3.id,event=20,strong=true,reaction='not_registered',style='dragon_of_dojima'})
 check(z3.events==events,'unregistered zombie clips cannot enter reaction state')
 local beforeHits=z3.hits
 client.command(P.module,'impact',{player=2,zombie=z3.id,event=21,strong=true,reaction='enemy_02',style='dragon_of_dojima'})
-check(z3.vars.DCFEnemyHitClip=='enemy_02' and z3.events==events+1 and z3.hits==beforeHits,'repeat hit enters reaction state without applying Hit again')
-DCF.Reactions.update(z3,clock+500)
-check(DCF.Reactions.states[z3]~=nil,'reaction survives a delayed native state entry')
-DCF.Reactions.update(z3,clock+800)
-check(DCF.Reactions.states[z3]==nil,'reaction that never enters native state times out')
+check(z3.vars.ProjectYakuzaEnemyHitClip=='enemy_02' and z3.events==events+1 and z3.hits==beforeHits,'repeat hit enters reaction state without applying Hit again')
+ProjectYakuza.Reactions.update(z3,clock+500)
+check(ProjectYakuza.Reactions.states[z3]~=nil,'reaction survives a delayed native state entry')
+ProjectYakuza.Reactions.update(z3,clock+800)
+check(ProjectYakuza.Reactions.states[z3]==nil,'reaction that never enters native state times out')
 
 -- The quickstep stream is bounded by the registered move, path and server quota.
 clock=clock+1100;p.x=0;p.y=0;remote.x=0;remote.y=0;replies={}
-snapshot(p,{clip='DCF_DD_Quickstep01',action=20})
+snapshot(p,{clip='ProjectYakuza_DD_Quickstep01',action=20})
 local function sample(id,x,finished)
- command('step',{step=id,clip='DCF_DD_Quickstep01',x=x,y=0,z=0,fx=1,fy=0,finished=finished})
+ command('step',{step=id,clip='ProjectYakuza_DD_Quickstep01',x=x,y=0,z=0,fx=1,fy=0,finished=finished})
 end
 sample(1,0,false);clock=clock+50;sample(1,.4,false)
 local sampleReply=replies[#replies]
@@ -292,10 +293,10 @@ clock=clock+50;sample(1,.9,false)
 check(server.players[1].step.travel==closedTravel,'late samples cannot reopen completed quickstep')
 clock=clock+50;sample(2,0,true);clock=clock+50;sample(3,0,true);clock=clock+50;sample(4,0,false)
 check(server.players[1].lastStep==3,'server independently enforces three quicksteps per 15 seconds')
-clock=clock+15001;snapshot(p,{clip='DCF_DD_Quickstep01',action=21});sample(4,0,false)
+clock=clock+15001;snapshot(p,{clip='ProjectYakuza_DD_Quickstep01',action=21});sample(4,0,false)
 check(server.players[1].lastStep==4,'quickstep quota releases after rolling window')
 local progress=server.players[1].step.travel
-command('step',{step=4,clip='DCF_DD_Quickstep01',x=0/0,y=0,z=0,fx=1,fy=0})
+command('step',{step=4,clip='ProjectYakuza_DD_Quickstep01',x=0/0,y=0,z=0,fx=1,fy=0})
 check(server.players[1].step.travel==progress,'nonfinite step position rejected')
 
 -- Interpolate only a remote actor. Late or reordered samples never rewind it.
@@ -313,9 +314,9 @@ position.player=1;position.event=200;position.x=1
 local localX=p.x;client.command(P.module,'step',position)
 check(p.x==localX,'observer movement never rewrites the owning player')
 repeated.seq=102;repeated.swing=9;repeated.action=12
-local previousCycle=remote.vars.DCFRemoteCycle
+local previousCycle=remote.vars.ProjectYakuzaRemoteCycle
 client.command(P.module,'state',repeated)
-check(remote.vars.DCFRemoteCycle~=previousCycle,'simultaneous swing and action increments still restart observer clip')
+check(remote.vars.ProjectYakuzaRemoteCycle~=previousCycle,'simultaneous swing and action increments still restart observer clip')
 local effectCount=effects
 client.command(P.module,'impact',{player=2,event=501,zombie=100,strong=true,reaction='enemy_03',style='dragon_of_dojima'})
 check(client.deferred['impact:2:501']~=nil and effects==effectCount,'hit arriving before zombie streams in is retained')
@@ -326,8 +327,8 @@ clock=clock+50;client.tick();check(effects==effectCount+1,'deferred reaction is 
 client.command(P.module,'damage',{player=2,event=502,zombie=101,health=.2,style='dragon_of_dojima'})
 clock=clock+800;client.tick()
 check(client.deferred['damage:2:502']==nil,'unresolved zombie updates expire rather than accumulating')
-DCF.Quicksteps={facing=function()return 1,0 end}
-local stepAction={started=true,context={action={animation='DCF_DD_Quickstep01'}}}
+ProjectYakuza.Quicksteps={facing=function()return 1,0 end}
+local stepAction={started=true,context={action={animation='ProjectYakuza_DD_Quickstep01'}}}
 outgoing={};local updates=p.nativeUpdates or 0
 client.step(p,stepAction,false)
 check(outgoing[#outgoing].command=='step' and p.nativeUpdates==updates+1,'quickstep uses exposed player setter to request native reliable position update')
@@ -335,4 +336,7 @@ local messages=#outgoing;client.step(p,stepAction,false)
 check(#outgoing==messages,'quickstep progress transmission is limited to 20Hz')
 client.step(p,stepAction,true)
 check(#outgoing>messages and outgoing[#outgoing].args.finished,'terminal position bypasses progress throttle')
+ProjectYakuza.FEATURES.grab=false;ProjectYakuza.styles.dragon_of_dojima.actions.grab.enabled=false
+clock=clock+2000;snapshot(p);command('grabRequest',{zombie=z4.id})
+check(not server.players[p.id].grab,'disabled server grab request cannot acquire a lease')
 return 'PASS '..count..' MP authority, duplicate, range, lease, cooldown, observer and throttle checks'

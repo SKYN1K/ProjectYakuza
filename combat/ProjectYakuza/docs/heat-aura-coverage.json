@@ -1,0 +1,75 @@
+[
+
+  {
+
+    "kind": "a",
+
+    "center_x": 0.0,
+
+    "center_height": 39.6,
+
+    "scale_per_tile": 0.25875,
+
+    "lowest_visible_height": 18.641250000000003,
+
+    "left": -13.19625,
+
+    "right": 12.678749999999999
+
+  },
+
+  {
+
+    "kind": "b",
+
+    "center_x": -6.9,
+
+    "center_height": 38.3,
+
+    "scale_per_tile": 0.207,
+
+    "lowest_visible_height": 21.532999999999998,
+
+    "left": -17.457,
+
+    "right": 3.2429999999999986
+
+  },
+
+  {
+
+    "kind": "c",
+
+    "center_x": 6.9,
+
+    "center_height": 38.3,
+
+    "scale_per_tile": 0.207,
+
+    "lowest_visible_height": 21.532999999999998,
+
+    "left": -3.6569999999999983,
+
+    "right": 17.043
+
+  },
+
+  {
+
+    "kind": "b",
+
+    "center_x": 0.0,
+
+    "center_height": 52.6,
+
+    "scale_per_tile": 0.1656,
+
+    "lowest_visible_height": 39.1864,
+
+    "left": -8.4456,
+
+    "right": 8.1144
+
+  }
+
+]

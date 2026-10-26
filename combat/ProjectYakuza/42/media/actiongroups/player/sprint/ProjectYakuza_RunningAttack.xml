@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<transitions>
+ <transition>
+  <transitionTo>melee</transitionTo><asSubstate>false</asSubstate><conditionPriority>50</conditionPriority>
+  <conditions>
+   <isTrue>ProjectYakuzaActive</isTrue><isTrue>ProjectYakuzaRunningAttack</isTrue><isTrue>initiateAttack</isTrue>
+   <notEquals a="Weapon" b=""/><isFalse>rangedWeapon</isFalse><isFalse>bDoShove</isFalse>
+   <isFalse>bDead</isFalse><isFalse>bknockeddown</isFalse><isFalse>bOnFloor</isFalse><isFalse>hashitreaction</isFalse>
+  </conditions>
+ </transition>
+</transitions>

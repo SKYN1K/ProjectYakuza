@@ -1,0 +1,82 @@
+[
+  {
+    "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_SUD_grd_st.gmt",
+    "sha256": "75e81268aa5319499c8c3851601f3298a85f3114c48e445af3ddda0b064f9da5",
+    "clip": "ProjectYakuza_DD_GuardEnter",
+    "fps": 30,
+    "end_frame": 4,
+    "duration": 0.13333333333333333
+  },
+  {
+    "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_SUD_grd_lp.gmt",
+    "sha256": "e88acb71110d3f8df3c7a30fd2261665909a078acdfe4d422b602156d053466c",
+    "clip": "ProjectYakuza_DD_GuardLoop",
+    "fps": 30,
+    "end_frame": 210,
+    "duration": 7
+  },
+  {
+    "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_SUD_grd_en.gmt",
+    "sha256": "7f8a4be268b48fc47ead89d68c5e26d0c588454d790a9f1abe88a3f53cdff8ac",
+    "clip": "ProjectYakuza_DD_GuardExit",
+    "fps": 30,
+    "end_frame": 10,
+    "duration": 0.3333333333333333
+  },
+  {
+    "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_SUD_grd_hed_f.gmt",
+    "sha256": "151912cca0f1a5bfc2a12246a483c608d7e2cc36264c1517925e6747c79b1797",
+    "clip": "ProjectYakuza_DD_GuardHit",
+    "fps": 30,
+    "end_frame": 20,
+    "duration": 0.6666666666666666
+  },
+  {
+    "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_SUD_sy0_sze_l_st.gmt",
+    "sha256": "5ceb33e5236c0d6db71aff46809ad6b5517b905f2d802d27a28ae72d85935521",
+    "clip": "ProjectYakuza_DD_GrabEnter",
+    "fps": 30,
+    "end_frame": 15,
+    "duration": 0.5
+  },
+  {
+    "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_SUD_sy1_sze_l_st.gmt",
+    "sha256": "b392f92c635470add27757064fbf655389fa94ef4bb54b8b1c4bb2b728f9f3de",
+    "clip": "ProjectYakuza_DD_GrabVictimEnter",
+    "fps": 30,
+    "end_frame": 15,
+    "duration": 0.5
+  },
+  {
+    "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_SUD_sy0_gsp_lp.gmt",
+    "sha256": "75781d0ed162608a490adee6bf5d02c6e037c389eed73ec297a710acb1e3da0c",
+    "clip": "ProjectYakuza_DD_GrabHold",
+    "fps": 30,
+    "end_frame": 85,
+    "duration": 2.8333333333333335
+  },
+  {
+    "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_SUD_sy1_gsp_lp.gmt",
+    "sha256": "d5ccc171d38a252f7c2e76ef7c61733eb62963062aa85cda91bedbed00d85f19",
+    "clip": "ProjectYakuza_DD_GrabVictimHold",
+    "fps": 30,
+    "end_frame": 85,
+    "duration": 2.8333333333333335
+  },
+  {
+    "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_SUD_sy0_gsp_to_nge.gmt",
+    "sha256": "e302dcc55b03e74321e67a257f5f73367137b2163da7e285bbc9b3d19d80ac16",
+    "clip": "ProjectYakuza_DD_Throw",
+    "fps": 30,
+    "end_frame": 77,
+    "duration": 2.566666666666667
+  },
+  {
+    "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_SUD_sy1_gsp_to_nge.gmt",
+    "sha256": "b6b0ce78595f62d57645defea21907f87e046d87f8d9787012c6aee88b9135ac",
+    "clip": "ProjectYakuza_DD_ThrowVictim",
+    "fps": 30,
+    "end_frame": 77,
+    "duration": 2.566666666666667
+  }
+]

@@ -1,0 +1,12 @@
+PASS step 1 selected=ProjectYakuza_DD_Light01 exclusively; one native collision event; speed=1.6; upper-body mask excludes root and legs
+
+PASS step 2 selected=ProjectYakuza_DD_Light02 exclusively; one native collision event; speed=1.6; upper-body mask excludes root and legs
+
+PASS step 3 selected=ProjectYakuza_DD_Light03 exclusively; one native collision event; speed=1.6; upper-body mask excludes root and legs
+
+PASS step 4 selected=ProjectYakuza_DD_Light04 exclusively; one native collision event; speed=1.6; upper-body mask excludes root and legs
+
+PASS unequipped: vanilla 1HDefault selected
+
+PASS ground attacks excluded from standing combo
+

@@ -1,0 +1,1547 @@
+[
+  {
+    "path": "42/media/textures/ProjectYakuza_EmptyHand.png",
+    "source_sha256": "980055f32603462384baae4a3dbfa580f0579627bb98c190f84443a047126613",
+    "sha256": "980055f32603462384baae4a3dbfa580f0579627bb98c190f84443a047126613"
+  },
+  {
+    "path": "42/media/textures/Item_ProjectYakuza_Dragon.png",
+    "source_sha256": "f685efe6dce875ccce87ce828e77646fc3b831b358f8128d48347f1039b7858c",
+    "sha256": "f685efe6dce875ccce87ce828e77646fc3b831b358f8128d48347f1039b7858c"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_CombatIdleLoop.x",
+    "source_sha256": "46489635a8a2adf792a3c0fb9fa0ba4efe9f7f121a214c9d14be456cadfa432e",
+    "sha256": "a8be65057d0d84063c0c8f1f8816da13b52a63c6cd8dc81285c4226fc3692815"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_DoubleFinisher01.x",
+    "source_sha256": "7fb328ca5d321a1574acd027b0c52d8aec9cfbb102e990c5c532af4f95d7a02b",
+    "sha256": "b31bccb37638b481fcfc06212e629212fbd074b6a81ba82335eb1041deac661a"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_DoubleFinisher02.x",
+    "source_sha256": "675b9b46b02e843c3b8f7461eb6655fa1396424429e5ea5472f41a620bfae946",
+    "sha256": "6002e6c2836bef1ec9b33c20cfa78de2ccb4307324f4e4173c1021467f02c66f"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_DoubleFinisher03.x",
+    "source_sha256": "acd4b10cc9bf5f8c8856e421a2185e4edf8efcbe58598b7fab999ad6f51e89e1",
+    "sha256": "3eaadd8023b354377a545d26bbc059b55c1916acf60858a58535eabb002fa179"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_DoubleFinisher04.x",
+    "source_sha256": "72971ccef5743b23f77a8ab55a3532039ad4a67f0c54b5ca2416937b6e303e1b",
+    "sha256": "6d51fa9c23a3ac005fbb0929fa1be3581feaf212d0f561477a917d34456345c0"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Finisher01.x",
+    "source_sha256": "76a70d231862ff790d1557d78bf6870aa94e246e85ac386c499c8f3177274c31",
+    "sha256": "6f423c06e6fed65debc3503f024b97fb122355e2ed2d08203009e8ada87fc302"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Finisher02.x",
+    "source_sha256": "65a05eea718e0f25c8ce48b73547339319bb4365c0b5068db90854bdfb630b87",
+    "sha256": "2fffce981ee6d0c191745ae6c4aa30285d9a1181350fbd0e3ce28d28b02592f3"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Finisher03.x",
+    "source_sha256": "c7dd46539a899d126913f030c1bc995d3950335709ad6137a6ee27dd315eb83d",
+    "sha256": "5e3c1254057b168cdfa39a5b87728a94ad7d61a9a276cfd0ff20bcbab123ab7c"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Finisher04.x",
+    "source_sha256": "652f28d28607ef5a12ef7d6d058e32e9bc2f6f27b295670aca956a61fa5e1eb5",
+    "sha256": "26705de56b710be92d166534ae064c076631ff2e5548f65034d18794f7db8987"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Footwork01.x",
+    "source_sha256": "41d29e65585e54f1719d20836da02d58170d59048c787e6f8971a99f4d2c948d",
+    "sha256": "6ec32da579a09a5f685e1f96d7503522e0b80a10023ca4247382c1910e3eecdf"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Footwork02.x",
+    "source_sha256": "a269df2d795e493141e863fc9f360d3762c0e8b82276bd4a7e5a141382e6e822",
+    "sha256": "6e20988ac8b28f40949df72f9e396d4284601ab230fb97e815418846ad31b7ac"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Footwork03.x",
+    "source_sha256": "0ad55d10ed40aaed2ed645ddd4c6a9e4ac575f1c131cb6e2b99e3793f91116eb",
+    "sha256": "8248cd5224d1ddacba29d0c7fe65cb61a89038df7cfc50578725978c2d89cac1"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Footwork04.x",
+    "source_sha256": "156ee3f1c92dd7af5e17f793c70f5335da199b4b319ccfa781bb73a007abd2fd",
+    "sha256": "76c7e9e44deb23f79d10b3ccdd15e4f7070b0c6026040d0e4d408b1af4245e30"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Footwork05.x",
+    "source_sha256": "7083a8a5cbd8f10448e446104e6bd19255242826c0e72d85fba5a65fb8dc1532",
+    "sha256": "42a0bfc7da73c7ab4b57447baf965e4ffd89fb8638775819d5ce4430bcb9936c"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Footwork06.x",
+    "source_sha256": "d05686dabf4e3e7a8288aabd1f331659affedddf9f743a5fed049c194ca93439",
+    "sha256": "602cdc4e4ca7b2265b97bc6c3547977f679a04279b7539bcf985f991f27ff7c9"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Footwork07.x",
+    "source_sha256": "e3a1df277dabe91403a85256f8247ef7a60fc31774c120c6696813ce362e8f84",
+    "sha256": "70f487e5f5ea6600e79bd8d6dff433ba962ba59e78453ffb16525881ec542540"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Footwork08.x",
+    "source_sha256": "6ced691e993efcd1755b64996cea80e246d3efe55f6efdf02a34f468a3a9226b",
+    "sha256": "64e4b7e5355bfe3588e81429a500eda11ab2eda61ef4bdbd781dd0b149ce9831"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Footwork09.x",
+    "source_sha256": "94ec46c679ef13f8dbadc3e9fb79c8d58aef31efa595af28592aeee81fde165e",
+    "sha256": "bad0509758bead2927bce2fa4f277e2c1bc430d7c46e43e5c5a6ce12136d23f4"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Footwork10.x",
+    "source_sha256": "aee6baa07c5cba73f78bb493927dd6660fc42309cf7851e49e101cdce8a0c576",
+    "sha256": "e3655c3488ecc3515808cb74cde1ce4fa58a7d03e116baad53f8aa7512555bba"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Footwork11.x",
+    "source_sha256": "9b1c31c3d4f6e9d4e54904c8e098aeb7bacc68b6fd74775c0e8d8e5a0ae05883",
+    "sha256": "6c1f72d8095217d49d64f9748f167223d137e6b69ef69fafb0c84a9a2a0e24e9"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Footwork12.x",
+    "source_sha256": "331695dc60cac5eb02c7fe3f377f686663f8f84e656bab2424892675d1d7abb4",
+    "sha256": "0a5e204aad8a0e08922b1b5a89ab4927b66e8eed286097cf13b0f9cb62f846e1"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_GrabEnter.x",
+    "source_sha256": "31fe97a246a36f83bb6b851c7f87c0ebc6fb7fde6372b8f07865a93897489f52",
+    "sha256": "d6bc4d7b64f152603a69d79acbdc1cce37b25e714645cce4e416d5ba816896a9"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_GrabHold.x",
+    "source_sha256": "70eb3918029d70a4b4917e1a373b277cf4d256d3dcfb2ef648aa15f11ecf5d24",
+    "sha256": "841e369a2e70e091201ae269b697d5bf53a52060d5293490bd70634d9aa211e6"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_GrabVictimEnter.x",
+    "source_sha256": "8bf07ef4bf78429016e6dc418a09f83b7ceaea501e97d6ab4e222b71c6d1b89e",
+    "sha256": "cbac64dd4d1c236e393942eacc6a0af3ae5f783cbe9a6c86e93fa66295fdf67d"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_GrabVictimHold.x",
+    "source_sha256": "7090aa6a45e70121300353dfd301e3c067403fb2f500c1bce3bd6ab88889a31b",
+    "sha256": "8ef5b0d6b8372dc0625bc092b067264854b15dc38f62f730855f4aa077ab0bf8"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_GrabVictimHoldNative.x",
+    "source_sha256": "8ed094144c622e5c45cb3758c7df571b1b205df9a654f0033811e83e28473a26",
+    "sha256": "5bc5c66e319c72c9ab8958d8251ad265bafa11d787b319c41500bf6e7f68540d"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_GrabVictimWalk.x",
+    "source_sha256": "3d12707165d86a78fad2253916e742f22ab19ca20c233dc16395dc3e29fa24b7",
+    "sha256": "e5906935db52e658c7e4a6a44bcd97e5f2192789dafff594b3d6f0f3bbbaef06"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_GrabVictimWalkBackward.x",
+    "source_sha256": "c467caad0bee5c0a64896fa5c5d8a3d22e6ae3f9bd0a6beeeafbd4b55f783884",
+    "sha256": "13e8305b4bc9c8a3b93ec2ddb614e24f47d81a9c1db3293d457373d69da88995"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_GrabVictimWalkForward.x",
+    "source_sha256": "6f160c1d1d9856960b915238165ffe5121350528ecc222a18786428b9712c2f6",
+    "sha256": "f68d598c522d840b4bdcba777388680e8e7ee0e2f68674026506ed97cf002bec"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_GrabVictimWalkLeft.x",
+    "source_sha256": "ae283b9f52d372e2109156c4898767a9cf1434a8bd4915b29a07418edc41a721",
+    "sha256": "c1f3cf440d9bf5a72824ac76f53fe1586c11ea52e002fa621d18b5b18b48076c"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_GrabVictimWalkRight.x",
+    "source_sha256": "c06c0574ef04fcefe684c232d9727c8caa16a8e33c1602670191b85499d6d92b",
+    "sha256": "2c63fd2d070be438f0e9ab080bc12f9357c8282c57d9e75f0c66df2155d1c261"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_GrabWalk.x",
+    "source_sha256": "2da5545117fc3a1b60be7d6057a1d2f241e6df6a981665e3bd35c03e9db5a7d3",
+    "sha256": "4140dade4dea969954bb315952229864cfda4a709f986b8e438d3fc5cc27a432"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_GroundStomp01.x",
+    "source_sha256": "afa9390e2ed243dd8e5f50df39a8270d701875a6953df1c88bc7f96115363244",
+    "sha256": "bf224bae0feb39486a5828e062523ff15de073272542dfe2e02417bde999e35b"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_GroundStomp02.x",
+    "source_sha256": "1c54c43bc01e384c65649d4f207ba2e9e1a1af2c01a568a53f7708defb36e10d",
+    "sha256": "e7c091938eef5aa051b624176877c9a7ca2c601c8a31dad5aabfddae0bb9ccab"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_GuardEnter.x",
+    "source_sha256": "f0b0cb8414d36d25c62359f69a19fb9b7dc43e181f0a29ac5c26f27c1ce44120",
+    "sha256": "961ca156d849c75cac2e9ec586f525c8f588d93e94cef86f96dd259372ece441"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_GuardExit.x",
+    "source_sha256": "e95016b46853739ef833ab60899b5de7bab6bc8336b4580576f1deb8c76abebb",
+    "sha256": "104e5cc777432e838ed7192d2b041286cb558650c2b1e804a6be1319b77688c7"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_GuardHit.x",
+    "source_sha256": "573b1201f532d7b70e10fa9db8351575ababbc3f642336733e5ae8765d0789b1",
+    "sha256": "ac6e6bd5d0af0a9b0328c6734a9f0cc627a2ec4aa0e8a4328bb97e642d56dc24"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_GuardLoop.x",
+    "source_sha256": "95e8dc471b4fa1fb44f6bb4941c2b2f247faa667cf8ccabfab5c875a9dc801f2",
+    "sha256": "c2c1a70b61bc6115bb8fdf0f9fa6c218fe6c65b6f39071528d592c655d9a1e13"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_HeatActivate01.x",
+    "source_sha256": "e721bc9c8392564bc4cf9877bdc6196b4c3f69eef903e95481453833e5dd6e2a",
+    "sha256": "29cf1441dfbb62f2d55b4fcd47e8125a3d679187828a019cfed84362cf9de731"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_HeatActivate02.x",
+    "source_sha256": "6e4a765156635953741e0efeaa190e59406e5ae3d4af2373ef7a23117b644a24",
+    "sha256": "be9a0693fd5301c4d315b5b8b31ce936a3984f15a20da5485bae7de5c994548e"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_HeatActivate03.x",
+    "source_sha256": "8c1f4b19e9390499233ffabe76c74d46ee267fb6420c99d73a6406ea4d672c4e",
+    "sha256": "e834a48b5eb62a07fcf2faedc5bcf823cca056d39abb89d383dd0d7e0c54ff2f"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_HeatActivate04.x",
+    "source_sha256": "708b3945f6c5f341e1978e32665f59d84ea6ef37df760baf8e0c6aed99fecbf6",
+    "sha256": "07bca28f8971ab7482d74c97fd3c00836fc0809d4ed9ce78de3638d932152545"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Light01.x",
+    "source_sha256": "243eff67f9d019eb5fc33de1b3f50eb2ea456aeb0c1ecfbb4e856303f5f89bf3",
+    "sha256": "79294a1ff6a2589950696a3a8938337b8bc60d4e56537222945f1a34d1466d30"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Light02.x",
+    "source_sha256": "1c2b497a9f5d0acf15a897805ba9443228333ebdf937b50c161d2fb4ea9ba31b",
+    "sha256": "4a37db6fe32599db765bdf0c4386b65917745dac31b5a059c2df8386443e5702"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Light03.x",
+    "source_sha256": "37ce13b79878f2cbc35862f6ec7f9dbc85e7c0518d62b37bd9d9f1e4bb61b922",
+    "sha256": "3d3d04bd21ffc0204e62e79ec78936f58922d3724741ce576d8be0937f46ee55"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Light04.x",
+    "source_sha256": "d9ad95edeae155f93b625b91511ea6dd97eb74f2fc19c8613cfd2459548af242",
+    "sha256": "9ceb5a5ef5713803da69ba6dc69cc0f64380a33da4a855a9ca8b0e6135710e54"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_LinkedDoubleFinisher01.x",
+    "source_sha256": "7291919ca55867e68cde486eeb16681214050af8723d8258af8219abc93502a4",
+    "sha256": "b41bbd5b055b11212e572cd309001a7af9e808f6210448f0e3817e28f0354781"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_LinkedDoubleFinisher02.x",
+    "source_sha256": "bcfa8ecdfea793a2b46b228713ae4aead65afcc766b99ddf320e0500065386be",
+    "sha256": "39d8f00b058a0bf9c2c43b2c331faaf16a0a1b95de2db2960ce1ff0d7e1b51f3"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_LinkedDoubleFinisher03.x",
+    "source_sha256": "4b89061b49efacd823da41d84e5cc667d8ce756a58c4e2e56797257153ca578d",
+    "sha256": "7f6acdd51e3d01b48d9adf210b8045ec3afca8f4ef349979b48dbbb0a1eeac9f"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_LinkedDoubleFinisher04.x",
+    "source_sha256": "407277611c0b09cd1c81f1bb64f26554e46b33fe3896e7e3c4817b21dbc0b56f",
+    "sha256": "fec14c927328326b873a82f222a3ac4799949d84541a575e24af24da533c5885"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_MovingStance.x",
+    "source_sha256": "97b03a4716a5d401a1d2cbda087a8b6da6ea6c2ce2c3fbeae2b464f8b7c0b4a6",
+    "sha256": "88c87492f81791d6a4c070453641415e8d50c058b74726c745a0b72920c29347"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Quickstep01.x",
+    "source_sha256": "086383d9abb3c9e2e9656d6b8383d4643e449e82dacec81e8a1f5194f3fd628d",
+    "sha256": "346a73a15269c703dc8332db3757d6480624c5fe92779be3e9829094c86a1213"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Quickstep02.x",
+    "source_sha256": "429e3b46fa7ec526be667a8e1cec8272eddf91027ec9c16f7cfef995c1501ab9",
+    "sha256": "170cc951500ba62a4e78e2ea262eb0caff70a42f40f7f7f66cd6785218ec6b59"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Quickstep03.x",
+    "source_sha256": "d839dc1454d7de61188095a2b6c390cbd2f8a21946ce54f2127e93d0d700565c",
+    "sha256": "588a1614c6ad316a937f9c5f29b73dbc6534a68b21d5ed5c1cbf0a24ac0d0d6f"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Quickstep04.x",
+    "source_sha256": "acb9c9824ecc6d5c144872e31cc55363e047b5f6d9c45a8b72d7cfd6c0701be3",
+    "sha256": "165132339f4d4e13910a49dba4b425030cf298e6e69887cb90d8d869f4e9fe0f"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_QuickstepAttack01.x",
+    "source_sha256": "dd243792f31d0c17d7335cde70a69914cdc86afa2c51da6e5a562c1787acff66",
+    "sha256": "707becdd5f25e730fa7e80beaf3b7f1519fca0ec918805a33495eb3f4b1e71d1"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_QuickstepAttack02.x",
+    "source_sha256": "624f3b0dc61cedaee40e59b3029ec07382b5fee3e6e6b34c088bdf7200761b2a",
+    "sha256": "9e5a593a12e1ee1dec99e4013423243c0682228a98718a6a22791ea3a62d7e79"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_QuickstepAttack03.x",
+    "source_sha256": "f82cb45b735cded72db09bf95d74c9ce3e8e8c1e6ca3c2784f8d5622d2b6cfa8",
+    "sha256": "a0e3ac1490f6d57e8b3215f6bff88952dcc5944887ea05286449a2e37e5957bd"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_QuickstepAttack04.x",
+    "source_sha256": "37235fada10b63dc5dde6031dff9420b73f8b2ec4f0b5a267750f71097d6b692",
+    "sha256": "591db61e91aab047cebc13a118ba4f2f7ce3176f0680d1b27ccd8f4ad76a24e1"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_RunningAttack01.x",
+    "source_sha256": "d8b507b5d07703dc16ece0162de5f86f6fca71d31401fe04cbff7319068e9f91",
+    "sha256": "67e6b5914b7ec4c1cb1d382018a42665610cef2794d4187d329437e45aa68ca6"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_RunningAttack02.x",
+    "source_sha256": "1494762bdfd4255db3d201ed627e5a2650c63d74c97710a603fca69891d4195f",
+    "sha256": "b96f56becb56d658432d426d30816cbc133e74f35462361e594c2b109de0cb75"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_RunningAttack03.x",
+    "source_sha256": "4448f8e02fc1ca247663203d92227c43200af680f13760a3a1f3996995730745",
+    "sha256": "0c2a28efd36e02705c25723fb5c3db0b0d6b7a49781d12be7eed4d6d95f92ac2"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_RunningAttack04.x",
+    "source_sha256": "6562f464faecb02ae592ee2b764549476428f1fc63ac14ff7d802d089144c58d",
+    "sha256": "ac3b9da5a149d6f66f9cfc69cdd6e0ad88b0d5e9ebc3d9d56bb79f85e3d9507e"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Taunt01.x",
+    "source_sha256": "b90035efa1777bf94e2675b1ba81305fce09bad8aa0b818c8cac3e8308825ed8",
+    "sha256": "d300293a4e9964a3b8a45e5a883afce85252ae1abaa632d98e3e18917a21289d"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Throw.x",
+    "source_sha256": "86af00f8f397563e5943ab4b7885aa45d92b5c8917a3883998fc40b4fe5655e4",
+    "sha256": "7ca8860aa44fe74561917736b92fd6e8f092aad3b9c24321810e96dae53393ca"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_ThrowVictim.x",
+    "source_sha256": "e33a0e9660f84bf2616e23d60f5597255e686010a9a22ee88a576d4b7751f783",
+    "sha256": "96cfd83aa58358682041c3a6a68623312332939cf382a3a3170dd1d710787b4c"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_TigerDrop.x",
+    "source_sha256": "24aa47afceb56b09af686a77f58e88bbaf684cafba02be6dd4a9b129fde8bc86",
+    "sha256": "482c5f8802b0461459a41a108a0632ac8c33730d3395ceaf3cde1cf49fac6f0a"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_EnemyHit01.x",
+    "source_sha256": "9017f538371f71ca5988461cd4bd26df84c79d622359e3b4c602b9962b0d638d",
+    "sha256": "256437bf6fea941dd678d68ea89ed41fc4c0523c01a069260aab6c355b75d6e3"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_EnemyHit02.x",
+    "source_sha256": "3ad10a1accbeb99abc253ed9a9b71b12e0c6550a73a7e29ab0d0f2c00624f5cf",
+    "sha256": "fb22afd52344d69072ac258d5deddd6a935435663c219f3a9ae71d028415d050"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_EnemyHit03.x",
+    "source_sha256": "4e29de0148bcde066f8933045aaae6b02f1669f8bc131852cbd731d6c4ec5bbd",
+    "sha256": "5ee85a0d8ae8d72460c139c14bdeeb3a6f696aeece85368f5f9d59e520702241"
+  },
+  {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_EnemyHit04.x",
+    "source_sha256": "cb42752d2968aa82213316401e3e3f49d9346782c0a938ceee63a106f07b2150",
+    "sha256": "cb0aa331625b0009909982d2399660d73dafd7d2109d8a94df4541aa63efa181"
+  },
+  {
+    "path": "42/media/models_X/Static/ProjectYakuza_EmptyHand.x",
+    "source_sha256": "ff2d5cd598109011fa37956d7c526621801a593947106aca945d2200044264ab",
+    "sha256": "587635951b46be70e1f26c645725d8a041f5119bcd55ef43e6493f6070c3be09"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/BringItOn.ogg",
+    "source_sha256": "dfba41e8a6fad2aa674278184df75ec9a11e725044f189ec5a5e10ee53819462",
+    "sha256": "dfba41e8a6fad2aa674278184df75ec9a11e725044f189ec5a5e10ee53819462"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Bruise.ogg",
+    "source_sha256": "7f76e2f16890d7ffb72b2224beb27b97376d4baa6bc87335321088f593b0de73",
+    "sha256": "7f76e2f16890d7ffb72b2224beb27b97376d4baa6bc87335321088f593b0de73"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/CrushAndStrike.ogg",
+    "source_sha256": "38c467386747944afa74e7661e3b708d7994af7a995da7e627f03cbdd4b89a25",
+    "sha256": "38c467386747944afa74e7661e3b708d7994af7a995da7e627f03cbdd4b89a25"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/D2A.ogg",
+    "source_sha256": "18714ac1289f6bdf84a40e938c9a460104c4961cec3ad4198383dc165d84b48f",
+    "sha256": "18714ac1289f6bdf84a40e938c9a460104c4961cec3ad4198383dc165d84b48f"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/FlirtWithBomb.ogg",
+    "source_sha256": "cd37a596dc217c4721484de60d77de145cca7ec66548ff235462d6379b753adb",
+    "sha256": "cd37a596dc217c4721484de60d77de145cca7ec66548ff235462d6379b753adb"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/FunkGoesOn.ogg",
+    "source_sha256": "a7f757198c73f419945c9d80dda0788d045279fb6eb778ba279b66e959a7887e",
+    "sha256": "a7f757198c73f419945c9d80dda0788d045279fb6eb778ba279b66e959a7887e"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/FunkGoesOnKiwami.ogg",
+    "source_sha256": "faf3d77fe32f222ab85d01cb17bd5c324a46581b32af814281a1d52ca50155c4",
+    "sha256": "faf3d77fe32f222ab85d01cb17bd5c324a46581b32af814281a1d52ca50155c4"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/IsolatedFight.ogg",
+    "source_sha256": "5fd7cdd1360a5e7e3a2ef46ff7190b327115384b370194fd297d3b89bff58835",
+    "sha256": "5fd7cdd1360a5e7e3a2ef46ff7190b327115384b370194fd297d3b89bff58835"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/KamuroAgain.ogg",
+    "source_sha256": "2ffc9fa5513f6d8ed351a5729d5abec791a73299d7b43ecd53c8801581712a48",
+    "sha256": "2ffc9fa5513f6d8ed351a5729d5abec791a73299d7b43ecd53c8801581712a48"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/LullabyOfOutlaws.ogg",
+    "source_sha256": "b38ce2d1eb0e8edf8d08fdd647f74c2088b59d35e6a622004b4fb868c1364def",
+    "sha256": "b38ce2d1eb0e8edf8d08fdd647f74c2088b59d35e6a622004b4fb868c1364def"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/OutlawsLullaby.ogg",
+    "source_sha256": "b29287bdf878424c1ea98797a49643be4494254018ea042921726cb86477139a",
+    "sha256": "b29287bdf878424c1ea98797a49643be4494254018ea042921726cb86477139a"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/PushMeDeepUnderwater.ogg",
+    "source_sha256": "ec8efaab63804a952a5ebfb18dde9023b01ee60c6c6bff7ad6e47b5d9b55be22",
+    "sha256": "ec8efaab63804a952a5ebfb18dde9023b01ee60c6c6bff7ad6e47b5d9b55be22"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/PushMeUnderWater.ogg",
+    "source_sha256": "2ef3204d73c03e9a147b6d5597fe7e02403b8ad3d2d545c38b1aa8581f650d09",
+    "sha256": "2ef3204d73c03e9a147b6d5597fe7e02403b8ad3d2d545c38b1aa8581f650d09"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/ReceiveAndBelieveYou.ogg",
+    "source_sha256": "31774cfd12625601d6ae0354669879a5ffdd9f41891afa381196c5e8eb25dd72",
+    "sha256": "31774cfd12625601d6ae0354669879a5ffdd9f41891afa381196c5e8eb25dd72"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/ReceiveYouVer7.ogg",
+    "source_sha256": "f2bdb5d3a1efc19f3bbe54290204be7c160c9edb51a78ef089c6a79f72488ffc",
+    "sha256": "f2bdb5d3a1efc19f3bbe54290204be7c160c9edb51a78ef089c6a79f72488ffc"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/RyuKyuHumming.ogg",
+    "source_sha256": "1c3fc889510b57eff47de27e98ac4549f4dc02382ce6fb977a61e86a70f35839",
+    "sha256": "1c3fc889510b57eff47de27e98ac4549f4dc02382ce6fb977a61e86a70f35839"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/SonOfAGun.ogg",
+    "source_sha256": "8a65d7bc9d104faa4dad96969268ce2bf143fec508d7268f4b7324d111033a6e",
+    "sha256": "8a65d7bc9d104faa4dad96969268ce2bf143fec508d7268f4b7324d111033a6e"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/TheMyth.ogg",
+    "source_sha256": "b5da8e69979433cd427d3e1a8b096808a44a580ad641b508abb2c002f716f0c2",
+    "sha256": "b5da8e69979433cd427d3e1a8b096808a44a580ad641b508abb2c002f716f0c2"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/TownBully.ogg",
+    "source_sha256": "42dee15ca0c41c025b33bc3e7255b0f5c0fd7ec90e4ca90e1cc3315c71c96d19",
+    "sha256": "42dee15ca0c41c025b33bc3e7255b0f5c0fd7ec90e4ca90e1cc3315c71c96d19"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Y6Combat/act_kiryu_000.ogg",
+    "source_sha256": "111563d54cfff643375146972b72c45d2427e9c1ecffb7663be5581bf011a93d",
+    "sha256": "111563d54cfff643375146972b72c45d2427e9c1ecffb7663be5581bf011a93d"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Y6Combat/act_kiryu_001.ogg",
+    "source_sha256": "7e9a19597a12ddf8362a8660ab89d0790984530fc978eff8c978a5f39c908262",
+    "sha256": "7e9a19597a12ddf8362a8660ab89d0790984530fc978eff8c978a5f39c908262"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Y6Combat/act_kiryu_002.ogg",
+    "source_sha256": "9c2b94ff8a8f9609844a4799552ed74055ceaa947fe72ca715f3467c4b53fa48",
+    "sha256": "9c2b94ff8a8f9609844a4799552ed74055ceaa947fe72ca715f3467c4b53fa48"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Y6Combat/act_kiryu_003.ogg",
+    "source_sha256": "24a32df6abd64b367eabdeff7afee95819f51faa1ffd5ea9906f887a54f94d0e",
+    "sha256": "24a32df6abd64b367eabdeff7afee95819f51faa1ffd5ea9906f887a54f94d0e"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Y6Combat/act_kiryu_004.ogg",
+    "source_sha256": "d5e062b4f81870f61bb67e0ef597eb1c582c439a301fcd07b6ddf0777b7a2d11",
+    "sha256": "d5e062b4f81870f61bb67e0ef597eb1c582c439a301fcd07b6ddf0777b7a2d11"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Y6Combat/act_kiryu_015.ogg",
+    "source_sha256": "bd65e430149a164a71d86378be13d750e3b86bc2599269cde7d0e391a0ca98f3",
+    "sha256": "bd65e430149a164a71d86378be13d750e3b86bc2599269cde7d0e391a0ca98f3"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Y6Combat/act_kiryu_016.ogg",
+    "source_sha256": "11eb2adaf5606ec0a557aea86efa613bb580b7f088bb106efe22e01ac966b242",
+    "sha256": "11eb2adaf5606ec0a557aea86efa613bb580b7f088bb106efe22e01ac966b242"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Y6Combat/act_kiryu_017.ogg",
+    "source_sha256": "7097b9b0ca88f9daa69ca3b78c5303117ac1dd46d16a8a76a44f563fca3ede26",
+    "sha256": "7097b9b0ca88f9daa69ca3b78c5303117ac1dd46d16a8a76a44f563fca3ede26"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Y6Combat/act_kiryu_018.ogg",
+    "source_sha256": "6053fd1327dfbf871b39cea0f9fef2e552c2876193653c3028c5c23fe0c21674",
+    "sha256": "6053fd1327dfbf871b39cea0f9fef2e552c2876193653c3028c5c23fe0c21674"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Y6Combat/act_kiryu_019.ogg",
+    "source_sha256": "420d0aa9c9a0178114f2187196090f61724e46e986f1b12e068330926cb0a0d6",
+    "sha256": "420d0aa9c9a0178114f2187196090f61724e46e986f1b12e068330926cb0a0d6"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Y6Combat/act_kiryu_020.ogg",
+    "source_sha256": "140168d72e88beef3bc023f47a7c3d2162552f23796dfa4490cb3cb1bbcae59b",
+    "sha256": "140168d72e88beef3bc023f47a7c3d2162552f23796dfa4490cb3cb1bbcae59b"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Y6Combat/act_kiryu_021.ogg",
+    "source_sha256": "928cc8526f01a517ce4207bd2f526a12a0685183ca8cc855c703c8af1f4862e4",
+    "sha256": "928cc8526f01a517ce4207bd2f526a12a0685183ca8cc855c703c8af1f4862e4"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Y6Combat/battle_common_000.ogg",
+    "source_sha256": "830a2e6438a7ba07e3da89edc4aad41396f0f21a43706cbaaed1f4d82b3b5ad7",
+    "sha256": "830a2e6438a7ba07e3da89edc4aad41396f0f21a43706cbaaed1f4d82b3b5ad7"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Y6Combat/battle_common_002.ogg",
+    "source_sha256": "285618b6db553d0aa7001e4a823f734147903e550f608cab05685d68e94f2005",
+    "sha256": "285618b6db553d0aa7001e4a823f734147903e550f608cab05685d68e94f2005"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Y6Combat/battle_common_018.ogg",
+    "source_sha256": "e735cde9e712601da1d86c698928c86afb846e672c259ae99ef7f85c8b83de57",
+    "sha256": "e735cde9e712601da1d86c698928c86afb846e672c259ae99ef7f85c8b83de57"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Y6Combat/battle_common_019.ogg",
+    "source_sha256": "7e098e50f6440370ca15d892fe7aa7355d520aea7dfcd325cf6fa7f5fcc4dab1",
+    "sha256": "7e098e50f6440370ca15d892fe7aa7355d520aea7dfcd325cf6fa7f5fcc4dab1"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Y6Combat/battle_common_020.ogg",
+    "source_sha256": "1a53c34d1cfff55fc92789a6dd7290929a001402afa6071e14496f69e31af26c",
+    "sha256": "1a53c34d1cfff55fc92789a6dd7290929a001402afa6071e14496f69e31af26c"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Y6Combat/battle_common_021.ogg",
+    "source_sha256": "cd24dbecdc700e4ba33407e9c13b820d27d803b74dee874fb02b84bad236e41c",
+    "sha256": "cd24dbecdc700e4ba33407e9c13b820d27d803b74dee874fb02b84bad236e41c"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Y6Combat/battle_common_023.ogg",
+    "source_sha256": "f4af3cfb2c8bdd9b065614d35324dcbe703f8aab2af7fee0928e90ffddc071db",
+    "sha256": "f4af3cfb2c8bdd9b065614d35324dcbe703f8aab2af7fee0928e90ffddc071db"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_000.ogg",
+    "source_sha256": "8f2aa69a4deb0928bbf9fafbfff091687106269830385763a99506bcf5eb20f3",
+    "sha256": "8f2aa69a4deb0928bbf9fafbfff091687106269830385763a99506bcf5eb20f3"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_001.ogg",
+    "source_sha256": "e21daa4449c63161a422bdae3cd97f1ecaa4ce4ac54a37d7fae18117598daa9b",
+    "sha256": "e21daa4449c63161a422bdae3cd97f1ecaa4ce4ac54a37d7fae18117598daa9b"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_003.ogg",
+    "source_sha256": "13886a9c86c5a706cbaefbb5305b1d512a96b0f71656466b694f99488b3f34e3",
+    "sha256": "13886a9c86c5a706cbaefbb5305b1d512a96b0f71656466b694f99488b3f34e3"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_004.ogg",
+    "source_sha256": "bcea46d74e06f217f63672ad82abeab097a636138d519c1095c3ab9ec9e4d8a9",
+    "sha256": "bcea46d74e06f217f63672ad82abeab097a636138d519c1095c3ab9ec9e4d8a9"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_007.ogg",
+    "source_sha256": "60e371b12f9ba455fa3241983a39b1a10df82d00b7e463fba43a54cb65f1f8ad",
+    "sha256": "60e371b12f9ba455fa3241983a39b1a10df82d00b7e463fba43a54cb65f1f8ad"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_008.ogg",
+    "source_sha256": "916c19c370cdd09edc2c31a07460ced631ffa084142cd8243ec9725d2c50c5a3",
+    "sha256": "916c19c370cdd09edc2c31a07460ced631ffa084142cd8243ec9725d2c50c5a3"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_009.ogg",
+    "source_sha256": "8db2a09fb30e64d9d83fdc3eb9218e118526d005d14ca11b4a5d19e8b2623bb4",
+    "sha256": "8db2a09fb30e64d9d83fdc3eb9218e118526d005d14ca11b4a5d19e8b2623bb4"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_010.ogg",
+    "source_sha256": "81de88b99cc01613588dd396e28ee2ae238cdff0817f1093ef750e913f00597f",
+    "sha256": "81de88b99cc01613588dd396e28ee2ae238cdff0817f1093ef750e913f00597f"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_011.ogg",
+    "source_sha256": "8de0b107909d940c0b62809399e9581b9cacaa2fc91ac6a75af0e1ef963098a8",
+    "sha256": "8de0b107909d940c0b62809399e9581b9cacaa2fc91ac6a75af0e1ef963098a8"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_012.ogg",
+    "source_sha256": "f302f9c0bc5e52acab3e9518cadd1aab0126995afa2ca5869fe6ddcafa8eabc2",
+    "sha256": "f302f9c0bc5e52acab3e9518cadd1aab0126995afa2ca5869fe6ddcafa8eabc2"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_013.ogg",
+    "source_sha256": "38dce1c59e11d3f8b0de63a8160a461d7518235c0f4055310e8673eb2e6c3852",
+    "sha256": "38dce1c59e11d3f8b0de63a8160a461d7518235c0f4055310e8673eb2e6c3852"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_014.ogg",
+    "source_sha256": "10e20a427825bc6f952ed812a271cd38d6e7886728d1219d71ec2b34021dce15",
+    "sha256": "10e20a427825bc6f952ed812a271cd38d6e7886728d1219d71ec2b34021dce15"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_015.ogg",
+    "source_sha256": "f1f6f9545766dbf377ef1e321c31c66b8831190227b8f57fa233e8e1fbc102ef",
+    "sha256": "f1f6f9545766dbf377ef1e321c31c66b8831190227b8f57fa233e8e1fbc102ef"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_016.ogg",
+    "source_sha256": "cc1b1ea579ae2a728bef3d714a12838588148a1023feed738555346fd1b66b2b",
+    "sha256": "cc1b1ea579ae2a728bef3d714a12838588148a1023feed738555346fd1b66b2b"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_017.ogg",
+    "source_sha256": "eb507edaffa05822aa7225220b3b8ab0e3bc72b24f6b35c528217c1d20ee7687",
+    "sha256": "eb507edaffa05822aa7225220b3b8ab0e3bc72b24f6b35c528217c1d20ee7687"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_018.ogg",
+    "source_sha256": "3b8525f2f2882c26330ad99a8efc292cbf0ea29a6aedad8c561b617594903e72",
+    "sha256": "3b8525f2f2882c26330ad99a8efc292cbf0ea29a6aedad8c561b617594903e72"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_019.ogg",
+    "source_sha256": "a38daeea6328987d5a486900ed4310ceaca0dc8d2ec78c5bb4fe663c96cb85ff",
+    "sha256": "a38daeea6328987d5a486900ed4310ceaca0dc8d2ec78c5bb4fe663c96cb85ff"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_020.ogg",
+    "source_sha256": "d565af8711bfff94c128a26dbf4d3c5977489ba03c8b8d8f3fb3a47e4e0d4462",
+    "sha256": "d565af8711bfff94c128a26dbf4d3c5977489ba03c8b8d8f3fb3a47e4e0d4462"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_021.ogg",
+    "source_sha256": "13b672562fc8da3e6cf3465292375d83b8086d687995ff0bbe0841f631dfe835",
+    "sha256": "13b672562fc8da3e6cf3465292375d83b8086d687995ff0bbe0841f631dfe835"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_022.ogg",
+    "source_sha256": "107cf30e8d9e3be0e4248d5cd609e1f52968f9cad64cf025ba758aea7581fe7e",
+    "sha256": "107cf30e8d9e3be0e4248d5cd609e1f52968f9cad64cf025ba758aea7581fe7e"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_024.ogg",
+    "source_sha256": "f0d0c5624ae3a09a3dd7e09b1c2cd8791ac099fbc7797c33ddc7a78e690636fc",
+    "sha256": "f0d0c5624ae3a09a3dd7e09b1c2cd8791ac099fbc7797c33ddc7a78e690636fc"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_025.ogg",
+    "source_sha256": "c15e816e95071f40c8f1268a21349280582bb7b6ae2d9428d750423ed42f64bb",
+    "sha256": "c15e816e95071f40c8f1268a21349280582bb7b6ae2d9428d750423ed42f64bb"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_026.ogg",
+    "source_sha256": "4632380bcddc417e96344353d75439569701794993de28caa63c2f8579bc6da8",
+    "sha256": "4632380bcddc417e96344353d75439569701794993de28caa63c2f8579bc6da8"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_027.ogg",
+    "source_sha256": "6aa163620836791c4c3bad7a24591b1b04e5e5392584102f7c1d75e3b0a53f8f",
+    "sha256": "6aa163620836791c4c3bad7a24591b1b04e5e5392584102f7c1d75e3b0a53f8f"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_028.ogg",
+    "source_sha256": "07166989f6645772981468e44bdffdc8eb9b8ca55842ab53fbf1f8d0610edb85",
+    "sha256": "07166989f6645772981468e44bdffdc8eb9b8ca55842ab53fbf1f8d0610edb85"
+  },
+  {
+    "path": "42/media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_029.ogg",
+    "source_sha256": "187300425bf5401533d3d218f0d87fb7993c9ef308d077ebdbe7cdd2026583ed",
+    "sha256": "187300425bf5401533d3d218f0d87fb7993c9ef308d077ebdbe7cdd2026583ed"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_a_0.png",
+    "source_sha256": "dfdfc7e0e8e36c2ebe7357b7dc0baaae9cafc8af1400ca88b70c9aa15d41a01f",
+    "sha256": "dfdfc7e0e8e36c2ebe7357b7dc0baaae9cafc8af1400ca88b70c9aa15d41a01f"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_a_1.png",
+    "source_sha256": "fe897693157fad31a1f4efebd8101fd7fe743fd3f0364bbb1b378ab5aa4cfa76",
+    "sha256": "fe897693157fad31a1f4efebd8101fd7fe743fd3f0364bbb1b378ab5aa4cfa76"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_a_10.png",
+    "source_sha256": "54b7a72d1261bf91025c8affb7d6abf4941c38253105a54494c77507ef750dd2",
+    "sha256": "54b7a72d1261bf91025c8affb7d6abf4941c38253105a54494c77507ef750dd2"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_a_11.png",
+    "source_sha256": "52c089a4b995e1d0fb2e2f86d3540dc8f48552471e6a50e9295213f2198ffa0b",
+    "sha256": "52c089a4b995e1d0fb2e2f86d3540dc8f48552471e6a50e9295213f2198ffa0b"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_a_12.png",
+    "source_sha256": "49188ee6a31765eb4b341e3bfe5038594a985794444119031757166abb170b4d",
+    "sha256": "49188ee6a31765eb4b341e3bfe5038594a985794444119031757166abb170b4d"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_a_13.png",
+    "source_sha256": "d2fd6b11e0a82ddcf71cc8957b06ba8abb3a5e25c875d1a3ec19f4146ea4fa4c",
+    "sha256": "d2fd6b11e0a82ddcf71cc8957b06ba8abb3a5e25c875d1a3ec19f4146ea4fa4c"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_a_14.png",
+    "source_sha256": "44eaa8276440650c1b2e9dc6e32ff25b815bafa261d3196c2a78cb296c88fb97",
+    "sha256": "44eaa8276440650c1b2e9dc6e32ff25b815bafa261d3196c2a78cb296c88fb97"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_a_15.png",
+    "source_sha256": "c25edb3942e500099b94822d432b314d80e3f90b5506668a085a77099602c2de",
+    "sha256": "c25edb3942e500099b94822d432b314d80e3f90b5506668a085a77099602c2de"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_a_16.png",
+    "source_sha256": "b9f110137c368dc6494600cad97373d861f38876a80d6c1b91c2e932424cd97f",
+    "sha256": "b9f110137c368dc6494600cad97373d861f38876a80d6c1b91c2e932424cd97f"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_a_17.png",
+    "source_sha256": "a3865f3982284d48d38bd52ec8692fc50eeda02961c7bf27913afe229fa5c164",
+    "sha256": "a3865f3982284d48d38bd52ec8692fc50eeda02961c7bf27913afe229fa5c164"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_a_18.png",
+    "source_sha256": "60970159b80868589b67e4b235355794e0794922a59b0268cdbb7a6c1ee362b3",
+    "sha256": "60970159b80868589b67e4b235355794e0794922a59b0268cdbb7a6c1ee362b3"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_a_19.png",
+    "source_sha256": "d2e435eae76552ed07f5489a008610749338fc04ee902a131e7ee75e3d4be870",
+    "sha256": "d2e435eae76552ed07f5489a008610749338fc04ee902a131e7ee75e3d4be870"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_a_2.png",
+    "source_sha256": "4e6c152a830400e9128920e9a764874310a2c591bd1d2f0784db26aad45e9f2d",
+    "sha256": "4e6c152a830400e9128920e9a764874310a2c591bd1d2f0784db26aad45e9f2d"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_a_20.png",
+    "source_sha256": "b7c6de0c5433a5a6e1ec68588d3fd67d5b7678327dcbaf8cc90187a2f1e4f8c0",
+    "sha256": "b7c6de0c5433a5a6e1ec68588d3fd67d5b7678327dcbaf8cc90187a2f1e4f8c0"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_a_21.png",
+    "source_sha256": "a16f0b1a967ffda8fc8bbff71ea75c0aa26cb903998b8452f0dff551a3a8961d",
+    "sha256": "a16f0b1a967ffda8fc8bbff71ea75c0aa26cb903998b8452f0dff551a3a8961d"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_a_22.png",
+    "source_sha256": "418ad159ddacb426cdbd757f7a222ec116b2141e175429d3d336c14579d30d18",
+    "sha256": "418ad159ddacb426cdbd757f7a222ec116b2141e175429d3d336c14579d30d18"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_a_23.png",
+    "source_sha256": "1a87428c46d674e3d6cb419f92112580e9245f5e1df255152652ca52a4d2a60b",
+    "sha256": "1a87428c46d674e3d6cb419f92112580e9245f5e1df255152652ca52a4d2a60b"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_a_24.png",
+    "source_sha256": "9980886823fa25769ed824eb06b0d8c90ea8cf345644a74055d9eec9d4d1e1f9",
+    "sha256": "9980886823fa25769ed824eb06b0d8c90ea8cf345644a74055d9eec9d4d1e1f9"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_a_25.png",
+    "source_sha256": "0cacdc48e203720e077ea2ecd65b847e6c51debcf82d8e467d3d830e694ff99e",
+    "sha256": "0cacdc48e203720e077ea2ecd65b847e6c51debcf82d8e467d3d830e694ff99e"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_a_26.png",
+    "source_sha256": "586e0b0b126473d5497fee4402c33f26585794fd9c95d12d787cf9258918c7ec",
+    "sha256": "586e0b0b126473d5497fee4402c33f26585794fd9c95d12d787cf9258918c7ec"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_a_27.png",
+    "source_sha256": "9536c2df27164e56e2797cef1d9f8c1480fcd74d4b06fc146ef718d51e3047f1",
+    "sha256": "9536c2df27164e56e2797cef1d9f8c1480fcd74d4b06fc146ef718d51e3047f1"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_a_28.png",
+    "source_sha256": "66a078bd1ca514a82e59f6230c4d838d28d175ddbbe4655a385dc802c4fe34ac",
+    "sha256": "66a078bd1ca514a82e59f6230c4d838d28d175ddbbe4655a385dc802c4fe34ac"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_a_29.png",
+    "source_sha256": "82ea7b9cf8c5f5692e61a3ca38c7c794453e78455b3bc35f89934673937ef819",
+    "sha256": "82ea7b9cf8c5f5692e61a3ca38c7c794453e78455b3bc35f89934673937ef819"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_a_3.png",
+    "source_sha256": "6620ca11917934d3e63d5b9727ce388ae0cd9e1cc58c4c9b8e59faaaf1bb7700",
+    "sha256": "6620ca11917934d3e63d5b9727ce388ae0cd9e1cc58c4c9b8e59faaaf1bb7700"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_a_30.png",
+    "source_sha256": "a815b097376c35a61caea46ae6a95f39078c77a52825c60d06140e16224a48d4",
+    "sha256": "a815b097376c35a61caea46ae6a95f39078c77a52825c60d06140e16224a48d4"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_a_31.png",
+    "source_sha256": "953e911c6a2e236d6d3a1675dd08d805b4403922c3dd3e3bb9c9bc4ec6dfde00",
+    "sha256": "953e911c6a2e236d6d3a1675dd08d805b4403922c3dd3e3bb9c9bc4ec6dfde00"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_a_4.png",
+    "source_sha256": "05fe9acff19abc64a16b40acc1a18287409a41c875f61d57c2f87625e48e120e",
+    "sha256": "05fe9acff19abc64a16b40acc1a18287409a41c875f61d57c2f87625e48e120e"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_a_5.png",
+    "source_sha256": "21f81186b1c44134054482ed9345fe47a93393c67bc1984ea5df07744a09a243",
+    "sha256": "21f81186b1c44134054482ed9345fe47a93393c67bc1984ea5df07744a09a243"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_a_6.png",
+    "source_sha256": "0ddbac9bbd535d02aac868018db3ac77c5b69e142cf2e338626faa5cbcc186da",
+    "sha256": "0ddbac9bbd535d02aac868018db3ac77c5b69e142cf2e338626faa5cbcc186da"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_a_7.png",
+    "source_sha256": "4a7bb04daaa9759d402790990f55c9b4ea5905664d887c2860f29bfcbfda39f9",
+    "sha256": "4a7bb04daaa9759d402790990f55c9b4ea5905664d887c2860f29bfcbfda39f9"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_a_8.png",
+    "source_sha256": "a20f8e9926c54b336097e9d10a61154effa0ab6a99038570a168f99124eb936d",
+    "sha256": "a20f8e9926c54b336097e9d10a61154effa0ab6a99038570a168f99124eb936d"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_a_9.png",
+    "source_sha256": "453fd4f4c7a54d49a236ed33da3bf29233ef7072d0eeb7c0c175b32dc80b6442",
+    "sha256": "453fd4f4c7a54d49a236ed33da3bf29233ef7072d0eeb7c0c175b32dc80b6442"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_b_0.png",
+    "source_sha256": "52c089a4b995e1d0fb2e2f86d3540dc8f48552471e6a50e9295213f2198ffa0b",
+    "sha256": "52c089a4b995e1d0fb2e2f86d3540dc8f48552471e6a50e9295213f2198ffa0b"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_b_1.png",
+    "source_sha256": "49188ee6a31765eb4b341e3bfe5038594a985794444119031757166abb170b4d",
+    "sha256": "49188ee6a31765eb4b341e3bfe5038594a985794444119031757166abb170b4d"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_b_10.png",
+    "source_sha256": "a16f0b1a967ffda8fc8bbff71ea75c0aa26cb903998b8452f0dff551a3a8961d",
+    "sha256": "a16f0b1a967ffda8fc8bbff71ea75c0aa26cb903998b8452f0dff551a3a8961d"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_b_11.png",
+    "source_sha256": "418ad159ddacb426cdbd757f7a222ec116b2141e175429d3d336c14579d30d18",
+    "sha256": "418ad159ddacb426cdbd757f7a222ec116b2141e175429d3d336c14579d30d18"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_b_12.png",
+    "source_sha256": "1a87428c46d674e3d6cb419f92112580e9245f5e1df255152652ca52a4d2a60b",
+    "sha256": "1a87428c46d674e3d6cb419f92112580e9245f5e1df255152652ca52a4d2a60b"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_b_13.png",
+    "source_sha256": "9980886823fa25769ed824eb06b0d8c90ea8cf345644a74055d9eec9d4d1e1f9",
+    "sha256": "9980886823fa25769ed824eb06b0d8c90ea8cf345644a74055d9eec9d4d1e1f9"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_b_14.png",
+    "source_sha256": "0cacdc48e203720e077ea2ecd65b847e6c51debcf82d8e467d3d830e694ff99e",
+    "sha256": "0cacdc48e203720e077ea2ecd65b847e6c51debcf82d8e467d3d830e694ff99e"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_b_15.png",
+    "source_sha256": "586e0b0b126473d5497fee4402c33f26585794fd9c95d12d787cf9258918c7ec",
+    "sha256": "586e0b0b126473d5497fee4402c33f26585794fd9c95d12d787cf9258918c7ec"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_b_16.png",
+    "source_sha256": "9536c2df27164e56e2797cef1d9f8c1480fcd74d4b06fc146ef718d51e3047f1",
+    "sha256": "9536c2df27164e56e2797cef1d9f8c1480fcd74d4b06fc146ef718d51e3047f1"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_b_17.png",
+    "source_sha256": "66a078bd1ca514a82e59f6230c4d838d28d175ddbbe4655a385dc802c4fe34ac",
+    "sha256": "66a078bd1ca514a82e59f6230c4d838d28d175ddbbe4655a385dc802c4fe34ac"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_b_18.png",
+    "source_sha256": "82ea7b9cf8c5f5692e61a3ca38c7c794453e78455b3bc35f89934673937ef819",
+    "sha256": "82ea7b9cf8c5f5692e61a3ca38c7c794453e78455b3bc35f89934673937ef819"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_b_19.png",
+    "source_sha256": "a815b097376c35a61caea46ae6a95f39078c77a52825c60d06140e16224a48d4",
+    "sha256": "a815b097376c35a61caea46ae6a95f39078c77a52825c60d06140e16224a48d4"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_b_2.png",
+    "source_sha256": "d2fd6b11e0a82ddcf71cc8957b06ba8abb3a5e25c875d1a3ec19f4146ea4fa4c",
+    "sha256": "d2fd6b11e0a82ddcf71cc8957b06ba8abb3a5e25c875d1a3ec19f4146ea4fa4c"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_b_20.png",
+    "source_sha256": "953e911c6a2e236d6d3a1675dd08d805b4403922c3dd3e3bb9c9bc4ec6dfde00",
+    "sha256": "953e911c6a2e236d6d3a1675dd08d805b4403922c3dd3e3bb9c9bc4ec6dfde00"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_b_21.png",
+    "source_sha256": "dfdfc7e0e8e36c2ebe7357b7dc0baaae9cafc8af1400ca88b70c9aa15d41a01f",
+    "sha256": "dfdfc7e0e8e36c2ebe7357b7dc0baaae9cafc8af1400ca88b70c9aa15d41a01f"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_b_22.png",
+    "source_sha256": "fe897693157fad31a1f4efebd8101fd7fe743fd3f0364bbb1b378ab5aa4cfa76",
+    "sha256": "fe897693157fad31a1f4efebd8101fd7fe743fd3f0364bbb1b378ab5aa4cfa76"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_b_23.png",
+    "source_sha256": "4e6c152a830400e9128920e9a764874310a2c591bd1d2f0784db26aad45e9f2d",
+    "sha256": "4e6c152a830400e9128920e9a764874310a2c591bd1d2f0784db26aad45e9f2d"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_b_24.png",
+    "source_sha256": "6620ca11917934d3e63d5b9727ce388ae0cd9e1cc58c4c9b8e59faaaf1bb7700",
+    "sha256": "6620ca11917934d3e63d5b9727ce388ae0cd9e1cc58c4c9b8e59faaaf1bb7700"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_b_25.png",
+    "source_sha256": "05fe9acff19abc64a16b40acc1a18287409a41c875f61d57c2f87625e48e120e",
+    "sha256": "05fe9acff19abc64a16b40acc1a18287409a41c875f61d57c2f87625e48e120e"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_b_26.png",
+    "source_sha256": "21f81186b1c44134054482ed9345fe47a93393c67bc1984ea5df07744a09a243",
+    "sha256": "21f81186b1c44134054482ed9345fe47a93393c67bc1984ea5df07744a09a243"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_b_27.png",
+    "source_sha256": "0ddbac9bbd535d02aac868018db3ac77c5b69e142cf2e338626faa5cbcc186da",
+    "sha256": "0ddbac9bbd535d02aac868018db3ac77c5b69e142cf2e338626faa5cbcc186da"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_b_28.png",
+    "source_sha256": "4a7bb04daaa9759d402790990f55c9b4ea5905664d887c2860f29bfcbfda39f9",
+    "sha256": "4a7bb04daaa9759d402790990f55c9b4ea5905664d887c2860f29bfcbfda39f9"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_b_29.png",
+    "source_sha256": "a20f8e9926c54b336097e9d10a61154effa0ab6a99038570a168f99124eb936d",
+    "sha256": "a20f8e9926c54b336097e9d10a61154effa0ab6a99038570a168f99124eb936d"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_b_3.png",
+    "source_sha256": "44eaa8276440650c1b2e9dc6e32ff25b815bafa261d3196c2a78cb296c88fb97",
+    "sha256": "44eaa8276440650c1b2e9dc6e32ff25b815bafa261d3196c2a78cb296c88fb97"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_b_30.png",
+    "source_sha256": "453fd4f4c7a54d49a236ed33da3bf29233ef7072d0eeb7c0c175b32dc80b6442",
+    "sha256": "453fd4f4c7a54d49a236ed33da3bf29233ef7072d0eeb7c0c175b32dc80b6442"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_b_31.png",
+    "source_sha256": "54b7a72d1261bf91025c8affb7d6abf4941c38253105a54494c77507ef750dd2",
+    "sha256": "54b7a72d1261bf91025c8affb7d6abf4941c38253105a54494c77507ef750dd2"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_b_4.png",
+    "source_sha256": "c25edb3942e500099b94822d432b314d80e3f90b5506668a085a77099602c2de",
+    "sha256": "c25edb3942e500099b94822d432b314d80e3f90b5506668a085a77099602c2de"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_b_5.png",
+    "source_sha256": "b9f110137c368dc6494600cad97373d861f38876a80d6c1b91c2e932424cd97f",
+    "sha256": "b9f110137c368dc6494600cad97373d861f38876a80d6c1b91c2e932424cd97f"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_b_6.png",
+    "source_sha256": "a3865f3982284d48d38bd52ec8692fc50eeda02961c7bf27913afe229fa5c164",
+    "sha256": "a3865f3982284d48d38bd52ec8692fc50eeda02961c7bf27913afe229fa5c164"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_b_7.png",
+    "source_sha256": "60970159b80868589b67e4b235355794e0794922a59b0268cdbb7a6c1ee362b3",
+    "sha256": "60970159b80868589b67e4b235355794e0794922a59b0268cdbb7a6c1ee362b3"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_b_8.png",
+    "source_sha256": "d2e435eae76552ed07f5489a008610749338fc04ee902a131e7ee75e3d4be870",
+    "sha256": "d2e435eae76552ed07f5489a008610749338fc04ee902a131e7ee75e3d4be870"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_b_9.png",
+    "source_sha256": "b7c6de0c5433a5a6e1ec68588d3fd67d5b7678327dcbaf8cc90187a2f1e4f8c0",
+    "sha256": "b7c6de0c5433a5a6e1ec68588d3fd67d5b7678327dcbaf8cc90187a2f1e4f8c0"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_c_0.png",
+    "source_sha256": "1a87428c46d674e3d6cb419f92112580e9245f5e1df255152652ca52a4d2a60b",
+    "sha256": "1a87428c46d674e3d6cb419f92112580e9245f5e1df255152652ca52a4d2a60b"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_c_1.png",
+    "source_sha256": "9980886823fa25769ed824eb06b0d8c90ea8cf345644a74055d9eec9d4d1e1f9",
+    "sha256": "9980886823fa25769ed824eb06b0d8c90ea8cf345644a74055d9eec9d4d1e1f9"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_c_10.png",
+    "source_sha256": "fe897693157fad31a1f4efebd8101fd7fe743fd3f0364bbb1b378ab5aa4cfa76",
+    "sha256": "fe897693157fad31a1f4efebd8101fd7fe743fd3f0364bbb1b378ab5aa4cfa76"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_c_11.png",
+    "source_sha256": "4e6c152a830400e9128920e9a764874310a2c591bd1d2f0784db26aad45e9f2d",
+    "sha256": "4e6c152a830400e9128920e9a764874310a2c591bd1d2f0784db26aad45e9f2d"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_c_12.png",
+    "source_sha256": "6620ca11917934d3e63d5b9727ce388ae0cd9e1cc58c4c9b8e59faaaf1bb7700",
+    "sha256": "6620ca11917934d3e63d5b9727ce388ae0cd9e1cc58c4c9b8e59faaaf1bb7700"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_c_13.png",
+    "source_sha256": "05fe9acff19abc64a16b40acc1a18287409a41c875f61d57c2f87625e48e120e",
+    "sha256": "05fe9acff19abc64a16b40acc1a18287409a41c875f61d57c2f87625e48e120e"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_c_14.png",
+    "source_sha256": "21f81186b1c44134054482ed9345fe47a93393c67bc1984ea5df07744a09a243",
+    "sha256": "21f81186b1c44134054482ed9345fe47a93393c67bc1984ea5df07744a09a243"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_c_15.png",
+    "source_sha256": "0ddbac9bbd535d02aac868018db3ac77c5b69e142cf2e338626faa5cbcc186da",
+    "sha256": "0ddbac9bbd535d02aac868018db3ac77c5b69e142cf2e338626faa5cbcc186da"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_c_16.png",
+    "source_sha256": "4a7bb04daaa9759d402790990f55c9b4ea5905664d887c2860f29bfcbfda39f9",
+    "sha256": "4a7bb04daaa9759d402790990f55c9b4ea5905664d887c2860f29bfcbfda39f9"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_c_17.png",
+    "source_sha256": "a20f8e9926c54b336097e9d10a61154effa0ab6a99038570a168f99124eb936d",
+    "sha256": "a20f8e9926c54b336097e9d10a61154effa0ab6a99038570a168f99124eb936d"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_c_18.png",
+    "source_sha256": "453fd4f4c7a54d49a236ed33da3bf29233ef7072d0eeb7c0c175b32dc80b6442",
+    "sha256": "453fd4f4c7a54d49a236ed33da3bf29233ef7072d0eeb7c0c175b32dc80b6442"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_c_19.png",
+    "source_sha256": "54b7a72d1261bf91025c8affb7d6abf4941c38253105a54494c77507ef750dd2",
+    "sha256": "54b7a72d1261bf91025c8affb7d6abf4941c38253105a54494c77507ef750dd2"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_c_2.png",
+    "source_sha256": "0cacdc48e203720e077ea2ecd65b847e6c51debcf82d8e467d3d830e694ff99e",
+    "sha256": "0cacdc48e203720e077ea2ecd65b847e6c51debcf82d8e467d3d830e694ff99e"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_c_20.png",
+    "source_sha256": "52c089a4b995e1d0fb2e2f86d3540dc8f48552471e6a50e9295213f2198ffa0b",
+    "sha256": "52c089a4b995e1d0fb2e2f86d3540dc8f48552471e6a50e9295213f2198ffa0b"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_c_21.png",
+    "source_sha256": "49188ee6a31765eb4b341e3bfe5038594a985794444119031757166abb170b4d",
+    "sha256": "49188ee6a31765eb4b341e3bfe5038594a985794444119031757166abb170b4d"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_c_22.png",
+    "source_sha256": "d2fd6b11e0a82ddcf71cc8957b06ba8abb3a5e25c875d1a3ec19f4146ea4fa4c",
+    "sha256": "d2fd6b11e0a82ddcf71cc8957b06ba8abb3a5e25c875d1a3ec19f4146ea4fa4c"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_c_23.png",
+    "source_sha256": "44eaa8276440650c1b2e9dc6e32ff25b815bafa261d3196c2a78cb296c88fb97",
+    "sha256": "44eaa8276440650c1b2e9dc6e32ff25b815bafa261d3196c2a78cb296c88fb97"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_c_24.png",
+    "source_sha256": "c25edb3942e500099b94822d432b314d80e3f90b5506668a085a77099602c2de",
+    "sha256": "c25edb3942e500099b94822d432b314d80e3f90b5506668a085a77099602c2de"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_c_25.png",
+    "source_sha256": "b9f110137c368dc6494600cad97373d861f38876a80d6c1b91c2e932424cd97f",
+    "sha256": "b9f110137c368dc6494600cad97373d861f38876a80d6c1b91c2e932424cd97f"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_c_26.png",
+    "source_sha256": "a3865f3982284d48d38bd52ec8692fc50eeda02961c7bf27913afe229fa5c164",
+    "sha256": "a3865f3982284d48d38bd52ec8692fc50eeda02961c7bf27913afe229fa5c164"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_c_27.png",
+    "source_sha256": "60970159b80868589b67e4b235355794e0794922a59b0268cdbb7a6c1ee362b3",
+    "sha256": "60970159b80868589b67e4b235355794e0794922a59b0268cdbb7a6c1ee362b3"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_c_28.png",
+    "source_sha256": "d2e435eae76552ed07f5489a008610749338fc04ee902a131e7ee75e3d4be870",
+    "sha256": "d2e435eae76552ed07f5489a008610749338fc04ee902a131e7ee75e3d4be870"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_c_29.png",
+    "source_sha256": "b7c6de0c5433a5a6e1ec68588d3fd67d5b7678327dcbaf8cc90187a2f1e4f8c0",
+    "sha256": "b7c6de0c5433a5a6e1ec68588d3fd67d5b7678327dcbaf8cc90187a2f1e4f8c0"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_c_3.png",
+    "source_sha256": "586e0b0b126473d5497fee4402c33f26585794fd9c95d12d787cf9258918c7ec",
+    "sha256": "586e0b0b126473d5497fee4402c33f26585794fd9c95d12d787cf9258918c7ec"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_c_30.png",
+    "source_sha256": "a16f0b1a967ffda8fc8bbff71ea75c0aa26cb903998b8452f0dff551a3a8961d",
+    "sha256": "a16f0b1a967ffda8fc8bbff71ea75c0aa26cb903998b8452f0dff551a3a8961d"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_c_31.png",
+    "source_sha256": "418ad159ddacb426cdbd757f7a222ec116b2141e175429d3d336c14579d30d18",
+    "sha256": "418ad159ddacb426cdbd757f7a222ec116b2141e175429d3d336c14579d30d18"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_c_4.png",
+    "source_sha256": "9536c2df27164e56e2797cef1d9f8c1480fcd74d4b06fc146ef718d51e3047f1",
+    "sha256": "9536c2df27164e56e2797cef1d9f8c1480fcd74d4b06fc146ef718d51e3047f1"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_c_5.png",
+    "source_sha256": "66a078bd1ca514a82e59f6230c4d838d28d175ddbbe4655a385dc802c4fe34ac",
+    "sha256": "66a078bd1ca514a82e59f6230c4d838d28d175ddbbe4655a385dc802c4fe34ac"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_c_6.png",
+    "source_sha256": "82ea7b9cf8c5f5692e61a3ca38c7c794453e78455b3bc35f89934673937ef819",
+    "sha256": "82ea7b9cf8c5f5692e61a3ca38c7c794453e78455b3bc35f89934673937ef819"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_c_7.png",
+    "source_sha256": "a815b097376c35a61caea46ae6a95f39078c77a52825c60d06140e16224a48d4",
+    "sha256": "a815b097376c35a61caea46ae6a95f39078c77a52825c60d06140e16224a48d4"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_c_8.png",
+    "source_sha256": "953e911c6a2e236d6d3a1675dd08d805b4403922c3dd3e3bb9c9bc4ec6dfde00",
+    "sha256": "953e911c6a2e236d6d3a1675dd08d805b4403922c3dd3e3bb9c9bc4ec6dfde00"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatWisp_c_9.png",
+    "source_sha256": "dfdfc7e0e8e36c2ebe7357b7dc0baaae9cafc8af1400ca88b70c9aa15d41a01f",
+    "sha256": "dfdfc7e0e8e36c2ebe7357b7dc0baaae9cafc8af1400ca88b70c9aa15d41a01f"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HitGlint.png",
+    "source_sha256": "599e27ec206cfe4d4122a5f3c64c87cb2763039a3b7124aff50bc77391eaa9a9",
+    "sha256": "599e27ec206cfe4d4122a5f3c64c87cb2763039a3b7124aff50bc77391eaa9a9"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HitSparks.png",
+    "source_sha256": "115586a2e9dc94a95b069d9b1e45eff901b41c44a49427053c60a5c9b7229eb9",
+    "sha256": "115586a2e9dc94a95b069d9b1e45eff901b41c44a49427053c60a5c9b7229eb9"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/TauntBurstspark_0.png",
+    "source_sha256": "08bac823dea4be75f4761b61061e4dce96215719742b66a35638986df85c84a9",
+    "sha256": "08bac823dea4be75f4761b61061e4dce96215719742b66a35638986df85c84a9"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/TauntBurstwispL_0.png",
+    "source_sha256": "4ec24192cc37bd5e1223561eab26d1325a012a9ee8380109909066da7d4c5c8b",
+    "sha256": "4ec24192cc37bd5e1223561eab26d1325a012a9ee8380109909066da7d4c5c8b"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/TauntBurstwispR_0.png",
+    "source_sha256": "18e86ad3f7f614ebbd36f09635d24ffdafeb0e58b5684109f766eebd169b8e71",
+    "sha256": "18e86ad3f7f614ebbd36f09635d24ffdafeb0e58b5684109f766eebd169b8e71"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/WorldHit_normal_0.png",
+    "source_sha256": "e697ee8d0cb20c53eec4fefa95bdc7c31dd47566110fa2a8471ad60a780a84c9",
+    "sha256": "e697ee8d0cb20c53eec4fefa95bdc7c31dd47566110fa2a8471ad60a780a84c9"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/WorldHit_normal_1.png",
+    "source_sha256": "f4083ea04772172f2a6d6a5ac80cef077b56120399f097c27fcaccaca83d91a6",
+    "sha256": "f4083ea04772172f2a6d6a5ac80cef077b56120399f097c27fcaccaca83d91a6"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/WorldHit_normal_10.png",
+    "source_sha256": "d0a4af1bc1ac592f5e45be7a109c4dfc44bfa62d4ed2c0491d5384961ceba918",
+    "sha256": "d0a4af1bc1ac592f5e45be7a109c4dfc44bfa62d4ed2c0491d5384961ceba918"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/WorldHit_normal_11.png",
+    "source_sha256": "ec12f7ce0271319f4d4d504be7c6c65811dfc90d393bd60d9087d05e82a4d6f1",
+    "sha256": "ec12f7ce0271319f4d4d504be7c6c65811dfc90d393bd60d9087d05e82a4d6f1"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/WorldHit_normal_12.png",
+    "source_sha256": "ae415836a8d865ebcc96382617195f8bb6988af1d1606426a8ae2831c0f60c76",
+    "sha256": "ae415836a8d865ebcc96382617195f8bb6988af1d1606426a8ae2831c0f60c76"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/WorldHit_normal_13.png",
+    "source_sha256": "4ed84408b851648e3411b58dec0d4e2016ec1acf0d0bed286e901cd9bff505c6",
+    "sha256": "4ed84408b851648e3411b58dec0d4e2016ec1acf0d0bed286e901cd9bff505c6"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/WorldHit_normal_14.png",
+    "source_sha256": "4ae15c2e3d66145f777d628d4ef515bebfd0b4717b548968abb9adb62fb4c6cc",
+    "sha256": "4ae15c2e3d66145f777d628d4ef515bebfd0b4717b548968abb9adb62fb4c6cc"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/WorldHit_normal_15.png",
+    "source_sha256": "052c48aa8b5e4f2c40bcd0d1bb7a4b93276276285dfa3e8a971b435dc88fdfee",
+    "sha256": "052c48aa8b5e4f2c40bcd0d1bb7a4b93276276285dfa3e8a971b435dc88fdfee"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/WorldHit_normal_2.png",
+    "source_sha256": "78cdc9e6043dcee4c7a3b0c442d648bb5c396157f9cbfd6618d30f2bce1efd3a",
+    "sha256": "78cdc9e6043dcee4c7a3b0c442d648bb5c396157f9cbfd6618d30f2bce1efd3a"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/WorldHit_normal_3.png",
+    "source_sha256": "4f1dda680671de146f24425646437c90caa86795a03ec42d6702b59ad3c68ddc",
+    "sha256": "4f1dda680671de146f24425646437c90caa86795a03ec42d6702b59ad3c68ddc"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/WorldHit_normal_4.png",
+    "source_sha256": "5dae0bbef34403a1d0da16a1ad88de3e25d3e01b7201d0ce80420c04d6fe7c5c",
+    "sha256": "5dae0bbef34403a1d0da16a1ad88de3e25d3e01b7201d0ce80420c04d6fe7c5c"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/WorldHit_normal_5.png",
+    "source_sha256": "05cc8f35c0c847d42ed5e89c9d230d273bf7b3e36e04a7f22d5edecb1314df0e",
+    "sha256": "05cc8f35c0c847d42ed5e89c9d230d273bf7b3e36e04a7f22d5edecb1314df0e"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/WorldHit_normal_6.png",
+    "source_sha256": "ee7c0fba6ece63a9539dc5529512ff76240ecbf2b55b62de7976f27d6ee1842f",
+    "sha256": "ee7c0fba6ece63a9539dc5529512ff76240ecbf2b55b62de7976f27d6ee1842f"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/WorldHit_normal_7.png",
+    "source_sha256": "4dd13b8f9437a7821fc59fad0ca0885443cddd37d3b44b05bd07bb8bb36c20e3",
+    "sha256": "4dd13b8f9437a7821fc59fad0ca0885443cddd37d3b44b05bd07bb8bb36c20e3"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/WorldHit_normal_8.png",
+    "source_sha256": "7694371145c497636aab5b63c3b02f3aed3d1510d5fbf2bb49ec996dddd104a4",
+    "sha256": "7694371145c497636aab5b63c3b02f3aed3d1510d5fbf2bb49ec996dddd104a4"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/WorldHit_normal_9.png",
+    "source_sha256": "bd5dc96bf63a990d512b67f22197ecaa99af62e87761da5d47d53d37c7a990a3",
+    "sha256": "bd5dc96bf63a990d512b67f22197ecaa99af62e87761da5d47d53d37c7a990a3"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/WorldHit_strong_0.png",
+    "source_sha256": "df66ed6d473eb2eb14fe3f7fbc5ba1e1813ff5af4f790c08d62eeccff6f50af6",
+    "sha256": "df66ed6d473eb2eb14fe3f7fbc5ba1e1813ff5af4f790c08d62eeccff6f50af6"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/WorldHit_strong_1.png",
+    "source_sha256": "a6a18b5d04c328f4f3488833f3b1961f4747326d399fee0e1a72321f699e3075",
+    "sha256": "a6a18b5d04c328f4f3488833f3b1961f4747326d399fee0e1a72321f699e3075"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/WorldHit_strong_10.png",
+    "source_sha256": "7afc589186137414140031ebcbfda56384a7b2f46e3f7ecf5cfe9df494ddd7fa",
+    "sha256": "7afc589186137414140031ebcbfda56384a7b2f46e3f7ecf5cfe9df494ddd7fa"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/WorldHit_strong_11.png",
+    "source_sha256": "68b913fbb44a1b3fb3cf5abc446ee8d60ff5987ec5a657b8a09d9846f725a894",
+    "sha256": "68b913fbb44a1b3fb3cf5abc446ee8d60ff5987ec5a657b8a09d9846f725a894"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/WorldHit_strong_12.png",
+    "source_sha256": "ec9e913994448200e511d817705ab1b5e41afe230f9721a229879fe4d53b0fd5",
+    "sha256": "ec9e913994448200e511d817705ab1b5e41afe230f9721a229879fe4d53b0fd5"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/WorldHit_strong_13.png",
+    "source_sha256": "32ef1f960412771ab1359b3a05974378f90bdacffc6a31a59f9565cfe988c5e5",
+    "sha256": "32ef1f960412771ab1359b3a05974378f90bdacffc6a31a59f9565cfe988c5e5"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/WorldHit_strong_14.png",
+    "source_sha256": "2455b05e335f80d6a9c987f2e75a0855f98e8e8f4af950e88fc5e4465a76d654",
+    "sha256": "2455b05e335f80d6a9c987f2e75a0855f98e8e8f4af950e88fc5e4465a76d654"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/WorldHit_strong_15.png",
+    "source_sha256": "052c48aa8b5e4f2c40bcd0d1bb7a4b93276276285dfa3e8a971b435dc88fdfee",
+    "sha256": "052c48aa8b5e4f2c40bcd0d1bb7a4b93276276285dfa3e8a971b435dc88fdfee"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/WorldHit_strong_2.png",
+    "source_sha256": "5e089575c6cb4021706db3a3bf8bf5c986b1482a718cd88cf975bcfd2fcdfddb",
+    "sha256": "5e089575c6cb4021706db3a3bf8bf5c986b1482a718cd88cf975bcfd2fcdfddb"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/WorldHit_strong_3.png",
+    "source_sha256": "b4ff514bc02c8dbd56e1a369a3390513f715c923b79396bdee73c22670cf38fd",
+    "sha256": "b4ff514bc02c8dbd56e1a369a3390513f715c923b79396bdee73c22670cf38fd"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/WorldHit_strong_4.png",
+    "source_sha256": "08723b042256dbd44d9687e3fdfd602ad9247531f217b2b8e564042d640ea3c4",
+    "sha256": "08723b042256dbd44d9687e3fdfd602ad9247531f217b2b8e564042d640ea3c4"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/WorldHit_strong_5.png",
+    "source_sha256": "4bcff1ae26578dd94ae810f25247fc041ed0c01a43dc8300dff8b8506e36fec4",
+    "sha256": "4bcff1ae26578dd94ae810f25247fc041ed0c01a43dc8300dff8b8506e36fec4"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/WorldHit_strong_6.png",
+    "source_sha256": "28b9fbb24715dd33c85c9b05db1ca7eaf60b9c21e374726077e985c57367eff0",
+    "sha256": "28b9fbb24715dd33c85c9b05db1ca7eaf60b9c21e374726077e985c57367eff0"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/WorldHit_strong_7.png",
+    "source_sha256": "72740a07b88a210588611d60cdaf65f14dcc1318e77af8fafbf5bc5e82744684",
+    "sha256": "72740a07b88a210588611d60cdaf65f14dcc1318e77af8fafbf5bc5e82744684"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/WorldHit_strong_8.png",
+    "source_sha256": "372babe1877fc5fa635c792289b7ea5836e6bbe92d87a39987ecb3e917408f6f",
+    "sha256": "372babe1877fc5fa635c792289b7ea5836e6bbe92d87a39987ecb3e917408f6f"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/WorldHit_strong_9.png",
+    "source_sha256": "a3a7ddf6c2e6eba54ba8cfeae0d1b810afcef02f25b053e6ff26e03b18a2530c",
+    "sha256": "a3a7ddf6c2e6eba54ba8cfeae0d1b810afcef02f25b053e6ff26e03b18a2530c"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatHUD/BarEmpty.png",
+    "source_sha256": "cff96952d1b770ca4831670b25190b441168610ee6b3468c2cd43c1b8695a823",
+    "sha256": "cff96952d1b770ca4831670b25190b441168610ee6b3468c2cd43c1b8695a823"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatHUD/BarFrame.png",
+    "source_sha256": "e88658b366fc169f570062224285782d8a5b5200283c2b9f98ee15fcbe4efbed",
+    "sha256": "e88658b366fc169f570062224285782d8a5b5200283c2b9f98ee15fcbe4efbed"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_0.png",
+    "source_sha256": "81e286e84353d5d97a9803658366872ea85d5aa059e666c6675c8306e01bc595",
+    "sha256": "81e286e84353d5d97a9803658366872ea85d5aa059e666c6675c8306e01bc595"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_1.png",
+    "source_sha256": "98f203ed87285057cb43d0c0fe3c807e15ef4bb68bb29ab6f64ff636963a58aa",
+    "sha256": "98f203ed87285057cb43d0c0fe3c807e15ef4bb68bb29ab6f64ff636963a58aa"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_10.png",
+    "source_sha256": "22dec3e871364b91ab1c4c70ca82b415f07720b9c8fe3b7da9ec7a03f39407df",
+    "sha256": "22dec3e871364b91ab1c4c70ca82b415f07720b9c8fe3b7da9ec7a03f39407df"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_11.png",
+    "source_sha256": "10612c75f9d31c9b691389cd7e1370c304178440503b19cb9b14f48571beb267",
+    "sha256": "10612c75f9d31c9b691389cd7e1370c304178440503b19cb9b14f48571beb267"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_12.png",
+    "source_sha256": "47e394f67fa36417dc558a921076504962dc1ca224babe6311da2251c51c9aa7",
+    "sha256": "47e394f67fa36417dc558a921076504962dc1ca224babe6311da2251c51c9aa7"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_13.png",
+    "source_sha256": "42cb6d6219981bc770c7b5340702436b5e7105039ea9650a74aac1ce708fb3e9",
+    "sha256": "42cb6d6219981bc770c7b5340702436b5e7105039ea9650a74aac1ce708fb3e9"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_14.png",
+    "source_sha256": "3d3f45c63ada2db3cc81d8725f3ca393c0a2f00ee0ee7d743b4980b058dca08c",
+    "sha256": "3d3f45c63ada2db3cc81d8725f3ca393c0a2f00ee0ee7d743b4980b058dca08c"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_15.png",
+    "source_sha256": "1994bb2b56c592d52a1cc0a62de06a4984ec0e921f50e2919889dc1fb30818a7",
+    "sha256": "1994bb2b56c592d52a1cc0a62de06a4984ec0e921f50e2919889dc1fb30818a7"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_16.png",
+    "source_sha256": "dc2e021c87ff3de48ff072c5dc3fbbf73f35adb9e836777a6b8cdc0ae7ae7d67",
+    "sha256": "dc2e021c87ff3de48ff072c5dc3fbbf73f35adb9e836777a6b8cdc0ae7ae7d67"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_17.png",
+    "source_sha256": "60f7245dc087a510790d01718655a99a8644917e94bf80f820df1d12d59fb88d",
+    "sha256": "60f7245dc087a510790d01718655a99a8644917e94bf80f820df1d12d59fb88d"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_18.png",
+    "source_sha256": "6ad13b15d25998e27bc3ada99f89c46a3cd1ef6176b116bbc900e2659e249476",
+    "sha256": "6ad13b15d25998e27bc3ada99f89c46a3cd1ef6176b116bbc900e2659e249476"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_19.png",
+    "source_sha256": "d7091f93c263eaa3bab95a1342d951aa0c1548234ddd53b53ae65ca4e229261c",
+    "sha256": "d7091f93c263eaa3bab95a1342d951aa0c1548234ddd53b53ae65ca4e229261c"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_2.png",
+    "source_sha256": "5251ece26ed1af5a54a885b74c18006cfd7db3f73edd5c7f33d9b3fab3df0949",
+    "sha256": "5251ece26ed1af5a54a885b74c18006cfd7db3f73edd5c7f33d9b3fab3df0949"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_20.png",
+    "source_sha256": "985457d2ad762e760c8aadfa6d449aeaa5052d7f61d9a894d2ecf3a012e81501",
+    "sha256": "985457d2ad762e760c8aadfa6d449aeaa5052d7f61d9a894d2ecf3a012e81501"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_21.png",
+    "source_sha256": "c480781ab02618a5c0a2609c7c6397b2022ef21195ab35483bca9c65b3fe0818",
+    "sha256": "c480781ab02618a5c0a2609c7c6397b2022ef21195ab35483bca9c65b3fe0818"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_22.png",
+    "source_sha256": "1e44984298a61e574c63bb46aaacb6e7219cef109ddafd611b677bf5ef6ae0de",
+    "sha256": "1e44984298a61e574c63bb46aaacb6e7219cef109ddafd611b677bf5ef6ae0de"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_23.png",
+    "source_sha256": "0cde116451a6b88fedb66e79924091e6dd646179ffe3cecc6b56375630fa1bb4",
+    "sha256": "0cde116451a6b88fedb66e79924091e6dd646179ffe3cecc6b56375630fa1bb4"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_24.png",
+    "source_sha256": "dcf12a87114aa1d774a7e42106bc3d1f547ed42c8ced3b6c4f71f099fd141315",
+    "sha256": "dcf12a87114aa1d774a7e42106bc3d1f547ed42c8ced3b6c4f71f099fd141315"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_25.png",
+    "source_sha256": "c2aa299847790b90824ed915d52ff0f08fd9f0f1ec338f2da88c7e331b9e75c0",
+    "sha256": "c2aa299847790b90824ed915d52ff0f08fd9f0f1ec338f2da88c7e331b9e75c0"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_26.png",
+    "source_sha256": "98a23ac376df91638ee64f48fc352287abcec591b0f8bf54f6b3a44bc1077ded",
+    "sha256": "98a23ac376df91638ee64f48fc352287abcec591b0f8bf54f6b3a44bc1077ded"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_27.png",
+    "source_sha256": "2dee2e5c83a244e6c55db1bc12fb8267be455816b3b2ac19948b54fd779d073d",
+    "sha256": "2dee2e5c83a244e6c55db1bc12fb8267be455816b3b2ac19948b54fd779d073d"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_28.png",
+    "source_sha256": "734ee11daa89b4c659c74019a1784c2d02333a143c5e555a6e2a4e06bb785900",
+    "sha256": "734ee11daa89b4c659c74019a1784c2d02333a143c5e555a6e2a4e06bb785900"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_29.png",
+    "source_sha256": "1be876da743e9d4cbc49aead7bef730e018e8253fcd50c34cec4b1ff4c737721",
+    "sha256": "1be876da743e9d4cbc49aead7bef730e018e8253fcd50c34cec4b1ff4c737721"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_3.png",
+    "source_sha256": "4f3324794f63730ee3f46a0349abc9d7de054ed0475c8062aa11c766d19c2fe3",
+    "sha256": "4f3324794f63730ee3f46a0349abc9d7de054ed0475c8062aa11c766d19c2fe3"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_30.png",
+    "source_sha256": "6472c1af0fff982b141135b259dcb0ee43b87fa4196ff4fe427d540fc23017da",
+    "sha256": "6472c1af0fff982b141135b259dcb0ee43b87fa4196ff4fe427d540fc23017da"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_31.png",
+    "source_sha256": "3778d2779e9682ba5791a97a7094248b01328ba6b48d26afdf1e9d620d5a1d6d",
+    "sha256": "3778d2779e9682ba5791a97a7094248b01328ba6b48d26afdf1e9d620d5a1d6d"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_4.png",
+    "source_sha256": "80cf7035b256eb24d1ab34fd6e9e61be68d7aac2c7ae7d25cdac99be8f7a3cd8",
+    "sha256": "80cf7035b256eb24d1ab34fd6e9e61be68d7aac2c7ae7d25cdac99be8f7a3cd8"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_5.png",
+    "source_sha256": "863d9d0f212f56cff4b37ce63d2afa5ef98b92348ed4b2c7e065de04634e1be9",
+    "sha256": "863d9d0f212f56cff4b37ce63d2afa5ef98b92348ed4b2c7e065de04634e1be9"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_6.png",
+    "source_sha256": "fc3f9700e5ec13c0949bcfdbb0a9320a76562a70588bd556bb973e8a137dfa40",
+    "sha256": "fc3f9700e5ec13c0949bcfdbb0a9320a76562a70588bd556bb973e8a137dfa40"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_7.png",
+    "source_sha256": "d46289b1b50585ad9a383a6aa3d6eb5419614b792c1f90b7384dbda09348a991",
+    "sha256": "d46289b1b50585ad9a383a6aa3d6eb5419614b792c1f90b7384dbda09348a991"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_8.png",
+    "source_sha256": "c07ff7242976b3a97623b283a083b41a881b5d87413ee29f9d51f7725909cf3a",
+    "sha256": "c07ff7242976b3a97623b283a083b41a881b5d87413ee29f9d51f7725909cf3a"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_9.png",
+    "source_sha256": "d5a6490a516e878690c733d9c6d8beaaf985ddafdc80cc790143e2bd418abf6b",
+    "sha256": "d5a6490a516e878690c733d9c6d8beaaf985ddafdc80cc790143e2bd418abf6b"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatHUD/OriginalCombatAtlas.png",
+    "source_sha256": "697fa8a42d1307b59f3f07c36e19dacb05909bf259d28bdca3cb94bf9a262936",
+    "sha256": "697fa8a42d1307b59f3f07c36e19dacb05909bf259d28bdca3cb94bf9a262936"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/HeatHUD/OriginalDragonAtlas.png",
+    "source_sha256": "35c014497cbc595d3fe91cf051069417c5ee834e417867f94c5d00b368441d01",
+    "sha256": "35c014497cbc595d3fe91cf051069417c5ee834e417867f94c5d00b368441d01"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/StyleSelector/KiwamiDragon.png",
+    "source_sha256": "f685efe6dce875ccce87ce828e77646fc3b831b358f8128d48347f1039b7858c",
+    "sha256": "f685efe6dce875ccce87ce828e77646fc3b831b358f8128d48347f1039b7858c"
+  },
+  {
+    "path": "42/media/textures/ProjectYakuza/StyleSelector/KiwamiLife.png",
+    "source_sha256": "b0cce8e51e8f48ca17329bf655541af40349cfb116c616786244e7f739e1f185",
+    "sha256": "b0cce8e51e8f48ca17329bf655541af40349cfb116c616786244e7f739e1f185"
+  }
+]

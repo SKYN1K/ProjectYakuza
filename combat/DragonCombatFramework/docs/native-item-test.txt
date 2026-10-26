@@ -1,5 +1,0 @@
-getItemType=base:weapon
-getSwingAnim=Bat
-getMaxDamage=0.65
-getMaxRange=1.25
-getWeaponSprite=DCF_EmptyHand

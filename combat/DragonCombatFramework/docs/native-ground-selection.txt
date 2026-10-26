@@ -1,6 +1,0 @@
-PASS normal floor attack variant 1: exclusive Kiryu clip; MeleeToFloor once; Floor reaction; full body; normal/Extreme speed
-PASS normal floor attack variant 2: exclusive Kiryu clip; MeleeToFloor once; Floor reaction; full body; normal/Extreme speed
-PASS ground nodes exclude standing, unequipped and styles without ground attacks
-PASS native stomp variant 1: exclusive Kiryu clip; Stomp once; Floor reaction; full body; normal/Extreme speed
-PASS native stomp variant 2: exclusive Kiryu clip; Stomp once; Floor reaction; full body; normal/Extreme speed
-PASS ground nodes exclude standing, unequipped and styles without ground attacks

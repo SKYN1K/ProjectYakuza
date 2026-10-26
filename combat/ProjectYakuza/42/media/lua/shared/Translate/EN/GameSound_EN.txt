@@ -1,0 +1,78 @@
+GameSound_EN = {
+
+    GameSound_Category_ProjectYakuza_Effects = "Project Yakuza - Effects",
+
+    GameSound_Category_ProjectYakuza_Music = "Dragon of Dojima - Music",
+
+    GameSound_ProjectYakuza_Y6_PunchImpact = "Punch impacts",
+
+    GameSound_ProjectYakuza_Y6_KickImpact = "Kick impacts",
+
+    GameSound_ProjectYakuza_Y6_HeatImpact = "Extreme Heat impacts",
+
+    GameSound_ProjectYakuza_Y6_ThrowImpact = "Throw impacts",
+
+    GameSound_ProjectYakuza_Y6_PunchSwing = "Punch swings",
+
+    GameSound_ProjectYakuza_Y6_KickSwing = "Kick swings",
+
+    GameSound_ProjectYakuza_Y6_Grab = "Grab",
+
+    GameSound_ProjectYakuza_Y6_Finisher = "Finisher impacts",
+
+    GameSound_ProjectYakuza_Y6_GuardBreak = "Guard break",
+
+    GameSound_ProjectYakuza_Y6_HeatGain = "Heat orb gained",
+
+    GameSound_ProjectYakuza_Y6_HeatFull = "Heat gauge full",
+
+    GameSound_ProjectYakuza_Y6_HeatOnA = "Extreme Heat activation - first layer",
+
+    GameSound_ProjectYakuza_Y6_HeatOnB = "Extreme Heat activation - second layer",
+
+    GameSound_ProjectYakuza_Y6_HeatOff = "Extreme Heat ends",
+
+    GameSound_ProjectYakuza_Y6_ChargeStart = "Activation charge starts",
+
+    GameSound_ProjectYakuza_Y6_ChargeEnd = "Activation charge ends",
+
+    GameSound_ProjectYakuza_FunkGoesOn = "Funk Goes On",
+
+    GameSound_ProjectYakuza_BringItOn = "Bring It On",
+
+    GameSound_ProjectYakuza_ReceiveYouVer7 = "Receive You Ver. 7",
+
+    GameSound_ProjectYakuza_FlirtWithBomb = "Flirt With Bomb",
+
+    GameSound_ProjectYakuza_SonOfAGun = "Son of a Gun",
+
+    GameSound_ProjectYakuza_PushMeUnderWater = "Push Me Under Water",
+
+    GameSound_ProjectYakuza_OutlawsLullaby = "Outlaw's Lullaby",
+
+    GameSound_ProjectYakuza_FunkGoesOnKiwami = "Funk Goes On 極",
+
+    GameSound_ProjectYakuza_PushMeDeepUnderwater = "Push Me Deep Underwater",
+
+    GameSound_ProjectYakuza_LullabyOfOutlaws = "Lullaby of Outlaws",
+
+    GameSound_ProjectYakuza_ReceiveAndBelieveYou = "Receive and Believe You",
+
+    GameSound_ProjectYakuza_Bruise = "Bruise",
+
+    GameSound_ProjectYakuza_CrushAndStrike = "Crush & Strike",
+
+    GameSound_ProjectYakuza_D2A = "D 2 A",
+
+    GameSound_ProjectYakuza_RyuKyuHumming = "Ryu-Kyu Humming",
+
+    GameSound_ProjectYakuza_TheMyth = "The Myth",
+
+    GameSound_ProjectYakuza_IsolatedFight = "Isolated Fight",
+
+    GameSound_ProjectYakuza_TownBully = "Town Bully",
+
+    GameSound_ProjectYakuza_KamuroAgain = "KAMURO again",
+
+}
+

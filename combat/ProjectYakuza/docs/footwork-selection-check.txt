@@ -1,0 +1,34 @@
+PASS group 1: exclusive normal/slow selection, looped, style/token/aim guards; native blend mapping
+
+PASS group 2: exclusive normal/slow selection, looped, style/token/aim guards; native blend mapping
+
+PASS group 3: exclusive normal/slow selection, looped, style/token/aim guards; native blend mapping
+
+Failed to load file Guid table.
+
+Failed to load file Guid table.
+
+Failed to load file Guid table.
+
+Failed to load file Guid table.
+
+Failed to load file Guid table.
+
+Failed to load file Guid table.
+
+Failed to load file Guid table.
+
+Failed to load file Guid table.
+
+Failed to load file Guid table.
+
+Failed to load file Guid table.
+
+Failed to load file Guid table.
+
+Failed to load file Guid table.
+
+Failed to load file Guid table.
+
+Failed to load file Guid table.
+

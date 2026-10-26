@@ -1,0 +1,68 @@
+UI_EN = {
+
+    UI_ProjectYakuza_OptionsTitle = "Project Yakuza",
+
+    UI_ProjectYakuza_AudioTitle = "Audio",
+
+    UI_ProjectYakuza_MusicVolume = "Music",
+
+    UI_ProjectYakuza_HitVolume = "Sounds",
+
+    UI_ProjectYakuza_VoiceVolume = "Voices",
+
+    UI_ProjectYakuza_AudioDescription = "Music, combat sound effects, and combat voice lines have separate volume controls. Zero mutes that group. Voices affects only combat lines requested by this mod.",
+
+    UI_ProjectYakuza_Bind_light = "Light attack input",
+
+    UI_ProjectYakuza_Key_light = "Light attack keyboard key",
+
+    UI_ProjectYakuza_Bind_finisher = "Finisher / double finisher input",
+
+    UI_ProjectYakuza_Key_finisher = "Finisher / double finisher keyboard key",
+
+    UI_ProjectYakuza_Bind_runningLight = "Running attack input",
+
+    UI_ProjectYakuza_Key_runningLight = "Running attack keyboard key",
+
+    UI_ProjectYakuza_Bind_dropkick = "Running dropkick input",
+
+    UI_ProjectYakuza_Key_dropkick = "Running dropkick keyboard key",
+
+    UI_ProjectYakuza_Bind_quickstepAttack = "Quickstep attack input",
+
+    UI_ProjectYakuza_Key_quickstepAttack = "Quickstep attack keyboard key",
+
+    UI_ProjectYakuza_Bind_counter = "Tiger Drop input",
+
+    UI_ProjectYakuza_Key_counter = "Tiger Drop keyboard key",
+
+    UI_ProjectYakuza_Bind_throw = "Throw input (temporarily disabled)",
+
+    UI_ProjectYakuza_Key_throw = "Throw held zombie keyboard key",
+
+    UI_ProjectYakuza_Bind_quickstep = "Quickstep input",
+
+    UI_ProjectYakuza_Key_quickstep = "Quickstep keyboard key",
+
+    UI_ProjectYakuza_Bind_block = "Block input",
+
+    UI_ProjectYakuza_Key_block = "Block keyboard key",
+
+    UI_ProjectYakuza_Bind_grab = "Grab / release input (temporarily disabled)",
+
+    UI_ProjectYakuza_Key_grab = "Grab / release keyboard key",
+
+    UI_ProjectYakuza_Bind_taunt = "Taunt input",
+
+    UI_ProjectYakuza_Key_taunt = "Taunt keyboard key",
+
+    UI_ProjectYakuza_Bind_extremeHeat = "Extreme Heat activation input",
+
+    UI_ProjectYakuza_Key_extremeHeat = "Extreme Heat activation keyboard key",
+
+    UI_ProjectYakuza_Bind_styles = "Style selector input",
+
+    UI_ProjectYakuza_Key_styles = "Style selector keyboard key",
+
+}
+

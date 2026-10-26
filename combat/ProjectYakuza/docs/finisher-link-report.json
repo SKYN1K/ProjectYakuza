@@ -1,0 +1,123 @@
+[
+
+  {
+
+    "branch": 1,
+
+    "first_exit_frame": 25,
+
+    "window_close_frame": 28,
+
+    "source_entry_frame": 0,
+
+    "bridge_frames": 4,
+
+    "impact_frame": 28,
+
+    "end_frame": 82,
+
+    "duration_seconds": 2.7333333333333334,
+
+    "impact_fraction": 0.34146341463414637,
+
+    "first_end_frame": 57,
+
+    "entry_error_degrees": 0.0,
+
+    "original_source": "P_KRU_BTL_SUD_ath_01_finW_md.gmt",
+
+    "source_preserved_after_frame": 4
+
+  },
+
+  {
+
+    "branch": 2,
+
+    "first_exit_frame": 31,
+
+    "window_close_frame": 34,
+
+    "source_entry_frame": 4,
+
+    "bridge_frames": 5,
+
+    "impact_frame": 24,
+
+    "end_frame": 77,
+
+    "duration_seconds": 2.566666666666667,
+
+    "impact_fraction": 0.3116883116883117,
+
+    "first_end_frame": 53,
+
+    "entry_error_degrees": 0.0,
+
+    "original_source": "P_KRU_BTL_SUD_ath_02_finW_md.gmt",
+
+    "source_preserved_after_frame": 9
+
+  },
+
+  {
+
+    "branch": 3,
+
+    "first_exit_frame": 26,
+
+    "window_close_frame": 29,
+
+    "source_entry_frame": 0,
+
+    "bridge_frames": 4,
+
+    "impact_frame": 24,
+
+    "end_frame": 61,
+
+    "duration_seconds": 2.033333333333333,
+
+    "impact_fraction": 0.39344262295081966,
+
+    "first_end_frame": 61,
+
+    "entry_error_degrees": 0.0,
+
+    "original_source": "P_KRU_BTL_SUD_ath_03_finW_md.gmt",
+
+    "source_preserved_after_frame": 4
+
+  },
+
+  {
+
+    "branch": 4,
+
+    "first_exit_frame": 26,
+
+    "window_close_frame": 29,
+
+    "source_entry_frame": 2,
+
+    "bridge_frames": 6,
+
+    "impact_frame": 24,
+
+    "end_frame": 69,
+
+    "duration_seconds": 2.3,
+
+    "impact_fraction": 0.34782608695652173,
+
+    "first_end_frame": 60,
+
+    "entry_error_degrees": 0.0,
+
+    "original_source": "P_KRU_BTL_SUD_ath_04_finW_md.gmt",
+
+    "source_preserved_after_frame": 8
+
+  }
+
+]

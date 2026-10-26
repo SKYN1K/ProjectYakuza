@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='utf-8'?>
+<animNode>
+<m_Name>ProjectYakuza_MP_ProjectYakuza_DD_Light04</m_Name>
+<m_Priority>9</m_Priority>
+<m_ConditionPriority>500</m_ConditionPriority>
+<m_AnimName>ProjectYakuza_DD_Light04</m_AnimName>
+<m_Looped>false</m_Looped>
+<m_BlendTime>0.08</m_BlendTime>
+<m_BlendOutTime>0.08</m_BlendOutTime>
+<m_EarlyTransitionOut>true</m_EarlyTransitionOut>
+<m_SpeedScale>ProjectYakuzaCombatSpeed</m_SpeedScale>
+<m_SyncTrackingEnabled>false</m_SyncTrackingEnabled>
+<m_SubStateBoneWeights>
+		<boneName>Bip01_Spine1</boneName>
+	</m_SubStateBoneWeights>
+	<m_SubStateBoneWeights>
+		<boneName>Bip01_Neck</boneName>
+	</m_SubStateBoneWeights>
+	<m_SubStateBoneWeights>
+		<boneName>Bip01_BackPack</boneName>
+	</m_SubStateBoneWeights>
+	<m_SubStateBoneWeights>
+		<boneName>Bip01_Prop1</boneName>
+	</m_SubStateBoneWeights>
+	<m_SubStateBoneWeights>
+		<boneName>Bip01_Prop2</boneName>
+	</m_SubStateBoneWeights>
+	<m_SubStateBoneWeights>
+		<boneName>Bip01_Spine</boneName>
+		<includeDescendants>false</includeDescendants>
+	</m_SubStateBoneWeights>
+<m_Conditions><m_Name>ProjectYakuzaRemoteObserver</m_Name><m_Type>BOOL</m_Type><m_Value>true</m_Value></m_Conditions><m_Conditions><m_Name>ProjectYakuzaRemoteClip</m_Name><m_Type>STRING</m_Type><m_Value>ProjectYakuza_DD_Light04</m_Value></m_Conditions><m_Conditions><m_Name>ProjectYakuzaRemoteCycle</m_Name><m_Type>STRING</m_Type><m_Value>0</m_Value></m_Conditions></animNode>

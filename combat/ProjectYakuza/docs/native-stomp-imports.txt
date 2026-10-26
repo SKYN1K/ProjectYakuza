@@ -1,0 +1,24 @@
+FILE C:/Users/Nik/Documents/Codex/2026-10-19/wo/outputs/ProjectYakuza/42/media/anims_X/Bob/ProjectYakuza_DD_GroundStomp01.x
+
+meshes=1 materials=1 animations=1
+
+meshHasBones=true
+
+PROCESSED_CLIPS=[ProjectYakuza_DD_GroundStomp01]
+
+clip=ProjectYakuza_DD_GroundStomp01 seconds=1.8 channels=35
+
+rightHandKeys=55
+
+FILE C:/Users/Nik/Documents/Codex/2026-10-19/wo/outputs/ProjectYakuza/42/media/anims_X/Bob/ProjectYakuza_DD_GroundStomp02.x
+
+meshes=1 materials=1 animations=1
+
+meshHasBones=true
+
+PROCESSED_CLIPS=[ProjectYakuza_DD_GroundStomp02]
+
+clip=ProjectYakuza_DD_GroundStomp02 seconds=1.8 channels=35
+
+rightHandKeys=55
+

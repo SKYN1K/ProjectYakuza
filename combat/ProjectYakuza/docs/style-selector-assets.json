@@ -1,0 +1,51 @@
+[
+
+  {
+
+    "game": "Yakuza Kiwami",
+
+    "source": "C:\\Users\\Nik\\Documents\\Codex\\2026-10-19\\wo\\work\\k1-ui\\pjcm_life.dds",
+
+    "source_sha256": "0a771fa406775746c38a565a755d92ad2639fdab93725c86bf73cb1eac50ca12",
+
+    "output": "42/media/textures/ProjectYakuza/StyleSelector/KiwamiLife.png",
+
+    "sha256": "b0cce8e51e8f48ca17329bf655541af40349cfb116c616786244e7f739e1f185",
+
+    "size": [
+
+      512,
+
+      128
+
+    ],
+
+    "conversion": "Lossless DDS to PNG. No generated pixels, resizing, recoloring or upscaling."
+
+  },
+
+  {
+
+    "game": "Yakuza Kiwami",
+
+    "source": "C:\\Users\\Nik\\Documents\\Codex\\2026-10-19\\wo\\work\\k1-ui\\2d_yk_style_icon_k03_e.dds",
+
+    "source_sha256": "e3932b5fb5d0fdd9ad62bc50dc2cfd3cdd2512ab6b2c636afa9d60aeaad9354d",
+
+    "output": "42/media/textures/ProjectYakuza/StyleSelector/KiwamiDragon.png",
+
+    "sha256": "f685efe6dce875ccce87ce828e77646fc3b831b358f8128d48347f1039b7858c",
+
+    "size": [
+
+      128,
+
+      128
+
+    ],
+
+    "conversion": "Lossless DDS to PNG. No generated pixels, resizing, recoloring or upscaling."
+
+  }
+
+]

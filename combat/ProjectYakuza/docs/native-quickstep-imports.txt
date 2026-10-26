@@ -1,0 +1,48 @@
+FILE C:\Users\Nik\Documents\Codex\2026-10-19\wo/outputs/ProjectYakuza/42/media/anims_X/Bob/ProjectYakuza_DD_Quickstep01.x
+
+meshes=1 materials=1 animations=1
+
+meshHasBones=true
+
+PROCESSED_CLIPS=[ProjectYakuza_DD_Quickstep01]
+
+clip=ProjectYakuza_DD_Quickstep01 seconds=0.7333333333333333 channels=35
+
+rightHandKeys=23
+
+FILE C:\Users\Nik\Documents\Codex\2026-10-19\wo/outputs/ProjectYakuza/42/media/anims_X/Bob/ProjectYakuza_DD_Quickstep02.x
+
+meshes=1 materials=1 animations=1
+
+meshHasBones=true
+
+PROCESSED_CLIPS=[ProjectYakuza_DD_Quickstep02]
+
+clip=ProjectYakuza_DD_Quickstep02 seconds=0.7333333333333333 channels=35
+
+rightHandKeys=23
+
+FILE C:\Users\Nik\Documents\Codex\2026-10-19\wo/outputs/ProjectYakuza/42/media/anims_X/Bob/ProjectYakuza_DD_Quickstep03.x
+
+meshes=1 materials=1 animations=1
+
+meshHasBones=true
+
+PROCESSED_CLIPS=[ProjectYakuza_DD_Quickstep03]
+
+clip=ProjectYakuza_DD_Quickstep03 seconds=0.7333333333333333 channels=35
+
+rightHandKeys=23
+
+FILE C:\Users\Nik\Documents\Codex\2026-10-19\wo/outputs/ProjectYakuza/42/media/anims_X/Bob/ProjectYakuza_DD_Quickstep04.x
+
+meshes=1 materials=1 animations=1
+
+meshHasBones=true
+
+PROCESSED_CLIPS=[ProjectYakuza_DD_Quickstep04]
+
+clip=ProjectYakuza_DD_Quickstep04 seconds=0.7333333333333333 channels=35
+
+rightHandKeys=23
+

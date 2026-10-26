@@ -1,0 +1,23 @@
+require "ProjectYakuza/Registry"
+local ProjectYakuza=ProjectYakuza
+assert(ProjectYakuza.API_VERSION>=1,"Example style requires Project Yakuza API 1")
+ProjectYakuza.registerStyle({
+    id="example_mod.my_style",
+    name="My Style",
+    description="Starter using an existing PZ punch; replace with your supplied moves.",
+    attackSpeed=1,
+    comboResetMs=500,
+    lightBufferLimit=1,
+    lightAttacks={
+        {animation="Bob_AttackPunch01_Hit",nodeValue="example_mod_light_01",
+         duration=1,impact=.25,chainAt=.65,damageMultiplier=1},
+    },
+    actions={},
+    heat=false,
+    music=false,
+    sounds=false,
+    -- Optional explicit opt-ins; omitted profiles never inherit DoD's assets:
+    -- hitEffects="yakuza6",
+    -- music={{sound="ExampleMod_MyTheme",title="My supplied track"}},
+    -- sounds={punchImpact="ExampleMod_MyPunchSound"},
+})

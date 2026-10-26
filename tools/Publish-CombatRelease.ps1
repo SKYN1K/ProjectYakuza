@@ -1,12 +1,12 @@
 [CmdletBinding()]
 param(
     [string]$Version,
-    [string]$Repo = 'SKYN1K/DragonCombatFramework',
+    [string]$Repo = 'SKYN1K/ProjectYakuza',
     [string]$GhPath = 'gh'
 )
 $ErrorActionPreference = 'Stop'
 $root = Split-Path $PSScriptRoot -Parent
-$mod = Join-Path $root 'combat/DragonCombatFramework'
+$mod = Join-Path $root 'combat/ProjectYakuza'
 $versionLine = Get-Content -LiteralPath (Join-Path $mod '42/mod.info') | Where-Object { $_ -match '^version=' }
 $installedVersion = $versionLine.Substring(8).Trim()
 if (-not $Version) { $Version = $installedVersion }
@@ -20,13 +20,13 @@ try {
     if ($LASTEXITCODE -eq 0) { throw "Release $tag already exists. Use a new version; published tags are not overwritten." }
     $dist = Join-Path $root 'dist'
     New-Item -ItemType Directory -Path $dist -Force | Out-Null
-    $archive = Join-Path $dist ('DragonCombatFramework-B42-v' + $Version + '.zip')
+    $archive = Join-Path $dist ('ProjectYakuza-B42-v' + $Version + '.zip')
     # Build a fresh artifact without deleting any source/install folder.
     $temporaryArchive = Join-Path $dist ('release-' + [guid]::NewGuid().ToString() + '.zip')
     Add-Type -AssemblyName System.IO.Compression.FileSystem
     [IO.Compression.ZipFile]::CreateFromDirectory($mod, $temporaryArchive, [IO.Compression.CompressionLevel]::Optimal, $true)
     Move-Item -LiteralPath $temporaryArchive -Destination $archive -Force
-    & git add -- .gitignore .gitattributes README.md AGENTS.md combat/DragonCombatFramework tools/Publish-CombatRelease.ps1 tools/build_mp_visuals.py tools/combat-tests/build_mp_tests.py tools/combat-tests/mp-test-fixture.lua tools/combat-tests/validate_mp_nodes.py tools/combat-tests/MPObserverProbe.java tools/combat-tests/LuaRunner.java tools/combat-tests/README.md
+    & git add -A -- .gitignore .gitattributes README.md AGENTS.md combat tools/Publish-CombatRelease.ps1 tools/build_mp_visuals.py tools/combat-tests/build_mp_tests.py tools/combat-tests/mp-test-fixture.lua tools/combat-tests/validate_mp_nodes.py tools/combat-tests/MPObserverProbe.java tools/combat-tests/LuaRunner.java tools/combat-tests/README.md
     if ($LASTEXITCODE -ne 0) { throw 'git add failed.' }
     & git diff --cached --quiet
     if ($LASTEXITCODE -eq 1) {

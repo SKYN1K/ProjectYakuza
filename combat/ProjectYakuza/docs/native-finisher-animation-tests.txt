@@ -1,0 +1,48 @@
+FILE C:\Users\Nik\Documents\Codex\2026-10-19\wo/outputs/ProjectYakuza/42/media/anims_X/Bob/ProjectYakuza_DD_Finisher01.x
+
+meshes=1 materials=1 animations=1
+
+meshHasBones=true
+
+PROCESSED_CLIPS=[ProjectYakuza_DD_Finisher01]
+
+clip=ProjectYakuza_DD_Finisher01 seconds=1.9 channels=35
+
+rightHandKeys=58
+
+FILE C:\Users\Nik\Documents\Codex\2026-10-19\wo/outputs/ProjectYakuza/42/media/anims_X/Bob/ProjectYakuza_DD_Finisher02.x
+
+meshes=1 materials=1 animations=1
+
+meshHasBones=true
+
+PROCESSED_CLIPS=[ProjectYakuza_DD_Finisher02]
+
+clip=ProjectYakuza_DD_Finisher02 seconds=1.7666666666666666 channels=35
+
+rightHandKeys=54
+
+FILE C:\Users\Nik\Documents\Codex\2026-10-19\wo/outputs/ProjectYakuza/42/media/anims_X/Bob/ProjectYakuza_DD_Finisher03.x
+
+meshes=1 materials=1 animations=1
+
+meshHasBones=true
+
+PROCESSED_CLIPS=[ProjectYakuza_DD_Finisher03]
+
+clip=ProjectYakuza_DD_Finisher03 seconds=2.033333333333333 channels=35
+
+rightHandKeys=62
+
+FILE C:\Users\Nik\Documents\Codex\2026-10-19\wo/outputs/ProjectYakuza/42/media/anims_X/Bob/ProjectYakuza_DD_Finisher04.x
+
+meshes=1 materials=1 animations=1
+
+meshHasBones=true
+
+PROCESSED_CLIPS=[ProjectYakuza_DD_Finisher04]
+
+clip=ProjectYakuza_DD_Finisher04 seconds=2.0 channels=35
+
+rightHandKeys=61
+

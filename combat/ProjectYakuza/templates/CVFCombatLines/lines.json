@@ -1,0 +1,120 @@
+{
+
+  "lines": [
+
+    {
+
+      "modId": "ProjectYakuza",
+
+      "id": "CombatLightAttack",
+
+      "label": "Combat - Light attack",
+
+      "wheel": false,
+
+      "cooldown": 0.25
+
+    },
+
+    {
+
+      "modId": "ProjectYakuza",
+
+      "id": "CombatHeavyAttack",
+
+      "label": "Combat - Heavy attack",
+
+      "wheel": false,
+
+      "cooldown": 0.5
+
+    },
+
+    {
+
+      "modId": "ProjectYakuza",
+
+      "id": "CombatSpecialMove",
+
+      "label": "Combat - Special move",
+
+      "wheel": false,
+
+      "cooldown": 0.75
+
+    },
+
+    {
+
+      "modId": "ProjectYakuza",
+
+      "id": "CombatTaunt",
+
+      "label": "Combat - Taunt",
+
+      "wheel": false,
+
+      "cooldown": 3.0
+
+    },
+
+    {
+
+      "modId": "ProjectYakuza",
+
+      "id": "CombatExtremeHeatActivation",
+
+      "label": "Combat - Extreme Heat activation",
+
+      "wheel": false,
+
+      "cooldown": 5.0
+
+    },
+
+    {
+
+      "modId": "ProjectYakuza",
+
+      "id": "CombatStanceEntry",
+
+      "label": "Combat - Stance entry",
+
+      "wheel": false,
+
+      "cooldown": 2.0
+
+    },
+
+    {
+
+      "modId": "ProjectYakuza",
+
+      "id": "CombatGettingHit",
+
+      "label": "Combat - Getting hit",
+
+      "wheel": false,
+
+      "cooldown": 0.6
+
+    },
+
+    {
+
+      "modId": "ProjectYakuza",
+
+      "id": "CombatGettingStunned",
+
+      "label": "Combat - Getting stunned",
+
+      "wheel": false,
+
+      "cooldown": 1.25
+
+    }
+
+  ]
+
+}
+

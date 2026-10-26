@@ -4,7 +4,7 @@ public class MPObserverProbe {
   Class<?> node=Class.forName("zombie.core.skinnedmodel.advancedanimation.AnimNode"),stateType=Class.forName("zombie.core.skinnedmodel.advancedanimation.AnimState"),variables=Class.forName("zombie.core.skinnedmodel.advancedanimation.AnimationVariableSource"),source=Class.forName("zombie.core.skinnedmodel.advancedanimation.IAnimationVariableSource");
   Method set=variables.getMethod("setVariable",String.class,String.class);int total=0;
   try(var paths=Files.walk(Path.of(args[0]))) {
-   for(Path path:paths.filter(p->p.getFileName().toString().startsWith("DCF_MP_")&&p.toString().endsWith(".xml")).toList()) {
+   for(Path path:paths.filter(p->p.getFileName().toString().startsWith("ProjectYakuza_MP_")&&p.toString().endsWith(".xml")).toList()) {
     Document doc=DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(path.toFile());
     if(doc.getElementsByTagName("m_Events").getLength()!=0)throw new AssertionError("Observer has events "+path);
     Object parsed=node.getMethod("Parse",String.class).invoke(null,path.toAbsolutePath().toString());if(parsed==null)throw new AssertionError(path);
@@ -13,7 +13,7 @@ public class MPObserverProbe {
     for(int i=0;i<conditions.getLength();i++){Element c=(Element)conditions.item(i);set.invoke(vars,c.getElementsByTagName("m_Name").item(0).getTextContent(),c.getElementsByTagName("m_Value").item(0).getTextContent());}
     List<?> selected=(List<?>)stateType.getMethod("getAnimNodes",source,List.class).invoke(state,vars,new ArrayList<>());
     if(selected.size()!=1)throw new AssertionError("Observer not selected "+path);
-    set.invoke(vars,"DCFRemoteClip","");selected=(List<?>)stateType.getMethod("getAnimNodes",source,List.class).invoke(state,vars,new ArrayList<>());
+    set.invoke(vars,"ProjectYakuzaRemoteClip","");selected=(List<?>)stateType.getMethod("getAnimNodes",source,List.class).invoke(state,vars,new ArrayList<>());
     if(!selected.isEmpty())throw new AssertionError("Observer leaks into native local action "+path);total++;
    }
   }

@@ -1,6 +1,0 @@
-name=Example DCF Style
-id=ExampleDCFStyle
-author=Your name
-description=Independent style addon for Dragon Combat Framework API 1.
-require=DragonCombatFramework
-version=0.1.0

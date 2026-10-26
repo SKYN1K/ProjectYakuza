@@ -1,0 +1,12 @@
+PASS standing style hit selects common-enemy clip 1
+
+PASS standing style hit selects common-enemy clip 2
+
+PASS standing style hit selects common-enemy clip 3
+
+PASS standing style hit selects common-enemy clip 4
+
+PASS ordinary hits retain native reaction
+
+PASS rear and special/death reactions excluded
+
