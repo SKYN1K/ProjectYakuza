@@ -30,3 +30,6 @@
 
 !/tools/combat-tests/build_taunt_tests.py
 !/tools/combat-tests/taunt-test-fixture.lua
+
+!/tools/combat-tests/NativeAuraTextureProbe.java
+!/tools/combat-tests/validate_extreme_assets.py

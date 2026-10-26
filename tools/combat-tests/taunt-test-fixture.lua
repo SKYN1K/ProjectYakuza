@@ -121,7 +121,7 @@ SpriteRenderer={instance={getDoAdditive=function()return additive end,setDoAddit
 Core={getTileScale=function()return 2 end};IsoDirections={N='N'};ColorInfo={new=function(r,g,b,a)return {r=r,g=g,b=b,a=a}end}
 instanceof=function()return true end
 IsoSprite={CreateSprite=function()
- local s={};function s:LoadFramesNoDirPageDirect(path,kind,count)self.kind=kind;check((path=='media/textures/ProjectYakuza/HeatWisp' and count==32) or (path=='media/textures/ProjectYakuza/TauntBurst' and count==1),'only supplied aura or Kiwami 2 particle textures');loads=loads+1 end
+ local s={};function s:LoadFramesNoDirPageDirect(path,kind,count)self.kind=kind;self.path=path;self.frameCount=count;check((path=='media/textures/ProjectYakuza/HeatWisp' and count==32) or (path=='media/textures/ProjectYakuza/TauntBurst' and count==1) or (path=='media/textures/ProjectYakuza/ExtremeHeat' and ((kind=='flame' and count==64) or ((kind=='wispL' or kind=='wispR') and count==1))),'only supplied normal, taunt or original Lost Judgment texture frames');loads=loads+1 end
  function s:setAnimate(v)self.animate=v end
  function s:update(i)i.frames=i.frames+1 end
  return s
@@ -134,7 +134,7 @@ ProjectYakuza.WorldEffects={attach=function(p,s,height,scale,anchor,loop,speed,x
  function i:SetAlpha(v)self.alpha=v end
  function i:SetTargetAlpha(v)end
  function i:Dispose()self.disposed=true end
- function i:render(_,_,_,_,_,_,_,color)draws=draws+1;self.additive=additive;drawLog[#drawLog+1]={instance=self,kind=s.kind,additive=additive,alpha=self.alpha,color=color};if self.fail and additive then error('render failure')end end
+ function i:render(owner,x,y,z,dir,ox,oy,color)draws=draws+1;self.additive=additive;drawLog[#drawLog+1]={instance=self,kind=s.kind,additive=additive,alpha=self.alpha,color=color,dir=dir,ox=ox,oy=oy};if self.fail and additive then error('render failure')end end
  return i
 end}
 function p:getAttachedAnimSprite()return {remove=function()end}end
@@ -170,16 +170,25 @@ check(s.opacity==oldOpacity,'switching aura profile preserves completed fade wit
 for i,e in ipairs(s.emitters) do
  local point=A.extremeLayout[i];local normal=A.layout[i]
  check(normalInstances[i].disposed and e.instance~=normalInstances[i],'normal emitter is released before Extreme Heat replacement')
- check(point.x==normal.x and point.height==normal.height and point.scale==normal.scale,'Extreme Heat bounds equal normal aura bounds')
- check(e.sprite.kind~=normalSprites[i].kind and e.instance.frames==1,'replacement uses different supplied animated wisp and advances only once')
+ local width=point.kind=='flame' and 32 or 64
+ check(point.frameHeight*point.scale<=256*normal.scale and width*point.scale<=128*normal.scale and point.height>=38,'new original particles fit within former upper-body patch size')
+ check(e.sprite.path=='media/textures/ProjectYakuza/ExtremeHeat' and e.sprite~=normalSprites[i],'replacement never uses the old blurred HeatWisp sequences')
+ check(e.instance.frames==(point.frames>1 and 1 or 0),'original atlas advances once; static native wisps do not fake animation frames')
 end
-check(#drawLog==8,'Extreme Heat renders only four replacement instances in base and modest additive passes')
+check(#drawLog==4,'Extreme Heat renders only four transparent particles with no continuous additive pass')
 for _,draw in ipairs(drawLog) do
  for _,normal in ipairs(normalInstances) do check(draw.instance~=normal,'no normal-heat instance is drawn during Extreme Heat') end
+ check(not draw.additive and draw.alpha<=.22 and draw.alpha>0,'replacement is low-opacity standard alpha blending')
+ check(draw.color==A.extremeColor and draw.color.r==.22 and draw.color.g==.54 and draw.color.b==.78,'replacement has restrained blue tint without near-white exposure')
+ check(draw.dir==IsoDirections.N,'all player facings share the same world renderer path')
 end
-check(drawLog[1].color==A.extremeColor and drawLog[5].color==A.extremeGlowColor,'Extreme Heat uses the separate cyan tint and brightness color')
-check(drawLog[5].alpha>0.14 and drawLog[5].alpha<=0.16,'replacement glow is a restrained sixteen-percent pass')
-check(not additive,'Extreme Heat restores renderer blend state')
+check(not additive,'Extreme Heat does not change renderer blend state')
+local driftX,driftY=drawLog[1].ox,drawLog[1].oy
+clock=clock+160;drawLog={};A.render()
+check(drawLog[1].ox~=driftX or drawLog[1].oy~=driftY,'original static wisps move gently in world space')
+local frozenX,frozenY=drawLog[1].ox,drawLog[1].oy
+paused=true;clock=clock+5000;drawLog={};A.render();paused=false
+check(drawLog[1].ox==frozenX and drawLog[1].oy==frozenY,'pausing freezes drift and breathing motion')
 count=loads;alloc=attached;for i=1,1000 do A.update(p)end
 check(loads==count and attached==alloc,'Extreme Heat reuses existing sprites without per-update allocations')
 local extremeInstances={};for i,e in ipairs(s.emitters) do extremeInstances[i]=e.instance end
