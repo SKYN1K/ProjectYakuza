@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animNode>
+  <m_Name>ExampleStyle_Flourish</m_Name>
+  <m_AnimName>Bob_AttackPunch01_Hit</m_AnimName>
+  <m_Priority>5</m_Priority>
+  <m_ConditionPriority>150</m_ConditionPriority>
+  <m_Looped>false</m_Looped>
+  <m_SpeedScale>1</m_SpeedScale>
+  <m_BlendTime>0.12</m_BlendTime>
+  <m_BlendOutTime>0.15</m_BlendOutTime>
+  <m_Conditions><m_Name>PerformingAction</m_Name><m_Type>STRING</m_Type><m_Value>ExampleStyle_Flourish</m_Value></m_Conditions>
+  <m_Events><m_EventName>SetVariable</m_EventName><m_Time>Start</m_Time><m_ParameterValue>ExampleStyleFlourish=started</m_ParameterValue></m_Events>
+  <m_Events><m_EventName>SetVariable</m_EventName><m_Time>End</m_Time><m_ParameterValue>ExampleStyleFlourish=done</m_ParameterValue></m_Events>
+  <m_SubStateBoneWeights><boneName>Bip01</boneName><weight>1</weight></m_SubStateBoneWeights>
+</animNode>

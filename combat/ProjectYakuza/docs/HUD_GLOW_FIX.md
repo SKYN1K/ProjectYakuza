@@ -1,3 +1,5 @@
+> Historical implementation note: controls and APIs may be superseded. Use the [current manual](INDEX.md) and [API reference](API_REFERENCE.md) for addon development.
+
 # HUD glow transparency correction
 
 The HUD's original game glow textures now use PZ's TransparentStyle rather than AdditiveStyle. This preserves the texture alpha feathering instead of flooding the surrounding area with cyan. Ready-state opacity is bounded to 0.075–0.125; Extreme Heat opacity is bounded to 0.24–0.36. The previous renderer state is restored after drawing.

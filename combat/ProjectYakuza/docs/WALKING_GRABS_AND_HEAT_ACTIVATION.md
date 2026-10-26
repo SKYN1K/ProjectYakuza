@@ -1,3 +1,5 @@
+> Historical implementation note: controls and APIs may be superseded. Use the [current manual](INDEX.md) and [API reference](API_REFERENCE.md) for addon development.
+
 # Walking grabs and animated Extreme Heat — 0.19.0
 
 After the paired grab entry finishes, use normal movement keys while aiming to walk with the zombie. Kiryu's `sy0_gsp_wlk_lp` and the matching `sy1` original clips provide the grabbing motion. The player's hold/walk nodes mask only Spine1 and its upper-body descendants, leaving native Zomboid locomotion in control of the legs. Five victim clips combine original grabbing upper-body motion with native Zomboid idle/forward/backward/left/right leg motion. Original upper-body and native lower-body cycle durations are preserved; the upper-body loop is not sped up to fit a shorter leg cycle.

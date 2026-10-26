@@ -1,3 +1,5 @@
+> Historical implementation note: controls and APIs may be superseded. Use the [current manual](INDEX.md) and [API reference](API_REFERENCE.md) for addon development.
+
 # Pose-matched double finishers, 0.12.0
 
 No second MMB press: the first finisher keeps its complete original clip. A second press queues the follow-up; only the matching current hit marker plus the short branch-specific ProjectYakuzaDoubleReady window can interrupt the first. If the input misses the window, native completion happens first and the original double-finisher clip is used. The existing late-input combo timeout is unchanged.

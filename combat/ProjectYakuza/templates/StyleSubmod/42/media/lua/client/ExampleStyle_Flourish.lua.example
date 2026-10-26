@@ -1,0 +1,84 @@
+require "ExampleStyle_Style"
+require "ProjectYakuza/Runtime"
+require "ProjectYakuza/Bindings"
+require "TimedActions/ISBaseTimedAction"
+require "TimedActions/ISTimedActionQueue"
+local PY=ProjectYakuza
+local kind="example_mod.flourish"
+local A=ISBaseTimedAction:derive("ExampleStyleFlourishAction")
+function A:isUsingTimeout()return false end
+function A:adjustMaxTime(v)return v end
+function A:isValid()
+    local p=self.character
+    return PY.isEquipped(p) and PY.getPlayerStyle(p).id==self.context.style.id
+        and not p:isDead() and not p:isOnFloor() and not p:isKnockedDown()
+        and not p:getVehicle() and not p:isClimbing() and (p:getHitReaction() or "")==""
+end
+function A:start()
+    self.started=true;self.lastAt=getTimestampMs();self.startedAt=self.lastAt
+    self.character:setVariable("ExampleStyleFlourish","")
+    self:setActionAnim(self.context.action.animation)
+end
+function A:cleanup(completed)
+    if self.cleaned then return end
+    self.cleaned=true
+    if self.started then self.character:setVariable("ExampleStyleFlourish","") end
+    if completed then PY.completeAction(self.character,self.context)
+    else PY.cancelAction(self.character,"flourish_interrupted",self.context) end
+end
+function A:perform()self:cleanup(true);ISBaseTimedAction.perform(self)end
+function A:stop()self:cleanup(false);ISBaseTimedAction.stop(self)end
+function A:update()
+    if self.cleaned then return end
+    local now=getTimestampMs();local elapsed=math.max(0,now-self.lastAt);self.lastAt=now
+    if isGamePaused() then self.startedAt=self.startedAt+elapsed;return end
+    if not self:isValid() then self:forceStop();return end
+    local marker=self.character:GetVariable("ExampleStyleFlourish") or ""
+    if marker=="started" then self.seen=true end
+    if marker=="done" and self.seen then self:forceComplete()
+    elseif now-self.startedAt>self.context.action.duration*1000+800 or (now-self.startedAt>600 and not self.seen) then self:forceStop() end
+end
+function A:new(c)
+    local o=ISBaseTimedAction.new(self,c.player);o.context=c;o.maxTime=-1
+    -- This demonstration does not change movement, AI, damage or protection.
+    -- Walking cancels it. Add and restore your own overrides for another policy.
+    o.stopOnWalk=true;o.stopOnRun=true;o.stopOnAim=false
+    return o
+end
+PY.registerStyleActionHandler("example_mod.my_style",kind,{
+    canStart=function(c)
+        local p=c.player
+        return not isGamePaused() and p:isAiming() and not p:hasTimedActions()
+            and not p:isDead() and not p:isOnFloor() and not p:getVehicle()
+            and (p:getHitReaction() or "")=="","not_ready"
+    end,
+    start=function(c)
+        local a=A:new(c);c.timedAction=a;c.requestedAt=getTimestampMs()
+        local ok,queue=pcall(ISTimedActionQueue.add,a)
+        if not ok or not queue then return false,"queue_rejected" end
+        c.queue=queue;return true
+    end,
+    update=function(c)
+        if not c.timedAction.started and getTimestampMs()-c.requestedAt>600 then
+            PY.cancelAction(c.player,"flourish_start_timeout",c)
+        end
+    end,
+    cancel=function(c)
+        local a=c.timedAction;if not a or a.cleaned then return end
+        a:cleanup(false)
+        if a.action then a:forceStop()
+        elseif c.queue then
+            if c.queue.current==a and c.queue.onCompleted then c.queue:onCompleted(a)
+            elseif c.queue.removeFromQueue then c.queue:removeFromQueue(a) end
+        end
+    end,
+})
+PY.Bindings.register({id="example_mod.flourish",name="Example style flourish",mode=4,code=0})
+PY.registerStyleInputHandler("example_mod.my_style",function(p,input)
+    -- Unbound initially: assign this action in Options > Mods > Project Yakuza.
+    local pressed=PY.Bindings.pressed(p,"example_mod.flourish")
+    if pressed and input.aiming and not PY.isBusy(p) then
+        PY.requestAction(p,kind);return true
+    end
+    return false
+end)

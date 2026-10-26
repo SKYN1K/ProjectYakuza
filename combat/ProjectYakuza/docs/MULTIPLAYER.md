@@ -1,36 +1,54 @@
-# Multiplayer synchronization 0.27.1 (protocol v2)
+# Multiplayer and addon authority
 
-Install and enable ProjectYakuza on the server and every client, with matching style add-ons and versions. The normal PZ launcher is retained. No game JAR edits, Java bridge, new visual/audio assets or physics-force extension is included.
+Normal launcher, Lua-only protocol 2. Server and clients need matching shared styles, custom kind declarations, catalogs and assets. Native input/UI/timed actions belong under client; new authoritative mechanics belong under server.
 
-## Transport and ownership
+| System | Current behavior |
+| --- | --- |
+| Equipment | Server-recognized inventory ID; waits for native delivery plus acknowledgement |
+| Explicit entry | Starts after equip acknowledgement; repairs/reconnects do not replay it |
+| Playback | Owner-node catalog, event-free remote clip/blend/speed/mask observers |
+| Heat/aura | Owner-driven state relayed for presentation; HUD local |
+| Primary hits | Native PZ; impact reporting does not hit again |
+| Supplemental hits | Server checks/deduplication and shared three-target cap; observer result is not another Hit |
+| Dash travel | Bounded collision-checked samples/interpolation |
+| Counter | Local 0.2-second window plus server target/state/range/60-second cooldown; no rewind guarantee |
+| Guard | Valid block clip/nearby attacker and scoped cancellation |
+| Heat activation | Bounded protection lease restores previous flags; other kinds do not inherit it |
+| Grabs/throws | Implementation/leases retained but temporarily disabled client/server |
+| Music, volumes, assignments | Local preferences, not synchronized soundtrack |
+| CVF | Provider owns transmission/policy; do not send voices twice |
 
-Multiplayer style equip requests are handled by the server. It creates/reuses the token in its inventory and sends native inventory/equipment packets plus a request-matched acknowledgement. The owner waits for actual inventory delivery before using the shared item ID. Already-equipped client-only saved tokens follow this repair path automatically. B42's Weapon parser looks up the ID in the server inventory; a locally created token was the cause of the null-weapon attack/zombie-hit packet rejections in the co-op log. The public sendAddItemToContainer/sendEquip globals are server-only in this build, so calling them on a client cannot fix the item.
+This is not a full server heat simulation/anti-cheat. Direct ragdoll impulses, cinematic cameras, PvP parity and rollback are not provided. Live two-client testing remains necessary.
 
-Owner clients send selected style, equipped state, heat/fuel, Extreme Heat flag, current move, observer clip and swing/action serials. Changed states are sampled every 50 ms; unchanged states heartbeat every second. Forced transitions can share a millisecond: the server retains them under an 80-state-per-second budget instead of discarding every second state inside a 50 ms window. The server binds packets to the authenticated sender, filters registered styles/clips and finite values, and forwards them within 60 tiles / nearby floors. Session sequences reject old snapshots. Observers clear stale state after four seconds.
+## Addon catalogs
 
-Normal movement retains native PZ replication. Quicksteps additionally send a bounded sample every 50 ms and an unthrottled final position/facing. The server checks the registered move, total distance, path, floor, finite coordinates, ordering, timeout and three-per-15-seconds quota. Observers interpolate current/next position over 50 ms, then release the override after the final sample or a short missing-packet timeout. The owner is never repositioned by these visual packets. During the step, the already-owned movement-ignore flag is set through IsoPlayer's exposed setter, which marks the native network AI for a reliable position update. The internal NetworkPlayerAI type is not exposed to Lua and is not called directly.
+```lua
+require "ProjectYakuza/NetworkExtensions"
+require "MyStyle_Style"
+ProjectYakuza.registerNetworkAnimations("my_mod.my_style",{
+    {id="MyStyle_Action",animation="MyStyle_Action",group="actions",
+     priority=150,loop=false,
+     conditions={{name="PerformingAction",value="MyStyle_Action"}}},
+})
+```
 
-148 observer XML nodes reference the existing clips with their original blend settings, playback scales and bone masks. Two mutually exclusive ProjectYakuzaRemoteCycle nodes per observer restart the same clip on a new swing/action, including when both serials change together. They contain zero animation events/collision markers. Melee/stomp observers run in native attack groups; timed observers use BaseAction's PerformingAction/IsPerformingAnAction variables. Remote copies never run input controllers or timed-action damage logic. Validated zombie reactions set the supplied clip and enter the native hit state; the repeat-hit group contains the same four supplied reaction clips. Hits arriving before a victim streams in retry for up to 750 ms in a bounded queue. Music, HUD and style-slot assignments remain local preferences; spatial combat sounds retain PZ networking.
+Conditions describe the owner node, not observer conditions. Groups: melee/stomp/actions. Style must be registered first. Catalog registration is one-time; IDs must be globally unique. Invalid batches publish nothing, caller metadata is copied and merged priority order is applied. Timed playback capture needs owned context.timedAction.started=true and matching native variables.
 
-## Damage and paired actions
+## Observer builder
 
-Native primary hits remain native; reporting one never calls Hit again on the server. Supplemental victims share a three-target per-swing cap and deduplicate targets, with distance/facing/swept collision checks. Server item data supplies their base damage and native Hit calculations. Extra hits have their own server result packets; observers apply absolute results without calling Hit or Kill. This avoids multiplying damage by the number of clients. Supplemental damage can differ from the native primary roll because it uses server weapon data, not a client-supplied damage value.
+The shipped tools/build_style_observers.py requires only Python 3's standard library. Activate your owner's .xml files first. Point --mod-root at your addon, not the framework:
 
-G requests a server grab lease before starting. Only one player may claim a zombie. Server pairing follows the replicated player facing/position through collision checks and sends walking phase/direction updates. Throw damage is issued once against that lease. Release, death, missing heartbeat, disconnect, collision failure and an eight-second ceiling restore captured zombie AI/movement settings. Server claims include late-observer restoration information. Client paired root/animation alignment retains the existing native-leg presentation.
+```text
+python ProjectYakuza/tools/build_style_observers.py --mod-root MyStyleAddon --style-id my_mod.my_style --prefix MyStyle_ --dry-run
+python ProjectYakuza/tools/build_style_observers.py --mod-root MyStyleAddon --style-id my_mod.my_style --prefix MyStyle_
+```
 
-Tiger Drop still uses the local animation's final 0.2-second input window. The server independently checks attack target/state, range, target count and a 60-second cooldown. Exact 200 ms agreement across latency is not guaranteed; timing is not a server rewind system. Its existing Lua-only hit force is retained, without additional ragdoll physics APIs. Guard cancellation is checked against the player's block clip and nearby attacker. Extreme Heat activation gets a bounded server ghost/invincible lease, restores the previous flags afterward, and tells nearby zombie-owning clients to suppress queued attacks. Heat and move timing are still owner-driven; this is not a complete anti-cheat or server-side heat simulation.
+Use an exclusive prefix ending in underscore for owner XML names and shared MyStyle_Style.lua. The tool writes MyStyle_Network.lua and observers. It preserves clip/speed/blends/masks, strips every event and replaces conditions with ProjectYakuzaRemoteObserver=true, ProjectYakuzaRemoteClip=owner ID and ProjectYakuzaRemoteCycle=0/1. Melee/stomp owners get both native-group and actions copies; timed owners get actions copies.
 
-## Audio settings
+Only simple BOOL/STRING conjunctions are supported; blend trees/complex conditions require manual support. The builder skips its stamped outputs, refuses to overwrite author-maintained files and deletes nothing. Remove only known obsolete generated nodes after renaming/removing owners. Inspect dry-run and diff. Output is Lua/XML code, not synthesized media.
 
-Options → Mods → Project Yakuza → Audio has Combat music volume and Combat hit volume (0–200%; zero mutes). They apply to registered style playlists and punch/kick/heat/finisher/throw/guard impact groups and persist through PZAPI.ModOptions. Orb-gain and activation effects retain independent Advanced Audio user levels. The punch -15% and orb +30% clip gains are unchanged. No third-party Mod Options dependency is required in this installed B42 build.
+## New gameplay
 
-## Style authors
+Catalog registration does not authorize damage, force, target grabs or teleporting. Implement scoped commands with eligibility/range/facing/obstruction validation, server costs/cooldowns where needed, serial checks, target ownership, bounded leases and disconnect cleanup. Existing commands only implement their own mechanics; never trust arbitrary client damage/force values.
 
-Registered styles retain independent music/heat/effect profiles. For observer animation support, provide `ProjectYakuza.NetworkCatalog[styleId]` as a priority-sorted array `{id, animation, group, conditions={{name,value}}, priority, loop}` and matching observer nodes. Group is melee, stomp or actions. Conditions are ProjectYakuzaRemoteObserver=true, ProjectYakuzaRemoteClip=entry.id and ProjectYakuzaRemoteCycle="0"/"1" on alternating nodes. Strip every event and preserve the original clip and bone mask. Shared catalogue conditions describe the owner's original node. tools/build_mp_visuals.py shows metadata extraction for the current style. Quickstep visual movement uses registered action distance/duration. Reaction clips must appear in the selected style's move definitions.
-
-## Validation and practical limits
-
-The production modules pass 91 offline MP assertions, including separate client/server inventories and delayed item delivery, same-tick transitions, duplicate native/extra hits, target caps, walls/range, grab leases, counter cooldowns, protected activation, repeated observer clips, bounded/reordered step samples and zombie streaming retries. Full local regression total: 3,083 assertions. The native B42 animation parser selects all 148 event-free observer nodes for matching conditions. All 31 Lua files compile. Regression sources and the native selector probe are under tools/combat-tests; engine inspection files and game libraries stay outside Git.
-
-No game or dedicated server was launched. Real two-client validation is still required for network-owned zombie death/corpse behavior, walking/throw alignment, native action transitions and high latency. No PvP combat synchronization, split-screen interface overhaul, client rollback or segmented music synchronization was added.
-
+Test late joins, delayed inventory/acks, repeated clips, walls/stairs, moving/streamed zombies, target ownership, interrupted actions and latency. Every victim must take damage once regardless of observer count. New paired mechanics need their own server tests; observer XML alone is insufficient.

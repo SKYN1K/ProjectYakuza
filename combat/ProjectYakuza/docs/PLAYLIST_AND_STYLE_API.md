@@ -1,13 +1,3 @@
-# Playlist and style-authoring update — 0.21.0
+# Playlist and style API
 
-Dragon of Dojima now has 19 supplied recordings. The previous Funk Goes On, Bring It On and Receive You Ver. 7 are joined by Flirt With Bomb, Son of a Gun, Push Me Under Water, Outlaw's Lullaby, Funk Goes On 極, Push Me Deep Underwater, Lullaby of Outlaws, Receive and Believe You, Bruise, Crush & Strike, D 2 A, Ryu-Kyu Humming, The Myth, Isolated Fight, Town Bully and KAMURO again.
-
-Each recording is used in full, with format conversion to OGG only. No music has been synthesized, composed, cut or normalized. Original recordings and output hashes, durations, sample rates and channels are listed in `combat-music-playlist.json`.
-
-Music definitions no longer loop a single song. At a natural track end, an active encounter chooses uniformly from the other sound names in that style's playlist. The just-finished song cannot be selected. Additional combat hits retain the current track; a handoff does not count as new combat activity. The existing quiet grace remains 12 seconds. Completed songs do not advance while paused; playback advances on resume if combat is still active. Style changes, unequip, death, disabling music, save and menu exit still restore vanilla music. A handoff keeps the original pre-encounter music volume and current mix, preventing cumulative ducking or an unwanted fade reset. Failed playback releases the managed channel and restores vanilla music.
-
-Playlists are now part of individual style definitions, not a framework-wide default. All 19 tracks are owned only by `dragon_of_dojima`. New styles get no music unless their registration explicitly supplies a playlist. Kiryu sounds, heat controls, counter tracking, aura, impact effects and dragon HUD are also explicit opt-ins; new registrations do not inherit them.
-
-Framework API 1 adds style validation, style-local action handlers, custom action kinds, style-local input handlers, listener removal and a style-list helper. Active action cancellation uses its original handler even after a handler registration changes. Failed starts invoke available rollback cleanup without spending heat. `docs/STYLE_AUTHORING.md` describes the API and required native collision markers. `templates/StyleSubmod` is an inactive, separate-submod starter using PZ's existing punch; no new animation assets are included or generated, and no example style is automatically registered.
-
-All existing visual/audio assets outside the newly supplied music are preserved. Existing attack clips and native AnimSet nodes are unchanged. PZ is not launched during installation; validation uses the installed engine's Lua, XML selection and sound-script parsers plus offline lifecycle tests.
+This older entry point is superseded by [Style authoring](STYLE_AUTHORING.md), [API reference](API_REFERENCE.md) and [Presentation](PRESENTATION.md). API 2 includes custom action lifecycle, addon key registration and observer catalogs. DoD's 19-track playlist is not inherited by other styles.

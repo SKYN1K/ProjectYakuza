@@ -1,3 +1,5 @@
+> Historical implementation note: controls and APIs may be superseded. Use the [current manual](INDEX.md) and [API reference](API_REFERENCE.md) for addon development.
+
 # HUD polish and heat balance — 0.16.5
 
 The HUD continues to use the two original, pixel-identical Yakuza 6 atlases. No artwork or texture files were generated, repainted or resized.

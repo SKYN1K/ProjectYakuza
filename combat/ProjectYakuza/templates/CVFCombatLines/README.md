@@ -1,8 +1,7 @@
-# Combat voice-pack entries
+# Reserved combat voice entries
 
-Merge the `lines` array from lines.json into your existing CVF source manifest.json, preserving packId, voices and all other fields. Use the definitions exactly (including cooldown, label and wheel=false) so multiple packs register the same reserved entries consistently.
+This is a manifest/code template, not a voice pack. Merge lines.json into a compatible CVF source manifest while preserving packId, voices and other settings. Keep ProjectYakuza namespace, eight Combat-prefixed IDs, labels, cooldowns and wheel=false consistent across packs.
 
-Place supplied recordings inside each voice's existing audio folder, using `ProjectYakuza.CombatLightAttack_01.ogg`, `ProjectYakuza.CombatHeavyAttack_01.ogg`, and the same pattern for each ID. .wav and additional _02/_03 takes are supported by CVF's own builder. Run that framework's tools/New-VoicePack.ps1 against your pack source folder. No recordings are included here; missing events remain silent. Do not point these slots at placeholder or unrelated recordings.
+Supply recordings such as ProjectYakuza.CombatLightAttack_01.ogg in the selected voice's source audio folder and build using CVF's tool. Missing entries stay silent; vanilla Shove/Stomp does not automatically fill them. No recordings or separate voice-pack project are modified here.
 
-The namespace is ProjectYakuza. All eight IDs begin Combat. Leave wheel false: these lines are owned by the combat integration, not the generic voice wheel or automatic vanilla pools. A voice-only combat taunt is available through Combat styles when its recording exists.
-
+CombatStanceEntry belongs to style-entry playback, not RMB. Taunt cues belong to actual animation start. See [CVF integration](../../docs/CVF_COMBAT_VOICES.md).

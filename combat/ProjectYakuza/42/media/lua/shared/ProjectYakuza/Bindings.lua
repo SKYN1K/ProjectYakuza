@@ -41,14 +41,31 @@ function B.label(id)
  local mode=B.mode(id);if mode<=3 then return ({"LMB","RMB","MMB"})[mode] end
  return B.key(id)>0 and getKeyName(B.key(id)) or "Unbound"
 end
+function B.configureDefinition(d)
+ local options=B.options
+ if not options then return end
+ local mode=options:addComboBox("input_"..d.id,d.custom and d.name or "UI_ProjectYakuza_Bind_"..d.id)
+ for i,label in ipairs({"Left mouse button","Right mouse button","Middle mouse button","Keyboard"}) do mode:addItem(label,i==d.mode) end
+ options:addKeyBind("key_"..d.id,d.custom and (d.name.." key") or "UI_ProjectYakuza_Key_"..d.id,(d.key and Keyboard and Keyboard[d.key]) or d.code or 0)
+end
+function B.register(definition)
+ assert(type(definition)=="table","binding definition required")
+ local d=definition
+ assert(type(d.id)=="string" and string.match(d.id,"^[%w_.-]+$"),"namespaced binding ID required")
+ assert(not B.byId[d.id],"binding already registered: "..d.id)
+ assert(type(d.name)=="string" and d.name~="","binding display name required")
+ assert(type(d.mode)=="number" and d.mode>=1 and d.mode<=4 and d.mode==math.floor(d.mode),"binding mode must be 1..4")
+ assert(d.code==nil or (type(d.code)=="number" and d.code>=0 and d.code<=65535 and d.code==math.floor(d.code)),"key code must be 0..65535")
+ assert(d.key==nil or type(d.key)=="string","key must name a Keyboard constant")
+ local copy={id=d.id,name=d.name,mode=d.mode,key=d.key,code=d.code or 0,custom=true}
+ B.byId[copy.id]=copy;B.definitions[#B.definitions+1]=copy
+ B.configureDefinition(copy)
+ return copy
+end
 function B.configure(options)
  B.options=options;options:addTitle("Controls")
  options:addDescription("Choose a mouse button or Keyboard, then set its key. Aim and movement use Project Zomboid's own bindings. Shift is no longer a quickstep shortcut.")
- for _,d in ipairs(B.definitions) do
-  local mode=options:addComboBox("input_"..d.id,"UI_ProjectYakuza_Bind_"..d.id)
-  for i,label in ipairs({"Left mouse button","Right mouse button","Middle mouse button","Keyboard"}) do mode:addItem(label,i==d.mode) end
-  options:addKeyBind("key_"..d.id,"UI_ProjectYakuza_Key_"..d.id,(d.key and Keyboard and Keyboard[d.key]) or d.code or 0)
- end
+ for _,d in ipairs(B.definitions) do B.configureDefinition(d) end
 end
 function B.restore(p)
  local old=B.attackGates[p];if old then p:setAuthorizeMeleeAction(old.allowed);B.attackGates[p]=nil end
@@ -58,7 +75,7 @@ function B.update(p)
  local custom=B.mode("light")~=1 or B.mode("runningLight")~=1 or B.mode("quickstepAttack")~=1
  local wheel=ProjectYakuza.StyleSelector and (ProjectYakuza.StyleSelector.wheel or ProjectYakuza.StyleSelector.setup)
  local action=ProjectYakuza.activeActions and ProjectYakuza.activeActions[p]
- local entry=action and action.kind=="styleEntry"
+ local entry=(ProjectYakuza.blocksNativeAttacks and ProjectYakuza.blocksNativeAttacks(p)) or (action and action.kind=="styleEntry")
  if ProjectYakuza.isEquipped and ProjectYakuza.isEquipped(p) and not p:isDead() and (custom or wheel or entry) then
   if not B.attackGates[p] then
    local shove=ProjectYakuza.Quicksteps and ProjectYakuza.Quicksteps.shoveAuth[p]

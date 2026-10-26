@@ -1,6 +1,6 @@
 name=Example ProjectYakuza Style
 id=ExampleProjectYakuzaStyle
 author=Your name
-description=Independent style addon for Project Yakuza API 1.
+description=Independent style addon for Project Yakuza API 2.
 require=ProjectYakuza
 version=0.1.0

@@ -1,3 +1,5 @@
+> Historical implementation note: controls and APIs may be superseded. Use the [current manual](INDEX.md) and [API reference](API_REFERENCE.md) for addon development.
+
 # Original dragon/orb HUD and world aura
 
 The dragon body, head, glass core, blue core and glow draw directly from unchanged regions of Yakuza 6's e/texture/btl_hact.dds. The installed PNG is a lossless conversion of the entire 512 by 512 atlas, with identical RGBA pixels. No extra ring, repainting, grayscale conversion, upscaled dragon image or baked dragon/orb animation remains. The original white dragon variant retains its original shading. Every dragon/orb region renders smaller than its source.

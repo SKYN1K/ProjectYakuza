@@ -1,5 +1,5 @@
 require "ProjectYakuza/Registry"
-require "ProjectYakuza/NetworkCatalog"
+require "ProjectYakuza/NetworkExtensions"
 local ProjectYakuza=ProjectYakuza
 local P={module="ProjectYakuzaMP",version=2,range=60}
 ProjectYakuza.NetworkProtocol=P

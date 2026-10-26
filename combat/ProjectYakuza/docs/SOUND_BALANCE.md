@@ -1,3 +1,5 @@
+> Historical implementation note: controls and APIs may be superseded. Use the [current manual](INDEX.md) and [API reference](API_REFERENCE.md) for addon development.
+
 # Sound balance 0.21.1
 
 `ProjectYakuza_Y6_PunchImpact` clips: 0.700 → 0.595 (×0.85).

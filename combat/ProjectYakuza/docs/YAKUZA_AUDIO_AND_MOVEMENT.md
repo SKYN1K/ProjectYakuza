@@ -1,3 +1,5 @@
+> Historical implementation note: controls and APIs may be superseded. Use the [current manual](INDEX.md) and [API reference](API_REFERENCE.md) for addon development.
+
 # Original Yakuza audio and movement fixes — 0.20.0
 
 Original audio is extracted from the supplied Yakuza 6 `act_kiryu.acb`, `battle_se_kiryu.acb` and `battle_common.acb` banks. The CRI cue tables are resolved through sequences, tracks and synth references to the embedded AWB/HCA waveforms. Forty-five original waveforms are decoded and converted to mono 48 kHz OGG for PZ spatial playback; no replacement recordings or synthesized sounds are used. Source-bank hashes, cue names, waveform indices, AWB IDs and output hashes are recorded in `yakuza-combat-sounds.json`.

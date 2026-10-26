@@ -1,3 +1,5 @@
+> Historical implementation note: controls and APIs may be superseded. Use the [current manual](INDEX.md) and [API reference](API_REFERENCE.md) for addon development.
+
 # Consistent animated world aura, 0.14.6
 
 All aura effects now use the same OnPostRender world-camera path, for every facing. The temporary attachment created by WorldEffects.attach is transferred out of the character's automatic attachment list using ArrayList.remove(instance), without disposal. HeatAura exclusively owns that native instance until cleanup. This removes the direction-dependent automatic draw rather than drawing a second copy over it. The callback uses N consistently, matching the former up-right path. It calls sprite.update(instance) once before each native instance.render call. Native GameTime handles frame delta and pause; native sprite looping wraps the 32-frame animation. The current camera's local player is the only owner rendered in its pass. No UI element or screen projection is involved.

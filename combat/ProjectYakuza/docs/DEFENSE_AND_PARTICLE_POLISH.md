@@ -1,3 +1,5 @@
+> Historical implementation note: controls and APIs may be superseded. Use the [current manual](INDEX.md) and [API reference](API_REFERENCE.md) for addon development.
+
 # Defense and particle polish — 0.18.0
 
 Controls while the Dragon of Dojima style item is equipped:

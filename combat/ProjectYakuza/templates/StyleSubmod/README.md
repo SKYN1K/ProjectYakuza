@@ -1,14 +1,12 @@
-# Inactive style-submod starter
+# Inactive API-2 style starter
 
-This folder is documentation/code only and is not loaded by the framework.
+Copy to your addon root under Zomboid/mods; keep common/. This folder is not loaded by the framework.
 
-1. Copy this folder to a new directory under your own Zomboid mods folder.
-2. Rename `42/mod.info.example` to `mod.info`, `ExampleStyle.lua.example` to `.lua`, and `ExampleStyle_Light01.xml.example` to `.xml`.
-3. Change the example mod/style IDs and display names. Keep IDs consistent in Lua and XML.
-4. Enable the framework and your new addon. Its menu entry appears automatically.
+1. Rename 42/mod.info.example to mod.info.
+2. Activate both shared/client Lua examples and both melee/actions XML examples by removing .example. The shared module name must stay ExampleStyle_Style.lua until you change all requires consistently.
+3. Replace example mod/style/action/binding/node prefixes before publishing. Dependency is ProjectYakuza, API 2.
+4. Select the addon in the inventory menu or assign through the wheel's bottom slot.
+5. LMB uses an existing native punch with one MeleeSwing. Assign the unbound Example style flourish in Mods settings to try the custom action. This separate punch-shaped flourish is visual-only: no damage, heat or protection; walking cancels it.
+6. For MP run ProjectYakuza/tools/build_style_observers.py --mod-root YourAddon --style-id example_mod.my_style --prefix ExampleStyle_ --dry-run, inspect, then run without dry-run. Install generated XML/Lua plus addon on all peers. New gameplay still needs server support.
 
-The starter uses PZ's existing `Bob_AttackPunch01_Hit` animation at 1x speed, so its single punch needs no copied animation file. Replace it with your provided animation and adjust timing to create your own moves.
-
-Music/sounds/heat/Kiryu effects are off. The optional music script remains `.example`; enable it only after supplying the referenced recording and configuring at least two distinct tracks for continuous shuffle. Do not copy any DoD playlist unless you intentionally want to reuse its provided tracks.
-
-See `docs/STYLE_AUTHORING.md` in the framework for API, native XML markers and custom-handler instructions. Nothing in this starter creates graphical/audio assets.
+Music/sounds/heat/Kiryu effects are off. Leave the sound script inactive until recordings exist; use two distinct tracks for continuous non-repeating shuffle. Existing PZ playback is referenced, not generated. See [authoring](../../docs/STYLE_AUTHORING.md), [actions](../../docs/ACTIONS.md) and [testing](../../docs/TESTING.md).

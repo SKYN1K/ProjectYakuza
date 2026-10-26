@@ -38,6 +38,7 @@ end
 -- PZ DoAttack checks the same native authorization used to suppress Space.
 -- Lift only our own temporary shove gate, and always restore it after the call.
 function ProjectYakuza.attemptAttack(player)
+    if ProjectYakuza.blocksNativeAttacks(player) then return false end
     local saved=(B and B.attackGates[player]) or (ProjectYakuza.Quicksteps and ProjectYakuza.Quicksteps.shoveAuth and ProjectYakuza.Quicksteps.shoveAuth[player])
     if not saved or not saved.allowed or not ProjectYakuza.isEquipped(player) or player:isAuthorizeMeleeAction() then return player:AttemptAttack() end
     player:setAuthorizeMeleeAction(true)
@@ -101,7 +102,7 @@ end
 local function onSwing(player, weapon)
     if not localPlayer(player) or not ProjectYakuza.isEquipped(player) then return end
     if not weapon or not ProjectYakuza.isStyleToken(weapon) then return end
-    if ProjectYakuza.activeActions[player] and ProjectYakuza.activeActions[player].kind=="styleEntry" then return end
+    if ProjectYakuza.blocksNativeAttacks(player) or ProjectYakuza.isCustomAction(player) then return end
     local style, s = ProjectYakuza.getPlayerStyle(player), ProjectYakuza.stateFor(player)
     s.groundMove=nil
     pollPress(player, style, s)
@@ -313,10 +314,12 @@ local function onUpdate(player)
     local style = ProjectYakuza.getPlayerStyle(player)
     if isClient() and ProjectYakuza.Network and not ProjectYakuza.Network.equipmentReady(player) then return end
     setReadyVariables(player, style, s)
+    local customAction=ProjectYakuza.updateCustomAction(player)
     if ProjectYakuza.styleInputHandlers[style.id] and ProjectYakuza.handleStyleInput(player,{
         aiming=player:isAiming(),lightDown=B.down("light"),
         heavyPressed=finisherPressed,heavyDown=finisherDown,
     }) then s.lastDown=B.down("light");return end
+    if customAction or ProjectYakuza.isCustomAction(player) then s.lastDown=B.down("light");return end
     if ProjectYakuza.Defense and ProjectYakuza.Defense.update(player,throwPressed) then s.lastDown=B.down("light");return end
     local context=ProjectYakuza.activeActions[player]
     if context and (context.kind=="parry" or context.kind=="heatActivation" or context.kind=="taunt") then
@@ -431,4 +434,13 @@ Events.OnWeaponSwing.Add(onSwing)
 Events.OnPlayerAttackFinished.Add(onFinished)
 Events.OnPlayerUpdate.Add(onUpdate)
 Events.OnWeaponHitCharacter.Add(onHit)
+local function clearCustomActions()
+    local pending={}
+    for p,c in pairs(ProjectYakuza.activeActions) do
+        if ProjectYakuza.isCustomAction(p) then pending[#pending+1]={player=p,context=c} end
+    end
+    for _,entry in ipairs(pending) do ProjectYakuza.cancelAction(entry.player,"world_exit",entry.context) end
+end
+Events.OnSave.Add(clearCustomActions)
+Events.OnMainMenuEnter.Add(clearCustomActions)
 print("[ProjectYakuza] Runtime loaded v" .. ProjectYakuza.VERSION .. "; styles=" .. #ProjectYakuza.styleOrder)

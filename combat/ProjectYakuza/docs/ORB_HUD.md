@@ -1,3 +1,5 @@
+> Historical implementation note: controls and APIs may be superseded. Use the [current manual](INDEX.md) and [API reference](API_REFERENCE.md) for addon development.
+
 # Connected heat stock orbs
 
 The horizontal heat extension now uses three connected small orbs, one per heat stock. Partial charge fills the next orb from bottom to top. The main orb remains inside the original dragon frame. Original atlas regions provide the glass, blue core, small orb border and dragon glow; no added artwork or enlarged source textures are used.

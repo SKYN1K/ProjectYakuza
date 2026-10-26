@@ -1,6 +1,9 @@
-## Default controls
+# Controls and settings
 
-Aim/movement/run use native PZ controls. While aiming: LMB light attack, MMB finisher or Tiger Drop; X block, G grab/release, MMB throw while grabbing, Q taunt, N Extreme Heat. Space quickstep; LMB during quickstep attacks. Running LMB attack, running MMB dropkick. Hold Z to select styles. Each action has its own binding in Mods settings; Shift remains native run input.
+The [README control table](../README.md#install-and-play) lists defaults. Every mod action has mouse/keyboard mode and key options under Options > Mods > Project Yakuza. Keyboard code 0 is unbound. Aim, movement, run and sprint use native PZ binds; Shift has no mod dash shortcut.
 
-Controls are persisted through PZ's native ModOptions API. Keyboard code 0 disables a keyboard-mode action. Mouse/keyboard overrides are scoped to the combat token; native attack permission is restored on unequip and world exit. Selector navigation retains mouse/arrow UI controls. Quickstep quota is saved as ProjectYakuzaQuickstepTimes in character mod data and checked only when requesting/starting a step, without per-frame zombie scans.
+MMB counter takes priority when valid, otherwise finishers follow their branch. Space replaces shove for an enabled quickstep style; stationary steps backward. Three accepted quicksteps per rolling 15 seconds are saved on the character. Normal ground attacks use registered floor moves. Grabs/throws are temporarily disabled, including reserved G/MMB behavior.
 
+The selector top is reserved, sides are assigned styles, bottom opens setup; assignments do not immediately switch. Empty slots do not disable the current style. The wheel does not pause the world. Entry locks movement/attacks but remains vulnerable. UI targets the first local keyboard/mouse player.
+
+Music/Sounds/Voices are separate 0-200% sliders. Sounds applies to style sound profiles, Voices only combat CVF cues. Native Advanced Audio can adjust individual definitions. Built-in PZAPI.ModOptions persists settings without a third-party dependency. Addon Bindings.register controls appear in the same page; vanilla key interception is not automatic.

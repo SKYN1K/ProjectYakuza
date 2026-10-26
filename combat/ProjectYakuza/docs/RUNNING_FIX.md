@@ -1,3 +1,5 @@
+> Historical implementation note: controls and APIs may be superseded. Use the [current manual](INDEX.md) and [API reference](API_REFERENCE.md) for addon development.
+
 # Running attack startup, 0.11.1
 
 The user's console records running inputs selecting dd_run_02 and dd_run_03 but timing out in PlayerMovementState with action=run/sprint. The earlier test parsed the added transition XML directly, which did not verify that the game discovers those files. Native ActionGroup.load enumerates its physical media directories, so standalone mod transition files are not sufficient.

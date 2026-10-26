@@ -1,3 +1,5 @@
+> Historical implementation note: controls and APIs may be superseded. Use the [current manual](INDEX.md) and [API reference](API_REFERENCE.md) for addon development.
+
 # Extreme Heat and shove quicksteps 0.24.0
 
 N is activation-only while the mode is active: pressing or holding it cannot cancel Extreme Heat. Existing fuel drain, attack costs and cleanup on death/unequip/style change remain. Hit gain was already blocked; the shared setHeat entry point now also rejects increases during Extreme Heat so other framework callers cannot bank extra heat. Fuel itself is not replenished. Normal gain resumes after the mode ends.

@@ -1,3 +1,5 @@
+> Historical implementation note: controls and APIs may be superseded. Use the [current manual](INDEX.md) and [API reference](API_REFERENCE.md) for addon development.
+
 # Animated Kiryu stance with native legs, 0.12.1
 
 Both aim and aim-strafe use ProjectYakuza_DD_CombatIdleLoop, derived from the provided P_KRU_BTL_SUD_stdB_lp.gmt conversion (updated in 0.26.3). The previous fixed moving pose is no longer selected. Both states use 1.0x speed, disabled locomotion sync tracking and matching 0.28s blend-in/out. The upper loop remains consistent across movement directions.

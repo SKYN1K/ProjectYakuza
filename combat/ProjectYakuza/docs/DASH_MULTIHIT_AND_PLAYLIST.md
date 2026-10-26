@@ -1,3 +1,5 @@
+> Historical implementation note: controls and APIs may be superseded. Use the [current manual](INDEX.md) and [API reference](API_REFERENCE.md) for addon development.
+
 # Dashes, multi-hit, world sparks and playlist — 0.17.1
 
 ## Quicksteps

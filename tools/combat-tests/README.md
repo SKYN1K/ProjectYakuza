@@ -22,3 +22,9 @@ taunt, voice, sound and selector suites. Generated fixtures, compiled classes,
 engine-inspection outputs and game-supplied libraries are excluded from Git.
 
 For the locked style entry fixture, run `python tools/combat-tests/build_style_entry_tests.py` from the root, then `LuaRunner style-entry-tests.lua` with the same classpath. It checks movement and native attack locks, normal vulnerability, full clip completion, hit interruption, missing clips, pause handling, queue rejection and world-exit cleanup.
+
+## API 2 and addon starter
+
+Run `python tools/combat-tests/build_extension_api_tests.py` from the root, then run `LuaRunner extension-api-tests.lua` and `LuaRunner addon-starter-tests.lua` separately from this directory. These embed actual production code and the shipped starter. They verify custom action routing, locks, pause/hit/save cleanup, context-safe completion, key registration and atomic catalog batches.
+
+`python tools/combat-tests/test_style_observer_builder.py` activates the starter in a temporary workspace folder, builds both observer cycles, checks deterministic/non-destructive output, and (when the installed game and compiled probes exist) uses native parsing and Kahlua compilation. No game/server is launched. MPObserverProbe accepts optional prefix/count arguments for addon checks; its default still validates each 75-node core cycle.

@@ -1,3 +1,5 @@
+> Historical implementation note: controls and APIs may be superseded. Use the [current manual](INDEX.md) and [API reference](API_REFERENCE.md) for addon development.
+
 # Aura fade-in
 
 Every new character-aura appearance fades from transparent to full opacity over 350 ms, using smoothstep easing. At 175 ms it is at half opacity. The fade pauses with the game and does not restart when heat eligibility is polled or heat increases while the aura remains active. Disabling and re-enabling the aura starts a fresh fade.

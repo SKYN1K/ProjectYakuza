@@ -204,7 +204,7 @@ function Q.movement()
 end
 function Q.pollShove(player)
     local active=ProjectYakuza.activeActions[player]
-    if active and active.kind=="styleEntry" then
+    if active and (active.kind=="styleEntry" or ProjectYakuza.isCustomAction(player)) then
         Q.shoveDown[player]=ProjectYakuza.Bindings.down("quickstep");return false
     end
     local style=ProjectYakuza.getPlayerStyle(player);local slot=style and style.actions.quickstep

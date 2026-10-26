@@ -1,3 +1,5 @@
+> Historical implementation note: controls and APIs may be superseded. Use the [current manual](INDEX.md) and [API reference](API_REFERENCE.md) for addon development.
+
 # Tiger Drop — 0.17.0
 
 While holding RMB with Dragon of Dojima equipped, tap MMB while a standing zombie in front of you is in the last 0.2 seconds before its bite collision. Tiger Drop takes priority over the MMB finisher only when its target and timing checks succeed. Outside that window, existing finishers retain their input. There is no queued or held-button parry.

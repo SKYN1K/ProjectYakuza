@@ -1,3 +1,5 @@
+> Historical implementation note: controls and APIs may be superseded. Use the [current manual](INDEX.md) and [API reference](API_REFERENCE.md) for addon development.
+
 # Running refinements, 0.11.2
 
 LMB is randomized equally among left side kick, right side kick and jumping knee on each accepted click; no screen/world key decides the variant. MMB selects dropkick for every running direction. Actual displacement supplies facing and continues to guard against walking or wall-running.

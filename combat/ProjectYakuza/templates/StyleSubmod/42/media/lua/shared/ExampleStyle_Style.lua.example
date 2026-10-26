@@ -1,6 +1,7 @@
 require "ProjectYakuza/Registry"
 local ProjectYakuza=ProjectYakuza
-assert(ProjectYakuza.API_VERSION>=1,"Example style requires Project Yakuza API 1")
+assert(ProjectYakuza.API_VERSION>=2,"Example style requires Project Yakuza API 2")
+ProjectYakuza.registerActionKind("example_mod.flourish")
 ProjectYakuza.registerStyle({
     id="example_mod.my_style",
     name="My Style",
@@ -12,7 +13,9 @@ ProjectYakuza.registerStyle({
         {animation="Bob_AttackPunch01_Hit",nodeValue="example_mod_light_01",
          duration=1,impact=.25,chainAt=.65,damageMultiplier=1},
     },
-    actions={},
+    actions={
+        ["example_mod.flourish"]={enabled=true,animation="ExampleStyle_Flourish",duration=1},
+    },
     heat=false,
     music=false,
     sounds=false,

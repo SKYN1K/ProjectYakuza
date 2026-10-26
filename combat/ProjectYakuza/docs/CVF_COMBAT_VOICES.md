@@ -5,26 +5,18 @@ Compatible API: Custom Voice Framework 1.1+ from https://github.com/DmitryFisk/c
 ## Reserved entries
 
 Namespace/modId: `ProjectYakuza`. All definitions are wheel=false and absent recordings have no fallback. Exact metadata for voice authors is in [the manifest fragment](../templates/CVFCombatLines/lines.json).
-
 | Entry | Trigger |
-
 |---|---|
-
 | CombatLightAttack | Actual light swing, after native floor targeting is classified |
-
 | CombatHeavyAttack | Finishers, double finishers and ground stomps |
-
 | CombatSpecialMove | Running/quickstep attacks; accepted quicksteps, grabs, parries, throws and future heat actions |
-
-| CombatTaunt | Combat styles → Combat taunt (voice only), or an add-on's tauntStarted event |
-
+| CombatTaunt | Actual animation-backed taunt start (tauntStarted) |
 | CombatExtremeHeatActivation | The activation animation actually starts; not every heat update |
-
 | CombatStanceEntry | Start the style-selection entry animation; raising RMB does not play this cue |
-
 | CombatGettingHit | Confirmed acute damage to the local style user; not hunger, thirst or ongoing bleeding |
-
 | CombatGettingStunned | Knockdown / stun, stagger, trip or bump reaction entry, or a guard break |
+
+The Voices slider applies only to combat-originated playback. combatVoiceVolume is a per-style multiplier; quickstepVoices=false suppresses movement-only step cues.
 
 Only the owning local player's client requests playback. CVF uses transmitPlayerVoiceSound once and enforces its server policy, voice-busy guard, 250 ms global interval and per-line cooldowns. ProjectYakuza does not replay voices through its MP effect messages. One attack queues one line, not one per zombie; native ground-target correction replaces the pending light line with the heavy line. Interrupted/stale attacks are discarded. Voices may be skipped when CVF reports busy/cooldown. Existing engine-triggered vanilla voices are not globally muted or rewritten by this adapter.
 

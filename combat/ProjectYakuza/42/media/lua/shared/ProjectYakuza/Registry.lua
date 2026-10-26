@@ -1,8 +1,8 @@
 ProjectYakuza = ProjectYakuza or {}
 local ProjectYakuza = ProjectYakuza
 ProjectYakuza.FEATURES={grab=false}
-ProjectYakuza.VERSION = "0.29.0"
-ProjectYakuza.API_VERSION = 1
+ProjectYakuza.VERSION = "0.30.0"
+ProjectYakuza.API_VERSION = 2
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
 ProjectYakuza.actionHandlers = ProjectYakuza.actionHandlers or {}
@@ -10,6 +10,7 @@ ProjectYakuza.styleActionHandlers = ProjectYakuza.styleActionHandlers or {}
 ProjectYakuza.styleInputHandlers = ProjectYakuza.styleInputHandlers or {}
 ProjectYakuza.listeners = ProjectYakuza.listeners or {}
 ProjectYakuza.actionKinds = { finisher=true, grab=true, parry=true, block=true, quickstep=true, quickstepAttack=true, runningAttack=true, heatAction=true, heatActivation=true, taunt=true, styleEntry=true }
+ProjectYakuza.actionDefinitions = ProjectYakuza.actionDefinitions or {}
 ProjectYakuza.activeActions = ProjectYakuza.activeActions or setmetatable({}, {__mode="k"})
 ProjectYakuza.MAX_HIT_COUNT = 3
 ProjectYakuza.TOKEN = "ProjectYakuza.StyleToken"
@@ -51,17 +52,23 @@ function ProjectYakuza.validateStyle(style)
             local v=value[key];if v~=nil and (not number(v) or v<0 or v>1) then problem(path.."."..key.." must be 0..1") end
         end
         if value.damageMultiplier~=nil and (not number(value.damageMultiplier) or value.damageMultiplier<0) then problem(path..".damageMultiplier must be nonnegative") end
+        for _,key in ipairs({"heatCost","heatStocks","distance","cooldownMs","windowMs"}) do
+            if value[key]~=nil and (not number(value[key]) or value[key]<0) then problem(path.."."..key.." must be nonnegative") end
+        end
+        if value.afterLight~=nil and (not number(value.afterLight) or value.afterLight<1 or value.afterLight~=math.floor(value.afterLight) or (type(style.lightAttacks)=="table" and value.afterLight>#style.lightAttacks)) then problem(path..".afterLight must index lightAttacks") end
         if value.speed~=nil and (not number(value.speed) or value.speed<=0) then problem(path..".speed must be positive") end
     end
     if type(style)~="table" then return false,{"style must be a table"} end
     if not text(style.id) or style.id=="none" or not string.match(style.id,"^[%w_.-]+$") then problem("style.id must be a unique namespaced ID using letters, numbers, underscore, dot or hyphen") end
     if not text(style.name) then problem("style.name is required") end
     if style.selectorIcon~=nil and not text(style.selectorIcon) then problem("selectorIcon must name a supplied texture") end
-    if style.combatVoices~=nil and type(style.combatVoices)~="boolean" then problem("combatVoices must be true or false") end
     for _,key in ipairs({"attackSpeed","runningKneeSpeed"}) do
         if style[key]~=nil and (not number(style[key]) or style[key]<=0) then problem(key.." must be positive") end
     end
-    if style.heat~=nil and type(style.heat)~="boolean" then problem("heat must be true or false") end
+    for _,key in ipairs({"heat","combatVoices","quickstepVoices","tigerDrop","enemyReactions"}) do
+        if style[key]~=nil and type(style[key])~="boolean" then problem(key.." must be true or false") end
+    end
+    if style.combatVoiceVolume~=nil and (not number(style.combatVoiceVolume) or style.combatVoiceVolume<0) then problem("combatVoiceVolume must be nonnegative") end
     if type(style.lightAttacks)~="table" or #style.lightAttacks==0 then problem("lightAttacks must contain at least one move")
     else for i,value in ipairs(style.lightAttacks) do move(value,"lightAttacks["..i.."]",true) end end
     if style.comboResetMs~=nil and (not number(style.comboResetMs) or style.comboResetMs<0) then problem("comboResetMs must be nonnegative milliseconds") end
@@ -145,11 +152,57 @@ function ProjectYakuza.registerActionHandler(kind, handler)
     assert(type(handler) == "table" and type(handler.start) == "function", "handler.start required")
     assert(handler.canStart==nil or type(handler.canStart)=="function","handler.canStart must be a function")
     assert(handler.cancel==nil or type(handler.cancel)=="function","handler.cancel must be a function")
+    assert(handler.update==nil or type(handler.update)=="function","handler.update must be a function")
     ProjectYakuza.actionHandlers[kind] = handler
 end
-function ProjectYakuza.registerActionKind(kind)
-    assert(type(kind)=="string" and kind~="","action kind required")
+-- New kinds own their input/lifecycle; built-in kinds retain their controllers.
+function ProjectYakuza.registerActionKind(kind,options)
+    assert(type(kind)=="string" and string.match(kind,"^[%w_.-]+$"),"namespaced action kind required")
+    assert(options==nil or type(options)=="table","action options must be a table")
+    local old=ProjectYakuza.actionDefinitions[kind]
+    if ProjectYakuza.actionKinds[kind] and not old then
+        assert(options==nil,"built-in action policies cannot be replaced; use a namespaced kind")
+        return nil
+    end
+    local blocked=not options or options.blocksAttacks~=false
+    if options then
+        for key in pairs(options) do assert(key=="blocksAttacks","unknown action option: "..tostring(key)) end
+        assert(options.blocksAttacks==nil or type(options.blocksAttacks)=="boolean","blocksAttacks must be boolean")
+    end
+    if old then
+        assert(not options or old.blocksAttacks==blocked,"action kind already has a different policy")
+        return old
+    end
     ProjectYakuza.actionKinds[kind]=true
+    local definition={blocksAttacks=blocked}
+    ProjectYakuza.actionDefinitions[kind]=definition
+    return definition
+end
+function ProjectYakuza.isCustomAction(player)
+    local c=ProjectYakuza.activeActions[player]
+    return c~=nil and ProjectYakuza.actionDefinitions[c.kind]~=nil
+end
+function ProjectYakuza.blocksNativeAttacks(player)
+    local c=ProjectYakuza.activeActions[player]
+    local d=c and ProjectYakuza.actionDefinitions[c.kind]
+    return c~=nil and (c.kind=="styleEntry" or (d~=nil and d.blocksAttacks)) or false
+end
+-- Called only for the current local player's custom action, never world scans.
+function ProjectYakuza.updateCustomAction(player)
+    local c=ProjectYakuza.activeActions[player]
+    if not c or not ProjectYakuza.actionDefinitions[c.kind] then return false end
+    if isGamePaused() then return true end
+    if (player:getHitReaction() or "")~="" then
+        ProjectYakuza.cancelAction(player,"hit_reaction",c);return true
+    end
+    if c.handler.update then
+        local ok,err=pcall(c.handler.update,c)
+        if not ok then
+            print("[ProjectYakuza] custom action update error: "..tostring(err))
+            ProjectYakuza.cancelAction(player,"update_failed",c)
+        end
+    end
+    return true
 end
 function ProjectYakuza.registerStyleActionHandler(styleId,kind,handler)
     assert(type(styleId)=="string" and styleId~="","style ID required")
@@ -157,6 +210,7 @@ function ProjectYakuza.registerStyleActionHandler(styleId,kind,handler)
     assert(type(handler)=="table" and type(handler.start)=="function","handler.start required")
     assert(handler.canStart==nil or type(handler.canStart)=="function","handler.canStart must be a function")
     assert(handler.cancel==nil or type(handler.cancel)=="function","handler.cancel must be a function")
+    assert(handler.update==nil or type(handler.update)=="function","handler.update must be a function")
     ProjectYakuza.styleActionHandlers[styleId]=ProjectYakuza.styleActionHandlers[styleId] or {}
     ProjectYakuza.styleActionHandlers[styleId][kind]=handler
 end
@@ -224,19 +278,22 @@ function ProjectYakuza.requestAction(player, kind, variant, target)
         return false,reason or "start_failed"
     end
     ProjectYakuza.activeActions[player] = context
+    if ProjectYakuza.blocksNativeAttacks(player) and ProjectYakuza.Bindings then ProjectYakuza.Bindings.update(player) end
     if cost>0 then ProjectYakuza.setHeat(player, ProjectYakuza.getHeat(player) - cost) end
     ProjectYakuza.emit("actionStarted", context)
     return true
 end
-function ProjectYakuza.completeAction(player)
+function ProjectYakuza.completeAction(player,expectedContext)
     local context = ProjectYakuza.activeActions[player]
+    if expectedContext and context~=expectedContext then return false end
     if not context then return false end
     ProjectYakuza.activeActions[player] = nil
     ProjectYakuza.emit("actionCompleted", context)
     return true
 end
-function ProjectYakuza.cancelAction(player, reason)
+function ProjectYakuza.cancelAction(player, reason,expectedContext)
     local context = ProjectYakuza.activeActions[player]
+    if expectedContext and context~=expectedContext then return false end
     if not context then return false end
     ProjectYakuza.activeActions[player] = nil
     local handler = context.handler or ProjectYakuza.getActionHandler(context.style.id,context.kind)

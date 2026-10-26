@@ -1,3 +1,5 @@
+> Historical implementation note: controls and APIs may be superseded. Use the [current manual](INDEX.md) and [API reference](API_REFERENCE.md) for addon development.
+
 # HUD atlas crop correction and aura size
 
 The dragon, head, glass, core and native glow use explicit source rectangles through ISUIElement.drawSubTexture / UIElement.DrawSubTextureRGBA. Runtime Texture.split objects are no longer passed to drawTextureScaled. The explicit native path computes source UV coordinates for each draw. The original 512 by 512 atlas and all its pixels are unchanged.

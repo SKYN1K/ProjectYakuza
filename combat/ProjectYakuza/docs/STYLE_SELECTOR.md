@@ -16,3 +16,5 @@ Register styles using the framework API. They appear in the assignment menu auto
 
 Frame atlas: Yakuza Kiwami/media/data/2dpar/ui_c.par → surfboard/pjcm_life.par → pjcm_life.dds. Dragon icon: 2dpar/sprite_c.par → 2d_yk_style_icon_k03_e.dds. PNGs preserve the source RGBA pixels exactly; the original ring/highlight atlas regions are selected at runtime. No textures, audio or animations were synthesized. See style-selector-assets.json for hashes.
 
+
+Selecting or reselecting a style with actions.styleEntry requests its native entry animation. The DoD entry blocks movement/attacks but leaves the player vulnerable. Empty/setup slots do not play entry. Explicit MP selection waits for equipment delivery/acknowledgement; reconnect repairs stay silent. Other styles can opt in with their own clip/markers.

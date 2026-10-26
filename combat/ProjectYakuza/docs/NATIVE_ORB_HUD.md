@@ -1,3 +1,5 @@
+> Historical implementation note: controls and APIs may be superseded. Use the [current manual](INDEX.md) and [API reference](API_REFERENCE.md) for addon development.
+
 # Original-asset connected orb HUD
 
 The active HUD uses only original artwork from the game's e/texture/btl_hact.dds and e/texture/btl.dds. Both atlases are losslessly converted to PNG, with every RGBA pixel checked against the source. No repainting, texture enlargement, generated animation frames or new graphical artwork is used. The older bar implementation and its assets remain preserved for later reference and are not loaded by the active HUD.
