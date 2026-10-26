@@ -15,7 +15,7 @@ assert actual==names
 for clip in clips:
     path=addon/'42/media/anims_X/Bob'/(clip['name']+'.x')
     assert hashlib.sha256(path.read_bytes()).hexdigest()==clip['output_sha256'],path
-    assert clip['frames']>0 and clip['fps']==30 and clip['channels']==36
+    assert clip['frames']>0 and clip['fps']==30 and clip['channels']==35
     if clip['impact_frame'] is not None:assert 0<clip['impact_frame']<clip['frames']
     assert clip['source'].startswith(('P_MJK_','P_btlst_MJA_to_MJK'))
 owner=observer=collisions=0

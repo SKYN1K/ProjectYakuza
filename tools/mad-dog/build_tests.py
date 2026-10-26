@@ -11,7 +11,7 @@ for directory in [base,addon]:
         for path in (directory/scope).rglob('*.lua'):
             modules[path.relative_to(directory/scope).with_suffix('').as_posix()]=path.read_text()
 selected=['ProjectYakuza/Registry','ProjectYakuza/Combo','ProjectYakuza/Styles/DragonOfDojima',
-          'ProjectYakuza/NetworkCatalog','ProjectYakuza/NetworkProtocol','ProjectYakuza/Heat',
+          'ProjectYakuza/NetworkCatalog','ProjectYakuza/NetworkExtensions','ProjectYakuza/NetworkProtocol','ProjectYakuza/Heat',
           'ProjectYakuza/Runtime','ProjectYakuzaMadDog/Motions','ProjectYakuzaMadDog/NetworkCatalog',
           'ProjectYakuzaMadDog/Style','ProjectYakuzaMadDog/Movement']
 lines=['local modules={}']

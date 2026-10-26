@@ -1,41 +1,19 @@
-"""Run in Blender 3.6: --background --python convert_motions.py -- [arguments].
+"""Port original Y0 motion onto PZ's real Human bind rig; run in Blender Python.
 
-Requires local original Y0 Majima GMD/GMT files and the pinned third-party
-importers documented in README.md. No original archives or tool installs are
-copied into the addon. Retargets existing motion; does not synthesize animation.
+No generated poses, IK, floor reconstruction or time reversal. The source is
+sampled directly from GMT/GMD keys. Only planar root travel is removed because
+framework actions own collision-aware travel. All original frame times remain.
 """
 import argparse
+import bisect
 import hashlib
-import importlib.util
 import json
 import math
 import re
 import sys
+import types
 from pathlib import Path
-
-import bpy
 from mathutils import Matrix, Quaternion, Vector
-
-MAP = {'Bip01':'ketu_c_n', 'Bip01_Pelvis':'ketu_c_n',
-       'Bip01_Spine':'kosi_c_n', 'Bip01_Spine1':'mune_c_n',
-       'Bip01_Neck':'kubi_c_n', 'Bip01_Head':'face_c_n'}
-for side in ('L','R'):
-    for target, source in [('Clavicle','kata'),('UpperArm','ude1'),
-                           ('Forearm','ude2'),('Hand','ude3'),('Thigh','asi1'),
-                           ('Calf','asi2'),('Foot','asi3'),('Toe0','asi4')]:
-        MAP[f'Bip01_{side}_{target}'] = f'{source}_{side.lower()}_n'
-
-# Contact frames are approximations selected from source pose samples. The
-# original MEP combat/physics implementation is not transplanted into Zomboid.
-AIM = {'Bip01_Spine':('Bip01_Spine1','mune_c_n'),
-       'Bip01_Spine1':('Bip01_Neck','kubi_c_n'),
-       'Bip01_Neck':('Bip01_Head','face_c_n')}
-for side in ('L','R'):
-    for parent,child,source_child in [('Clavicle','UpperArm','ude1'),
-            ('UpperArm','Forearm','ude2'),('Forearm','Hand','ude3'),
-            ('Hand','Finger1','naka1'),('Thigh','Calf','asi2'),
-            ('Calf','Foot','asi3'),('Foot','Toe0','asi4')]:
-        AIM[f'Bip01_{side}_{parent}']=(f'Bip01_{side}_{child}',f'{source_child}_{side.lower()}_n')
 
 CLIPS = []
 def clip(name, source, kind, impact=None, **extra):
@@ -61,164 +39,220 @@ clip('HeatActivate','P_MJK_stlye_st','heatActivation')
 clip('StyleEntry','P_btlst_MJA_to_MJK','styleEntry')
 
 
-def read_frames(text):
-    """Read the named Frame hierarchy from a text DirectX file (row matrices)."""
-    text=text[re.search(r'^Frame\s+\w+\s*\{', text, re.M).start():]
-    text=text.split('\nAnimationSet ')[0]
-    tokens = re.findall(r'[A-Za-z_][\w.]*|[-+]?\d*\.?\d+(?:[eE][-+]?\d+)?|[{};,]',text)
-    frames, stack = {}, []
-    i=0
-    while i<len(tokens):
-        if tokens[i]=='Frame' and i+2<len(tokens) and tokens[i+2]=='{':
-            name=tokens[i+1]
-            frames[name]={'parent':stack[-1] if stack else None}
-            stack.append(name); i+=3
-        elif tokens[i]=='FrameTransformMatrix' and stack:
-            j=tokens.index('}',i); values=[float(v) for v in tokens[i+2:j] if v not in (';',',')]
-            assert len(values)==16
-            frames[stack[-1]]['local']=Matrix([values[n:n+4] for n in range(0,16,4)]).transposed()
-            i=j+1
-        elif tokens[i]=='}' and stack:
-            stack.pop(); i+=1
-        else: i+=1
+def matrix(text):
+    v=[float(n) for n in text.strip().rstrip(';').split(',')]
+    assert len(v)==16
+    return Matrix([v[i:i+4] for i in range(0,16,4)]).transposed()
+
+
+def raw_frames(text):
+    start=text.index('Frame Dummy01 {');depth=0
+    for i in range(start,len(text)):
+        if text[i]=='{':depth+=1
+        elif text[i]=='}':
+            depth-=1
+            if depth==0:end=i+1;break
+    frames={};stack=[]
+    for match in re.finditer(r'Frame (\w+)\s*\{|FrameTransformMatrix\s*\{([^}]+)\}|(\})',text[start:end]):
+        if match[1]:
+            frames[match[1]]={'parent':stack[-1] if stack else None};stack.append(match[1])
+        elif match[2]:frames[stack[-1]]['local']=matrix(match[2])
+        else:stack.pop()
     for name,b in frames.items():
         b['world']=(frames[b['parent']]['world'] if b['parent'] else Matrix.Identity(4)) @ b['local']
-    return frames
+    return frames,start
 
 
-def basis(left, right, head, hip):
-    x=(left-right).normalized(); z=(head-hip).normalized()
-    z=(z-x*z.dot(x)).normalized(); y=z.cross(x).normalized()
-    return Matrix([x,y,z]).transposed()
+def human_bind(text):
+    frames,start=raw_frames(text);skin={}
+    for match in re.finditer(r'SkinWeights\s*\{\s*"([^"]+)";\s*(\d+);([^}]+)\}',text):
+        count=int(match[2])
+        values=[float(v) for v in re.findall(r'-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?',match[3])][2*count:]
+        assert len(values)==16
+        skin[match[1]]=Matrix([values[i:i+4] for i in range(0,16,4)]).transposed().inverted()
+    skin['Dummy01']=frames['Dummy01']['local'].copy()
+    skin['Bip01']=skin['Bip01_Pelvis'] @ frames['Bip01_Pelvis']['local'].inverted()
+    for name,b in frames.items():
+        parent=b['parent']
+        b['world']=skin.get(name,(frames[parent]['world'] @ b['local']) if parent else b['local']).copy()
+        b['local']=(frames[parent]['world'].inverted() @ b['world']) if parent else b['world'].copy()
+    # This is where PZ's ImportedSkeleton attaches the separate translation node.
+    match=re.search(r'Frame Translation_Data\s*\{\s*FrameTransformMatrix\s*\{([^}]+)\}',text)
+    if match:
+        local=matrix(match[1]);frames['Translation_Data']={'parent':'Dummy01','local':local,'world':frames['Dummy01']['world'] @ local}
+    return frames,start
 
 
-def fmt(values):return ','.join(f'{v:.9f}' for v in values)
+def native_knife_grip(text):
+    frames,_=raw_frames(text);channels={};world={}
+    for match in re.finditer(r'Animation\s*(?:\w+)?\s*\{\s*\{\s*(\w+)\s*\}(.*?)(?=\n\s*Animation\s|\Z)',text,re.S):
+        name,body=match.groups();channels[name]={}
+        for key in re.finditer(r'AnimationKey\s*(?:\w+)?\s*\{\s*(\d+)\s*;\s*\d+\s*;\s*\d+\s*;\s*\d+\s*;([^;]+)',body,re.S):
+            channels[name][int(key[1])]=[float(v) for v in key[2].split(',') if v.strip()]
+    for name,b in frames.items():
+        keys=channels.get(name,{})
+        q=Quaternion([-keys[0][0],*keys[0][1:]]) if 0 in keys else b['local'].to_quaternion()
+        loc=Vector(keys[2]) if 2 in keys else b['local'].translation
+        local=Matrix.LocRotScale(loc,q,Vector((1,1,1)))
+        world[name]=(world[b['parent']] if b['parent'] else Matrix.Identity(4)) @ local
+    grip=world['Bip01_R_Hand'].inverted() @ world['Bip01_Prop1']
+    fingers={n:world[frames[n]['parent']].inverted() @ world[n] for n in ['Bip01_R_Finger0','Bip01_R_Finger1']}
+    return grip,fingers
+
+
+def frame(primary,secondary):
+    x=primary.normalized();y=secondary-x*secondary.dot(x)
+    assert y.length>1e-6,'Ambiguous anatomical rest frame'
+    y.normalize();return Matrix((x,y,x.cross(y).normalized())).transposed().to_4x4()
+
+
+def rotation(value):return Quaternion((value[3],value[0],value[1],value[2])).normalized()
+
+
+def evaluate(curve,time,default,is_rotation=False):
+    if curve is None or not curve.keyframes:return default.copy()
+    curve.fill_channels();keys=curve.keyframes
+    index=max(0,bisect.bisect_right([k.frame for k in keys],time)-1)
+    convert=rotation if is_rotation else Vector
+    a=convert(keys[index].value)
+    if index==len(keys)-1 or time<=keys[index].frame:return a
+    b=convert(keys[index+1].value);t=(time-keys[index].frame)/(keys[index+1].frame-keys[index].frame)
+    return a.slerp(b,t) if is_rotation else a.lerp(b,t)
 
 
 def main():
-    p=argparse.ArgumentParser()
-    p.add_argument('--source',type=Path,required=True)
-    p.add_argument('--gmd',type=Path,required=True)
-    p.add_argument('--gmd-importer',type=Path,required=True)
-    p.add_argument('--gmt-importer',type=Path,required=True)
-    p.add_argument('--native-knife',type=Path,required=True)
-    p.add_argument('--output',type=Path,required=True)
-    p.add_argument('--samples',type=Path,required=True)
-    args=p.parse_args(sys.argv[sys.argv.index('--')+1:])
-    root=Path(__file__).resolve().parents[2]
-    template=(root/'combat/ProjectYakuza/42/media/anims_X/Bob/ProjectYakuza_DD_Light01.x').read_text()
-    prefix=(template.split('\nAnimationSet ')[0]+'\n').replace('Y6_Default','MadDog_Default').replace('Y6_ImportSupport','MadDog_ImportSupport')
-    bones=read_frames(template)
-    sys.path.insert(0,str(args.gmd_importer))
-    import yk_gmd_blender
-    yk_gmd_blender.register()
-    spec=importlib.util.spec_from_file_location('yakuza_gmt',args.gmt_importer/'__init__.py',submodule_search_locations=[str(args.gmt_importer)])
-    module=importlib.util.module_from_spec(spec); sys.modules[spec.name]=module; spec.loader.exec_module(module)
-    from yakuza_gmt.blender.importer import GMTImporter
-    bpy.ops.object.select_all(action='SELECT');bpy.ops.object.delete(use_global=False)
-    bpy.ops.import_scene.gmd_skinned(filepath=str(args.gmd),strict=False,logging_categories='')
-    rig=next(o for o in bpy.data.objects if o.type=='ARMATURE')
-    bpy.context.view_layer.objects.active=rig;rig.select_set(True)
-    rest={n:b.matrix_local.copy() for n,b in rig.data.bones.items()}
-    def s(n):return rest[n].translation
-    def t(n):return bones[n]['world'].translation
-    sb=basis(s('asi1_l_n'),s('asi1_r_n'),s('face_c_n'),s('ketu_c_n'))
-    tb=basis(t('Bip01_L_Thigh'),t('Bip01_R_Thigh'),t('Bip01_Head'),t('Bip01'))
-    conversion=tb @ sb.transposed()
-    # Leg length preserves PZ proportions, with in-place hips and original height motion.
-    scale=(t('Bip01_L_Thigh')-t('Bip01_L_Foot')).length/(s('asi1_l_n')-s('asi3_l_n')).length
-    # Reuse the original PZ knife's prop-to-hand grip, never a generated model.
-    native=args.native_knife.read_text()
-    native_frames=read_frames(native)
-    def native_pose_zero():
-        result={};channels={}
-        for match in re.finditer(r'Animation\s*(?:\w+)?\s*\{\s*\{\s*(\w+)\s*\}(.*?)(?=\n\s*Animation\s|\Z)',native,re.S):
-            name,body=match.groups(); channels[name]={}
-            for key in re.finditer(r'AnimationKey\s*(?:\w+)?\s*\{\s*(\d+)\s*;\s*\d+\s*;\s*\d+\s*;\s*\d+\s*;([^;]+)',body,re.S):
-                kind,nums=key.groups();channels[name][int(kind)]=[float(x.strip()) for x in nums.split(',') if x.strip()]
-        for name,b in native_frames.items():
-            c=channels.get(name,{})
-            q=Quaternion([-c[0][0],*c[0][1:]]) if 0 in c else b['local'].to_quaternion()
-            pos=Vector(c[2]) if 2 in c else b['local'].translation
-            local=q.to_matrix().to_4x4();local.translation=pos
-            result[name]=(result[b['parent']] if b['parent'] else Matrix.Identity(4)) @ local
-        return result
-    zero=native_pose_zero()
-    grip=zero['Bip01_R_Hand'].inverted() @ zero['Bip01_Prop1']
-    fingers={name:zero[native_frames[name]['parent']].inverted() @ zero[name]
-             for name in ('Bip01_R_Finger0','Bip01_R_Finger1')}
-    args.output.mkdir(parents=True,exist_ok=True)
-    args.samples.mkdir(parents=True,exist_ok=True)
-    report=[]
+    parser=argparse.ArgumentParser(description=__doc__)
+    for key in ['source','gmd','gmt-importer','pz-media','output','samples']:
+        parser.add_argument('--'+key,type=Path,required=True)
+    args=parser.parse_args(sys.argv[sys.argv.index('--')+1:])
+    pkg=types.ModuleType('mad_dog_source');pkg.__path__=[str(args.gmt_importer)];sys.modules[pkg.__name__]=pkg
+    from mad_dog_source.read_gmd import read_gmd_bones
+    from mad_dog_source.gmt_lib import read_gmt
+    bones=read_gmd_bones(str(args.gmd));source_rest={}
+    for b in bones:
+        local=Matrix.LocRotScale(Vector(b.local_pos[:3]),rotation(b.local_rot),Vector((1,1,1)))
+        source_rest[b.name]=(source_rest[bones[b.parent_index].name] if b.parent_index>=0 else Matrix.Identity(4)) @ local
+    target_path=args.pz_media/'models_X/Skinned/MaleBody.x';text=target_path.read_text()
+    target,start=human_bind(text)
+    # Yakuza is +Z-forward; PZ is -Z-forward, with +X still character-left.
+    # A 180-degree body turn swaps sides. A handedness conversion does not.
+    conversion=Matrix.Diagonal((1,1,-1,1));converted_rest={n:conversion @ m @ conversion for n,m in source_rest.items()}
+    def direction(world,a,b):return world[b].translation-world[a].translation
+    def td(a,b):return target[b]['world'].translation-target[a]['world'].translation
+    source_forward=sum((direction(converted_rest,'asi3_'+s+'_n','asi4_'+s+'_n') for s in ['l','r']),Vector())
+    target_forward=sum((td('Bip01_'+s+'_Foot','Bip01_'+s+'_Toe0') for s in ['L','R']),Vector())
+    source_forward.y=0;source_forward.normalize();target_forward.y=0;target_forward.normalize()
+    source_left=direction(converted_rest,'asi1_r_n','asi1_l_n').normalized()
+    target_left=td('Bip01_R_Thigh','Bip01_L_Thigh').normalized()
+    assert source_forward.dot(target_forward)>.999 and source_left.dot(target_left)>.99,'Incorrect forward or left/right mapping'
+    mapping={'Bip01_Pelvis':('ketu_c_n',None),'Bip01_Spine':('kosi_c_n','mune_c_n'),
+             'Bip01_Spine1':('mune_c_n','kubi_c_n'),'Bip01_Neck':('kubi_c_n','face_c_n'),'Bip01_Head':('face_c_n',None)}
+    children={'Bip01_Spine':'Bip01_Spine1','Bip01_Spine1':'Bip01_Neck','Bip01_Neck':'Bip01_Head'}
+    for side,s in [('L','l'),('R','r')]:
+        for name,child,src,src_child in [('Clavicle','UpperArm','kata','ude1'),('UpperArm','Forearm','ude1','ude2'),
+                ('Forearm','Hand','ude2','ude3'),('Hand','Finger1','ude3','naka1'),('Thigh','Calf','asi1','asi2'),
+                ('Calf','Foot','asi2','asi3'),('Foot','Toe0','asi3','asi4'),('Toe0',None,'asi4',None)]:
+            name='Bip01_'+side+'_'+name
+            mapping[name]=(src+'_'+s+'_n',src_child+'_'+s+'_n' if src_child else None)
+            if child:children[name]='Bip01_'+side+'_'+child
+    alignment={}
+    for name,(src,child) in mapping.items():
+        secondary_source,secondary_target=source_forward,target_forward
+        if name=='Bip01_Pelvis':
+            a=direction(converted_rest,'kosi_c_n','mune_c_n');b=td(name,'Bip01_Spine')
+            secondary_source,secondary_target=source_left,target_left
+        elif name.endswith('_Toe0'):a,b=source_forward,target_forward;secondary_source=secondary_target=Vector((0,1,0))
+        elif name=='Bip01_Head':a=b=Vector((0,1,0))
+        else:a=direction(converted_rest,src,child);b=td(name,children[name])
+        if name.endswith('_Hand'):
+            side='l' if '_L_' in name else 'r'
+            secondary_source=direction(converted_rest,src,'oya1_'+side+'_n')
+            secondary_target=td(name,'Bip01_'+side.upper()+'_Finger0')
+        alignment[name]=frame(a,secondary_source) @ frame(b,secondary_target).inverted()
+    scale=target['Bip01']['world'].translation.y/source_rest['center_c_n'].translation.y
+    knife=args.pz_media/'anims_X/Bob/Bob_AttackKnife01_Hit.x'
+    grip,fingers=native_knife_grip(knife.read_text())
+    def source_pose(animation,time):
+        world={}
+        for b in bones:
+            k=animation.bones.get(b.name)
+            q=evaluate(k.rotation if k else None,time,rotation(b.local_rot),True)
+            loc=evaluate(k.location if k else None,time,Vector(b.local_pos[:3]))
+            local=Matrix.LocRotScale(loc,q,Vector((1,1,1)))
+            world[b.name]=(world[bones[b.parent_index].name] if b.parent_index>=0 else Matrix.Identity(4)) @ local
+        return world
+    def render_frame(name,depth=0):
+        indent=' '*depth;v=[v for row in target[name]['local'].transposed() for v in row]
+        lines=[indent+'Frame '+name+' {',indent+' FrameTransformMatrix { '+','.join(f'{v:.9f}' for v in v)+';; }']
+        for child,b in target.items():
+            if b['parent']==name:lines.append(render_frame(child,depth+1))
+        return '\n'.join(lines+[indent+'}'])
+    skeleton='\n'.join(render_frame(n) for n,b in target.items() if b['parent'] is None)
+    header=re.split(r'(?m)^Material \w+\s*\{',text[:start])[0]
+    support='''
+Mesh MadDog_ImportSupport {
+3; 0.0;0.0;0.0;, 0.001;0.0;0.0;, 0.0;0.001;0.0;;
+1; 3;0,1,2;;
+XSkinMeshHeader { 1;3;1; }
+SkinWeights { "Bip01";3;0,1,2;1.0,1.0,1.0;
+1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,0.0,1.0;; }
+}
+AnimTicksPerSecond { 4800; }
+'''
+    args.output.mkdir(parents=True,exist_ok=True);args.samples.mkdir(parents=True,exist_ok=True)
+    records=[]
     for entry in CLIPS:
-        source=args.source/entry['source']
-        GMTImporter(bpy.context,str(source),{'merge_vector_curves':True,'is_auth':False,'import_as_path':False}).read()
-        end=bpy.context.scene.frame_end; fps=bpy.context.scene.render.fps
-        transforms={name:[] for name in bones}; sample_frames=[]
-        for f in range(end+1):
-            bpy.context.scene.frame_set(f)
-            world={};source_hip=rig.pose.bones['ketu_c_n'].matrix.translation
-            for name,b in bones.items():
-                parent=b['parent'];parent_pose=world[parent] if parent else Matrix.Identity(4)
-                source_name=MAP.get(name)
-                if source_name:
-                    delta=rig.pose.bones[source_name].matrix.to_3x3() @ rest[source_name].to_3x3().inverted()
-                    rotation=conversion @ delta @ conversion.transposed() @ b['world'].to_3x3()
-                    if name in AIM:
-                        child,source_child=AIM[name]
-                        bind_vector=bones[child]['world'].translation-b['world'].translation
-                        predicted=rotation @ b['world'].to_3x3().inverted() @ bind_vector
-                        desired=conversion @ (rig.pose.bones[source_child].matrix.translation-rig.pose.bones[source_name].matrix.translation)
-                        if predicted.length>.00001 and desired.length>.00001:
-                            rotation=predicted.rotation_difference(desired).to_matrix() @ rotation
-                    local_rotation=parent_pose.to_3x3().inverted() @ rotation
-                    local=local_rotation.to_quaternion().normalized().to_matrix().to_4x4()
-                    local.translation=b['local'].translation
-                    if name=='Bip01':
-                        height=conversion @ ((source_hip-s('ketu_c_n'))*scale)
-                        position=b['world'].translation.copy();position.y+=height.y
-                        local.translation=parent_pose.inverted() @ position
-                else:local=fingers.get(name,b['local']).copy()
-                world[name]=parent_pose @ local
-                if name=='Bip01_Prop1':
-                    world[name]=world['Bip01_R_Hand'] @ grip
-                    local=parent_pose.inverted() @ world[name]
-                transforms[name].append(local)
-            sample_frames.append({n:list(w.translation) for n,w in world.items()})
-        chunks=[prefix,f'AnimationSet {entry["name"]} {{\n']
-        for name,matrices in transforms.items():
-            chunks.append(f' Animation {{ {{ {name} }}\n')
-            rotations=[];last=None
-            for mat in matrices:
-                q=mat.to_quaternion().normalized()
-                if last is not None and q.dot(last)<0:q.negate()
-                last=q.copy();rotations.append([-q.w,q.x,q.y,q.z])
-            for label,kind,values in [('R',0,rotations),('S',1,[(1,1,1)]*(end+1)),('T',2,[m.translation for m in matrices])]:
-                chunks.append(f'  AnimationKey {label} {{ {kind}; {end+1};\n')
-                for f,value in enumerate(values):
+        source=args.source/entry['source'];animation=read_gmt(str(source)).animation
+        end=animation.end_frame;fps=animation.frame_rate
+        transforms={n:[] for n in target};samples=[]
+        for time in range(end+1):
+            src_pose=source_pose(animation,time);world={};local={}
+            root_delta=conversion.to_3x3() @ (src_pose['center_c_n'].translation-source_rest['center_c_n'].translation)*scale
+            root_delta.x=0;root_delta.z=0
+            for name,rest in target.items():
+                parent=rest['parent'];parent_world=world[parent] if parent else Matrix.Identity(4)
+                mat=rest['local'].copy()
+                if name in mapping:
+                    src=mapping[name][0];current=conversion @ src_pose[src] @ conversion
+                    delta=current.to_quaternion().to_matrix().to_4x4() @ converted_rest[src].to_quaternion().inverted().to_matrix().to_4x4()
+                    desired=delta @ alignment[name] @ rest['world'].to_quaternion().to_matrix().to_4x4()
+                    mat=Matrix.LocRotScale(mat.translation,parent_world.to_quaternion().inverted() @ desired.to_quaternion(),Vector((1,1,1)))
+                elif name in fingers:mat=fingers[name].copy()
+                if name=='Bip01':mat.translation=parent_world.inverted() @ (rest['world'].translation+root_delta)
+                world[name]=parent_world @ mat
+                if name=='Bip01_Prop1':world[name]=world['Bip01_R_Hand'] @ grip;mat=parent_world.inverted() @ world[name]
+                local[name]=mat;transforms[name].append(mat)
+            if time in {round(end*i/4) for i in range(5)}:
+                samples.append({'frame':time,'world':{n:[v for row in m for v in row] for n,m in world.items()}})
+        output=[header,skeleton,support,'AnimationSet '+entry['name']+' {']
+        for name,keys in transforms.items():
+            output.append(' Animation { { '+name+' }')
+            for label,kind in [('R',0),('T',2),('S',1)]:
+                previous=None;rows=[]
+                for time,mat in enumerate(keys):
+                    if kind==0:
+                        value=mat.to_quaternion().conjugated().normalized()
+                        if previous is not None and value.dot(previous)<0:value.negate()
+                        previous=value.copy()
+                    else:value=mat.translation if kind==2 else Vector((1,1,1))
                     assert all(math.isfinite(v) for v in value)
-                    ending=';;;' if f==end else ';;,'
-                    chunks.append(f'{round(f*4800/fps)};{len(value)};{fmt(value)}{ending}\n')
-                chunks.append(' }\n')
-            chunks.append(' }\n')
-        chunks.append('}\n')
-        output=args.output/(entry['name']+'.x');output.write_text(''.join(chunks))
-        record=dict(entry,frames=end,fps=fps,duration=end/fps,
-                    source_sha256=hashlib.sha256(source.read_bytes()).hexdigest(),
-                    output_sha256=hashlib.sha256(output.read_bytes()).hexdigest(),
-                    channels=len(bones))
-        report.append(record)
-        (args.samples/(entry['name']+'.json')).write_text(json.dumps(sample_frames))
-        print('EXPORTED',entry['name'],end,'frames',flush=True)
-    manifest={'source_game':'Yakuza 0 (local PC installation)',
-              'archive':'media/data/motion_w64/BattlePlayerMajimaL.par',
-              'source_model':args.gmd.name,
-              'source_model_archive':'media/data/chara/w64/adv/c_cm_majima_origin/mesh.par',
-              'native_grip_animation':'media/anims_X/Bob/Bob_AttackKnife01_Hit.x',
-              'native_grip_sha256':hashlib.sha256(args.native_knife.read_bytes()).hexdigest(),
+                    rows.append(f'{round(time*4800/fps)};{len(value)};'+','.join(f'{v:.9f}' for v in value)+';;')
+                output.append(f'  AnimationKey {label} {{ {kind}; {len(keys)};\n'+',\n'.join(rows)+';\n }')
+            output.append(' }')
+        output.append('}')
+        path=args.output/(entry['name']+'.x');path.write_text('\n'.join(output)+'\n')
+        record=dict(entry,frames=end,fps=fps,duration=end/fps,channels=len(target),
+                    source_sha256=hashlib.sha256(source.read_bytes()).hexdigest(),output_sha256=hashlib.sha256(path.read_bytes()).hexdigest())
+        records.append(record)
+        (args.samples/(entry['name']+'.json')).write_text(json.dumps(samples))
+        print('EXPORTED',entry['name'],end,'frames;',len(target),'Human channels',flush=True)
+    manifest={'source_game':'Yakuza 0 (supplied local PC installation)','archive':'media/data/motion_w64/BattlePlayerMajimaL.par',
+              'source_model':args.gmd.name,'source_model_archive':'media/data/chara/w64/adv/c_cm_majima_origin/mesh.par',
               'source_model_sha256':hashlib.sha256(args.gmd.read_bytes()).hexdigest(),
-              'retarget':'Global bind-relative rotations with source segment-direction correction for T/A-pose differences; native PZ bone lengths; horizontal root motion removed; vertical hip motion retained; native knife prop/finger grip.',
-              'scale':scale,'bone_map':MAP,'clips':report}
+              'target_bind_source':'media/models_X/Skinned/MaleBody.x','target_bind_sha256':hashlib.sha256(target_path.read_bytes()).hexdigest(),
+              'native_grip_animation':'media/anims_X/Bob/Bob_AttackKnife01_Hit.x','native_grip_sha256':hashlib.sha256(knife.read_bytes()).hexdigest(),
+              'retarget':'Direct GMT/GMD FK, Z handedness conversion preserving left/right, native inverse-skin bind and anatomical roll calibration. Source frame times and scaled vertical root motion; planar root travel removed. No IK, floor reconstruction, generated poses or time reversal.',
+              'source_to_target':[list(row) for row in conversion],'scale':scale,'bone_map':mapping,'clips':records}
     (args.output.parents[3]/'docs/motion-provenance.json').write_text(json.dumps(manifest,indent=2)+'\n')
 
 if __name__=='__main__':main()

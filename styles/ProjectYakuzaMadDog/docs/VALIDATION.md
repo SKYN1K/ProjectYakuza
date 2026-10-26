@@ -1,18 +1,28 @@
-# Mad Dog addon validation
+# Mad Dog 0.1.1 validation
 
-Tested against the current repository's 0.29.0 framework (`c5c2408`) and locally installed Project Zomboid Build 42.21.0. This is an unmerged feature branch, not a release or local installation.
+Based on current upstream **Project Yakuza 0.30.0 / API 2** (`76ae237`), tested with the installed PZ Build 42.21.0 classes and native importer. This remains an unmerged PR, with no published framework release.
 
-- **153 addon Kahlua assertions:** production registry validation, real Runtime/Combo swings, all four finisher branches, marker-gated recovery, per-move damage restoration, optional held-model switching, style isolation, movement cleanup, save/load ground-variant reset, split-screen lease separation and network catalogue/protocol lookups.
-- **21 Mad Dog entry assertions:** production StyleEntry handler with the addon's original one-second transition; movement/input lock, vulnerability, contact interruption, pause, missing playback, queue rejection, completion and cleanup.
-- **96 existing multiplayer assertions:** server-owned equipment, duplicate/range validation, bounded leases, cooldowns, observer state, acknowledgements and throttling remain passing.
-- **21 existing Dragon of Dojima entry assertions:** upstream entry behavior remains passing.
-- **36 production Lua files** compile in the installed game's Kahlua compiler, including all addon modules.
-- **26 clips** pass the installed Jassimp importer and `ProcessedAiScene` animation processing, with 36 channels each, finite normalized rotations and no horizontal root drift. Source timing is retained before the explicit playback speed.
-- **28 owner nodes** pass native AnimNode/AnimState parsing and selection alongside every framework node in the same group. They select for Mad Dog and do not override DoD.
-- **82 observer nodes** pass both network cycles, with zero animation/collision events and no local-player leakage.
-- Asset checks verify all 26 output SHA-256 hashes, all clip references, exact style conditions and all **15 single-collision nodes**, including native stomp/floor routes. Source GMT and original Majima GMD hashes are checked directly against the supplied local game archives.
-- Reviewed skeletal pose samples across all four lights, all four finishers and the stance. Native bone lengths, original body turns/crouches and source frame timing are preserved, with bind-pose direction correction and the native PZ knife grip.
+## Orientation regression and native Human rig
 
-Reproduction commands and pinned importer revisions are in [tools/mad-dog/README.md](../../../tools/mad-dog/README.md).
+The original exporter treated matching left/up axes as a complete coordinate conversion and reused a saved animation-node pose as its target reference. That did not account for Yakuza's +Z forward versus PZ's -Z forward. The replacement reads the original GMT/GMD local keys directly, reflects Z while preserving anatomical left/right, and calibrates segment/palm axes against the actual inverse-skin bind in PZ's MaleBody.x.
 
-No game was launched. These checks do not prove live contact timing, final mesh deformation, knife alignment, transitions, multiplayer latency behavior or compatibility with pending changes outside the repository. Test those on this branch before merging. No installed mod or save was changed.
+All **26 clips** were rebuilt from the same supplied source files. Original frame order/rate, explicit playback speeds and native bone lengths are retained. The source root's height is uniformly scaled; horizontal root travel remains fixed because framework movement owns collision-aware displacement. There is no IK, floor solver, generated pose or timeline reversal. The existing PZ knife prop/finger grip remains in use.
+
+- **19,216 source-reader joint samples** agree with the established GMTImporter on the original Majima rig after removing only planar actor travel (maximum positional discrepancy below 0.000034 source units). Original key interpolation is checked with linear Blender curves.
+- **28,824 independent direction checks** compare the original GMT forward-kinematic limb segments with native playback on both MaleBody and FemaleBody, across every frame of every clip. The checker derives forward and left from source joints and actual PZ inverse-skin/toe data; it imports no exporter calibration or reference poses.
+- **2,402 native Human poses** pass the actual Jassimp loader flags, shared Human `SkinningData`, engine animation processing and `HelperFunctions` PRS-to-matrix path. Hierarchies remain unchanged and transforms stay finite and rigid.
+- Negative control: the previously installed 0.1.0 clips fail the same independent checker for **all 52 body/clip pairs**, with reversed limb directions. The rebuilt clips pass every pair. This catches the defect that the original import-only checks missed.
+- All 26 clips have **35 Human animation channels**, normalized quaternions, original source durations and no planar root drift. All output/source SHA-256 hashes and the native bind/grip references are recorded in `motion-provenance.json`.
+
+## Framework and control regressions
+
+- **342 Kahlua assertions:** 153 addon/runtime checks, 21 Mad Dog entry checks, 96 existing multiplayer checks, 21 DoD entry checks, 42 upstream API-extension checks and 9 shipped-starter lifecycle checks.
+- All **37 production Lua files** compile in the installed Kahlua compiler.
+- **28 owner nodes** pass native selection alongside the framework, including style isolation and priority conflict checks.
+- **82 observer nodes** pass both network cycles with no collision/animation events and no local-player leakage.
+- All clip references, exact style conditions and **15 single-collision nodes** pass asset validation, including native floor/stomp routing.
+- Upstream observer-builder tests pass: deterministic generation, native parsing, compilation, overwrite protection and complex-condition validation.
+
+Reproduction commands are in [tools/mad-dog/README.md](../../../tools/mad-dog/README.md). Extraction folders, reference/runtime JSON, old files and logs stay outside Git.
+
+Project Zomboid was not launched for validation. Live mesh/knife alignment, transition feel and two-client latency behavior still require gameplay confirmation; the checks above verify source direction through actual engine transforms without claiming a live game test.

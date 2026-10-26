@@ -1,6 +1,8 @@
 # Unreleased PR — Mad Dog of Shimano
 
-- Separate original-motion style addon and optional per-style held-weapon appearance. Based on framework 0.30.0. PR remains unmerged and unpublished.
+- Separate original-motion style addon 0.1.1 and optional per-style held-weapon appearance, based on framework 0.30.0. PR remains unmerged and unpublished.
+- Correct Yakuza-to-PZ forward-axis handedness against the actual Human inverse-skin bind; rebuild all 26 original clips without generated poses or time reversal.
+- 28,824 independent source-direction checks pass across 2,402 native poses on both survivor rigs; the previous installed clips fail all 52 body/clip pairs. 342 Kahlua assertions, 37 Lua compiles and native selectors pass. See the addon validation report for scope and live-test limits.
 
 # 0.30.0 - Addon authoring and Lua API 2
 

@@ -19,7 +19,7 @@ public class MadDogProbe {
             AiScene scene=Jassimp.importFile(path.toAbsolutePath().toString(),EnumSet.of(AiPostProcessSteps.VALIDATE_DATA_STRUCTURE));
             if(scene.getAnimations().size()!=1)throw new AssertionError("Animation count "+path);
             AiAnimation anim=scene.getAnimations().get(0);
-            if(anim.getNumChannels()!=36 || anim.getDuration()<=0 || anim.getTicksPerSecond()!=4800)throw new AssertionError("Clip metadata "+path);
+            if(anim.getNumChannels()!=35 || anim.getDuration()<=0 || anim.getTicksPerSecond()!=4800)throw new AssertionError("Clip metadata "+path);
             for(AiNodeAnim channel:anim.getChannels()) {
                 for(int i=0;i<channel.getNumRotKeys();i++) {
                     double norm=Math.pow(channel.getRotKeyW(i),2)+Math.pow(channel.getRotKeyX(i),2)+Math.pow(channel.getRotKeyY(i),2)+Math.pow(channel.getRotKeyZ(i),2);

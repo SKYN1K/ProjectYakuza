@@ -3,4 +3,4 @@ id=ProjectYakuzaMadDog
 require=ProjectYakuza
 author=Project Yakuza contributors
 description=Majima's Yakuza 0 Mad Dog of Shimano: original knife combos, finishers, quicksteps, guard and running slash. Requires the framework weaponSprite API from this PR.
-version=0.1.0
+version=0.1.1

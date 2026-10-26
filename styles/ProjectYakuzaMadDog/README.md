@@ -1,10 +1,10 @@
-# Mad Dog of Shimano — addon 0.1.0
+# Mad Dog of Shimano — addon 0.1.1
 
 Adds Majima's Yakuza 0 legend style to Project Yakuza. The 26 playable clips are retargeted from the supplied local game's original `BattlePlayerMajimaL.par` motions. This addon contains its own registration, animation nodes and multiplayer catalogue; it does not bundle another copy of the framework.
 
 ## Install for testing this PR
 
-Use the **ProjectYakuza framework from this PR**, based on 0.29.0, plus `styles/ProjectYakuzaMadDog`. Put the `ProjectYakuza` and `ProjectYakuzaMadDog` folders side by side in `Zomboid/mods`, then enable both. The released 0.29.0 framework by itself lacks the optional `weaponSprite` API added here. This branch is not a published framework release. Install matching framework/addon revisions on server and clients.
+Use the **ProjectYakuza framework from this PR**, based on 0.30.0, plus `styles/ProjectYakuzaMadDog`. Put the `ProjectYakuza` and `ProjectYakuzaMadDog` folders side by side in `Zomboid/mods`, then enable both. The released 0.30.0 framework by itself lacks the optional `weaponSprite` API added here. This branch is not a published framework release. Install matching framework/addon revisions on server and clients.
 
 Right-click your inventory → **Combat styles → Mad Dog of Shimano**, or assign it to a slot through the framework's existing Z selector. Selecting the style plays Majima's original one-second `P_btlst_MJA_to_MJK` entry at source speed, without invulnerability.
 
@@ -28,8 +28,8 @@ The held knife and swing/impact sounds use Zomboid's existing `HuntingKnife` res
 
 ## Fidelity and testing limits
 
-This is a Zomboid adaptation. Horizontal root travel is removed; bounded native collision-aware movement handles dodges and the running slash. Contact frames and damage are approximate and use one native collision per move. Native PZ proportions and knife/finger grip replace Yakuza's skeleton/weapon attachment. Light attacks play at 1.8×; quicksteps at 1.35×; entry, guard and flourish at source speed.
+This is a Zomboid adaptation. Horizontal root travel is removed; bounded native collision-aware movement handles dodges and the running slash. Contact frames and damage are approximate and use one native collision per move. Native PZ proportions and knife/finger grip replace Yakuza's skeleton/weapon attachment. Version 0.1.1 uses the true Human inverse-skin bind and a Z-axis handedness conversion, preserving left/right and the original motion direction; no pose generation or floor solver is used. Light attacks play at 1.8×; quicksteps at 1.35×; entry, guard and flourish at source speed.
 
 The shared heat/Extreme Heat system is not Yakuza 0's exact heat model. Both running triggers use the running slash. Continuous spinning double finishers, charged attacks, cinematic heat actions and synchronized counters are not implemented. Guard/idle retain native walking legs; attacking clips use the complete original body motion.
 
-Offline checks passed; Project Zomboid was not launched. Foot contact, blade alignment, blending, female-body proportions, controller feel and live two-client replication still need gameplay testing before merging. See [validation](docs/VALIDATION.md) and [motion provenance](docs/motion-provenance.json).
+All 28,824 original-source direction comparisons and 342 Lua assertions pass; Project Zomboid was not launched. Foot contact, blade alignment, blending, female-body proportions, controller feel and live two-client replication still need gameplay testing before merging. See [validation](docs/VALIDATION.md) and [motion provenance](docs/motion-provenance.json).

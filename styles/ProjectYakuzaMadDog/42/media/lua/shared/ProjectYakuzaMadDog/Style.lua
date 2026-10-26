@@ -2,7 +2,7 @@ require "ProjectYakuza/Registry"
 require "ProjectYakuzaMadDog/NetworkCatalog"
 local motions=require "ProjectYakuzaMadDog/Motions"
 local P=ProjectYakuza
-assert(P.API_VERSION>=1 and P.prepareTokenAppearance and P.actionKinds.styleEntry,
+assert(P.API_VERSION>=2 and P.prepareTokenAppearance and P.actionKinds.styleEntry,
     "Mad Dog of Shimano requires Project Yakuza with the style weaponSprite API")
 local speed=1.8
 local function move(name,node,damage)
