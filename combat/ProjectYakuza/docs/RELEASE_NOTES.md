@@ -1,3 +1,9 @@
+# Unreleased PR — Mad Dog of Shimano
+
+- Separate original-motion style addon 0.1.1 and optional per-style held-weapon appearance, based on framework 0.30.1. PR remains unmerged and unpublished.
+- Correct Yakuza-to-PZ forward-axis handedness against the actual Human inverse-skin bind; rebuild all 26 original clips without generated poses or time reversal.
+- 28,824 independent source-direction checks pass across 2,402 native poses on both survivor rigs; the previous installed clips fail all 52 body/clip pairs. 463 Kahlua assertions, 37 Lua compiles and native selectors pass. See the addon validation report for scope and live-test limits.
+
 # 0.30.1 - Exclusive Extreme Heat aura
 
 - Extreme Heat now replaces the regular heat glow instead of layering over it. The normal instances are released for the duration and return only when normal heat is eligible.

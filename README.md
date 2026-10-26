@@ -8,6 +8,10 @@ Download the ZIP from this repository's Releases page. Extract its `ProjectYakuz
 
 All graphical/audio assets originate from supplied local game files. No generative artwork/audio or upscaling is used. This repository is private. Motion/texture provenance and framework authoring guides are in the mod's docs folder.
 
+## Optional styles
+
+[Mad Dog of Shimano](styles/ProjectYakuzaMadDog/README.md) adds Majima's original Yakuza 0 motions as a separate addon. It currently requires this branch's optional held-weapon model API; see its validation and testing limits before merging or installing.
+
 ## Publishing updates
 
 Each installed, validated update receives a new version and GitHub release with its install ZIP. Run `tools/Publish-CombatRelease.ps1` after updating the version, release notes and validation. It builds the ZIP, commits only the combat project files, pushes main, and publishes a unique version tag. Preview-only work is not a mod release.

@@ -71,14 +71,9 @@ function ProjectYakuza.resetPlayer(player, reason)
     ProjectYakuza.emit("comboCancelled", player, reason)
 end
 -- Old saves retain the literal "null" sprite from v0.3.0.
-function ProjectYakuza.prepareToken(token)
+function ProjectYakuza.prepareToken(token, player)
     if token and ProjectYakuza.isStyleToken(token) and token:getMaxHitCount()~=ProjectYakuza.MAX_HIT_COUNT then token:setMaxHitCount(ProjectYakuza.MAX_HIT_COUNT) end
-    if token and ProjectYakuza.isStyleToken(token) and token:getWeaponSprite() ~= "ProjectYakuza_EmptyHand" then
-        token:setWeaponSprite("ProjectYakuza_EmptyHand")
-        token:setOriginalWeaponSprite("ProjectYakuza_EmptyHand")
-        return true
-    end
-    return false
+    return ProjectYakuza.prepareTokenAppearance(token, player and ProjectYakuza.getPlayerStyle(player))
 end
 local function setReadyVariables(player, style, s)
     local move = s.groundMove or s.finisherMove or s.pendingFinisher or style.lightAttacks[s.step > 0 and s.step or 1]
@@ -307,9 +302,9 @@ local function onUpdate(player)
         s.lastDown=B.down("light");return
     end
     local token = player:getPrimaryHandItem()
-    if ProjectYakuza.prepareToken(token) then
+    if ProjectYakuza.prepareToken(token, player) then
         player:resetModelNextFrame()
-        trace(player, "migrated saved style item to ProjectYakuza_EmptyHand")
+        trace(player, "updated style weapon model")
     end
     local style = ProjectYakuza.getPlayerStyle(player)
     if isClient() and ProjectYakuza.Network and not ProjectYakuza.Network.equipmentReady(player) then return end

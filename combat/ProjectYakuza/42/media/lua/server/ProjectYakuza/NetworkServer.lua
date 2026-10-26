@@ -84,7 +84,7 @@ function S.equip(p,a,s)
         if not item then item=inventory:AddItem(ProjectYakuza.TOKEN) end
         if not item then return end
         item:setMaxHitCount(ProjectYakuza.MAX_HIT_COUNT)
-        item:setWeaponSprite("ProjectYakuza_EmptyHand");item:setOriginalWeaponSprite("ProjectYakuza_EmptyHand")
+        ProjectYakuza.prepareTokenAppearance(item,ProjectYakuza.getStyle(a.style))
         -- These B42 globals only send from a server. Native equip/hit packets
         -- subsequently resolve this exact server inventory ID.
         if created or a.item~=item:getID() then sendAddItemToContainer(inventory,item) end

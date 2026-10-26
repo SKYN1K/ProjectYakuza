@@ -1,0 +1,459 @@
+{
+  "source_game": "Yakuza 0 (supplied local PC installation)",
+  "archive": "media/data/motion_w64/BattlePlayerMajimaL.par",
+  "source_model": "c_cm_majima_origin.gmd",
+  "source_model_archive": "media/data/chara/w64/adv/c_cm_majima_origin/mesh.par",
+  "source_model_sha256": "1ee9aa7d75f47d21cf9e7ef56133ac35b3560117f15b034587a6c3929285a34e",
+  "target_bind_source": "media/models_X/Skinned/MaleBody.x",
+  "target_bind_sha256": "a0a7cbb3f8fb55827f4039edd04f9af28299d76ae9160484069084faca2aff01",
+  "native_grip_animation": "media/anims_X/Bob/Bob_AttackKnife01_Hit.x",
+  "native_grip_sha256": "4f8529807b66a2a59f13fe8a56b9716da39c4af7ec63ca33e24f24e4bd591380",
+  "retarget": "Direct GMT/GMD FK, Z handedness conversion preserving left/right, native inverse-skin bind and anatomical roll calibration. Source frame times and scaled vertical root motion; planar root travel removed. No IK, floor reconstruction, generated poses or time reversal.",
+  "source_to_target": [
+    [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      1.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      -1.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "scale": 0.44308598137428024,
+  "bone_map": {
+    "Bip01_Pelvis": [
+      "ketu_c_n",
+      null
+    ],
+    "Bip01_Spine": [
+      "kosi_c_n",
+      "mune_c_n"
+    ],
+    "Bip01_Spine1": [
+      "mune_c_n",
+      "kubi_c_n"
+    ],
+    "Bip01_Neck": [
+      "kubi_c_n",
+      "face_c_n"
+    ],
+    "Bip01_Head": [
+      "face_c_n",
+      null
+    ],
+    "Bip01_L_Clavicle": [
+      "kata_l_n",
+      "ude1_l_n"
+    ],
+    "Bip01_L_UpperArm": [
+      "ude1_l_n",
+      "ude2_l_n"
+    ],
+    "Bip01_L_Forearm": [
+      "ude2_l_n",
+      "ude3_l_n"
+    ],
+    "Bip01_L_Hand": [
+      "ude3_l_n",
+      "naka1_l_n"
+    ],
+    "Bip01_L_Thigh": [
+      "asi1_l_n",
+      "asi2_l_n"
+    ],
+    "Bip01_L_Calf": [
+      "asi2_l_n",
+      "asi3_l_n"
+    ],
+    "Bip01_L_Foot": [
+      "asi3_l_n",
+      "asi4_l_n"
+    ],
+    "Bip01_L_Toe0": [
+      "asi4_l_n",
+      null
+    ],
+    "Bip01_R_Clavicle": [
+      "kata_r_n",
+      "ude1_r_n"
+    ],
+    "Bip01_R_UpperArm": [
+      "ude1_r_n",
+      "ude2_r_n"
+    ],
+    "Bip01_R_Forearm": [
+      "ude2_r_n",
+      "ude3_r_n"
+    ],
+    "Bip01_R_Hand": [
+      "ude3_r_n",
+      "naka1_r_n"
+    ],
+    "Bip01_R_Thigh": [
+      "asi1_r_n",
+      "asi2_r_n"
+    ],
+    "Bip01_R_Calf": [
+      "asi2_r_n",
+      "asi3_r_n"
+    ],
+    "Bip01_R_Foot": [
+      "asi3_r_n",
+      "asi4_r_n"
+    ],
+    "Bip01_R_Toe0": [
+      "asi4_r_n",
+      null
+    ]
+  },
+  "clips": [
+    {
+      "name": "ProjectYakuza_MD_Light01",
+      "source": "P_MJK_CMB_01.gmt",
+      "kind": "light",
+      "impact_frame": 9,
+      "index": 1,
+      "frames": 39,
+      "fps": 30.0,
+      "duration": 1.3,
+      "channels": 35,
+      "source_sha256": "4cd08e7c48ad7dff69517d042b74df3ee6c7adefa82bf527bebe92577841dee6",
+      "output_sha256": "4883959fc03995aa15e60a351cd3dac702072b62658672ae9a2429b63724537a"
+    },
+    {
+      "name": "ProjectYakuza_MD_Light02",
+      "source": "P_MJK_CMB_02.gmt",
+      "kind": "light",
+      "impact_frame": 12,
+      "index": 2,
+      "frames": 50,
+      "fps": 30.0,
+      "duration": 1.6666666666666667,
+      "channels": 35,
+      "source_sha256": "f9711197ef6a2c843175be7ef0656a342b7c98d15ff71f342a8e4bec9d8f7378",
+      "output_sha256": "541782b19f514015a7610696b7b39a391ca7d4ac689b8766291f8b9175cf8cdc"
+    },
+    {
+      "name": "ProjectYakuza_MD_Light03",
+      "source": "P_MJK_CMB_03.gmt",
+      "kind": "light",
+      "impact_frame": 12,
+      "index": 3,
+      "frames": 46,
+      "fps": 30.0,
+      "duration": 1.5333333333333334,
+      "channels": 35,
+      "source_sha256": "ea0668346af59c6fc42cf02ef034d70dee0dcaa261e58a43e168f1214722657e",
+      "output_sha256": "fbaafc9de951336d99e322106dcf5f42c238817393a2b76edf1e25aba90cdfa6"
+    },
+    {
+      "name": "ProjectYakuza_MD_Light04",
+      "source": "P_MJK_CMB_04.gmt",
+      "kind": "light",
+      "impact_frame": 12,
+      "index": 4,
+      "frames": 42,
+      "fps": 30.0,
+      "duration": 1.4,
+      "channels": 35,
+      "source_sha256": "bf22300f97dcc4b8d978bb3d762ec2780419b597703b112eb943877e938f86e5",
+      "output_sha256": "9b1f72517c035f2bd0d859d3fd38781462222dda4b8c6ee932155664fc70111a"
+    },
+    {
+      "name": "ProjectYakuza_MD_Finisher01",
+      "source": "P_MJK_CMB_01_fin.gmt",
+      "kind": "finisher",
+      "impact_frame": 20,
+      "index": 1,
+      "frames": 70,
+      "fps": 30.0,
+      "duration": 2.3333333333333335,
+      "channels": 35,
+      "source_sha256": "6efcfd2132c0b41a5e24e26f644c8b42e30c44b80f42cbb315ac446499f1a889",
+      "output_sha256": "872fee7d6e470e93671082324520337c6072a1884217c4841c72f48ed2560e42"
+    },
+    {
+      "name": "ProjectYakuza_MD_Finisher02",
+      "source": "P_MJK_CMB_02_fin.gmt",
+      "kind": "finisher",
+      "impact_frame": 21,
+      "index": 2,
+      "frames": 69,
+      "fps": 30.0,
+      "duration": 2.3,
+      "channels": 35,
+      "source_sha256": "b00adf23a35d09f71c5fb3b6393ae757dc89013823b65949614bdcb9c6b8066c",
+      "output_sha256": "c3658f80ab5430dc6b866687241e209b88f5d7fbd0b610ea6bb2a59195754c2f"
+    },
+    {
+      "name": "ProjectYakuza_MD_Finisher03",
+      "source": "P_MJK_CMB_03_fin.gmt",
+      "kind": "finisher",
+      "impact_frame": 24,
+      "index": 3,
+      "frames": 80,
+      "fps": 30.0,
+      "duration": 2.6666666666666665,
+      "channels": 35,
+      "source_sha256": "58045c5db0095d920fa9d4dd66773eeb929fdfc344e858634b3735a9f529357d",
+      "output_sha256": "3496e4ea96ad0dcc5842272dea1cb58332eb38d9d9be01bb4247e044a7d77438"
+    },
+    {
+      "name": "ProjectYakuza_MD_Finisher04",
+      "source": "P_MJK_CMB_04_fin.gmt",
+      "kind": "finisher",
+      "impact_frame": 18,
+      "index": 4,
+      "frames": 67,
+      "fps": 30.0,
+      "duration": 2.2333333333333334,
+      "channels": 35,
+      "source_sha256": "0ad7fec8ab32a94f1dd1bcf47f1f12266b242e59b307ae1c908fe36dade4f615",
+      "output_sha256": "fd1eeb407a558d5345c4560945bb771089b71802f0aeac70310b21e4116eb49a"
+    },
+    {
+      "name": "ProjectYakuza_MD_Quickstep01",
+      "source": "P_MJK_sway_f.gmt",
+      "kind": "quickstep",
+      "impact_frame": null,
+      "index": 1,
+      "frames": 15,
+      "fps": 30.0,
+      "duration": 0.5,
+      "channels": 35,
+      "source_sha256": "f548eae13187a0151db76d19c3e7fb73bae3caf1a817d9748729df14c45e09bb",
+      "output_sha256": "ae8c267ba5462a17d34b0cd2e9cf52b3b5ac391297ec5abdf4a93434701243a1"
+    },
+    {
+      "name": "ProjectYakuza_MD_QuickstepAttack01",
+      "source": "P_MJK_ATK_sway_f.gmt",
+      "kind": "quickstepAttack",
+      "impact_frame": 13,
+      "index": 1,
+      "frames": 43,
+      "fps": 30.0,
+      "duration": 1.4333333333333333,
+      "channels": 35,
+      "source_sha256": "f85577c5db7f2e005f3c608200b1df977bc6214d32ef64c8c71ef3619c476b61",
+      "output_sha256": "d5fd1f7f67a329ded243779058a387a3f38157a2d913422f4a94af521d115873"
+    },
+    {
+      "name": "ProjectYakuza_MD_Quickstep02",
+      "source": "P_MJK_sway_b.gmt",
+      "kind": "quickstep",
+      "impact_frame": null,
+      "index": 2,
+      "frames": 15,
+      "fps": 30.0,
+      "duration": 0.5,
+      "channels": 35,
+      "source_sha256": "3ea1cbd1eb4f88f7fe6661fd7e58d83945d72336182a300d627e9b84afae9156",
+      "output_sha256": "9a519b96954d631279d359e2ce0db7d3b6750efe85ea3239bc955aef555769a8"
+    },
+    {
+      "name": "ProjectYakuza_MD_QuickstepAttack02",
+      "source": "P_MJK_ATK_sway_b.gmt",
+      "kind": "quickstepAttack",
+      "impact_frame": 14,
+      "index": 2,
+      "frames": 41,
+      "fps": 30.0,
+      "duration": 1.3666666666666667,
+      "channels": 35,
+      "source_sha256": "0922e189e409293efab286a2aa10d5c58b44f1fd6a3f6744f00f6bf2ef31cf17",
+      "output_sha256": "6003bf1ba8059fcb42691e0a998cca327679738eb0811fc2f9d0e6953cbec91e"
+    },
+    {
+      "name": "ProjectYakuza_MD_Quickstep03",
+      "source": "P_MJK_sway_l.gmt",
+      "kind": "quickstep",
+      "impact_frame": null,
+      "index": 3,
+      "frames": 15,
+      "fps": 30.0,
+      "duration": 0.5,
+      "channels": 35,
+      "source_sha256": "660f95786a67bcd05e3a812ee2ae3401cf0de39705a6b73c410ef6a702ea4a1e",
+      "output_sha256": "ec3a4893439713dd76730ebe801f4557543e58ff7d8131840804a5ecb74c1045"
+    },
+    {
+      "name": "ProjectYakuza_MD_QuickstepAttack03",
+      "source": "P_MJK_ATK_sway_l.gmt",
+      "kind": "quickstepAttack",
+      "impact_frame": 16,
+      "index": 3,
+      "frames": 48,
+      "fps": 30.0,
+      "duration": 1.6,
+      "channels": 35,
+      "source_sha256": "86d173206b5afadc1611b4874b334d269916ef1852346f208609cf40e2f4668a",
+      "output_sha256": "31182ebeca252c7155e2dcf3f3608f7cd87ea2fdc9f0d9c25be2e7b89b2ea48e"
+    },
+    {
+      "name": "ProjectYakuza_MD_Quickstep04",
+      "source": "P_MJK_sway_r.gmt",
+      "kind": "quickstep",
+      "impact_frame": null,
+      "index": 4,
+      "frames": 15,
+      "fps": 30.0,
+      "duration": 0.5,
+      "channels": 35,
+      "source_sha256": "51668f4921883a0579fd1fe67ecb20fb977920a7d803e3bfc2484ec935cb20d0",
+      "output_sha256": "50e8163e007a53b551ba871b959b9d52c5548d9356a7e4c5954dc0f3e1ae66e9"
+    },
+    {
+      "name": "ProjectYakuza_MD_QuickstepAttack04",
+      "source": "P_MJK_ATK_sway_r.gmt",
+      "kind": "quickstepAttack",
+      "impact_frame": 16,
+      "index": 4,
+      "frames": 51,
+      "fps": 30.0,
+      "duration": 1.7,
+      "channels": 35,
+      "source_sha256": "9f049b3cae3f50b3604d3916461b983cbf159b19dec2003fe02482ce185ba94b",
+      "output_sha256": "d62f7415bc57f6d3a3fbd40c039f6efb13621cb0957f7da71d3135501bc20438"
+    },
+    {
+      "name": "ProjectYakuza_MD_GroundSlash",
+      "source": "P_MJK_ATK_down_slash.gmt",
+      "kind": "ground",
+      "impact_frame": 17,
+      "frames": 48,
+      "fps": 30.0,
+      "duration": 1.6,
+      "channels": 35,
+      "source_sha256": "05c2c8f818e36e52e4c946d075d7752e08e76a475e0bb364b2cbe0ce11ba2d6f",
+      "output_sha256": "472f1574a39637ea56368ad62ce7bf1cb532c344cf0ebdc07e8fca00431a3b33"
+    },
+    {
+      "name": "ProjectYakuza_MD_RunningSlash",
+      "source": "P_MJK_ATK_run_slash.gmt",
+      "kind": "runningAttack",
+      "impact_frame": 16,
+      "frames": 60,
+      "fps": 30.0,
+      "duration": 2.0,
+      "channels": 35,
+      "source_sha256": "8c1dbc8573e3ff8e187c7cf45f0629a27d230aa813d477a9cacc934f0ce14e15",
+      "output_sha256": "911c1b2cad3fc66098378961f6176f03ea4065f26c89e994a4fab67ef39d35dd"
+    },
+    {
+      "name": "ProjectYakuza_MD_CombatIdle",
+      "source": "P_MJK_stand_btl_lp.gmt",
+      "kind": "idle",
+      "impact_frame": null,
+      "frames": 130,
+      "fps": 30.0,
+      "duration": 4.333333333333333,
+      "channels": 35,
+      "source_sha256": "0cd783f90ee97fe9fcb9e4534f0dfe04924e724f2520ab7a29c8828798a4d5c7",
+      "output_sha256": "820734fdc37b9623c4de75feac87ba18fe5caf0cc4abd79685dc97fba64aa198"
+    },
+    {
+      "name": "ProjectYakuza_MD_GuardEnter",
+      "source": "P_MJK_guard_st.gmt",
+      "kind": "guard",
+      "impact_frame": null,
+      "phase": "enter",
+      "frames": 10,
+      "fps": 30.0,
+      "duration": 0.3333333333333333,
+      "channels": 35,
+      "source_sha256": "1090528dec5b0906f9d09fc19dd7124c8bd08bbd532f1a4ac1feb8ab0f9fe55f",
+      "output_sha256": "a83b81572ca17ea0ef3d11aee0c1bc921c346aa3ad22ef3021265e21d8e02a91"
+    },
+    {
+      "name": "ProjectYakuza_MD_GuardLoop",
+      "source": "P_MJK_guard_lp.gmt",
+      "kind": "guard",
+      "impact_frame": null,
+      "phase": "hold",
+      "frames": 40,
+      "fps": 30.0,
+      "duration": 1.3333333333333333,
+      "channels": 35,
+      "source_sha256": "abb83b3e201ca8cd146bd46c26e546bdd4ca1f61d286617a047910bde1558c2b",
+      "output_sha256": "7cfe9ac0f4efcbab549ae2d3406d6ef9b1a7235a1b9820184fa053aa6e29bb4d"
+    },
+    {
+      "name": "ProjectYakuza_MD_GuardHit",
+      "source": "P_MJK_guard.gmt",
+      "kind": "guard",
+      "impact_frame": null,
+      "phase": "hit",
+      "frames": 18,
+      "fps": 30.0,
+      "duration": 0.6,
+      "channels": 35,
+      "source_sha256": "5ebb124b8e95211707f18372f39fba52bea094ef0a6406eba11d2d535a766048",
+      "output_sha256": "fb4a60296fda8c4ef8034c8d5b6d28b316e40a74fd1f41dbfdaad48b0d458df9"
+    },
+    {
+      "name": "ProjectYakuza_MD_GuardExit",
+      "source": "P_MJK_guard_en.gmt",
+      "kind": "guard",
+      "impact_frame": null,
+      "phase": "exit",
+      "frames": 18,
+      "fps": 30.0,
+      "duration": 0.6,
+      "channels": 35,
+      "source_sha256": "9b6f0d245ed4d479f7561ce362b0afb33f36195196365de0e3c26e3912defc88",
+      "output_sha256": "2643843e1fdfe7d78ba72f7692a51105f181fa55695cedfdd3abb095645ade5c"
+    },
+    {
+      "name": "ProjectYakuza_MD_Taunt",
+      "source": "P_MJK_stlyeact.gmt",
+      "kind": "taunt",
+      "impact_frame": null,
+      "frames": 60,
+      "fps": 30.0,
+      "duration": 2.0,
+      "channels": 35,
+      "source_sha256": "58c119bc32a3466a25658bd21d60dd1d2c2643e7cd9e5ad6d2e6b3723daeed20",
+      "output_sha256": "f1e3aa1cf74190f2ad6f4f0e54b23280027eaf16a2266f19442fcaf6c4004311"
+    },
+    {
+      "name": "ProjectYakuza_MD_HeatActivate",
+      "source": "P_MJK_stlye_st.gmt",
+      "kind": "heatActivation",
+      "impact_frame": null,
+      "frames": 55,
+      "fps": 30.0,
+      "duration": 1.8333333333333333,
+      "channels": 35,
+      "source_sha256": "ad801f26a1ced6ac951984e7fc3aac633bf7710a722203122217062caf361ee8",
+      "output_sha256": "acafa62cbe4bffae989164fecee1b249bc1880d8771ba0567ded0c7982854842"
+    },
+    {
+      "name": "ProjectYakuza_MD_StyleEntry",
+      "source": "P_btlst_MJA_to_MJK.gmt",
+      "kind": "styleEntry",
+      "impact_frame": null,
+      "frames": 30,
+      "fps": 30.0,
+      "duration": 1.0,
+      "channels": 35,
+      "source_sha256": "d6e963a75a6e1703138d9d9afe37c24deecc80fd17cb65336f5f59fa3bd58f20",
+      "output_sha256": "c45c2dc0b45b02e56dea31d4460106de469ea02bc3e7b691894f127aceb70aac"
+    }
+  ]
+}

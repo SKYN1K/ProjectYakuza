@@ -1,0 +1,6 @@
+name=Project Yakuza - Mad Dog of Shimano
+id=ProjectYakuzaMadDog
+require=ProjectYakuza
+author=Project Yakuza contributors
+description=Majima's Yakuza 0 Mad Dog of Shimano: original knife combos, finishers, quicksteps, guard, running slash, original Legend image, independent heat HUD and aura. Requires the framework weaponSprite API from this PR.
+version=0.2.0

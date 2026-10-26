@@ -62,6 +62,7 @@ function ProjectYakuza.validateStyle(style)
     if not text(style.id) or style.id=="none" or not string.match(style.id,"^[%w_.-]+$") then problem("style.id must be a unique namespaced ID using letters, numbers, underscore, dot or hyphen") end
     if not text(style.name) then problem("style.name is required") end
     if style.selectorIcon~=nil and not text(style.selectorIcon) then problem("selectorIcon must name a supplied texture") end
+    if style.weaponSprite~=nil and not text(style.weaponSprite) then problem("weaponSprite must name an existing weapon model") end
     for _,key in ipairs({"attackSpeed","runningKneeSpeed"}) do
         if style[key]~=nil and (not number(style[key]) or style[key]<=0) then problem(key.." must be positive") end
     end
@@ -124,6 +125,16 @@ end
 function ProjectYakuza.getStyle(id) return ProjectYakuza.styles[id] end
 function ProjectYakuza.isStyleToken(item)
     return item~=nil and item:getFullType()==ProjectYakuza.TOKEN
+end
+-- Appearance only: native targeting, token identity and damage remain shared.
+-- Called on both server and client so equip packets agree on the held model.
+function ProjectYakuza.prepareTokenAppearance(token, style)
+    if not ProjectYakuza.isStyleToken(token) then return false end
+    local sprite=style and style.weaponSprite or "ProjectYakuza_EmptyHand"
+    if token:getWeaponSprite()==sprite then return false end
+    token:setWeaponSprite(sprite)
+    token:setOriginalWeaponSprite(sprite)
+    return true
 end
 function ProjectYakuza.getPlayerStyle(player)
     local data = player:getModData()

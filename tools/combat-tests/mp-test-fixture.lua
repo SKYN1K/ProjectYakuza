@@ -12,6 +12,7 @@ local nextItem=1000
 local function tokenItem(id)
  return {getID=function()return id end,getFullType=function()return 'ProjectYakuza.StyleToken' end,
  getMinDamage=function()return .3 end,getMaxDamage=function()return .5 end,
+ getWeaponSprite=function(self)return self.sprite end,
  setMaxHitCount=function(self,v)self.maxHit=v end,setWeaponSprite=function(self,v)self.sprite=v end,
  setOriginalWeaponSprite=function(self,v)self.originalSprite=v end}
 end

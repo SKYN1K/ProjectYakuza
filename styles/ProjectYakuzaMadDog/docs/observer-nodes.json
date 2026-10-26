@@ -1,0 +1,632 @@
+[
+  {
+    "id": "ProjectYakuza_MD_Light01",
+    "animation": "ProjectYakuza_MD_Light01",
+    "group": "melee",
+    "priority": 220,
+    "loop": false,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "project_yakuza.mad_dog_of_shimano"
+      },
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "ProjectYakuzaMove",
+        "value": "md_light_01"
+      },
+      {
+        "name": "AimFloorAnim",
+        "value": "false"
+      }
+    ]
+  },
+  {
+    "id": "ProjectYakuza_MD_Light02",
+    "animation": "ProjectYakuza_MD_Light02",
+    "group": "melee",
+    "priority": 220,
+    "loop": false,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "project_yakuza.mad_dog_of_shimano"
+      },
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "ProjectYakuzaMove",
+        "value": "md_light_02"
+      },
+      {
+        "name": "AimFloorAnim",
+        "value": "false"
+      }
+    ]
+  },
+  {
+    "id": "ProjectYakuza_MD_Light03",
+    "animation": "ProjectYakuza_MD_Light03",
+    "group": "melee",
+    "priority": 220,
+    "loop": false,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "project_yakuza.mad_dog_of_shimano"
+      },
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "ProjectYakuzaMove",
+        "value": "md_light_03"
+      },
+      {
+        "name": "AimFloorAnim",
+        "value": "false"
+      }
+    ]
+  },
+  {
+    "id": "ProjectYakuza_MD_Light04",
+    "animation": "ProjectYakuza_MD_Light04",
+    "group": "melee",
+    "priority": 220,
+    "loop": false,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "project_yakuza.mad_dog_of_shimano"
+      },
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "ProjectYakuzaMove",
+        "value": "md_light_04"
+      },
+      {
+        "name": "AimFloorAnim",
+        "value": "false"
+      }
+    ]
+  },
+  {
+    "id": "ProjectYakuza_MD_Finisher01",
+    "animation": "ProjectYakuza_MD_Finisher01",
+    "group": "melee",
+    "priority": 220,
+    "loop": false,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "project_yakuza.mad_dog_of_shimano"
+      },
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "ProjectYakuzaMove",
+        "value": "md_finisher_01"
+      },
+      {
+        "name": "AimFloorAnim",
+        "value": "false"
+      }
+    ]
+  },
+  {
+    "id": "ProjectYakuza_MD_Finisher02",
+    "animation": "ProjectYakuza_MD_Finisher02",
+    "group": "melee",
+    "priority": 220,
+    "loop": false,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "project_yakuza.mad_dog_of_shimano"
+      },
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "ProjectYakuzaMove",
+        "value": "md_finisher_02"
+      },
+      {
+        "name": "AimFloorAnim",
+        "value": "false"
+      }
+    ]
+  },
+  {
+    "id": "ProjectYakuza_MD_Finisher03",
+    "animation": "ProjectYakuza_MD_Finisher03",
+    "group": "melee",
+    "priority": 220,
+    "loop": false,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "project_yakuza.mad_dog_of_shimano"
+      },
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "ProjectYakuzaMove",
+        "value": "md_finisher_03"
+      },
+      {
+        "name": "AimFloorAnim",
+        "value": "false"
+      }
+    ]
+  },
+  {
+    "id": "ProjectYakuza_MD_Finisher04",
+    "animation": "ProjectYakuza_MD_Finisher04",
+    "group": "melee",
+    "priority": 220,
+    "loop": false,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "project_yakuza.mad_dog_of_shimano"
+      },
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "ProjectYakuzaMove",
+        "value": "md_finisher_04"
+      },
+      {
+        "name": "AimFloorAnim",
+        "value": "false"
+      }
+    ]
+  },
+  {
+    "id": "ProjectYakuza_MD_Quickstep01",
+    "animation": "ProjectYakuza_MD_Quickstep01",
+    "group": "actions",
+    "priority": 220,
+    "loop": false,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "project_yakuza.mad_dog_of_shimano"
+      },
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "PerformingAction",
+        "value": "ProjectYakuza_MD_Quickstep01"
+      }
+    ]
+  },
+  {
+    "id": "ProjectYakuza_MD_QuickstepAttack01",
+    "animation": "ProjectYakuza_MD_QuickstepAttack01",
+    "group": "melee",
+    "priority": 220,
+    "loop": false,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "project_yakuza.mad_dog_of_shimano"
+      },
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "ProjectYakuzaMove",
+        "value": "md_quickattack_01"
+      },
+      {
+        "name": "AimFloorAnim",
+        "value": "false"
+      }
+    ]
+  },
+  {
+    "id": "ProjectYakuza_MD_Quickstep02",
+    "animation": "ProjectYakuza_MD_Quickstep02",
+    "group": "actions",
+    "priority": 220,
+    "loop": false,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "project_yakuza.mad_dog_of_shimano"
+      },
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "PerformingAction",
+        "value": "ProjectYakuza_MD_Quickstep02"
+      }
+    ]
+  },
+  {
+    "id": "ProjectYakuza_MD_QuickstepAttack02",
+    "animation": "ProjectYakuza_MD_QuickstepAttack02",
+    "group": "melee",
+    "priority": 220,
+    "loop": false,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "project_yakuza.mad_dog_of_shimano"
+      },
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "ProjectYakuzaMove",
+        "value": "md_quickattack_02"
+      },
+      {
+        "name": "AimFloorAnim",
+        "value": "false"
+      }
+    ]
+  },
+  {
+    "id": "ProjectYakuza_MD_Quickstep03",
+    "animation": "ProjectYakuza_MD_Quickstep03",
+    "group": "actions",
+    "priority": 220,
+    "loop": false,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "project_yakuza.mad_dog_of_shimano"
+      },
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "PerformingAction",
+        "value": "ProjectYakuza_MD_Quickstep03"
+      }
+    ]
+  },
+  {
+    "id": "ProjectYakuza_MD_QuickstepAttack03",
+    "animation": "ProjectYakuza_MD_QuickstepAttack03",
+    "group": "melee",
+    "priority": 220,
+    "loop": false,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "project_yakuza.mad_dog_of_shimano"
+      },
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "ProjectYakuzaMove",
+        "value": "md_quickattack_03"
+      },
+      {
+        "name": "AimFloorAnim",
+        "value": "false"
+      }
+    ]
+  },
+  {
+    "id": "ProjectYakuza_MD_Quickstep04",
+    "animation": "ProjectYakuza_MD_Quickstep04",
+    "group": "actions",
+    "priority": 220,
+    "loop": false,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "project_yakuza.mad_dog_of_shimano"
+      },
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "PerformingAction",
+        "value": "ProjectYakuza_MD_Quickstep04"
+      }
+    ]
+  },
+  {
+    "id": "ProjectYakuza_MD_QuickstepAttack04",
+    "animation": "ProjectYakuza_MD_QuickstepAttack04",
+    "group": "melee",
+    "priority": 220,
+    "loop": false,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "project_yakuza.mad_dog_of_shimano"
+      },
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "ProjectYakuzaMove",
+        "value": "md_quickattack_04"
+      },
+      {
+        "name": "AimFloorAnim",
+        "value": "false"
+      }
+    ]
+  },
+  {
+    "id": "ProjectYakuza_MD_GroundSlash",
+    "animation": "ProjectYakuza_MD_GroundSlash",
+    "group": "melee",
+    "priority": 220,
+    "loop": false,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "project_yakuza.mad_dog_of_shimano"
+      },
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "DFCGroundEnabled",
+        "value": "true"
+      },
+      {
+        "name": "ProjectYakuzaStompVariant",
+        "value": "1"
+      },
+      {
+        "name": "AimFloorAnim",
+        "value": "true"
+      }
+    ]
+  },
+  {
+    "id": "ProjectYakuza_MD_GroundSlash_NativeStomp",
+    "animation": "ProjectYakuza_MD_GroundSlash",
+    "group": "stomp",
+    "priority": 220,
+    "loop": false,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "project_yakuza.mad_dog_of_shimano"
+      },
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "DFCGroundEnabled",
+        "value": "true"
+      },
+      {
+        "name": "ProjectYakuzaStompVariant",
+        "value": "1"
+      },
+      {
+        "name": "AimFloorAnim",
+        "value": "true"
+      }
+    ]
+  },
+  {
+    "id": "ProjectYakuza_MD_RunningSlash",
+    "animation": "ProjectYakuza_MD_RunningSlash",
+    "group": "melee",
+    "priority": 220,
+    "loop": false,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "project_yakuza.mad_dog_of_shimano"
+      },
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "ProjectYakuzaMove",
+        "value": "md_run_slash"
+      },
+      {
+        "name": "AimFloorAnim",
+        "value": "false"
+      }
+    ]
+  },
+  {
+    "id": "ProjectYakuza_MD_GuardEnter",
+    "animation": "ProjectYakuza_MD_GuardEnter",
+    "group": "actions",
+    "priority": 220,
+    "loop": false,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "project_yakuza.mad_dog_of_shimano"
+      },
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "PerformingAction",
+        "value": "ProjectYakuza_MD_Guard"
+      },
+      {
+        "name": "ProjectYakuzaDefensePhase",
+        "value": "enter"
+      }
+    ]
+  },
+  {
+    "id": "ProjectYakuza_MD_GuardLoop",
+    "animation": "ProjectYakuza_MD_GuardLoop",
+    "group": "actions",
+    "priority": 220,
+    "loop": true,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "project_yakuza.mad_dog_of_shimano"
+      },
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "PerformingAction",
+        "value": "ProjectYakuza_MD_Guard"
+      },
+      {
+        "name": "ProjectYakuzaDefensePhase",
+        "value": "hold"
+      }
+    ]
+  },
+  {
+    "id": "ProjectYakuza_MD_GuardHit",
+    "animation": "ProjectYakuza_MD_GuardHit",
+    "group": "actions",
+    "priority": 220,
+    "loop": false,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "project_yakuza.mad_dog_of_shimano"
+      },
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "PerformingAction",
+        "value": "ProjectYakuza_MD_Guard"
+      },
+      {
+        "name": "ProjectYakuzaDefensePhase",
+        "value": "hit"
+      }
+    ]
+  },
+  {
+    "id": "ProjectYakuza_MD_GuardExit",
+    "animation": "ProjectYakuza_MD_GuardExit",
+    "group": "actions",
+    "priority": 220,
+    "loop": false,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "project_yakuza.mad_dog_of_shimano"
+      },
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "PerformingAction",
+        "value": "ProjectYakuza_MD_Guard"
+      },
+      {
+        "name": "ProjectYakuzaDefensePhase",
+        "value": "exit"
+      }
+    ]
+  },
+  {
+    "id": "ProjectYakuza_MD_Taunt",
+    "animation": "ProjectYakuza_MD_Taunt",
+    "group": "actions",
+    "priority": 220,
+    "loop": false,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "project_yakuza.mad_dog_of_shimano"
+      },
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "PerformingAction",
+        "value": "ProjectYakuza_MD_Taunt"
+      }
+    ]
+  },
+  {
+    "id": "ProjectYakuza_MD_HeatActivate",
+    "animation": "ProjectYakuza_MD_HeatActivate",
+    "group": "actions",
+    "priority": 220,
+    "loop": false,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "project_yakuza.mad_dog_of_shimano"
+      },
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "PerformingAction",
+        "value": "ProjectYakuza_MD_HeatActivate"
+      }
+    ]
+  },
+  {
+    "id": "ProjectYakuza_MD_StyleEntry",
+    "animation": "ProjectYakuza_MD_StyleEntry",
+    "group": "actions",
+    "priority": 220,
+    "loop": false,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "project_yakuza.mad_dog_of_shimano"
+      },
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "PerformingAction",
+        "value": "ProjectYakuza_MD_StyleEntry"
+      }
+    ]
+  }
+]
