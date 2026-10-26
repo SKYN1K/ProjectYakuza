@@ -5,7 +5,7 @@ New styles do not inherit DoD's playlist, HUD, aura, impact renderer or counter.
 | Field | Supplied profile |
 | --- | --- |
 | heatHud="yakuza6" | Dragon/main orb and six stock-orb HUD, requires heat |
-| heatAura="kiryu" | World torso/arms/head aura, fade-in, taunt end flash and brighter Extreme Heat |
+| heatAura="kiryu" | World torso/arms/head aura, fade-in, taunt end flash; exclusive, equally sized cyan replacement during Extreme Heat |
 | hitEffects="yakuza6" | Animated world impact glints/sparks |
 | selectorIcon | Existing texture path in selector circle |
 | enemyReactions=true | Configured supplied victim mappings |
@@ -27,3 +27,5 @@ Options > Mods > Project Yakuza has **Music, Sounds, Voices**, each 0-200%, zero
 Optional CVF resolves the selected character voice. Reserved ProjectYakuza IDs: CombatLightAttack, CombatHeavyAttack, CombatSpecialMove, CombatTaunt, CombatExtremeHeatActivation, CombatStanceEntry, CombatGettingHit, CombatGettingStunned. combatVoices=false opts out, combatVoiceVolume defaults to 1, quickstepVoices=false suppresses movement-only step cues. Missing provider/recordings stay silent without blocking attacks.
 
 CombatStanceEntry belongs to actual styleEntryStarted, not RMB aiming. Taunt/activation cues belong to actual action start. Custom moves can call CombatVoices.play(player,id) for an appropriate existing cue; do not duplicate a cue already subscribed to an event. See [CVF](CVF_COMBAT_VOICES.md) and its template. The separate voice-pack project is not modified.
+
+Extreme Heat uses a separate four-patch profile with different supplied 32-frame wisp sequences. Normal aura instances are released for the duration, not drawn underneath it. Anchors/scales match normal heat exactly; a restrained 16% additive pass reuses the replacement frame for brightness. Normal sprites are cached for return, and texture bytes are unchanged. See [replacement profile](EXTREME_HEAT_AURA.md).

@@ -1,6 +1,6 @@
 # Mad Dog 0.1.1 validation
 
-Based on current upstream **Project Yakuza 0.30.0 / API 2** (`76ae237`), tested with the installed PZ Build 42.21.0 classes and native importer. This remains an unmerged PR, with no published framework release.
+Based on current upstream **Project Yakuza 0.30.1 / API 2** (`f5bac37`), tested with the installed PZ Build 42.21.0 classes and native importer. This remains an unmerged PR, with no published framework release.
 
 ## Orientation regression and native Human rig
 
@@ -16,7 +16,7 @@ All **26 clips** were rebuilt from the same supplied source files. Original fram
 
 ## Framework and control regressions
 
-- **342 Kahlua assertions:** 153 addon/runtime checks, 21 Mad Dog entry checks, 96 existing multiplayer checks, 21 DoD entry checks, 42 upstream API-extension checks and 9 shipped-starter lifecycle checks.
+- **463 Kahlua assertions:** 153 addon/runtime checks, 21 Mad Dog entry checks, 96 existing multiplayer checks, 21 DoD entry checks, 42 upstream API-extension checks, 9 shipped-starter lifecycle checks and 121 upstream taunt/aura checks.
 - All **37 production Lua files** compile in the installed Kahlua compiler.
 - **28 owner nodes** pass native selection alongside the framework, including style isolation and priority conflict checks.
 - **82 observer nodes** pass both network cycles with no collision/animation events and no local-player leakage.

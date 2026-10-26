@@ -26,9 +26,11 @@ python3 tools/mad-dog/build_tests.py "$SCRATCH/mad-dog-tests.lua"
 python3 tools/combat-tests/build_mp_tests.py
 python3 tools/combat-tests/build_style_entry_tests.py
 python3 tools/combat-tests/build_extension_api_tests.py
+python3 tools/combat-tests/build_taunt_tests.py
 cp "$PZ/stdlib.lua" "$SCRATCH/stdlib.lua"
 cp tools/combat-tests/mp-tests.lua tools/combat-tests/style-entry-tests.lua \
-  tools/combat-tests/extension-api-tests.lua tools/combat-tests/addon-starter-tests.lua "$SCRATCH/"
+  tools/combat-tests/extension-api-tests.lua tools/combat-tests/addon-starter-tests.lua \
+  tools/combat-tests/taunt-tests.lua "$SCRATCH/"
 javac --release 17 -cp "$PZ/projectzomboid.jar" -d "$SCRATCH" \
   tools/mad-dog/MadDogProbe.java tools/mad-dog/MadDogRigProbe.java tools/mad-dog/CompileLua.java tools/combat-tests/LuaRunner.java
 ```
@@ -45,7 +47,7 @@ Run Lua checks from `SCRATCH` so Kahlua finds the original game's `stdlib.lua`:
 ```sh
 java -cp ".:$PZ/projectzomboid.jar" LuaRunner \
   mad-dog-tests.lua mad-dog-entry-tests.lua mp-tests.lua style-entry-tests.lua \
-  extension-api-tests.lua addon-starter-tests.lua
+  extension-api-tests.lua addon-starter-tests.lua taunt-tests.lua
 java -cp ".:$PZ/projectzomboid.jar" CompileLua \
   "$REPO/combat/ProjectYakuza/42/media/lua" "$REPO/styles/ProjectYakuzaMadDog/42/media/lua"
 ```

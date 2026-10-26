@@ -4,7 +4,7 @@ Adds Majima's Yakuza 0 legend style to Project Yakuza. The 26 playable clips are
 
 ## Install for testing this PR
 
-Use the **ProjectYakuza framework from this PR**, based on 0.30.0, plus `styles/ProjectYakuzaMadDog`. Put the `ProjectYakuza` and `ProjectYakuzaMadDog` folders side by side in `Zomboid/mods`, then enable both. The released 0.30.0 framework by itself lacks the optional `weaponSprite` API added here. This branch is not a published framework release. Install matching framework/addon revisions on server and clients.
+Use the **ProjectYakuza framework from this PR**, based on 0.30.1, plus `styles/ProjectYakuzaMadDog`. Put the `ProjectYakuza` and `ProjectYakuzaMadDog` folders side by side in `Zomboid/mods`, then enable both. The released 0.30.1 framework by itself lacks the optional `weaponSprite` API added here. This branch is not a published framework release. Install matching framework/addon revisions on server and clients.
 
 Right-click your inventory → **Combat styles → Mad Dog of Shimano**, or assign it to a slot through the framework's existing Z selector. Selecting the style plays Majima's original one-second `P_btlst_MJA_to_MJK` entry at source speed, without invulnerability.
 
@@ -32,4 +32,4 @@ This is a Zomboid adaptation. Horizontal root travel is removed; bounded native 
 
 The shared heat/Extreme Heat system is not Yakuza 0's exact heat model. Both running triggers use the running slash. Continuous spinning double finishers, charged attacks, cinematic heat actions and synchronized counters are not implemented. Guard/idle retain native walking legs; attacking clips use the complete original body motion.
 
-All 28,824 original-source direction comparisons and 342 Lua assertions pass; Project Zomboid was not launched. Foot contact, blade alignment, blending, female-body proportions, controller feel and live two-client replication still need gameplay testing before merging. See [validation](docs/VALIDATION.md) and [motion provenance](docs/motion-provenance.json).
+All 28,824 original-source direction comparisons and 463 Lua assertions pass; Project Zomboid was not launched. Foot contact, blade alignment, blending, female-body proportions, controller feel and live two-client replication still need gameplay testing before merging. See [validation](docs/VALIDATION.md) and [motion provenance](docs/motion-provenance.json).

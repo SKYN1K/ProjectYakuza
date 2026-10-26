@@ -32,3 +32,6 @@
 !/styles/ProjectYakuzaMadDog/
 !/tools/mad-dog/
 /tools/mad-dog/__pycache__/
+
+!/tools/combat-tests/build_taunt_tests.py
+!/tools/combat-tests/taunt-test-fixture.lua
