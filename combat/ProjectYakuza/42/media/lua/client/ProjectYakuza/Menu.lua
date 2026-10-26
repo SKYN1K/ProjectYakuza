@@ -10,13 +10,14 @@ require "ProjectYakuza/StyleSelector"
 require "ProjectYakuza/NetworkClient"
 require "ProjectYakuza/CombatVoices"
 require "ProjectYakuza/Taunts"
+require "ProjectYakuza/StyleEntry"
 local ProjectYakuza = ProjectYakuza
 function ProjectYakuza.equipStyle(player, styleId)
     local ok, reason = ProjectYakuza.selectStyle(player, styleId)
     if not ok then player:Say("Cannot switch style: " .. tostring(reason)); return end
     -- B42 hit packets carry an inventory item ID, not a serialized weapon.
     -- A client-only AddItem produces a weapon the server can never resolve.
-    if isClient() then ProjectYakuza.Network.equip(player,styleId);return end
+    if isClient() then ProjectYakuza.Network.equip(player,styleId,true);return end
     local items, token = player:getInventory():getItems(), nil
     for i = 0, items:size() - 1 do
         local item = items:get(i)
@@ -30,6 +31,7 @@ function ProjectYakuza.equipStyle(player, styleId)
     player:setSecondaryHandItem(nil)
     player:setVariable("ProjectYakuzaActive", true)
     player:setVariable("ProjectYakuzaMove", ProjectYakuza.getPlayerStyle(player).lightAttacks[1].nodeValue)
+    ProjectYakuza.StyleEntry.request(player,styleId)
     print("[ProjectYakuza] equipped " .. styleId)
 end
 local function disable(player)

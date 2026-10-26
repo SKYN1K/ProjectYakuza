@@ -7,9 +7,10 @@ local function now()return getTimestampMs()end
 function N.localState(p)
     local s=N.locals[p];if not s then s={seq=0,event=0,swing=0};N.locals[p]=s end;return s
 end
-function N.equip(p,style)
+function N.equip(p,style,playEntry)
     if not isClient() or not p:isLocalPlayer() then return end
     local s=N.localState(p)
+    s.entryWanted=playEntry==true or (playEntry==nil and s.equipWanted==style and s.entryWanted) or false
     s.equipWanted=style;s.equipReady=nil;s.equipReply=nil
     s.equipRequest=(s.equipRequest or 0)+1;s.nextEquip=now()+1000
     local item=p:getPrimaryHandItem()
@@ -27,7 +28,9 @@ function N.finishEquipment(p,s)
     if item then ProjectYakuza.prepareToken(item) end
     p:setSecondaryHandItem(nil);p:setPrimaryHandItem(item);p:resetModelNextFrame()
     p:updateHandEquips()
+    local entry=s.entryWanted;s.entryWanted=nil
     s.equipReady=item;s.equipStyle=a.style;s.equipReply=nil;s.equipWanted=nil
+    if entry and item and ProjectYakuza.StyleEntry then ProjectYakuza.StyleEntry.request(p,a.style) end
     return true
 end
 function N.ensureEquipment(p,style)

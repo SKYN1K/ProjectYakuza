@@ -27,7 +27,7 @@ ProjectYakuza.registerStyle({
         {sound="ProjectYakuza_SonOfAGun",title="Son of a Gun"},
         {sound="ProjectYakuza_PushMeUnderWater",title="Push Me Under Water"},
         {sound="ProjectYakuza_OutlawsLullaby",title="Outlaw's Lullaby"},
-        {sound="ProjectYakuza_FunkGoesOnKiwami",title="Funk Goes On ÃƒÂ¦Ã‚Â¥Ã‚Âµ"},
+        {sound="ProjectYakuza_FunkGoesOnKiwami",title="Funk Goes On ÃƒÆ’Ã‚Â¦Ãƒâ€šÃ‚Â¥Ãƒâ€šÃ‚Âµ"},
         {sound="ProjectYakuza_PushMeDeepUnderwater",title="Push Me Deep Underwater"},
         {sound="ProjectYakuza_LullabyOfOutlaws",title="Lullaby of Outlaws"},
         {sound="ProjectYakuza_ReceiveAndBelieveYou",title="Receive and Believe You"},
@@ -55,6 +55,7 @@ ProjectYakuza.registerStyle({
         {animation="ProjectYakuza_DD_GroundStomp02",nodeValue="dd_ground_02",duration=1.8/1.6,speed=1.6,impact=0.25925925925925924,groundAttack=true,fullBody=true},
     },
     actions = {
+        styleEntry = {enabled=true,animation="ProjectYakuza_DD_StyleEntry",duration=50/30},
         taunt = {enabled=true,animation="ProjectYakuza_DD_Taunt01",duration=55/30},
         finisher = { enabled=true, variants={
             after_1={enabled=true,afterLight=1,animation="ProjectYakuza_DD_Finisher01",nodeValue="dd_finisher_01",damageMultiplier=1.25,duration=1.9/1.6,speed=1.6,impact=0.2807017543859649,reaction="enemy_01",fullBody=true,doubleLinkFrame=25,doubleLinkEndFrame=28},

@@ -18,3 +18,6 @@
 !/tools/combat-tests/MPObserverProbe.java
 !/tools/combat-tests/LuaRunner.java
 !/tools/combat-tests/README.md
+
+!/tools/combat-tests/build_style_entry_tests.py
+!/tools/combat-tests/style-entry-test-fixture.lua

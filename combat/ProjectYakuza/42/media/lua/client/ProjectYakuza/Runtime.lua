@@ -101,6 +101,7 @@ end
 local function onSwing(player, weapon)
     if not localPlayer(player) or not ProjectYakuza.isEquipped(player) then return end
     if not weapon or not ProjectYakuza.isStyleToken(weapon) then return end
+    if ProjectYakuza.activeActions[player] and ProjectYakuza.activeActions[player].kind=="styleEntry" then return end
     local style, s = ProjectYakuza.getPlayerStyle(player), ProjectYakuza.stateFor(player)
     s.groundMove=nil
     pollPress(player, style, s)
@@ -299,6 +300,10 @@ local function onUpdate(player)
         local reaction=player:getHitReaction()
         if (not handoff.playingDouble and now()>handoff.deadline) or player:isOnFloor() or player:isKnockedDown()
             or player:isClimbing() or player:getVehicle() or (reaction and reaction~="") then ProjectYakuza.releaseFinisherHandoff(player) end
+    end
+    local entry=ProjectYakuza.activeActions[player]
+    if entry and entry.kind=="styleEntry" and ProjectYakuza.StyleEntry and ProjectYakuza.StyleEntry.watch(player,entry) then
+        s.lastDown=B.down("light");return
     end
     local token = player:getPrimaryHandItem()
     if ProjectYakuza.prepareToken(token) then

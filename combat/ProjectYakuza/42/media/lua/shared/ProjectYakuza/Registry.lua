@@ -1,7 +1,7 @@
 ProjectYakuza = ProjectYakuza or {}
 local ProjectYakuza = ProjectYakuza
 ProjectYakuza.FEATURES={grab=false}
-ProjectYakuza.VERSION = "0.28.0"
+ProjectYakuza.VERSION = "0.29.0"
 ProjectYakuza.API_VERSION = 1
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -9,7 +9,7 @@ ProjectYakuza.actionHandlers = ProjectYakuza.actionHandlers or {}
 ProjectYakuza.styleActionHandlers = ProjectYakuza.styleActionHandlers or {}
 ProjectYakuza.styleInputHandlers = ProjectYakuza.styleInputHandlers or {}
 ProjectYakuza.listeners = ProjectYakuza.listeners or {}
-ProjectYakuza.actionKinds = { finisher=true, grab=true, parry=true, block=true, quickstep=true, quickstepAttack=true, runningAttack=true, heatAction=true, heatActivation=true, taunt=true }
+ProjectYakuza.actionKinds = { finisher=true, grab=true, parry=true, block=true, quickstep=true, quickstepAttack=true, runningAttack=true, heatAction=true, heatActivation=true, taunt=true, styleEntry=true }
 ProjectYakuza.activeActions = ProjectYakuza.activeActions or setmetatable({}, {__mode="k"})
 ProjectYakuza.MAX_HIT_COUNT = 3
 ProjectYakuza.TOKEN = "ProjectYakuza.StyleToken"

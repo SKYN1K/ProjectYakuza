@@ -144,3 +144,7 @@ An optional `actions.taunt={enabled=true,animation="YourClip",duration=4.0}` slo
 
 Style voice options: `combatVoiceVolume=1.5` raises the native handle mix for that style only. `quickstepVoices=false` silences movement-only quickstep voice cues; quickstep attacks retain their attack cue. Defaults are normal mix and enabled quickstep voices.
 
+
+## Optional style entry
+
+A style can opt into the shared in-place entry handler with `actions.styleEntry={enabled=true, animation="YourEntryClip", duration=1.67}`. Supply a non-looping player/actions node with `PerformingAction=YourEntryClip`, plus Start/End SetVariable markers `ProjectYakuzaStyleEntry=started` and `ProjectYakuzaStyleEntry=done`. Use the actual clip duration. Selection and explicit reselection request this action; styles without it remain unaffected. Entry blocks movement and attacks, grants no protection or heat, and stops on damage/hit reaction, death or unequip. `styleEntryStarted(player,style)` supplies the existing CombatStanceEntry voice hook. Regenerate or extend the multiplayer catalog/observer nodes when adding a custom animation.

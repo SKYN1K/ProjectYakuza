@@ -58,7 +58,10 @@ function S.finish()
     if not S.allowed(p) then return end
     if side=="bottom" then S.openSetup(p);return end
     local id=ProjectYakuza.StyleSlots.id(p,side)
-    if id and (not ProjectYakuza.isEquipped(p) or ProjectYakuza.getPlayerStyle(p).id~=id) then ProjectYakuza.equipStyle(p,id) end
+    if id then
+        if not ProjectYakuza.isEquipped(p) or ProjectYakuza.getPlayerStyle(p).id~=id then ProjectYakuza.equipStyle(p,id)
+        elseif ProjectYakuza.StyleEntry then ProjectYakuza.StyleEntry.request(p,id) end
+    end
 end
 function S.tick()
     local w=S.wheel;if not w then return end

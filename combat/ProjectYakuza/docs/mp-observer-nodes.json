@@ -394,6 +394,32 @@
 
   {
 
+    "id": "ProjectYakuza_DD_StyleEntry",
+
+    "animation": "ProjectYakuza_DD_StyleEntry",
+
+    "loop": false,
+
+    "conditions": [
+
+      {
+
+        "name": "PerformingAction",
+
+        "value": "ProjectYakuza_DD_StyleEntry"
+
+      }
+
+    ],
+
+    "priority": 150,
+
+    "group": "actions"
+
+  },
+
+  {
+
     "id": "ProjectYakuza_DD_Taunt01",
 
     "animation": "ProjectYakuza_DD_Taunt01",

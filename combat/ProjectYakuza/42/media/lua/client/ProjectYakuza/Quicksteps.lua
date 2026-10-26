@@ -203,6 +203,10 @@ function Q.movement()
     return dx,dy
 end
 function Q.pollShove(player)
+    local active=ProjectYakuza.activeActions[player]
+    if active and active.kind=="styleEntry" then
+        Q.shoveDown[player]=ProjectYakuza.Bindings.down("quickstep");return false
+    end
     local style=ProjectYakuza.getPlayerStyle(player);local slot=style and style.actions.quickstep
     local scoped=ProjectYakuza.isEquipped(player) and slot and slot.enabled==true and not player:isDead()
         and not player:getVehicle() and not player:isOnFloor() and not player:isKnockedDown()

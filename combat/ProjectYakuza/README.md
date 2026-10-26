@@ -1,4 +1,6 @@
-# Project Yakuza 0.28.0
+# Project Yakuza 0.29.0
+
+Selecting or reselecting Dragon of Dojima plays Kiryu's supplied Kiwami 2 fast combat entry (1.67 seconds). Movement and attacks are locked until it completes; the player remains vulnerable and hit reactions interrupt it. The existing CombatStanceEntry voice cue now belongs to this entry, and raising RMB no longer plays it. In multiplayer, explicit selection waits for native equipment acknowledgement; automatic equipment repair does not replay the entry.
 
 ## Clean rename and temporary grab disable
 

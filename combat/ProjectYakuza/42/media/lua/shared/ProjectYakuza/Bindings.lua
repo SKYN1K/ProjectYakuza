@@ -57,7 +57,9 @@ function B.update(p)
  if not p or not p:isLocalPlayer() then return end
  local custom=B.mode("light")~=1 or B.mode("runningLight")~=1 or B.mode("quickstepAttack")~=1
  local wheel=ProjectYakuza.StyleSelector and (ProjectYakuza.StyleSelector.wheel or ProjectYakuza.StyleSelector.setup)
- if ProjectYakuza.isEquipped and ProjectYakuza.isEquipped(p) and not p:isDead() and (custom or wheel) then
+ local action=ProjectYakuza.activeActions and ProjectYakuza.activeActions[p]
+ local entry=action and action.kind=="styleEntry"
+ if ProjectYakuza.isEquipped and ProjectYakuza.isEquipped(p) and not p:isDead() and (custom or wheel or entry) then
   if not B.attackGates[p] then
    local shove=ProjectYakuza.Quicksteps and ProjectYakuza.Quicksteps.shoveAuth[p]
    B.attackGates[p]={allowed=shove and shove.allowed or p:isAuthorizeMeleeAction()}

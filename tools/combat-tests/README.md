@@ -14,9 +14,11 @@ native delivery; it never starts Project Zomboid or a dedicated server.
        java -cp ".;F:/SteamLibrary/steamapps/common/ProjectZomboid/projectzomboid.jar" LuaRunner mp-tests.lua
 
 5. `python validate_mp_nodes.py` additionally runs the native animation-node
-   parser/selector against both cycles of all 148 observer nodes. Its `game`
+   parser/selector against both cycles of all 150 observer nodes. Its `game`
    path defaults to the same local F: installation; adjust it if needed.
 
 The full local regression harness contains additional single-player, input,
 taunt, voice, sound and selector suites. Generated fixtures, compiled classes,
 engine-inspection outputs and game-supplied libraries are excluded from Git.
+
+For the locked style entry fixture, run `python tools/combat-tests/build_style_entry_tests.py` from the root, then `LuaRunner style-entry-tests.lua` with the same classpath. It checks movement and native attack locks, normal vulnerability, full clip completion, hit interruption, missing clips, pause handling, queue rejection and world-exit cleanup.

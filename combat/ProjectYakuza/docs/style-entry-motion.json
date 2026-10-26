@@ -1,0 +1,22 @@
+{
+  "source": "M_KRU_TLK_stand_to_btl_fast.gmt",
+  "clip": "ProjectYakuza_DD_StyleEntry",
+  "duration_seconds": 1.6666666666666667,
+  "full_body": true,
+  "root_horizontal_travel": "discarded",
+  "movement": "player locked to entry anchor until completion or interruption",
+  "game": "Yakuza Kiwami 2",
+  "source_archive": "motion.par",
+  "source_sha256": "1f2c79b3ea955357e7f3cc63637df4a8cb54a98858fa6951b4b244247722bd35",
+  "skeleton": "chara.par / c_man_bone.gmd",
+  "skeleton_sha256": "00638d8baeef2d4d761c3b8d59797ab8d1553bab4410790314aeea2030fc0632",
+  "output_sha256": "99d711abcc8312b87a3a9f7d71d35bc7f171f29f8babbdb97a7b928fbe4b55b0",
+  "fps": 30,
+  "end_frame": 50,
+  "speed": 1,
+  "retarget": "Original supplied GMT retargeted to native Bob skeleton; native finger mapping; no generative assets or upscaling",
+  "attack_input": "discarded during entry; native melee denied",
+  "protection": false,
+  "voice": "CombatStanceEntry on entry start only",
+  "release": "0.29.0"
+}

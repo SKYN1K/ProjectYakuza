@@ -17,7 +17,7 @@ public class MPObserverProbe {
     if(!selected.isEmpty())throw new AssertionError("Observer leaks into native local action "+path);total++;
    }
   }
-  if(total!=74)throw new AssertionError("Unexpected observer node count "+total);
+  if(total!=75)throw new AssertionError("Unexpected observer node count "+total);
   System.out.println("PASS: "+total+" native observer nodes parse, select only for a matching remote clip and contain zero events");
  }
 }

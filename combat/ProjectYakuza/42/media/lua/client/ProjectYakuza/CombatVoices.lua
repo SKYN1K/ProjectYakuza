@@ -85,8 +85,7 @@ function V.update(p)
             if combo.groundMove then id="CombatHeavyAttack" end
             V.play(p,id)
         end
-    elseif not s.pending and aiming and not s.aiming and not stunned and not ProjectYakuza.isBusy(p) then
-        V.play(p,"CombatStanceEntry")
+
     end
     s.aiming=aiming
 end
@@ -125,6 +124,7 @@ end
 ProjectYakuza.on("heatActivationStarted",V.activation)
 ProjectYakuza.on("heatActivationStopped",function(p)local s=V.states[p];if s then s.activation=nil end end)
 ProjectYakuza.on("tauntStarted",function(p)V.play(p,"CombatTaunt")end)
+ProjectYakuza.on("styleEntryStarted",function(p)V.play(p,"CombatStanceEntry")end)
 ProjectYakuza.on("guardBroken",function(p)if V.allowed(p) then state(p).stunned=true;V.play(p,"CombatGettingStunned") end end)
 ProjectYakuza.on("comboCancelled",function(p)local s=V.states[p];if s then s.pending=nil end end)
 ProjectYakuza.on("styleChanged",function(p)V.states[p]=nil end)

@@ -20,7 +20,7 @@ Namespace/modId: `ProjectYakuza`. All definitions are wheel=false and absent rec
 
 | CombatExtremeHeatActivation | The activation animation actually starts; not every heat update |
 
-| CombatStanceEntry | Enter aim stance with the style equipped, including entering a different style; attacks take precedence |
+| CombatStanceEntry | Start the style-selection entry animation; raising RMB does not play this cue |
 
 | CombatGettingHit | Confirmed acute damage to the local style user; not hunger, thirst or ongoing bleeding |
 
