@@ -27,3 +27,6 @@
 !/tools/combat-tests/test_style_observer_builder.py
 
 /combat/ProjectYakuza/**/__pycache__/
+
+!/tools/combat-tests/build_taunt_tests.py
+!/tools/combat-tests/taunt-test-fixture.lua
