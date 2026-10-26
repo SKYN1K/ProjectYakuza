@@ -2,7 +2,7 @@
 
 Project Yakuza is a Build 42 combat mod and a framework for independent fighting-style addons. Dragon of Dojima uses supplied Yakuza/Kiwami animations, textures and sounds. Other styles register their own moves, assets and controllers without copying the framework.
 
-**Version 0.30.3 · Lua API 2 · MP protocol 2.** API 1 style registrations remain supported. Internal namespace/mod dependency: `ProjectYakuza`. Display name: Project Yakuza.
+**Version 0.30.4 · Lua API 2 · MP protocol 2.** API 1 style registrations remain supported. Internal namespace/mod dependency: `ProjectYakuza`. Display name: Project Yakuza.
 
 ## Install and play
 
@@ -15,7 +15,7 @@ Choose **Inventory context menu > Combat styles > Dragon of Dojima** to equip th
 | RMB + LMB | Light chain; fresh click per attack |
 | RMB + MMB | Finisher/double finisher; valid Tiger Drop counter takes priority |
 | Space + direction | Quickstep; stationary steps backward; three per rolling 15 seconds |
-| LMB during quickstep | Directional quickstep attack |
+| LMB during quickstep | Directional quickstep attack; one strike per step |
 | Running, RMB released + LMB | Random side kick/jumping knee after run-up |
 | Running, RMB released + MMB | Dropkick in travel direction |
 | RMB + X | Walking block |

@@ -1,7 +1,7 @@
 ProjectYakuza = ProjectYakuza or {}
 local ProjectYakuza = ProjectYakuza
 ProjectYakuza.FEATURES={grab=false}
-ProjectYakuza.VERSION = "0.30.3"
+ProjectYakuza.VERSION = "0.30.4"
 ProjectYakuza.API_VERSION = 2
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -185,7 +185,7 @@ end
 function ProjectYakuza.blocksNativeAttacks(player)
     local c=ProjectYakuza.activeActions[player]
     local d=c and ProjectYakuza.actionDefinitions[c.kind]
-    return c~=nil and (c.kind=="styleEntry" or (d~=nil and d.blocksAttacks)) or false
+    return c~=nil and (c.kind=="styleEntry" or c.kind=="quickstepAttack" or (d~=nil and d.blocksAttacks)) or false
 end
 -- Called only for the current local player's custom action, never world scans.
 function ProjectYakuza.updateCustomAction(player)

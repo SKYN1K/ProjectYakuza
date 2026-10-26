@@ -103,3 +103,5 @@ Failures include unknown_action, style_not_equipped, busy, not_implemented, unkn
 ## Network catalog
 
 After requiring NetworkExtensions and registering the style, `registerNetworkAnimations(styleId,entries)` returns added count. Each entry requires id,animation,group,priority,loop,conditions={{name,value}} describing the owner node. Groups: melee/stomp/actions. IDs are globally unique; batches validate before publication, copy caller data and priority-sort the merged catalog. Requiring the registration module once is sufficient. This registers presentation only: see [Multiplayer](MULTIPLAYER.md).
+
+Built-in quickstep strikes use a single-use handover ticket. Native attack input is gated while the strike owns the player; the first asynchronous native swing is still classified normally. Replaying a consumed ticket or mismatching its direction is rejected. Follow the built-in controller protocol rather than creating/reusing tickets from an addon.

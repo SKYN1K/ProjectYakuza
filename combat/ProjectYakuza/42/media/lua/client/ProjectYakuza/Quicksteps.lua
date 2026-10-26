@@ -91,7 +91,7 @@ function A:cleanup(completed, reason)
 end
 function Q.pollAttack(player,context)
     local down=ProjectYakuza.Bindings.down("quickstepAttack")
-    if player:isAiming() and down and not context.lastAttackDown then context.timedAction.attackRequested=true end
+    if not context.timedAction.cleaned and not context.attackIssued and player:isAiming() and down and not context.lastAttackDown then context.timedAction.attackRequested=true end
     context.lastAttackDown=down
 end
 function A:update()
@@ -125,11 +125,14 @@ function A:update()
     if var(p,"ProjectYakuzaQuickstepDone")==move.nodeValue then self:forceComplete() end
 end
 function A:perform()
+    if self.performed or self.cleaned then return end
+    self.performed=true
     local p=self.character
     self:cleanup(true)
     ISBaseTimedAction.perform(self)
-    if self.attackHandover and ProjectYakuza.isEquipped(p) and p:isAiming() and not p:isDead() then
-        Q.pending[p]={direction=self.context.action.direction,expiresAt=now()+500}
+    if self.attackHandover and not self.context.attackIssued and ProjectYakuza.isEquipped(p) and p:isAiming() and not p:isDead() then
+        self.context.attackIssued=true
+        Q.pending[p]={direction=self.context.action.direction,expiresAt=now()+500,consumed=false}
     end
 end
 function A:stop()
@@ -191,7 +194,11 @@ ProjectYakuza.registerActionHandler("quickstep",{
 local function key(id) local code=getCore():getKey(id:getId());return code and code>0 and isKeyDown(code) end
 function Q.restoreShove(player)
     local saved=Q.shoveAuth[player]
-    if saved then player:setAuthorizeMeleeAction(saved.allowed);Q.shoveAuth[player]=nil end
+    if saved then
+        local allowed=saved.allowed
+        if ProjectYakuza.blocksNativeAttacks(player) then allowed=false end
+        player:setAuthorizeMeleeAction(allowed);Q.shoveAuth[player]=nil
+    end
     Q.shoveDown[player]=nil
 end
 function Q.movement()

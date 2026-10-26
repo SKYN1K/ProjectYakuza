@@ -36,3 +36,6 @@
 
 !/tools/combat-tests/build_heat_audio_tests.py
 !/tools/combat-tests/heat-audio-test-fixture.lua
+
+!/tools/combat-tests/build_quickstep_once_tests.py
+!/tools/combat-tests/quickstep-once-test-fixture.lua

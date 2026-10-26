@@ -102,8 +102,10 @@ end
 local function onSwing(player, weapon)
     if not localPlayer(player) or not ProjectYakuza.isEquipped(player) then return end
     if not weapon or not ProjectYakuza.isStyleToken(weapon) then return end
-    if ProjectYakuza.blocksNativeAttacks(player) or ProjectYakuza.isCustomAction(player) then return end
     local style, s = ProjectYakuza.getPlayerStyle(player), ProjectYakuza.stateFor(player)
+    local owned=ProjectYakuza.activeActions[player]
+    local firstQuickstepSwing=owned and owned.kind=="quickstepAttack" and s.pendingFinisher==owned.action
+    if ProjectYakuza.isCustomAction(player) or (ProjectYakuza.blocksNativeAttacks(player) and not firstQuickstepSwing) then return end
     s.groundMove=nil
     pollPress(player, style, s)
     -- Every accepted native attack gets its own collision/armor/LOS calculation.
@@ -153,6 +155,7 @@ local function onFinished(player, weapon)
         if move.runningAttack and ProjectYakuza.RunningAttacks then ProjectYakuza.RunningAttacks.finish(player) end
         ProjectYakuza.completeAction(player)
         Combo.reset(s)
+        if move.quickstepAttack then setReadyVariables(player,ProjectYakuza.getPlayerStyle(player),s) end
         if not move.double and not move.quickstepAttack and not move.runningAttack then
             s.finisherBranch, s.finisherFinishedAt = step, now()
             if followup then s.step, s.finishedAt, s.queuedDouble = step, now(), true end
@@ -229,7 +232,7 @@ local nativeAttackHandler = {
         end
         if context.action.quickstepAttack then
             local pending=ProjectYakuza.Quicksteps and ProjectYakuza.Quicksteps.pending[context.player]
-            if not pending or context.target~=pending or pending.expiresAt<now() then return false,"quickstep_required" end
+            if not pending or context.target~=pending or pending.consumed or context.variant~=pending.direction or pending.expiresAt<now() then return false,"quickstep_required" end
         end
         if context.action.double and (s.finisherBranch ~= context.comboStep or not s.finisherFinishedAt
             or now() - s.finisherFinishedAt > context.style.comboResetMs) then return false, "first_finisher_required" end
@@ -249,10 +252,18 @@ local nativeAttackHandler = {
             setReadyVariables(player, context.style, s)
             return false, "native_attack_rejected"
         end
+        if context.action.quickstepAttack then
+            context.target.consumed=true
+            if ProjectYakuza.Quicksteps.pending[player]==context.target then ProjectYakuza.Quicksteps.pending[player]=nil end
+        end
         return true
     end,
     cancel = function(context)
         local s = ProjectYakuza.stateFor(context.player)
+        if context.action.quickstepAttack and context.target and (s.active or context.player:isAttackStarted()) then
+            context.target.consumed=true
+            if ProjectYakuza.Quicksteps.pending[context.player]==context.target then ProjectYakuza.Quicksteps.pending[context.player]=nil end
+        end
         ProjectYakuza.releaseFinisherHandoff(context.player)
         ProjectYakuza.Heat.endSwing(context.player)
         context.player:setBlockMovement(false)

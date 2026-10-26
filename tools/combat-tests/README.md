@@ -32,3 +32,5 @@ Run `python tools/combat-tests/build_extension_api_tests.py` from the root, then
 Aura source checks: `python tools/combat-tests/validate_extreme_assets.py --source-dir "path/to/extracted/Lost Judgment DDS files"` verifies original pixels and provenance. Compile NativeAuraTextureProbe.java, then run it with the mod texture directory on the PZ JAR/native-library classpath to check all 66 PNG decodes through B42 ImageData. These are standalone CPU/native probes, not a game launch.
 
 Activation SFX: build_heat_audio_tests.py embeds the shipped Feedback.lua into heat-audio-tests.lua. Run through LuaRunner in a separate JVM. Checks cover original layer delay, runtime crossfade/mix, successful tails, interruption, pause, invalid handles, independent swing jobs and owner-only playback without invoking character voices.
+
+One-strike quicksteps: build_quickstep_once_tests.py embeds production modules into quickstep-once-tests.lua. Run via LuaRunner separately to test all four directions, rapid inputs, ticket replay/retry, native attack gating, key release and asynchronous first swings.
