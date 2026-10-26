@@ -1,10 +1,10 @@
-# 0.30.2 - Original Lost Judgment Extreme Heat particles
+# 0.30.3 - Extreme Heat activation sound polish
 
-- Removed the previous bright/smudged Extreme Heat profile and its continuous additive bloom. Normal heat remains suppressed during Extreme Heat and resumes only when eligible.
-- Replaced it with original Lost Judgment flame-atlas cells and thin wisp textures, decoded/cropped losslessly at native resolution. No procedural image frames, resizing, upscaling or generated media.
-- Four upper-body particles use muted blue tint and 12-22% opacity rather than an opaque luminous cloud. Native flame frames and bounded wisp drift provide movement without increasing body coverage or adding leg emitters.
-- Regular heat, combat behavior, activation SFX and the separate voice pack remain unchanged.
+- Softer runtime mix for the existing non-voice Yakuza 6 charge, flare layers and ending cue. The charge fades into the native flare marker over 140 ms instead of overlapping at full level.
+- Preserves the original 300 ms second-layer timing after successful short animations; its job no longer shares/competes with swing SFX. Successful native End provides a fallback when a slow frame skips the transient flare marker.
+- Duplicate events do not stack cues. Pause preserves timing, natural tails release cleanly, and interrupted/lifecycle cleanup stops only owned SFX with no false ending flourish.
+- Existing voice cues, sound files/definitions, Sounds slider, combat timing and aura visuals are unchanged. No audio/visual asset generation or edits.
 
 ## Validation
 
-2,750 targeted Kahlua checks pass (121 taunt/aura and 2,629 combat/aura/music), including exclusive profile ownership, source selection, bounded size/opacity/tint, no continuous additive rendering, motion/pause and cached cleanup. All 33 production Lua files compile. All 66 new PNGs match source DDS RGBA pixels/crops and hashes; native B42 ImageData decodes all 66 at original dimensions. All 310 pre-existing media files retain their bytes. PZ was not launched. Installation backs up only changed files and verifies installed bytes.
+2,664 targeted Kahlua checks pass: 35 activation-audio checks plus 2,629 combat/aura/music regressions. All 33 production Lua files compile. Tests cover crossfade levels, original delay, short completion, independent swing scheduling, duplicate events, pause, missed-marker fallback, native tail completion/watchdog, invalid handles, optional profiles, owner-only playback and cleanup that preserves unrelated audio. All 376 media files are byte-identical to v0.30.2. No PZ client/server was launched. Changed installed files are backed up and all installed bytes verified.

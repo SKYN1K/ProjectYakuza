@@ -18,7 +18,7 @@ music is false/omitted for silence, or a unique list such as `{{sound="MyMod_The
 
 ## Sounds and volume
 
-Supported cue keys: punchImpact, kickImpact, heatImpact, punchSwing, kickSwing, finisher, grab, throwImpact, guardHit, guardBreak, heatGain, heatFull, heatStart, heatOnA, heatOnB, heatOff. Values are existing PZ sound-definition names. Omitted cues add nothing; native unarmed fallback remains. Optional heatOnB follows after 300 ms; other sequences need their own controller.
+Supported cue keys: punchImpact, kickImpact, heatImpact, punchSwing, kickSwing, finisher, grab, throwImpact, guardHit, guardBreak, heatGain, heatFull, heatStart, heatOnA, heatOnB, heatOff. Values are existing PZ sound-definition names. Omitted cues add nothing; native unarmed fallback remains. Optional heatOnB follows after 300 ms; other sequences need their own controller. The charge fades into the flare over 140 ms, and delayed layers survive successful animation completion. Source recordings remain unchanged; runtime handle volumes provide the softer mix. See [activation SFX](EXTREME_HEAT_AUDIO.md).
 
 Options > Mods > Project Yakuza has **Music, Sounds, Voices**, each 0-200%, zero mutes. Music applies to registered playlists; Sounds applies to registered profile sound names; Voices affects combat-originated CVF playback only. Native Advanced Audio remains available for individual definitions. PZ sound resources/user volumes are global: give addon sounds unique names. Clip gains and per-style voice mix remain separate.
 

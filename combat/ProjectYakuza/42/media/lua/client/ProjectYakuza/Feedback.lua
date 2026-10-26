@@ -1,7 +1,8 @@
 require "ProjectYakuza/Runtime"
 local ProjectYakuza=ProjectYakuza
-local F={states=setmetatable({}, {__mode="k"}),pending=setmetatable({}, {__mode="k"}),stocks=setmetatable({}, {__mode="k"}),activationVoices=setmetatable({}, {__mode="k"})}
+local F={states=setmetatable({}, {__mode="k"}),pending=setmetatable({}, {__mode="k"}),stocks=setmetatable({}, {__mode="k"}),activationSounds=setmetatable({}, {__mode="k"})}
 ProjectYakuza.Feedback=F
+F.heatMix={charge=.28,flare=.50,layer=.32,finish=.42,fadeMs=140,layerDelayMs=300,tailMs=2800}
 function F.sound(p,key)
     local style=p and ProjectYakuza.getPlayerStyle(p)
     return style and type(style.sounds)=="table" and style.sounds[key] or nil
@@ -17,20 +18,85 @@ function F.notice(p,text)
 end
 local function unhook()
     local any=false;for _ in pairs(F.pending) do any=true;break end
+    if not any then for _ in pairs(F.activationSounds) do any=true;break end end
     if not any and F.ticking then Events.OnTick.Remove(F.tick);F.ticking=false end
 end
 function F.cancel(p)F.pending[p]=nil;unhook()end
+local function hook()
+    if not F.ticking then Events.OnTick.Add(F.tick);F.ticking=true end
+end
 function F.stopActivation(p)
-    local voices=F.activationVoices[p]
-    if voices then for _,id in ipairs(voices) do p:getEmitter():stopSound(id) end end
-    F.activationVoices[p]=nil
-    if F.pending[p] and F.pending[p].kind=="heatLayer" then F.cancel(p) end
+    local session=F.activationSounds[p]
+    if session then for id in pairs(session.handles) do p:getEmitter():stopSound(id) end end
+    F.activationSounds[p]=nil;unhook()
 end
 function F.activationSound(p,name,volume)
     local id=F.play(p,name,volume)
+    local session=F.activationSounds[p]
     if type(id)=="number" and id~=0 then
-        F.activationVoices[p]=F.activationVoices[p] or {};table.insert(F.activationVoices[p],id)
+        if session then session.handles[id]=true end
+        return id
     end
+end
+function F.startActivation(p)
+    if not p or not p:isLocalPlayer() or not ProjectYakuza.isEquipped(p) then return end
+    local action=ProjectYakuza.HeatActivation and ProjectYakuza.HeatActivation.active[p]
+    local old=F.activationSounds[p]
+    if old and not old.completed and old.action==action then return end
+    F.stopActivation(p)
+    local time=getTimestampMs()
+    local session={action=action,style=ProjectYakuza.getPlayerStyle(p).id,handles={},last=time,deadline=time+6000}
+    F.activationSounds[p]=session
+    session.charge=F.activationSound(p,F.sound(p,"heatStart"),F.heatMix.charge)
+    F.notice(p,"EXTREME HEAT");hook()
+end
+function F.flareActivation(p)
+    local session=F.activationSounds[p]
+    if not session or session.flared then return end
+    session.flared=true;local time=getTimestampMs();session.last=time
+    session.fadeAt=time
+    F.activationSound(p,F.sound(p,"heatOnA"),F.heatMix.flare)
+    local second=F.sound(p,"heatOnB")
+    if second then session.second=second;session.due=time+F.heatMix.layerDelayMs end
+    hook()
+end
+function F.finishActivation(p,complete)
+    local session=F.activationSounds[p]
+    if not session then return end
+    if not complete then F.stopActivation(p);return end
+    if session.completed then return end
+    -- Slow frames may skip the transient flare marker; successful End is a safe fallback.
+    if not session.flared then F.flareActivation(p) end
+    session.completed=true;session.last=getTimestampMs();session.deadline=session.last+F.heatMix.tailMs
+end
+function F.updateActivation(p,session,time,paused)
+    local dt=math.max(0,time-session.last);session.last=time
+    local style=ProjectYakuza.getPlayerStyle(p)
+    if p:isDead() or not ProjectYakuza.isEquipped(p) or not style or style.id~=session.style then F.stopActivation(p);return end
+    if paused then
+        session.deadline=session.deadline+dt
+        if session.due then session.due=session.due+dt end
+        if session.fadeAt then session.fadeAt=session.fadeAt+dt end
+        return
+    end
+    local emitter=p:getEmitter()
+    if session.charge and session.fadeAt then
+        local fraction=math.max(0,math.min(1,(time-session.fadeAt)/F.heatMix.fadeMs))
+        emitter:setVolume(session.charge,F.heatMix.charge*(1-fraction))
+        if fraction>=1 then
+            emitter:stopSound(session.charge);session.handles[session.charge]=nil;session.charge=nil
+        end
+    end
+    if session.second and time>=session.due then
+        F.activationSound(p,session.second,F.heatMix.layer);session.second=nil;session.due=nil
+    end
+    if session.completed and not session.second and not session.charge then
+        local playing=false
+        if emitter.isPlaying then for id in pairs(session.handles) do if emitter:isPlaying(id) then playing=true;break end end
+        else playing=time<session.deadline end
+        if not playing then F.activationSounds[p]=nil;return end
+    end
+    if time>=session.deadline then F.stopActivation(p) end
 end
 function F.swing(p,style,step,move)
     local s=ProjectYakuza.stateFor(p);local kick=move.groundAttack or move.runningAttack or move.quickstepAttack or move.afterLight
@@ -52,15 +118,12 @@ function F.tick()
     for p,job in pairs(F.pending) do
         local dt=math.max(0,time-job.last);job.last=time
         local s=ProjectYakuza.stateFor(p)
-        if job.kind=="heatLayer" then
-            if not F.activationVoices[p] or not ProjectYakuza.isEquipped(p) or p:isDead() then F.pending[p]=nil
-            elseif paused then job.due=job.due+dt
-            elseif time>=job.due then F.activationSound(p,job.sound,.5);F.pending[p]=nil end
-        elseif not ProjectYakuza.isEquipped(p) or p:isDead() or not s.active or (s.multiHitToken or s.startedAt)~=job.stamp
+        if not ProjectYakuza.isEquipped(p) or p:isDead() or not s.active or (s.multiHitToken or s.startedAt)~=job.stamp
             then F.pending[p]=nil
         elseif paused then job.due=job.due+dt
         elseif time>=job.due then F.play(p,job.sound,.65);F.pending[p]=nil end
     end
+    for p,session in pairs(F.activationSounds) do F.updateActivation(p,session,time,paused) end
     unhook()
 end
 function F.hit(p,z,weapon,damage)
@@ -83,7 +146,7 @@ function F.initialise()
 end
 function F.clear()
     F.pending=setmetatable({}, {__mode="k"});unhook()
-    for p in pairs(F.activationVoices) do F.stopActivation(p) end
+    for p in pairs(F.activationSounds) do F.stopActivation(p) end
 end
 ProjectYakuza.on("lightAttackStarted",F.swing)
 ProjectYakuza.on("finisherStarted",F.swing)
@@ -103,19 +166,16 @@ ProjectYakuza.on("tigerDrop",function(p)
     if s and s.text=="TIGER DROP" and time<s.untilAt then return end
     F.play(p,F.sound(p,"finisher"),.9);F.notice(p,"TIGER DROP")
 end)
-ProjectYakuza.on("heatActivationStarted",function(p)F.activationSound(p,F.sound(p,"heatStart"),.4);F.notice(p,"EXTREME HEAT")end)
-ProjectYakuza.on("heatActivationFlare",function(p)
-    F.activationSound(p,F.sound(p,"heatOnA"),.65)
-    -- The original hactmode_on sequence delays its second layer by 300 ms.
-    local second=F.sound(p,"heatOnB")
-    if second then
-        F.activationVoices[p]=F.activationVoices[p] or {}
-        local time=getTimestampMs();F.pending[p]={kind="heatLayer",sound=second,due=time+300,last=time}
-        if not F.ticking then Events.OnTick.Add(F.tick);F.ticking=true end
+ProjectYakuza.on("heatActivationStarted",F.startActivation)
+ProjectYakuza.on("heatActivationFlare",F.flareActivation)
+ProjectYakuza.on("heatActivationStopped",F.finishActivation)
+ProjectYakuza.on("extremeHeatEnded",function(p,reason)
+    F.stopActivation(p)
+    if (not reason or reason=="depleted") and not p:isDead() and ProjectYakuza.isEquipped(p) then
+        F.play(p,F.sound(p,"heatOff"),F.heatMix.finish)
     end
 end)
-ProjectYakuza.on("heatActivationStopped",function(p,complete)if complete then F.activationVoices[p]=nil else F.stopActivation(p) end end)
-ProjectYakuza.on("extremeHeatEnded",function(p)F.play(p,F.sound(p,"heatOff"),.65)end)
+ProjectYakuza.on("styleChanged",F.stopActivation)
 Events.OnGameStart.Add(F.initialise)
 Events.OnSave.Add(F.clear)
 Events.OnMainMenuEnter.Add(F.clear)

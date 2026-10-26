@@ -33,3 +33,6 @@
 
 !/tools/combat-tests/NativeAuraTextureProbe.java
 !/tools/combat-tests/validate_extreme_assets.py
+
+!/tools/combat-tests/build_heat_audio_tests.py
+!/tools/combat-tests/heat-audio-test-fixture.lua
