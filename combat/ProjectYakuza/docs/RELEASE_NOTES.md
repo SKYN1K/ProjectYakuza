@@ -1,3 +1,7 @@
+# Unreleased PR — Mad Dog of Shimano
+
+- Separate original-motion style addon and optional per-style held-weapon appearance. Based on framework 0.30.0. PR remains unmerged and unpublished.
+
 # 0.30.0 - Addon authoring and Lua API 2
 
 - Replaced the chronological prototype README with a current install/player guide and a single documentation index. Added complete style/API/action/animation/presentation/testing guides and rewrote multiplayer, heat, controls, playlists and extension entry points. Older implementation notes are clearly labeled historical; source/provenance reports remain intact.

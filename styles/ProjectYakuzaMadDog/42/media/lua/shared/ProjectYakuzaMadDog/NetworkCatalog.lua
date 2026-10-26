@@ -609,4 +609,25 @@ ProjectYakuza.NetworkCatalog["project_yakuza.mad_dog_of_shimano"]={
             },
         },
     },
+    {
+        ["id"]="ProjectYakuza_MD_StyleEntry",
+        ["animation"]="ProjectYakuza_MD_StyleEntry",
+        ["group"]="actions",
+        ["priority"]=220,
+        ["loop"]=false,
+        ["conditions"]={
+            {
+                ["name"]="ProjectYakuzaStyle",
+                ["value"]="project_yakuza.mad_dog_of_shimano",
+            },
+            {
+                ["name"]="ProjectYakuzaActive",
+                ["value"]="true",
+            },
+            {
+                ["name"]="PerformingAction",
+                ["value"]="ProjectYakuza_MD_StyleEntry",
+            },
+        },
+    },
 }

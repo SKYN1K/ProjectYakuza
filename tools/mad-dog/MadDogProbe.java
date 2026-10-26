@@ -61,18 +61,15 @@ public class MadDogProbe {
                 for(int i=0;i<cs.getLength();i++){Element c=(Element)cs.item(i);set.invoke(vars,text(c,"m_Name"),text(c,"m_Value"));}
                 Object state=states.get(path.getParent().getFileName().toString());
                 List<?> selected=(List<?>)select.invoke(state,vars,new ArrayList<>());
-                if(selected.size()!=1 || !selected.get(0).equals(parsed(path,node))) {
-                    // Parse creates a new instance: compare public node names below.
-                    if(selected.size()!=1 || !node.getField("name").get(selected.get(0)).equals(text(doc,"m_Name")))
-                        throw new AssertionError("Native priority/selection conflict "+path+" count="+selected.size());
-                }
+                if(selected.size()!=1 || !node.getField("name").get(selected.get(0)).equals(text(doc,"m_Name")))
+                    throw new AssertionError("Native priority/selection conflict "+path+" count="+selected.size());
                 set.invoke(vars,observer?"ProjectYakuzaRemoteObserver":"ProjectYakuzaStyle",observer?"false":"dragon_of_dojima");
                 selected=(List<?>)select.invoke(state,vars,new ArrayList<>());
                 for(Object n:selected)if(node.getField("name").get(n).equals(text(doc,"m_Name")))throw new AssertionError("Style/observer leakage "+path);
                 if(observer)observers++;else owners++;
             }
         }
-        if(clips!=25||owners!=27||observers!=80)throw new AssertionError("Unexpected coverage: "+clips+"/"+owners+"/"+observers);
+        if(clips!=26||owners!=28||observers!=82)throw new AssertionError("Unexpected coverage: "+clips+"/"+owners+"/"+observers);
         System.out.printf("PASS: %d native clip imports, %d owner selectors with framework conflict checks, %d event-free observer selectors and style/remote isolation%n",clips,owners,observers);
     }
 }

@@ -58,6 +58,7 @@ clip('GuardHit','P_MJK_guard','guard',phase='hit')
 clip('GuardExit','P_MJK_guard_en','guard',phase='exit')
 clip('Taunt','P_MJK_stlyeact','taunt')
 clip('HeatActivate','P_MJK_stlye_st','heatActivation')
+clip('StyleEntry','P_btlst_MJA_to_MJK','styleEntry')
 
 
 def read_frames(text):
@@ -212,6 +213,9 @@ def main():
     manifest={'source_game':'Yakuza 0 (local PC installation)',
               'archive':'media/data/motion_w64/BattlePlayerMajimaL.par',
               'source_model':args.gmd.name,
+              'source_model_archive':'media/data/chara/w64/adv/c_cm_majima_origin/mesh.par',
+              'native_grip_animation':'media/anims_X/Bob/Bob_AttackKnife01_Hit.x',
+              'native_grip_sha256':hashlib.sha256(args.native_knife.read_bytes()).hexdigest(),
               'source_model_sha256':hashlib.sha256(args.gmd.read_bytes()).hexdigest(),
               'retarget':'Global bind-relative rotations with source segment-direction correction for T/A-pose differences; native PZ bone lengths; horizontal root motion removed; vertical hip motion retained; native knife prop/finger grip.',
               'scale':scale,'bone_map':MAP,'clips':report}

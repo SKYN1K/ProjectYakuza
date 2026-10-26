@@ -114,4 +114,8 @@ return {
         ["animation"]="ProjectYakuza_MD_HeatActivate",
         ["duration"]=1.83333333333,
     },
+    ["StyleEntry"]={
+        ["animation"]="ProjectYakuza_MD_StyleEntry",
+        ["duration"]=1,
+    },
 }

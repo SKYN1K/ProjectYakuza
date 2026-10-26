@@ -63,3 +63,7 @@ python ProjectYakuza/tools/build_style_observers.py --mod-root MyStyleAddon --st
 ```
 
 The prefix must match owner XML names and the shared `MyStyle_Style.lua` module. The builder writes XML/Lua code only. It registers presentation, not custom damage/physics. Follow [Multiplayer](MULTIPLAYER.md) and [Testing](TESTING.md). Package only your addon with `require=ProjectYakuza`; do not bundle a second framework or the separate voice pack.
+
+## Optional held weapon model (Mad Dog PR)
+
+`weaponSprite="HuntingKnife"` selects an existing PZ weapon model for this style's shared token. Omitting it retains `ProjectYakuza_EmptyHand`. This changes appearance only; the token identity, native targeting, hit cap and damage mechanics remain shared. Both server equipment preparation and local preparation use `prepareTokenAppearance(token, style)`; client `prepareToken(token, player)` resolves the selected style. Do not call it without the player for a style with a supplied model. New models must have a real script definition and corresponding attachment/prop animation. See the separate `styles/ProjectYakuzaMadDog` example.

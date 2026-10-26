@@ -112,7 +112,7 @@ for c in CLIPS:
         publish(n,'actions')
     else:
         n=node(c,'actions');cond(n,'PerformingAction',name);mask(n,'Bip01')
-        marker='ProjectYakuzaTaunt' if kind=='taunt' else 'ProjectYakuzaHeatActivation'
+        marker={'taunt':'ProjectYakuzaTaunt','heatActivation':'ProjectYakuzaHeatActivation','styleEntry':'ProjectYakuzaStyleEntry'}[kind]
         event(n,'SetVariable',marker+'=started');event(n,'SetVariable',marker+'=done','End')
         if kind=='heatActivation':event(n,'SetVariable',marker+'=flare',.55)
         publish(n,'actions')

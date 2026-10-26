@@ -2,7 +2,7 @@ require "ProjectYakuza/Registry"
 require "ProjectYakuzaMadDog/NetworkCatalog"
 local motions=require "ProjectYakuzaMadDog/Motions"
 local P=ProjectYakuza
-assert(P.API_VERSION>=1 and P.prepareTokenAppearance,
+assert(P.API_VERSION>=1 and P.prepareTokenAppearance and P.actionKinds.styleEntry,
     "Mad Dog of Shimano requires Project Yakuza with the style weaponSprite API")
 local speed=1.8
 local function move(name,node,damage)
@@ -67,5 +67,6 @@ P.registerStyle({
         -- Original style-action flourish and stance entry, using shared handlers.
         taunt={enabled=true,animation=motions.Taunt.animation,duration=motions.Taunt.duration},
         heatActivation={enabled=true,animation=motions.HeatActivate.animation,duration=motions.HeatActivate.duration},
+        styleEntry={enabled=true,animation=motions.StyleEntry.animation,duration=motions.StyleEntry.duration},
     },
 })

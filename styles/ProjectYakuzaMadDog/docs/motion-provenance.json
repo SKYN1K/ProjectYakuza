@@ -349,6 +349,21 @@
       "source_sha256": "ad801f26a1ced6ac951984e7fc3aac633bf7710a722203122217062caf361ee8",
       "output_sha256": "2a98f055291753a2c8ef0a0a74782b28d0654ee38eb2fad54ce276d49a40f331",
       "channels": 36
+    },
+    {
+      "name": "ProjectYakuza_MD_StyleEntry",
+      "source": "P_btlst_MJA_to_MJK.gmt",
+      "kind": "styleEntry",
+      "impact_frame": null,
+      "frames": 30,
+      "fps": 30,
+      "duration": 1.0,
+      "source_sha256": "d6e963a75a6e1703138d9d9afe37c24deecc80fd17cb65336f5f59fa3bd58f20",
+      "output_sha256": "299543facbdedac92380e6cf624e0f40fa76e15f19aaff75b94160b917b984d4",
+      "channels": 36
     }
-  ]
+  ],
+  "source_model_archive": "media/data/chara/w64/adv/c_cm_majima_origin/mesh.par",
+  "native_grip_animation": "media/anims_X/Bob/Bob_AttackKnife01_Hit.x",
+  "native_grip_sha256": "4f8529807b66a2a59f13fe8a56b9716da39c4af7ec63ca33e24f24e4bd591380"
 }
