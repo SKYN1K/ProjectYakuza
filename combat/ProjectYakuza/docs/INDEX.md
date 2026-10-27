@@ -1,6 +1,6 @@
 # Documentation index
 
-Current manual: Project Yakuza 0.31.1, Lua API 3, MP protocol 2.
+Current manual: Project Yakuza 0.32.0, Lua API 3, MP protocol 2.
 
 | Task | Guide |
 | --- | --- |

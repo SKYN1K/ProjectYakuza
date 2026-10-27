@@ -19,6 +19,8 @@ A.extremeLayout={
     {x=-6.9,height=38.3,kind="flame",frames=64,frameHeight=32,speed=64/(.73*60),scale=.80,alpha=.42,drift=.5,lift=1},
     {x=6.9,height=38.3,kind="flame",frames=64,frameHeight=32,speed=64/(.81*60),scale=.80,alpha=.44,drift=.5,lift=1.1},
     {x=0,height=52.6,kind="flame",frames=64,frameHeight=32,speed=64/(.59*60),scale=.65,alpha=.36,drift=.4,lift=.8},
+    {x=-7,height=6,kind="smoke",frames=64,frameHeight=64,speed=64/(1.6*60),scale=.40,alpha=.22,drift=-4,lift=9,smoke=true,cycleMs=1600},
+    {x=7,height=7,kind="smoke",frames=64,frameHeight=64,speed=64/(1.85*60),scale=.40,alpha=.18,drift=4,lift=10,smoke=true,cycleMs=1850},
 }
 A.flashLayout={
     {kind="wispL",x=-7,height=40,scale=.30,frameHeight=128,drift=-2,lift=5,alpha=.22},
@@ -77,7 +79,7 @@ function A.draw(p,s,additive,flashStrength)
     local tile=Core.getTileScale()
     local color=s.extreme and A.extremeColor or A.color
     for _,e in ipairs(s.emitters) do
-        if e.instance and e.instance:getParentSprite()==e.sprite then
+        if e.instance and e.instance:getParentSprite()==e.sprite and not (flashStrength and e.point.smoke) then
             local alpha=s.opacity
             local dx,dy=0,0
             if s.extreme then
@@ -85,13 +87,19 @@ function A.draw(p,s,additive,flashStrength)
                 alpha=alpha*e.point.alpha*(.92+.08*math.sin(phase))
                 dx=e.point.drift*math.sin(phase*.7)
                 dy=e.point.lift*math.sin(phase*.9)
+                if e.point.smoke then
+                    local cycle=(s.clock/e.point.cycleMs+e.index*.37)%1
+                    alpha=s.opacity*e.point.alpha*math.sin(math.pi*cycle)
+                    dx=e.point.drift*cycle;dy=e.point.lift*cycle
+                end
             end
             if flashStrength then alpha=alpha*flashStrength end
             -- Advance once, including the base additive flame pass; flashes do not double-step.
             if not additive and not flashStrength and not isGamePaused() and e.frames>1 then e.sprite:update(e.instance) end
             if e.opacity~=alpha then e.instance:SetAlpha(alpha);e.instance:SetTargetAlpha(alpha);e.opacity=alpha end
+            if s.extreme then SpriteRenderer.instance:setDoAdditive(not e.point.smoke) end
             e.instance:render(p,p:getX(),p:getY(),p:getZ(),IsoDirections.N,
-                p:getOffsetX()+tile+dx*tile,p:getOffsetY()-89*tile-dy*tile,color)
+                p:getOffsetX()+tile+dx*tile,p:getOffsetY()-89*tile-dy*tile,e.point.smoke and A.smokeColor or color)
         end
     end
 end
@@ -99,7 +107,8 @@ function A.render()
     -- One native world-render path for every facing; never use character-direction rendering.
     if not A.color then
         A.color=ColorInfo.new(1,1,1,1)
-        A.extremeColor=ColorInfo.new(.08,.38,1,1)
+        A.extremeColor=ColorInfo.new(.25,.15,1,1)
+        A.smokeColor=ColorInfo.new(.48,.40,.72,1)
     end
     for p,s in pairs(A.states) do
     if not p:isDead() and s.fadeElapsed then
@@ -182,6 +191,11 @@ function A.update(player)
     if fresh then s.fadeElapsed=0;s.fadeLast=getTimestampMs();s.opacity=0;s.clock=0 end
     local tile=Core.getTileScale()
     local layout=s.extreme and A.extremeLayout or A.layout
+    for i=#s.emitters,#layout+1,-1 do
+        local e=s.emitters[i]
+        if e.instance then e.instance:Dispose();IsoSpriteInstance.add(e.instance) end
+        table.remove(s.emitters,i)
+    end
     for i,point in ipairs(layout) do
         local e=s.emitters[i]
         if not e then e={sprites={}};s.emitters[i]=e end

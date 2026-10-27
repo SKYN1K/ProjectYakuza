@@ -1,0 +1,109 @@
+{
+  "operation": "Retarget supplied original finisher frames to native B42 skeleton, then split wind-up/release at the same source pose. No invented poses, generated motion or interpolation beyond native playback. Horizontal root motion removed; native fist tracks retained. Non-looping wind-up holds its final pose until release.",
+  "clips": [
+    {
+      "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_SUD_ath_01_fin_md.gmt",
+      "source_sha256": "f80f5ea3e54726d80afb7164379858769a46226ed7651baf694e8767f01b58ab",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_ChargeWindup01.x",
+      "sha256": "8358eb7bd8eccc2f30522acce3e08284c185e8577eac485b37426fc78eed9457",
+      "source_frames": [
+        0,
+        10
+      ],
+      "fps": 30,
+      "duration": 0.3333333333333333,
+      "contact_frame": null
+    },
+    {
+      "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_SUD_ath_01_fin_md.gmt",
+      "source_sha256": "f80f5ea3e54726d80afb7164379858769a46226ed7651baf694e8767f01b58ab",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_ChargedFinisher01.x",
+      "sha256": "97d13e33c809e7239fc52c93ea5930cacdaea345903a8d10f9430742280cf2e9",
+      "source_frames": [
+        10,
+        57
+      ],
+      "fps": 30,
+      "duration": 1.5666666666666667,
+      "contact_frame": 6
+    },
+    {
+      "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_SUD_ath_02_fin_md.gmt",
+      "source_sha256": "7307766ec417ca6014c70c33c06929ab901e6dbf30b08524d56c8c69a42801b2",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_ChargeWindup02.x",
+      "sha256": "72460e8a437732fcc86e7f5984ce51998b2c77835ab8d0c972950029f304d2dd",
+      "source_frames": [
+        0,
+        16
+      ],
+      "fps": 30,
+      "duration": 0.5333333333333333,
+      "contact_frame": null
+    },
+    {
+      "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_SUD_ath_02_fin_md.gmt",
+      "source_sha256": "7307766ec417ca6014c70c33c06929ab901e6dbf30b08524d56c8c69a42801b2",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_ChargedFinisher02.x",
+      "sha256": "a846101d4ac0e50833cd9c3084b75b358887f66b9ca06ac28955a87ddd249309",
+      "source_frames": [
+        16,
+        53
+      ],
+      "fps": 30,
+      "duration": 1.2333333333333334,
+      "contact_frame": 8
+    },
+    {
+      "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_SUD_ath_03_fin_md.gmt",
+      "source_sha256": "8905621ce388dde26f84fa145c0b608594e494ba1a34a76c6de45de88f884d9f",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_ChargeWindup03.x",
+      "sha256": "15d24cf4509d9dd5e7160844ce24983a6b4e9bbbcf276b445c0557250633747c",
+      "source_frames": [
+        0,
+        12
+      ],
+      "fps": 30,
+      "duration": 0.4,
+      "contact_frame": null
+    },
+    {
+      "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_SUD_ath_03_fin_md.gmt",
+      "source_sha256": "8905621ce388dde26f84fa145c0b608594e494ba1a34a76c6de45de88f884d9f",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_ChargedFinisher03.x",
+      "sha256": "8676121fdba96e7f236117f67f05ba1fac3a69392ddbff0be12ea9bd929e58d9",
+      "source_frames": [
+        12,
+        61
+      ],
+      "fps": 30,
+      "duration": 1.6333333333333333,
+      "contact_frame": 8
+    },
+    {
+      "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_SUD_ath_04_fin_md.gmt",
+      "source_sha256": "e63393318090be9767e11c0ff359877501949ef34b7248dd501310b74144254f",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_ChargeWindup04.x",
+      "sha256": "703feffc9c6c0ddee2172405576d01c4eeabfcff8b71ae0088a5f74111c4e588",
+      "source_frames": [
+        0,
+        16
+      ],
+      "fps": 30,
+      "duration": 0.5333333333333333,
+      "contact_frame": null
+    },
+    {
+      "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_SUD_ath_04_fin_md.gmt",
+      "source_sha256": "e63393318090be9767e11c0ff359877501949ef34b7248dd501310b74144254f",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_ChargedFinisher04.x",
+      "sha256": "aac404733be4606d6d070e59957dd4aa34c348b914330520c15859076895c42c",
+      "source_frames": [
+        16,
+        60
+      ],
+      "fps": 30,
+      "duration": 1.4666666666666666,
+      "contact_frame": 8
+    }
+  ]
+}

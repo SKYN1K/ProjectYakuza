@@ -9,7 +9,7 @@ root = here.parents[1]
 media = root / 'combat/ProjectYakuza/42/media'
 game = Path('F:/SteamLibrary/steamapps/common/ProjectZomboid')
 nodes = list((media / 'AnimSets/player').rglob('ProjectYakuza_MP_*.xml'))
-assert len(nodes) == 156, len(nodes)
+assert len(nodes) == 180, len(nodes)
 for cycle in ('0', '1'):
     directory = here / ('native-observers-cycle' + cycle)
     directory.mkdir(exist_ok=True)
@@ -31,7 +31,7 @@ for cycle in ('0', '1'):
             # Probe intentionally scans files whose names begin ProjectYakuza_MP_.
             shutil.copyfile(path, directory / ('ProjectYakuza_MP_' + path.parent.name + '_' + path.name))
             count += 1
-    assert count == 78
+    assert count == 90
     result = subprocess.run([str(game / 'jre64/bin/java.exe'), '-cp', str(here) + ';' + str(game / 'projectzomboid.jar'),
                              'MPObserverProbe', str(directory)], cwd=here, capture_output=True, text=True)
     print(result.stdout, end='')
@@ -41,4 +41,4 @@ for cycle in ('0', '1'):
 for path in (media / 'AnimSets/zombie/hitreaction').glob('ProjectYakuza_EnemyHit*.xml'):
     repeat = media / 'AnimSets/zombie/hitreaction-hit' / path.name
     assert E.tostring(E.parse(path).getroot()) == E.tostring(E.parse(repeat).getroot())
-print('PASS 156 event-free observer selectors retain their supplied clips/settings; 4 native repeat-hit nodes match originals')
+print('PASS 180 event-free observer selectors retain their supplied clips/settings; 4 native repeat-hit nodes match originals')

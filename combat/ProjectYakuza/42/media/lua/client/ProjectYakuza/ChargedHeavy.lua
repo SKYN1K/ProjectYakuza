@@ -44,7 +44,7 @@ function A:cleanup(completed)
         if completed then PY.completeAction(p,self.context) else PY.cancelAction(p,"charge_interrupted",self.context) end
     end
     H.gestures[p]=nil
-    if completed and self.started and self:isValid() then H.pending[p]={expiresAt=now()+600,consumed=false} end
+    if completed and self.started and self:isValid() then H.pending[p]={expiresAt=now()+600,consumed=false,variant=self.context.variant,branch=self.context.action.chargeBranch} end
     if self.started then PY.emit("heavyChargeStopped",p,completed==true) end
 end
 function A:perform()self:cleanup(true);ISBaseTimedAction.perform(self)end
@@ -76,6 +76,11 @@ end
 PY.registerActionHandler("heavyCharge",{
     canStart=function(c)
         local p=c.player
+        local s=PY.stateFor(p)
+        if s.finisherMove or s.pendingFinisher or s.queuedFinisher or s.queuedDouble
+            or (s.finisherBranch and s.finisherFinishedAt and now()-s.finisherFinishedAt<=c.style.comboResetMs) then return false,"second_finisher_only" end
+        local gesture=H.gestures[p]
+        if c.action.chargeBranch and (not gesture or c.target~=gesture or gesture.branch~=c.action.chargeBranch) then return false,"light_branch_required" end
         return p:isLocalPlayer() and p:isAiming() and not isGamePaused() and not p:hasTimedActions()
             and not p:isDead() and not p:isOnFloor() and not p:isKnockedDown() and not p:isClimbing()
             and not p:getVehicle() and not p:isAsleep() and not p:isDraggingCorpse()
@@ -102,22 +107,34 @@ function H.input(p,down,pressed,s,style)
     if not slot or not slot.enabled then return false end
     if not p:isAiming() or isGamePaused() then H.gestures[p]=nil;H.pending[p]=nil;return true end
     local move=s.finisherMove or s.pendingFinisher
-    if move and (move.runningAttack or move.quickstepAttack or move.chargedHeavy) then H.gestures[p]=nil;return true end
+    if move and (move.runningAttack or move.quickstepAttack or (move.chargedHeavy and not move.chargedFinisher)) then H.gestures[p]=nil;return true end
     local ticket=H.pending[p]
     if ticket then
         if now()>ticket.expiresAt or ticket.consumed then H.pending[p]=nil;return true end
-        local ok,reason=PY.requestAction(p,"chargedHeavy",nil,ticket)
+        local ok,reason=PY.requestAction(p,"chargedHeavy",ticket.variant,ticket)
         if ok or (reason~="native_attack_busy" and reason~="busy" and reason~="native_attack_rejected") then H.pending[p]=nil end
         return true
     end
-    if pressed then H.gestures[p]={at=now()} end
+    if pressed then
+        -- Second finishers never enter the hold gesture, even if MMB stays held.
+        if move or s.queuedFinisher or s.queuedDouble or (s.finisherBranch and s.finisherFinishedAt and now()-s.finisherFinishedAt<=style.comboResetMs) then
+            H.gestures[p]=nil;PY.queueFinisher(p);return true
+        end
+        local branch=(s.active or (s.finishedAt and now()-s.finishedAt<=style.comboResetMs)) and s.step or 0
+        H.gestures[p]={at=now(),branch=branch}
+    end
     local gesture=H.gestures[p]
     if not gesture then return true end
+    -- Preserve a valid initial press past combo expiry, but follow any light
+    -- that was already buffered and actually executes before charging starts.
+    if s.active and not s.finisherMove and not s.groundMove and s.step>0 then gesture.branch=s.step end
     if not down then
         H.gestures[p]=nil;PY.queueFinisher(p);return true
     end
     if now()-gesture.at>=(slot.holdMs or 350) and not s.active and not s.starting and not PY.activeActions[p] then
-        PY.requestAction(p,"heavyCharge")
+        local branch=gesture.branch or 0
+        local variant=slot.variants and slot.variants["after_"..branch] and ("after_"..branch) or nil
+        PY.requestAction(p,"heavyCharge",variant,gesture)
     end
     return true
 end

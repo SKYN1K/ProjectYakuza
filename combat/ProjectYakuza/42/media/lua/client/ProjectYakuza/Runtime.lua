@@ -119,6 +119,7 @@ local function onSwing(player, weapon)
         s.finisherBranch, s.finisherFinishedAt = nil, nil
         move = Combo.begin(s, style, now())
     end
+    if move.chargeBranch then s.step=move.chargeBranch end
     s.multiHitToken={};s.effectVictims=nil
     s.seenClip, s.seenHit, s.confirmedHit, s.recoveryReleased, s.heatVictims = nil, nil, false, false, nil
     if move.runningAttack and ProjectYakuza.RunningAttacks then ProjectYakuza.RunningAttacks.onSwing(player,move) end
@@ -157,7 +158,7 @@ local function onFinished(player, weapon)
         ProjectYakuza.completeAction(player)
         Combo.reset(s)
         if move.quickstepAttack or move.chargedHeavy then setReadyVariables(player,ProjectYakuza.getPlayerStyle(player),s) end
-        if not move.double and not move.quickstepAttack and not move.runningAttack and not move.chargedHeavy then
+        if not move.double and not move.quickstepAttack and not move.runningAttack and (not move.chargedHeavy or move.chargedFinisher) then
             s.finisherBranch, s.finisherFinishedAt = step, now()
             if followup then s.step, s.finishedAt, s.queuedDouble = step, now(), true end
         end
@@ -180,8 +181,8 @@ function ProjectYakuza.queueFinisher(player)
     local slot = style.actions.finisher
     if not slot or not slot.enabled then return false, "not_implemented" end
     local first = s.finisherMove or s.pendingFinisher
-    if s.groundMove or (first and (first.quickstepAttack or first.runningAttack or first.chargedHeavy)) then return false,"busy" end
-    local branch = first and first.afterLight or s.queuedFinisher or s.finisherBranch
+    if s.groundMove or (first and (first.quickstepAttack or first.runningAttack or (first.chargedHeavy and not first.chargedFinisher))) then return false,"busy" end
+    local branch = first and (first.afterLight or first.chargeBranch) or s.queuedFinisher or s.finisherBranch
     if first or s.queuedFinisher or s.finisherBranch then
         if (first and first.double) or s.queuedDouble then return false, "finisher_limit" end
         if not first and not s.queuedFinisher and now() - s.finisherFinishedAt > style.comboResetMs then return false, "combo_window_closed" end
@@ -238,7 +239,8 @@ local nativeAttackHandler = {
         end
         if context.action.chargedHeavy then
             local ticket=ProjectYakuza.ChargedHeavy and ProjectYakuza.ChargedHeavy.pending[context.player]
-            if not ticket or context.target~=ticket or ticket.consumed or ticket.expiresAt<now() then return false,"charge_required" end
+            if not ticket or context.target~=ticket or ticket.consumed or ticket.expiresAt<now()
+                or (ticket.variant or "default")~=(context.variant or "default") or ticket.branch~=context.action.chargeBranch then return false,"charge_required" end
         end
         if context.action.double and (s.finisherBranch ~= context.comboStep or not s.finisherFinishedAt
             or now() - s.finisherFinishedAt > context.style.comboResetMs) then return false, "first_finisher_required" end

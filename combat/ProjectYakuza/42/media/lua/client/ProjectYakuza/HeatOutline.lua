@@ -22,7 +22,7 @@ function O.update(p,wanted)
     O.states[p]=s
     -- Preserve target highlighting owned by the base game or another addon.
     if s.previousFlag then return end
-    p:setOutlineHighlightCol(index,.16,.48,.92,.42)
+    p:setOutlineHighlightCol(index,.32,.22,.95,.42)
     s.color=p:getOutlineHighlightCol(index);s.owned=true
 end
 function O.draw(p)

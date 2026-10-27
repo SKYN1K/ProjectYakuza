@@ -9,6 +9,7 @@ H.visualOrbs=6
 H.originX=78
 H.originY=90
 H.glowColor={0.35,0.75,1}
+H.extremeGlowColor={.52,.22,1}
 function H.loadAssets()
     if H.assets then return H.assets end
     local base="media/textures/ProjectYakuza/HeatHUD/"
@@ -20,6 +21,10 @@ function H.loadAssets()
     a.connector={339,63,77,62};a.tail={416,63,92,62}
     a.glow={0,300,234,212};a.glowLink={314,218,78,137};a.glowTail={393,218,119,137}
     a.kanji={205,36,68,68}
+    -- Original dark/blue counterparts in the same supplied Y6 atlas.
+    a.extremeBody={0,160,118,138};a.extremeHead={0,38,129,121}
+    a.extremeRing={38,0,37,37};a.extremeGlass={114,0,37,37}
+    a.extremeConnector={339,0,77,62};a.extremeTail={416,0,92,62}
     H.assets=a
     return a
 end
@@ -79,36 +84,38 @@ function H:prerender()
         else self.activationMs=nil end
     end
     -- Native hact_bg offsets: two continuous 77px serpent spans, followed by the native tail.
-    self:drawOriginal(a.connector,54.5,-6,77,62)
-    self:drawOriginal(a.connector,131.5,-6,77,62)
-    self:drawOriginal(a.tail,208,-6,92,62)
+    self:drawOriginal(self.extreme and a.extremeConnector or a.connector,54.5,-6,77,62)
+    self:drawOriginal(self.extreme and a.extremeConnector or a.connector,131.5,-6,77,62)
+    self:drawOriginal(self.extreme and a.extremeTail or a.tail,208,-6,92,62)
     -- Native stock centers relative to the main orb. Each orb now represents one complete banked stock.
     local centers={56,93,130,169,207,246}
     for i=1,H.visualOrbs do
         local x=centers[i]-18.5;local y=6.5
-        self:drawOriginal(a.stockRing,x,y,37,37)
-        self:drawOriginal(a.stockGlass,x,y,37,37)
+        self:drawOriginal(self.extreme and a.extremeRing or a.stockRing,x,y,37,37)
+        self:drawOriginal(self.extreme and a.extremeGlass or a.stockGlass,x,y,37,37)
         local fraction=math.max(0,math.min(1,self.visualHeat*ProjectYakuza.Heat.config.maxStocks/100-(i-1)))
-        self:drawFill(a.core,centers[i]-14.5,10.5,29,fraction,.9)
-        if fraction>0 then self:drawOriginal(a.stockGlass,x,y,37,37,.4) end
+        if not self.extreme then
+            self:drawFill(a.core,centers[i]-14.5,10.5,29,fraction,.9)
+            if fraction>0 then self:drawOriginal(a.stockGlass,x,y,37,37,.4) end
+        end
     end
     self.glowState=self.extreme and "extreme" or (self.heat>=99.999 and "ready" or "none")
     local glowAlpha
-    if self.extreme then glowAlpha=.30+.06*math.sin(phase*.25)
+    if self.extreme then glowAlpha=.38+.06*math.sin(phase*.4)
     elseif self.heat>=99.999 then glowAlpha=.10+.025*math.sin(phase*.2) end
     if glowAlpha then
         local renderer=SpriteRenderer.instance
         local previous=renderer:getDoAdditive()
         renderer:setDoAdditive(false)
-        self:drawOriginal(a.glow,-102,-114,234,212,glowAlpha,nil,H.glowColor,true)
-        self:drawOriginal(a.glowLink,132,-45.5,78,137,glowAlpha,nil,H.glowColor,true)
-        self:drawOriginal(a.glowTail,210,-46.5,120,137,glowAlpha,nil,H.glowColor,true)
+        self:drawOriginal(a.glow,-102,-114,234,212,glowAlpha,nil,self.extreme and H.extremeGlowColor or H.glowColor,true)
+        self:drawOriginal(a.glowLink,132,-45.5,78,137,glowAlpha,nil,self.extreme and H.extremeGlowColor or H.glowColor,true)
+        self:drawOriginal(a.glowTail,210,-46.5,120,137,glowAlpha,nil,self.extreme and H.extremeGlowColor or H.glowColor,true)
         renderer:setDoAdditive(previous)
     end
-    self:drawOriginal(a.body,-64,-69,118,138)
+    self:drawOriginal(self.extreme and a.extremeBody or a.body,-64,-69,118,138)
     self:drawOriginal(a.kanji,-34,-34,68,68,1,a.combat)
     -- Native head position (24,-31), native 0.8 head scale, original pivot (64.5,60.5).
-    self:drawOriginal(a.head,-27.6,-79.4,103.2,96.8)
+    self:drawOriginal(self.extreme and a.extremeHead or a.head,-27.6,-79.4,103.2,96.8)
     if ProjectYakuza.TigerDrop then
         local seconds=math.ceil(ProjectYakuza.TigerDrop.remaining(p)/1000)
         self:drawOriginal(a.stockGlass,-58,63,22,22,.8)

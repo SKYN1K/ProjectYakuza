@@ -1,0 +1,968 @@
+{
+  "source": "C:\\Users\\Nik\\Documents\\Codex\\2026-10-19\\wo\\work\\y6-particle\\raw\\e_f_0014_roop_smoke01.dds",
+  "source_sha256": "28e81452d057c2b5876ec9e1e2b12db4f018caf921a2345bb4c5892651234046",
+  "game": "Yakuza 6",
+  "operation": "Exact original 64x64 atlas-cell DDS RGBA decode/crops. No resize, alpha modification, compositing, generated frames or upscaling. Runtime opacity, motion and tint only.",
+  "frames": [
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_0.png",
+      "crop": [
+        0,
+        0,
+        64,
+        64
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "da82c658f5e91189c7a2147562f80619006a74a437097863405759101d869e7d",
+      "rgba_sha256": "456daa042c7551e514c83f82b31d1c954839c9fb655094bc40f940b9f0eeffc2"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_1.png",
+      "crop": [
+        64,
+        0,
+        128,
+        64
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "7b65fc2e2cc758a007b45a9233c86b944f0608ad74b08aa43944a77e9e974844",
+      "rgba_sha256": "0b54f7469910e0e41208233b210e1862b0fa303ec53066e58128b2355673bbd1"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_2.png",
+      "crop": [
+        128,
+        0,
+        192,
+        64
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "c435842d5f79bae2b9f134822aeed80b1ff9421939e015eaaba990dab61d57ae",
+      "rgba_sha256": "346a064f661a1195629a0061a7bdf1cd026eb5436d5700054b2a0a546111caa2"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_3.png",
+      "crop": [
+        192,
+        0,
+        256,
+        64
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "6cdeaad571aab640f43df23e84eecbe271a2481ac453da629676e64305c7acc2",
+      "rgba_sha256": "b890d741b311c0a7e1303b6b17ba4168e110a9f0b171d17a66a9855b696fa7c1"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_4.png",
+      "crop": [
+        256,
+        0,
+        320,
+        64
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "684bfe6f281abe66248cdaa8ca01c3142dfc84531e6424ad5e1d52673e64d85b",
+      "rgba_sha256": "4d275fe004e58585e76e68ec6d8cebca9c2fc92d62fc1ee52c97c65e543eca08"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_5.png",
+      "crop": [
+        320,
+        0,
+        384,
+        64
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "fef7ff21085ce4c9029e15fe5c0db2c1a630308a0c4aa19a9a15fd27e3e0fbf1",
+      "rgba_sha256": "704da371c5fffce26fd5321437fd254ecc09b3b2d7909d276764ed62de955650"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_6.png",
+      "crop": [
+        384,
+        0,
+        448,
+        64
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "84305e5ed8c06da4b8e6c6c4dafaa16fc4404900dfed5c33d674698e45a72488",
+      "rgba_sha256": "c773b16158efdab5adae945a8d4c19ea69c1a184b6eca40a86aa823f96b25b03"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_7.png",
+      "crop": [
+        448,
+        0,
+        512,
+        64
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "a4ccddb56b0ad45c7dd0866914d8e0e715cbdae5d6223a0347012acb3f8e90be",
+      "rgba_sha256": "ac656f40fcebdfdb7f6111572c3e517f7b66b7dc339c1c945167f8ec40757fb6"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_8.png",
+      "crop": [
+        0,
+        64,
+        64,
+        128
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "95f651b305391f2fa5bb366171ed8d77f41265832ca6b7518f99d6787502dc69",
+      "rgba_sha256": "5796d96ace14be98da31b8e593b99090df29e961cfd1bc04331d09ca385b9b0f"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_9.png",
+      "crop": [
+        64,
+        64,
+        128,
+        128
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "1290ebeab04e0f4d6393ea5e8c51e01e274e9b3387df370a3e671051940af606",
+      "rgba_sha256": "4dac3312e19b8d18bf601e2b0cca2dcff5baaa7a8c908c5450b9787dd9239fa5"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_10.png",
+      "crop": [
+        128,
+        64,
+        192,
+        128
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "9508e84f121d83813dbfdc5ba952e3d8abcba30a52d25572bc24693beabf4038",
+      "rgba_sha256": "9077d9b39c21778e867fc278ed7bfaa037db4f63d9e4d5c76324545c0e0aa1a8"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_11.png",
+      "crop": [
+        192,
+        64,
+        256,
+        128
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "6a814709d389188b43cd2f67d922cf5d03caf6cbb679ae232a592c2fe0345290",
+      "rgba_sha256": "1e134ab5673bd4eaa29fcc0d9abb906edde11bf1f49cea04e538c7f6dd51cbfc"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_12.png",
+      "crop": [
+        256,
+        64,
+        320,
+        128
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "2b131ca7247b51caec0413ba4001851fc6757c80eff1b804d5dbe648df54f276",
+      "rgba_sha256": "fcf8e83c024a8d70919345e4336c2823d112611e7de9eaccae4a5a1e356c42fa"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_13.png",
+      "crop": [
+        320,
+        64,
+        384,
+        128
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "3e40be6f048b2cfc3f30048f6539d2fde4dd489a6f8100f6627878bb591b6b34",
+      "rgba_sha256": "136ae14317489182ee160cd9338d941757372333c58a9919bc2d7b0c2e9fc141"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_14.png",
+      "crop": [
+        384,
+        64,
+        448,
+        128
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "9c4e0935685b51ae11811490aa015b8b401ef56e44d35f582bafec2ccd6293e5",
+      "rgba_sha256": "f92d0ba293279cea90325ed5a029b4c864d62dd52f997cf7ebde45f616150cd5"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_15.png",
+      "crop": [
+        448,
+        64,
+        512,
+        128
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "e057f123358b4de552018dc0d6ffd08a038f93492d1247610fbe04fa60eabd10",
+      "rgba_sha256": "982a4c3bf41bc870efe7b2f915c46200ae1a5664175b359acd5e432f09510cbf"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_16.png",
+      "crop": [
+        0,
+        128,
+        64,
+        192
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "0ac189d9ba3e037ad5a77ced19b4bfafec5a2a273b01d7a31ab8cebf9b612a50",
+      "rgba_sha256": "4c0cd494f9ec89feabf403ede30bf205a9b4c31241b439300556e9372c6f1364"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_17.png",
+      "crop": [
+        64,
+        128,
+        128,
+        192
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "d6c99e84e8c75e5849395383cb66b2e90621a46cfb0fd72e0e63c02149dbeb74",
+      "rgba_sha256": "c234b1ef973d771d32c3059ba6d68a64b7400d818379732155cb1d761116aa0a"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_18.png",
+      "crop": [
+        128,
+        128,
+        192,
+        192
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "d6754a61d43d762a9397ac9f30201ff45a8f4a1550b68610056bba972d7b0d98",
+      "rgba_sha256": "fefdf4218dff9d026d37d0c371eb31dc534d468835d707ceb8da26c54ec1dddf"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_19.png",
+      "crop": [
+        192,
+        128,
+        256,
+        192
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "ba546cbe831cd8f2f8e253b3d8d017031c3db5740bc562e158a8fc2f841b664c",
+      "rgba_sha256": "32edd6bd8e44ae9cc0c48631a6a854c0c24300cbeddae5695d72601b46e28e89"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_20.png",
+      "crop": [
+        256,
+        128,
+        320,
+        192
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "0bc19d61eafbe15640fbe520da04ec137888db5f4f8c015891cd4b29a1137785",
+      "rgba_sha256": "d12b5715f45a5a2995ab8c4b00342cae01c8d0d8c024960b6a71483fe34dd893"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_21.png",
+      "crop": [
+        320,
+        128,
+        384,
+        192
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "d2fd14da731bc5ab70553dc67a1bfcd4d19e7dce48eafdfe33adf77f75403e1b",
+      "rgba_sha256": "5cb5a063119558c8a15494c0972501eb06c558e5450b6beaf13219415bca7518"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_22.png",
+      "crop": [
+        384,
+        128,
+        448,
+        192
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "df04f89ce8bd4ca296c07b0a17af227663bf1b826fe3325e504429185fa270cb",
+      "rgba_sha256": "685934b74336bf34f38e6d43e54e93cf77d7d54ca0db09e67a87b1cc71c5fda4"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_23.png",
+      "crop": [
+        448,
+        128,
+        512,
+        192
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "63d7db59c65f06b1c7b12da25afe05a8a80753a4f7e2b94e1f062b51ebc77545",
+      "rgba_sha256": "84dd88460ee580ba5aae7e9b38b547d56f612fda43a6bbc7ba98f735aa7ae431"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_24.png",
+      "crop": [
+        0,
+        192,
+        64,
+        256
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "ff3f33a3ca429c6431cb0ec01b1d5a7f30dc2371dc00ebb3e57be79dd86c8d41",
+      "rgba_sha256": "87874cb8d7a1c2361558dd3f053680801566d75dc9b46f0b5f14efdc3e86021f"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_25.png",
+      "crop": [
+        64,
+        192,
+        128,
+        256
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "7968c1f5eb409f8f262341fac6a89b149cb1bf752efa951a14c70f6a584deb0c",
+      "rgba_sha256": "4f251b33ad1026f38e276edeb4dcc104b5df080ba555a3fd9ab07cc6f469101f"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_26.png",
+      "crop": [
+        128,
+        192,
+        192,
+        256
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "e9d264a00b1db4fbf68b3481784c01444cffb76918e9a4f9936d3af845178f2f",
+      "rgba_sha256": "af9fcb77ff632466e8f3466cab4c792fc5e99f0b9f04e0edc892ad1013c9a48a"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_27.png",
+      "crop": [
+        192,
+        192,
+        256,
+        256
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "ddfc122582e49561025d3e9fd920755f8dd64fd960253dd2696fbbe931bac91c",
+      "rgba_sha256": "f4d2b04e9de82c3c649e600f3e774e1dad2919532c6fc51c831f7ec533a4b043"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_28.png",
+      "crop": [
+        256,
+        192,
+        320,
+        256
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "70d5540377b04a7f430171344880187bfa32ceb4f455bf839598c3d45a99683c",
+      "rgba_sha256": "5e2ff5136a9516e917a62f25252d7a32aa4c211aec039b1ac8e34f2127264dfc"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_29.png",
+      "crop": [
+        320,
+        192,
+        384,
+        256
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "bb0e71f20297a483f4fe713128bab9ba7368a6617fce550c91bb1c3c4cf347a3",
+      "rgba_sha256": "a080da54b9854eb6bdc78543d4aeb6c0bb828605ab46c3a684f1e201e9882669"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_30.png",
+      "crop": [
+        384,
+        192,
+        448,
+        256
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "72c9c635194e73d5f6641b67d649433356b90e5f58c690970e265c94a9472414",
+      "rgba_sha256": "ed57a2b6a79548d019aada7883c5e40aa65eeb5dc1aa6f92f4fa5780daac174b"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_31.png",
+      "crop": [
+        448,
+        192,
+        512,
+        256
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "d7debe97679c83ecfc8b9b176fcd41d829adad2c06036de4a65903f2a2e6c10d",
+      "rgba_sha256": "5740aab1e8095bc7ee41d9f19f2aae8f9c8f4c93fb893e90305ebcb4042b2ec5"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_32.png",
+      "crop": [
+        0,
+        256,
+        64,
+        320
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "cad665a38e4da56735707c1516417beebd8e3bd7a0dd3a610995248af4c9a2a6",
+      "rgba_sha256": "f0473869bf32d3e8be51072262492c0ca161d2667e79ea019c8ba4eb0346982a"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_33.png",
+      "crop": [
+        64,
+        256,
+        128,
+        320
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "72104a8b0a09f90718f38f6cefcfd8627cac555ef0538a6b8d75c890b632e024",
+      "rgba_sha256": "8703634802ac5b8c983e4870bbd75111a1c1e39398ddc6a5949721fb985369c0"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_34.png",
+      "crop": [
+        128,
+        256,
+        192,
+        320
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "d844bd902116744946d91a700c802b5db08697a8ace76a59d742fbdb3b3f4a30",
+      "rgba_sha256": "1a272626d995bcd30a12087ee4b60153cd12bc07ab5c5d2e70f8b95a2c5696df"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_35.png",
+      "crop": [
+        192,
+        256,
+        256,
+        320
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "59e6f3d2e8432f5fefd451e5f53da301952f634b1d2da3d72889ee449ab4d705",
+      "rgba_sha256": "f4ce7e511999b45cf71d1f3a610238a61e724ffc673907555a357d544f85f8eb"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_36.png",
+      "crop": [
+        256,
+        256,
+        320,
+        320
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "00781e86a6f621943a35abc43282e2088101533f9c5d99fadcb76281993f6378",
+      "rgba_sha256": "b5624724d3b5c38b29178ac89d11b2027e20afbc54d2715ad5ce9d45b118bcf8"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_37.png",
+      "crop": [
+        320,
+        256,
+        384,
+        320
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "e4517eb56c7829860172674c00b46a0af511c3031573674345aa2ee41dedfb80",
+      "rgba_sha256": "7206621e64db2378091fae36b74bdd6bdffe382876d5c676bf1e738c809faef5"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_38.png",
+      "crop": [
+        384,
+        256,
+        448,
+        320
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "0630508de8166127bc5fd245cc9349d84f892b10016162a9fd60f452b4408c34",
+      "rgba_sha256": "913fcf3cf82246a70a30aaa3de94fae9bae90328efeb17ad914acef0a6623ae8"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_39.png",
+      "crop": [
+        448,
+        256,
+        512,
+        320
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "80923ad671589978d86be180538b09018e4d61d35cc0eac112bbd9655e1613d8",
+      "rgba_sha256": "52666b37f02868e11b228261ee7d8d2b4c15ae6ee1a992fa43a2323d4ca48d67"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_40.png",
+      "crop": [
+        0,
+        320,
+        64,
+        384
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "d88787f239648a2f5063f53078a7561684181c7bf4dfd83031c9903e6be08676",
+      "rgba_sha256": "2638a48fbd97fff735510750e2f1fb138b4f324d117483b8f2d7389e308f404d"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_41.png",
+      "crop": [
+        64,
+        320,
+        128,
+        384
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "7c4c76fc83bd20d20cd91764213200a8f2e4a4ddf16879434007501ffa6ff32d",
+      "rgba_sha256": "f3afa35744980acfb465b4f7faf9a89348beeabf476d11eca5a5803b95c57f05"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_42.png",
+      "crop": [
+        128,
+        320,
+        192,
+        384
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "57e65e496a9304da949b7a570a90acfe1bbd99674de04fb3b0c6cb44f07f3fca",
+      "rgba_sha256": "a6735d2a55bf494e363a7f4b55cd7022642111f72f92deb35158b6af0653a851"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_43.png",
+      "crop": [
+        192,
+        320,
+        256,
+        384
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "8d0dbf50bba2089ecc6369ec27d9929e2020bec3f0bf33d619fe71b72afeabec",
+      "rgba_sha256": "aefe1474f98b495004c0caab3cdb71b0fe5192a00d9782f1b9dfbc77d8dd079a"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_44.png",
+      "crop": [
+        256,
+        320,
+        320,
+        384
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "ed971644a2343f6ee348bf9b2a5307be4027f0d29cec27e0d74e73494db67b0d",
+      "rgba_sha256": "97714b45e177274b5b06eeb23d85dd385d4be8c8af1b76097d55f12479e92d7e"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_45.png",
+      "crop": [
+        320,
+        320,
+        384,
+        384
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "b0ecbaff54c0e162cf0fbd4b5dfda4d435690842c233e9de636516c08f0e080e",
+      "rgba_sha256": "c3f1e62be6180c91dcc82ceb3ba420fd7d95c54dd5b93f5ab66b00590178de23"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_46.png",
+      "crop": [
+        384,
+        320,
+        448,
+        384
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "cfea8997f6303e265e75bc6f77105eff0c7e3bf943602e9c97685678c0159257",
+      "rgba_sha256": "487c44a38cd33541a75080982303daf8efb9a46d0062f8b5aaf650b4724433ae"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_47.png",
+      "crop": [
+        448,
+        320,
+        512,
+        384
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "8b00a630331539fe597cbf00dd9f63beb621ca1e9431d9fdd4c2af03af00a29b",
+      "rgba_sha256": "bf1ee1cddf65a1eb01068451919db294960e228757676ddfaae0d476774be1be"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_48.png",
+      "crop": [
+        0,
+        384,
+        64,
+        448
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "562fc8a181af0d22f166e2f306a1984b1b448280560075ac51a34bab5aec43dc",
+      "rgba_sha256": "37b0500810fab5e944868319cfc4e19a3e261d867b13596ce68c8ed7f5d068b4"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_49.png",
+      "crop": [
+        64,
+        384,
+        128,
+        448
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "1b318c23bd1492127a425b251d5dfe6d863efc9f7f138d28964b293f3268ccf2",
+      "rgba_sha256": "ed601f68239c4bb91697243069d8cbf173734dcfb2c0de8718d9b644cbfecf24"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_50.png",
+      "crop": [
+        128,
+        384,
+        192,
+        448
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "f7cba1810d8923b9130e594c85f55d8f60bccff28beea130cc5a59ba21016a42",
+      "rgba_sha256": "f8b5b6a44218dca632236a6d5eeb9a9c6aee34fa71ba182a83b714f5941a3f46"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_51.png",
+      "crop": [
+        192,
+        384,
+        256,
+        448
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "d22fcbf6b6814eb661793fd07645734d5ed532c5ad3414eb48e17b4f47a4c85a",
+      "rgba_sha256": "474899888bc1c721274a4058205fb212fd020ed9187df217bff145c79e850696"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_52.png",
+      "crop": [
+        256,
+        384,
+        320,
+        448
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "dd157a03d7c906c59682d57bce96ccf207cf1135dd66c6d057e99a4c46ba69f6",
+      "rgba_sha256": "6d9d33fee5bc16a15ce8ece97fb53045220415eceda544b3620dbfcf28049e78"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_53.png",
+      "crop": [
+        320,
+        384,
+        384,
+        448
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "5afbaab122b76bd52ac351d937aa78917cf1558389db516b809c2f05f8fc68f1",
+      "rgba_sha256": "febe06f901dc2a5438066b4a6e4ec3414a3a1a1f820ccd66db441bc2951223d5"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_54.png",
+      "crop": [
+        384,
+        384,
+        448,
+        448
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "2f44b3a4a17953b0f4b5ff2e18e9548595ed6e6e9f9022e690f4d2dd49218416",
+      "rgba_sha256": "409c59f8f62fef521d6f61e509f2f53e6b26ccc946e177f517b9dff06818167f"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_55.png",
+      "crop": [
+        448,
+        384,
+        512,
+        448
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "439bcc67455d084d03c3a23a7ec4f078f073e29c161302da2026b558e9c16dc6",
+      "rgba_sha256": "b9a566105d8c7426e5e5425367cb2620b3003daa870e16f34c30fe41d1c48681"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_56.png",
+      "crop": [
+        0,
+        448,
+        64,
+        512
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "79c0e08ebff67f35c7d8067f080dd77b488a3d21ab5b4f24b25c2f20a00cbd18",
+      "rgba_sha256": "751c3071e6872371fc8527bdf6e4050f415bd5cf2f30fb23761e51c7dd216833"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_57.png",
+      "crop": [
+        64,
+        448,
+        128,
+        512
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "f3285f5729f00a24f46b685ef23a5469df733b3a977e0c046170776d5d9082dd",
+      "rgba_sha256": "fae16296a54dc5d64fe20a9aa29e70ebd96cc877705ca3d5da8ebee2c8a49bd4"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_58.png",
+      "crop": [
+        128,
+        448,
+        192,
+        512
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "84cd5dd7b8b7831c389adb7f227d4143e672c55fda9131d85609c561c85c1554",
+      "rgba_sha256": "c48036506d704f8d2818ca64afedb444ddf641eb8d705138ef8d6bd2e152c924"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_59.png",
+      "crop": [
+        192,
+        448,
+        256,
+        512
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "370e0e5ee416445012e8b27120cc62c7733f84c9a1741a0f96521061a3d6a903",
+      "rgba_sha256": "c6418ae492a96645324ce01c85bf2d02f80b543aaf7b06963efe59b9086f8208"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_60.png",
+      "crop": [
+        256,
+        448,
+        320,
+        512
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "0bf7e592c735aa4355d873495edb26e311ba50c51b9c503c2f440d4855fbf258",
+      "rgba_sha256": "6b4297d6e0cfe7907e01ce601fadb9a9bc376cd077123c80a406e0fe230e620b"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_61.png",
+      "crop": [
+        320,
+        448,
+        384,
+        512
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "fc52cc9715886e7319fc13b5f2657e1e2287ae33ea7a51086a198d18d25a8539",
+      "rgba_sha256": "d5a750ecdf5279f18f2e0c883e6bbcb9e0a19a2b0913998f5f8026f3b7f025b0"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_62.png",
+      "crop": [
+        384,
+        448,
+        448,
+        512
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "4588babdeb51620ac50c8ea28e6c91e3e4e96295efcf76b6130137005e852ae8",
+      "rgba_sha256": "56c43985801bd4f600ee9544a1c2ceb38bbba1138e08de8260aebbe6a512bb5f"
+    },
+    {
+      "output": "42/media/textures/ProjectYakuza/ExtremeHeatsmoke_63.png",
+      "crop": [
+        448,
+        448,
+        512,
+        512
+      ],
+      "size": [
+        64,
+        64
+      ],
+      "sha256": "d8c234f17feccfe2a9767fdeabce88b847c09c0fa74c17dcabda2a4c6078db29",
+      "rgba_sha256": "b57be2897586f4c92747e6b81e145e2a12041fae16aa3ae60a6061b508b3da78"
+    }
+  ]
+}

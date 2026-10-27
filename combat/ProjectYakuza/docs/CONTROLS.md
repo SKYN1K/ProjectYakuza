@@ -9,3 +9,5 @@ The selector top is reserved, sides are assigned styles, bottom opens setup; ass
 Music/Sounds/Voices are separate 0-200% sliders. Sounds applies to style sound profiles, Voices only combat CVF cues. Native Advanced Audio can adjust individual definitions. Built-in PZAPI.ModOptions persists settings without a third-party dependency. Addon Bindings.register controls appear in the same page; vanilla key interception is not automatic.
 
 A quickstep grants at most one quickstep attack. Rapid release/repress or held attack input cannot restart/stack that strike; releasing Space cannot lift its active attack lock. Each new valid quickstep can grant a new strike. The three-step rolling quota, multihit target cap and other attacks retain their existing behavior.
+
+Holding heavy after 1–4 lights charges that first-finisher branch using its own wind-up and strike. A second-finisher press queues immediately and cannot charge; holding it does not grant another charge afterward. The neutral heavy still uses its generic charge animation.

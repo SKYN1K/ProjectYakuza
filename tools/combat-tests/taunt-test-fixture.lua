@@ -121,7 +121,7 @@ SpriteRenderer={instance={getDoAdditive=function()return additive end,setDoAddit
 Core={getTileScale=function()return 2 end};IsoDirections={N='N'};ColorInfo={new=function(r,g,b,a)return {r=r,g=g,b=b,a=a}end}
 instanceof=function()return true end
 IsoSprite={CreateSprite=function()
- local s={};function s:LoadFramesNoDirPageDirect(path,kind,count)self.kind=kind;self.path=path;self.frameCount=count;check((path=='media/textures/ProjectYakuza/HeatWisp' and count==32) or (path=='media/textures/ProjectYakuza/TauntBurst' and count==1) or (path=='media/textures/ProjectYakuza/ExtremeHeat' and ((kind=='flame' and count==64) or ((kind=='wispL' or kind=='wispR') and count==1))),'only supplied normal, taunt or original Lost Judgment texture frames');loads=loads+1 end
+ local s={};function s:LoadFramesNoDirPageDirect(path,kind,count)self.kind=kind;self.path=path;self.frameCount=count;check((path=='media/textures/ProjectYakuza/HeatWisp' and count==32) or (path=='media/textures/ProjectYakuza/TauntBurst' and count==1) or (path=='media/textures/ProjectYakuza/ExtremeHeat' and (((kind=='flame' or kind=='smoke') and count==64) or ((kind=='wispL' or kind=='wispR') and count==1))),'only supplied normal, taunt or original Lost Judgment texture frames');loads=loads+1 end
  function s:setAnimate(v)self.animate=v end
  function s:update(i)i.frames=i.frames+1 end
  return s
@@ -165,22 +165,22 @@ local normalInstances={};local normalSprites={}
 for i,e in ipairs(s.emitters) do normalInstances[i]=e.instance;normalSprites[i]=e.sprite end
 local oldOpacity=s.opacity
 extreme=true;A.update(p);drawLog={};clock=clock+350;A.render()
-check(s.extreme and s.profile=='extreme' and #s.emitters==4,'Extreme Heat exclusively selects four original Y6 flame patches')
+check(s.extreme and s.profile=='extreme' and #s.emitters==6,'Extreme Heat exclusively selects four original Y6 flame patches')
 check(s.opacity==oldOpacity,'switching aura profile preserves completed fade without blinking')
 for i,e in ipairs(s.emitters) do
- local point=A.extremeLayout[i];local normal=A.layout[i]
- check(normalInstances[i].disposed and e.instance~=normalInstances[i],'normal emitter is released before Extreme Heat replacement')
+ local point=A.extremeLayout[i];local normal=A.layout[i] or A.layout[1]
+ check((not normalInstances[i] or normalInstances[i].disposed) and e.instance~=normalInstances[i],'normal emitter is released before Extreme Heat replacement')
  local width=point.kind=='flame' and 32 or 64
- check(point.frameHeight*point.scale<=256*normal.scale and width*point.scale<=128*normal.scale and point.height>=38,'new original particles fit within former upper-body patch size')
+ check(point.frameHeight*point.scale<=256*normal.scale and width*point.scale<=128*normal.scale and (point.smoke and point.height<=8 or not point.smoke and point.height>=38),'new original particles fit within former upper-body patch size')
  check(e.sprite.path=='media/textures/ProjectYakuza/ExtremeHeat' and e.sprite~=normalSprites[i],'replacement never uses the old blurred HeatWisp sequences')
- check(point.kind=='flame' and e.frames==64 and e.instance.frames==1,'all four patches animate original flame frames exactly once')
- check(64/(point.speed*60)<.85 and 64/(point.speed*60)>.55,'flame loops are substantially faster at roughly .6-.8 seconds')
+ check((point.kind=='flame' or point.kind=='smoke') and e.frames==64 and e.instance.frames==1,'all original flame/smoke frames advance exactly once')
+ check(point.smoke or (64/(point.speed*60)<.85 and 64/(point.speed*60)>.55),'upper flames retain fast loops; smoke has its own slower playback')
 end
-check(#drawLog==4,'Extreme Heat renders four base flame particles without a second bloom/cloud pass')
+check(#drawLog==6,'Extreme Heat renders four upper flames and two low smoke patches')
 for _,draw in ipairs(drawLog) do
  for _,normal in ipairs(normalInstances) do check(draw.instance~=normal,'no normal-heat instance is drawn during Extreme Heat') end
- check(draw.additive and draw.alpha<=.48 and draw.alpha>0,'black-backed original Y6 flames use scoped additive rendering at bounded opacity')
- check(draw.color==A.extremeColor and draw.color.r==.08 and draw.color.g==.38 and draw.color.b==1,'flames use a saturated blue tint instead of near-white exposure')
+ check((draw.kind=='smoke' and not draw.additive or draw.kind=='flame' and draw.additive) and draw.alpha<=.48 and draw.alpha>0,'black-backed original Y6 flames use scoped additive rendering at bounded opacity')
+ check((draw.kind=='smoke' and draw.color==A.smokeColor or draw.kind=='flame' and draw.color==A.extremeColor and draw.color.r==.25 and draw.color.g==.15 and draw.color.b==1),'flames use a saturated blue tint instead of near-white exposure')
  check(draw.dir==IsoDirections.N,'all player facings share the same world renderer path')
 end
 check(not additive,'Extreme Heat does not change renderer blend state')
@@ -199,7 +199,7 @@ local extremeInstances={};for i,e in ipairs(s.emitters) do extremeInstances[i]=e
 extreme=false;A.update(p);drawLog={};clock=clock+250;A.render()
 check(s.profile=='normal' and not s.extreme and #drawLog==4,'ending mode restores only normal aura without a lingering Extreme Heat overlay')
 for i,e in ipairs(s.emitters) do check(extremeInstances[i].disposed and e.sprite==normalSprites[i],'mode exit releases replacement and reuses cached normal sprite') end
-check(loads==count,'returning to normal reloads no supplied texture sequences')
+check(loads==count and extremeInstances[5].disposed and extremeInstances[6].disposed and #s.emitters==4,'returning to normal releases low smoke and reloads no normal sequences')
 p.data.ProjectYakuzaHeatAuraDisabled=true;A.flash(p);check(not A.flashes[p] and not s.emitters[1].instance and not A.rendering,'disabled aura cannot retain a delayed flash');p.data.ProjectYakuzaHeatAuraDisabled=nil
 p.localPlayer=false;p:setVariable('ProjectYakuzaRemoteClip','ProjectYakuza_DD_Taunt01');ProjectYakuza.setHeat(p,0);A.update(p)
 check(not s.emitters[1].instance,'remote taunt playback alone has no flash')

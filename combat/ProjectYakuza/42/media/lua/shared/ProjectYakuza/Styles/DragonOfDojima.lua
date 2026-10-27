@@ -55,8 +55,20 @@ ProjectYakuza.registerStyle({
         {animation="ProjectYakuza_DD_GroundStomp02",nodeValue="dd_ground_02",duration=1.8/1.6,speed=1.6,impact=0.25925925925925924,groundAttack=true,fullBody=true},
     },
     actions = {
-        heavyCharge={enabled=true,animation="ProjectYakuza_DD_ChargeLoop",duration=3.5,holdMs=350,minChargeMs=350},
-        chargedHeavy={enabled=true,animation="ProjectYakuza_DD_ChargeEnd",nodeValue="dd_charged_heavy",duration=(55/30)/1.35,speed=1.35,impact=10/55,damageMultiplier=2,chargedHeavy=true,fullBody=true,reaction="enemy_01"},
+        heavyCharge={enabled=true,holdMs=350,variants={
+            default={animation="ProjectYakuza_DD_ChargeLoop",duration=3.5,minChargeMs=350},
+            after_1={animation="ProjectYakuza_DD_ChargeWindup01",duration=3.5,minChargeMs=383.333333,chargeBranch=1},
+            after_2={animation="ProjectYakuza_DD_ChargeWindup02",duration=3.5,minChargeMs=583.333333,chargeBranch=2},
+            after_3={animation="ProjectYakuza_DD_ChargeWindup03",duration=3.5,minChargeMs=450.000000,chargeBranch=3},
+            after_4={animation="ProjectYakuza_DD_ChargeWindup04",duration=3.5,minChargeMs=583.333333,chargeBranch=4},
+        }},
+        chargedHeavy={enabled=true,speed=1.35,variants={
+            default={animation="ProjectYakuza_DD_ChargeEnd",nodeValue="dd_charged_heavy",duration=(55/30)/1.35,speed=1.35,impact=10/55,damageMultiplier=2,chargedHeavy=true,fullBody=true,reaction="enemy_01"},
+            after_1={animation="ProjectYakuza_DD_ChargedFinisher01",nodeValue="dd_charged_finisher_01",duration=1.160493827,speed=1.35,impact=0.127659574,damageMultiplier=2,chargedHeavy=true,chargedFinisher=true,chargeBranch=1,fullBody=true,reaction="enemy_01"},
+            after_2={animation="ProjectYakuza_DD_ChargedFinisher02",nodeValue="dd_charged_finisher_02",duration=0.913580247,speed=1.35,impact=0.216216216,damageMultiplier=2,chargedHeavy=true,chargedFinisher=true,chargeBranch=2,fullBody=true,reaction="enemy_02"},
+            after_3={animation="ProjectYakuza_DD_ChargedFinisher03",nodeValue="dd_charged_finisher_03",duration=1.209876543,speed=1.35,impact=0.163265306,damageMultiplier=2,chargedHeavy=true,chargedFinisher=true,chargeBranch=3,fullBody=true,reaction="enemy_03"},
+            after_4={animation="ProjectYakuza_DD_ChargedFinisher04",nodeValue="dd_charged_finisher_04",duration=1.086419753,speed=1.35,impact=0.181818182,damageMultiplier=2,chargedHeavy=true,chargedFinisher=true,chargeBranch=4,fullBody=true,reaction="enemy_04"},
+        }},
         styleEntry = {enabled=true,animation="ProjectYakuza_DD_StyleEntry",duration=50/30},
         taunt = {enabled=true,animation="ProjectYakuza_DD_Taunt01",duration=55/30},
         finisher = { enabled=true, variants={

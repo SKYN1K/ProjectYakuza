@@ -1,0 +1,44 @@
+{
+  "source": "42/media/textures/ProjectYakuza/HeatHUD/OriginalDragonAtlas.png",
+  "original_game_asset": "Yakuza 6 ui.par e/texture/btl_hact.dds",
+  "source_sha256": "35c014497cbc595d3fe91cf051069417c5ee834e417867f94c5d00b368441d01",
+  "operation": "Runtime crop selection only; atlas bytes unchanged. Dark dragon/body/rings/serpentine connector and tail replace white counterparts during Extreme Heat. Original glow sprites tinted purple-blue. All six stock orbs remain visible and dark; main orb displays remaining mode fuel.",
+  "rectangles": {
+    "body": [
+      0,
+      160,
+      118,
+      138
+    ],
+    "head": [
+      0,
+      38,
+      129,
+      121
+    ],
+    "ring": [
+      38,
+      0,
+      37,
+      37
+    ],
+    "glass": [
+      114,
+      0,
+      37,
+      37
+    ],
+    "connector": [
+      339,
+      0,
+      77,
+      62
+    ],
+    "tail": [
+      416,
+      0,
+      92,
+      62
+    ]
+  }
+}

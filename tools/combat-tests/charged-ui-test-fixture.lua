@@ -34,8 +34,9 @@ ISTimedActionQueue.add=function(a)if queueFail then return nil end;return {remov
 -- CHARGE
 local H=PY.ChargedHeavy
 local function state()return PY.stateFor(p)end
-local function charge()
+local function charge(branch)
  p.aim=true;p.hit='';p.attacking=false;p.nativeAction=nil
+ if branch then state().step=branch;state().finishedAt=clock end
  H.input(p,true,true,state(),style);clock=clock+351;H.input(p,true,false,state(),style)
  local c=PY.activeActions[p];check(c and c.kind=='heavyCharge','hold enters native charge action')
  local a=c.timedAction;a.action={setOverrideHandModelsObject=function()end};p.nativeAction=a.action;a:start()
@@ -88,6 +89,48 @@ local counters=0;PY.TigerDrop={track=function()end,tryCounter=function()counters
 mouse[2]=false;fire('OnPlayerUpdate',p);mouse[2]=true;fire('OnPlayerUpdate',p)
 check(counters==1 and not H.gestures[p] and not PY.activeActions[p],'Tiger Drop on initial press takes priority over charge')
 PY.TigerDrop=nil;mouse[2]=false;fire('OnPlayerUpdate',p)
+-- Every first finisher has an independent source-derived wind-up and release.
+for branch=1,4 do
+ local a,c=charge(branch)
+ check(c.variant=='after_'..branch and c.action.animation=='ProjectYakuza_DD_ChargeWindup0'..branch,'light branch selects its unique native wind-up')
+ check(c.action.minChargeMs>=350,'minimum charge waits for the source wind-up endpoint')
+ clock=clock+c.action.minChargeMs+1;mouse[2]=false;a:update()
+ local entitlement=H.pending[p]
+ check(entitlement and entitlement.branch==branch and entitlement.variant==c.variant,'charge completion preserves selected branch')
+ local wrong=branch%4+1
+ local accepted,reason=PY.requestAction(p,'chargedHeavy','after_'..wrong,entitlement)
+ check(not accepted and reason=='charge_required' and not entitlement.consumed,'ticket cannot be substituted for a different finisher branch')
+ H.input(p,false,false,state(),style)
+ local move=state().finisherMove
+ check(move.chargedFinisher and move.chargeBranch==branch and state().step==branch,'release plays the matching first finisher and restores combo branch')
+ H.input(p,true,true,state(),style)
+ check(state().queuedDouble and not H.gestures[p],'second finisher queues immediately on press and cannot start charging')
+ clock=clock+1000;H.input(p,true,false,state(),style)
+ check(PY.activeActions[p].kind=='chargedHeavy' and not H.gestures[p],'holding second-finisher input cannot replace the current action with a charge')
+ finish()
+ check(state().finisherBranch==branch,'charged first finisher opens the matching ordinary second-finisher branch')
+ check(PY.requestAction(p,'finisher','double_after_'..branch),'ordinary second finisher follows charged first finisher')
+ H.input(p,true,true,state(),style);clock=clock+1000;H.input(p,true,false,state(),style)
+ check(not H.gestures[p] and state().finisherMove.double,'second-finisher playback never grants another charge gesture')
+ finish();H.clearPlayer(p)
+end
+-- A retained first-finisher window cannot be charged through the public API.
+state().step=1;state().finishedAt=clock
+check(PY.requestAction(p,'finisher','after_1'),'ordinary first finisher can still start')
+finish();local allowed,why=PY.requestAction(p,'heavyCharge')
+check(not allowed and why=='second_finisher_only','only an ordinary second finisher is allowed in the follow-up window')
+PY.Combo.reset(state())
+state().step=2;state().finishedAt=clock-300
+H.input(p,true,true,state(),style);clock=clock+351
+PY.Combo.reset(state()) -- native combo expiry while a valid heavy press is held
+H.input(p,true,false,state(),style)
+check(PY.activeActions[p] and PY.activeActions[p].variant=='after_2','valid initial charge press retains its branch after combo expiry')
+PY.cancelAction(p,'fixture_reset');H.clearPlayer(p)
+state().step=1;state().finishedAt=clock
+H.input(p,true,true,state(),style);state().active=true;state().step=2
+H.input(p,true,false,state(),style)
+check(H.gestures[p].branch==2,'a buffered light that really executes updates the charged branch')
+H.clearPlayer(p);PY.Combo.reset(state())
 -- UI callbacks: isolation, live replacement, styles, channels, pause, cleanup.
 getPlayerScreenLeft=function()return 0 end;getPlayerScreenTop=function()return 0 end
 getPlayerScreenWidth=function()return 1920 end;getPlayerScreenHeight=function()return 1080 end
@@ -170,5 +213,40 @@ check(#burst.emitters==9 and burst.charged,'confirmed charged impact selects bou
 PY.HitEffects.render();check(burst.emitters[2].instance.color.b==1,'charged impact uses blue world tint')
 before=disposed;PY.HitEffects.clear(p)
 check(#PY.HitEffects.bursts==0 and disposed==before+9,'impact cleanup releases every world sprite')
+-- Native ISPanel drawing is captured without generating an image.
+local hudDraws={};ISPanel={}
+function ISPanel:derive()local c={};c.__index=c;setmetatable(c,{__index=self});return c end
+function ISPanel:new(x,y,width,height)return setmetatable({x=x,y=y,width=width,height=height},self)end
+function ISPanel:initialise()end;function ISPanel:setWantMouseEvents()end;function ISPanel:addToUIManager()end
+function ISPanel:drawSubTexture(texture,sx,sy,sw,sh,x,y,w,h,alpha,r,g,b)
+ hudDraws[#hudDraws+1]={source={sx,sy,sw,sh},alpha=alpha,r=r,g=g,b=b,path=texture.path}
+end
+function ISPanel:drawText()end
+getSpecificPlayer=function()return p end;UIFont={Small=1}
+getKeyName=function(key)return tostring(key)end
+local extremeHud=false;PY.Heat.enabled=function()return true end
+PY.Heat.isExtreme=function()return extremeHud end
+-- HEATUI
+local HUD=PY.HeatUI;HUD.create();HUD.instance:prerender()
+local function cropped(x,y,w,h)
+ local count=0;for _,d in ipairs(hudDraws) do local q=d.source;if q[1]==x and q[2]==y and q[3]==w and q[4]==h then count=count+1 end end;return count
+end
+check(cropped(130,38,129,121)==1 and cropped(0,38,129,121)==0,'normal HUD keeps original white dragon')
+extremeHud=true;clock=clock+101;hudDraws={};HUD.instance:prerender()
+check(cropped(0,38,129,121)==1 and cropped(130,38,129,121)==0,'Extreme Heat selects original dark blue dragon head')
+check(cropped(0,160,118,138)==1,'Extreme Heat selects matching original dark body')
+check(cropped(38,0,37,37)==6 and cropped(114,0,37,37)==6,'all six original dark orb rings/glasses remain connected')
+check(cropped(339,0,77,62)==2 and cropped(416,0,92,62)==1,'Extreme Heat uses the original matching dark connectors and tail')
+local colored=false;local stockFills=0
+for _,d in ipairs(hudDraws) do
+ if d.source[1]==0 and d.source[2]==300 and d.r==.52 and d.g==.22 and d.b==1 then colored=true end
+ if d.source[1]==266 and d.alpha==.9 then stockFills=stockFills+1 end
+end
+check(colored and stockFills==0,'original glow is purple-blue and six stock orbs stay dark during mode')
+local phase=HUD.instance.frame;paused=true;clock=clock+1000;HUD.instance:prerender();paused=false
+check(HUD.instance.frame==phase,'Extreme Heat HUD glow animation pauses')
+extremeHud=false;clock=clock+101;hudDraws={};HUD.instance:prerender()
+check(cropped(130,38,129,121)==1 and cropped(0,38,129,121)==0,'ending mode restores the white dragon artwork')
+check(cropped(0,0,37,37)==6 and cropped(339,63,77,62)==2,'normal orb rings and connectors return after mode')
 print('PASS '..checks..' charged heavy, style UI and outline checks')
 return checks

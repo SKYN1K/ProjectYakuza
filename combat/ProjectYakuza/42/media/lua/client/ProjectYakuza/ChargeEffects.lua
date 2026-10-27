@@ -15,7 +15,8 @@ function F.update(p)
     local style=PY.getPlayerStyle(p)
     local c=PY.activeActions[p]
     local localCharge=c and c.kind=="heavyCharge" and c.timedAction and c.timedAction.started
-    local remote=not p:isLocalPlayer() and p:GetVariable("ProjectYakuzaRemoteClip")=="ProjectYakuza_DD_ChargeLoop"
+    local clip=p:GetVariable("ProjectYakuzaRemoteClip") or ""
+    local remote=not p:isLocalPlayer() and (clip=="ProjectYakuza_DD_ChargeLoop" or string.match(clip,"^ProjectYakuza_DD_ChargeWindup0[1-4]$")~=nil)
     local wanted=PY.isEquipped(p) and not p:isDead() and style and style.hitEffects=="yakuza6"
         and not p:getModData().ProjectYakuzaHitEffectsDisabled and (localCharge or remote)
     if not wanted then F.clear(p);return end

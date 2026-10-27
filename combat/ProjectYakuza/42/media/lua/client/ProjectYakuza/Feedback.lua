@@ -99,7 +99,7 @@ function F.updateActivation(p,session,time,paused)
     if time>=session.deadline then F.stopActivation(p) end
 end
 function F.swing(p,style,step,move)
-    local s=ProjectYakuza.stateFor(p);local kick=move.groundAttack or move.runningAttack or move.quickstepAttack or move.afterLight
+    local s=ProjectYakuza.stateFor(p);local kick=move.groundAttack or move.runningAttack or move.quickstepAttack or move.afterLight or move.chargedFinisher
     local hit=ProjectYakuza.Heat.isExtreme(p) and F.sound(p,"heatImpact") or kick and F.sound(p,"kickImpact") or F.sound(p,"punchImpact") or "BareHandsHit"
     -- This weapon belongs exclusively to the combat framework. Saved tokens are
     -- migrated on their next swing; no global BareHands sound is changed.

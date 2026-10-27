@@ -43,3 +43,4 @@
 !/tools/combat-tests/charged-ui-test-fixture.lua
 !/tools/combat-tests/ChargeAssetProbe.java
 !/tools/combat-tests/OutlineProbe.java
+!/tools/combat-tests/validate_finisher_reference_assets.py
