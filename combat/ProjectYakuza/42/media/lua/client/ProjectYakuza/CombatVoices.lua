@@ -104,6 +104,7 @@ end
 function V.clear()V.states=setmetatable({}, {__mode="k"})end
 ProjectYakuza.on("lightAttackStarted",function(p)V.queue(p,"CombatLightAttack")end)
 ProjectYakuza.on("finisherStarted",function(p)V.queue(p,"CombatHeavyAttack")end)
+ProjectYakuza.on("chargedHeavyStarted",function(p)V.queue(p,"CombatHeavyAttack")end)
 ProjectYakuza.on("groundAttackStarted",function(p)V.queue(p,"CombatHeavyAttack")end)
 ProjectYakuza.on("runningAttackStarted",function(p)V.queue(p,"CombatSpecialMove")end)
 ProjectYakuza.on("quickstepAttackStarted",function(p)V.queue(p,"CombatSpecialMove")end)

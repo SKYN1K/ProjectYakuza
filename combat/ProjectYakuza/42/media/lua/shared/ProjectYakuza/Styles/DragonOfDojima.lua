@@ -55,6 +55,8 @@ ProjectYakuza.registerStyle({
         {animation="ProjectYakuza_DD_GroundStomp02",nodeValue="dd_ground_02",duration=1.8/1.6,speed=1.6,impact=0.25925925925925924,groundAttack=true,fullBody=true},
     },
     actions = {
+        heavyCharge={enabled=true,animation="ProjectYakuza_DD_ChargeLoop",duration=3.5,holdMs=350,minChargeMs=350},
+        chargedHeavy={enabled=true,animation="ProjectYakuza_DD_ChargeEnd",nodeValue="dd_charged_heavy",duration=(55/30)/1.35,speed=1.35,impact=10/55,damageMultiplier=2,chargedHeavy=true,fullBody=true,reaction="enemy_01"},
         styleEntry = {enabled=true,animation="ProjectYakuza_DD_StyleEntry",duration=50/30},
         taunt = {enabled=true,animation="ProjectYakuza_DD_Taunt01",duration=55/30},
         finisher = { enabled=true, variants={

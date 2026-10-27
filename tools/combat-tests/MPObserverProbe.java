@@ -2,7 +2,7 @@ import java.nio.file.*;import java.util.*;import java.lang.reflect.*;import java
 public class MPObserverProbe {
  public static void main(String[] args)throws Exception {
   Class<?> node=Class.forName("zombie.core.skinnedmodel.advancedanimation.AnimNode"),stateType=Class.forName("zombie.core.skinnedmodel.advancedanimation.AnimState"),variables=Class.forName("zombie.core.skinnedmodel.advancedanimation.AnimationVariableSource"),source=Class.forName("zombie.core.skinnedmodel.advancedanimation.IAnimationVariableSource");
-  String prefix=args.length>1?args[1]:"ProjectYakuza_MP_";int expected=args.length>2?Integer.parseInt(args[2]):75;
+  String prefix=args.length>1?args[1]:"ProjectYakuza_MP_";int expected=args.length>2?Integer.parseInt(args[2]):78;
   Method set=variables.getMethod("setVariable",String.class,String.class);int total=0;
   try(var paths=Files.walk(Path.of(args[0]))) {
    for(Path path:paths.filter(p->p.getFileName().toString().startsWith(prefix)&&p.toString().endsWith(".xml")).toList()) {

@@ -107,6 +107,8 @@ end
 check(not P.number(0/0,0,1) and not P.integer(1.1,0,2),'reject NaN and fractional IDs')
 check(P.clip('dragon_of_dojima','ProjectYakuza_DD_Light01')~=nil,'catalogue has known attack')
 check(P.clip('dragon_of_dojima','arbitrary_clip')==nil,'unknown animation rejected')
+check(P.clip('dragon_of_dojima','ProjectYakuza_DD_ChargeLoop').loop==true,'original charge hold is available to observers')
+check(P.move('dragon_of_dojima','dd_charged_heavy').damageMultiplier==2,'server resolves charged hit from shared style definition')
 snapshot(p);local s=server.players[1]
 check(s.packet.clip=='ProjectYakuza_DD_Light01','known state accepted')
 local accepted=s.seq;snapshot(p,{seq=accepted});check(s.seq==accepted,'stale state rejected')

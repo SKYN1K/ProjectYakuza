@@ -29,3 +29,7 @@ Optional CVF resolves the selected character voice. Reserved ProjectYakuza IDs: 
 CombatStanceEntry belongs to actual styleEntryStarted, not RMB aiming. Taunt/activation cues belong to actual action start. Custom moves can call CombatVoices.play(player,id) for an appropriate existing cue; do not duplicate a cue already subscribed to an event. See [CVF](CVF_COMBAT_VOICES.md) and its template. The separate voice-pack project is not modified.
 
 Extreme Heat replaces normal heat with original Lost Judgment flame/wisp particles. Opacity is 12-22%, tint is muted blue and there is no continuous additive bloom. Original atlas cells animate directly; static source wisps drift gently in world space. The character's upper-body coverage stays bounded. Normal aura remains separate and returns only when eligible. See [replacement profile](EXTREME_HEAT_AURA.md).
+
+## Custom style UI
+
+API 3 adds client-side `registerStyleUI`/`unregisterStyleUI`. Styles opt into individual heat, status, selector, selectorSlot and setup renderers using `ui`. Providers can draw supplied textures/atlas crops, animate them using a paused clock, and own panel resources through create/update/render/destroy. Missing or failed providers fall back to the existing UI; false explicitly hides that channel. See [Style UI](STYLE_UI.md). Extreme Heat also uses a subtle native silhouette outline; it is an approximation rather than the Yakuza lighting shader.

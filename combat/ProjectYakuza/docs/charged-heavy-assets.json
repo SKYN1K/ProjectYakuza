@@ -1,0 +1,36 @@
+{
+  "clips": [
+    {
+      "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_SUD_ath_hvy_chg_lp.gmt",
+      "sha256": "4cb1d1e800ae06fdb4c1a14c73d3b650b08d8c4f21eec99f42190d7238d44aa6",
+      "clip": "ProjectYakuza_DD_ChargeLoop",
+      "fps": 30.0,
+      "end_frame": 50,
+      "duration": 1.6666666666666667,
+      "output_sha256": "07aa0ca1bab2be25fa0177982469e46cfc73cb7721c2ac9c96136d44d7747f8a"
+    },
+    {
+      "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_SUD_ath_hvy_chg_en.gmt",
+      "sha256": "3bb427af44353ef8279463b8856561445a01a72ff5265011cc974932947eca02",
+      "clip": "ProjectYakuza_DD_ChargeEnd",
+      "fps": 30.0,
+      "end_frame": 55,
+      "duration": 1.8333333333333333,
+      "output_sha256": "3729e9d78996b47fd978bc7505b908833b56e27f32a469da5f100939c8f364cd"
+    }
+  ],
+  "retarget": "Y6 c_man_bone.gmd to native B42 MaleBody.x; original 30fps samples; native finger fist tracks; horizontal root motion removed; no generated motion. Loop first and last source hand positions match; End begins at Loop pose.",
+  "impact": "End frame 10/55, single native MeleeSwing at the upward strike; 1.35 playback speed. Needs visual gameplay validation.",
+  "spark": {
+    "source": "C:\\Users\\Nik\\Documents\\Codex\\2026-10-19\\wo\\work\\y6-particle\\raw\\e_f_0006_spark01.dds",
+    "game": "Yakuza 6 particle archive original texture e_f_0006_spark01.dds",
+    "sha256": "e23c72abd9d301d811a30a072866ff6c134c149ceb19950a6316bc793ec442a2",
+    "output": "42/media/textures/ProjectYakuza/ChargeSpark.png",
+    "output_sha256": "3e94b064a111841796b1e057955559bbff1d5df9d83a5998a56facc3a828c85a",
+    "size": [
+      16,
+      32
+    ],
+    "operation": "Lossless DDS RGBA decode to PNG; exact pixels, no resize, no new visual content."
+  }
+}

@@ -9,7 +9,7 @@
 5. Compile with B42 Kahlua and import nodes/clips with native classes. Generic Lua syntax tools alone do not prove native compatibility.
 6. Retain hashes/provenance when converting supplied media. Missing source assets must be supplied, not generated/upscaled.
 
-The repository tools/combat-tests/README.md describes Kahlua/native probes. Rebuild embedded snapshots after production changes and run fixture JVMs separately. API-2 tests embed actual Registry/Bindings/Combo/NetworkExtensions/Runtime. Game libraries, extracted stdlib and compiled probes stay out of distributed addons.
+The repository tools/combat-tests/README.md describes Kahlua/native probes. Rebuild embedded snapshots after production changes and run fixture JVMs separately. API-2/3 tests embed actual Registry/Bindings/Combo/NetworkExtensions/Runtime. Game libraries, extracted stdlib and compiled probes stay out of distributed addons.
 
 ## Gameplay and network checklist
 
@@ -32,3 +32,5 @@ Use a real host plus client before advertising MP compatibility. Test delayed in
 | Music fails to shuffle | loop=false, two distinct tracks, natural-end detection and selected-style playlist |
 
 Package only your addon code and supplied assets, with requirements/controls/license/provenance. Do not include framework copies, source-game archives, previews, backups, credentials, extracted tools or another voice pack.
+
+API 3 additionally tests charged tap/hold/counter priority, single-use native release, interruption/paused cleanup, style UI provider failures/unregistration, original-pixel particle decoding and native outline preservation. See [0.31.0 validation](VALIDATION_0.31.0.md).

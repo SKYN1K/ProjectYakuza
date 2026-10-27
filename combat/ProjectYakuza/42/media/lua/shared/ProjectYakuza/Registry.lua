@@ -1,15 +1,15 @@
 ProjectYakuza = ProjectYakuza or {}
 local ProjectYakuza = ProjectYakuza
 ProjectYakuza.FEATURES={grab=false}
-ProjectYakuza.VERSION = "0.30.4"
-ProjectYakuza.API_VERSION = 2
+ProjectYakuza.VERSION = "0.31.0"
+ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
 ProjectYakuza.actionHandlers = ProjectYakuza.actionHandlers or {}
 ProjectYakuza.styleActionHandlers = ProjectYakuza.styleActionHandlers or {}
 ProjectYakuza.styleInputHandlers = ProjectYakuza.styleInputHandlers or {}
 ProjectYakuza.listeners = ProjectYakuza.listeners or {}
-ProjectYakuza.actionKinds = { finisher=true, grab=true, parry=true, block=true, quickstep=true, quickstepAttack=true, runningAttack=true, heatAction=true, heatActivation=true, taunt=true, styleEntry=true }
+ProjectYakuza.actionKinds = { finisher=true, grab=true, parry=true, block=true, quickstep=true, quickstepAttack=true, runningAttack=true, heatAction=true, heatActivation=true, taunt=true, styleEntry=true, heavyCharge=true, chargedHeavy=true }
 ProjectYakuza.actionDefinitions = ProjectYakuza.actionDefinitions or {}
 ProjectYakuza.activeActions = ProjectYakuza.activeActions or setmetatable({}, {__mode="k"})
 ProjectYakuza.MAX_HIT_COUNT = 3
@@ -52,7 +52,7 @@ function ProjectYakuza.validateStyle(style)
             local v=value[key];if v~=nil and (not number(v) or v<0 or v>1) then problem(path.."."..key.." must be 0..1") end
         end
         if value.damageMultiplier~=nil and (not number(value.damageMultiplier) or value.damageMultiplier<0) then problem(path..".damageMultiplier must be nonnegative") end
-        for _,key in ipairs({"heatCost","heatStocks","distance","cooldownMs","windowMs"}) do
+        for _,key in ipairs({"heatCost","heatStocks","distance","cooldownMs","windowMs","holdMs","minChargeMs"}) do
             if value[key]~=nil and (not number(value[key]) or value[key]<0) then problem(path.."."..key.." must be nonnegative") end
         end
         if value.afterLight~=nil and (not number(value.afterLight) or value.afterLight<1 or value.afterLight~=math.floor(value.afterLight) or (type(style.lightAttacks)=="table" and value.afterLight>#style.lightAttacks)) then problem(path..".afterLight must index lightAttacks") end
@@ -61,6 +61,13 @@ function ProjectYakuza.validateStyle(style)
     if type(style)~="table" then return false,{"style must be a table"} end
     if not text(style.id) or style.id=="none" or not string.match(style.id,"^[%w_.-]+$") then problem("style.id must be a unique namespaced ID using letters, numbers, underscore, dot or hyphen") end
     if not text(style.name) then problem("style.name is required") end
+    if style.ui~=nil then
+        if type(style.ui)~="table" then problem("ui must be a channel/provider table")
+        else for key,value in pairs(style.ui) do
+            if not ({heat=true,status=true,selector=true,selectorSlot=true,setup=true})[key] then problem("unknown UI channel: "..tostring(key)) end
+            if value~=false and not text(value) then problem("ui."..tostring(key).." must be a provider ID or false") end
+        end end
+    end
     if style.selectorIcon~=nil and not text(style.selectorIcon) then problem("selectorIcon must name a supplied texture") end
     for _,key in ipairs({"attackSpeed","runningKneeSpeed"}) do
         if style[key]~=nil and (not number(style[key]) or style[key]<=0) then problem(key.." must be positive") end
@@ -185,7 +192,7 @@ end
 function ProjectYakuza.blocksNativeAttacks(player)
     local c=ProjectYakuza.activeActions[player]
     local d=c and ProjectYakuza.actionDefinitions[c.kind]
-    return c~=nil and (c.kind=="styleEntry" or c.kind=="quickstepAttack" or (d~=nil and d.blocksAttacks)) or false
+    return c~=nil and (c.kind=="styleEntry" or c.kind=="quickstepAttack" or c.kind=="heavyCharge" or c.kind=="chargedHeavy" or (d~=nil and d.blocksAttacks)) or false
 end
 -- Called only for the current local player's custom action, never world scans.
 function ProjectYakuza.updateCustomAction(player)

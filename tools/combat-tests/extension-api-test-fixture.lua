@@ -130,5 +130,5 @@ local invalid=entry('Test_Bad',1);invalid.group='unknown'
 rejects(function()PY.registerNetworkAnimations(style.id,{invalid})end,'invalid network group rejected')
 local other={id='test.other',name='Other',lightAttacks=style.lightAttacks};PY.registerStyle(other)
 rejects(function()PY.registerNetworkAnimations(other.id,{entry('Test_One',1)})end,'clip IDs must be unique across styles')
-check(PY.API_VERSION==2,'framework API 2 advertised')
+check(PY.API_VERSION==3,'framework API 3 advertised')
 return 'PASS '..checks..' addon API, actual Runtime routing, lifecycle, keybind and network registration checks'

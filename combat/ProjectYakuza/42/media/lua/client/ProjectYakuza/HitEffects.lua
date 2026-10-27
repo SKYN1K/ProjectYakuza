@@ -4,6 +4,10 @@ local ProjectYakuza=ProjectYakuza
 local F={bursts={},pool={},maxBursts=6,maxTotal=24}
 ProjectYakuza.HitEffects=F
 -- Original Y6 particle exports; no generated frames or direction-dependent pages.
+local chargedParticles={
+    {kind="chargeCore",path="media/textures/ProjectYakuza/HitGlint.png",size=64,scale=.20,dx=0,dy=0},
+}
+for i=1,8 do local a=i*math.pi/4;chargedParticles[#chargedParticles+1]={kind="chargeSpark",path="media/textures/ProjectYakuza/ChargeSpark.png",size=32,scale=.28,dx=math.cos(a)*17,dy=math.sin(a)*14} end
 local particles={
     {kind="core",path="media/textures/ProjectYakuza/HitGlint.png",size=64,scale=.20,dx=0,dy=0},
     {kind="spark",path="media/textures/ProjectYakuza/HitGlint.png",size=64,scale=.07,dx=-9,dy=-6},
@@ -57,10 +61,10 @@ function F.onHit(player,victim,weapon,damage)
     if s.effectVictims[victim] then return end
     s.effectVictims[victim]=true
     local move=s.groundMove or s.finisherMove
-    local strong=move and (move.double or move.afterLight) and not move.runningAttack and not move.quickstepAttack
-    F.spawn(player,victim,strong)
+    local strong=move and (move.double or move.afterLight or move.chargedHeavy) and not move.runningAttack and not move.quickstepAttack
+    F.spawn(player,victim,strong,move and move.chargedHeavy)
 end
-function F.spawn(player,victim,strong)
+function F.spawn(player,victim,strong,charged)
     local style=ProjectYakuza.getPlayerStyle(player)
     if not style or style.hitEffects~="yakuza6" then return end
     if player:getModData().ProjectYakuzaHitEffectsDisabled then return end
@@ -72,8 +76,8 @@ function F.spawn(player,victim,strong)
         end
     end
     local tile=Core.getTileScale()
-    local b={player=player,victim=victim,emitters={},last=getTimestampMs(),age=0,life=strong and 280 or 240,strong=strong}
-    for _,point in ipairs(particles) do
+    local b={player=player,victim=victim,emitters={},last=getTimestampMs(),age=0,life=charged and 340 or strong and 280 or 240,strong=strong,charged=charged}
+    for _,point in ipairs(charged and chargedParticles or particles) do
         local slot=acquire(point)
         if slot then
             local scale=tile*point.scale*(strong and 1.15 or 1)
@@ -105,7 +109,7 @@ function F.update()
 end
 function F.render()
     F.update()
-    if not F.color then F.color=ColorInfo.new(1,1,1,1) end
+    if not F.color then F.color=ColorInfo.new(1,1,1,1);F.chargeColor=ColorInfo.new(.3,.7,1,1) end
     local tile=Core.getTileScale()
     for _,b in ipairs(F.bursts) do
         local v=b.victim;local t=b.age/b.life
@@ -117,7 +121,7 @@ function F.render()
             e.instance:SetAlpha(alpha);e.instance:SetTargetAlpha(alpha)
             e.instance:render(v,v:getX(),v:getY(),v:getZ(),IsoDirections.N,
                 v:getOffsetX()+tile-e.point.dx*t*tile,
-                v:getOffsetY()-89*tile+e.point.size*(e.scale-scale)/2-e.point.dy*t*tile,F.color)
+                v:getOffsetY()-89*tile+e.point.size*(e.scale-scale)/2-e.point.dy*t*tile,b.charged and F.chargeColor or F.color)
         end
     end
 end

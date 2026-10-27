@@ -104,7 +104,7 @@ local function onSwing(player, weapon)
     if not weapon or not ProjectYakuza.isStyleToken(weapon) then return end
     local style, s = ProjectYakuza.getPlayerStyle(player), ProjectYakuza.stateFor(player)
     local owned=ProjectYakuza.activeActions[player]
-    local firstQuickstepSwing=owned and owned.kind=="quickstepAttack" and s.pendingFinisher==owned.action
+    local firstQuickstepSwing=owned and (owned.kind=="quickstepAttack" or owned.kind=="chargedHeavy") and s.pendingFinisher==owned.action
     if ProjectYakuza.isCustomAction(player) or (ProjectYakuza.blocksNativeAttacks(player) and not firstQuickstepSwing) then return end
     s.groundMove=nil
     pollPress(player, style, s)
@@ -131,6 +131,7 @@ local function onSwing(player, weapon)
     setReadyVariables(player, style, s)
     trace(player, "swing style=" .. style.id .. " step=" .. s.step .. " move=" .. move.nodeValue .. " queued=" .. s.queued)
     if move.runningAttack then ProjectYakuza.emit("runningAttackStarted",player,style,move)
+    elseif move.chargedHeavy then ProjectYakuza.emit("chargedHeavyStarted",player,style,move)
     elseif move.quickstepAttack then ProjectYakuza.emit("quickstepAttackStarted", player, style, move)
     elseif s.finisherMove then ProjectYakuza.emit("finisherStarted", player, style, s.step, move)
     else ProjectYakuza.emit("lightAttackStarted", player, style, s.step, move) end
@@ -155,14 +156,15 @@ local function onFinished(player, weapon)
         if move.runningAttack and ProjectYakuza.RunningAttacks then ProjectYakuza.RunningAttacks.finish(player) end
         ProjectYakuza.completeAction(player)
         Combo.reset(s)
-        if move.quickstepAttack then setReadyVariables(player,ProjectYakuza.getPlayerStyle(player),s) end
-        if not move.double and not move.quickstepAttack and not move.runningAttack then
+        if move.quickstepAttack or move.chargedHeavy then setReadyVariables(player,ProjectYakuza.getPlayerStyle(player),s) end
+        if not move.double and not move.quickstepAttack and not move.runningAttack and not move.chargedHeavy then
             s.finisherBranch, s.finisherFinishedAt = step, now()
             if followup then s.step, s.finishedAt, s.queuedDouble = step, now(), true end
         end
         trace(player, "finisher finished after light=" .. step .. " double=" .. tostring(move.double == true))
         if followup then player:setMeleeDelay(0) end
         if move.runningAttack then ProjectYakuza.emit("runningAttackFinished",player,move)
+        elseif move.chargedHeavy then ProjectYakuza.emit("chargedHeavyFinished",player,move)
         elseif move.quickstepAttack then ProjectYakuza.emit("quickstepAttackFinished", player, move)
         else ProjectYakuza.emit("finisherFinished", player, step, move) end
         return
@@ -178,7 +180,7 @@ function ProjectYakuza.queueFinisher(player)
     local slot = style.actions.finisher
     if not slot or not slot.enabled then return false, "not_implemented" end
     local first = s.finisherMove or s.pendingFinisher
-    if s.groundMove or (first and (first.quickstepAttack or first.runningAttack)) then return false,"busy" end
+    if s.groundMove or (first and (first.quickstepAttack or first.runningAttack or first.chargedHeavy)) then return false,"busy" end
     local branch = first and first.afterLight or s.queuedFinisher or s.finisherBranch
     if first or s.queuedFinisher or s.finisherBranch then
         if (first and first.double) or s.queuedDouble then return false, "finisher_limit" end
@@ -234,6 +236,10 @@ local nativeAttackHandler = {
             local pending=ProjectYakuza.Quicksteps and ProjectYakuza.Quicksteps.pending[context.player]
             if not pending or context.target~=pending or pending.consumed or context.variant~=pending.direction or pending.expiresAt<now() then return false,"quickstep_required" end
         end
+        if context.action.chargedHeavy then
+            local ticket=ProjectYakuza.ChargedHeavy and ProjectYakuza.ChargedHeavy.pending[context.player]
+            if not ticket or context.target~=ticket or ticket.consumed or ticket.expiresAt<now() then return false,"charge_required" end
+        end
         if context.action.double and (s.finisherBranch ~= context.comboStep or not s.finisherFinishedAt
             or now() - s.finisherFinishedAt > context.style.comboResetMs) then return false, "first_finisher_required" end
         return (context.action.runningAttack or context.player:isAiming()) and context.player:isWeaponReady() and not context.player:isAttackStarted()
@@ -244,13 +250,17 @@ local nativeAttackHandler = {
         if context.action.runningAttack then Combo.reset(s);ProjectYakuza.RunningAttacks.beforeStart(context) end
         s.pendingFinisher, s.starting, s.startRequestedAt = context.action, true, now()
         setReadyVariables(player, context.style, s)
-        if context.action.double or context.action.quickstepAttack or context.action.runningAttack then player:setMeleeDelay(0) end
+        if context.action.double or context.action.quickstepAttack or context.action.runningAttack or context.action.chargedHeavy then player:setMeleeDelay(0) end
         if context.action.runningAttack then return true end
         ProjectYakuza.attemptAttack(player)
         if not s.active and not player:isAttackStarted() then
             s.pendingFinisher, s.starting = nil, false
             setReadyVariables(player, context.style, s)
             return false, "native_attack_rejected"
+        end
+        if context.action.chargedHeavy then
+            context.target.consumed=true
+            if ProjectYakuza.ChargedHeavy.pending[player]==context.target then ProjectYakuza.ChargedHeavy.pending[player]=nil end
         end
         if context.action.quickstepAttack then
             context.target.consumed=true
@@ -272,6 +282,7 @@ local nativeAttackHandler = {
         s.finisherBranch, s.finisherFinishedAt = nil, nil
     end,
 }
+ProjectYakuza.registerActionHandler("chargedHeavy", nativeAttackHandler)
 ProjectYakuza.registerActionHandler("finisher", nativeAttackHandler)
 ProjectYakuza.registerActionHandler("quickstepAttack", nativeAttackHandler)
 ProjectYakuza.registerActionHandler("runningAttack", nativeAttackHandler)
@@ -331,6 +342,10 @@ local function onUpdate(player)
         heavyPressed=finisherPressed,heavyDown=finisherDown,
     }) then s.lastDown=B.down("light");return end
     if customAction or ProjectYakuza.isCustomAction(player) then s.lastDown=B.down("light");return end
+    local charging=ProjectYakuza.activeActions[player]
+    if charging and charging.kind=="heavyCharge" and ProjectYakuza.ChargedHeavy then
+        ProjectYakuza.ChargedHeavy.watch(player,charging);s.lastDown=B.down("light");return
+    end
     if ProjectYakuza.Defense and ProjectYakuza.Defense.update(player,throwPressed) then s.lastDown=B.down("light");return end
     local context=ProjectYakuza.activeActions[player]
     if context and (context.kind=="parry" or context.kind=="heatActivation" or context.kind=="taunt") then
@@ -350,10 +365,10 @@ local function onUpdate(player)
     end
     if ProjectYakuza.RunningAttacks then ProjectYakuza.RunningAttacks.update(player) end
     ProjectYakuza.syncGroundAttack(player,style,s)
-    if counterPressed and ProjectYakuza.TigerDrop and ProjectYakuza.TigerDrop.tryCounter(player) then s.lastDown=B.down("light");return end
-    if finisherPressed then
-        ProjectYakuza.queueFinisher(player)
-    end
+    if counterPressed and ProjectYakuza.TigerDrop and ProjectYakuza.TigerDrop.tryCounter(player) then if ProjectYakuza.ChargedHeavy then ProjectYakuza.ChargedHeavy.clearPlayer(player) end;s.lastDown=B.down("light");return end
+    local heavyInput=ProjectYakuza.ChargedHeavy and ProjectYakuza.ChargedHeavy.input(player,finisherDown,finisherPressed,s,style)
+    if finisherPressed and not heavyInput then ProjectYakuza.queueFinisher(player) end
+    if ProjectYakuza.activeActions[player] and ProjectYakuza.activeActions[player].kind=="heavyCharge" then s.lastDown=B.down("light");return end
     pollPress(player, style, s)
     if not player:isAiming() then
         s.queued, s.queuedFinisher, s.queuedDouble = 0, nil, nil

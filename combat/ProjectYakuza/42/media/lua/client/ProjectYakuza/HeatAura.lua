@@ -1,4 +1,5 @@
 require "ProjectYakuza/Runtime"
+require "ProjectYakuza/HeatOutline"
 require "ProjectYakuza/WorldEffects"
 local ProjectYakuza=ProjectYakuza
 local A={states=setmetatable({}, {__mode="k"}),fadeInMs=350,flashMs=260,flashStrength=0.035,flashes=setmetatable({}, {__mode="k"})}
@@ -121,6 +122,7 @@ function A.render()
     if not s.flashing and not s.extreme and ProjectYakuza.Heat.stocks(p)<1 then
         A.clear(p)
     else
+    if ProjectYakuza.HeatOutline then ProjectYakuza.HeatOutline.draw(p) end
     A.draw(p,s,false)
     local strength=flash and flash.remaining>0 and A.flashStrength*math.sin(math.pi*(1-flash.remaining/A.flashMs)) or 0
     if strength>0.002 or (flash and flash.remaining>0) then
@@ -140,6 +142,7 @@ function A.render()
     end
 end
 function A.clear(player)
+    if ProjectYakuza.HeatOutline then ProjectYakuza.HeatOutline.clear(player) end
     A.releaseFlash(player)
     local s=A.states[player]
     if not s then return end
@@ -160,6 +163,7 @@ function A.update(player)
     local s=A.states[player]
     if not s then s={emitters={}};A.states[player]=s end
     s.flashing=flashing;s.extreme=ProjectYakuza.Heat.isExtreme(player)
+    if ProjectYakuza.HeatOutline then ProjectYakuza.HeatOutline.update(player,s.extreme) end
     local profile=s.extreme and "extreme" or "normal"
     local fresh=not s.emitters[1] or not s.emitters[1].instance
     if not fresh and s.profile~=profile then

@@ -129,7 +129,7 @@ end
 function F.hit(p,z,weapon,damage)
     if not p or not ProjectYakuza.isEquipped(p) or type(damage)~="number" or damage<=0 then return end
     local s=ProjectYakuza.stateFor(p);local move=s.groundMove or s.finisherMove
-    if not s.active or not move or (not move.afterLight and not move.groundAttack) then return end
+    if not s.active or not move or (not move.afterLight and not move.groundAttack and not move.chargedHeavy) then return end
     local stamp=s.multiHitToken or s.startedAt
     if s.feedbackStamp==stamp then return end
     s.feedbackStamp=stamp
@@ -153,6 +153,7 @@ ProjectYakuza.on("finisherStarted",F.swing)
 local function specialSwing(p,style,move)F.swing(p,style,0,move)end
 ProjectYakuza.on("quickstepAttackStarted",specialSwing)
 ProjectYakuza.on("runningAttackStarted",specialSwing)
+ProjectYakuza.on("chargedHeavyStarted",specialSwing)
 ProjectYakuza.on("groundAttackStarted",specialSwing)
 ProjectYakuza.on("comboCancelled",F.cancel)
 ProjectYakuza.on("combatHit",F.hit)

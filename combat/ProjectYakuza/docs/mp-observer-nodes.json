@@ -290,6 +290,32 @@
 
   {
 
+    "id": "ProjectYakuza_DD_ChargeLoop",
+
+    "animation": "ProjectYakuza_DD_ChargeLoop",
+
+    "loop": true,
+
+    "conditions": [
+
+      {
+
+        "name": "PerformingAction",
+
+        "value": "ProjectYakuza_DD_ChargeLoop"
+
+      }
+
+    ],
+
+    "priority": 150,
+
+    "group": "actions"
+
+  },
+
+  {
+
     "id": "ProjectYakuza_DD_HeatActivate01",
 
     "animation": "ProjectYakuza_DD_HeatActivate01",
@@ -467,6 +493,48 @@
     "priority": 150,
 
     "group": "actions"
+
+  },
+
+  {
+
+    "id": "ProjectYakuza_DD_ChargeEnd",
+
+    "animation": "ProjectYakuza_DD_ChargeEnd",
+
+    "loop": false,
+
+    "conditions": [
+
+      {
+
+        "name": "ProjectYakuzaActive",
+
+        "value": "true"
+
+      },
+
+      {
+
+        "name": "ProjectYakuzaMove",
+
+        "value": "dd_charged_heavy"
+
+      },
+
+      {
+
+        "name": "AimFloorAnim",
+
+        "value": "false"
+
+      }
+
+    ],
+
+    "priority": 100,
+
+    "group": "melee"
 
   },
 

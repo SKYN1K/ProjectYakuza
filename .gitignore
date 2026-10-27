@@ -39,3 +39,7 @@
 
 !/tools/combat-tests/build_quickstep_once_tests.py
 !/tools/combat-tests/quickstep-once-test-fixture.lua
+!/tools/combat-tests/build_charged_ui_tests.py
+!/tools/combat-tests/charged-ui-test-fixture.lua
+!/tools/combat-tests/ChargeAssetProbe.java
+!/tools/combat-tests/OutlineProbe.java

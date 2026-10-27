@@ -212,7 +212,7 @@ function S.command(module,command,p,a)
         if command=="extra" and ((z:isOnFloor() or z:isKnockedDown())~=(job.move.groundAttack==true)) then return end
         job.seen[a.zombie]=true;job.count=job.count+1
         if command=="impact" then
-            S.fanout(p,"impact",{player=p:getOnlineID(),event=a.event,zombie=a.zombie,style=job.style,reaction=job.move.reaction or "",strong=job.move.afterLight~=nil})
+            S.fanout(p,"impact",{player=p:getOnlineID(),event=a.event,zombie=a.zombie,style=job.style,reaction=job.move.reaction or "",strong=job.move.afterLight~=nil or job.move.chargedHeavy==true,charged=job.move.chargedHeavy==true})
         else
             -- Extra victims use server weapon data; primary native hits are never re-applied.
             if not S.baseWeapon then S.baseWeapon=InventoryItemFactory.CreateItem(ProjectYakuza.TOKEN) end

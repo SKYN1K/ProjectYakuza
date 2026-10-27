@@ -301,7 +301,7 @@ function N.command(module,command,a)
         if p:isLocalPlayer() then return end
         local key="impact:"..a.player..":"..tostring(a.event)
         if N.seen[key] then return end;N.seen[key]=now()
-        if ProjectYakuza.HitEffects then ProjectYakuza.HitEffects.spawn(p,z,a.strong) end
+        if ProjectYakuza.HitEffects then ProjectYakuza.HitEffects.spawn(p,z,a.strong,a.charged) end
         if ProjectYakuza.Reactions and P.reaction(a.style,a.reaction) then ProjectYakuza.Reactions.remote(z,a.reaction) end
     elseif command=="damage" then
         local key="damage:"..a.player..":"..tostring(a.event)
@@ -366,6 +366,7 @@ ProjectYakuza.on("lightAttackStarted",N.swing)
 ProjectYakuza.on("finisherStarted",N.swing)
 ProjectYakuza.on("runningAttackStarted",N.swing)
 ProjectYakuza.on("quickstepAttackStarted",N.swing)
+ProjectYakuza.on("chargedHeavyStarted",N.swing)
 ProjectYakuza.on("groundAttackStarted",N.swing)
 ProjectYakuza.on("tauntStopped",function(p,completed)
     if completed and isClient() and p:isLocalPlayer() then

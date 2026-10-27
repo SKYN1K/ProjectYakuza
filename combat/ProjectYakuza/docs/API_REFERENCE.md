@@ -1,4 +1,4 @@
-# Lua API 2 reference
+# Lua API 3 reference
 
 Require `ProjectYakuza/Registry` for shared definitions, `ProjectYakuza/Runtime` for client gameplay, `ProjectYakuza/Bindings` for controls, and `ProjectYakuza/NetworkExtensions` for addon observer registration. Do not require client UI from server/shared definitions.
 
@@ -10,6 +10,7 @@ Require `ProjectYakuza/Registry` for shared definitions, `ProjectYakuza/Runtime`
 | --- | --- |
 | id/name | Required unique ID/readable name; none is reserved |
 | description/selectorIcon | Optional text/existing texture path |
+| ui | Optional heat/status/selector/selectorSlot/setup -> client provider ID or false; omitted channels retain default presentation. See [UI API](STYLE_UI.md). |
 | lightAttacks | Required nonempty ordered move array |
 | attackSpeed | Native ProjectYakuzaCombatSpeed; default 1 |
 | runningKneeSpeed | Separate built-in knee speed; otherwise attackSpeed |
@@ -105,3 +106,9 @@ Failures include unknown_action, style_not_equipped, busy, not_implemented, unkn
 After requiring NetworkExtensions and registering the style, `registerNetworkAnimations(styleId,entries)` returns added count. Each entry requires id,animation,group,priority,loop,conditions={{name,value}} describing the owner node. Groups: melee/stomp/actions. IDs are globally unique; batches validate before publication, copy caller data and priority-sort the merged catalog. Requiring the registration module once is sufficient. This registers presentation only: see [Multiplayer](MULTIPLAYER.md).
 
 Built-in quickstep strikes use a single-use handover ticket. Native attack input is gated while the strike owns the player; the first asynchronous native swing is still classified normally. Replaying a consumed ticket or mismatching its direction is rejected. Follow the built-in controller protocol rather than creating/reusing tickets from an addon.
+
+## API 3 additions
+
+Client `ProjectYakuza/StyleUI`: `registerStyleUI(id,provider)`, `unregisterStyleUI(id)`. Style `ui` validates heat/status/selector/selectorSlot/setup keys and provider strings or false. A provider has required render and optional create/update/destroy callbacks. See [complete UI contract](STYLE_UI.md). API 1/2 definitions remain valid.
+
+Built-in action kinds `heavyCharge` and `chargedHeavy` use the native timed-action hold and single-use native-strike handover. Events: `heavyChargeStarted(player,style,move)`, `heavyChargeStopped(player,completed)`, `chargedHeavyStarted(player,style,move)`, `chargedHeavyFinished(player,move)`. Callbacks are local presentation/lifecycle hooks, not permission to apply damage again. See [charged heavy](CHARGED_HEAVY.md).

@@ -31,3 +31,7 @@ Use a namespaced Bindings.register control and poll it once in the style input h
 ## Damage and MP
 
 Native strikes use exactly one AttackCollisionCheck=MeleeSwing at contact. Do not add another health-subtraction timer. Observer registration replicates presentation, not damage, force or paired target ownership. New grabs/throws/heat actions need server checks for eligibility, range, facing, obstructions, costs/cooldowns, serial deduplication, ownership leases and disconnect cleanup. Grabs are temporarily disabled. Cinematic cameras/direct ragdoll force are outside this Lua API.
+
+## Built-in charged heavy (API 3)
+
+Use `heavyCharge` for a stationary native hold and `chargedHeavy` for its one-use native strike handover when that protocol fits. These built-in kinds have dedicated input/cleanup/swing handling; use a namespaced custom kind for a different mechanic. See [Charged heavy](CHARGED_HEAVY.md).

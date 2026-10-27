@@ -11,6 +11,7 @@ function H.playback(p,extreme)
     local speed=style.attackSpeed or 1
     local factor=extreme and H.config.extremeSpeed or 1
     p:setVariable("ProjectYakuzaCombatSpeed",speed*factor)
+    p:setVariable("ProjectYakuzaChargedHeavySpeed",(((style.actions and style.actions.chargedHeavy) or {}).speed or speed)*factor)
     p:setVariable("ProjectYakuzaRunningKneeSpeed",(style.runningKneeSpeed or speed)*factor)
 end
 local function state(p)

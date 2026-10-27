@@ -1,4 +1,5 @@
 require "ProjectYakuza/Runtime"
+require "ProjectYakuza/StyleUI"
 require "ISUI/ISPanel"
 local ProjectYakuza=ProjectYakuza
 local H=ISPanel:derive("ProjectYakuzaHeatGauge")
@@ -41,7 +42,8 @@ function H:drawFill(region,x,y,size,fraction,alpha)
 end
 function H:prerender()
     local p=getSpecificPlayer(0)
-    if not p or p:isDead() or not ProjectYakuza.isEquipped(p) then return end
+    if not p or p:isDead() or not ProjectYakuza.isEquipped(p) then ProjectYakuza.StyleUI.releaseAll(self);return end
+    if ProjectYakuza.StyleUI.render("heat",p,self) then return end
     if ProjectYakuza.getPlayerStyle(p).heatHud~="yakuza6" or not ProjectYakuza.Heat.enabled(p) then return end
     local time=getTimestampMs()
     if time>=(self.nextRead or 0) then

@@ -1,4 +1,5 @@
 require "ProjectYakuza/Runtime"
+require "ProjectYakuza/StyleUI"
 require "ProjectYakuza/StyleSlots"
 require "ISUI/ISPanel"
 require "ISUI/ISComboBox"
@@ -19,12 +20,15 @@ function S.loadAssets()
     S.assets={life=getTexture(base.."KiwamiLife.png"),dragon=getTexture(base.."KiwamiDragon.png")}
 end
 function Wheel:prerender()
+    if ProjectYakuza.StyleUI.render("selector",self.player,self,{side=self.side}) then return end
     local elapsed=math.min(1,(getTimestampMs()-self.opened)/120)
     local a=S.assets
     for _,side in ipairs({"top","left","right","bottom"}) do
         local xy=positions[side];local chosen=self.side==side
         local id=ProjectYakuza.StyleSlots.id(self.player,side);local style=id and ProjectYakuza.getStyle(id)
         local alpha=elapsed*(chosen and 1 or .65)
+        local custom=ProjectYakuza.StyleUI.render("selectorSlot",self.player,self,{style=style,side=side,x=xy[1],y=xy[2],alpha=alpha,selected=chosen})
+        if not custom then
         -- Original Kiwami circular frame and highlight; unchanged atlas pixels.
         if a.life then
             self:drawSubTexture(a.life,122,74,51,51,xy[1]-42,xy[2]-42,84,84,alpha,1,1,1)
@@ -39,6 +43,7 @@ function Wheel:prerender()
         elseif side=="bottom" then self:drawTextCentre("SETUP",xy[1],xy[2]-8,1,1,1,alpha,UIFont.Small)
         elseif style then self:drawTextCentre(side=="left" and "1" or "2",xy[1],xy[2]-10,1,1,1,alpha,UIFont.Medium) end
         if side=="left" or side=="right" then self:drawTextCentre(side=="left" and "STYLE 1" or "STYLE 2",xy[1],xy[2]+49,1,1,1,alpha,UIFont.Small) end
+        end
     end
     local side=self.side
     local id=ProjectYakuza.StyleSlots.id(self.player,side);local style=id and ProjectYakuza.getStyle(id)
@@ -48,7 +53,7 @@ function Wheel:prerender()
 end
 function S.cancel()
     local wheel=S.wheel;S.wheel=nil
-    if wheel then wheel:removeFromUIManager() end
+    if wheel then ProjectYakuza.StyleUI.releaseAll(wheel);wheel:removeFromUIManager() end
     Events.OnTick.Remove(S.tick)
 end
 function S.finish()
@@ -93,6 +98,7 @@ function S.open(p)
     return true
 end
 function Setup:prerender()
+    if ProjectYakuza.StyleUI.render("setup",self.player,self,{left=self.left,right=self.right,message=self.message}) then return end
     ISPanel.prerender(self)
     self:drawText("STYLE ASSIGNMENTS",20,16,1,1,1,1,UIFont.Medium)
     self:drawText("Style 1 - left",20,62,1,1,1,1,UIFont.Small)
@@ -101,6 +107,7 @@ function Setup:prerender()
     self:drawText(self.message or "Assignments are saved for this character.",20,211,.85,.85,.85,1,UIFont.Small)
 end
 function Setup:close()
+    ProjectYakuza.StyleUI.releaseAll(self)
     self:removeFromUIManager()
     if S.setup==self then S.setup=nil end
 end

@@ -2,7 +2,7 @@
 
 Project Yakuza is a Build 42 combat mod and a framework for independent fighting-style addons. Dragon of Dojima uses supplied Yakuza/Kiwami animations, textures and sounds. Other styles register their own moves, assets and controllers without copying the framework.
 
-**Version 0.30.4 · Lua API 2 · MP protocol 2.** API 1 style registrations remain supported. Internal namespace/mod dependency: `ProjectYakuza`. Display name: Project Yakuza.
+**Version 0.31.0 · Lua API 3 · MP protocol 2.** API 1 style registrations remain supported. Internal namespace/mod dependency: `ProjectYakuza`. Display name: Project Yakuza.
 
 ## Install and play
 
@@ -13,7 +13,7 @@ Choose **Inventory context menu > Combat styles > Dragon of Dojima** to equip th
 | Default input | Action |
 | --- | --- |
 | RMB + LMB | Light chain; fresh click per attack |
-| RMB + MMB | Finisher/double finisher; valid Tiger Drop counter takes priority |
+| RMB + MMB | Tap-release: finisher/double finisher; hold: charged heavy; Tiger Drop on initial press takes priority |
 | Space + direction | Quickstep; stationary steps backward; three per rolling 15 seconds |
 | LMB during quickstep | Directional quickstep attack; one strike per step |
 | Running, RMB released + LMB | Random side kick/jumping knee after run-up |
@@ -31,6 +31,8 @@ All mod controls are rebindable under **Options > Mods > Project Yakuza**. Shift
 - Walking guard, Tiger Drop's final-0.2-second timing and 60-second cooldown, and Lua knockback approximating a launch.
 - Six heat stocks, damage-scaled gain, banked stocks, taunt reward, multiple activation clips and Extreme Heat. Gain stops during mode; fuel expires naturally. Activation temporarily protects the player; taunts and style entry do not.
 - Supplied dragon/orb HUD, world-rendered aura/impacts, native-leg stance, combat feedback, optional selected-character CVF voices and a DoD-only 19-track non-repeating-shuffle playlist.
+- Yakuza 6 charge stance/release, blue world sparks, x2 charged-hit damage and a subtle native Extreme Heat outline.
+- Per-style UI providers for heat, status, selector, slot art and setup; see [Style UI API](docs/STYLE_UI.md).
 - Independent Music/Sounds/Voices sliders, persistent style slots, MP equipment/hit/observer synchronization and addon APIs.
 
 Grabs remain disabled. Cinematic heat actions, camera control, direct ragdoll impulses, a Java bridge, PvP parity and a gamepad/split-screen interface are not implemented.

@@ -14,7 +14,7 @@ native delivery; it never starts Project Zomboid or a dedicated server.
        java -cp ".;F:/SteamLibrary/steamapps/common/ProjectZomboid/projectzomboid.jar" LuaRunner mp-tests.lua
 
 5. `python validate_mp_nodes.py` additionally runs the native animation-node
-   parser/selector against both cycles of all 150 observer nodes. Its `game`
+   parser/selector against both cycles of all 156 observer nodes. Its `game`
    path defaults to the same local F: installation; adjust it if needed.
 
 The full local regression harness contains additional single-player, input,
@@ -27,10 +27,29 @@ For the locked style entry fixture, run `python tools/combat-tests/build_style_e
 
 Run `python tools/combat-tests/build_extension_api_tests.py` from the root, then run `LuaRunner extension-api-tests.lua` and `LuaRunner addon-starter-tests.lua` separately from this directory. These embed actual production code and the shipped starter. They verify custom action routing, locks, pause/hit/save cleanup, context-safe completion, key registration and atomic catalog batches.
 
-`python tools/combat-tests/test_style_observer_builder.py` activates the starter in a temporary workspace folder, builds both observer cycles, checks deterministic/non-destructive output, and (when the installed game and compiled probes exist) uses native parsing and Kahlua compilation. No game/server is launched. MPObserverProbe accepts optional prefix/count arguments for addon checks; its default still validates each 75-node core cycle.
+`python tools/combat-tests/test_style_observer_builder.py` activates the starter in a temporary workspace folder, builds both observer cycles, checks deterministic/non-destructive output, and (when the installed game and compiled probes exist) uses native parsing and Kahlua compilation. No game/server is launched. MPObserverProbe accepts optional prefix/count arguments for addon checks; its default still validates each 78-node core cycle.
 
 Aura source checks: `python tools/combat-tests/validate_extreme_assets.py --source-dir "path/to/extracted/Lost Judgment DDS files"` verifies original pixels and provenance. Compile NativeAuraTextureProbe.java, then run it with the mod texture directory on the PZ JAR/native-library classpath to check all 66 PNG decodes through B42 ImageData. These are standalone CPU/native probes, not a game launch.
 
 Activation SFX: build_heat_audio_tests.py embeds the shipped Feedback.lua into heat-audio-tests.lua. Run through LuaRunner in a separate JVM. Checks cover original layer delay, runtime crossfade/mix, successful tails, interruption, pause, invalid handles, independent swing jobs and owner-only playback without invoking character voices.
 
 One-strike quicksteps: build_quickstep_once_tests.py embeds production modules into quickstep-once-tests.lua. Run via LuaRunner separately to test all four directions, rapid inputs, ticket replay/retry, native attack gating, key release and asynchronous first swings.
+
+## API 3 charged heavy and style UI
+
+Run `python tools/combat-tests/build_charged_ui_tests.py` from the repository root,
+then `LuaRunner charged-ui-tests.lua` from this directory. Its 70 checks embed
+production Registry/Combo/Bindings/Runtime/ChargedHeavy/StyleUI/HeatOutline/
+WorldEffects/ChargeEffects/HitEffects. They cover tap/double release, Tiger Drop
+priority, lock/anchor/restoration, pause, interruption, queue rejection, exactly
+one ticket, native rejection/retry, asynchronous callbacks, expiry, addon UI
+lifecycle/error fallback/additive restoration, native packed-color restoration,
+all-facing world particles and bounded cleanup. It imports no generated media.
+
+Compile `OutlineProbe.java` and `ChargeAssetProbe.java` with your JDK. Using the
+installed B42 runtime and JARs, run `OutlineProbe`, then
+`ChargeAssetProbe ../../combat/ProjectYakuza/42/media`. These use reflection to
+check native outline flags/color, the original-size decoded PNG and native XML
+parsing/collision counts without launching PZ. Source GMT/PNG hashes and conversion
+operations are recorded in `combat/ProjectYakuza/docs/charged-heavy-assets.json`.
+GPU appearance/live MP still require a separate authorized gameplay test.

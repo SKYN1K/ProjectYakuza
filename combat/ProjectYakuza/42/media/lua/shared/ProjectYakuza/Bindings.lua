@@ -5,7 +5,7 @@ local B={edges=setmetatable({}, {__mode="k"}),attackGates=setmetatable({}, {__mo
 ProjectYakuza.Bindings=B
 B.definitions={
  {id="light",name="Light attack",mode=1},
- {id="finisher",name="Finisher / double finisher",mode=3},
+ {id="finisher",name="Finisher (tap) / charged heavy (hold)",mode=3},
  {id="runningLight",name="Running attack",mode=1},
  {id="dropkick",name="Running dropkick",mode=3},
  {id="quickstepAttack",name="Quickstep attack",mode=1},

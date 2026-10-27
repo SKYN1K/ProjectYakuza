@@ -63,3 +63,9 @@ python ProjectYakuza/tools/build_style_observers.py --mod-root MyStyleAddon --st
 ```
 
 The prefix must match owner XML names and the shared `MyStyle_Style.lua` module. The builder writes XML/Lua code only. It registers presentation, not custom damage/physics. Follow [Multiplayer](MULTIPLAYER.md) and [Testing](TESTING.md). Package only your addon with `require=ProjectYakuza`; do not bundle a second framework or the separate voice pack.
+
+## Custom presentation and charged heavies (API 3)
+
+Declare `ui={heat="my_mod.heat",selectorSlot="my_mod.slot"}` in the shared definition and register the renderers from client code. Omit any channel to keep its default. See the full [UI contract and example](STYLE_UI.md). UI cannot award heat or cause attack collisions.
+
+For a native charged heavy, opt into both `actions.heavyCharge` and `actions.chargedHeavy`, supply native action/melee nodes and register observer entries. See [charged heavy contracts](CHARGED_HEAVY.md). These are built-in action kinds with dedicated controllers; custom move types still use the normal action-kind extension API.
