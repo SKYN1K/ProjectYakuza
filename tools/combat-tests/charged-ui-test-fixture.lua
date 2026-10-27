@@ -80,7 +80,7 @@ check(not ok and why=='charge_required','consumed strike ticket cannot be reused
 a,c=charge();p.hit='Bite';a:update()
 check(a.cleaned and not H.pending[p] and not p.blocked and not p.ignored,'getting hit cancels charge without damage or lingering locks');p.hit=''
 a,c=charge();p.aim=false;a:update();check(a.cleaned and not H.pending[p],'losing aim cancels charge');p.aim=true
-a,c=charge();clock=clock+3501;a:update();check(a.cleaned and H.pending[p],'maximum hold auto releases rather than locking player forever')
+a,c=charge();clock=clock+10000;a:update();check(not a.cleaned and not H.pending[p],'DoD charge stays held until release rather than forcing a 3.5-second timeout');mouse[2]=false;a:update();check(a.cleaned and H.pending[p],'releasing a long-held charge submits its handover')
 clock=clock+601;H.input(p,false,false,state(),style);check(not H.pending[p],'expired native handover is dropped')
 queueFail=true;H.input(p,true,true,state(),style);clock=clock+351;H.input(p,true,false,state(),style)
 check(not PY.activeActions[p] and not p.blocked,'queue rejection restores the player');queueFail=false;H.clearPlayer(p)
@@ -93,7 +93,14 @@ PY.TigerDrop=nil;mouse[2]=false;fire('OnPlayerUpdate',p)
 for branch=1,4 do
  local a,c=charge(branch)
  check(c.variant=='after_'..branch and c.action.animation=='ProjectYakuza_DD_ChargeWindup0'..branch,'light branch selects its unique native wind-up')
- check(c.action.minChargeMs>=350,'minimum charge waits for the source wind-up endpoint')
+ check(c.action.minChargeMs>=150 and c.action.minChargeMs<=250,'minimum charge uses source frame 5/6/7 at 30fps')
+ local sourceFrames={6,7,6,5}
+ check(math.abs(c.action.minChargeMs-sourceFrames[branch]/30*1000)<.00001 and c.action.holdMs==c.action.minChargeMs,'branch charge recognition and wind-up use the verified BEP pause time')
+ clock=clock+c.action.minChargeMs+1;a:update()
+ check(a.holding and p:GetVariable('PerformingAction')==c.action.holdAnimation and not a.cleaned,'finished wind-up explicitly transitions into a looping source-pose hold')
+ p:setVariable('ProjectYakuzaChargeClip','holding')
+ clock=clock+5000;a:update()
+ check(not a.cleaned and p:GetVariable('PerformingAction')==c.action.holdAnimation,'held charge cannot fall back to idle while input remains held')
  clock=clock+c.action.minChargeMs+1;mouse[2]=false;a:update()
  local entitlement=H.pending[p]
  check(entitlement and entitlement.branch==branch and entitlement.variant==c.variant,'charge completion preserves selected branch')
@@ -114,6 +121,10 @@ for branch=1,4 do
  check(not H.gestures[p] and state().finisherMove.double,'second-finisher playback never grants another charge gesture')
  finish();H.clearPlayer(p)
 end
+local missingHold,missingContext=charge(1)
+clock=clock+missingContext.action.minChargeMs+1;missingHold:update()
+clock=clock+601;missingHold:update()
+check(missingHold.cleaned and not H.pending[p] and not p.blocked and not p.ignored,'missing native hold clip cancels cleanly instead of silently charging in idle')
 -- A retained first-finisher window cannot be charged through the public API.
 state().step=1;state().finishedAt=clock
 check(PY.requestAction(p,'finisher','after_1'),'ordinary first finisher can still start')
@@ -184,9 +195,9 @@ IsoSpriteInstance={add=function()end}
 local function instance(sprite)
  return {sprite=sprite,Dispose=function()disposed=disposed+1 end,setScale=function()end,setFrameSpeedPerFrame=function()end,
   SetAlpha=function(self,v)self.alpha=v end,SetTargetAlpha=function()end,
-  render=function(self,p,x,y,z,d,dx,dy,color)rendered=rendered+1;self.direction=d;self.dx=dx;self.dy=dy;self.color=color end}
+  render=function(self,p,x,y,z,d,dx,dy,color)if self.fail then error('intentional charge FX failure')end;rendered=rendered+1;self.direction=d;self.dx=dx;self.dy=dy;self.color=color end}
 end
-IsoSprite={CreateSprite=function()return {LoadFramesNoDirPageSimple=function(self,path)self.path=path end}end}
+IsoSprite={CreateSprite=function()return {LoadFramesNoDirPageSimple=function(self,path)self.path=path end,LoadFramesNoDirPageDirect=function(self,path,kind,count)self.path=path;self.kind=kind;self.frameCount=count end,setAnimate=function()end,update=function(self,i)i.advanced=(i.advanced or 0)+1 end}end}
 function p:getZ()return 0 end
 function p:getOffsetX()return 0 end;function p:getOffsetY()return 0 end
 function p:getForwardDirection()return {getX=function()return self.fx or 1 end,getY=function()return self.fy or 0 end}end
@@ -197,15 +208,22 @@ function p:getAttachedAnimSprite()return {size=function()return self.attached an
 local E=PY.ChargeEffects
 E.update(p);check(not E.hooked,'idle players create no particle render hook')
 PY.activeActions[p]={kind='heavyCharge',timedAction={started=true}}
-E.update(p);check(#E.states[p].instances==6 and E.hooked,'charge creates six bounded original-texture world sprites')
+E.update(p);check(#E.states[p].instances==12 and E.hooked,'charge creates ten original sparks plus source flame/core world sprites')
 clock=clock+100;E.update(p);E.render();local time=E.states[p].clock
+local flameFrames=E.states[p].instances[11].advanced
+PY.emit('heavyChargeReady',p)
+check(E.states[p].readyClock==time,'ready event triggers one bounded charging core pulse')
 paused=true;clock=clock+500;E.update(p);E.render();check(E.states[p].clock==time,'world spark animation pauses');paused=false
+check(E.states[p].instances[11].advanced==flameFrames,'source charging flame animation also freezes while paused')
+additive=true;E.states[p].instances[1].fail=true;local fxOK=pcall(E.render)
+check(not fxOK and additive,'charge effect error restores the incoming blend state')
+E.states[p].instances[1].fail=nil;additive=false
 for _,dir in ipairs({{1,0},{0,1},{-1,0},{0,-1}})do
  p.fx,p.fy=dir[1],dir[2];clock=clock+40;E.update(p);E.render()
  check(E.states[p].instances[1].direction=='N','all character facings use the same world sprite page')
 end
 local before=disposed;PY.activeActions[p]=nil;E.update(p)
-check(not E.states[p] and not E.hooked and disposed==before+6,'ending charge disposes particles and removes render hook')
+check(not E.states[p] and not E.hooked and disposed==before+12,'ending charge disposes particles and removes render hook')
 -- HITS
 PY.HitEffects.spawn(p,p,true,true)
 local burst=PY.HitEffects.bursts[1]

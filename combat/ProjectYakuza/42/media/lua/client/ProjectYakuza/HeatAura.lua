@@ -11,14 +11,13 @@ A.layout={
     {x=6.9,height=38.3,kind="c",speed=1.04,scale=0.207},
     {x=0,height=52.6,kind="b",speed=0.98,scale=0.1656},
 }
--- Original Yakuza 6 RGBA flame atlas. Its black-backed RGB requires additive
--- blending; ordinary alpha blending would draw a dark rectangle.
+-- Original Yakuza 6 A8L8 flame alpha: normal blending, without black-backed RGB.
 -- Four fast upper-body flames, without static wisps or a broad bloom layer.
 A.extremeLayout={
-    {x=0,height=39.6,kind="flame",frames=64,frameHeight=32,speed=64/(.65*60),scale=.95,alpha=.48,drift=.6,lift=1.2},
-    {x=-6.9,height=38.3,kind="flame",frames=64,frameHeight=32,speed=64/(.73*60),scale=.80,alpha=.42,drift=.5,lift=1},
-    {x=6.9,height=38.3,kind="flame",frames=64,frameHeight=32,speed=64/(.81*60),scale=.80,alpha=.44,drift=.5,lift=1.1},
-    {x=0,height=52.6,kind="flame",frames=64,frameHeight=32,speed=64/(.59*60),scale=.65,alpha=.36,drift=.4,lift=.8},
+    {x=0,height=39.6,kind="flame",frames=64,frameHeight=32,speed=.55*64/(.65*60),scale=.95,alpha=.85,drift=.6,lift=1.2},
+    {x=-6.9,height=38.3,kind="flame",frames=64,frameHeight=32,speed=.55*64/(.73*60),scale=.80,alpha=.75,drift=.5,lift=1},
+    {x=6.9,height=38.3,kind="flame",frames=64,frameHeight=32,speed=.55*64/(.81*60),scale=.80,alpha=.80,drift=.5,lift=1.1},
+    {x=0,height=52.6,kind="flame",frames=64,frameHeight=32,speed=.55*64/(.59*60),scale=.65,alpha=.70,drift=.4,lift=.8},
     {x=-7,height=6,kind="smoke",frames=64,frameHeight=64,speed=64/(1.6*60),scale=.40,alpha=.22,drift=-4,lift=9,smoke=true,cycleMs=1600},
     {x=7,height=7,kind="smoke",frames=64,frameHeight=64,speed=64/(1.85*60),scale=.40,alpha=.18,drift=4,lift=10,smoke=true,cycleMs=1850},
 }
@@ -97,7 +96,7 @@ function A.draw(p,s,additive,flashStrength)
             -- Advance once, including the base additive flame pass; flashes do not double-step.
             if not additive and not flashStrength and not isGamePaused() and e.frames>1 then e.sprite:update(e.instance) end
             if e.opacity~=alpha then e.instance:SetAlpha(alpha);e.instance:SetTargetAlpha(alpha);e.opacity=alpha end
-            if s.extreme then SpriteRenderer.instance:setDoAdditive(not e.point.smoke) end
+            if s.extreme then SpriteRenderer.instance:setDoAdditive(false) end
             e.instance:render(p,p:getX(),p:getY(),p:getZ(),IsoDirections.N,
                 p:getOffsetX()+tile+dx*tile,p:getOffsetY()-89*tile-dy*tile,e.point.smoke and A.smokeColor or color)
         end
@@ -135,7 +134,7 @@ function A.render()
     if ProjectYakuza.HeatOutline then ProjectYakuza.HeatOutline.draw(p) end
     if s.extreme then
         local renderer=SpriteRenderer.instance;local previous=renderer:getDoAdditive()
-        renderer:setDoAdditive(true)
+        renderer:setDoAdditive(false)
         local ok,err=pcall(A.draw,p,s,false)
         renderer:setDoAdditive(previous)
         if not ok then error(err) end

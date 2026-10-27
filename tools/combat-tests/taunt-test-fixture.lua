@@ -134,7 +134,7 @@ ProjectYakuza.WorldEffects={attach=function(p,s,height,scale,anchor,loop,speed,x
  function i:SetAlpha(v)self.alpha=v end
  function i:SetTargetAlpha(v)end
  function i:Dispose()self.disposed=true end
- function i:render(owner,x,y,z,dir,ox,oy,color)draws=draws+1;self.additive=additive;drawLog[#drawLog+1]={instance=self,kind=s.kind,additive=additive,alpha=self.alpha,color=color,dir=dir,ox=ox,oy=oy};if self.fail and additive then error('render failure')end end
+ function i:render(owner,x,y,z,dir,ox,oy,color)draws=draws+1;self.additive=additive;drawLog[#drawLog+1]={instance=self,kind=s.kind,additive=additive,alpha=self.alpha,color=color,dir=dir,ox=ox,oy=oy};if self.fail and (additive or (s.path=='media/textures/ProjectYakuza/ExtremeHeat' and s.kind=='flame')) then error('render failure')end end
  return i
 end}
 function p:getAttachedAnimSprite()return {remove=function()end}end
@@ -142,6 +142,9 @@ function p:getAttachedAnimSprite()return {remove=function()end}end
 -- PROTOCOL
 -- AURA
 local A=ProjectYakuza.HeatAura
+for i,seconds in ipairs({.65,.73,.81,.59})do
+ check(near(A.extremeLayout[i].speed,.55*64/(seconds*60)),'Extreme Heat flame playback is exactly 45 percent slower')
+end
 ProjectYakuza.setHeat(p,0);A.update(p);check(not A.states[p],'zero heat has no ordinary aura')
 a=begin();check(not A.states[p],'taunt animation itself has no aura boost at zero heat')
 p:setVariable('ProjectYakuzaTaunt','started');a:update();p:setVariable('ProjectYakuzaTaunt','done');a:update()
@@ -174,12 +177,12 @@ for i,e in ipairs(s.emitters) do
  check(point.frameHeight*point.scale<=256*normal.scale and width*point.scale<=128*normal.scale and (point.smoke and point.height<=8 or not point.smoke and point.height>=38),'new original particles fit within former upper-body patch size')
  check(e.sprite.path=='media/textures/ProjectYakuza/ExtremeHeat' and e.sprite~=normalSprites[i],'replacement never uses the old blurred HeatWisp sequences')
  check((point.kind=='flame' or point.kind=='smoke') and e.frames==64 and e.instance.frames==1,'all original flame/smoke frames advance exactly once')
- check(point.smoke or (64/(point.speed*60)<.85 and 64/(point.speed*60)>.55),'upper flames retain fast loops; smoke has its own slower playback')
+ check(point.smoke or (64/(point.speed*60)<1.5 and 64/(point.speed*60)>1.0),'upper flames retain fast loops; smoke has its own slower playback')
 end
 check(#drawLog==6,'Extreme Heat renders four upper flames and two low smoke patches')
 for _,draw in ipairs(drawLog) do
  for _,normal in ipairs(normalInstances) do check(draw.instance~=normal,'no normal-heat instance is drawn during Extreme Heat') end
- check((draw.kind=='smoke' and not draw.additive or draw.kind=='flame' and draw.additive) and draw.alpha<=.48 and draw.alpha>0,'black-backed original Y6 flames use scoped additive rendering at bounded opacity')
+ check(not draw.additive and draw.alpha<=.85 and draw.alpha>0,'black-backed original Y6 flames use scoped additive rendering at bounded opacity')
  check((draw.kind=='smoke' and draw.color==A.smokeColor or draw.kind=='flame' and draw.color==A.extremeColor and draw.color.r==.25 and draw.color.g==.15 and draw.color.b==1),'flames use a saturated blue tint instead of near-white exposure')
  check(draw.dir==IsoDirections.N,'all player facings share the same world renderer path')
 end

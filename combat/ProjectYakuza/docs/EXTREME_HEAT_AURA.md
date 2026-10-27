@@ -11,3 +11,7 @@ All texture files are exact original DDS decodes/crops: no resize, alpha repaint
 ## 0.32.1 loader and activation correction
 
 Animated pages follow native `LoadFramesNoDirPageDirect(prefix,kind,count)` naming: `prefix_kind_0.png` through `prefix_kind_<count-1>.png`. This applies to normal aura, Extreme Heat flame/smoke and taunt bursts. Export/decode checks alone do not verify native path resolution; run validate_effect_loader_paths.py too. Extreme Heat fire/smoke now begin during the actual started activation action, continue into fuel mode, and restore/clear on interruption or observer clip exit. The HUD uses a protected normal-alpha pass with purple glow behind the solid orb artwork.
+
+## 0.33.0 transparent material and slower flames
+
+The black-backed RGBA flame export is replaced by exact crops of the supplied e_j_0076_aura_gA8L8.dds alpha-bearing variant. Original pixels/alpha are preserved; the renderer uses normal alpha blending. This removes the black rectangle without repainting or deriving synthetic alpha. Upper-flame opacity is adjusted for the source's lower alpha, while hue remains purple-blue. Native flame frame speeds are multiplied by **0.55**: exactly 45% slower, giving approximately 1.18/1.33/1.47/1.07-second loops. Smoke timing and normal heat remain unchanged. Full restart is needed to clear cached textures.

@@ -23,15 +23,19 @@ def keys(path):
 for clip in report['clips']:
     assert sha(Path(clip['source']).read_bytes())==clip['source_sha256']
     out=mod/clip['output'];assert sha(out.read_bytes())==clip['sha256']
-    k=keys(out);assert all(len(rows)==clip['source_frames'][1]-clip['source_frames'][0]+1 for rows in k.values())
+    k=keys(out);assert all(len(rows)==(2 if clip.get('held_source_pose') else clip['source_frames'][1]-clip['source_frames'][0]+1) for rows in k.values())
 for i in range(1,5):
     windup=keys(mod/f'42/media/anims_X/Bob/ProjectYakuza_DD_ChargeWindup0{i}.x')
     release=keys(mod/f'42/media/anims_X/Bob/ProjectYakuza_DD_ChargedFinisher0{i}.x')
+    hold=keys(mod/f'42/media/anims_X/Bob/ProjectYakuza_DD_ChargeHold0{i}.x')
     for key,rows in windup.items():
         a,b=rows[-1],release[key][0]
+        assert hold[key][0]==hold[key][-1],('hold pose animates unexpectedly',i,key)
+        h=hold[key][0]
+        assert min(sum((x-y)**2 for x,y in zip(a,h)),sum((x+y)**2 for x,y in zip(a,h)))<1e-12 if key[1]==0 else sum((x-y)**2 for x,y in zip(a,h))<1e-12
         difference=min(sum((x-y)**2 for x,y in zip(a,b)),sum((x+y)**2 for x,y in zip(a,b))) if key[1]==0 else sum((x-y)**2 for x,y in zip(a,b))
         assert difference<1e-12,(i,key,difference)
-print('PASS 8 original-source clip hashes/ranges and all 105 native channels per branch meet at the identical wind-up/release pose')
+print('PASS 12 original-source clip hashes/ranges (including persistent hold poses) and all 105 native channels per branch meet at the identical wind-up/release pose')
 report=json.loads((mod/'docs/extreme-smoke-assets.json').read_text(encoding='utf-8'))
 source=Path(report['source']);assert sha(source.read_bytes())==report['source_sha256']
 im=Image.open(source).convert('RGBA');assert len(report['frames'])==64

@@ -2,12 +2,12 @@
   "game": "Yakuza 6",
   "archive": "Supplied local Yakuza 6 particle extraction: y6-particle/raw_event; source entries and hashes verified locally.",
   "conversion": "Exact native DDS RGBA decoding and original 32x32 atlas-cell crops only. No resize, alpha edits, compositing, synthesized frames, AI or upscaling.",
-  "material": "The RGBA flame RGB is black-backed and uses scoped additive world rendering. Blue tint/opacity and faster playback are runtime code.",
+  "material": "Original A8L8 source alpha is preserved and rendered using normal alpha blending; no black-backed RGB material, synthetic alpha edits or background removal.",
   "retained_wisps": "The c/d source DDS hashes/pixels are identical to the prior Lost Judgment exports. They remain available but are not used by the Extreme Heat profile.",
   "sources": [
     {
-      "entry": "e_j_0076_aura_g.dds",
-      "sha256": "b467fedfc32a10c83af34535e2529a039b862a15a13e3b5679bc1a7d21b90e67",
+      "entry": "e_j_0076_aura_gA8L8.dds",
+      "sha256": "3f5baea06961516ff02f1ecda0b8fbde172b80a3901c133e0c1577ca4a7981b0",
       "size": [
         256,
         256
@@ -32,7 +32,7 @@
   ],
   "frames": [
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         0,
         0,
@@ -44,11 +44,11 @@
         32,
         32
       ],
-      "sha256": "6173d6f50be1103c7997ac1f52b4e3efcba8a90e86b30e199632b8fb1ca5c0fb",
-      "rgba_sha256": "ce517b3d2dc34799fd58e23718a5c469b5041ad3213b33b14f3cd712d851d65f"
+      "sha256": "7f61522ffa76666860078695e2e784c1b3e47bc2b374c7a10b43984c7ed55a9f",
+      "rgba_sha256": "53f0c808387278ae0aa010ff50c9671a13084af86e6f7ef513645dd6ce61a2b0"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         32,
         0,
@@ -60,11 +60,11 @@
         32,
         32
       ],
-      "sha256": "f0e5dc441516500ed9aa18b4272218c2723dd8368d79aa04df9499a951378f10",
-      "rgba_sha256": "e899fb5f1172334109cb3345b3be89928c4f4428a995d62a464c2d2dbc2ef670"
+      "sha256": "97b938be602ef43a80b00a958647eccb10b8cf6dc409ba57248223f6377db6c7",
+      "rgba_sha256": "146f7f9dfafa5da6d39ee7fdf737cea87a790e03f025ca7359339de111f3972d"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         64,
         0,
@@ -76,11 +76,11 @@
         32,
         32
       ],
-      "sha256": "8a855030d2cb7bb53f2929cb983e8351e5d78a29929fad4de216b65348620ca4",
-      "rgba_sha256": "25b5976f2077c61f31a743924e5d9f30612184449704bdc540a4d8865c3c9778"
+      "sha256": "fb1668674cdde8f55dd76973739ae9b6cdd28d66d69e059b38ef39c7e5c9c479",
+      "rgba_sha256": "752119ffdc61b6448f01665451181f940512a307a6fcc454e813eda2bd79003b"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         96,
         0,
@@ -92,11 +92,11 @@
         32,
         32
       ],
-      "sha256": "0e1735b0eeea8d83af363b3285cc712ff140f7fbb1c5db536491b3013f13465c",
-      "rgba_sha256": "0213860731bc41d5d7241c4151c5b4814b09fe06656aa32921caee359857d003"
+      "sha256": "919c8884e33f0cc50042309738a7064934e259a8843a3246f6a02a11438910fb",
+      "rgba_sha256": "0849c81edf92917ce444be350a6a7083acec14a64aac9c1e4cf08a7bc858da67"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         128,
         0,
@@ -108,11 +108,11 @@
         32,
         32
       ],
-      "sha256": "eda9c6a88f431ce107f8044242f58d0833b3e513ec6c53e946c241e0344972aa",
-      "rgba_sha256": "034ff9790b4111eb787e23ced13c607d9a7a7216b079007c426794126220a745"
+      "sha256": "8b82577bdeadc960a3db65e2c892a3a2243af2546b84f786518665ba01c66c75",
+      "rgba_sha256": "a71577acc438ded7b9a8581aa73688340339da82e7c345ddec6f5a12164cac8a"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         160,
         0,
@@ -124,11 +124,11 @@
         32,
         32
       ],
-      "sha256": "4f36ad9e61940c70c93bbaea9aaf24d3deda3e14e8b8d70eb2c226f2238d3593",
-      "rgba_sha256": "4937efc38f2db16f1eb942f1a31a0b21655c94826a3861a1bf5a1a8258a58d77"
+      "sha256": "5b95d7f6c3f3acf01ccd68ebf0d6500e02989c100e33b3ac379296386020bab1",
+      "rgba_sha256": "f08b5a8fc58e669bfb13e20b899895829466547fa0e222e13743510facc1e5e8"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         192,
         0,
@@ -140,11 +140,11 @@
         32,
         32
       ],
-      "sha256": "aa4b083e7770c4e1440372df93fb6fa404b4119930d538ff3e0b706b187f4c56",
-      "rgba_sha256": "99315808269b4b0963c576dced3be7214b8c62f7f604a76e9d4941bdd6e16de5"
+      "sha256": "6541b93ede582092b012ada9daa22e9c8f97fe143f1c68ee1f2404f5ce374eb8",
+      "rgba_sha256": "652d5eb5835f3cffc62e187d44b0ac2a35f20d56ec06173cec92f7964d6f52b8"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         224,
         0,
@@ -156,11 +156,11 @@
         32,
         32
       ],
-      "sha256": "a11dabd27a4a63f763394c6b368979d6e798ba764ecaaffb1ba76793833e1ca1",
-      "rgba_sha256": "6c6c1a656e0bcf9cb0d295dcc35fe2347794ff7ad39cae6cef6d39f0d43b75de"
+      "sha256": "bdfbeaab464dd7847a50a9b965dab71bac8fb78d3825d098160a48f4d1b6da86",
+      "rgba_sha256": "8e26e0e0693766a3416ed755fdc4ef845fc0708e3c0333e55419b94fa63c62c1"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         0,
         32,
@@ -172,11 +172,11 @@
         32,
         32
       ],
-      "sha256": "f9831390cc95bd9faa0f01f9a01ed0e20e7bf9181c489221b02f93d8952d06be",
-      "rgba_sha256": "5a36833e82856b2b0a144ad2c2f049deb10d1810989151e155816850ee010cff"
+      "sha256": "bfa68b3e5d8ac118ac80e387b75764c02b772cbb97ee2cf8f2982e1dba6a253d",
+      "rgba_sha256": "70ec1572dd2abc87ecadcb706bc1b7d176339f7e371ef5c482a1b078688fad26"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         32,
         32,
@@ -188,11 +188,11 @@
         32,
         32
       ],
-      "sha256": "bfdcfbc2c29a9577c5ee8b45ef4d2a4f548dd3c4bcc9778fe60ad2d924cb5e75",
-      "rgba_sha256": "7141b7ab7270ddcdead74024912d30703629bb34ced445deb3e5b7dd1a31cda6"
+      "sha256": "d190bec88bd0348a10467f83a03f58d3a6c9b00bfa78634d9816ecf7d523ca39",
+      "rgba_sha256": "f87e698f363b75693b5efa28c9971ca809f825ec9ca6bfd144afc1745d3778a7"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         64,
         32,
@@ -204,11 +204,11 @@
         32,
         32
       ],
-      "sha256": "8db8a164114ce8ce053155ea30b3a2889aa5ef1e882515741a67a4db1d9b513c",
-      "rgba_sha256": "b52bef3407b5ac920321630236b940c6c6f19b58272bf31f49b9ad2ccb09e3d0"
+      "sha256": "ae35abdbd3759a5e403858ec5ac2478c438dff6d8dadfbd0b0ce419a096d8ae7",
+      "rgba_sha256": "be9c59e22bcb7fde595a13ef288204d80f758d0b30d98a93a3dba4b9df9b279c"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         96,
         32,
@@ -220,11 +220,11 @@
         32,
         32
       ],
-      "sha256": "128d0ed5aa974a2e05dc7216869cf9fec5dc0e9eb7a41a2559a26b4d509dcfaf",
-      "rgba_sha256": "77bb5cf750d68482ab39fb1c434cca1e2e024dc0cef5049881e4dbce10629fef"
+      "sha256": "d7bf607532614ec5660ce592699bf24f193ffcbdec8b015410b82b330a58a9ad",
+      "rgba_sha256": "fe0a4add07770d442c105d06a3d313e3bf76c2db7d2ce010216c70d991a533f5"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         128,
         32,
@@ -236,11 +236,11 @@
         32,
         32
       ],
-      "sha256": "18e53996809df2cc4b405bc0e86ed2725ff41acee77c3d5223650b04a93c3648",
-      "rgba_sha256": "574d2aa27c7985eebc1dc696c6de44e18ece92d3a92365500d2c27f4c6d9c19a"
+      "sha256": "f4920868cbd87170e070163ca7b1172fc7c2a3524c550514219e4a727b7c0b2b",
+      "rgba_sha256": "6f60fc32cea597ee7238725cb62293cbf0cffa3e992e66ea9bb84659e6361a30"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         160,
         32,
@@ -252,11 +252,11 @@
         32,
         32
       ],
-      "sha256": "c9b1259bd1a4edcdf95a698e4a456cbc23bb403a119f6034d571f5d95ba42ff0",
-      "rgba_sha256": "055beac4f9bbb9a93a11d1a7f4c966be4184d87c7b23e8ab28f6d45fdcf95fdb"
+      "sha256": "6f3b0fca5a0cc59af9bcb0869fad7e746bf2c9711ddbb61631b2613098b92e27",
+      "rgba_sha256": "662b7357c4623bd33f49e2b1e1b2faca6733ab11f00eec2e29aaedfbbcd8291a"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         192,
         32,
@@ -268,11 +268,11 @@
         32,
         32
       ],
-      "sha256": "d85e5dbe6aac4ef8e5276e3870719f38da530653a0d7dc066f7d1cf9a010b120",
-      "rgba_sha256": "aa34a6c4cc3a7d0a06abae85bb5d549efdfa459dbd39f84eb7ef50ccac84aee7"
+      "sha256": "e3f4084caec06f7049be3e4029aa7c2af44e2ce30b44f886966528bf6316b60c",
+      "rgba_sha256": "4d5573e5270fa985ba6b0d0d47a05a4ea8839ba68676cd6872e5959a648c60fa"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         224,
         32,
@@ -284,11 +284,11 @@
         32,
         32
       ],
-      "sha256": "4bddacc2d95d2fc015ce4d4304d5aecd158eb6bc69a82a90e2aa6b9cd83d4b8a",
-      "rgba_sha256": "8ca3a4bb25a112240055a918cc80ac2a5884c14adedae1871b38d016a823a482"
+      "sha256": "a9efefc42a828c0ee0764f48778293c818491b4df1e761e86abc86526a7a7244",
+      "rgba_sha256": "d4cbabba0aa50ac2b193e7690bf73241309147daa1c2dfb493ae2a9bb74c8c59"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         0,
         64,
@@ -300,11 +300,11 @@
         32,
         32
       ],
-      "sha256": "7153eb5f0212e8ff3cb0617058f7e8f559030fc914b547baef9198d1cce87f50",
-      "rgba_sha256": "ef0695d992e31b102fa6db6fbb4d02c54c7d20888b76cab57ea351bc695ed0ff"
+      "sha256": "27011224bf5253df95f79948229894d63a38c06d586c1589f12db3c614c9a80f",
+      "rgba_sha256": "8465815ba3d844f5aa38ec241baf6f128596ba9268028f39b083b907eaa29290"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         32,
         64,
@@ -316,11 +316,11 @@
         32,
         32
       ],
-      "sha256": "b3c6cc1494014969aca8e696c57838462241948e52838f739ed72ef86f569b5d",
-      "rgba_sha256": "099d9243dbcc8c641a9a7465f0a3b6464794c05823c46281da56e375ee491e79"
+      "sha256": "9d87242fb1c708ad8f30aad60e169412426b44df8bf47ced9361023dcd65bf95",
+      "rgba_sha256": "c486b193c536071e0f77db7ad87404c4535b3e69f1f8250df41730846a279d18"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         64,
         64,
@@ -332,11 +332,11 @@
         32,
         32
       ],
-      "sha256": "44d2d3918d13c3d1c26c19d8ed77a2257d0f41357bdf692fe9956bb7ed4c8f26",
-      "rgba_sha256": "f555f0fed8ee40b4ac8c108059cdfb1f5fbeab4ed07ce94b6b63dcd1860cc9e7"
+      "sha256": "d77858fa95cb2b9d92862a3b566be9807edb294307907b8a94c43994947de88a",
+      "rgba_sha256": "8a543c9b8512d6b044240e4db4459ffd3484b9c156e6e21e7fbddbcb8e883341"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         96,
         64,
@@ -348,11 +348,11 @@
         32,
         32
       ],
-      "sha256": "4e208d3735e0ab039e8669d739d2db8180ec5597e56b00ce5f2b99b2c2d1259f",
-      "rgba_sha256": "16eedbc011a3eeee8ec65e81b961f4b787c9d64f4a7a2252a7fd6bdef8826c6f"
+      "sha256": "ca16aa71d1834c92f9621534e9b81e642d40832b7f37d52e0e1e34d57a6dbf3c",
+      "rgba_sha256": "0611045bfb184b2e44b52156aaf98d00f8c99b3f24808dc79332adc87243c986"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         128,
         64,
@@ -364,11 +364,11 @@
         32,
         32
       ],
-      "sha256": "643ff177e9d706ae8fce321a227d66afc6de73e0f6d9fd2932076b83e00e9610",
-      "rgba_sha256": "3691224618a853df0963f3ac2922daef04ca53130f935090c0a62138ea71e148"
+      "sha256": "84162b4776ff11d8e56079ce789264296d79b018904128bd84152c1f82bdab33",
+      "rgba_sha256": "b956da928d1dd3a1c3463269b3e624e34ed0feafe693df2f7230ac7ca451f963"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         160,
         64,
@@ -380,11 +380,11 @@
         32,
         32
       ],
-      "sha256": "40efceaec257c915b766b321a1ef508c73554a771d28bc39a8b8779f07bef287",
-      "rgba_sha256": "e58dfa71b7bc60bf10f772629b681992e881329f0c09775a894574a08bf8987c"
+      "sha256": "4399221fbf4c850f77dcfc6a9fbf76cfa048484b5bb479f7e78dc5c8ec968334",
+      "rgba_sha256": "aa2ad35efa223ba202119c584d35392af2e98eeebb71c1dbb91ff64a5fa37620"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         192,
         64,
@@ -396,11 +396,11 @@
         32,
         32
       ],
-      "sha256": "7ed71ec7579617f7dfa63bcc42f5019e392750cea8ede4a2b7b14577dee02f09",
-      "rgba_sha256": "9733551531262daac3d850aa835abb76f8d146d7cace22cfaf6d23c22170d496"
+      "sha256": "0de68cff027eadefa9b460fc6069b335402baf4318c10cacfc31c3ea0d2fad8a",
+      "rgba_sha256": "dcd2a50890c3ae094a993820be729d82394c5c5257d5b6c7ffa8e4edb982c198"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         224,
         64,
@@ -412,11 +412,11 @@
         32,
         32
       ],
-      "sha256": "57085457383acfbac027aa679260c26497f024c278c4bea356aead0c92ff32bd",
-      "rgba_sha256": "87bdb2045ba444e77ed78553c7fd073abbeb4f99258a4fd3860d19458b18202b"
+      "sha256": "051a1e221d623f39f1dde875e176512356382d9f0bc9e5a2a2bdc1f95b23aa6a",
+      "rgba_sha256": "39d0ddbdd4d4071ce1e1fdb1cf556a5da3017a9ebe85fea00a84bb0753dd4630"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         0,
         96,
@@ -428,11 +428,11 @@
         32,
         32
       ],
-      "sha256": "40f10e286d4966d11a7bb78ccdcbb6423df25cbeff4d44ca4be9b1abddc40197",
-      "rgba_sha256": "2b60d6790b42afd1b5e753e678ade5a48dffc9b9496fd51fbfe4fad17443d1f6"
+      "sha256": "15f0a4271ecf734b30b56424c49657ff61489e6462802123a5b7d4f1ab3f67c5",
+      "rgba_sha256": "e2ced4abd6fa5b6cf0bbd4d55c81f2cf284b8bb81e52f45ae57c88d0bf0e1bb4"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         32,
         96,
@@ -444,11 +444,11 @@
         32,
         32
       ],
-      "sha256": "9c00fb13985e316e8f79701c0ec9365dde27619fa3293a73f9451f71af049205",
-      "rgba_sha256": "ddf4520d467daf889c3e5f41585daa268ead5aae7f2e216c4069b6e32d909083"
+      "sha256": "d26315c23d0fb09252560b303e0251047763a20599b115e8d9a20185cb083961",
+      "rgba_sha256": "9076e7bd830b87dd9dfe78f09e734e07ab9eba92433fa3ba3814909207cf030f"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         64,
         96,
@@ -460,11 +460,11 @@
         32,
         32
       ],
-      "sha256": "fbcc91ea6ff559e4bc3a6db25617cdccf25b1278cd96c06171d543ae0f70d7eb",
-      "rgba_sha256": "94af19f4f3cf5fb1a619aa92acb6ecba3bfe1c60522ba4a73c5fd9214ce3f2b7"
+      "sha256": "8148f61c4e58794bbdcd616068bc7b88db6b0a63541864f46aa3c3e654358031",
+      "rgba_sha256": "9c2c5add245e2453ef5de763035672f5b03b3d5a7be9e0017d178e5fb18be140"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         96,
         96,
@@ -476,11 +476,11 @@
         32,
         32
       ],
-      "sha256": "08c1bbd556b15dbbfa85e552c8c83f02b504f381c5a873ebe429baeaf7ec66ed",
-      "rgba_sha256": "b49dff9f082f1745d94d5114ca367e621f79d2a53544d6647d3beea1cf774b75"
+      "sha256": "55f76e06f019359015238d0859d923ed3cf9cf3f013659eebed7c3ecfb6832fa",
+      "rgba_sha256": "6f9784f67ba92879350cc250178ec30f5b091c2ecb5f8b30b11158138693df8d"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         128,
         96,
@@ -492,11 +492,11 @@
         32,
         32
       ],
-      "sha256": "0aa86f4aefb472ba23eee230645c19ea4f6ecaa8056a8387e247b491c6828af6",
-      "rgba_sha256": "5b300d1331f54fdf241a224d353e825cdda3921083666bf9df27e30be81aa053"
+      "sha256": "856b3a96c0a7af10ba3ebd7e1eca0ea9f27e1e9783405f93335a96510008e2f9",
+      "rgba_sha256": "7e8d9aa264e5b0e9d59c398ce40f005cf9d90308e4a793de965a0496346e70d1"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         160,
         96,
@@ -508,11 +508,11 @@
         32,
         32
       ],
-      "sha256": "a2757b423ddce3f9991185732e7b2e4bf228e99b88b1e2d796f4c181ba4f4d4c",
-      "rgba_sha256": "c405e98d6938ad1809ddc15c789151baa58b8a9599ffb027b0624accd9a06ae0"
+      "sha256": "3952f59707983c355552adf6dd7a4e9aeeb889b8aac9b12a829d43cd4181dcfc",
+      "rgba_sha256": "00ae7454f398a47d39c750d5bc7909ec17ea53fb9617d0c45ffd43fac10752ce"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         192,
         96,
@@ -524,11 +524,11 @@
         32,
         32
       ],
-      "sha256": "1c0af4ef7c42e52ec3e29dc7ba20e579d009e69583574312740c480aacc6208e",
-      "rgba_sha256": "e53967a71fafede9cb950f800894e1af94c38c9492d1d12cc98844d7a6be28be"
+      "sha256": "33daa6e16ecf936f1a8df059f4bbc0fdce2641b2ef57b752c40f16d7ca6be063",
+      "rgba_sha256": "8a543945eb47d98daa096763cf986e894dd0b185446ffe722465e8289b945035"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         224,
         96,
@@ -540,11 +540,11 @@
         32,
         32
       ],
-      "sha256": "db6a43a41cbab3d0a30aedb38fe8f4b547b7681bdfead38f207b238d12af6fb8",
-      "rgba_sha256": "c84d2d0f3c88c5a0954856830fd04794ef17364d2dc70846cf20bf298c17bb4d"
+      "sha256": "ae7f07882a8e7f4bd4343029fae356ee2d9ffd665406976c7d36ee7eb655e6e1",
+      "rgba_sha256": "4e113706487df444654e98797684db39fbad85ed03743532b9bac138c86b571b"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         0,
         128,
@@ -556,11 +556,11 @@
         32,
         32
       ],
-      "sha256": "9c584523706c718f8967eb586d49d6566cafd1f002bbf83ecff23b1410986371",
-      "rgba_sha256": "9475e58bc3fa5313eb75e307996ce58e86465e5d6fb27431aef6c0de567dce9b"
+      "sha256": "aded9a1e092c08f18541891f04c664fab3924669164c7a9cab47bcf2f095cd75",
+      "rgba_sha256": "d71669c9767992496a9daf4131880992cfb303dc0c1bd40b477bdb957bddc4dd"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         32,
         128,
@@ -572,11 +572,11 @@
         32,
         32
       ],
-      "sha256": "2419526ce70a63d3bb403fb7c9dade9c465b58b9d9ceb3a5f83b6aa812ac3d78",
-      "rgba_sha256": "e17dbe79ad9c28e9eed4691018ae6064e6f7bca99030451c00d37ec7640875d1"
+      "sha256": "31c80d455e3dd57b6831599157a62fe81e672615e926ebc493f7cf05b8b1e0f1",
+      "rgba_sha256": "acacecccbfe71f3a193faf5a3c05196b03b921f421492b68d2b0dcb177c25003"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         64,
         128,
@@ -588,11 +588,11 @@
         32,
         32
       ],
-      "sha256": "68582c5da17fb773c344c3bc8a2aa80c1f07012a3c95cb66942e45253bd9d72c",
-      "rgba_sha256": "dee34a291383feb14f0c184eaec3df3a8959353fe914f965749daa0a25fccf59"
+      "sha256": "c61f4575750295c6037a89a698c6ea071ad59a834984d3b90f04f0fdf9c86854",
+      "rgba_sha256": "f84b4ae391cbd04aca7c80f48794ba62ad023d18c7aac3f5aec238024461172b"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         96,
         128,
@@ -604,11 +604,11 @@
         32,
         32
       ],
-      "sha256": "16285e8d3008cdf57cd46924f064898d75a99f4ef33f63a701cd4f47c1978338",
-      "rgba_sha256": "ff6fcab83d1ac57d4bd05b6671403cabfbd55b7034bf87b3416a1d58c5cf03f5"
+      "sha256": "037bd896be207f9e51bf749b4c939d32b6cd95208ce0b4bd20cbd762059b9bcb",
+      "rgba_sha256": "574fc5cf53ee4ef5f71ca84ccb46c6f8879b61350017438fa70935385bd1a924"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         128,
         128,
@@ -620,11 +620,11 @@
         32,
         32
       ],
-      "sha256": "eef6e662a2dad83f172626eb66449d3b1b35d62a091cbc8d5b80c1132e2bfb41",
-      "rgba_sha256": "1f3e98e49588ab1048ac31220310f04deb5a9306d8ba7b552a4cc138b8ac0201"
+      "sha256": "f56d1e8ab1d24ac2528c89a77bb53498d500de6624f21cd3961bc7bd96e25c47",
+      "rgba_sha256": "6af57398345105e2b7cb80df2fb5227bb8357e7c03c4486ecfc453b3da51f03a"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         160,
         128,
@@ -636,11 +636,11 @@
         32,
         32
       ],
-      "sha256": "d72d2dc0ee66e40d3b89fbe5acdd64f1b441e2f0e04d323f7209a7a2e5b39094",
-      "rgba_sha256": "2669c2481d2b9a0b0cb6e793fe9d6c66d2abed106315c52cc4aabc9bf59e4523"
+      "sha256": "a42d28508e8f5d29ecdfadb3c1c5fdc3c268d065f1c45acdf54f28e701112fb1",
+      "rgba_sha256": "d1c18dbbe7f60a7d20cfffa386f8e0d779be68a8b9c7f5480265f4c3a1dd79e5"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         192,
         128,
@@ -652,11 +652,11 @@
         32,
         32
       ],
-      "sha256": "10d85016929da67a31c4dc4d5db17dcea074f6b857f546d236177831e164186e",
-      "rgba_sha256": "891f0d6b4447670f0ddee86d2f4dc45535d9d8f8ec20d9fa43e875170520eb76"
+      "sha256": "6469389166003c6e1f3af7d89f89094cc8cfcfaead8c0aea23ebf2b6014a53d4",
+      "rgba_sha256": "fe70a4f19f20d6716944067308a66960e84fe9068da4a9f7bf3e5e262e3f6091"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         224,
         128,
@@ -668,11 +668,11 @@
         32,
         32
       ],
-      "sha256": "3633dbf9c42968409ab1d32199baa180c678cef16f5f0579cb3003ad6d7681b0",
-      "rgba_sha256": "3722f1e28766dac9d04835fe4dc78e1e29ce9e01b01dba2cc358710f5abf3f06"
+      "sha256": "02c5384b0f142199ff30c0020ec89ac03b77d8c998300efc9c43d1706a9774b9",
+      "rgba_sha256": "ba513069361b304462c5af53bd1ef35197a5e2b15a9b7831e8ec9b3cc0f88ff5"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         0,
         160,
@@ -684,11 +684,11 @@
         32,
         32
       ],
-      "sha256": "f9328d0aa9a3843346d009224d8b49e5aebed6b0936c9ca4872d2b747b09d923",
-      "rgba_sha256": "d2af36657077bc93e3dd8fb9164dcc05712416e4c1d3a38dfe50d539bacb18a6"
+      "sha256": "294a34ff4076e8c15b26ef1ad78475509419768ef125a23621cb1ebb19a80ba7",
+      "rgba_sha256": "53568b317dc65202ddc0021ebca361f6effa65a8f1c2482a2678a07052ab256f"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         32,
         160,
@@ -700,11 +700,11 @@
         32,
         32
       ],
-      "sha256": "d4da8613015d1fb846e2f6185b2ed8d0b568261abfb06ab186c116be6ea3a131",
-      "rgba_sha256": "000598cf93a9bdd427916bf1610eff5f935ba20a77f97fb92448ca17103312f9"
+      "sha256": "7269cc0151369e8b713e18592353b035bb3289457ac054bef4d13137c70bb495",
+      "rgba_sha256": "47b308e1cb9ab6fbe3af8160ac06f5a8987944f1013cdd1d1c80856a3540bff9"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         64,
         160,
@@ -716,11 +716,11 @@
         32,
         32
       ],
-      "sha256": "34251e5bee8bfa771a4b5c0b41f266a0d1ad4dd3e4cb474c27f1c63a2e2d7a24",
-      "rgba_sha256": "325971cb47e84591372115517367c4d00d24c2515f230f89a7f97d23006c1913"
+      "sha256": "5d344bea284a6a6a19ad0b99b2fad779beec4b67c0100c9aa32722eab8be24ed",
+      "rgba_sha256": "40b0146e596eb95f8010cdb0d0c48627cde72096770f13de88a6c69d5e7a2d48"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         96,
         160,
@@ -732,11 +732,11 @@
         32,
         32
       ],
-      "sha256": "ae7dc6fa91e253a1c5f72514744bfa5d701375a77558ccf3e5008d4e45d8c285",
-      "rgba_sha256": "6467841924ffd4e2914eabdb0edf910ca3bfdcd3827507e8376408bb4af3c4a1"
+      "sha256": "0fb33ded8e4b3f931ccecb8e747cea3549f00fe8c5f963273c07501f2c2ed6ae",
+      "rgba_sha256": "f338356941c49bc8eeaf384d78e245e756a4b9bfc38fef522fe937bf84a4ebeb"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         128,
         160,
@@ -748,11 +748,11 @@
         32,
         32
       ],
-      "sha256": "647a51c2a7dad2c576b2bd2cd5f9530b7927f7a3c659d7962645e609d76e9718",
-      "rgba_sha256": "d15aab15bdc31d0f3e80265f9379e84011c06824903d64c80ea53fc838ae6b7e"
+      "sha256": "1b42fcbab0c3d4c0b21d9ded0bc53d122e7714e27b4c7014f9151d0a5a26cf84",
+      "rgba_sha256": "aa555a9c60b38b494a0e90f732db5a97f466660717a74a1b0c95fc10e80e1cfd"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         160,
         160,
@@ -764,11 +764,11 @@
         32,
         32
       ],
-      "sha256": "ec95a168041a8a6c01f6a1f69b6889e57173e078a09628fc59576c45f38f2f20",
-      "rgba_sha256": "1b3d41fb322e229e7bf04480aa3d599726fb0d3b0edcab8cf2d2022afd84afa9"
+      "sha256": "1f9cad915c3bc4f6048c2bcee558e33dbcba4293b2e6712964f6623a81e13cc5",
+      "rgba_sha256": "05e5835e4b84dc89bc49d2f4f189adcdd1b56eeb05d8563da06ba9ae4e29b856"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         192,
         160,
@@ -780,11 +780,11 @@
         32,
         32
       ],
-      "sha256": "a309f81e9950c1c41e0374780f44de2f4177cd28a6c0b1be39aeb58d5d2c9822",
-      "rgba_sha256": "edccc0f8a2b522f423af9cb88b39bdd2e7c8d57066c5f658d06cb47a34bafed1"
+      "sha256": "4c73b4ae4cab5f79326a094ccfae8059e856c52e9a4062b57f05fd68b57c8fdd",
+      "rgba_sha256": "618ba2bd992b717736193eea050e492e8977ef7f8aa9c091bc1c0a1abc66a94f"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         224,
         160,
@@ -796,11 +796,11 @@
         32,
         32
       ],
-      "sha256": "5cbf1b857e070eb453477a12546e5f16a824174ddeef3bdfa84632878e6a5e67",
-      "rgba_sha256": "369ceca719b3490ca7776aaa54a3b1f5d2f8b233488e64b5e571fc0b7f0939e0"
+      "sha256": "ad1638540bae464650e43bc429228c1315a058ff3e1400ca1be46384d7b9d282",
+      "rgba_sha256": "0f0bd7a7e22e299c20da213b285120462f6d8ae05477212e6eae0e3ff41019b0"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         0,
         192,
@@ -812,11 +812,11 @@
         32,
         32
       ],
-      "sha256": "80de84380de7b4ecf5c17f88c19949eaa1d89e143cf7b204fbc184796bb3528b",
-      "rgba_sha256": "b79260fd3ceadd500d8fae5c2dd3e8dcffaa03567ebe6f5e0b4f09613f215dd0"
+      "sha256": "9d0bff3178e13706083d6a6dc481bc22d54c260c6a959b54c3e87ec2154bd788",
+      "rgba_sha256": "33cabf79f9d2f931667622c5c4e4146c1d81cb3d2361cda1729674863ab2f038"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         32,
         192,
@@ -828,11 +828,11 @@
         32,
         32
       ],
-      "sha256": "772ac007810f7b8e60094099a1a46ec6ea3a6ca025ff8ed678f6305f1f780733",
-      "rgba_sha256": "859269275462243e1eff9d87a74a5fc9f62674f82b24f120637521c0aae19867"
+      "sha256": "a94519b4af7ae3df439c91e0d940d8271779523374742b5e5dbed33ade4f634a",
+      "rgba_sha256": "9bb5b075f800dbbea80c0c001293d3e3819f66e5747c43d0ccc5e7fbc4289a09"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         64,
         192,
@@ -844,11 +844,11 @@
         32,
         32
       ],
-      "sha256": "24183d55ce7e3fac071a261571d0ec9a12af53c4012dfbdcba8b7736268bf24b",
-      "rgba_sha256": "34997784df95ef1c4da8dbdc9c209e4433cc7ba6bb2ffc8f2cf26dcc6015e5be"
+      "sha256": "fabe319c0d4f90acb828292a4560ccfd1f7883a8cc3efdf3b0eee2d44d1c625c",
+      "rgba_sha256": "4378582d62fb53041d2b87540ad18d5dc0015c5b224b8cdfacd5e8772afce692"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         96,
         192,
@@ -860,11 +860,11 @@
         32,
         32
       ],
-      "sha256": "f01a3069e4296176fc3f437b5cb5388bcd9b851363a973e5a3a7478f16de2c31",
-      "rgba_sha256": "3b92186f5819d7aa623aba1a4dcb9d203dc7b7666c46222622670feba34e4635"
+      "sha256": "83825a72ad773674e863705304a8e3bddc05bc2d30494278ccf6fcda7a2abbe6",
+      "rgba_sha256": "008f4cf9eeb98eb05ec8fbcea99b98a0bd1dd792c34bdc019889db2d8ac66a58"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         128,
         192,
@@ -876,11 +876,11 @@
         32,
         32
       ],
-      "sha256": "0ebcee11225fae12d1011217659de7b8e93c07660893f8a719617ee7aa7d3da6",
-      "rgba_sha256": "f3a4d810a15656e299bef9d92fefcc969350ab07e34a8f545d6132ca1e0416cf"
+      "sha256": "1845a9d634c2ddb3631ee60efc41f5ee95f7370f1d2faa59996b70014288151f",
+      "rgba_sha256": "7ebc8d8a0e8e80a49d5426aa60a1e85cb372469d74722429ef6b35ebfcf26ee5"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         160,
         192,
@@ -892,11 +892,11 @@
         32,
         32
       ],
-      "sha256": "e6e4845da9fa0f9c42ea7df171409c2c576fb39a5269559bee67a7cbd11e70e2",
-      "rgba_sha256": "6fa4a68ac7fdf65282a02b91134395fb6d71a86ad5afb4ef4d1e03edc7952a73"
+      "sha256": "9037226dc43960ee25f295246d9c5dfa0a0ea82fa325541d3b30f355f5f7ea38",
+      "rgba_sha256": "d83056489541be5b216ca6848fff46e89b48b51947845325e11647f887b87c5b"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         192,
         192,
@@ -908,11 +908,11 @@
         32,
         32
       ],
-      "sha256": "01155dd271ecd2eca6f369c13c22283395f21ea0e9cbe2ce06db21cd4e0706ef",
-      "rgba_sha256": "4dd357807f340259cbe42c09b786c05fe72590afb80d771fe5028b139d6d8923"
+      "sha256": "7f9d215daa74d9c61bfe5c94fe21c40160045429e005676987449881d0e812f5",
+      "rgba_sha256": "cb274ec4175310384f8e1b2e3cef2e961d0b65d55a3dab663a93f0b7967dbd87"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         224,
         192,
@@ -924,11 +924,11 @@
         32,
         32
       ],
-      "sha256": "a8c3cf08b043e89e081634c8165c5d2bfe3f7bffdc0b3f3b49306c2cd84ea191",
-      "rgba_sha256": "766025ef11055bf82962a018f20fa992c8a2d4f925555da640bbef5eb9fb4bad"
+      "sha256": "ff4d8c836cdc5d5a4c35e247809e6bcae00059d6967563d3496760b9eee97cc3",
+      "rgba_sha256": "bb2d4dbb30bb940d6e1902a05d6b1d7105ee84dd61695203385b481840bc0388"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         0,
         224,
@@ -940,11 +940,11 @@
         32,
         32
       ],
-      "sha256": "f93acf9279f2e887fc4122826d4a705e5fc0ed84e4c3665675ba528558d87065",
-      "rgba_sha256": "0539afb5d2ef5d33c0a8dbed7ea6ba68fa516db494e18764527a93e42552cbb6"
+      "sha256": "ceccb685daf5dda932b935110e392e65e2de82389f1bc67aee5702837545b32c",
+      "rgba_sha256": "618eeeae156744cdc215b2c49e924a8cbd3640a63594eb1e0d425f366f2fb677"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         32,
         224,
@@ -956,11 +956,11 @@
         32,
         32
       ],
-      "sha256": "ee7fc70ed6ca577f8e1f16b1ac181238ae94658d74b5bab82bc32317c1cbebd7",
-      "rgba_sha256": "5e351ac5afdad0d99970e5b4cf3e65ecca9db302ca2392f1d0841ae2efe682da"
+      "sha256": "f603371fa0a936e2d907a3d5e2aef3a0ba7ba36cb2f9a159eaf08052d5aea956",
+      "rgba_sha256": "5ccbf8c98b331a613c0bf58dfc0b86a585e9158bf78632a130d6a58a9e816c59"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         64,
         224,
@@ -972,11 +972,11 @@
         32,
         32
       ],
-      "sha256": "f8a6995d908054c30380365f941c1e1710f420eeec698c20cf9a68c6de04d4e3",
-      "rgba_sha256": "0c0f8c5767a36fa67886ce1a9f67524c7112bcb40206d0d84902f0b2fa2a7155"
+      "sha256": "c9e6f5b26d56884942152435a0be4ab9a5a41c263c900016c20bd521106c34b7",
+      "rgba_sha256": "73aa09e1fd1e5c9aa169b04ab2e89abce4707dcd3a9745889e03ba709ee3c06d"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         96,
         224,
@@ -988,11 +988,11 @@
         32,
         32
       ],
-      "sha256": "bea2bd736b5d7b9df8d429972290bdb44e19a2e323afe767cc5e780bfa31c7b7",
-      "rgba_sha256": "9ddf387b6615aed8d48faad6598f2ee7fce7ba91df507422ba8b6f34c2a0f1fe"
+      "sha256": "872bf0749f790aae3964b7c0b2f9b910711aacbd955a4266372dd05471295d06",
+      "rgba_sha256": "b8a2b8fbef9f959d390b2a27ba28cfd90b4b6c7fac0f42e3c1162d12ca578209"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         128,
         224,
@@ -1004,11 +1004,11 @@
         32,
         32
       ],
-      "sha256": "55335d23efdf44811d871dc5eea2e47cea4e34ec4a84ba492fa57b128de54c38",
-      "rgba_sha256": "146ddf77b836daacb3be52c4427d0aa3838713e258985928e0cbb87bd43149d8"
+      "sha256": "86540f4c4066ec97006e254d47133d605a88761e2104d711a8fc62a0d71b598b",
+      "rgba_sha256": "ac5f8ed584836028f199427e76bd45fa2106096d7cc7661567859a34b7fbc052"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         160,
         224,
@@ -1020,11 +1020,11 @@
         32,
         32
       ],
-      "sha256": "f993d468eb5241b5792aa734009870ae8a068c4f40ed333a345df1fdbd4d6cc9",
-      "rgba_sha256": "e4ca34e43910eb910f97efb849c572b65637fa341376c0def9f2216a4b48b378"
+      "sha256": "9d999e5cf1f4c9e66c3a33f020270e1dc9d4c99099d89a463591f6a050a6ff05",
+      "rgba_sha256": "b29ce74596573e5781c26009ba8858c7d5e88ecc423e55b525a00712d0f7974d"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         192,
         224,
@@ -1036,11 +1036,11 @@
         32,
         32
       ],
-      "sha256": "748d06217346b3f97bbac2129e66d386982526b7a57c820e4d4944fe883eed9e",
-      "rgba_sha256": "65cb975e56e0be97a125ab4763f60c79a81ea449a6a045ae473cd1005c409c90"
+      "sha256": "a367f463d98a4798ea6747a06ec7744825b7c4c90386168da387a89aac7dbfa8",
+      "rgba_sha256": "fd82814f377e105e925e38afc71ec7a4eb01f97c67076239cb86053fcf65d087"
     },
     {
-      "source": "e_j_0076_aura_g.dds",
+      "source": "e_j_0076_aura_gA8L8.dds",
       "crop": [
         224,
         224,
@@ -1052,8 +1052,8 @@
         32,
         32
       ],
-      "sha256": "10e5967b2219b2b93facf4b42440daf5772a44eeab73f947ba7137485d7451b8",
-      "rgba_sha256": "3f0392484f56e3be00e72d7419d51e6ff6e196a2e5002622a5ce7f4ae462043a"
+      "sha256": "3e9afc6b55574982720cb9cbc526142f823c8ed1765a9727360fe91e12c24f8e",
+      "rgba_sha256": "1c400830546eda39504a488217cafed003248f4ff4e2c9a6b0c9c15703aa4995"
     },
     {
       "source": "e_j_0073_aura_cA8L8.dds",

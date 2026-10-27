@@ -63,10 +63,20 @@ function A:update()
     self:holdPosition()
     local age=t-self.startedAt
     local clip=self.character:GetVariable("ProjectYakuzaChargeClip") or ""
-    if clip=="started" then self.seenClip=true end
+    if clip=="started" or clip=="done" or clip=="holding" then self.seenClip=true end
+    if self.seenClip and self.context.action.holdAnimation and not self.holding
+        and (clip=="done" or age>=(self.context.action.windupMs or self.context.action.minChargeMs or 350)) then
+        self.holding=true;self.holdRequestedAt=t
+        self:setActionAnim(self.context.action.holdAnimation)
+    end
+    if clip=="holding" then self.holdSeen=true end
+    if self.holding and not self.holdSeen and t-self.holdRequestedAt>600 then self:forceStop();return end
+    if self.seenClip and age>=(self.context.action.minChargeMs or 350) and not self.ready then
+        self.ready=true;PY.emit("heavyChargeReady",self.character,self.context.style,self.context.action)
+    end
     if age>600 and not self.seenClip then self:forceStop();return end
     if self.seenClip and age>=(self.context.action.minChargeMs or 350)
-        and (not PY.Bindings.down("finisher") or age>=self.context.action.duration*1000) then self:forceComplete() end
+        and (not PY.Bindings.down("finisher") or (self.context.action.maxHoldMs~=0 and age>=(self.context.action.maxHoldMs or self.context.action.duration*1000))) then self:forceComplete() end
 end
 function A:new(c)
     local o=ISBaseTimedAction.new(self,c.player);o.context=c;o.maxTime=-1
@@ -131,7 +141,8 @@ function H.input(p,down,pressed,s,style)
     if not down then
         H.gestures[p]=nil;PY.queueFinisher(p);return true
     end
-    if now()-gesture.at>=(slot.holdMs or 350) and not s.active and not s.starting and not PY.activeActions[p] then
+    local branchSlot=slot.variants and slot.variants["after_"..(gesture.branch or 0)]
+    if now()-gesture.at>=((branchSlot and branchSlot.holdMs) or slot.holdMs or 350) and not s.active and not s.starting and not PY.activeActions[p] then
         local branch=gesture.branch or 0
         local variant=slot.variants and slot.variants["after_"..branch] and ("after_"..branch) or nil
         PY.requestAction(p,"heavyCharge",variant,gesture)

@@ -290,6 +290,110 @@
 
   {
 
+    "id": "ProjectYakuza_DD_ChargeHold01",
+
+    "animation": "ProjectYakuza_DD_ChargeHold01",
+
+    "loop": true,
+
+    "conditions": [
+
+      {
+
+        "name": "PerformingAction",
+
+        "value": "ProjectYakuza_DD_ChargeHold01"
+
+      }
+
+    ],
+
+    "priority": 150,
+
+    "group": "actions"
+
+  },
+
+  {
+
+    "id": "ProjectYakuza_DD_ChargeHold02",
+
+    "animation": "ProjectYakuza_DD_ChargeHold02",
+
+    "loop": true,
+
+    "conditions": [
+
+      {
+
+        "name": "PerformingAction",
+
+        "value": "ProjectYakuza_DD_ChargeHold02"
+
+      }
+
+    ],
+
+    "priority": 150,
+
+    "group": "actions"
+
+  },
+
+  {
+
+    "id": "ProjectYakuza_DD_ChargeHold03",
+
+    "animation": "ProjectYakuza_DD_ChargeHold03",
+
+    "loop": true,
+
+    "conditions": [
+
+      {
+
+        "name": "PerformingAction",
+
+        "value": "ProjectYakuza_DD_ChargeHold03"
+
+      }
+
+    ],
+
+    "priority": 150,
+
+    "group": "actions"
+
+  },
+
+  {
+
+    "id": "ProjectYakuza_DD_ChargeHold04",
+
+    "animation": "ProjectYakuza_DD_ChargeHold04",
+
+    "loop": true,
+
+    "conditions": [
+
+      {
+
+        "name": "PerformingAction",
+
+        "value": "ProjectYakuza_DD_ChargeHold04"
+
+      }
+
+    ],
+
+    "priority": 150,
+
+    "group": "actions"
+
+  },
+
+  {
+
     "id": "ProjectYakuza_DD_ChargeLoop",
 
     "animation": "ProjectYakuza_DD_ChargeLoop",

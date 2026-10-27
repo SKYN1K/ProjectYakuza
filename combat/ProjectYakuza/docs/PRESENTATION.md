@@ -39,3 +39,5 @@ During Extreme Heat, the original dark/blue dragon body/head, six dark orb rings
 ## 0.32.1 loader and activation correction
 
 Animated pages follow native `LoadFramesNoDirPageDirect(prefix,kind,count)` naming: `prefix_kind_0.png` through `prefix_kind_<count-1>.png`. This applies to normal aura, Extreme Heat flame/smoke and taunt bursts. Export/decode checks alone do not verify native path resolution; run validate_effect_loader_paths.py too. Extreme Heat fire/smoke now begin during the actual started activation action, continue into fuel mode, and restore/clear on interruption or observer clip exit. The HUD uses a protected normal-alpha pass with purple glow behind the solid orb artwork.
+
+0.33.0 uses original alpha-bearing flame crops with normal blending to avoid black rectangles; only Extreme Heat flame frame speeds are multiplied by .55. Charging effects reuse those transparent cells, original ChargeSpark and HitGlint with a ready pulse. No new graphical artwork or audio was generated.

@@ -14,7 +14,7 @@ native delivery; it never starts Project Zomboid or a dedicated server.
        java -cp ".;F:/SteamLibrary/steamapps/common/ProjectZomboid/projectzomboid.jar" LuaRunner mp-tests.lua
 
 5. `python validate_mp_nodes.py` additionally runs the native animation-node
-   parser/selector against both cycles of all 180 observer nodes. Its `game`
+   parser/selector against both cycles of all 188 observer nodes. Its `game`
    path defaults to the same local F: installation; adjust it if needed.
 
 The full local regression harness contains additional single-player, input,
@@ -27,7 +27,7 @@ For the locked style entry fixture, run `python tools/combat-tests/build_style_e
 
 Run `python tools/combat-tests/build_extension_api_tests.py` from the root, then run `LuaRunner extension-api-tests.lua` and `LuaRunner addon-starter-tests.lua` separately from this directory. These embed actual production code and the shipped starter. They verify custom action routing, locks, pause/hit/save cleanup, context-safe completion, key registration and atomic catalog batches.
 
-`python tools/combat-tests/test_style_observer_builder.py` activates the starter in a temporary workspace folder, builds both observer cycles, checks deterministic/non-destructive output, and (when the installed game and compiled probes exist) uses native parsing and Kahlua compilation. No game/server is launched. MPObserverProbe accepts optional prefix/count arguments for addon checks; its default still validates each 90-node core cycle.
+`python tools/combat-tests/test_style_observer_builder.py` activates the starter in a temporary workspace folder, builds both observer cycles, checks deterministic/non-destructive output, and (when the installed game and compiled probes exist) uses native parsing and Kahlua compilation. No game/server is launched. MPObserverProbe accepts optional prefix/count arguments for addon checks; its default still validates each 94-node core cycle.
 
 Aura source checks: `python tools/combat-tests/validate_extreme_assets.py --source-dir "path/to/extracted/Lost Judgment DDS files"` verifies original pixels and provenance. Compile NativeAuraTextureProbe.java, then run it with the mod texture directory on the PZ JAR/native-library classpath to check all 66 PNG decodes through B42 ImageData. These are standalone CPU/native probes, not a game launch.
 
@@ -38,7 +38,7 @@ One-strike quicksteps: build_quickstep_once_tests.py embeds production modules i
 ## API 3 charged heavy and style UI
 
 Run `python tools/combat-tests/build_charged_ui_tests.py` from the repository root,
-then `LuaRunner charged-ui-tests.lua` from this directory. Its 132 checks embed
+then `LuaRunner charged-ui-tests.lua` from this directory. Its 150 checks embed
 production Registry/Combo/Bindings/Runtime/ChargedHeavy/StyleUI/HeatOutline/
 WorldEffects/ChargeEffects/HitEffects. They cover tap/double release, Tiger Drop
 priority, lock/anchor/restoration, pause, interruption, queue rejection, exactly
@@ -57,3 +57,5 @@ GPU appearance/live MP still require a separate authorized gameplay test.
 For 0.32.0 original assets, run `python tools/combat-tests/validate_finisher_reference_assets.py --hud-dds <supplied btl_hact.dds>` from the repository root. It validates all eight split-motion hashes/ranges and identical handover poses across 105 native channels per branch, all 64 original smoke crops, and the unchanged original HUD atlas/crop bounds. NativeAuraTextureProbe now checks all 130 aura PNGs; ChargeAssetProbe checks ten hold/release nodes and exactly one collision per strike.
 
 Run `python tools/combat-tests/validate_effect_loader_paths.py` from the root after any animated texture export. It checks native IsoAnim naming recipes and resolves all 229 aura/burst filenames. This prevents exported PNGs passing decoder tests while remaining invisible through the native loader. No game JAR is changed or game launched.
+
+For 0.33.0 run validate_charge_source_timing.py against supplied local BEPs: it independently verifies type-206 pause frames, first hit windows, native looping holds, source playback, alpha-bearing flame pixels and .55 frame speed. validate_finisher_reference_assets.py checks all twelve wind-up/hold/release outputs and their identical endpoint poses. ChargeAssetProbe now parses fourteen nodes with no hold collisions and one collision per release.

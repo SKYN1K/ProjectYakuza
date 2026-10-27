@@ -7,7 +7,7 @@ public class ChargeAssetProbe {
   if(imageType.getMethod("getData").invoke(image)==null)throw new AssertionError("particle decode");imageType.getMethod("dispose").invoke(image);
   Class<?> node=Class.forName("zombie.core.skinnedmodel.advancedanimation.AnimNode");
   var paths=new java.util.ArrayList<String>();paths.add("actions/ProjectYakuza_DD_ChargeLoop.xml");paths.add("melee/ProjectYakuza_DD_ChargeEnd.xml");
-  for(int i=1;i<=4;i++){paths.add("actions/ProjectYakuza_DD_ChargeWindup0"+i+".xml");paths.add("melee/ProjectYakuza_DD_ChargedFinisher0"+i+".xml");}
+  for(int i=1;i<=4;i++){paths.add("actions/ProjectYakuza_DD_ChargeWindup0"+i+".xml");paths.add("actions/ProjectYakuza_DD_ChargeHold0"+i+".xml");paths.add("melee/ProjectYakuza_DD_ChargedFinisher0"+i+".xml");}
   for(String path:paths) {
    Path p=media.resolve("AnimSets/player").resolve(path);Document d=DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(p.toFile());
    if(node.getMethod("Parse",String.class).invoke(null,p.toAbsolutePath().toString())==null)throw new AssertionError("node parse");
@@ -15,6 +15,6 @@ public class ChargeAssetProbe {
    for(int i=0;i<events.getLength();i++){var e=(Element)events.item(i);if(e.getElementsByTagName("m_EventName").item(0).getTextContent().equals("AttackCollisionCheck"))collisions++;}
    if(collisions!=(path.startsWith("melee")?1:0))throw new AssertionError("collision count "+path);
   }
-  System.out.println("PASS original 16x32 spark native decode; 10 native charge nodes parse, every release has one collision and all holds have zero");
+  System.out.println("PASS original 16x32 spark native decode; 14 native charge nodes parse, every release has one collision and all holds have zero");
  }
 }

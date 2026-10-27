@@ -1,109 +1,173 @@
 {
-  "operation": "Retarget supplied original finisher frames to native B42 skeleton, then split wind-up/release at the same source pose. No invented poses, generated motion or interpolation beyond native playback. Horizontal root motion removed; native fist tracks retained. Non-looping wind-up holds its final pose until release.",
+  "operation": "Source BEP type-206 charge markers define the splits. Original motion samples retargeted to B42; the hold clip repeats that same source pose at two native key times to keep it active. No new poses or interpolated motion frames are authored.",
   "clips": [
     {
       "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_SUD_ath_01_fin_md.gmt",
       "source_sha256": "f80f5ea3e54726d80afb7164379858769a46226ed7651baf694e8767f01b58ab",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_ChargeWindup01.x",
-      "sha256": "8358eb7bd8eccc2f30522acce3e08284c185e8577eac485b37426fc78eed9457",
+      "sha256": "1ae9ff471dc9f818ec719b688154c2c8197ae726b869787d7390df8583b4745c",
       "source_frames": [
         0,
-        10
+        6
       ],
       "fps": 30,
-      "duration": 0.3333333333333333,
+      "duration": 0.2,
+      "held_source_pose": false,
+      "contact_frame": null
+    },
+    {
+      "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_SUD_ath_01_fin_md.gmt",
+      "source_sha256": "f80f5ea3e54726d80afb7164379858769a46226ed7651baf694e8767f01b58ab",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_ChargeHold01.x",
+      "sha256": "226e76d900fcd8fdc4dd9d785e882621645a73bc1164983c8641e7a07f3e65d2",
+      "source_frames": [
+        6,
+        6
+      ],
+      "fps": 30,
+      "duration": 0.03333333333333333,
+      "held_source_pose": true,
       "contact_frame": null
     },
     {
       "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_SUD_ath_01_fin_md.gmt",
       "source_sha256": "f80f5ea3e54726d80afb7164379858769a46226ed7651baf694e8767f01b58ab",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_ChargedFinisher01.x",
-      "sha256": "97d13e33c809e7239fc52c93ea5930cacdaea345903a8d10f9430742280cf2e9",
+      "sha256": "a865549da00def73258999d47ea1b8bcf33978459765206529a21510286924ed",
       "source_frames": [
-        10,
+        6,
         57
       ],
       "fps": 30,
-      "duration": 1.5666666666666667,
-      "contact_frame": 6
+      "duration": 1.7,
+      "held_source_pose": false,
+      "contact_frame": 12
     },
     {
       "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_SUD_ath_02_fin_md.gmt",
       "source_sha256": "7307766ec417ca6014c70c33c06929ab901e6dbf30b08524d56c8c69a42801b2",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_ChargeWindup02.x",
-      "sha256": "72460e8a437732fcc86e7f5984ce51998b2c77835ab8d0c972950029f304d2dd",
+      "sha256": "5285871a36957ada896e310ad08052f5aa9e710119c80ae3e0d6c4027df0026e",
       "source_frames": [
         0,
-        16
+        7
       ],
       "fps": 30,
-      "duration": 0.5333333333333333,
+      "duration": 0.23333333333333334,
+      "held_source_pose": false,
+      "contact_frame": null
+    },
+    {
+      "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_SUD_ath_02_fin_md.gmt",
+      "source_sha256": "7307766ec417ca6014c70c33c06929ab901e6dbf30b08524d56c8c69a42801b2",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_ChargeHold02.x",
+      "sha256": "5532b8b83ec8724cfbefc6ff053f50c7c98f1193ea786fe54bf8c00e1e641198",
+      "source_frames": [
+        7,
+        7
+      ],
+      "fps": 30,
+      "duration": 0.03333333333333333,
+      "held_source_pose": true,
       "contact_frame": null
     },
     {
       "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_SUD_ath_02_fin_md.gmt",
       "source_sha256": "7307766ec417ca6014c70c33c06929ab901e6dbf30b08524d56c8c69a42801b2",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_ChargedFinisher02.x",
-      "sha256": "a846101d4ac0e50833cd9c3084b75b358887f66b9ca06ac28955a87ddd249309",
+      "sha256": "6548b6fa0c86e88dcb8b3aa74d46876fc568fe750129f4b0a7bd1e5c598bc4b7",
       "source_frames": [
-        16,
+        7,
         53
       ],
       "fps": 30,
-      "duration": 1.2333333333333334,
-      "contact_frame": 8
+      "duration": 1.5333333333333334,
+      "held_source_pose": false,
+      "contact_frame": 12
     },
     {
       "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_SUD_ath_03_fin_md.gmt",
       "source_sha256": "8905621ce388dde26f84fa145c0b608594e494ba1a34a76c6de45de88f884d9f",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_ChargeWindup03.x",
-      "sha256": "15d24cf4509d9dd5e7160844ce24983a6b4e9bbbcf276b445c0557250633747c",
+      "sha256": "a5aac0c149fb327445d65459d8aa832e785d3bbf9b754d6830c10d67d6d4183a",
       "source_frames": [
         0,
-        12
+        6
       ],
       "fps": 30,
-      "duration": 0.4,
+      "duration": 0.2,
+      "held_source_pose": false,
+      "contact_frame": null
+    },
+    {
+      "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_SUD_ath_03_fin_md.gmt",
+      "source_sha256": "8905621ce388dde26f84fa145c0b608594e494ba1a34a76c6de45de88f884d9f",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_ChargeHold03.x",
+      "sha256": "e0e1beac04a085c8168a644e0d59f8701ea6840327e566492582c6debce5e7da",
+      "source_frames": [
+        6,
+        6
+      ],
+      "fps": 30,
+      "duration": 0.03333333333333333,
+      "held_source_pose": true,
       "contact_frame": null
     },
     {
       "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_SUD_ath_03_fin_md.gmt",
       "source_sha256": "8905621ce388dde26f84fa145c0b608594e494ba1a34a76c6de45de88f884d9f",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_ChargedFinisher03.x",
-      "sha256": "8676121fdba96e7f236117f67f05ba1fac3a69392ddbff0be12ea9bd929e58d9",
+      "sha256": "c5f3874539594b944c723cc7b93b51a9b2441753a4012732a7f0d41f2a7cbc50",
       "source_frames": [
-        12,
+        6,
         61
       ],
       "fps": 30,
-      "duration": 1.6333333333333333,
-      "contact_frame": 8
+      "duration": 1.8333333333333333,
+      "held_source_pose": false,
+      "contact_frame": 9
     },
     {
       "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_SUD_ath_04_fin_md.gmt",
       "source_sha256": "e63393318090be9767e11c0ff359877501949ef34b7248dd501310b74144254f",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_ChargeWindup04.x",
-      "sha256": "703feffc9c6c0ddee2172405576d01c4eeabfcff8b71ae0088a5f74111c4e588",
+      "sha256": "31415b096e5426d9a327ddbab1ef5270d6a6adf12e35a8d64410d7e490f0fc9d",
       "source_frames": [
         0,
-        16
+        5
       ],
       "fps": 30,
-      "duration": 0.5333333333333333,
+      "duration": 0.16666666666666666,
+      "held_source_pose": false,
+      "contact_frame": null
+    },
+    {
+      "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_SUD_ath_04_fin_md.gmt",
+      "source_sha256": "e63393318090be9767e11c0ff359877501949ef34b7248dd501310b74144254f",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_ChargeHold04.x",
+      "sha256": "7862b893930e761374ca72dddf8fe4d7b3a0c40f2bfb0f623f8869bfeb7c1505",
+      "source_frames": [
+        5,
+        5
+      ],
+      "fps": 30,
+      "duration": 0.03333333333333333,
+      "held_source_pose": true,
       "contact_frame": null
     },
     {
       "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_SUD_ath_04_fin_md.gmt",
       "source_sha256": "e63393318090be9767e11c0ff359877501949ef34b7248dd501310b74144254f",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_ChargedFinisher04.x",
-      "sha256": "aac404733be4606d6d070e59957dd4aa34c348b914330520c15859076895c42c",
+      "sha256": "4547e1454d730cfe8b5ccc777168130a6233b4d47976dd46b32d31c77c4f83d8",
       "source_frames": [
-        16,
+        5,
         60
       ],
       "fps": 30,
-      "duration": 1.4666666666666666,
-      "contact_frame": 8
+      "duration": 1.8333333333333333,
+      "held_source_pose": false,
+      "contact_frame": 13
     }
   ]
 }

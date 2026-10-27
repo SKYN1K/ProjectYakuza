@@ -1,7 +1,7 @@
 ProjectYakuza = ProjectYakuza or {}
 local ProjectYakuza = ProjectYakuza
 ProjectYakuza.FEATURES={grab=false}
-ProjectYakuza.VERSION = "0.32.1"
+ProjectYakuza.VERSION = "0.33.0"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -44,6 +44,7 @@ function ProjectYakuza.validateStyle(style)
     local function move(value,path,light)
         if type(value)~="table" then problem(path.." must be a table");return end
         if not text(value.animation) then problem(path..".animation is required") end
+        if value.holdAnimation~=nil and not text(value.holdAnimation) then problem(path..".holdAnimation must name a native clip") end
         if light and not text(value.nodeValue) then problem(path..".nodeValue is required") end
         if light or value.duration~=nil then
             if not number(value.duration) or value.duration<=0 then problem(path..".duration must be positive seconds") end
@@ -52,7 +53,7 @@ function ProjectYakuza.validateStyle(style)
             local v=value[key];if v~=nil and (not number(v) or v<0 or v>1) then problem(path.."."..key.." must be 0..1") end
         end
         if value.damageMultiplier~=nil and (not number(value.damageMultiplier) or value.damageMultiplier<0) then problem(path..".damageMultiplier must be nonnegative") end
-        for _,key in ipairs({"heatCost","heatStocks","distance","cooldownMs","windowMs","holdMs","minChargeMs"}) do
+        for _,key in ipairs({"heatCost","heatStocks","distance","cooldownMs","windowMs","holdMs","minChargeMs","windupMs","maxHoldMs"}) do
             if value[key]~=nil and (not number(value[key]) or value[key]<0) then problem(path.."."..key.." must be nonnegative") end
         end
         if value.afterLight~=nil and (not number(value.afterLight) or value.afterLight<1 or value.afterLight~=math.floor(value.afterLight) or (type(style.lightAttacks)=="table" and value.afterLight>#style.lightAttacks)) then problem(path..".afterLight must index lightAttacks") end
