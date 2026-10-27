@@ -165,7 +165,7 @@ local normalInstances={};local normalSprites={}
 for i,e in ipairs(s.emitters) do normalInstances[i]=e.instance;normalSprites[i]=e.sprite end
 local oldOpacity=s.opacity
 extreme=true;A.update(p);drawLog={};clock=clock+350;A.render()
-check(s.extreme and s.profile=='extreme' and #s.emitters==4,'Extreme Heat exclusively selects a four-patch replacement profile')
+check(s.extreme and s.profile=='extreme' and #s.emitters==4,'Extreme Heat exclusively selects four original Y6 flame patches')
 check(s.opacity==oldOpacity,'switching aura profile preserves completed fade without blinking')
 for i,e in ipairs(s.emitters) do
  local point=A.extremeLayout[i];local normal=A.layout[i]
@@ -173,16 +173,20 @@ for i,e in ipairs(s.emitters) do
  local width=point.kind=='flame' and 32 or 64
  check(point.frameHeight*point.scale<=256*normal.scale and width*point.scale<=128*normal.scale and point.height>=38,'new original particles fit within former upper-body patch size')
  check(e.sprite.path=='media/textures/ProjectYakuza/ExtremeHeat' and e.sprite~=normalSprites[i],'replacement never uses the old blurred HeatWisp sequences')
- check(e.instance.frames==(point.frames>1 and 1 or 0),'original atlas advances once; static native wisps do not fake animation frames')
+ check(point.kind=='flame' and e.frames==64 and e.instance.frames==1,'all four patches animate original flame frames exactly once')
+ check(64/(point.speed*60)<.85 and 64/(point.speed*60)>.55,'flame loops are substantially faster at roughly .6-.8 seconds')
 end
-check(#drawLog==4,'Extreme Heat renders only four transparent particles with no continuous additive pass')
+check(#drawLog==4,'Extreme Heat renders four base flame particles without a second bloom/cloud pass')
 for _,draw in ipairs(drawLog) do
  for _,normal in ipairs(normalInstances) do check(draw.instance~=normal,'no normal-heat instance is drawn during Extreme Heat') end
- check(not draw.additive and draw.alpha<=.22 and draw.alpha>0,'replacement is low-opacity standard alpha blending')
- check(draw.color==A.extremeColor and draw.color.r==.22 and draw.color.g==.54 and draw.color.b==.78,'replacement has restrained blue tint without near-white exposure')
+ check(draw.additive and draw.alpha<=.48 and draw.alpha>0,'black-backed original Y6 flames use scoped additive rendering at bounded opacity')
+ check(draw.color==A.extremeColor and draw.color.r==.08 and draw.color.g==.38 and draw.color.b==1,'flames use a saturated blue tint instead of near-white exposure')
  check(draw.dir==IsoDirections.N,'all player facings share the same world renderer path')
 end
 check(not additive,'Extreme Heat does not change renderer blend state')
+s.emitters[1].instance.fail=true;ok=pcall(A.render)
+check(not ok and not additive,'failed Extreme Heat flame rendering restores the previous blend state')
+s.emitters[1].instance.fail=false
 local driftX,driftY=drawLog[1].ox,drawLog[1].oy
 clock=clock+160;drawLog={};A.render()
 check(drawLog[1].ox~=driftX or drawLog[1].oy~=driftY,'original static wisps move gently in world space')

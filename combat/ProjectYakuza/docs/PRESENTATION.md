@@ -28,7 +28,7 @@ Optional CVF resolves the selected character voice. Reserved ProjectYakuza IDs: 
 
 CombatStanceEntry belongs to actual styleEntryStarted, not RMB aiming. Taunt/activation cues belong to actual action start. Custom moves can call CombatVoices.play(player,id) for an appropriate existing cue; do not duplicate a cue already subscribed to an event. See [CVF](CVF_COMBAT_VOICES.md) and its template. The separate voice-pack project is not modified.
 
-Extreme Heat replaces normal heat with original Lost Judgment flame/wisp particles. Opacity is 12-22%, tint is muted blue and there is no continuous additive bloom. Original atlas cells animate directly; static source wisps drift gently in world space. The character's upper-body coverage stays bounded. Normal aura remains separate and returns only when eligible. See [replacement profile](EXTREME_HEAT_AURA.md).
+Extreme Heat replaces normal heat with four original Yakuza 6 blue flame sequences, looping in roughly .6-.8 seconds. Their black-backed RGBA source uses one scoped additive world pass, with no static wisp/cloud or separate bloom layer. Tint/opacity are runtime code; original atlas pixels are unchanged. Upper-body bounds, fade-in, pause and mode cleanup remain in place. Normal aura returns only when eligible. See [flame profile](EXTREME_HEAT_AURA.md).
 
 ## Custom style UI
 

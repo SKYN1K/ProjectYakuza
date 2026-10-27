@@ -11,13 +11,14 @@ A.layout={
     {x=6.9,height=38.3,kind="c",speed=1.04,scale=0.207},
     {x=0,height=52.6,kind="b",speed=0.98,scale=0.1656},
 }
--- Original Lost Judgment DDS pixels: thin wisps plus native atlas flames.
--- Low-opacity alpha blending only; no continuous bloom or large cloud layer.
+-- Original Yakuza 6 RGBA flame atlas. Its black-backed RGB requires additive
+-- blending; ordinary alpha blending would draw a dark rectangle.
+-- Four fast upper-body flames, without static wisps or a broad bloom layer.
 A.extremeLayout={
-    {x=-2,height=40,kind="wispL",frames=1,frameHeight=128,speed=0,scale=.30,alpha=.15,drift=.8,lift=.8},
-    {x=-8,height=39,kind="flame",frames=64,frameHeight=32,speed=64/(2.6*60),scale=.70,alpha=.22,drift=.6,lift=1.2},
-    {x=8,height=40,kind="flame",frames=64,frameHeight=32,speed=64/(2.9*60),scale=.70,alpha=.20,drift=.6,lift=1},
-    {x=2,height=52.6,kind="wispR",frames=1,frameHeight=128,speed=0,scale=.19,alpha=.12,drift=.5,lift=.6},
+    {x=0,height=39.6,kind="flame",frames=64,frameHeight=32,speed=64/(.65*60),scale=.95,alpha=.48,drift=.6,lift=1.2},
+    {x=-6.9,height=38.3,kind="flame",frames=64,frameHeight=32,speed=64/(.73*60),scale=.80,alpha=.42,drift=.5,lift=1},
+    {x=6.9,height=38.3,kind="flame",frames=64,frameHeight=32,speed=64/(.81*60),scale=.80,alpha=.44,drift=.5,lift=1.1},
+    {x=0,height=52.6,kind="flame",frames=64,frameHeight=32,speed=64/(.59*60),scale=.65,alpha=.36,drift=.4,lift=.8},
 }
 A.flashLayout={
     {kind="wispL",x=-7,height=40,scale=.30,frameHeight=128,drift=-2,lift=5,alpha=.22},
@@ -86,7 +87,7 @@ function A.draw(p,s,additive,flashStrength)
                 dy=e.point.lift*math.sin(phase*.9)
             end
             if flashStrength then alpha=alpha*flashStrength end
-            -- Original atlas frames advance once; single wisps move gently in world space.
+            -- Advance once, including the base additive flame pass; flashes do not double-step.
             if not additive and not flashStrength and not isGamePaused() and e.frames>1 then e.sprite:update(e.instance) end
             if e.opacity~=alpha then e.instance:SetAlpha(alpha);e.instance:SetTargetAlpha(alpha);e.opacity=alpha end
             e.instance:render(p,p:getX(),p:getY(),p:getZ(),IsoDirections.N,
@@ -98,7 +99,7 @@ function A.render()
     -- One native world-render path for every facing; never use character-direction rendering.
     if not A.color then
         A.color=ColorInfo.new(1,1,1,1)
-        A.extremeColor=ColorInfo.new(.22,.54,.78,1)
+        A.extremeColor=ColorInfo.new(.08,.38,1,1)
     end
     for p,s in pairs(A.states) do
     if not p:isDead() and s.fadeElapsed then
@@ -123,7 +124,13 @@ function A.render()
         A.clear(p)
     else
     if ProjectYakuza.HeatOutline then ProjectYakuza.HeatOutline.draw(p) end
-    A.draw(p,s,false)
+    if s.extreme then
+        local renderer=SpriteRenderer.instance;local previous=renderer:getDoAdditive()
+        renderer:setDoAdditive(true)
+        local ok,err=pcall(A.draw,p,s,false)
+        renderer:setDoAdditive(previous)
+        if not ok then error(err) end
+    else A.draw(p,s,false) end
     local strength=flash and flash.remaining>0 and A.flashStrength*math.sin(math.pi*(1-flash.remaining/A.flashMs)) or 0
     if strength>0.002 or (flash and flash.remaining>0) then
         local renderer=SpriteRenderer.instance;local previous=renderer:getDoAdditive()
