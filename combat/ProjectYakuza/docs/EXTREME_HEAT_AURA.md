@@ -7,3 +7,7 @@ Two low emitters use the supplied e_f_0014_roop_smoke01.dds atlas, split into it
 The 350 ms appearance fade, pause handling, cached sprites, world anchoring for every facing and MP heat-state replication remain active. Leaving Extreme Heat releases all six instances and restores the four normal emitters. Render state is restored on success or failure. No new gameplay/protection, audio, camera or voice changes are introduced.
 
 All texture files are exact original DDS decodes/crops: no resize, alpha repainting, compositing, generated frames or upscaling. Source hashes, crop rectangles and output hashes are recorded in extreme-heat-assets.json and extreme-smoke-assets.json. B42 ImageData decodes all 130 aura images. See [validation](VALIDATION_0.32.0.md); live GPU appearance still requires in-game viewing.
+
+## 0.32.1 loader and activation correction
+
+Animated pages follow native `LoadFramesNoDirPageDirect(prefix,kind,count)` naming: `prefix_kind_0.png` through `prefix_kind_<count-1>.png`. This applies to normal aura, Extreme Heat flame/smoke and taunt bursts. Export/decode checks alone do not verify native path resolution; run validate_effect_loader_paths.py too. Extreme Heat fire/smoke now begin during the actual started activation action, continue into fuel mode, and restore/clear on interruption or observer clip exit. The HUD uses a protected normal-alpha pass with purple glow behind the solid orb artwork.

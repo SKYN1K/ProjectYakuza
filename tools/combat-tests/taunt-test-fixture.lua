@@ -206,4 +206,25 @@ check(not s.emitters[1].instance,'remote taunt playback alone has no flash')
 A.flash(p);check(s.flashing and s.emitters[1].instance,'replicated completion triggers observer flash')
 clock=clock+261;A.render();check(not s.emitters[1].instance,'remote completion glow expires at zero heat')
 p.localPlayer=true
+-- Activation uses the actual started native action, before fuel mode starts.
+ProjectYakuza.HeatActivation={active={}}
+ProjectYakuza.setHeat(p,0);extreme=false
+local activation={started=true,cleaned=false};ProjectYakuza.HeatActivation.active[p]=activation
+ProjectYakuza.emit('heatActivationStarted',p)
+check(A.states[p].activating and A.states[p].extreme and #A.states[p].emitters==6,'native activation immediately selects fire/smoke even before Extreme Heat fuel starts')
+clock=clock+350;drawLog={};A.render()
+check(#drawLog==6 and A.states[p].opacity==1,'activation fire and smoke render after normal fade in')
+local activationSprites={};for i,e in ipairs(A.states[p].emitters)do activationSprites[i]=e.instance end
+extreme=true;activation.cleaned=true;ProjectYakuza.emit('extremeHeatStarted',p)
+check(not A.states[p].activating and A.states[p].extreme,'activation hands over to active mode')
+local reused=true;for i,e in ipairs(A.states[p].emitters)do if e.instance~=activationSprites[i]then reused=false end end
+check(reused,'activation-to-mode transition reuses particles without a disappearance')
+extreme=false;ProjectYakuza.emit('heatActivationStopped',p,false)
+check(not A.states[p].emitters[1].instance,'interrupted/ended activation clears particles when no heat remains')
+ProjectYakuza.HeatActivation.active[p]=nil
+p.localPlayer=false;p:setVariable('ProjectYakuzaRemoteClip','ProjectYakuza_DD_HeatActivate02');A.update(p)
+check(A.states[p].activating and #A.states[p].emitters==6,'remote activation observer clip also selects the six-particle profile')
+p:setVariable('ProjectYakuzaRemoteClip','');A.update(p)
+check(not A.states[p].emitters[1].instance,'remote activation clip ending clears zero-heat effects')
+p.localPlayer=true
 return 'PASS '..checks..' taunt lifecycle, input, heat, world aura and MP checks'

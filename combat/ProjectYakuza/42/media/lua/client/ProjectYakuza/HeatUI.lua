@@ -50,6 +50,15 @@ function H:prerender()
     if not p or p:isDead() or not ProjectYakuza.isEquipped(p) then ProjectYakuza.StyleUI.releaseAll(self);return end
     if ProjectYakuza.StyleUI.render("heat",p,self) then return end
     if ProjectYakuza.getPlayerStyle(p).heatHud~="yakuza6" or not ProjectYakuza.Heat.enabled(p) then return end
+    -- World/addon renderers may leave additive mode selected. Dark atlas pixels
+    -- need ordinary alpha blending, otherwise black orb cores become see-through.
+    local renderer=SpriteRenderer.instance;local previous=renderer:getDoAdditive()
+    renderer:setDoAdditive(false)
+    local ok,err=pcall(self.drawGauge,self,p)
+    renderer:setDoAdditive(previous)
+    if not ok then error(err) end
+end
+function H:drawGauge(p)
     local time=getTimestampMs()
     if time>=(self.nextRead or 0) then
         self.heat=math.max(0,math.min(100,ProjectYakuza.Heat.display(p)))
@@ -71,6 +80,20 @@ function H:prerender()
         self.visualHeat=self.fillFrom+(self.fillTarget-self.fillFrom)*t*t*(3-2*t)
     end
     local phase=self.frame or 0;local a=H.loadAssets()
+    -- Glow belongs behind the opaque orb cores, frames and serpent artwork.
+    self.glowState=self.extreme and "extreme" or (self.heat>=99.999 and "ready" or "none")
+    local glowAlpha
+    if self.extreme then glowAlpha=.38+.06*math.sin(phase*.4)
+    elseif self.heat>=99.999 then glowAlpha=.10+.025*math.sin(phase*.2) end
+    if glowAlpha then
+        local renderer=SpriteRenderer.instance
+        local previous=renderer:getDoAdditive()
+        renderer:setDoAdditive(false)
+        self:drawOriginal(a.glow,-102,-114,234,212,glowAlpha,nil,self.extreme and H.extremeGlowColor or H.glowColor,true)
+        self:drawOriginal(a.glowLink,132,-45.5,78,137,glowAlpha,nil,self.extreme and H.extremeGlowColor or H.glowColor,true)
+        self:drawOriginal(a.glowTail,210,-46.5,120,137,glowAlpha,nil,self.extreme and H.extremeGlowColor or H.glowColor,true)
+        renderer:setDoAdditive(previous)
+    end
     self:drawOriginal(a.glass,-34,-34,68,68)
     self:drawFill(a.core,-34,-34,68,self.visualHeat/100,.8)
     -- Preserve the original glass highlight above the moving energy crop.
@@ -98,19 +121,6 @@ function H:prerender()
             self:drawFill(a.core,centers[i]-14.5,10.5,29,fraction,.9)
             if fraction>0 then self:drawOriginal(a.stockGlass,x,y,37,37,.4) end
         end
-    end
-    self.glowState=self.extreme and "extreme" or (self.heat>=99.999 and "ready" or "none")
-    local glowAlpha
-    if self.extreme then glowAlpha=.38+.06*math.sin(phase*.4)
-    elseif self.heat>=99.999 then glowAlpha=.10+.025*math.sin(phase*.2) end
-    if glowAlpha then
-        local renderer=SpriteRenderer.instance
-        local previous=renderer:getDoAdditive()
-        renderer:setDoAdditive(false)
-        self:drawOriginal(a.glow,-102,-114,234,212,glowAlpha,nil,self.extreme and H.extremeGlowColor or H.glowColor,true)
-        self:drawOriginal(a.glowLink,132,-45.5,78,137,glowAlpha,nil,self.extreme and H.extremeGlowColor or H.glowColor,true)
-        self:drawOriginal(a.glowTail,210,-46.5,120,137,glowAlpha,nil,self.extreme and H.extremeGlowColor or H.glowColor,true)
-        renderer:setDoAdditive(previous)
     end
     self:drawOriginal(self.extreme and a.extremeBody or a.body,-64,-69,118,138)
     self:drawOriginal(a.kanji,-34,-34,68,68,1,a.combat)

@@ -1,11 +1,11 @@
-# Project Yakuza 0.32.0
+# Project Yakuza 0.32.1
 
-- Each of the four first finishers now charges in its own original wind-up and releases into its matching strike. The eight clips use exact frame splits/retargets of supplied Kiryu motions; no poses or animation frames were generated. Neutral charged heavy remains available.
-- Second finishers are unchargeable: a fresh press queues the ordinary follow-up immediately. Charged first finishers can still flow into their matching second finishers. Tickets bind each charged release to its branch; source contact/link markers are preserved and rebased.
-- Extreme Heat now has a more purple-blue flame/outline hue and two low animated smoke emitters around the legs, using the original Yakuza 6 smoke atlas. Regular heat retains its existing layout.
-- Extreme Heat HUD uses the supplied atlas's original dark dragon, orb rings/glasses, connectors and tail with purple-blue original glow pieces. All six stock orbs remain dark during mode; normal artwork/fills return afterward.
-- No visual/audio asset was generated or upscaled. Grabs remain disabled and the separate voice pack was untouched. New owner/observer clips use the existing MP protocol.
+- Fixed invisible Extreme Heat and taunt burst textures: native B42 LoadFramesNoDirPageDirect expects prefix_kind_frame.png. The 130 Extreme Heat and three taunt-burst PNGs were missing the underscore after the prefix. Filenames and provenance records are corrected; every original pixel/file byte is unchanged.
+- Fire and smoke now begin when the actual Extreme Heat activation animation starts, then continue into active mode without recreating/disappearing particles. Interrupted and remote activation states clean up correctly.
+- Fixed the Extreme Heat orb row: all built-in HUD layers now use normal alpha blending, isolated from a world/addon renderer's incoming additive state. Purple glow is drawn behind the solid orb/frame/serpent layers. Previous renderer state is restored after both success and failure.
+- New filename-contract checks cover all 229 aura/burst frames. Earlier image-decode checks did not catch the loader filename mismatch; the new check prevents that regression.
+- No visual/audio asset was generated, repainted, upscaled or otherwise changed. Combat, damage, animations, heat rules and the separate voice pack are untouched.
 
 ## Validation
 
-Offline Kahlua tests, native B42 clip import/node selection/texture decode and original-pixel/hash checks pass. Native split-pose checks verify every wind-up endpoint matches its release start. PZ was not launched, so final GPU appearance and live input/MP still need gameplay verification. See [validation](VALIDATION_0.32.0.md). Installation backs up only changed files and verifies all installed bytes.
+3,006 targeted Kahlua assertions pass, all 37 production Lua files compile, 130 aura images decode natively, and loader-path/source-pixel/provenance checks pass. All 451 shipped animation/image/audio file contents retain v0.32.0 bytes, including renamed textures. PZ was not launched; final GPU/live MP verification remains pending. See [validation](VALIDATION_0.32.1.md).

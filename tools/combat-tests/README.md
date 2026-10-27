@@ -38,7 +38,7 @@ One-strike quicksteps: build_quickstep_once_tests.py embeds production modules i
 ## API 3 charged heavy and style UI
 
 Run `python tools/combat-tests/build_charged_ui_tests.py` from the repository root,
-then `LuaRunner charged-ui-tests.lua` from this directory. Its 127 checks embed
+then `LuaRunner charged-ui-tests.lua` from this directory. Its 132 checks embed
 production Registry/Combo/Bindings/Runtime/ChargedHeavy/StyleUI/HeatOutline/
 WorldEffects/ChargeEffects/HitEffects. They cover tap/double release, Tiger Drop
 priority, lock/anchor/restoration, pause, interruption, queue rejection, exactly
@@ -55,3 +55,5 @@ operations are recorded in `combat/ProjectYakuza/docs/charged-heavy-assets.json`
 GPU appearance/live MP still require a separate authorized gameplay test.
 
 For 0.32.0 original assets, run `python tools/combat-tests/validate_finisher_reference_assets.py --hud-dds <supplied btl_hact.dds>` from the repository root. It validates all eight split-motion hashes/ranges and identical handover poses across 105 native channels per branch, all 64 original smoke crops, and the unchanged original HUD atlas/crop bounds. NativeAuraTextureProbe now checks all 130 aura PNGs; ChargeAssetProbe checks ten hold/release nodes and exactly one collision per strike.
+
+Run `python tools/combat-tests/validate_effect_loader_paths.py` from the root after any animated texture export. It checks native IsoAnim naming recipes and resolves all 229 aura/burst filenames. This prevents exported PNGs passing decoder tests while remaining invisible through the native loader. No game JAR is changed or game launched.

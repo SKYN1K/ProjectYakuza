@@ -40,5 +40,6 @@
       92,
       62
     ]
-  }
+  },
+  "rendering": "All built-in HUD artwork uses a protected normal-alpha pass; incoming additive state is restored even after errors. Original purple glow is drawn behind the solid orb/ring/connector layers."
 }

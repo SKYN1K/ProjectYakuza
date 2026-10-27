@@ -219,7 +219,8 @@ function ISPanel:derive()local c={};c.__index=c;setmetatable(c,{__index=self});r
 function ISPanel:new(x,y,width,height)return setmetatable({x=x,y=y,width=width,height=height},self)end
 function ISPanel:initialise()end;function ISPanel:setWantMouseEvents()end;function ISPanel:addToUIManager()end
 function ISPanel:drawSubTexture(texture,sx,sy,sw,sh,x,y,w,h,alpha,r,g,b)
- hudDraws[#hudDraws+1]={source={sx,sy,sw,sh},alpha=alpha,r=r,g=g,b=b,path=texture.path}
+ if self.failDraw then error('intentional native HUD draw failure') end
+ hudDraws[#hudDraws+1]={source={sx,sy,sw,sh},alpha=alpha,r=r,g=g,b=b,path=texture.path,additive=additive}
 end
 function ISPanel:drawText()end
 getSpecificPlayer=function()return p end;UIFont={Small=1}
@@ -243,6 +244,22 @@ for _,d in ipairs(hudDraws) do
  if d.source[1]==266 and d.alpha==.9 then stockFills=stockFills+1 end
 end
 check(colored and stockFills==0,'original glow is purple-blue and six stock orbs stay dark during mode')
+-- A world renderer's incoming blend state cannot make dark cores transparent.
+additive=true;hudDraws={};HUD.instance:prerender()
+local alphaOnly=true;local solidCores=0;local glowIndex,ringIndex
+for index,d in ipairs(hudDraws) do
+ if d.additive then alphaOnly=false end
+ if d.source[1]==0 and d.source[2]==300 then glowIndex=index end
+ if d.source[1]==38 and d.source[2]==0 then ringIndex=ringIndex or index end
+ if (d.source[1]==38 or d.source[1]==114) and d.source[2]==0 and d.alpha==1 then solidCores=solidCores+1 end
+end
+check(alphaOnly,'incoming additive blend state never reaches built-in HUD texture draws')
+check(additive,'successful HUD rendering restores incoming renderer state')
+check(solidCores==12,'six dark rings and six dark glass pieces render at full opacity')
+check(glowIndex and ringIndex and glowIndex<ringIndex,'purple glow renders behind the dark orb row')
+HUD.instance.failDraw=true;local renderedOK=pcall(HUD.instance.prerender,HUD.instance)
+check(not renderedOK and additive,'native HUD drawing failure also restores incoming blend state')
+HUD.instance.failDraw=nil;additive=false
 local phase=HUD.instance.frame;paused=true;clock=clock+1000;HUD.instance:prerender();paused=false
 check(HUD.instance.frame==phase,'Extreme Heat HUD glow animation pauses')
 extremeHud=false;clock=clock+101;hudDraws={};HUD.instance:prerender()

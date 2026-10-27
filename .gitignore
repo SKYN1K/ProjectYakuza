@@ -44,3 +44,4 @@
 !/tools/combat-tests/ChargeAssetProbe.java
 !/tools/combat-tests/OutlineProbe.java
 !/tools/combat-tests/validate_finisher_reference_assets.py
+!/tools/combat-tests/validate_effect_loader_paths.py

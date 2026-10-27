@@ -168,18 +168,25 @@ function A.clear(player)
     s.fadeElapsed=nil;s.fadeLast=nil;s.opacity=nil
     A.syncRenderHook()
 end
+function A.isActivating(player)
+    local activation=ProjectYakuza.HeatActivation and ProjectYakuza.HeatActivation.active and ProjectYakuza.HeatActivation.active[player]
+    if activation and activation.started and not activation.cleaned then return true end
+    local clip=player:GetVariable("ProjectYakuzaRemoteClip") or ""
+    return not player:isLocalPlayer() and string.match(clip,"^ProjectYakuza_DD_HeatActivate0[1-4]$")~=nil
+end
 function A.update(player)
     if not player or not instanceof(player,"IsoPlayer") then return end
     local flashing=A.flashes[player]~=nil
+    local activating=A.isActivating(player)
     local wanted=not player:isDead() and ProjectYakuza.isEquipped(player) and not player:getVehicle()
         and ProjectYakuza.getPlayerStyle(player).heatAura=="kiryu" and ProjectYakuza.Heat.enabled(player)
         and not player:getModData().ProjectYakuzaHeatAuraDisabled
-        and (flashing or ProjectYakuza.Heat.stocks(player)>=1 or (ProjectYakuza.Heat.isExtreme(player) and ProjectYakuza.Heat.display(player)>0))
+        and (activating or flashing or ProjectYakuza.Heat.stocks(player)>=1 or (ProjectYakuza.Heat.isExtreme(player) and ProjectYakuza.Heat.display(player)>0))
     if not wanted then A.clear(player);return end
     local s=A.states[player]
     if not s then s={emitters={}};A.states[player]=s end
-    s.flashing=flashing;s.extreme=ProjectYakuza.Heat.isExtreme(player)
-    if ProjectYakuza.HeatOutline then ProjectYakuza.HeatOutline.update(player,s.extreme) end
+    s.flashing=flashing;s.activating=activating;s.extreme=activating or ProjectYakuza.Heat.isExtreme(player)
+    if ProjectYakuza.HeatOutline then ProjectYakuza.HeatOutline.update(player,ProjectYakuza.Heat.isExtreme(player)) end
     local profile=s.extreme and "extreme" or "normal"
     local fresh=not s.emitters[1] or not s.emitters[1].instance
     if not fresh and s.profile~=profile then
@@ -229,6 +236,8 @@ end
 ProjectYakuza.on("heatChanged",A.update)
 ProjectYakuza.on("extremeHeatStarted",A.update)
 ProjectYakuza.on("extremeHeatEnded",A.update)
+ProjectYakuza.on("heatActivationStarted",A.update)
+ProjectYakuza.on("heatActivationStopped",A.update)
 ProjectYakuza.on("styleChanged",A.update)
 ProjectYakuza.on("tauntStopped",function(p,completed)if completed then A.flash(p) end end)
 Events.OnSave.Add(A.clearAll)

@@ -39,7 +39,7 @@
         32,
         32
       ],
-      "output": "ExtremeHeatflame_0.png",
+      "output": "ExtremeHeat_flame_0.png",
       "size": [
         32,
         32
@@ -55,7 +55,7 @@
         64,
         32
       ],
-      "output": "ExtremeHeatflame_1.png",
+      "output": "ExtremeHeat_flame_1.png",
       "size": [
         32,
         32
@@ -71,7 +71,7 @@
         96,
         32
       ],
-      "output": "ExtremeHeatflame_2.png",
+      "output": "ExtremeHeat_flame_2.png",
       "size": [
         32,
         32
@@ -87,7 +87,7 @@
         128,
         32
       ],
-      "output": "ExtremeHeatflame_3.png",
+      "output": "ExtremeHeat_flame_3.png",
       "size": [
         32,
         32
@@ -103,7 +103,7 @@
         160,
         32
       ],
-      "output": "ExtremeHeatflame_4.png",
+      "output": "ExtremeHeat_flame_4.png",
       "size": [
         32,
         32
@@ -119,7 +119,7 @@
         192,
         32
       ],
-      "output": "ExtremeHeatflame_5.png",
+      "output": "ExtremeHeat_flame_5.png",
       "size": [
         32,
         32
@@ -135,7 +135,7 @@
         224,
         32
       ],
-      "output": "ExtremeHeatflame_6.png",
+      "output": "ExtremeHeat_flame_6.png",
       "size": [
         32,
         32
@@ -151,7 +151,7 @@
         256,
         32
       ],
-      "output": "ExtremeHeatflame_7.png",
+      "output": "ExtremeHeat_flame_7.png",
       "size": [
         32,
         32
@@ -167,7 +167,7 @@
         32,
         64
       ],
-      "output": "ExtremeHeatflame_8.png",
+      "output": "ExtremeHeat_flame_8.png",
       "size": [
         32,
         32
@@ -183,7 +183,7 @@
         64,
         64
       ],
-      "output": "ExtremeHeatflame_9.png",
+      "output": "ExtremeHeat_flame_9.png",
       "size": [
         32,
         32
@@ -199,7 +199,7 @@
         96,
         64
       ],
-      "output": "ExtremeHeatflame_10.png",
+      "output": "ExtremeHeat_flame_10.png",
       "size": [
         32,
         32
@@ -215,7 +215,7 @@
         128,
         64
       ],
-      "output": "ExtremeHeatflame_11.png",
+      "output": "ExtremeHeat_flame_11.png",
       "size": [
         32,
         32
@@ -231,7 +231,7 @@
         160,
         64
       ],
-      "output": "ExtremeHeatflame_12.png",
+      "output": "ExtremeHeat_flame_12.png",
       "size": [
         32,
         32
@@ -247,7 +247,7 @@
         192,
         64
       ],
-      "output": "ExtremeHeatflame_13.png",
+      "output": "ExtremeHeat_flame_13.png",
       "size": [
         32,
         32
@@ -263,7 +263,7 @@
         224,
         64
       ],
-      "output": "ExtremeHeatflame_14.png",
+      "output": "ExtremeHeat_flame_14.png",
       "size": [
         32,
         32
@@ -279,7 +279,7 @@
         256,
         64
       ],
-      "output": "ExtremeHeatflame_15.png",
+      "output": "ExtremeHeat_flame_15.png",
       "size": [
         32,
         32
@@ -295,7 +295,7 @@
         32,
         96
       ],
-      "output": "ExtremeHeatflame_16.png",
+      "output": "ExtremeHeat_flame_16.png",
       "size": [
         32,
         32
@@ -311,7 +311,7 @@
         64,
         96
       ],
-      "output": "ExtremeHeatflame_17.png",
+      "output": "ExtremeHeat_flame_17.png",
       "size": [
         32,
         32
@@ -327,7 +327,7 @@
         96,
         96
       ],
-      "output": "ExtremeHeatflame_18.png",
+      "output": "ExtremeHeat_flame_18.png",
       "size": [
         32,
         32
@@ -343,7 +343,7 @@
         128,
         96
       ],
-      "output": "ExtremeHeatflame_19.png",
+      "output": "ExtremeHeat_flame_19.png",
       "size": [
         32,
         32
@@ -359,7 +359,7 @@
         160,
         96
       ],
-      "output": "ExtremeHeatflame_20.png",
+      "output": "ExtremeHeat_flame_20.png",
       "size": [
         32,
         32
@@ -375,7 +375,7 @@
         192,
         96
       ],
-      "output": "ExtremeHeatflame_21.png",
+      "output": "ExtremeHeat_flame_21.png",
       "size": [
         32,
         32
@@ -391,7 +391,7 @@
         224,
         96
       ],
-      "output": "ExtremeHeatflame_22.png",
+      "output": "ExtremeHeat_flame_22.png",
       "size": [
         32,
         32
@@ -407,7 +407,7 @@
         256,
         96
       ],
-      "output": "ExtremeHeatflame_23.png",
+      "output": "ExtremeHeat_flame_23.png",
       "size": [
         32,
         32
@@ -423,7 +423,7 @@
         32,
         128
       ],
-      "output": "ExtremeHeatflame_24.png",
+      "output": "ExtremeHeat_flame_24.png",
       "size": [
         32,
         32
@@ -439,7 +439,7 @@
         64,
         128
       ],
-      "output": "ExtremeHeatflame_25.png",
+      "output": "ExtremeHeat_flame_25.png",
       "size": [
         32,
         32
@@ -455,7 +455,7 @@
         96,
         128
       ],
-      "output": "ExtremeHeatflame_26.png",
+      "output": "ExtremeHeat_flame_26.png",
       "size": [
         32,
         32
@@ -471,7 +471,7 @@
         128,
         128
       ],
-      "output": "ExtremeHeatflame_27.png",
+      "output": "ExtremeHeat_flame_27.png",
       "size": [
         32,
         32
@@ -487,7 +487,7 @@
         160,
         128
       ],
-      "output": "ExtremeHeatflame_28.png",
+      "output": "ExtremeHeat_flame_28.png",
       "size": [
         32,
         32
@@ -503,7 +503,7 @@
         192,
         128
       ],
-      "output": "ExtremeHeatflame_29.png",
+      "output": "ExtremeHeat_flame_29.png",
       "size": [
         32,
         32
@@ -519,7 +519,7 @@
         224,
         128
       ],
-      "output": "ExtremeHeatflame_30.png",
+      "output": "ExtremeHeat_flame_30.png",
       "size": [
         32,
         32
@@ -535,7 +535,7 @@
         256,
         128
       ],
-      "output": "ExtremeHeatflame_31.png",
+      "output": "ExtremeHeat_flame_31.png",
       "size": [
         32,
         32
@@ -551,7 +551,7 @@
         32,
         160
       ],
-      "output": "ExtremeHeatflame_32.png",
+      "output": "ExtremeHeat_flame_32.png",
       "size": [
         32,
         32
@@ -567,7 +567,7 @@
         64,
         160
       ],
-      "output": "ExtremeHeatflame_33.png",
+      "output": "ExtremeHeat_flame_33.png",
       "size": [
         32,
         32
@@ -583,7 +583,7 @@
         96,
         160
       ],
-      "output": "ExtremeHeatflame_34.png",
+      "output": "ExtremeHeat_flame_34.png",
       "size": [
         32,
         32
@@ -599,7 +599,7 @@
         128,
         160
       ],
-      "output": "ExtremeHeatflame_35.png",
+      "output": "ExtremeHeat_flame_35.png",
       "size": [
         32,
         32
@@ -615,7 +615,7 @@
         160,
         160
       ],
-      "output": "ExtremeHeatflame_36.png",
+      "output": "ExtremeHeat_flame_36.png",
       "size": [
         32,
         32
@@ -631,7 +631,7 @@
         192,
         160
       ],
-      "output": "ExtremeHeatflame_37.png",
+      "output": "ExtremeHeat_flame_37.png",
       "size": [
         32,
         32
@@ -647,7 +647,7 @@
         224,
         160
       ],
-      "output": "ExtremeHeatflame_38.png",
+      "output": "ExtremeHeat_flame_38.png",
       "size": [
         32,
         32
@@ -663,7 +663,7 @@
         256,
         160
       ],
-      "output": "ExtremeHeatflame_39.png",
+      "output": "ExtremeHeat_flame_39.png",
       "size": [
         32,
         32
@@ -679,7 +679,7 @@
         32,
         192
       ],
-      "output": "ExtremeHeatflame_40.png",
+      "output": "ExtremeHeat_flame_40.png",
       "size": [
         32,
         32
@@ -695,7 +695,7 @@
         64,
         192
       ],
-      "output": "ExtremeHeatflame_41.png",
+      "output": "ExtremeHeat_flame_41.png",
       "size": [
         32,
         32
@@ -711,7 +711,7 @@
         96,
         192
       ],
-      "output": "ExtremeHeatflame_42.png",
+      "output": "ExtremeHeat_flame_42.png",
       "size": [
         32,
         32
@@ -727,7 +727,7 @@
         128,
         192
       ],
-      "output": "ExtremeHeatflame_43.png",
+      "output": "ExtremeHeat_flame_43.png",
       "size": [
         32,
         32
@@ -743,7 +743,7 @@
         160,
         192
       ],
-      "output": "ExtremeHeatflame_44.png",
+      "output": "ExtremeHeat_flame_44.png",
       "size": [
         32,
         32
@@ -759,7 +759,7 @@
         192,
         192
       ],
-      "output": "ExtremeHeatflame_45.png",
+      "output": "ExtremeHeat_flame_45.png",
       "size": [
         32,
         32
@@ -775,7 +775,7 @@
         224,
         192
       ],
-      "output": "ExtremeHeatflame_46.png",
+      "output": "ExtremeHeat_flame_46.png",
       "size": [
         32,
         32
@@ -791,7 +791,7 @@
         256,
         192
       ],
-      "output": "ExtremeHeatflame_47.png",
+      "output": "ExtremeHeat_flame_47.png",
       "size": [
         32,
         32
@@ -807,7 +807,7 @@
         32,
         224
       ],
-      "output": "ExtremeHeatflame_48.png",
+      "output": "ExtremeHeat_flame_48.png",
       "size": [
         32,
         32
@@ -823,7 +823,7 @@
         64,
         224
       ],
-      "output": "ExtremeHeatflame_49.png",
+      "output": "ExtremeHeat_flame_49.png",
       "size": [
         32,
         32
@@ -839,7 +839,7 @@
         96,
         224
       ],
-      "output": "ExtremeHeatflame_50.png",
+      "output": "ExtremeHeat_flame_50.png",
       "size": [
         32,
         32
@@ -855,7 +855,7 @@
         128,
         224
       ],
-      "output": "ExtremeHeatflame_51.png",
+      "output": "ExtremeHeat_flame_51.png",
       "size": [
         32,
         32
@@ -871,7 +871,7 @@
         160,
         224
       ],
-      "output": "ExtremeHeatflame_52.png",
+      "output": "ExtremeHeat_flame_52.png",
       "size": [
         32,
         32
@@ -887,7 +887,7 @@
         192,
         224
       ],
-      "output": "ExtremeHeatflame_53.png",
+      "output": "ExtremeHeat_flame_53.png",
       "size": [
         32,
         32
@@ -903,7 +903,7 @@
         224,
         224
       ],
-      "output": "ExtremeHeatflame_54.png",
+      "output": "ExtremeHeat_flame_54.png",
       "size": [
         32,
         32
@@ -919,7 +919,7 @@
         256,
         224
       ],
-      "output": "ExtremeHeatflame_55.png",
+      "output": "ExtremeHeat_flame_55.png",
       "size": [
         32,
         32
@@ -935,7 +935,7 @@
         32,
         256
       ],
-      "output": "ExtremeHeatflame_56.png",
+      "output": "ExtremeHeat_flame_56.png",
       "size": [
         32,
         32
@@ -951,7 +951,7 @@
         64,
         256
       ],
-      "output": "ExtremeHeatflame_57.png",
+      "output": "ExtremeHeat_flame_57.png",
       "size": [
         32,
         32
@@ -967,7 +967,7 @@
         96,
         256
       ],
-      "output": "ExtremeHeatflame_58.png",
+      "output": "ExtremeHeat_flame_58.png",
       "size": [
         32,
         32
@@ -983,7 +983,7 @@
         128,
         256
       ],
-      "output": "ExtremeHeatflame_59.png",
+      "output": "ExtremeHeat_flame_59.png",
       "size": [
         32,
         32
@@ -999,7 +999,7 @@
         160,
         256
       ],
-      "output": "ExtremeHeatflame_60.png",
+      "output": "ExtremeHeat_flame_60.png",
       "size": [
         32,
         32
@@ -1015,7 +1015,7 @@
         192,
         256
       ],
-      "output": "ExtremeHeatflame_61.png",
+      "output": "ExtremeHeat_flame_61.png",
       "size": [
         32,
         32
@@ -1031,7 +1031,7 @@
         224,
         256
       ],
-      "output": "ExtremeHeatflame_62.png",
+      "output": "ExtremeHeat_flame_62.png",
       "size": [
         32,
         32
@@ -1047,7 +1047,7 @@
         256,
         256
       ],
-      "output": "ExtremeHeatflame_63.png",
+      "output": "ExtremeHeat_flame_63.png",
       "size": [
         32,
         32
@@ -1063,7 +1063,7 @@
         64,
         128
       ],
-      "output": "ExtremeHeatwispL_0.png",
+      "output": "ExtremeHeat_wispL_0.png",
       "size": [
         64,
         128
@@ -1079,7 +1079,7 @@
         64,
         128
       ],
-      "output": "ExtremeHeatwispR_0.png",
+      "output": "ExtremeHeat_wispR_0.png",
       "size": [
         64,
         128
