@@ -54,7 +54,7 @@ function ProjectYakuza.setVisual(player, active, move)
     if not active and state.style~=nil then player:setVariable("ProjectYakuzaStyle","");state.style=nil end
     if move~=nil and state.move~=move then player:setVariable("ProjectYakuzaMove",move);state.move=move end
 end
-function ProjectYakuza.resetPlayer(player, reason)
+function ProjectYakuza.resetPlayer(player, reason,keepStance)
     local s = ProjectYakuza.stateFor(player)
     ProjectYakuza.releaseFinisherHandoff(player)
     ProjectYakuza.Heat.endSwing(player)
@@ -62,7 +62,7 @@ function ProjectYakuza.resetPlayer(player, reason)
     if ProjectYakuza.RunningAttacks then ProjectYakuza.RunningAttacks.finish(player) end
     if s.groundMove or s.finisherMove or s.pendingFinisher then player:setBlockMovement(false) end
     Combo.reset(s)
-    ProjectYakuza.setVisual(player,false,"")
+    ProjectYakuza.setVisual(player,keepStance==true,"")
     player:setVariable("ProjectYakuzaClipStarted", "")
     player:setVariable("ProjectYakuzaHitMarker", "")
     player:setVariable("ProjectYakuzaChainReady", "")
@@ -210,6 +210,7 @@ function ProjectYakuza.tryRecoveryCancel(player, style, s)
     local move = s.groundMove or s.finisherMove or style.lightAttacks[s.step]
     local finisher=s.finisherMove~=nil
     local queued = finisher and (not move.double and s.queuedDouble) or (not finisher and (s.queued > 0 or s.queuedFinisher ~= nil))
+    if not finisher and ProjectYakuza.ChargedHeavy and ProjectYakuza.ChargedHeavy.wantsRecovery and ProjectYakuza.ChargedHeavy.wantsRecovery(player,s,style) then queued=true end
     local marker=finisher and "ProjectYakuzaDoubleReady" or "ProjectYakuzaChainReady"
     if not queued or variable(player, marker) ~= move.nodeValue
         or variable(player, "ProjectYakuzaHitMarker") ~= move.nodeValue then return false end

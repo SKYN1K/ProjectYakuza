@@ -15,13 +15,18 @@ local additive=true
 SpriteRenderer={instance={getDoAdditive=function()return additive end,setDoAdditive=function(_,v)additive=v end}}
 local allocated,disposed,updated,draws=0,0,0,{}
 local failRender=false
+local function centre(d)
+ local x,y,z=d.x-d.rootX,d.y-d.rootY,d.z-d.rootZ
+ return (x-y)*64-d.ox,(x+y)*32-z*192-d.oy-d.height*d.scale/2
+end
+
 local function instance()
  allocated=allocated+1
  return {setScale=function(s,x,y)s.scale=x end,setFrameSpeedPerFrame=function()end,SetAlpha=function(s,v)s.alpha=v end,SetTargetAlpha=function()end,
  Dispose=function(s)check(not s.disposed,'no double disposal');s.disposed=true;disposed=disposed+1 end,
  render=function(s,p,x,y,z,d,ox,oy,col)
-  check(not additive,'normal alpha scopes render');if failRender then error('injected render failure')end
-  draws[#draws+1]={p=p,x=x,y=y,z=z,ox=ox,oy=oy,color=col,alpha=s.alpha,scale=s.scale,height=s.sprite.height}
+  if failRender then error('injected render failure')end
+  draws[#draws+1]={p=p,x=x,y=y,z=z,ox=ox,oy=oy,color=col,alpha=s.alpha,scale=s.scale,height=s.sprite.height,additive=additive,rootX=p:getX(),rootY=p:getY(),rootZ=p:getZ()}
  end}
 end
 IsoSprite={CreateSprite=function()return {height=64,LoadFramesNoDirPageSimple=function(s,path)s.height=string.find(path,'ChargeSpark') and 32 or 64 end,LoadFramesNoDirPageDirect=function(s)s.height=32 end,setAnimate=function()end,update=function()updated=updated+1 end}end}
@@ -61,13 +66,14 @@ local function emit(name,...)for _,f in ipairs(ProjectYakuza.listeners[name] or 
 -- EFFECTS
 local F=ProjectYakuza.AttackEffects
 local track=ProjectYakuza.AttackTracks.dd_light_01
-local move={animation=track.animation,duration=.625,impact=.2,attackEffects={track='dd_light_01',from=2/30,to=14/30,swingFrame=3}}
+local move={animation=track.animation,duration=.625,impact=.2,attackEffects={track='dd_light_01',from=2/30,to=14/30,swingFrame=3,verticalOffset=2.5}}
 style.lightAttacks={move}
 check(not F.hooked and not any(Events.OnTick.hooks),'idle has no tick/render effects')
 local nativeProjection=-- PROJECTION
 for i=0,7 do
- local x,y=F.project(.1,.65,-.4,i*math.pi/4,2)
+ local x,y,wx,wy,wz=F.project(.1,.65,-.4,i*math.pi/4,2)
  check(near(x,nativeProjection[i+1][1]) and near(y,nativeProjection[i+1][2]),'native eight-facing model/world/screen projection '..i)
+ check(near(wx,nativeProjection[i+1][3]) and near(wy,nativeProjection[i+1][4]) and near(wz,nativeProjection[i+1][5]),'native limb-height world depth anchor '..i)
 end
 for i=0,30 do
  for bone=1,3 do
@@ -82,6 +88,8 @@ emit('lightAttackStarted',p,style,1,move);check(F.states[p] and F.hooked and all
 p.time=.04;F.tick();F.render();check(allocated==0 and #draws==0,'windup before configured window has no particles')
 p.time=.2;F.tick();F.render();check(allocated==18 and #F.states[p].points==18,'bounded eighteen sprites for first punch')
 check(additive,'render restores original additive state')
+check(draws[1].additive and not draws[7].additive,'punch cores glow while original flames retain alpha transparency')
+check(draws[1].alpha>.5 and draws[1].scale>.2,'punch glow is larger and more visible')
 check(F.normal.r>=.6 and F.normal.g>=.8 and F.normal.b==1,'punch glow has a white-bluish tint')
 for j=1,6 do
  local d=draws[j];local x,y,z
@@ -93,7 +101,8 @@ for j=1,6 do
   x,y,z=ax+(wx-ax)*t,ay+(wy-ay)*t,az+(wz-az)*t
  end
  local px,py=F.project(x,y,z,p.angle,2)
- check(near(-d.ox,px) and near(-d.oy-d.height*d.scale/2,py),'each independently sized glow centres on the arm path')
+ local cx,cy=centre(d)
+ check(near(cx,px) and near(cy,py+5) and d.z>d.rootZ,'lowered punch centre retains native limb-height depth')
 end
 check(#draws>=14,'forearm glow, two flames, trails and several sparks are visible together')
 
@@ -104,7 +113,7 @@ function duplicate:dbgGetAnimTrackTime(layer,slot)return slot==0 and .8 or .12 e
 local time,weight,where=F.findTrack(duplicate,move.animation)
 check(near(time,.12) and where.slot==1,'new native track wins over fading copy of same clip')
 
-local last=draws[#draws];check(last.p==p and last.x==p:getX() and last.y==p:getY(),'native world renderer remains anchored to actor')
+local last=draws[#draws];check(last.p==p and math.abs(last.x-p:getX())<1 and math.abs(last.y-p:getY())<1 and last.z>p:getZ(),'world renderer anchors particles at the nearby limb height')
 local a=allocated;F.render();check(allocated==a,'no sprite allocation on repeated frames')
 local ticks=F.states[p].clock;local beforeUpdate=updated;paused=true;clock=clock+1000;p.time=.3;F.tick();F.render()
 check(F.states[p].time==.2 and F.states[p].clock==ticks and updated==beforeUpdate,'pause freezes clock, source position and flame')
@@ -138,12 +147,23 @@ for branch=1,4 do
  local state=C.states[p];check(state and #state.instances==6,'branch has only six limb-bound charging particles')
  local row=state.track.frames[1];local ax,ay,az=row[1],row[2],row[3];local bx,by,bz=row[4],row[5],row[6]
  local x,y=F.project(ax+(bx-ax)*.31,ay+(by-ay)*.31,az+(bz-az)*.31,p.angle,2)
- local d=draws[1];check(near(-d.ox,x) and near(-d.oy-d.height*d.scale/2,y),'charge particle centres on the branch-specific native limb')
+ local d=draws[1];local cx,cy=centre(d);check(near(cx,x) and near(cy,y+4) and d.z>d.rootZ,'charge particle centres and depth follow the branch-specific limb')
  check(d.color.r>=.6 and d.color.g>=.8,'limb charge glow is white-blue')
  local n=allocated;C.update(p);C.render();check(allocated==n,'stable charge never rebuilds particles')
  C.clear(p)
 end
 ProjectYakuza.activeActions[p]=nil;C.update(p);check(not C.hooked and not C.states[p],'charge stop removes render callback')
+local startingContext={kind='heavyCharge',action={animation='ProjectYakuza_DD_ChargeLoop'},timedAction={started=true,power=.5}}
+p.empty=true
+C.begin(p,style,startingContext.action,startingContext)
+check(C.states[p] and C.owners[p]==startingContext,'synchronous action start creates effects before registry publishes its context')
+clock=clock+120;draws={};C.render()
+check(#draws==12 and draws[1].additive and not draws[4].additive,'missing debug track still draws bounded charging limbs with scoped core glow')
+local lookups=p.lookup;clock=clock+10;C.render();check(p.lookup==lookups,'missing debug track retries are throttled')
+check(draws[1].alpha>.4 and draws[1].scale>=.3,'charge cores are visible before full power')
+C.clear(p);p.empty=false
+check(not C.owners[p] and not C.states[p],'stopping charge clears early-start ownership too')
+
 p.localPlayer=false;p.vars={ProjectYakuzaRemoteClip='ProjectYakuza_DD_ChargeHold02',ProjectYakuzaRemoteChargePower='.7'}
 C.update(p);check(C.states[p] and near(C.states[p].power,.7),'remote limb charge follows bounded replicated power')
 C.clear(p);p.localPlayer=true;p.vars=nil

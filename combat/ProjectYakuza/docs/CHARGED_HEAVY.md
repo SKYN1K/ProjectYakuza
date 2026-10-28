@@ -1,4 +1,4 @@
-# Charged heavy attacks — 0.36.0
+# Charged heavy attacks — 0.37.0
 
 Hold MMB while aiming after 1–4 lights to charge that first finisher. Tap-release retains normal finisher input; Tiger Drop keeps initial-press priority. Second finishers cannot charge.
 
@@ -12,13 +12,13 @@ A variant-bound, expiring, one-use ticket carries the fraction. Runtime copies t
 
 ## Animation handoff and work reduction
 
-Wind-ups emit started, a handoff marker one source frame before the end, then done. The controller switches to the matching original-pose looping hold only after a native handoff/done marker, rather than cutting it based on wall time. Wind-up/hold blends are .08/.06 seconds. The original hold/release poses and all .x files are unchanged. Missing hold acknowledgement cancels; pause now suspends that timeout too.
+Wind-ups emit started, a handoff marker one source frame before the end, then done. The controller switches to the matching original-pose looping hold only after a native handoff/done marker, rather than cutting it based on wall time. Wind-up/hold blends are .14/.06 seconds. A held charge can now leave light-attack recovery at the existing native hit-and-chain markers; no input still lets the light finish. The custom stance remains enabled while the charge is queued, rather than briefly resetting to idle. The original hold/release poses and all .x files are unchanged. Missing hold acknowledgement cancels; pause now suspends that timeout too.
 
 Stationary charging no longer repeatedly rewrites tile/current-square state. Position correction runs only if the actor actually drifts from the anchor. Movement/attack locks remain intact. These changes address transition timing and redundant position updates; live smoothness is not established by offline tests.
 
 ## Limb effects
 
-The former fixed facing offset/wide spark orbit is removed. ChargeTracks contains numeric positions imported from the already-retargeted native B42 clips: neutral hands and branch-specific forearm/wrist or calf/ankle paths. Four source wind-ups, four fixed holds and the neutral loop supply 87 original sample times. Each charged limb has three glints, two animated source flame patches and a small spark travelling inside the limb span. A neutral two-arm charge uses twelve instances, branch charges six, with an eight-actor cap. Native playback time/facing, pause, cached lookups, detached per-instance centring and cleanup are preserved. Glow strength rises with charge fraction.
+The former fixed facing offset/wide spark orbit is removed. ChargeTracks contains numeric positions imported from the already-retargeted native B42 clips: neutral hands and branch-specific forearm/wrist or calf/ankle paths. Four source wind-ups, four fixed holds and the neutral loop supply 87 original sample times. Each charged limb has three glints, two animated source flame patches and a small spark travelling inside the limb span. A neutral two-arm charge uses twelve instances, branch charges six, with an eight-actor cap. Native playback time/facing, pause, cached lookups, detached per-instance centring and cleanup are preserved. Glow strength rises with charge fraction from a stronger visible baseline. Cores use a small scoped additive glow; original flame patches retain normal alpha. Native startup passes the action context directly to the effect, so synchronous queue starts do not depend on Registry.activeActions being published first. If an exposed debug track cannot be found, confirmed-session visual timing supplies a bounded source-pose fallback with throttled lookup retries; it never controls hits or charge damage. Limb-height world anchors provide B42 depth while preserving the calibrated screen centres.
 
 These are code-sampled particle positions, not final blended bone transforms or an emissive mesh shader. Full-body charge poses reduce locomotion mismatch, but visual alignment still needs live testing. [Provenance](charge-limb-tracks.json) records native clip hashes, selected bones and exact output-code hash. No image/audio/motion asset was created, altered or upscaled.
 
@@ -31,3 +31,5 @@ Existing state snapshots carry an optional bounded chargePower fraction. Chargin
 `heavyCharge` variants use animation, holdAnimation, chargeBranch, holdMs (input recognition), windupMs/minChargeMs (minimum pose) and maxHoldMs (automatic release). DoD sets maxHoldMs=1200. Other styles may explicitly use zero for manual-only release. Matching `chargedHeavy` variants use damageMultiplier (maximum) and optional minChargedDamageMultiplier (minimum, validated 0..maximum). Omit the minimum to retain that addon's fixed damage. `ProjectYakuza.ChargeRules.power` and `.damage` centralize clamping/interpolation.
 
 `heavyChargeReady` now means full power, rather than the start of the held pose. Existing started/stopped and chargedHeavyStarted/Finished hooks remain. Presentation hooks must not apply extra damage. Original BEPs prove pause/contact markers, not a Dragon Engine global full-charge threshold; the 1.2-second limit is this mod's selected policy.
+
+`heavyChargeStarted` provides an optional fourth context argument in 0.37.0. Existing three-argument listeners continue unchanged. Presentation sessions clear on stop, errors and world exit.

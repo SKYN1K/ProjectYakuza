@@ -33,7 +33,7 @@ function A:start()
     p:setVariable("ProjectYakuzaChargeClip","")
     self:setActionAnim(self.context.action.animation)
     self.action:setOverrideHandModelsObject(p:getPrimaryHandItem(),nil,false)
-    PY.emit("heavyChargeStarted",p,self.context.style,self.context.action)
+    PY.emit("heavyChargeStarted",p,self.context.style,self.context.action,self.context)
 end
 function A:cleanup(completed)
     if self.cleaned then return end
@@ -110,7 +110,7 @@ PY.registerActionHandler("heavyCharge",{
             and (p:getHitReaction() or "")=="","not_ready"
     end,
     start=function(c)
-        PY.resetPlayer(c.player,"heavy_charge_started")
+        PY.resetPlayer(c.player,"heavy_charge_started",true)
         local a=A:new(c);c.timedAction=a;c.requestedAt=now()
         local ok,q=pcall(ISTimedActionQueue.add,a)
         if not ok or not q then a:cancel();return false,"queue_rejected" end
@@ -122,6 +122,15 @@ function H.watch(p,c)
     if not c.timedAction.started and now()-c.requestedAt>600 then PY.cancelAction(p,"charge_start_timeout",c) end
     if c.timedAction.started and not c.timedAction.cleaned then c.timedAction:holdPosition() end
     return PY.activeActions[p]==c
+end
+function H.wantsRecovery(p,s,style)
+    local gesture=H.gestures[p]
+    if not gesture or not PY.Bindings.down("finisher") or not p:isAiming() or isGamePaused()
+        or not s.active or s.finisherMove or s.groundMove or s.queued>0 or PY.activeActions[p] then return false end
+    local slot=style.actions.heavyCharge
+    if not slot or not slot.enabled then return false end
+    local branch=slot.variants and slot.variants["after_"..s.step]
+    return gesture.branch==s.step and now()-gesture.at>=((branch and branch.holdMs) or slot.holdMs or 350)
 end
 function H.input(p,down,pressed,s,style)
     local slot=style.actions.heavyCharge
@@ -153,7 +162,7 @@ function H.input(p,down,pressed,s,style)
         H.gestures[p]=nil;PY.queueFinisher(p);return true
     end
     local branchSlot=slot.variants and slot.variants["after_"..(gesture.branch or 0)]
-    if now()-gesture.at>=((branchSlot and branchSlot.holdMs) or slot.holdMs or 350) and not s.active and not s.starting and not PY.activeActions[p] then
+    if now()-gesture.at>=((branchSlot and branchSlot.holdMs) or slot.holdMs or 350) and not s.active and not s.starting and s.queued==0 and not PY.activeActions[p] then
         local branch=gesture.branch or 0
         local variant=slot.variants and slot.variants["after_"..branch] and ("after_"..branch) or nil
         PY.requestAction(p,"heavyCharge",variant,gesture)

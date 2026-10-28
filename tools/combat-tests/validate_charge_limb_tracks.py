@@ -20,5 +20,5 @@ for i,frames in enumerate([6,7,6,5],1):
  n=E.parse(mod/f'42/media/AnimSets/player/actions/ProjectYakuza_DD_ChargeWindup0{i}.xml').getroot()
  handoff=[e for e in n.findall('m_Events') if e.findtext('m_ParameterValue')=='ProjectYakuzaChargeClip=handoff']
  assert len(handoff)==1 and abs(float(handoff[0].findtext('m_TimePc'))-(frames-1)/frames)<1e-8
- assert float(n.findtext('m_BlendTime'))==.08
+ assert float(n.findtext('m_BlendTime'))==.14
 print(f'PASS {len(report["clips"])} original B42 charge limb paths, {samples} source samples, four native last-frame handoff markers; no motion/texture/audio changed')

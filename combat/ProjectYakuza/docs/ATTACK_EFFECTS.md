@@ -1,10 +1,10 @@
 # Source-tracked punch effects
 
-Version 0.36.0 refines a narrow prototype for Dragon of Dojima's first light attack. Existing source textures are rendered as world sprites along the original left forearm/fist trajectory. It is visible without heat, white-bluish, with a stronger pale-blue tint during Extreme Heat. Existing hit sparks and body auras are independent.
+Version 0.37.0 refines a narrow prototype for Dragon of Dojima's first light attack. Existing source textures are rendered as world sprites along the original left forearm/fist trajectory. It is visible without heat, white-bluish, with a stronger pale-blue tint during Extreme Heat. Existing hit sparks and body auras are independent.
 
 ## Move configuration
 
-`lightAttacks[1].attackEffects = {track="dd_light_01", from=2/30, to=14/30, swingFrame=3}` opts in. Omit the field to retain the existing presentation and whoosh schedule. `from`/`to` are source clip seconds, not sped-up wall time; `swingFrame` uses the current 30-fps source convention. The move's `animation` must match its track. Do not copy the DoD hand path onto a different animation.
+`lightAttacks[1].attackEffects = {track="dd_light_01", from=2/30, to=14/30, swingFrame=3, verticalOffset=2.5}` opts in. Omit the field to retain the existing presentation and whoosh schedule. `from`/`to` are source clip seconds, not sped-up wall time; `swingFrame` uses the current 30-fps source convention. The move's `animation` must match its track. Do not copy the DoD hand path onto a different animation.
 
 `ProjectYakuza.AttackTracks.dd_light_01` contains an animation name, fps=30 and 31 numeric frames. Each row is model-space forearm XYZ, wrist XYZ and knuckle XYZ, extracted through B42's own animation importer and matrix helpers. These are code-side positions, not new animation/media. A separately supplied matching track can be added under a unique addon key after requiring AttackTracks; the current renderer expects that same three-point arm layout. This is not a general foot/shader attachment API. Automatic events currently cover light attacks; other move types require their own scoped presentation hook. Remote automatic selection currently covers each style's first light.
 
@@ -14,7 +14,7 @@ The existing Feedback controller schedules this move's original punch whoosh aga
 
 ## Lifetime and budget
 
-The effect uses existing HitGlint, ChargeSpark and ExtremeHeat_flame textures unchanged. Six glow centres along the forearm/wrist/fist, two small animated flames, four trail samples and six departing sparks give eighteen instances per active actor, with an eight-actor cap. No zombie scan, additional network packet or idle tick/render callback is introduced. Rendering uses scoped normal alpha and restores the prior renderer flag on success/failure. World/actor/move changes dispose instances and unsubscribe idle callbacks. Pause freezes time and flame progression.
+The effect uses existing HitGlint, ChargeSpark and ExtremeHeat_flame textures unchanged. Six glow centres along the forearm/wrist/fist, two small animated flames, four trail samples and six departing sparks give eighteen instances per active actor, with an eight-actor cap. No zombie scan, additional network packet or idle tick/render callback is introduced. Small core glints use scoped additive glow for visibility; the animated original flame/trail/spark layers use normal alpha. The prior renderer flag is restored on success/failure. World/actor/move changes dispose instances and unsubscribe idle callbacks. Pause freezes time and flame progression.
 
 ## Fidelity limits
 
@@ -25,3 +25,5 @@ Provenance: [punch-effect-assets.json](punch-effect-assets.json). No visuals/aud
 In 0.36.0 the main glow ends at 78% of the elbow-to-wrist span, rather than extending toward the knuckles. The other arm centres use .20/.32/.44/.56/.68 of that span. Trail samples lag by only .006 source seconds per point; six spark emissions follow the current inset hand position for .10 source seconds, with very short outward motion. They no longer remain at a previously extended hand position while the arm retracts. These are conservative visual inset settings, not edits to the native skeleton.
 
 ChargeEffects now shares the sample/projection helpers but uses distinct native arm/leg charge paths; see [Charged heavy](CHARGED_HEAVY.md).
+
+In 0.37.0 DoD's move sets verticalOffset=2.5 world-sprite pixel units (about five display pixels at tileScale=2 before zoom). It lowers all punch layers without changing the native skeleton. Larger existing glints/flames and a stronger white-blue mix address visibility. WorldEffects.renderCentered accepts optional relative world anchor XYZ, used here at each limb point with a small camera-facing depth bias; projection compensation keeps screen centres unchanged. Omitting anchors retains the old foot-centred behavior for existing callers. No depth test is globally disabled, and no UI element is used. GPU visibility remains unverified.

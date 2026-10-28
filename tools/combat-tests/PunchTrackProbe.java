@@ -42,7 +42,7 @@ public class PunchTrackProbe {
    float x=component(point,"x"),y=component(point,"y"),z=component(point,"z");
    float sx=(Float)iso.getMethod("XToScreen",float.class,float.class,float.class,int.class).invoke(null,x,y,z,0);
    float sy=(Float)iso.getMethod("YToScreen",float.class,float.class,float.class,int.class).invoke(null,x,y,z,0);
-   if(i>0)out.append(',');out.append(String.format("[%.9f,%.9f]",sx,sy));
+   if(i>0)out.append(',');out.append(String.format("[%.9f,%.9f,%.9f,%.9f,%.9f]",sx,sy,x,y,z));
   }
   // Verify the scalar Lua surface on the installed engine. Nested model classes are deliberately not used by the mod.
   var character=Class.forName("zombie.characters.IsoGameCharacter");

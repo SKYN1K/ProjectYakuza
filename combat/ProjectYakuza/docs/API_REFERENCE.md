@@ -120,3 +120,7 @@ Charge controller additions: optional holdAnimation, windupMs and maxHoldMs; max
 ## Charge power (0.36.0)
 
 Charged moves may set `minChargedDamageMultiplier` (0..damageMultiplier). DoD heavyCharge variants set `maxHoldMs=1200`; `minChargeMs` defines the low-power pose threshold. The controller normalizes elapsed unpaused action time between those thresholds, automatically releases at the maximum, and copies the runtime move before scaling it. `ProjectYakuza.ChargeRules.power(ageMs,minMs,maxMs)` and `.damage(move,fraction)` implement the shared rule. `heavyChargeReady` now marks full power. Optional MP state `chargePower` is validated 0..1 and locked per multihit swing. See [Charged heavy](CHARGED_HEAVY.md).
+
+## Charge recovery and world anchors (0.37.0)
+
+`ChargedHeavy.wantsRecovery(player,combo,style)` reports a ready held first-finisher charge intent; Runtime still requires the existing hit/chain markers before ending recovery. `heavyChargeStarted` adds an optional fourth context argument for presentation before action registry publication. Existing listener arguments are unchanged. `WorldEffects.renderCentered` accepts optional relative world anchor XYZ after color, compensating their projection to retain the requested screen centre; limb effects use them for native depth. Omitted anchors preserve existing callers. `attackEffects.verticalOffset` is an optional per-move downwards offset in sprite-pixel units.

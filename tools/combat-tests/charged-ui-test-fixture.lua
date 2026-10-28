@@ -122,6 +122,23 @@ for branch=1,4 do
  check(not H.gestures[p] and state().finisherMove.double,'second-finisher playback never grants another charge gesture')
  finish();H.clearPlayer(p)
 end
+-- Charge intent uses the real hit/chain gate and preserves stance through the queue gap.
+PY.Combo.reset(state());state().active=true;state().step=2;state().queued=0;state().startedAt=clock
+p.attacking=true;mouse[2]=true;H.input(p,true,true,state(),style)
+local light=style.lightAttacks[2]
+p:setVariable('ProjectYakuzaChainReady',light.nodeValue);p:setVariable('ProjectYakuzaHitMarker',light.nodeValue)
+check(not PY.tryRecoveryCancel(p,style,state()),'short MMB press cannot cut a light for charging')
+clock=clock+style.actions.heavyCharge.variants.after_2.holdMs+1
+p:setVariable('ProjectYakuzaHitMarker','')
+check(not PY.tryRecoveryCancel(p,style,state()),'charge intent cannot cancel before native hit marker')
+p:setVariable('ProjectYakuzaHitMarker',light.nodeValue);state().queued=1
+check(not H.wantsRecovery(p,state(),style),'buffered light retains priority over charge handoff');state().queued=0
+function p:setPerformingAttackAnimation(v)self.attacking=v end
+function p:reportEvent(name)self.lastReported=name end
+check(PY.tryRecoveryCancel(p,style,state()) and p.lastReported=='ActiveAnimFinishing','held charge exits recovery through normal native chain handoff')
+finish();H.input(p,true,false,state(),style)
+check(PY.activeActions[p] and PY.activeActions[p].kind=='heavyCharge' and p:GetVariable('ProjectYakuzaActive')==true,'combo-to-charge queue keeps custom stance active instead of forcing an idle reset')
+PY.cancelAction(p,'fixture_reset');H.clearPlayer(p);mouse[2]=false
 -- Native handoff timing, full-power deadline and pause-safe hold acknowledgement.
 for branch=1,4 do
  PY.Combo.reset(state())

@@ -2,7 +2,7 @@
 
 Project Yakuza is a Build 42 combat mod and a framework for independent fighting-style addons. Dragon of Dojima uses supplied Yakuza/Kiwami animations, textures and sounds. Other styles register their own moves, assets and controllers without copying the framework.
 
-**Version 0.36.0 · Lua API 3 · MP protocol 2.** API 1 style registrations remain supported. Internal namespace/mod dependency: `ProjectYakuza`. Display name: Project Yakuza.
+**Version 0.37.0 · Lua API 3 · MP protocol 2.** API 1 style registrations remain supported. Internal namespace/mod dependency: `ProjectYakuza`. Display name: Project Yakuza.
 
 ## Install and play
 
@@ -30,9 +30,9 @@ All mod controls are rebindable under **Options > Mods > Project Yakuza**. Shift
 - Native melee collisions, short buffers, conditional recovery, pose-linked double finishers, multihit capped at three targets and ground/running/dash strikes. DoD lights use x0.75 damage and finishers x1.25 before heat modifiers.
 - Walking guard, Tiger Drop's final-0.2-second timing and 60-second cooldown, and Lua knockback approximating a launch.
 - Six heat stocks, damage-scaled gain, banked stocks, taunt reward, multiple activation clips and Extreme Heat. Gain stops during mode; fuel expires naturally. Activation temporarily protects the player; taunts and style entry do not.
-- Extreme Heat outline begins with activation, accompanied by a one-second foot smoke cloud; completed taunts use a short animated torso flare and sparks with a brief bounded aura pulse.
+- Extreme Heat outline begins with activation, accompanied by a one-second foot smoke cloud; completed taunts use a short animated torso flare and sparks without a body-brightness pulse.
 - Supplied dragon/orb HUD, world-rendered aura/impacts, native-leg stance, combat feedback, optional selected-character CVF voices and a DoD-only 19-track non-repeating-shuffle playlist.
-- First-light left-fist/forearm glow, two animated flame patches, trails and sparks use original Y6 assets, independent sprite centring and source-sampled positions inset toward the forearm; its existing whoosh follows the native clip clock. This is a scoped prototype; other attacks retain their effects.
+- First-light left-fist/forearm glow, two animated flame patches, trails and sparks use original Y6 assets, independent sprite centring, limb-height world depth, a small downward calibration and source-sampled positions inset toward the forearm; its existing whoosh follows the native clip clock. This is a scoped prototype; other attacks retain their effects.
 - Yakuza 6 branch-specific charge stance/release, limb-bound original VFX, automatic release after 1.2 seconds and partial-to-x2 charged damage and a subtle native Extreme Heat outline.
 - Per-style UI providers for heat, status, selector, slot art and setup; see [Style UI API](docs/STYLE_UI.md).
 - Independent Music/Sounds/Voices sliders, persistent style slots, MP equipment/hit/observer synchronization and addon APIs.

@@ -162,8 +162,8 @@ p:setVariable('ProjectYakuzaTaunt','started');a:update();p:setVariable('ProjectY
 local s=A.states[p];check(s and #s.emitters==4 and s.flashing,'completion flash reuses only the four ordinary aura sprites')
 clock=clock+130;A.render()
 check(s.opacity>0 and s.profile=='normal' and not s.extreme,'brief flash keeps the normal aura profile')
-check(s.emitters[1].instance.additive and not additive,'taunt completion pulses the actual aura and restores renderer state')
-check(s.emitters[1].instance.alpha>0 and s.emitters[1].instance.alpha<=s.opacity*.12 and s.emitters[1].instance.frames==1,'taunt aura pulse is bounded to twelve percent and advances frames once')
+check(not s.emitters[1].instance.additive and not additive,'taunt has no additive brightness pulse')
+check(near(s.emitters[1].instance.alpha,s.opacity) and s.emitters[1].instance.frames==1,'taunt never doubles the body aura or advances its frame twice')
 check(#A.flashes[p].emitters==8,'completion creates four animated torso flames and four small sparks')
 for _,e in ipairs(A.flashes[p].emitters)do check(e.sprite.kind=='flame' or e.sprite.kind=='spark','old static wisps are absent')end
 local count,alloc=loads,attached

@@ -78,7 +78,7 @@ function A.flash(player)
 end
 function A.drawFlash(p,f)
     if not A.particleColor then
-        A.particleColor=ColorInfo.new(.60,.80,1,1)
+        A.particleColor=ColorInfo.new(.28,.60,1,1)
         A.burstSmokeColor=A.extremeColor
     end
     local t=math.max(0,math.min(1,1-f.remaining/f.duration));local tile=Core.getTileScale()
@@ -104,11 +104,11 @@ function A.syncRenderHook()
     if active and not A.rendering then Events.OnPostRender.Add(A.render);A.rendering=true
     elseif not active and A.rendering then Events.OnPostRender.Remove(A.render);A.rendering=false end
 end
-function A.draw(p,s,pulse)
+function A.draw(p,s)
     local tile=Core.getTileScale()
     local color=s.extreme and A.extremeColor or A.color
     for _,e in ipairs(s.emitters) do
-        if e.instance and e.instance:getParentSprite()==e.sprite and not (pulse and e.point.smoke) then
+        if e.instance and e.instance:getParentSprite()==e.sprite then
             local alpha=s.opacity
             local dx,dy=0,0
             if s.extreme then
@@ -122,8 +122,7 @@ function A.draw(p,s,pulse)
                     dx=e.point.drift*cycle;dy=e.point.lift*cycle
                 end
             end
-            if pulse then alpha=alpha*pulse end
-            if not pulse and not isGamePaused() and e.frames>1 then e.sprite:update(e.instance) end
+            if not isGamePaused() and e.frames>1 then e.sprite:update(e.instance) end
             if e.opacity~=alpha then e.instance:SetAlpha(alpha);e.instance:SetTargetAlpha(alpha);e.opacity=alpha end
             e.instance:render(p,p:getX(),p:getY(),p:getZ(),IsoDirections.N,
                 p:getOffsetX()+tile+dx*tile,p:getOffsetY()-89*tile-dy*tile,e.point.smoke and A.smokeColor or color)
@@ -156,13 +155,7 @@ function A.renderBody()
                 if s.activationBurst then A.drawFlash(p,s.activationBurst) end
                 if flash then
                     A.drawFlash(p,flash)
-                    -- Brief, low-gain pulse of the actual aura, only after taunt completion.
-                    local pulse=.12*math.sin(math.pi*(1-flash.remaining/flash.duration))
-                    if pulse>.002 then
-                        SpriteRenderer.instance:setDoAdditive(true)
-                        A.draw(p,s,pulse)
-                        SpriteRenderer.instance:setDoAdditive(false)
-                    end
+
                 end
             end
         elseif p:isDead() then A.clear(p) end

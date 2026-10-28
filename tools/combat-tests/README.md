@@ -70,3 +70,6 @@ For 0.35.0, compile/run DetachedEffectProbe.java with B42's runtime/JARs to repr
 
 
 For 0.36.0 compile ChargeTrackProbe.java against the installed B42 JARs, then run validate_charge_limb_tracks.py. It validates nine existing clips/87 source samples and last-frame handoff markers against ChargeTracks.lua, writing only ignored numeric JSON. The charge/UI fixture has 176 assertions, MP 104, taunt 190 and limb-presentation 528. Source .x/image/audio files remain unchanged; native owner/observer metadata and source-pose checks still apply.
+
+
+0.37.0: native PunchTrackProbe additionally exports world XYZ for the eight projection checks. Limb tests have 401 assertions covering compensated limb-height depth, lowered centres, mixed glow/alpha scoping, synchronous start before action publication and missing-track retry/fallback. Charge/UI has 181 assertions including marker-gated charge recovery and stance retention; taunt has 190, including absence of an additive brightness pulse. validate_charge_limb_tracks.py checks .14 entry blends. No game/GPU test is implied.
