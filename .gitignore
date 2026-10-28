@@ -50,3 +50,5 @@
 !/tools/combat-tests/PunchTrackProbe.java
 !/tools/combat-tests/build_punch_effects_tests.py
 !/tools/combat-tests/punch-effects-test-fixture.lua
+
+!/tools/combat-tests/DetachedEffectProbe.java

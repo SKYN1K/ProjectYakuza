@@ -17,15 +17,15 @@ local allocated,disposed,updated,draws=0,0,0,{}
 local failRender=false
 local function instance()
  allocated=allocated+1
- return {setScale=function()end,setFrameSpeedPerFrame=function()end,SetAlpha=function(s,v)s.alpha=v end,SetTargetAlpha=function()end,
+ return {setScale=function(s,x,y)s.scale=x end,setFrameSpeedPerFrame=function()end,SetAlpha=function(s,v)s.alpha=v end,SetTargetAlpha=function()end,
  Dispose=function(s)check(not s.disposed,'no double disposal');s.disposed=true;disposed=disposed+1 end,
  render=function(s,p,x,y,z,d,ox,oy,col)
   check(not additive,'normal alpha scopes render');if failRender then error('injected render failure')end
-  draws[#draws+1]={p=p,x=x,y=y,z=z,ox=ox,oy=oy,color=col,alpha=s.alpha}
+  draws[#draws+1]={p=p,x=x,y=y,z=z,ox=ox,oy=oy,color=col,alpha=s.alpha,scale=s.scale,height=s.sprite.height}
  end}
 end
-IsoSprite={CreateSprite=function()return {LoadFramesNoDirPageSimple=function()end,LoadFramesNoDirPageDirect=function()end,setAnimate=function()end,update=function()updated=updated+1 end}end}
-IsoSpriteInstance={add=function()end}
+IsoSprite={CreateSprite=function()return {height=64,LoadFramesNoDirPageSimple=function(s,path)s.height=string.find(path,'ChargeSpark') and 32 or 64 end,LoadFramesNoDirPageDirect=function(s)s.height=32 end,setAnimate=function()end,update=function()updated=updated+1 end}end}
+IsoSpriteInstance={add=function()end,get=function(sprite)local i=instance();i.sprite=sprite;return i end}
 local function actor()
  local a={dead=false,equipped=true,reaction='',floor=false,md={},angle=0,time=0,weight=1,localPlayer=true,lookup=0,empty=false,x=0,y=0,z=0}
  function a:isDead()return self.dead end
@@ -56,11 +56,12 @@ ProjectYakuza={listeners={},WorldEffects={attach=function()return instance()end}
  isStyleToken=function()return false end,Heat={isExtreme=function(who)return who.extreme or false end,config={extremeSpeed=1.15}},HeatActivation={active={}}}
 function ProjectYakuza.on(name,fn)local listeners=ProjectYakuza.listeners;listeners[name]=listeners[name] or {};table.insert(listeners[name],fn)end
 local function emit(name,...)for _,f in ipairs(ProjectYakuza.listeners[name] or {})do f(...)end end
+-- WORLD
 -- TRACKS
 -- EFFECTS
 local F=ProjectYakuza.AttackEffects
 local track=ProjectYakuza.AttackTracks.dd_light_01
-local move={animation=track.animation,duration=.625,impact=.2,attackEffects={track='dd_light_01',from=2/30,to=11/30,swingFrame=3}}
+local move={animation=track.animation,duration=.625,impact=.2,attackEffects={track='dd_light_01',from=2/30,to=14/30,swingFrame=3}}
 style.lightAttacks={move}
 check(not F.hooked and not any(Events.OnTick.hooks),'idle has no tick/render effects')
 local nativeProjection=-- PROJECTION
@@ -79,8 +80,22 @@ check(near(x,(track.frames[7][4]+track.frames[8][4])/2),'subframe position inter
 F.start(p,style,1,{animation='Other'});check(not F.states[p],'unconfigured moves remain unchanged')
 emit('lightAttackStarted',p,style,1,move);check(F.states[p] and F.hooked and allocated==0,'begin waits for actual native clip before allocating')
 p.time=.04;F.tick();F.render();check(allocated==0 and #draws==0,'windup before configured window has no particles')
-p.time=.2;F.tick();F.render();check(allocated==10 and #F.states[p].points==10,'bounded ten sprites for first punch')
+p.time=.2;F.tick();F.render();check(allocated==18 and #F.states[p].points==18,'bounded eighteen sprites for first punch')
 check(additive,'render restores original additive state')
+for j=1,6 do
+ local d=draws[j];local x,y,z
+ if j==6 then
+  local wx,wy,wz=F.sample(track,.2,2);local kx,ky,kz=F.sample(track,.2,3)
+  x,y,z=wx+(kx-wx)*.35,wy+(ky-wy)*.35,wz+(kz-wz)*.35
+ else
+  local ax,ay,az=F.sample(track,.2,1);local wx,wy,wz=F.sample(track,.2,2);local t=j*.2
+  x,y,z=ax+(wx-ax)*t,ay+(wy-ay)*t,az+(wz-az)*t
+ end
+ local px,py=F.project(x,y,z,p.angle,2)
+ check(near(-d.ox,px) and near(-d.oy-d.height*d.scale/2,py),'each independently sized glow centres on the arm path')
+end
+check(#draws>=14,'forearm glow, two flames, trails and several sparks are visible together')
+
 local n=p.lookup;F.tick();check(p.lookup==n+1,'native slot cached after bounded initial lookup')
 local duplicate=actor()
 function duplicate:dbgGetAnimTrackName(layer,slot)if layer==1 and slot<2 then return move.animation end;return '' end

@@ -22,6 +22,6 @@ for f in report['reused_sounds']:assert sha(mod/'42'/f['output'])==f['sha256']
 print('PASS 31 native FK samples, 66 unchanged texture hashes and original Y6 whoosh hashes')
 m=mod/'42/media/lua/client/ProjectYakuza'
 s=(w/'punch-effects-test-fixture.lua').read_text(encoding='utf-8')
-for marker,name in [('TRACKS','AttackTracks'),('EFFECTS','AttackEffects'),('FEEDBACK','Feedback')]:s=s.replace('-- '+marker+'\n','do\n'+(m/(name+'.lua')).read_text(encoding='utf-8')+'\nend\n')
+for marker,name in [('WORLD','WorldEffects'),('TRACKS','AttackTracks'),('EFFECTS','AttackEffects'),('FEEDBACK','Feedback')]:s=s.replace('-- '+marker+'\n','do\n'+(m/(name+'.lua')).read_text(encoding='utf-8')+'\nend\n')
 s=s.replace('-- PROJECTION','{'+','.join('{'+','.join(str(x) for x in row)+'}' for row in d['projection'])+'}')
 (w/'punch-effects-tests.lua').write_text(s,encoding='utf-8')

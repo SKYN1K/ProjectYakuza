@@ -1,13 +1,14 @@
-# Project Yakuza 0.34.0
+# Project Yakuza 0.35.0
 
-- Added a first-light-punch effect prototype: short blue glow along the striking left fist/forearm, a small animated flame, short trail and three outgoing sparks. Extreme Heat uses a stronger purple-blue tint. The effect also appears without heat so this first pass can be evaluated independently.
-- Attachment positions come from the original shipped punch, sampled through B42's native importer/FK at 30 fps. Playback follows the live native track time and actor facing, including Extreme Heat speed. No image, sound or animation asset was created or modified.
-- Synchronized the existing Y6 punch whoosh to source frame 3 for this move; no duplicated sound layer or new recording. Other attacks, sound volumes, body auras, damage, hit timing and inputs are unchanged.
-- Remote observer playback triggers the same configured effect without additional packets. Effects clean up on hit, move/style change, end, timeout, pause/world transitions and rendering failure. Ten sprites per active punch, maximum eight actors; no idle effect tick/render subscription.
-- Added numeric-track/provenance documentation and a native/Kahlua regression fixture. Lua API 3 and MP protocol 2 remain unchanged. Grabs remain disabled; the separate voice pack is untouched.
+- Extreme Heat outline now begins immediately with the activation animation, including remote observer playback, before fuel mode starts. Interruption/end restores the previous outline.
+- Added a one-second expanding smoke cloud around the feet/lower legs at activation: four original animated smoke particles, normal transparency, pause-aware lifetime, no repeated triggering during the animation. Existing sustained auras retain their timing/size.
+- Rebuilt taunt completion VFX: a 320 ms torso flare with four animated source flame patches and four small outgoing sparks. Removed the old static wisps and extra additive aura-brightening pass. Taunt animation/reward/voice behavior is unchanged.
+- Fixed a demonstrated native positioning bug in first-light punch particles: AttachExistingAnim overwrites offsets on a shared sprite. Punch/taunt/activation-burst particles now use detached native instances and per-instance centring. Glow centres are placed along the forearm and inset fist path.
+- Made the first-light effect visibly layered: six arm glow centres, two animated flames, four short trails and six sparks; extended the source window through frame 14 and spark lifetime to .18 source seconds. Maximum eighteen instances per active punch/eight actors; no idle effect callbacks or new MP packets.
+- No visual/audio/animation files were added or modified. Only supplied assets are used. Combat damage, collisions, controls, music, body-aura scale/flame speed and the separate voice pack are unchanged. Grabs remain disabled.
 
-## Validation and limits
+## Validation
 
-3,793 offline Kahlua assertions pass; all 39 production Lua files compile. Native import verifies all 31 source samples and eight-direction projection; original texture/sound hashes match. See [validation](VALIDATION_0.34.0.md).
+3,834 offline Kahlua assertions pass; all 39 production Lua files compile. A native probe reproduces the shared-offset overwrite and verifies detached scale/alpha/pool behavior. Tests check early local/remote outline, the one-second cloud, taunt replacement/alpha, per-scale punch centring, simultaneous particles, pause, interruption and cleanup. See [validation](VALIDATION_0.35.0.md).
 
-This follows the original clip path, not live blended bone transforms or a limb-surface shader. Walking/torso blending and occlusion can differ. No PZ client/server was launched; GPU appearance and live MP remain unverified. Restart PZ after installing, and use the same version on server/clients.
+PZ was not launched; live GPU appearance and MP gameplay remain unverified. Source-path tracking still approximates final blended limb positions. Fully restart PZ after updating; server and clients need the same version.

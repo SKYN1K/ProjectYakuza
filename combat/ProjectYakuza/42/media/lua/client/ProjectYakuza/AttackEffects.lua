@@ -103,20 +103,23 @@ local function allocate(p,s)
         F.flame:LoadFramesNoDirPageDirect("media/textures/ProjectYakuza/ExtremeHeat","flame",64);F.flame:setAnimate(true)
     end
     local tile=Core.getTileScale();s.points={}
-    for i=1,10 do
-        local sp=i==4 and F.flame or i>=8 and F.spark or F.glint
-        local height=(i==4 or i>=8) and 32 or 64
-        local scale=(i==1 and .16 or i==4 and .24 or i>=8 and .22 or .075)*tile
-        local instance=PY.WorldEffects.attach(p,sp,height,scale,0,true,i==4 and .8 or 0)
-        p:getAttachedAnimSprite():remove(instance)
+    for i=1,18 do
+        local sp=(i==7 or i==8) and F.flame or i>=13 and F.spark or F.glint
+        local height=(i==7 or i==8 or i>=13) and 32 or 64
+        local scale=(i==6 and .12 or i==7 and .22 or i==8 and .27 or i>=13 and .20 or .075)*tile
+        local instance=PY.WorldEffects.detached(sp,scale,(i==7 and 1 or i==8 and .85 or 0))
         s.points[i]={instance=instance,height=height,scale=scale}
     end
 end
 local function drawPoint(p,point,x,y,alpha,color)
     point.instance:SetAlpha(alpha);point.instance:SetTargetAlpha(alpha)
-    point.instance:render(p,p:getX(),p:getY(),p:getZ(),IsoDirections.N,
-        p:getOffsetX()+Core.getTileScale()-x,p:getOffsetY()-89*Core.getTileScale()-y,color)
+    PY.WorldEffects.renderCentered(p,point.instance,point.height,point.scale,x,y,color)
 end
+local function hand(track,time)
+    local wx,wy,wz=F.sample(track,time,2);local kx,ky,kz=F.sample(track,time,3)
+    return wx+(kx-wx)*.35,wy+(ky-wy)*.35,wz+(kz-wz)*.35
+end
+
 function F.draw()
     local tile=Core.getTileScale()
     if not F.normal then F.normal=ColorInfo.new(.18,.52,1,1);F.extreme=ColorInfo.new(.38,.24,1,1) end
@@ -127,33 +130,38 @@ function F.draw()
             local angle=p:getAnimAngleRadians()
             local extreme=PY.Heat.isExtreme(p);local color=extreme and F.extreme or F.normal
             local fade=math.min(1,(time-s.config.from)/.035,math.max(0,(s.config.to+.06-time)/.06))*math.min(1,s.weight)
-            local strength=extreme and .80 or .52
-            local wx,wy,wz=F.sample(s.track,time,2);local kx,ky,kz=F.sample(s.track,time,3)
-            local hx,hy=F.project(wx+(kx-wx)*.6,wy+(ky-wy)*.6,wz+(kz-wz)*.6,angle,tile)
-            drawPoint(p,s.points[1],hx,hy,fade*strength,color)
-            local ax,ay,az=F.sample(s.track,time,1)
-            for i=2,3 do
-                local t=(i==2 and .55 or .85)
-                local x,y=F.project(ax+(wx-ax)*t,ay+(wy-ay)*t,az+(wz-az)*t,angle,tile)
-                drawPoint(p,s.points[i],x,y,fade*strength*.5,color)
+            local strength=extreme and .80 or .60
+            local wx,wy,wz=F.sample(s.track,time,2);local ax,ay,az=F.sample(s.track,time,1)
+            local fx,fy,fz=hand(s.track,time)
+            local hx,hy=F.project(fx,fy,fz,angle,tile)
+            -- Six overlapping centres lie within the elbow-to-fist path.
+            for i=1,6 do
+                local x,y
+                if i==6 then x,y=hx,hy
+                else local t=i*.2;x,y=F.project(ax+(wx-ax)*t,ay+(wy-ay)*t,az+(wz-az)*t,angle,tile) end
+                drawPoint(p,s.points[i],x,y,fade*strength*(i==6 and 1 or .65),color)
             end
-            if not isGamePaused() then F.flame:update(s.points[4].instance) end
-            drawPoint(p,s.points[4],hx,hy,fade*strength*.7,color)
-            for i=5,7 do
-                local lag=(i-4)*.018;local x,y,z=F.sample(s.track,math.max(s.config.from,time-lag),3)
+            for i=7,8 do
+                if not isGamePaused() then F.flame:update(s.points[i].instance) end
+                local x,y=hx,hy
+                if i==7 then x,y=F.project(ax+(wx-ax)*.65,ay+(wy-ay)*.65,az+(wz-az)*.65,angle,tile) end
+                drawPoint(p,s.points[i],x,y,fade*strength*.8,color)
+            end
+            for i=9,12 do
+                local lag=(i-8)*.022;local x,y,z=hand(s.track,math.max(s.config.from,time-lag))
                 local dx,dy=F.project(x,y,z,angle,tile)
-                drawPoint(p,s.points[i],dx,dy,fade*strength*(8-i)*.14,color)
+                drawPoint(p,s.points[i],dx,dy,fade*strength*(13-i)*.10,color)
             end
-            for i=8,10 do
-                local point=s.points[i];local birth=(i-4)/30;local age=time-birth
-                if age>=0 and age<.12 then
+            for i=13,18 do
+                local point=s.points[i];local birth=(i-10)/30;local age=time-birth
+                if age>=0 and age<.18 then
                     if not point.x then
-                        local x,y,z=F.sample(s.track,birth,3)
+                        local x,y,z=hand(s.track,birth)
                         point.x,point.y=F.project(x,y,z,angle,tile);point.px=p:getX();point.py=p:getY();point.pz=p:getZ()
                     end
-                    local t=age/.12;local dx=p:getX()-point.px;local dy=p:getY()-point.py;local dz=p:getZ()-point.pz
-                    local x=point.x-(dx-dy)*32*tile+(i-9)*9*t*tile
-                    local y=point.y-(dx+dy)*16*tile+dz*96*tile-(5+(i-8)*3)*t*tile
+                    local t=age/.18;local dx=p:getX()-point.px;local dy=p:getY()-point.py;local dz=p:getZ()-point.pz
+                    local x=point.x-(dx-dy)*32*tile+((i-13)%3-1)*6*t*tile
+                    local y=point.y-(dx+dy)*16*tile+dz*96*tile-(4+(i-13)*1.1)*t*tile
                     drawPoint(p,point,x,y,(1-t)*strength,color)
                 end
             end

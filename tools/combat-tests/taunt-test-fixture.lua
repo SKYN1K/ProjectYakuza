@@ -122,6 +122,7 @@ Core={getTileScale=function()return 2 end};IsoDirections={N='N'};ColorInfo={new=
 instanceof=function()return true end
 IsoSprite={CreateSprite=function()
  local s={};function s:LoadFramesNoDirPageDirect(path,kind,count)self.kind=kind;self.path=path;self.frameCount=count;check((path=='media/textures/ProjectYakuza/HeatWisp' and count==32) or (path=='media/textures/ProjectYakuza/TauntBurst' and count==1) or (path=='media/textures/ProjectYakuza/ExtremeHeat' and (((kind=='flame' or kind=='smoke') and count==64) or ((kind=='wispL' or kind=='wispR') and count==1))),'only supplied normal, taunt or original Lost Judgment texture frames');loads=loads+1 end
+ function s:LoadFramesNoDirPageSimple(path)self.kind='spark';self.path=path;self.frameCount=1;check(path=='media/textures/ProjectYakuza/ChargeSpark.png','taunt uses existing original spark');loads=loads+1 end
  function s:setAnimate(v)self.animate=v end
  function s:update(i)i.frames=i.frames+1 end
  return s
@@ -130,6 +131,7 @@ IsoSpriteInstance={add=function()pooled=pooled+1 end}
 ProjectYakuza.WorldEffects={attach=function(p,s,height,scale,anchor,loop,speed,x)
  attached=attached+1
  local i={frames=0,scale=scale,height=anchor,speed=speed,x=x}
+ function i:setScale(x,y)self.scale=x end
  function i:getParentSprite()return s end
  function i:SetAlpha(v)self.alpha=v end
  function i:SetTargetAlpha(v)end
@@ -138,6 +140,15 @@ ProjectYakuza.WorldEffects={attach=function(p,s,height,scale,anchor,loop,speed,x
  return i
 end}
 function p:getAttachedAnimSprite()return {remove=function()end}end
+ProjectYakuza.WorldEffects.detached=function(s,scale,speed)return ProjectYakuza.WorldEffects.attach(p,s,s.kind=='smoke' and 64 or 32,scale,0,true,speed,0)end
+ProjectYakuza.WorldEffects.renderCentered=function(owner,i,height,scale,x,y,color)i:render(owner,owner:getX(),owner:getY(),owner:getZ(),IsoDirections.N,-x,-y-height*scale/2,color)end
+function p:getPlayerNum()return 0 end
+function p:isOutlineHighlight()return self.outline or false end
+function p:getOutlineHighlightCol()return self.outlineColor or 0 end
+function p:setOutlineHighlight(_,value)self.outline=value end
+function p:setOutlineHighlightCol(_,r,g,b,a)self.outlineColor=math.floor(r*255)+math.floor(g*255)*256+math.floor(b*255)*65536+math.floor(a*255)*16777216 end
+getPlayer=function()return p end
+-- OUTLINE
 -- CATALOG
 -- PROTOCOL
 -- AURA
@@ -151,16 +162,17 @@ p:setVariable('ProjectYakuzaTaunt','started');a:update();p:setVariable('ProjectY
 local s=A.states[p];check(s and #s.emitters==4 and s.flashing,'completion flash reuses only the four ordinary aura sprites')
 clock=clock+130;A.render()
 check(s.opacity>0 and s.profile=='normal' and not s.extreme,'brief flash keeps the normal aura profile')
-check(s.emitters[1].instance.additive and not additive,'same normal aura frame receives the subtle additive pass')
-check(near(s.emitters[1].instance.alpha,s.opacity*.035) and s.emitters[1].instance.frames==1,'brief ordinary glow stays subtle and never advances the animation twice')
-check(#A.flashes[p].emitters==5,'completion creates only five upper-body particles')
+check(not s.emitters[1].instance.additive and not additive,'taunt no longer adds a bright overlay to the normal aura')
+check(near(s.emitters[1].instance.alpha,s.opacity) and s.emitters[1].instance.frames==1,'normal aura draws once without an extra taunt brightness pass')
+check(#A.flashes[p].emitters==8,'completion creates four animated torso flames and four small sparks')
+for _,e in ipairs(A.flashes[p].emitters)do check(e.sprite.kind=='flame' or e.sprite.kind=='spark','old static wisps are absent')end
 local count,alloc=loads,attached
 for i=1,1000 do A.update(p);A.render()end
 check(loads==count and attached==alloc,'stable aura never reallocates per frame')
 local frames=s.emitters[1].instance.frames;local pulse=s.clock
 paused=true;clock=clock+5000;A.render();check(s.clock==pulse and s.emitters[1].instance.frames==frames,'pause holds glow and sprites');paused=false
-s.emitters[1].instance.fail=true;local ok=pcall(A.render);check(not ok and not additive,'flash render failure restores additive state');s.emitters[1].instance.fail=false
-ProjectYakuza.setHeat(p,0);clock=clock+131;A.render()
+A.flashes[p].emitters[1].instance.fail=true;local ok=pcall(A.render);check(not ok and not additive,'flash render failure restores additive state');A.flashes[p].emitters[1].instance.fail=false
+ProjectYakuza.setHeat(p,0);clock=clock+191;A.render()
 check(not A.flashes[p] and not s.emitters[1].instance,'completion flash expires and zero-heat aura clears')
 a=begin();a:stop();check(not A.flashes[p] and not s.emitters[1].instance,'interrupted taunt never flashes')
 ProjectYakuza.setHeat(p,100/6);A.update(p);clock=clock+350;A.render();check(s.emitters[1].instance.scale==.5175,'normal aura original dimensions preserved')
@@ -207,27 +219,50 @@ p.data.ProjectYakuzaHeatAuraDisabled=true;A.flash(p);check(not A.flashes[p] and 
 p.localPlayer=false;p:setVariable('ProjectYakuzaRemoteClip','ProjectYakuza_DD_Taunt01');ProjectYakuza.setHeat(p,0);A.update(p)
 check(not s.emitters[1].instance,'remote taunt playback alone has no flash')
 A.flash(p);check(s.flashing and s.emitters[1].instance,'replicated completion triggers observer flash')
-clock=clock+261;A.render();check(not s.emitters[1].instance,'remote completion glow expires at zero heat')
+clock=clock+321;A.render();check(not s.emitters[1].instance,'remote completion glow expires at zero heat')
 p.localPlayer=true
 -- Activation uses the actual started native action, before fuel mode starts.
 ProjectYakuza.HeatActivation={active={}}
 ProjectYakuza.setHeat(p,0);extreme=false
 local activation={started=true,cleaned=false};ProjectYakuza.HeatActivation.active[p]=activation
 ProjectYakuza.emit('heatActivationStarted',p)
+check(p.outline==true,'outline starts immediately with native activation before mode fuel starts')
 check(A.states[p].activating and A.states[p].extreme and #A.states[p].emitters==6,'native activation immediately selects fire/smoke even before Extreme Heat fuel starts')
 clock=clock+350;drawLog={};A.render()
-check(#drawLog==6 and A.states[p].opacity==1,'activation fire and smoke render after normal fade in')
+check(#drawLog==10 and A.states[p].opacity==1,'activation draws body aura plus four expanding foot-cloud particles')
+local cloud=A.states[p].activationBurst
+local cloudCentres=0
+for _,draw in ipairs(drawLog)do
+ for _,e in ipairs(cloud.emitters)do if draw.instance==e.instance then
+  local centreY=-draw.oy-64*e.instance.scale/2
+  check(centreY<0 and centreY>-55,'activation cloud centres stay within lower legs above ground')
+  check(draw.alpha<=.38 and not draw.additive,'activation smoke stays translucent without additive glare')
+  cloudCentres=cloudCentres+1
+ end end
+end
+check(cloudCentres==4,'four independent smoke centres render from the feet')
+local oldCloudLog=drawLog;additive=true;drawLog={};A.render()
+local onlyAlpha=true;for _,draw in ipairs(drawLog)do if draw.additive then onlyAlpha=false end end
+check(additive and onlyAlpha,'aura and transient particles force alpha and restore foreign additive mode');additive=false;drawLog=oldCloudLog
+check(cloud and #cloud.emitters==4 and cloud.remaining==650,'activation smoke is a four-particle one-second cloud')
+local beforeCloudFrames=cloud.emitters[1].instance.frames;paused=true;clock=clock+3000;A.render();paused=false
+check(cloud.remaining==650 and cloud.emitters[1].instance.frames==beforeCloudFrames,'pause freezes activation smoke age and animation')
+for i=1,100 do A.update(p)end
+check(A.states[p].activationBurst==cloud,'repeated state updates never restart activation cloud')
+clock=clock+651;A.render()
+check(not A.states[p].activationBurst and cloud.emitters[1].instance.disposed,'cloud ends after one unpaused second and returns all instances')
+A.update(p);check(not A.states[p].activationBurst,'cloud does not repeat during remaining activation')
 local activationSprites={};for i,e in ipairs(A.states[p].emitters)do activationSprites[i]=e.instance end
 extreme=true;activation.cleaned=true;ProjectYakuza.emit('extremeHeatStarted',p)
 check(not A.states[p].activating and A.states[p].extreme,'activation hands over to active mode')
 local reused=true;for i,e in ipairs(A.states[p].emitters)do if e.instance~=activationSprites[i]then reused=false end end
 check(reused,'activation-to-mode transition reuses particles without a disappearance')
 extreme=false;ProjectYakuza.emit('heatActivationStopped',p,false)
-check(not A.states[p].emitters[1].instance,'interrupted/ended activation clears particles when no heat remains')
+check(not A.states[p].emitters[1].instance and not p.outline,'interrupted/ended activation clears particles and outline when no heat remains')
 ProjectYakuza.HeatActivation.active[p]=nil
 p.localPlayer=false;p:setVariable('ProjectYakuzaRemoteClip','ProjectYakuza_DD_HeatActivate02');A.update(p)
-check(A.states[p].activating and #A.states[p].emitters==6,'remote activation observer clip also selects the six-particle profile')
+check(A.states[p].activating and #A.states[p].emitters==6 and A.states[p].activationBurst and p.outline,'remote activation starts matching aura, cloud and outline')
 p:setVariable('ProjectYakuzaRemoteClip','');A.update(p)
-check(not A.states[p].emitters[1].instance,'remote activation clip ending clears zero-heat effects')
+check(not A.states[p].emitters[1].instance and not A.states[p].activationBurst and not p.outline,'remote activation clip ending clears zero-heat aura, cloud and outline')
 p.localPlayer=true
 return 'PASS '..checks..' taunt lifecycle, input, heat, world aura and MP checks'

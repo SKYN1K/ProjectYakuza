@@ -1,6 +1,19 @@
 require "ProjectYakuza/Registry"
 local W={}
 ProjectYakuza.WorldEffects=W
+-- Detached effects must use sprites that never pass through AttachExistingAnim.
+-- That engine method changes offsets on the shared sprite, not on its instance.
+function W.detached(sprite,scale,speed)
+    local instance=IsoSpriteInstance.get(sprite)
+    instance:setScale(scale,scale);instance:setFrameSpeedPerFrame(speed or 0)
+    return instance
+end
+function W.renderCentered(character,instance,frameHeight,scale,x,y,color)
+    -- Native moving-object sprites anchor bottom-centre. Cancel half the height
+    -- explicitly per instance, leaving the shared sprite's default offsets at zero.
+    instance:render(character,character:getX(),character:getY(),character:getZ(),IsoDirections.N,
+        -x,-y-frameHeight*scale/2,color)
+end
 -- B42 character rendering passes (offsetX + tileScale, offsetY - 89*tileScale).
 -- IsoSprite additionally anchors moving-object textures at bottom centre.
 -- Frame centre is therefore (0, -frameHeight*scale/2) before our offsets.
