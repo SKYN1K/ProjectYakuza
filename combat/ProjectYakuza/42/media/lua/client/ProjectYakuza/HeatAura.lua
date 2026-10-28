@@ -2,7 +2,7 @@ require "ProjectYakuza/Runtime"
 require "ProjectYakuza/HeatOutline"
 require "ProjectYakuza/WorldEffects"
 local ProjectYakuza=ProjectYakuza
-local A={states=setmetatable({}, {__mode="k"}),fadeInMs=350,flashMs=320,flashes=setmetatable({}, {__mode="k"})}
+local A={states=setmetatable({}, {__mode="k"}),fadeInMs=350,flashMs=480,flashes=setmetatable({}, {__mode="k"})}
 ProjectYakuza.HeatAura=A
 -- Four tight overlapping patches on the upper body; no waist/leg emitters.
 A.layout={
@@ -24,14 +24,14 @@ A.extremeLayout={
 -- Completion-only torso flare: animated supplied flames plus small departing sparks.
 -- Detached instances keep per-particle centring independent of shared sprite offsets.
 A.flashLayout={
-    {kind="flame",x=-6,height=38,scale=.40,frameHeight=32,drift=-2,lift=5,alpha=.32},
-    {kind="flame",x=6,height=39,scale=.40,frameHeight=32,drift=2,lift=6,alpha=.32},
-    {kind="flame",x=0,height=48,scale=.34,frameHeight=32,drift=0,lift=4,alpha=.26},
-    {kind="flame",x=0,height=33,scale=.42,frameHeight=32,drift=0,lift=7,alpha=.28},
-    {kind="spark",x=-7,height=38,scale=.20,frameHeight=32,drift=-5,lift=9,alpha=.40},
-    {kind="spark",x=7,height=39,scale=.20,frameHeight=32,drift=5,lift=8,alpha=.40},
-    {kind="spark",x=-3,height=46,scale=.18,frameHeight=32,drift=-3,lift=10,alpha=.32},
-    {kind="spark",x=3,height=46,scale=.18,frameHeight=32,drift=3,lift=11,alpha=.32},
+    {kind="flame",x=-6,height=38,scale=.65,frameHeight=32,drift=-2,lift=5,alpha=.52},
+    {kind="flame",x=6,height=39,scale=.65,frameHeight=32,drift=2,lift=6,alpha=.52},
+    {kind="flame",x=0,height=48,scale=.56,frameHeight=32,drift=0,lift=4,alpha=.46},
+    {kind="flame",x=0,height=33,scale=.70,frameHeight=32,drift=0,lift=7,alpha=.48},
+    {kind="spark",x=-7,height=38,scale=.20,frameHeight=32,drift=-5,lift=9,alpha=.55},
+    {kind="spark",x=7,height=39,scale=.20,frameHeight=32,drift=5,lift=8,alpha=.55},
+    {kind="spark",x=-3,height=46,scale=.18,frameHeight=32,drift=-3,lift=10,alpha=.52},
+    {kind="spark",x=3,height=46,scale=.18,frameHeight=32,drift=3,lift=11,alpha=.52},
 }
 A.activationLayout={
     {kind="smoke",x=-11,height=3,scale=.62,frameHeight=64,drift=-9,lift=11,alpha=.38},
@@ -78,8 +78,8 @@ function A.flash(player)
 end
 function A.drawFlash(p,f)
     if not A.particleColor then
-        A.particleColor=ColorInfo.new(.22,.46,1,1)
-        A.burstSmokeColor=ColorInfo.new(.42,.39,.62,1)
+        A.particleColor=ColorInfo.new(.60,.80,1,1)
+        A.burstSmokeColor=A.extremeColor
     end
     local t=math.max(0,math.min(1,1-f.remaining/f.duration));local tile=Core.getTileScale()
     local fade=math.sin(math.pi*t)
@@ -104,11 +104,11 @@ function A.syncRenderHook()
     if active and not A.rendering then Events.OnPostRender.Add(A.render);A.rendering=true
     elseif not active and A.rendering then Events.OnPostRender.Remove(A.render);A.rendering=false end
 end
-function A.draw(p,s)
+function A.draw(p,s,pulse)
     local tile=Core.getTileScale()
     local color=s.extreme and A.extremeColor or A.color
     for _,e in ipairs(s.emitters) do
-        if e.instance and e.instance:getParentSprite()==e.sprite then
+        if e.instance and e.instance:getParentSprite()==e.sprite and not (pulse and e.point.smoke) then
             local alpha=s.opacity
             local dx,dy=0,0
             if s.extreme then
@@ -122,7 +122,8 @@ function A.draw(p,s)
                     dx=e.point.drift*cycle;dy=e.point.lift*cycle
                 end
             end
-            if not isGamePaused() and e.frames>1 then e.sprite:update(e.instance) end
+            if pulse then alpha=alpha*pulse end
+            if not pulse and not isGamePaused() and e.frames>1 then e.sprite:update(e.instance) end
             if e.opacity~=alpha then e.instance:SetAlpha(alpha);e.instance:SetTargetAlpha(alpha);e.opacity=alpha end
             e.instance:render(p,p:getX(),p:getY(),p:getZ(),IsoDirections.N,
                 p:getOffsetX()+tile+dx*tile,p:getOffsetY()-89*tile-dy*tile,e.point.smoke and A.smokeColor or color)
@@ -133,7 +134,7 @@ function A.renderBody()
     if not A.color then
         A.color=ColorInfo.new(1,1,1,1)
         A.extremeColor=ColorInfo.new(.25,.15,1,1)
-        A.smokeColor=ColorInfo.new(.48,.40,.72,1)
+        A.smokeColor=A.extremeColor
     end
     local time=getTimestampMs()
     for p,s in pairs(A.states) do
@@ -153,7 +154,16 @@ function A.renderBody()
                 if ProjectYakuza.HeatOutline then ProjectYakuza.HeatOutline.draw(p) end
                 A.draw(p,s)
                 if s.activationBurst then A.drawFlash(p,s.activationBurst) end
-                if flash then A.drawFlash(p,flash) end
+                if flash then
+                    A.drawFlash(p,flash)
+                    -- Brief, low-gain pulse of the actual aura, only after taunt completion.
+                    local pulse=.12*math.sin(math.pi*(1-flash.remaining/flash.duration))
+                    if pulse>.002 then
+                        SpriteRenderer.instance:setDoAdditive(true)
+                        A.draw(p,s,pulse)
+                        SpriteRenderer.instance:setDoAdditive(false)
+                    end
+                end
             end
         elseif p:isDead() then A.clear(p) end
     end

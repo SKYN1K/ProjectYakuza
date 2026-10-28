@@ -88,9 +88,11 @@ function N.capture(p,force)
     local move=combo.groundMove or combo.finisherMove or (style and style.lightAttacks[combo.step>0 and combo.step or 1])
     local packet={style=style and style.id or "none",equipped=equipped,heat=ProjectYakuza.getHeat(p),fuel=ProjectYakuza.Heat.display(p),extreme=ProjectYakuza.Heat.isExtreme(p),
         clip=equipped and N.pickClip(p,style,combo) or "",move=equipped and move and move.nodeValue or "",
+        chargePower=action and action.kind=="heavyCharge" and action.timedAction and (action.timedAction.power or 0) or move and move.chargePower or 0,
         swing=s.swing,action=s.action or 0,taunt=s.taunt or 0,linked=p:GetVariable("ProjectYakuzaLinkedDouble")=="true",ground=combo.groundMove~=nil,phase=p:GetVariable("ProjectYakuzaDefensePhase") or "",
         grabMoving=p:GetVariable("ProjectYakuzaGrabMoving")=="true",grabDirection=action and action.kind=="grab" and action.target:GetVariable("ProjectYakuzaGrabWalkDirection") or "forward"}
     local key=packet.style..tostring(equipped)..math.floor(packet.heat)..math.floor(packet.fuel)..tostring(ProjectYakuza.Heat.stocks(p))..tostring(packet.extreme)..packet.clip..packet.move..packet.phase..tostring(packet.linked)..tostring(packet.grabMoving)..packet.grabDirection..tostring(packet.taunt)..":"..packet.swing..":"..packet.action
+    key=key..":"..math.floor(packet.chargePower*10)
     if force or key~=s.key or t>=(s.heartbeat or 0) then
         s.seq=s.seq+1;packet.seq=s.seq;sendClientCommand(p,P.module,"state",packet)
         s.key=key;s.heartbeat=t+1000
@@ -189,6 +191,7 @@ function N.applyState(p,packet,s)
     p:setVariable("ProjectYakuzaActive",packet.equipped);p:setVariable("ProjectYakuzaStyle",packet.equipped and packet.style or "")
     p:setVariable("ProjectYakuzaLinkedDouble",packet.linked);p:setVariable("DFCGroundEnabled",packet.ground)
     p:setVariable("ProjectYakuzaMove",packet.move)
+    p:setVariable("ProjectYakuzaRemoteChargePower",tostring(packet.chargePower or 0))
     p:setVariable("ProjectYakuzaRemoteObserver",packet.equipped)
     ProjectYakuza.Heat.playback(p,packet.extreme)
     if s.style~=packet.style or s.clip~=packet.clip or (packet.clip~="" and (s.swing~=packet.swing or s.action~=(packet.action or 0))) then
@@ -252,6 +255,7 @@ function N.command(module,command,a)
         return
     end
     if command=="state" then
+        if a.chargePower~=nil and not P.number(a.chargePower,0,1) then return end
         if not P.integer(a.seq,0,1000000000) or not P.number(a.heat,0,100) or not P.number(a.fuel,0,100) then return end
         if a.taunt~=nil and not P.integer(a.taunt,0,1000000000) then return end
         local s=N.remote[a.player]

@@ -1,7 +1,9 @@
 require "ProjectYakuza/Runtime"
 require "ProjectYakuza/WorldEffects"
+require "ProjectYakuza/AttackEffects"
+require "ProjectYakuza/ChargeTracks"
 local PY=ProjectYakuza
-local F={states=setmetatable({}, {__mode="k"})}
+local F={states=setmetatable({}, {__mode="k"}),maxActors=8}
 PY.ChargeEffects=F
 function F.clear(p)
     local s=F.states[p];if not s then return end
@@ -12,82 +14,78 @@ function F.clear(p)
 end
 function F.update(p)
     if not p or not instanceof(p,"IsoPlayer") then return end
-    local style=PY.getPlayerStyle(p)
-    local c=PY.activeActions[p]
-    local localCharge=c and c.kind=="heavyCharge" and c.timedAction and c.timedAction.started
-    local clip=p:GetVariable("ProjectYakuzaRemoteClip") or ""
-    local remote=not p:isLocalPlayer() and (clip=="ProjectYakuza_DD_ChargeLoop" or string.match(clip,"^ProjectYakuza_DD_ChargeWindup0[1-4]$")~=nil or string.match(clip,"^ProjectYakuza_DD_ChargeHold0[1-4]$")~=nil)
-    local wanted=PY.isEquipped(p) and not p:isDead() and style and style.hitEffects=="yakuza6"
-        and not p:getModData().ProjectYakuzaHitEffectsDisabled and (localCharge or remote)
+    local style=PY.getPlayerStyle(p);local c=PY.activeActions[p]
+    local localCharge=c and c.kind=="heavyCharge" and c.timedAction and c.timedAction.started and not c.timedAction.cleaned
+    local animation=localCharge and (c.timedAction.holding and c.action.holdAnimation or c.action.animation)
+        or not p:isLocalPlayer() and p:GetVariable("ProjectYakuzaRemoteClip") or ""
+    local track=PY.ChargeTracks[animation]
+    local wanted=track and PY.isEquipped(p) and not p:isDead() and style and style.hitEffects=="yakuza6"
+        and not p:getModData().ProjectYakuzaHitEffectsDisabled
     if not wanted then F.clear(p);return end
-    local ready=localCharge and c.timedAction.ready or string.match(clip,"^ProjectYakuza_DD_ChargeHold0[1-4]$")~=nil
-    if F.states[p] then
-        local s=F.states[p];s.updated=getTimestampMs()
-        if ready and not s.readyClock then s.readyClock=s.clock end
-        return
+    local power=localCharge and c.timedAction.power or tonumber(p:GetVariable("ProjectYakuzaRemoteChargePower")) or 0
+    local s=F.states[p]
+    if s and #s.track.limbs~=#track.limbs then F.clear(p);s=nil end
+    if s then
+        if s.track~=track then s.location=nil end
+        s.track=track;s.power=math.max(0,math.min(1,power));s.updated=getTimestampMs();return
     end
-    if not F.sprite then F.sprite=IsoSprite.CreateSprite(nil);F.sprite:LoadFramesNoDirPageSimple("media/textures/ProjectYakuza/ChargeSpark.png") end
-    if not F.flame then
+    local count=0;for _ in pairs(F.states) do count=count+1 end;if count>=F.maxActors then return end
+    if not F.spark then
+        F.spark=IsoSprite.CreateSprite(nil);F.spark:LoadFramesNoDirPageSimple("media/textures/ProjectYakuza/ChargeSpark.png")
         F.flame=IsoSprite.CreateSprite(nil);F.flame:LoadFramesNoDirPageDirect("media/textures/ProjectYakuza/ExtremeHeat","flame",64);F.flame:setAnimate(true)
         F.core=IsoSprite.CreateSprite(nil);F.core:LoadFramesNoDirPageSimple("media/textures/ProjectYakuza/HitGlint.png")
     end
-    local s={instances={},clock=0,last=getTimestampMs(),updated=getTimestampMs(),readyClock=ready and 0 or nil};F.states[p]=s
-    for i=1,10 do
-        local instance=PY.WorldEffects.attach(p,F.sprite,32,.28*Core.getTileScale(),26*Core.getTileScale(),true,0)
-        p:getAttachedAnimSprite():remove(instance);s.instances[i]=instance
-    end
-    for _,point in ipairs({{sprite=F.flame,height=32,scale=.38,speed=64/(1.3*60)},{sprite=F.core,height=64,scale=.20,speed=0}}) do
-        local instance=PY.WorldEffects.attach(p,point.sprite,point.height,point.scale*Core.getTileScale(),26*Core.getTileScale(),true,point.speed)
-        p:getAttachedAnimSprite():remove(instance);s.instances[#s.instances+1]=instance
+    s={instances={},points={},track=track,power=math.max(0,math.min(1,power)),clock=0,last=getTimestampMs(),updated=getTimestampMs()};F.states[p]=s
+    local tile=Core.getTileScale()
+    for _,limb in ipairs(track.limbs) do
+        for i=1,6 do
+            local sp=i<=3 and F.core or i<=5 and F.flame or F.spark
+            local height=i<=3 and 64 or 32;local scale=(i<=3 and .10 or i<=5 and .26 or .18)*tile
+            local instance=PY.WorldEffects.detached(sp,scale,i==4 and .9 or i==5 and 1.1 or 0)
+            s.instances[#s.instances+1]=instance;s.points[#s.points+1]={instance=instance,sprite=sp,height=height,scale=scale,limb=limb,index=i}
+        end
     end
     if not F.hooked then Events.OnPostRender.Add(F.render);F.hooked=true end
 end
 function F.render()
     local renderer=SpriteRenderer.instance;local previous=renderer:getDoAdditive();renderer:setDoAdditive(false)
     local ok,err=pcall(F.draw);renderer:setDoAdditive(previous)
-    if not ok then error(err) end
+    if not ok then F.clearAll();error(err) end
 end
 function F.draw()
-    if not F.color then F.color=ColorInfo.new(.28,.66,1,1) end
-    local tile=Core.getTileScale();local t=getTimestampMs()
+    if not F.color then F.color=ColorInfo.new(.60,.80,1,1) end
+    local tile=Core.getTileScale();local now=getTimestampMs()
     for p,s in pairs(F.states) do
-        if p:isDead() or (not isGamePaused() and t-s.updated>2000) then F.clear(p)
+        if p:isDead() or (not isGamePaused() and now-s.updated>2000) then F.clear(p)
         else
-        local dt=math.max(0,math.min(100,t-s.last));s.last=t
-        if not isGamePaused() then s.clock=s.clock+dt end
-        local v=p:getForwardDirection();local fx,fy=v:getX(),v:getY()
-        local x=((fx-fy)*9+(fx+fy)*5)*tile
-        local y=((fx+fy)*4+(fy-fx)*2)*tile
-        for i=1,10 do
-            local instance=s.instances[i]
-            local phase=(s.clock/420+i/10)%1
-            local angle=i*2.399963
-            local radius=phase*10*tile
-            local alpha=math.sin(phase*math.pi)*.65*math.min(1,s.clock/200)
-            instance:SetAlpha(alpha);instance:SetTargetAlpha(alpha)
-            instance:render(p,p:getX(),p:getY(),p:getZ(),IsoDirections.N,
-                p:getOffsetX()+tile+x+math.cos(angle)*radius,
-                p:getOffsetY()-89*tile+y+math.sin(angle)*radius-phase*5*tile,F.color)
-        end
-        local flame,core=s.instances[11],s.instances[12]
-        if not isGamePaused() then F.flame:update(flame) end
-        local ready=s.readyClock and math.max(0,1-(s.clock-s.readyClock)/280) or 0
-        local fade=math.min(1,s.clock/200)
-        local flameAlpha=(.55+.15*math.sin(s.clock*.012))*fade
-        flame:SetAlpha(flameAlpha);flame:SetTargetAlpha(flameAlpha)
-        flame:render(p,p:getX(),p:getY(),p:getZ(),IsoDirections.N,p:getOffsetX()+tile+x,p:getOffsetY()-89*tile+y,F.color)
-        local coreAlpha=(.22+.08*math.sin(s.clock*.016)+ready*.35)*fade
-        core:SetAlpha(coreAlpha);core:SetTargetAlpha(coreAlpha)
-        core:render(p,p:getX(),p:getY(),p:getZ(),IsoDirections.N,p:getOffsetX()+tile+x,p:getOffsetY()-89*tile+y,F.color)
+            local dt=math.max(0,math.min(100,now-s.last));s.last=now
+            if not isGamePaused() then s.clock=s.clock+dt end
+            local phase,weight,location=PY.AttackEffects.findTrack(p,s.track.animation,s.location);s.location=location
+            if s.track.fixed then phase=0;weight=1 end
+            if phase then
+                local angle=p:getAnimAngleRadians();local fade=math.min(1,s.clock/120)*math.min(1,weight or 1)
+                for _,point in ipairs(s.points) do
+                    local ax,ay,az=PY.AttackEffects.sample(s.track,phase,point.limb)
+                    local bx,by,bz=PY.AttackEffects.sample(s.track,phase,point.limb+1)
+                    local i=point.index;local t=i<=3 and (.12+i*.19) or i==4 and .38 or i==5 and .70 or (.18+.55*((s.clock/360)%1))
+                    local x,y=PY.AttackEffects.project(ax+(bx-ax)*t,ay+(by-ay)*t,az+(bz-az)*t,angle,tile)
+                    local alpha=fade*(.25+.40*s.power)*(i<=3 and .7 or i<=5 and .8 or 1)
+                    if i==6 then x=x+math.sin(s.clock*.025)*tile;y=y+math.cos(s.clock*.025)*tile end
+                    point.instance:SetAlpha(alpha);point.instance:SetTargetAlpha(alpha)
+                    if (i==4 or i==5) and not isGamePaused() then point.sprite:update(point.instance) end
+                    PY.WorldEffects.renderCentered(p,point.instance,point.height,point.scale,x,y,F.color)
+                end
+            end
         end
     end
 end
-function F.ready(p)local s=F.states[p];if s and not s.readyClock then s.readyClock=s.clock end end
+function F.ready(p)local s=F.states[p];if s then s.power=1 end end
 PY.on("heavyChargeReady",F.ready)
 function F.clearAll()
     local players={};for p in pairs(F.states) do players[#players+1]=p end
     for _,p in ipairs(players) do F.clear(p) end
 end
+PY.on("heavyChargeStarted",F.update)
 PY.on("heavyChargeStopped",F.clear)
 Events.OnPlayerUpdate.Add(F.update)
 Events.OnSave.Add(F.clearAll)

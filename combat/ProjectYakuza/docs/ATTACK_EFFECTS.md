@@ -1,6 +1,6 @@
 # Source-tracked punch effects
 
-Version 0.35.0 refines a narrow prototype for Dragon of Dojima's first light attack. Existing source textures are rendered as world sprites along the original left forearm/fist trajectory. It is visible without heat, stronger and purple-blue during Extreme Heat. Existing hit sparks and body auras are independent.
+Version 0.36.0 refines a narrow prototype for Dragon of Dojima's first light attack. Existing source textures are rendered as world sprites along the original left forearm/fist trajectory. It is visible without heat, white-bluish, with a stronger pale-blue tint during Extreme Heat. Existing hit sparks and body auras are independent.
 
 ## Move configuration
 
@@ -22,4 +22,6 @@ The source path is exact at the imported source key times, then linearly interpo
 
 Provenance: [punch-effect-assets.json](punch-effect-assets.json). No visuals/audio were synthesized, resized, repainted or exported by this update. Existing unrelated effects are unchanged.
 
-In 0.35.0 the fist centre is inset to 35% of the wrist-to-knuckle segment. The effect window extends through source frame 14; spark lifetime is .18 source seconds. This avoids putting the main glow beyond the hand and gives several particles time to be visible together. Native bone blending remains a fidelity limit.
+In 0.36.0 the main glow ends at 78% of the elbow-to-wrist span, rather than extending toward the knuckles. The other arm centres use .20/.32/.44/.56/.68 of that span. Trail samples lag by only .006 source seconds per point; six spark emissions follow the current inset hand position for .10 source seconds, with very short outward motion. They no longer remain at a previously extended hand position while the arm retracts. These are conservative visual inset settings, not edits to the native skeleton.
+
+ChargeEffects now shares the sample/projection helpers but uses distinct native arm/leg charge paths; see [Charged heavy](CHARGED_HEAVY.md).

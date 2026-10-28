@@ -346,4 +346,25 @@ check(#outgoing>messages and outgoing[#outgoing].args.finished,'terminal positio
 ProjectYakuza.FEATURES.grab=false;ProjectYakuza.styles.dragon_of_dojima.actions.grab.enabled=false
 clock=clock+2000;snapshot(p);command('grabRequest',{zombie=z4.id})
 check(not server.players[p.id].grab,'disabled server grab request cannot acquire a lease')
+-- Bounded charge state and server-side multihit scaling.
+clock=clock+2000;snapshot(p,{clip='ProjectYakuza_DD_ChargedFinisher01',move='dd_charged_finisher_01',chargePower=.5})
+check(server.players[1].packet.chargePower==.5,'server preserves a bounded partial charge')
+local chargePrimary=zombie(150,p.x+1);local chargeExtra=zombie(151,p.x+1.1)
+function chargeExtra:Hit(item,attacker,damage)self.received=damage;self.hits=self.hits+1 end
+command('impact',{swing=1000,zombie=150})
+command('extra',{swing=1000,zombie=151})
+local base=math.min(2,(server.baseWeapon:getMinDamage()+server.baseWeapon:getMaxDamage())*.5)
+check(chargeExtra.received and math.abs(chargeExtra.received-base*1.625)<.00001,'server extra victim receives partial-charge damage, not full power')
+snapshot(p,{clip='ProjectYakuza_DD_ChargedFinisher01',move='dd_charged_finisher_01',chargePower=1})
+check(server.players[1].swings[1000].move.damageMultiplier==1.625,'later snapshots cannot change power of an existing multihit swing')
+snapshot(p,{clip='ProjectYakuza_DD_ChargedFinisher01',move='dd_charged_finisher_01',chargePower=.5})
+
+local saved=server.players[1].seq;snapshot(p,{chargePower=2})
+check(server.players[1].seq==saved,'server rejects charge above full power')
+local halfMove=ProjectYakuza.styles.dragon_of_dojima.actions.chargedHeavy.variants.after_1
+check(ProjectYakuza.ChargeRules.damage(halfMove,server.players[1].packet.chargePower)==1.625,'extra victims use the same partial damage rule')
+local oldRemote=client.remote[2].packet.seq
+local invalid={player=2,seq=oldRemote+1,style='dragon_of_dojima',equipped=true,heat=0,fuel=0,chargePower=0/0}
+client.command(P.module,'state',invalid)
+check(client.remote[2].packet.seq==oldRemote,'remote state rejects nonfinite charging power')
 return 'PASS '..count..' MP authority, duplicate, range, lease, cooldown, observer and throttle checks'

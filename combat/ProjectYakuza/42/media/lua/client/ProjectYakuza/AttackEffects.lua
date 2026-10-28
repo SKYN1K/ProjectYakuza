@@ -116,13 +116,13 @@ local function drawPoint(p,point,x,y,alpha,color)
     PY.WorldEffects.renderCentered(p,point.instance,point.height,point.scale,x,y,color)
 end
 local function hand(track,time)
-    local wx,wy,wz=F.sample(track,time,2);local kx,ky,kz=F.sample(track,time,3)
-    return wx+(kx-wx)*.35,wy+(ky-wy)*.35,wz+(kz-wz)*.35
+    local wx,wy,wz=F.sample(track,time,2);local ax,ay,az=F.sample(track,time,1)
+    return ax+(wx-ax)*.78,ay+(wy-ay)*.78,az+(wz-az)*.78
 end
 
 function F.draw()
     local tile=Core.getTileScale()
-    if not F.normal then F.normal=ColorInfo.new(.18,.52,1,1);F.extreme=ColorInfo.new(.38,.24,1,1) end
+    if not F.normal then F.normal=ColorInfo.new(.70,.86,1,1);F.extreme=ColorInfo.new(.62,.76,1,1) end
     for p,s in pairs(F.states) do
         local time=s.time
         if time and time>=s.config.from and time<=s.config.to+.12 then
@@ -138,7 +138,7 @@ function F.draw()
             for i=1,6 do
                 local x,y
                 if i==6 then x,y=hx,hy
-                else local t=i*.2;x,y=F.project(ax+(wx-ax)*t,ay+(wy-ay)*t,az+(wz-az)*t,angle,tile) end
+                else local t=.08+i*.12;x,y=F.project(ax+(wx-ax)*t,ay+(wy-ay)*t,az+(wz-az)*t,angle,tile) end
                 drawPoint(p,s.points[i],x,y,fade*strength*(i==6 and 1 or .65),color)
             end
             for i=7,8 do
@@ -148,20 +148,15 @@ function F.draw()
                 drawPoint(p,s.points[i],x,y,fade*strength*.8,color)
             end
             for i=9,12 do
-                local lag=(i-8)*.022;local x,y,z=hand(s.track,math.max(s.config.from,time-lag))
+                local lag=(i-8)*.006;local x,y,z=hand(s.track,math.max(s.config.from,time-lag))
                 local dx,dy=F.project(x,y,z,angle,tile)
                 drawPoint(p,s.points[i],dx,dy,fade*strength*(13-i)*.10,color)
             end
             for i=13,18 do
                 local point=s.points[i];local birth=(i-10)/30;local age=time-birth
-                if age>=0 and age<.18 then
-                    if not point.x then
-                        local x,y,z=hand(s.track,birth)
-                        point.x,point.y=F.project(x,y,z,angle,tile);point.px=p:getX();point.py=p:getY();point.pz=p:getZ()
-                    end
-                    local t=age/.18;local dx=p:getX()-point.px;local dy=p:getY()-point.py;local dz=p:getZ()-point.pz
-                    local x=point.x-(dx-dy)*32*tile+((i-13)%3-1)*6*t*tile
-                    local y=point.y-(dx+dy)*16*tile+dz*96*tile-(4+(i-13)*1.1)*t*tile
+                if age>=0 and age<.10 then
+                    local t=age/.10
+                    local x,y=hx+((i-13)%3-1)*2*t*tile,hy-(1+(i-13)*.3)*t*tile
                     drawPoint(p,point,x,y,(1-t)*strength,color)
                 end
             end

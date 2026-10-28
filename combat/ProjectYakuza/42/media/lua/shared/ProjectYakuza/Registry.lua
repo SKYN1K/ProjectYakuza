@@ -1,7 +1,19 @@
 ProjectYakuza = ProjectYakuza or {}
+local R={}
+ProjectYakuza.ChargeRules=R
+function R.power(age,minimum,maximum)
+    return math.max(0,math.min(1,(age-minimum)/math.max(1,maximum-minimum)))
+end
+function R.damage(move,power)
+    local maximum=move.damageMultiplier or 1
+    local minimum=math.max(0,math.min(maximum,move.minChargedDamageMultiplier or maximum))
+    power=type(power)=="number" and power==power and math.max(0,math.min(1,power)) or 0
+    return minimum+(maximum-minimum)*power
+end
+
 local ProjectYakuza = ProjectYakuza
 ProjectYakuza.FEATURES={grab=false}
-ProjectYakuza.VERSION = "0.35.0"
+ProjectYakuza.VERSION = "0.36.0"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -53,6 +65,7 @@ function ProjectYakuza.validateStyle(style)
             local v=value[key];if v~=nil and (not number(v) or v<0 or v>1) then problem(path.."."..key.." must be 0..1") end
         end
         if value.damageMultiplier~=nil and (not number(value.damageMultiplier) or value.damageMultiplier<0) then problem(path..".damageMultiplier must be nonnegative") end
+        if value.minChargedDamageMultiplier~=nil and (not number(value.minChargedDamageMultiplier) or value.minChargedDamageMultiplier<0 or value.minChargedDamageMultiplier>(value.damageMultiplier or 1)) then problem(path..".minChargedDamageMultiplier must be between zero and maximum damageMultiplier") end
         for _,key in ipairs({"heatCost","heatStocks","distance","cooldownMs","windowMs","holdMs","minChargeMs","windupMs","maxHoldMs"}) do
             if value[key]~=nil and (not number(value[key]) or value[key]<0) then problem(path.."."..key.." must be nonnegative") end
         end

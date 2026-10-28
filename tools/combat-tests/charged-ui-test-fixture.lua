@@ -59,9 +59,10 @@ check(a.startedAt==started+1000 and not a.cleaned,'pause does not advance charge
 mouse[2]=false;clock=clock+100;a:update();check(not a.cleaned,'early release waits for minimum charge pose')
 clock=clock+251;a:update();check(a.cleaned and H.pending[p] and not PY.activeActions[p],'release produces one native attack ticket')
 check(not p.blocked and not p.ignored and p.deferred,'charge completion restores previous movement state')
-local ticket=H.pending[p];a:perform();check(H.pending[p]==ticket,'duplicate charge completion cannot mint another strike')
+local ticket=H.pending[p];check(ticket.power>0 and ticket.power<1,'early release records a fractional charge');a:perform();check(H.pending[p]==ticket,'duplicate charge completion cannot mint another strike')
 local before=p.submissions;H.input(p,false,false,state(),style)
 check(p.submissions==before+1 and state().finisherMove.chargedHeavy and ticket.consumed,'release submits one native charged strike')
+check(state().finisherMove.damageMultiplier>1 and state().finisherMove.damageMultiplier<2 and style.actions.chargedHeavy.variants.default.damageMultiplier==2,'partial charge lowers only this strike damage, preserving style maximum')
 check(not H.pending[p] and PY.blocksNativeAttacks(p),'accepted strike consumes ticket and locks repeated attacks')
 check(not PY.attemptAttack(p),'repeated LMB cannot replay charged hit')
 local tokenStamp=state().multiHitToken;fire('OnWeaponSwing',p,token)
@@ -80,7 +81,7 @@ check(not ok and why=='charge_required','consumed strike ticket cannot be reused
 a,c=charge();p.hit='Bite';a:update()
 check(a.cleaned and not H.pending[p] and not p.blocked and not p.ignored,'getting hit cancels charge without damage or lingering locks');p.hit=''
 a,c=charge();p.aim=false;a:update();check(a.cleaned and not H.pending[p],'losing aim cancels charge');p.aim=true
-a,c=charge();clock=clock+10000;a:update();check(not a.cleaned and not H.pending[p],'DoD charge stays held until release rather than forcing a 3.5-second timeout');mouse[2]=false;a:update();check(a.cleaned and H.pending[p],'releasing a long-held charge submits its handover')
+a,c=charge();clock=clock+1200;a:update();check(a.cleaned and H.pending[p] and H.pending[p].power==1,'DoD charge automatically releases at full power after 1.2 seconds');check(not p.blocked and not p.ignored,'automatic release restores movement for its native strike')
 clock=clock+601;H.input(p,false,false,state(),style);check(not H.pending[p],'expired native handover is dropped')
 queueFail=true;H.input(p,true,true,state(),style);clock=clock+351;H.input(p,true,false,state(),style)
 check(not PY.activeActions[p] and not p.blocked,'queue rejection restores the player');queueFail=false;H.clearPlayer(p)
@@ -96,10 +97,10 @@ for branch=1,4 do
  check(c.action.minChargeMs>=150 and c.action.minChargeMs<=250,'minimum charge uses source frame 5/6/7 at 30fps')
  local sourceFrames={6,7,6,5}
  check(math.abs(c.action.minChargeMs-sourceFrames[branch]/30*1000)<.00001 and c.action.holdMs==c.action.minChargeMs,'branch charge recognition and wind-up use the verified BEP pause time')
- clock=clock+c.action.minChargeMs+1;a:update()
+ clock=clock+c.action.minChargeMs+1;p:setVariable('ProjectYakuzaChargeClip','handoff');a:update()
  check(a.holding and p:GetVariable('PerformingAction')==c.action.holdAnimation and not a.cleaned,'finished wind-up explicitly transitions into a looping source-pose hold')
  p:setVariable('ProjectYakuzaChargeClip','holding')
- clock=clock+5000;a:update()
+ clock=clock+100;a:update()
  check(not a.cleaned and p:GetVariable('PerformingAction')==c.action.holdAnimation,'held charge cannot fall back to idle while input remains held')
  clock=clock+c.action.minChargeMs+1;mouse[2]=false;a:update()
  local entitlement=H.pending[p]
@@ -121,8 +122,27 @@ for branch=1,4 do
  check(not H.gestures[p] and state().finisherMove.double,'second-finisher playback never grants another charge gesture')
  finish();H.clearPlayer(p)
 end
+-- Native handoff timing, full-power deadline and pause-safe hold acknowledgement.
+for branch=1,4 do
+ PY.Combo.reset(state())
+ local a,c=charge(branch);clock=clock+c.action.minChargeMs+1;a:update()
+ check(not a.holding,'wall time alone cannot prematurely cut a source wind-up')
+ p:setVariable('ProjectYakuzaChargeClip','handoff');a:update()
+ local requested=a.holdRequestedAt
+ paused=true;clock=clock+2000;a:update();paused=false
+ check(a.holdRequestedAt==requested+2000 and not a.cleaned,'pause also suspends missing-hold acknowledgement timeout')
+ p:setVariable('ProjectYakuzaChargeClip','holding');clock=a.startedAt+1200;a:update()
+ check(a.cleaned and H.pending[p] and H.pending[p].power==1,'each branch auto-releases a full-power ticket at its finite deadline')
+ H.input(p,true,false,state(),style)
+ check(state().finisherMove.damageMultiplier==2 and state().finisherMove.chargePower==1,'automatic branch strike uses configured maximum damage')
+ finish();H.clearPlayer(p)
+end
+check(PY.ChargeRules.damage(style.actions.chargedHeavy.variants.after_1,0)==1.25,'earliest branch release starts at ordinary finisher damage')
+check(PY.ChargeRules.damage(style.actions.chargedHeavy.variants.after_1,.5)==1.625,'charge damage interpolates between minimum and maximum')
+check(PY.ChargeRules.damage(style.actions.chargedHeavy.variants.after_1,100)==2,'untrusted charge fractions cannot exceed maximum damage')
+PY.Combo.reset(state())
 local missingHold,missingContext=charge(1)
-clock=clock+missingContext.action.minChargeMs+1;missingHold:update()
+clock=clock+missingContext.action.minChargeMs+1;p:setVariable('ProjectYakuzaChargeClip','handoff');missingHold:update()
 clock=clock+601;missingHold:update()
 check(missingHold.cleaned and not H.pending[p] and not p.blocked and not p.ignored,'missing native hold clip cancels cleanly instead of silently charging in idle')
 -- A retained first-finisher window cannot be charged through the public API.
@@ -191,8 +211,9 @@ check(color==12345,'foreign outline takeover is not overwritten on cleanup')
 Core={getTileScale=function()return 2 end};IsoDirections={N='N'}
 ColorInfo={new=function(r,g,b,a)return {r=r,g=g,b=b,a=a}end}
 local disposed,rendered=0,0
-IsoSpriteInstance={add=function()end}
-local function instance(sprite)
+local instance
+IsoSpriteInstance={add=function()end,get=function(sprite)return instance(sprite)end}
+instance=function(sprite)
  return {sprite=sprite,Dispose=function()disposed=disposed+1 end,setScale=function()end,setFrameSpeedPerFrame=function()end,
   SetAlpha=function(self,v)self.alpha=v end,SetTargetAlpha=function()end,
   render=function(self,p,x,y,z,d,dx,dy,color)if self.fail then error('intentional charge FX failure')end;rendered=rendered+1;self.direction=d;self.dx=dx;self.dy=dy;self.color=color end}
@@ -204,20 +225,29 @@ function p:getForwardDirection()return {getX=function()return self.fx or 1 end,g
 function p:AttachExistingAnim(sprite)self.attached=instance(sprite)end
 function p:getAttachedAnimSprite()return {size=function()return self.attached and 1 or 0 end,get=function()return self.attached end,remove=function()self.attached=nil end}end
 -- WORLD
+-- ATTACKTRACKS
+-- ATTACKEFFECTS
+-- CHARGETRACKS
+function p:dbgGetAnimTrackName(layer,slot)
+ if layer==0 and slot==0 then local c=PY.activeActions[self];return c and c.action and c.action.animation or 'ProjectYakuza_DD_ChargeLoop' end;return ''
+end
+function p:dbgGetAnimTrackTime()return .2 end
+function p:dbgGetAnimTrackWeight()return 1 end
+function p:getAnimAngleRadians()return 0 end
 -- SPARKS
 local E=PY.ChargeEffects
 E.update(p);check(not E.hooked,'idle players create no particle render hook')
-PY.activeActions[p]={kind='heavyCharge',timedAction={started=true}}
+PY.activeActions[p]={kind='heavyCharge',action=style.actions.heavyCharge.variants.default,timedAction={started=true,power=.5}}
 E.update(p);check(#E.states[p].instances==12 and E.hooked,'charge creates ten original sparks plus source flame/core world sprites')
 clock=clock+100;E.update(p);E.render();local time=E.states[p].clock
 local flameFrames=E.states[p].instances[11].advanced
 PY.emit('heavyChargeReady',p)
-check(E.states[p].readyClock==time,'ready event triggers one bounded charging core pulse')
+check(E.states[p].power==1,'full-ready event updates limb glow strength')
 paused=true;clock=clock+500;E.update(p);E.render();check(E.states[p].clock==time,'world spark animation pauses');paused=false
 check(E.states[p].instances[11].advanced==flameFrames,'source charging flame animation also freezes while paused')
 additive=true;E.states[p].instances[1].fail=true;local fxOK=pcall(E.render)
 check(not fxOK and additive,'charge effect error restores the incoming blend state')
-E.states[p].instances[1].fail=nil;additive=false
+check(not E.states[p] and not E.hooked,'render failure releases owned limb particles');additive=false;E.update(p)
 for _,dir in ipairs({{1,0},{0,1},{-1,0},{0,-1}})do
  p.fx,p.fy=dir[1],dir[2];clock=clock+40;E.update(p);E.render()
  check(E.states[p].instances[1].direction=='N','all character facings use the same world sprite page')

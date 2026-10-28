@@ -67,3 +67,6 @@ Compile PunchTrackProbe.java against the installed B42 JARs (`javac -cp "F:/Stea
 
 
 For 0.35.0, compile/run DetachedEffectProbe.java with B42's runtime/JARs to reproduce the native shared sprite-offset overwrite and validate detached pool instances without GPU/game startup. The punch fixture now embeds WorldEffects and has 342 assertions, including eighteen instances, several visible particles and independent per-scale centring. The taunt fixture has 189 assertions and embeds HeatOutline, checking immediate activation outline, a one-second four-particle cloud, pause/retrigger prevention, remote cleanup and the replacement eight-particle normal-alpha completion flare.
+
+
+For 0.36.0 compile ChargeTrackProbe.java against the installed B42 JARs, then run validate_charge_limb_tracks.py. It validates nine existing clips/87 source samples and last-frame handoff markers against ChargeTracks.lua, writing only ignored numeric JSON. The charge/UI fixture has 176 assertions, MP 104, taunt 190 and limb-presentation 528. Source .x/image/audio files remain unchanged; native owner/observer metadata and source-pose checks still apply.

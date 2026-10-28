@@ -6,7 +6,7 @@
   <m_ConditionPriority>150</m_ConditionPriority>
   <m_Looped>true</m_Looped>
   <m_SpeedScale>1</m_SpeedScale>
-  <m_BlendTime>0.04</m_BlendTime>
+  <m_BlendTime>0.06</m_BlendTime>
   <m_BlendOutTime>0.04</m_BlendOutTime>
   <m_SyncTrackingEnabled>false</m_SyncTrackingEnabled>
   <m_Conditions>

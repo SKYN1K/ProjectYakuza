@@ -19,7 +19,9 @@ function A:isValid()
 end
 function A:holdPosition()
     local p=self.character
-    PY.Defense.snapActor(p,self.anchorX,self.anchorY)
+    if math.abs(p:getX()-self.anchorX)>.0001 or math.abs(p:getY()-self.anchorY)>.0001 then
+        PY.Defense.snapActor(p,self.anchorX,self.anchorY)
+    end
     p:getMovementLastFrame():set(0,0);p:setMoving(false);p:setRunning(false);p:setSprinting(false)
 end
 function A:start()
@@ -44,7 +46,7 @@ function A:cleanup(completed)
         if completed then PY.completeAction(p,self.context) else PY.cancelAction(p,"charge_interrupted",self.context) end
     end
     H.gestures[p]=nil
-    if completed and self.started and self:isValid() then H.pending[p]={expiresAt=now()+600,consumed=false,variant=self.context.variant,branch=self.context.action.chargeBranch} end
+    if completed and self.started and self:isValid() then H.pending[p]={expiresAt=now()+600,consumed=false,variant=self.context.variant,branch=self.context.action.chargeBranch,power=self.power or 0} end
     if self.started then PY.emit("heavyChargeStopped",p,completed==true) end
 end
 function A:perform()self:cleanup(true);ISBaseTimedAction.perform(self)end
@@ -58,25 +60,34 @@ end
 function A:update()
     if self.cleaned then return end
     local t=now();local dt=math.max(0,t-self.lastAt);self.lastAt=t
-    if isGamePaused() then self.startedAt=self.startedAt+dt;return end
+    if isGamePaused() then
+        self.startedAt=self.startedAt+dt
+        if self.holdRequestedAt then self.holdRequestedAt=self.holdRequestedAt+dt end
+        return
+    end
     if not self:isValid() then self:forceStop();return end
     self:holdPosition()
     local age=t-self.startedAt
     local clip=self.character:GetVariable("ProjectYakuzaChargeClip") or ""
-    if clip=="started" or clip=="done" or clip=="holding" then self.seenClip=true end
+    if clip=="started" or clip=="handoff" or clip=="done" or clip=="holding" then self.seenClip=true end
     if self.seenClip and self.context.action.holdAnimation and not self.holding
-        and (clip=="done" or age>=(self.context.action.windupMs or self.context.action.minChargeMs or 350)) then
+        and (clip=="handoff" or clip=="done") then
         self.holding=true;self.holdRequestedAt=t
         self:setActionAnim(self.context.action.holdAnimation)
     end
     if clip=="holding" then self.holdSeen=true end
     if self.holding and not self.holdSeen and t-self.holdRequestedAt>600 then self:forceStop();return end
-    if self.seenClip and age>=(self.context.action.minChargeMs or 350) and not self.ready then
+    local minimum=self.context.action.minChargeMs or 350
+    local maximum=self.context.action.maxHoldMs or self.context.action.duration*1000
+    self.power=PY.ChargeRules.power(age,minimum,maximum>0 and maximum or minimum+1000)
+    if self.seenClip and self.power>=1 and not self.ready then
         self.ready=true;PY.emit("heavyChargeReady",self.character,self.context.style,self.context.action)
     end
     if age>600 and not self.seenClip then self:forceStop();return end
+    if self.context.action.holdAnimation and not self.holding and age>(self.context.action.windupMs or minimum)+600 then self:forceStop();return end
     if self.seenClip and age>=(self.context.action.minChargeMs or 350)
-        and (not PY.Bindings.down("finisher") or (self.context.action.maxHoldMs~=0 and age>=(self.context.action.maxHoldMs or self.context.action.duration*1000))) then self:forceComplete() end
+        and (not self.context.action.holdAnimation or self.holding)
+        and (not PY.Bindings.down("finisher") or (maximum>0 and age>=maximum)) then self:forceComplete() end
 end
 function A:new(c)
     local o=ISBaseTimedAction.new(self,c.player);o.context=c;o.maxTime=-1

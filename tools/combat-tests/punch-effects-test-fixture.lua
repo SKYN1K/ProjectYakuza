@@ -7,7 +7,7 @@ local clock,paused=1000,false
 getTimestampMs=function()return clock end
 isGamePaused=function()return paused end
 local function event()local e={hooks={}};function e.Add(f)e.hooks[f]=true end;function e.Remove(f)e.hooks[f]=nil end;return e end
-Events={OnTick=event(),OnPostRender=event(),OnSave=event(),OnMainMenuEnter=event(),OnGameStart=event()}
+Events={OnPlayerUpdate=event(),OnTick=event(),OnPostRender=event(),OnSave=event(),OnMainMenuEnter=event(),OnGameStart=event()}
 Core={getTileScale=function()return 2 end}
 IsoDirections={N=0}
 ColorInfo={new=function(r,g,b,a)return {r=r,g=g,b=b,a=a}end}
@@ -82,13 +82,14 @@ emit('lightAttackStarted',p,style,1,move);check(F.states[p] and F.hooked and all
 p.time=.04;F.tick();F.render();check(allocated==0 and #draws==0,'windup before configured window has no particles')
 p.time=.2;F.tick();F.render();check(allocated==18 and #F.states[p].points==18,'bounded eighteen sprites for first punch')
 check(additive,'render restores original additive state')
+check(F.normal.r>=.6 and F.normal.g>=.8 and F.normal.b==1,'punch glow has a white-bluish tint')
 for j=1,6 do
  local d=draws[j];local x,y,z
  if j==6 then
-  local wx,wy,wz=F.sample(track,.2,2);local kx,ky,kz=F.sample(track,.2,3)
-  x,y,z=wx+(kx-wx)*.35,wy+(ky-wy)*.35,wz+(kz-wz)*.35
+  local ax,ay,az=F.sample(track,.2,1);local wx,wy,wz=F.sample(track,.2,2)
+  x,y,z=ax+(wx-ax)*.78,ay+(wy-ay)*.78,az+(wz-az)*.78
  else
-  local ax,ay,az=F.sample(track,.2,1);local wx,wy,wz=F.sample(track,.2,2);local t=j*.2
+  local ax,ay,az=F.sample(track,.2,1);local wx,wy,wz=F.sample(track,.2,2);local t=.08+j*.12
   x,y,z=ax+(wx-ax)*t,ay+(wy-ay)*t,az+(wz-az)*t
  end
  local px,py=F.project(x,y,z,p.angle,2)
@@ -124,6 +125,37 @@ local actors={};for i=1,10 do local who=actor();actors[i]=who;F.start(who,style,
 local total=0;for _ in pairs(F.states)do total=total+1 end;check(total==8,'actor effect count bounded under MP load');F.clearAll();check(not any(F.states),'all bounded actors cleaned')
 F.start(p,style,1,move);F.tick();failRender=true;local ok=pcall(F.render);check(not ok and additive and not any(F.states) and not F.hooked,'render error restores graphics flags and disposes state');failRender=false
 for _,event in ipairs({Events.OnSave,Events.OnMainMenuEnter,Events.OnGameStart})do F.start(p,style,1,move);for fn in pairs(event.hooks)do fn()end;check(not any(F.states),'world transition clears state')end
+-- CHARGELIMBTRACKS
+-- CHARGELIMBEFFECTS
+local C=ProjectYakuza.ChargeEffects
+ProjectYakuza.activeActions={};style.hitEffects='yakuza6';instanceof=function()return true end
+function p:GetVariable(k)return self.vars and self.vars[k] end
+local chargeAllocation=allocated
+for branch=1,4 do
+ local animation='ProjectYakuza_DD_ChargeWindup0'..branch
+ ProjectYakuza.activeActions[p]={kind='heavyCharge',action={animation=animation,holdAnimation='ProjectYakuza_DD_ChargeHold0'..branch},timedAction={started=true,holding=true,power=.5}}
+ p.time=0;C.update(p);clock=clock+120;C.update(p);draws={};C.render()
+ local state=C.states[p];check(state and #state.instances==6,'branch has only six limb-bound charging particles')
+ local row=state.track.frames[1];local ax,ay,az=row[1],row[2],row[3];local bx,by,bz=row[4],row[5],row[6]
+ local x,y=F.project(ax+(bx-ax)*.31,ay+(by-ay)*.31,az+(bz-az)*.31,p.angle,2)
+ local d=draws[1];check(near(-d.ox,x) and near(-d.oy-d.height*d.scale/2,y),'charge particle centres on the branch-specific native limb')
+ check(d.color.r>=.6 and d.color.g>=.8,'limb charge glow is white-blue')
+ local n=allocated;C.update(p);C.render();check(allocated==n,'stable charge never rebuilds particles')
+ C.clear(p)
+end
+ProjectYakuza.activeActions[p]=nil;C.update(p);check(not C.hooked and not C.states[p],'charge stop removes render callback')
+p.localPlayer=false;p.vars={ProjectYakuzaRemoteClip='ProjectYakuza_DD_ChargeHold02',ProjectYakuzaRemoteChargePower='.7'}
+C.update(p);check(C.states[p] and near(C.states[p].power,.7),'remote limb charge follows bounded replicated power')
+C.clear(p);p.localPlayer=true;p.vars=nil
+local chargeActors={}
+for i=1,10 do
+ local who=actor();chargeActors[i]=who
+ ProjectYakuza.activeActions[who]={kind='heavyCharge',action={animation='ProjectYakuza_DD_ChargeLoop'},timedAction={started=true,power=.4}}
+ C.update(who)
+end
+local chargeCount=0;for _ in pairs(C.states)do chargeCount=chargeCount+1 end
+check(chargeCount==8,'charge effect bounds active actors to eight');C.clearAll();ProjectYakuza.activeActions={}
+check(not C.hooked and allocated==disposed,'all arm/leg charge instances return to the pool')
 -- FEEDBACK
 local audio={}
 function p:getPrimaryHandItem()return nil end
@@ -140,4 +172,3 @@ p.time=.02;A.swing(p,style,1,move);p.time=.6;A.tick();check(#audio==2,'late fram
 p.time=.2;p.localPlayer=false;A.swing(p,style,1,move);A.tick();check(#audio==2,'remote visuals do not duplicate local-only swing audio');p.localPlayer=true
 A.clear();check(not A.ticking and not F.hooked and allocated==disposed,'complete effects/audio cleanup')
 return 'PASS '..count..' original-punch tracking, world projection, lifecycle, bounded MP and source-clock audio checks'
-

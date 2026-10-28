@@ -1,5 +1,5 @@
 {
-  "version": "0.35.0",
+  "version": "0.36.0",
   "operation": "Code-only timing, positioning, animation playback and alpha changes. Reuses supplied textures without creating or altering any media.",
   "activation": {
     "outline": "Starts on native heatActivationStarted and equivalent remote observer activation, before mode fuel. Restored on interruption/end.",
@@ -7,11 +7,12 @@
     "smoke_instances": 4,
     "source_manifest": "extreme-smoke-assets.json",
     "frames": 64,
-    "rendering": "Detached world sprites, normal alpha, outward drift/upward lift/expansion; pause-aware, one shot per activation."
+    "rendering": "Detached world sprites, normal alpha, outward drift/upward lift/expansion; pause-aware, one shot per activation.",
+    "tint": "Same ColorInfo/RGB (.25,.15,1) as Extreme Heat flames, for both activation and sustained smoke."
   },
   "taunt": {
     "trigger": "Successful taunt completion only, including replicated completion.",
-    "duration_ms": 320,
+    "duration_ms": 480,
     "instances": 8,
     "flames": 4,
     "sparks": 4,
@@ -19,7 +20,7 @@
       "extreme-heat-assets.json",
       "charged-heavy-assets.json"
     ],
-    "rendering": "Normal alpha throughout. Old static TauntBurst wisps and additive body-aura brightening are not rendered."
+    "rendering": "More visible animated torso flare and sparks plus one .12-gain sine pulse of the actual selected aura after completion. Aura frames advance only once; blend state restored."
   },
-  "media_unchanged_from": "0.34.0"
+  "media_unchanged_from": "0.35.0"
 }

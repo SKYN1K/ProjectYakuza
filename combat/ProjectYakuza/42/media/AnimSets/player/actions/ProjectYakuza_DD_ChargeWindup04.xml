@@ -6,12 +6,12 @@
   <m_ConditionPriority>150</m_ConditionPriority>
   <m_Looped>false</m_Looped>
   <m_SpeedScale>1</m_SpeedScale>
-  <m_BlendTime>0.06</m_BlendTime>
-  <m_BlendOutTime>0.04</m_BlendOutTime>
+  <m_BlendTime>.08</m_BlendTime>
+  <m_BlendOutTime>.06</m_BlendOutTime>
   <m_SyncTrackingEnabled>false</m_SyncTrackingEnabled>
   <m_Conditions>
     <m_Name>PerformingAction</m_Name>
     <m_Type>STRING</m_Type>
     <m_Value>ProjectYakuza_DD_ChargeWindup04</m_Value>
   </m_Conditions>
-  <m_Events><m_EventName>SetVariable</m_EventName><m_Time>Start</m_Time><m_ParameterValue>ProjectYakuzaChargeClip=started</m_ParameterValue></m_Events><m_Events><m_EventName>SetVariable</m_EventName><m_Time>End</m_Time><m_ParameterValue>ProjectYakuzaChargeClip=done</m_ParameterValue></m_Events><m_SubStateBoneWeights><boneName>Bip01</boneName><weight>1</weight></m_SubStateBoneWeights></animNode>
+  <m_Events><m_EventName>SetVariable</m_EventName><m_Time>Start</m_Time><m_ParameterValue>ProjectYakuzaChargeClip=started</m_ParameterValue></m_Events><m_Events><m_EventName>SetVariable</m_EventName><m_Time>End</m_Time><m_ParameterValue>ProjectYakuzaChargeClip=done</m_ParameterValue></m_Events><m_SubStateBoneWeights><boneName>Bip01</boneName><weight>1</weight></m_SubStateBoneWeights><m_Events><m_EventName>SetVariable</m_EventName><m_TimePc>0.8</m_TimePc><m_ParameterValue>ProjectYakuzaChargeClip=handoff</m_ParameterValue></m_Events></animNode>

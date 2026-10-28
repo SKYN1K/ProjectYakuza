@@ -249,6 +249,12 @@ local nativeAttackHandler = {
     end,
     start = function(context)
         local player, s = context.player, ProjectYakuza.stateFor(context.player)
+        if context.action.chargedHeavy then
+            local move={};for key,value in pairs(context.action) do move[key]=value end
+            move.chargePower=math.max(0,math.min(1,context.target.power or 0))
+            move.damageMultiplier=ProjectYakuza.ChargeRules.damage(context.action,move.chargePower)
+            context.action=move
+        end
         if context.action.runningAttack then Combo.reset(s);ProjectYakuza.RunningAttacks.beforeStart(context) end
         s.pendingFinisher, s.starting, s.startRequestedAt = context.action, true, now()
         setReadyVariables(player, context.style, s)

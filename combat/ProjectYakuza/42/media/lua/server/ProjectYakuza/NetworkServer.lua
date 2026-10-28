@@ -40,6 +40,7 @@ function S.snapshot(p,a,s)
     s.stateBucket=(s.stateBucket or 0)+1;if s.stateBucket>80 then return end
     if type(a.style)~="string" or #a.style>100 or (a.style~="none" and not ProjectYakuza.getStyle(a.style)) then return end
     if not P.number(a.heat,0,100) or not P.number(a.fuel,0,100) then return end
+    if a.chargePower~=nil and not P.number(a.chargePower,0,1) then return end
     local equipped=a.equipped==true and ProjectYakuza.getStyle(a.style)~=nil and alive(p) and token(p)~=nil
     local clip=equipped and type(a.clip)=="string" and P.clip(a.style,a.clip) or nil
     local style=ProjectYakuza.getStyle(a.style)
@@ -56,6 +57,7 @@ function S.snapshot(p,a,s)
     local packet={player=p:getOnlineID(),seq=a.seq,style=a.style,equipped=equipped,
         heat=equipped and a.heat or 0,fuel=equipped and a.fuel or 0,extreme=equipped and a.extreme==true and style.heat==true,
         clip=clip and clip.id or "",move=equipped and type(a.move)=="string" and P.move(a.style,a.move) and a.move or "",
+        chargePower=equipped and (a.chargePower or 0) or 0,
         swing=P.integer(a.swing,0,1000000000) and a.swing or 0,
         action=P.integer(a.action,0,1000000000) and a.action or 0,
         taunt=equipped and style.actions.taunt and P.integer(a.taunt,0,1000000000) and a.taunt or 0,
@@ -200,6 +202,11 @@ function S.command(module,command,p,a)
         if command=="extra" and not job then return end
         if not job then
             if a.swing<=(s.lastSwing or 0) then return end
+            if move.chargedHeavy then
+                local scaled={};for key,value in pairs(move) do scaled[key]=value end
+                scaled.damageMultiplier=ProjectYakuza.ChargeRules.damage(move,s.packet.chargePower)
+                move=scaled
+            end
             s.lastSwing=a.swing;job={seen={},count=0,expires=t+2500,move=move,style=s.packet.style};s.swings[a.swing]=job
         end
         if t>job.expires or job.count>=ProjectYakuza.MAX_HIT_COUNT or job.seen[a.zombie] then return end

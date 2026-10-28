@@ -1,0 +1,157 @@
+{
+  "operation": "Numeric positions only; original already-retargeted B42 clips imported through native Jassimp/HelperFunctions. No motion/texture/audio files created or altered. Limb selection inferred from original release trajectory/contact pose, not a claim of decoded Y6 hitbox attachment enums.",
+  "output": "42/media/lua/client/ProjectYakuza/ChargeTracks.lua",
+  "sha256": "300f80727e4b6e1cd9cd2c17ffc44250d57731cfbf8eece8934ee93c909cb0c1",
+  "clips": [
+    {
+      "animation": "ProjectYakuza_DD_ChargeLoop",
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_ChargeLoop.x",
+      "clip_sha256": "07aa0ca1bab2be25fa0177982469e46cfc73cb7721c2ac9c96136d44d7747f8a",
+      "sample_count": 51,
+      "source_bone_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "bones": [
+        "Bip01_L_Forearm",
+        "Bip01_L_Hand",
+        "Bip01_L_Finger1",
+        "Bip01_R_Forearm",
+        "Bip01_R_Hand",
+        "Bip01_R_Finger1"
+      ]
+    },
+    {
+      "animation": "ProjectYakuza_DD_ChargeWindup01",
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_ChargeWindup01.x",
+      "clip_sha256": "1ae9ff471dc9f818ec719b688154c2c8197ae726b869787d7390df8583b4745c",
+      "sample_count": 7,
+      "source_bone_indices": [
+        3,
+        4,
+        5
+      ],
+      "bones": [
+        "Bip01_R_Forearm",
+        "Bip01_R_Hand",
+        "Bip01_R_Finger1"
+      ]
+    },
+    {
+      "animation": "ProjectYakuza_DD_ChargeHold01",
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_ChargeHold01.x",
+      "clip_sha256": "226e76d900fcd8fdc4dd9d785e882621645a73bc1164983c8641e7a07f3e65d2",
+      "sample_count": 2,
+      "source_bone_indices": [
+        3,
+        4,
+        5
+      ],
+      "bones": [
+        "Bip01_R_Forearm",
+        "Bip01_R_Hand",
+        "Bip01_R_Finger1"
+      ]
+    },
+    {
+      "animation": "ProjectYakuza_DD_ChargeWindup02",
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_ChargeWindup02.x",
+      "clip_sha256": "5285871a36957ada896e310ad08052f5aa9e710119c80ae3e0d6c4027df0026e",
+      "sample_count": 8,
+      "source_bone_indices": [
+        9,
+        10,
+        11
+      ],
+      "bones": [
+        "Bip01_R_Calf",
+        "Bip01_R_Foot",
+        "Bip01_R_Toe0"
+      ]
+    },
+    {
+      "animation": "ProjectYakuza_DD_ChargeHold02",
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_ChargeHold02.x",
+      "clip_sha256": "5532b8b83ec8724cfbefc6ff053f50c7c98f1193ea786fe54bf8c00e1e641198",
+      "sample_count": 2,
+      "source_bone_indices": [
+        9,
+        10,
+        11
+      ],
+      "bones": [
+        "Bip01_R_Calf",
+        "Bip01_R_Foot",
+        "Bip01_R_Toe0"
+      ]
+    },
+    {
+      "animation": "ProjectYakuza_DD_ChargeWindup03",
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_ChargeWindup03.x",
+      "clip_sha256": "a5aac0c149fb327445d65459d8aa832e785d3bbf9b754d6830c10d67d6d4183a",
+      "sample_count": 7,
+      "source_bone_indices": [
+        0,
+        1,
+        2
+      ],
+      "bones": [
+        "Bip01_L_Forearm",
+        "Bip01_L_Hand",
+        "Bip01_L_Finger1"
+      ]
+    },
+    {
+      "animation": "ProjectYakuza_DD_ChargeHold03",
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_ChargeHold03.x",
+      "clip_sha256": "e0e1beac04a085c8168a644e0d59f8701ea6840327e566492582c6debce5e7da",
+      "sample_count": 2,
+      "source_bone_indices": [
+        0,
+        1,
+        2
+      ],
+      "bones": [
+        "Bip01_L_Forearm",
+        "Bip01_L_Hand",
+        "Bip01_L_Finger1"
+      ]
+    },
+    {
+      "animation": "ProjectYakuza_DD_ChargeWindup04",
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_ChargeWindup04.x",
+      "clip_sha256": "31415b096e5426d9a327ddbab1ef5270d6a6adf12e35a8d64410d7e490f0fc9d",
+      "sample_count": 6,
+      "source_bone_indices": [
+        9,
+        10,
+        11
+      ],
+      "bones": [
+        "Bip01_R_Calf",
+        "Bip01_R_Foot",
+        "Bip01_R_Toe0"
+      ]
+    },
+    {
+      "animation": "ProjectYakuza_DD_ChargeHold04",
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_ChargeHold04.x",
+      "clip_sha256": "7862b893930e761374ca72dddf8fe4d7b3a0c40f2bfb0f623f8869bfeb7c1505",
+      "sample_count": 2,
+      "source_bone_indices": [
+        9,
+        10,
+        11
+      ],
+      "bones": [
+        "Bip01_R_Calf",
+        "Bip01_R_Foot",
+        "Bip01_R_Toe0"
+      ]
+    }
+  ]
+}

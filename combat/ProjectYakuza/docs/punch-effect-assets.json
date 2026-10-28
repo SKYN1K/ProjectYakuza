@@ -1,5 +1,5 @@
 {
-  "version": "0.35.0",
+  "version": "0.36.0",
   "operation": "Numeric attachment paths only, extracted from shipped original-source retargeted punch via B42 native Jassimp/ProcessedAiScene and HelperFunctions FK. No image, sound or animation files created or modified.",
   "clip": {
     "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Light01.x",
@@ -354,5 +354,5 @@
     "Native walking, torso twist, blend-in/out and occlusion can differ; live GPU/MP appearance has not been tested.",
     "World sprites use the existing IsoSprite world-render path, not UI drawing."
   ],
-  "positioning": "Detached IsoSpriteInstance pool instances; shared sprite offsets remain zero. Each differently sized particle cancels native half-height anchoring independently. Six glow centres lie along the source forearm/wrist/fist; two animated flames, four trails and six sparks make eighteen bounded instances."
+  "positioning": "Original native clip samples, conservatively inset along the elbow-to-wrist span (.20/.32/.44/.56/.68/.78). White-blue tint, short .006-per-point source trails and .10-second current-hand spark emissions. Original clip and all media bytes unchanged."
 }

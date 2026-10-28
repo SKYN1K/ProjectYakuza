@@ -116,3 +116,7 @@ Built-in action kinds `heavyCharge` and `chargedHeavy` use the native timed-acti
 Charged first-finisher variants opt into `chargeBranch=<light index>` on both hold/release and `chargedFinisher=true` on release. Slot variants use default/after_1…after_n. Native release tickets bind the variant/branch; second-finisher windows bypass charging. `heavyChargeStarted` receives the selected move; custom HUD code can inspect `context.action.chargeBranch` or `combo.finisherMove.chargedFinisher`. See [charged heavy](CHARGED_HEAVY.md).
 
 Charge controller additions: optional holdAnimation, windupMs and maxHoldMs; maxHoldMs=0 disables timed auto-release. A looping hold acknowledges ProjectYakuzaChargeClip=holding. heavyChargeReady(player,style,move) fires once at the minimum wind-up endpoint for cosmetic feedback. Missing native holds cancel safely. See [charged heavy](CHARGED_HEAVY.md).
+
+## Charge power (0.36.0)
+
+Charged moves may set `minChargedDamageMultiplier` (0..damageMultiplier). DoD heavyCharge variants set `maxHoldMs=1200`; `minChargeMs` defines the low-power pose threshold. The controller normalizes elapsed unpaused action time between those thresholds, automatically releases at the maximum, and copies the runtime move before scaling it. `ProjectYakuza.ChargeRules.power(ageMs,minMs,maxMs)` and `.damage(move,fraction)` implement the shared rule. `heavyChargeReady` now marks full power. Optional MP state `chargePower` is validated 0..1 and locked per multihit swing. See [Charged heavy](CHARGED_HEAVY.md).
