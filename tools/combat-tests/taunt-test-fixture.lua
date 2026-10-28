@@ -136,7 +136,7 @@ ProjectYakuza.WorldEffects={attach=function(p,s,height,scale,anchor,loop,speed,x
  function i:SetAlpha(v)self.alpha=v end
  function i:SetTargetAlpha(v)end
  function i:Dispose()self.disposed=true end
- function i:render(owner,x,y,z,dir,ox,oy,color)draws=draws+1;self.additive=additive;drawLog[#drawLog+1]={instance=self,kind=s.kind,additive=additive,alpha=self.alpha,color=color,dir=dir,ox=ox,oy=oy};if self.fail and (additive or (s.path=='media/textures/ProjectYakuza/ExtremeHeat' and s.kind=='flame')) then error('render failure')end end
+ function i:render(owner,x,y,z,dir,ox,oy,color)draws=draws+1;self.additive=additive;drawLog[#drawLog+1]={instance=self,kind=s.kind,additive=additive,alpha=self.alpha,color=color,dir=dir,ox=ox,oy=oy};if self.fail then error('render failure')end end
  return i
 end}
 function p:getAttachedAnimSprite()return {remove=function()end}end
@@ -162,17 +162,21 @@ p:setVariable('ProjectYakuzaTaunt','started');a:update();p:setVariable('ProjectY
 local s=A.states[p];check(s and #s.emitters==4 and s.flashing,'completion flash reuses only the four ordinary aura sprites')
 clock=clock+130;A.render()
 check(s.opacity>0 and s.profile=='normal' and not s.extreme,'brief flash keeps the normal aura profile')
-check(not s.emitters[1].instance.additive and not additive,'taunt has no additive brightness pulse')
-check(near(s.emitters[1].instance.alpha,s.opacity) and s.emitters[1].instance.frames==1,'taunt never doubles the body aura or advances its frame twice')
-check(#A.flashes[p].emitters==8,'completion creates four animated torso flames and four small sparks')
-for _,e in ipairs(A.flashes[p].emitters)do check(e.sprite.kind=='flame' or e.sprite.kind=='spark','old static wisps are absent')end
+check(not additive,'taunt has no additive brightness pulse')
+check(s.emitters[1].instance.frames==0,'taunt replaces normal pass without double drawing')
+check(#A.flashes[p].emitters==4,'completion uses only four ordinary heat aura emitters')
+for i,e in ipairs(A.flashes[p].emitters)do
+ check(e.sprite.path=='media/textures/ProjectYakuza/HeatWisp' and e.sprite.kind==A.layout[i].kind,'taunt shares the standard aura animation')
+ check(near(e.instance.scale,A.layout[i].scale*2*1.2) and e.instance.frames==1,'twenty percent larger normal-speed aura at full envelope')
+end
+check(A.flashes[p].duration==750,'taunt echo lasts exactly 0.75 unpaused seconds')
 local count,alloc=loads,attached
 for i=1,1000 do A.update(p);A.render()end
 check(loads==count and attached==alloc,'stable aura never reallocates per frame')
-local frames=s.emitters[1].instance.frames;local pulse=s.clock
-paused=true;clock=clock+5000;A.render();check(s.clock==pulse and s.emitters[1].instance.frames==frames,'pause holds glow and sprites');paused=false
+local frames=A.flashes[p].emitters[1].instance.frames;local pulse=s.clock
+paused=true;clock=clock+5000;A.render();check(s.clock==pulse and A.flashes[p].emitters[1].instance.frames==frames,'pause holds glow and sprites');paused=false
 A.flashes[p].emitters[1].instance.fail=true;local ok=pcall(A.render);check(not ok and not additive,'flash render failure restores additive state');A.flashes[p].emitters[1].instance.fail=false
-ProjectYakuza.setHeat(p,0);clock=clock+351;A.render()
+ProjectYakuza.setHeat(p,0);clock=clock+621;A.render()
 check(not A.flashes[p] and not s.emitters[1].instance,'completion flash expires and zero-heat aura clears')
 a=begin();a:stop();check(not A.flashes[p] and not s.emitters[1].instance,'interrupted taunt never flashes')
 ProjectYakuza.setHeat(p,100/6);A.update(p);clock=clock+350;A.render();check(s.emitters[1].instance.scale==.5175,'normal aura original dimensions preserved')
@@ -219,8 +223,12 @@ p.data.ProjectYakuzaHeatAuraDisabled=true;A.flash(p);check(not A.flashes[p] and 
 p.localPlayer=false;p:setVariable('ProjectYakuzaRemoteClip','ProjectYakuza_DD_Taunt01');ProjectYakuza.setHeat(p,0);A.update(p)
 check(not s.emitters[1].instance,'remote taunt playback alone has no flash')
 A.flash(p);check(s.flashing and s.emitters[1].instance,'replicated completion triggers observer flash')
-clock=clock+481;A.render();check(not s.emitters[1].instance,'remote completion glow expires at zero heat')
+clock=clock+751;A.render();check(not s.emitters[1].instance,'remote completion glow expires at zero heat')
 p.localPlayer=true
+A.flash(p);local echo=A.flashes[p]
+clock=clock+50;A.render();check(near(echo.emitters[1].instance.alpha,.5),'zero-heat echo fades in over 100ms')
+clock=clock+625;A.render();check(near(echo.emitters[1].instance.alpha,.5),'zero-heat echo fades out over 150ms')
+clock=clock+76;A.render();check(not A.flashes[p],'taunt echo cleans up after fade')
 -- Activation uses the actual started native action, before fuel mode starts.
 ProjectYakuza.HeatActivation={active={}}
 ProjectYakuza.setHeat(p,0);extreme=false

@@ -39,6 +39,7 @@ local function actor()
  function a:getHitReaction()return self.reaction end
  function a:getModData()return self.md end
  function a:getAnimAngleRadians()return self.angle end
+ function a:getShoulderTwist()return self.twist or 0 end
  function a:getX()return self.x end;function a:getY()return self.y end;function a:getZ()return self.z end
  function a:getOffsetX()return 0 end;function a:getOffsetY()return 0 end
  function a:getAttachedAnimSprite()return {remove=function()end}end
@@ -88,7 +89,8 @@ emit('lightAttackStarted',p,style,1,move);check(F.states[p] and F.hooked and all
 p.time=.04;F.tick();F.render();check(allocated==0 and #draws==0,'windup before configured window has no particles')
 p.time=.2;F.tick();F.render();check(allocated==18 and #F.states[p].points==18,'bounded eighteen sprites for first punch')
 check(additive,'render restores original additive state')
-check(draws[1].additive and not draws[7].additive,'punch cores glow while original flames retain alpha transparency')
+for _,d in ipairs(draws)do check(not d.additive,'every punch layer uses normal transparency without brightness boost')end
+check(near(F.states[p].points[6].scale,.16*2*1.25) and near(F.states[p].points[7].scale,.30*2*1.25),'all punch particles are exactly 25 percent larger')
 check(draws[1].alpha>.5 and draws[1].scale>.2,'punch glow is larger and more visible')
 check(F.normal.r>=.6 and F.normal.g>=.8 and F.normal.b==1,'punch glow has a white-bluish tint')
 for j=1,6 do
@@ -118,7 +120,14 @@ local a=allocated;F.render();check(allocated==a,'no sprite allocation on repeate
 local ticks=F.states[p].clock;local beforeUpdate=updated;paused=true;clock=clock+1000;p.time=.3;F.tick();F.render()
 check(F.states[p].time==.2 and F.states[p].clock==ticks and updated==beforeUpdate,'pause freezes clock, source position and flame')
 paused=false;p.time=.25;p.extreme=true;F.tick();draws={};F.render();check(draws[1].color==F.extreme and draws[1].alpha>.5,'extreme tint and stronger glow without touching body aura')
-p.angle=math.pi;draws={};F.render();check(#draws>0,'continuous actor rotation still renders')
+for i=0,15 do
+ p.angle=i*math.pi/8;p.twist=(i%3-1)*30;draws={};F.render()
+ local ax,ay,az=F.sample(track,p.time,1);local wx,wy,wz=F.sample(track,p.time,2)
+ local x,y,z=ax+(wx-ax)*.78,ay+(wy-ay)*.78,az+(wz-az)*.78
+ local px,py=F.project(x,y,z,p.angle+math.rad(p.twist),2)
+ local cx,cy=centre(draws[6]);check(near(cx,px) and near(cy,py+5),'continuous facing includes live degree-valued shoulder twist '..i)
+end
+p.twist=0
 p.reaction='Bite';F.tick();check(not F.states[p] and not F.hooked and allocated==disposed,'hit interruption disposes everything and removes hooks');p.reaction=''
 p.empty=true;F.start(p,style,1,move);clock=clock+351;F.tick();check(not F.states[p],'missing animation times out without offset fallback');p.empty=false
 F.start(p,style,1,move);p.time=.8;F.tick();check(F.states[p] and not F.states[p].seen,'stale outgoing clip waits for replacement');clock=clock+351;F.tick();check(not F.states[p],'late clip observation skips stale burst')

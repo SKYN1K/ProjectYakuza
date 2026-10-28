@@ -1,5 +1,5 @@
 {
-  "version": "0.37.0",
+  "version": "0.38.0",
   "operation": "Code-only timing, positioning, animation playback and alpha changes. Reuses supplied textures without creating or altering any media.",
   "activation": {
     "outline": "Starts on native heatActivationStarted and equivalent remote observer activation, before mode fuel. Restored on interruption/end.",
@@ -12,15 +12,16 @@
   },
   "taunt": {
     "trigger": "Successful taunt completion only, including replicated completion.",
-    "duration_ms": 480,
-    "instances": 8,
-    "flames": 4,
-    "sparks": 4,
+    "duration_ms": 750,
+    "fade_in_ms": 100,
+    "fade_out_ms": 150,
+    "size_multiplier": 1.2,
+    "instances": 4,
     "sources": [
-      "extreme-heat-assets.json",
-      "charged-heavy-assets.json"
+      "heat-aura-assets.json"
     ],
-    "rendering": "Normal-alpha torso flare and small sparks only, cooler blue tint. No additive body-aura pass or brightness pulse."
+    "rendering": "The existing three HeatWisp sequences and four-emitter normal aura layout, normal transparency and normal playback speed. Replaces the normal body pass during the echo; no old flare/sparks, no additive pulse. Existing blue pixels retained; a 25-percent-whiter copy requires user approval.",
+    "pause": "Lifetime and animation pause; cancellation has no echo."
   },
-  "media_unchanged_from": "0.36.0"
+  "media_unchanged_from": "0.37.0"
 }

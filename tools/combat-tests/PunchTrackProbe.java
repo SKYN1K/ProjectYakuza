@@ -47,7 +47,7 @@ public class PunchTrackProbe {
   // Verify the scalar Lua surface on the installed engine. Nested model classes are deliberately not used by the mod.
   var character=Class.forName("zombie.characters.IsoGameCharacter");
   for(String method:new String[]{"dbgGetAnimTrackName","dbgGetAnimTrackTime","dbgGetAnimTrackWeight"})character.getMethod(method,int.class,int.class);
-  character.getMethod("getAnimAngleRadians");
+  character.getMethod("getAnimAngleRadians");character.getMethod("getShoulderTwist");
   out.append("]}");Files.writeString(Path.of(args[1]),out);System.out.println("PASS native original punch import/FK: "+frames+" samples, six bones, "+hierarchy.size()+" skeleton bones");
  }
 }

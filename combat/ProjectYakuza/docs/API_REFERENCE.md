@@ -113,7 +113,7 @@ Client `ProjectYakuza/StyleUI`: `registerStyleUI(id,provider)`, `unregisterStyle
 
 Built-in action kinds `heavyCharge` and `chargedHeavy` use the native timed-action hold and single-use native-strike handover. Events: `heavyChargeStarted(player,style,move)`, `heavyChargeStopped(player,completed)`, `chargedHeavyStarted(player,style,move)`, `chargedHeavyFinished(player,move)`. Callbacks are local presentation/lifecycle hooks, not permission to apply damage again. See [charged heavy](CHARGED_HEAVY.md).
 
-Charged first-finisher variants opt into `chargeBranch=<light index>` on both hold/release and `chargedFinisher=true` on release. Slot variants use default/after_1…after_n. Native release tickets bind the variant/branch; second-finisher windows bypass charging. `heavyChargeStarted` receives the selected move; custom HUD code can inspect `context.action.chargeBranch` or `combo.finisherMove.chargedFinisher`. See [charged heavy](CHARGED_HEAVY.md).
+Charged first-finisher variants opt into `chargeBranch=<light index>` on both hold/release and `chargedFinisher=true` on release. Slot variants use default/after_1â€¦after_n. Native release tickets bind the variant/branch; second-finisher windows bypass charging. `heavyChargeStarted` receives the selected move; custom HUD code can inspect `context.action.chargeBranch` or `combo.finisherMove.chargedFinisher`. See [charged heavy](CHARGED_HEAVY.md).
 
 Charge controller additions: optional holdAnimation, windupMs and maxHoldMs; maxHoldMs=0 disables timed auto-release. A looping hold acknowledges ProjectYakuzaChargeClip=holding. heavyChargeReady(player,style,move) fires once at the minimum wind-up endpoint for cosmetic feedback. Missing native holds cancel safely. See [charged heavy](CHARGED_HEAVY.md).
 
@@ -124,3 +124,7 @@ Charged moves may set `minChargedDamageMultiplier` (0..damageMultiplier). DoD he
 ## Charge recovery and world anchors (0.37.0)
 
 `ChargedHeavy.wantsRecovery(player,combo,style)` reports a ready held first-finisher charge intent; Runtime still requires the existing hit/chain markers before ending recovery. `heavyChargeStarted` adds an optional fourth context argument for presentation before action registry publication. Existing listener arguments are unchanged. `WorldEffects.renderCentered` accepts optional relative world anchor XYZ after color, compensating their projection to retain the requested screen centre; limb effects use them for native depth. Omitted anchors preserve existing callers. `attackEffects.verticalOffset` is an optional per-move downwards offset in sprite-pixel units.
+
+### 0.38.0 presentation refinement
+
+AttackEffects.facing(player) combines getAnimAngleRadians with math.rad(getShoulderTwist()) for the punch prototype. Its project helper remains the unchanged native body-space projection used by charge effects. No Java bridge is required. HeatAura completion echoes now last 750ms, reuse the normal aura animation and replace the ordinary body pass to avoid stacking brightness.

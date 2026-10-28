@@ -354,5 +354,5 @@
     "Native walking, torso twist, blend-in/out and occlusion can differ; live GPU/MP appearance has not been tested.",
     "World sprites use the existing IsoSprite world-render path, not UI drawing."
   ],
-  "positioning": "Native source samples inset along forearm, move-scoped verticalOffset=2.5, stronger/larger white-blue cores with scoped additive glow, normal-alpha flames and true limb-height native depth anchors with screen compensation. No media changes."
+  "positioning": "Original native source samples inset along forearm, move-scoped verticalOffset=2.5. All punch particles exactly 1.25 times v0.37.0 scale, normal alpha only. Continuous body angle plus exposed shoulder twist converted from degrees. Existing limb-height world anchors and screen compensation retained. Source path remains an approximation of the final blended pose. No media changes."
 }

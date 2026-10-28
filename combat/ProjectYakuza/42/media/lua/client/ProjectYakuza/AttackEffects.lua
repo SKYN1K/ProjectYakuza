@@ -47,6 +47,11 @@ function F.project(x,y,z,angle,tile)
     local wz=y*.61237234
     return (wx-wy)*32*tile,(wx+wy)*16*tile-wz*96*tile,wx,wy,wz
 end
+-- The skeleton can keep turning its shoulders while the body angle lags behind.
+-- getShoulderTwist is an exposed degree-valued scalar, unlike live bone matrices.
+function F.facing(p)
+    return p:getAnimAngleRadians()+math.rad(p:getShoulderTwist())
+end
 function F.clear(p)
     local s=F.states[p];if not s then return end
     for _,point in ipairs(s.points or {}) do point.instance:Dispose();IsoSpriteInstance.add(point.instance) end
@@ -107,13 +112,13 @@ local function allocate(p,s)
     for i=1,18 do
         local sp=(i==7 or i==8) and F.flame or i>=13 and F.spark or F.glint
         local height=(i==7 or i==8 or i>=13) and 32 or 64
-        local scale=(i==6 and .16 or i==7 and .30 or i==8 and .36 or i>=13 and .20 or .105)*tile
+        local scale=(i==6 and .16 or i==7 and .30 or i==8 and .36 or i>=13 and .20 or .105)*tile*1.25
         local instance=PY.WorldEffects.detached(sp,scale,(i==7 and 1 or i==8 and .85 or 0))
         s.points[i]={instance=instance,height=height,scale=scale,verticalOffset=s.config.verticalOffset or 0}
     end
 end
 local function drawPoint(p,point,x,y,alpha,color,glow,wx,wy,wz)
-    SpriteRenderer.instance:setDoAdditive(glow==true)
+    SpriteRenderer.instance:setDoAdditive(false)
     point.instance:SetAlpha(alpha);point.instance:SetTargetAlpha(alpha)
     PY.WorldEffects.renderCentered(p,point.instance,point.height,point.scale,x,y+point.verticalOffset*Core.getTileScale(),color,
         wx and wx+.06,wy and wy+.06,wz)
@@ -130,7 +135,7 @@ function F.draw()
         local time=s.time
         if time and time>=s.config.from and time<=s.config.to+.12 then
             if not s.points then allocate(p,s) end
-            local angle=p:getAnimAngleRadians()
+            local angle=F.facing(p)
             local extreme=PY.Heat.isExtreme(p);local color=extreme and F.extreme or F.normal
             local fade=math.min(1,(time-s.config.from)/.035,math.max(0,(s.config.to+.06-time)/.06))*math.min(1,s.weight)
             local strength=extreme and .90 or .82
@@ -142,7 +147,7 @@ function F.draw()
                 local x,y,dx,dy,dz
                 if i==6 then x,y,dx,dy,dz=hx,hy,hwx,hwy,hwz
                 else local t=.08+i*.12;x,y,dx,dy,dz=F.project(ax+(wx-ax)*t,ay+(wy-ay)*t,az+(wz-az)*t,angle,tile) end
-                drawPoint(p,s.points[i],x,y,fade*strength*(i==6 and 1 or .70),color,true,dx,dy,dz)
+                drawPoint(p,s.points[i],x,y,fade*strength*(i==6 and 1 or .70),color,false,dx,dy,dz)
             end
             for i=7,8 do
                 if not isGamePaused() then F.flame:update(s.points[i].instance) end

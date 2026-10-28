@@ -2,7 +2,7 @@ require "ProjectYakuza/Runtime"
 require "ProjectYakuza/HeatOutline"
 require "ProjectYakuza/WorldEffects"
 local ProjectYakuza=ProjectYakuza
-local A={states=setmetatable({}, {__mode="k"}),fadeInMs=350,flashMs=480,flashes=setmetatable({}, {__mode="k"})}
+local A={states=setmetatable({}, {__mode="k"}),fadeInMs=350,flashMs=750,flashes=setmetatable({}, {__mode="k"})}
 ProjectYakuza.HeatAura=A
 -- Four tight overlapping patches on the upper body; no waist/leg emitters.
 A.layout={
@@ -21,18 +21,41 @@ A.extremeLayout={
     {x=-7,height=6,kind="smoke",frames=64,frameHeight=64,speed=64/(1.6*60),scale=.40,alpha=.22,drift=-4,lift=9,smoke=true,cycleMs=1600},
     {x=7,height=7,kind="smoke",frames=64,frameHeight=64,speed=64/(1.85*60),scale=.40,alpha=.18,drift=4,lift=10,smoke=true,cycleMs=1850},
 }
--- Completion-only torso flare: animated supplied flames plus small departing sparks.
--- Detached instances keep per-particle centring independent of shared sprite offsets.
-A.flashLayout={
-    {kind="flame",x=-6,height=38,scale=.65,frameHeight=32,drift=-2,lift=5,alpha=.52},
-    {kind="flame",x=6,height=39,scale=.65,frameHeight=32,drift=2,lift=6,alpha=.52},
-    {kind="flame",x=0,height=48,scale=.56,frameHeight=32,drift=0,lift=4,alpha=.46},
-    {kind="flame",x=0,height=33,scale=.70,frameHeight=32,drift=0,lift=7,alpha=.48},
-    {kind="spark",x=-7,height=38,scale=.20,frameHeight=32,drift=-5,lift=9,alpha=.55},
-    {kind="spark",x=7,height=39,scale=.20,frameHeight=32,drift=5,lift=8,alpha=.55},
-    {kind="spark",x=-3,height=46,scale=.18,frameHeight=32,drift=-3,lift=10,alpha=.52},
-    {kind="spark",x=3,height=46,scale=.18,frameHeight=32,drift=3,lift=11,alpha=.52},
-}
+-- Completion-only normal-aura echo. Its blue frames remain supplied game assets.
+-- Four detached instances avoid sharing attachment offsets with the sustained aura.
+function A.makeTaunt()
+    local f={remaining=A.flashMs,duration=A.flashMs,last=getTimestampMs(),emitters={}}
+    A.tauntSprites=A.tauntSprites or {};local tile=Core.getTileScale()
+    for _,point in ipairs(A.layout) do
+        local sprite=A.tauntSprites[point.kind]
+        if not sprite then
+            sprite=IsoSprite.CreateSprite(nil)
+            sprite:LoadFramesNoDirPageDirect("media/textures/ProjectYakuza/HeatWisp",point.kind,32)
+            sprite:setAnimate(true);A.tauntSprites[point.kind]=sprite
+        end
+        local instance=ProjectYakuza.WorldEffects.detached(sprite,tile*point.scale,point.speed*32/(1.2*60))
+        instance:SetAlpha(0);instance:SetTargetAlpha(0)
+        f.emitters[#f.emitters+1]={instance=instance,point=point,sprite=sprite}
+    end
+    return f
+end
+local function smooth(x) x=math.max(0,math.min(1,x));return x*x*(3-2*x) end
+function A.drawTaunt(p,f,s)
+    local fade=smooth((f.duration-f.remaining)/100)*smooth(f.remaining/150)
+    local tile=Core.getTileScale()
+    -- Replace the normal body pass, rather than stacking the same aura twice.
+    local baseline=not s.extreme and ProjectYakuza.Heat.stocks(p)>=1 and s.opacity or 0
+    local alpha=baseline+(1-baseline)*fade
+    local size=1+.20*fade
+    for _,e in ipairs(f.emitters) do
+        local point=e.point;local scale=tile*point.scale*size
+        e.instance:setScale(scale,scale)
+        e.instance:SetAlpha(alpha);e.instance:SetTargetAlpha(alpha)
+        if not isGamePaused() then e.sprite:update(e.instance) end
+        ProjectYakuza.WorldEffects.renderCentered(p,e.instance,256,scale,point.x*tile*size,
+            -(40+(point.height-40)*size)*tile,A.color)
+    end
+end
 A.activationLayout={
     {kind="smoke",x=-11,height=3,scale=.62,frameHeight=64,drift=-9,lift=11,alpha=.38},
     {kind="smoke",x=-4,height=7,scale=.66,frameHeight=64,drift=-4,lift=15,alpha=.34},
@@ -74,7 +97,7 @@ function A.flash(player)
     local f={remaining=A.flashMs,last=getTimestampMs(),emitters={}}
     A.flashes[player]=f;A.update(player)
     if A.flashes[player]~=f then return end
-    A.flashes[player]=A.makeBurst(player,A.flashLayout,A.flashMs)
+    A.flashes[player]=A.makeTaunt()
 end
 function A.drawFlash(p,f)
     if not A.particleColor then
@@ -151,10 +174,10 @@ function A.renderBody()
             if not s.flashing and not s.extreme and ProjectYakuza.Heat.stocks(p)<1 then A.clear(p)
             else
                 if ProjectYakuza.HeatOutline then ProjectYakuza.HeatOutline.draw(p) end
-                A.draw(p,s)
+                if not flash or s.extreme then A.draw(p,s) end
                 if s.activationBurst then A.drawFlash(p,s.activationBurst) end
                 if flash then
-                    A.drawFlash(p,flash)
+                    A.drawTaunt(p,flash,s)
 
                 end
             end
