@@ -21,7 +21,7 @@ A.extremeLayout={
     {x=-7,height=6,kind="smoke",frames=64,frameHeight=64,speed=64/(1.6*60),scale=.40,alpha=.22,drift=-4,lift=9,smoke=true,cycleMs=1600},
     {x=7,height=7,kind="smoke",frames=64,frameHeight=64,speed=64/(1.85*60),scale=.40,alpha=.18,drift=4,lift=10,smoke=true,cycleMs=1850},
 }
--- Completion-only normal-aura echo. Its blue frames remain supplied game assets.
+-- Completion-only normal-aura echo; approved colour-only copies are 25% whiter.
 -- Four detached instances avoid sharing attachment offsets with the sustained aura.
 function A.makeTaunt()
     local f={remaining=A.flashMs,duration=A.flashMs,last=getTimestampMs(),emitters={}}
@@ -30,7 +30,7 @@ function A.makeTaunt()
         local sprite=A.tauntSprites[point.kind]
         if not sprite then
             sprite=IsoSprite.CreateSprite(nil)
-            sprite:LoadFramesNoDirPageDirect("media/textures/ProjectYakuza/HeatWisp",point.kind,32)
+            sprite:LoadFramesNoDirPageDirect("media/textures/ProjectYakuza/TauntAura",point.kind,32)
             sprite:setAnimate(true);A.tauntSprites[point.kind]=sprite
         end
         local instance=ProjectYakuza.WorldEffects.detached(sprite,tile*point.scale,point.speed*32/(1.2*60))
@@ -47,13 +47,18 @@ function A.drawTaunt(p,f,s)
     local baseline=not s.extreme and ProjectYakuza.Heat.stocks(p)>=1 and s.opacity or 0
     local alpha=baseline+(1-baseline)*fade
     local size=1+.20*fade
+    -- Restore the original baked blue at either end of the envelope so the
+    -- replacement never pops from/to a white tint over the sustained aura.
+    if not A.tauntColor then A.tauntColor=ColorInfo.new(1,1,1,1) end
+    A.tauntColor.r=(80+44*fade)/124;A.tauntColor.g=(195+15*fade)/210
+    A.tauntColor.b=1;A.tauntColor.a=1
     for _,e in ipairs(f.emitters) do
         local point=e.point;local scale=tile*point.scale*size
         e.instance:setScale(scale,scale)
         e.instance:SetAlpha(alpha);e.instance:SetTargetAlpha(alpha)
         if not isGamePaused() then e.sprite:update(e.instance) end
         ProjectYakuza.WorldEffects.renderCentered(p,e.instance,256,scale,point.x*tile*size,
-            -(40+(point.height-40)*size)*tile,A.color)
+            -(40+(point.height-40)*size)*tile,A.tauntColor)
     end
 end
 A.activationLayout={

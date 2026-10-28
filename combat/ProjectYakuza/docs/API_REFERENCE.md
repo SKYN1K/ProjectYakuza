@@ -113,7 +113,7 @@ Client `ProjectYakuza/StyleUI`: `registerStyleUI(id,provider)`, `unregisterStyle
 
 Built-in action kinds `heavyCharge` and `chargedHeavy` use the native timed-action hold and single-use native-strike handover. Events: `heavyChargeStarted(player,style,move)`, `heavyChargeStopped(player,completed)`, `chargedHeavyStarted(player,style,move)`, `chargedHeavyFinished(player,move)`. Callbacks are local presentation/lifecycle hooks, not permission to apply damage again. See [charged heavy](CHARGED_HEAVY.md).
 
-Charged first-finisher variants opt into `chargeBranch=<light index>` on both hold/release and `chargedFinisher=true` on release. Slot variants use default/after_1â€¦after_n. Native release tickets bind the variant/branch; second-finisher windows bypass charging. `heavyChargeStarted` receives the selected move; custom HUD code can inspect `context.action.chargeBranch` or `combo.finisherMove.chargedFinisher`. See [charged heavy](CHARGED_HEAVY.md).
+Charged first-finisher variants opt into `chargeBranch=<light index>` on both hold/release and `chargedFinisher=true` on release. Slot variants use default/after_1Ã¢â‚¬Â¦after_n. Native release tickets bind the variant/branch; second-finisher windows bypass charging. `heavyChargeStarted` receives the selected move; custom HUD code can inspect `context.action.chargeBranch` or `combo.finisherMove.chargedFinisher`. See [charged heavy](CHARGED_HEAVY.md).
 
 Charge controller additions: optional holdAnimation, windupMs and maxHoldMs; maxHoldMs=0 disables timed auto-release. A looping hold acknowledges ProjectYakuzaChargeClip=holding. heavyChargeReady(player,style,move) fires once at the minimum wind-up endpoint for cosmetic feedback. Missing native holds cancel safely. See [charged heavy](CHARGED_HEAVY.md).
 
@@ -128,3 +128,7 @@ Charged moves may set `minChargedDamageMultiplier` (0..damageMultiplier). DoD he
 ### 0.38.0 presentation refinement
 
 AttackEffects.facing(player) combines getAnimAngleRadians with math.rad(getShoulderTwist()) for the punch prototype. Its project helper remains the unchanged native body-space projection used by charge effects. No Java bridge is required. HeatAura completion echoes now last 750ms, reuse the normal aura animation and replace the ordinary body pass to avoid stacking brightness.
+
+### 0.39.0 approved taunt colour copies
+
+The TauntAura_a/b/c sequences are colour-only copies of the existing HeatWisp sequences. RGB is rounded 75% source plus 25% white; alpha, dimensions and frame order are identical. drawTaunt fades the colour toward the original blue at either end using a multiplicative tint, independently of the existing size/opacity envelope. Normal and Extreme Heat source assets are unchanged. See taunt-aura-assets.json for hashes and the explicit authorization.

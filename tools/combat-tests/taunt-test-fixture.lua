@@ -121,7 +121,7 @@ SpriteRenderer={instance={getDoAdditive=function()return additive end,setDoAddit
 Core={getTileScale=function()return 2 end};IsoDirections={N='N'};ColorInfo={new=function(r,g,b,a)return {r=r,g=g,b=b,a=a}end}
 instanceof=function()return true end
 IsoSprite={CreateSprite=function()
- local s={};function s:LoadFramesNoDirPageDirect(path,kind,count)self.kind=kind;self.path=path;self.frameCount=count;check((path=='media/textures/ProjectYakuza/HeatWisp' and count==32) or (path=='media/textures/ProjectYakuza/TauntBurst' and count==1) or (path=='media/textures/ProjectYakuza/ExtremeHeat' and (((kind=='flame' or kind=='smoke') and count==64) or ((kind=='wispL' or kind=='wispR') and count==1))),'only supplied normal, taunt or original Lost Judgment texture frames');loads=loads+1 end
+ local s={};function s:LoadFramesNoDirPageDirect(path,kind,count)self.kind=kind;self.path=path;self.frameCount=count;check(((path=='media/textures/ProjectYakuza/HeatWisp' or path=='media/textures/ProjectYakuza/TauntAura') and count==32) or (path=='media/textures/ProjectYakuza/TauntBurst' and count==1) or (path=='media/textures/ProjectYakuza/ExtremeHeat' and (((kind=='flame' or kind=='smoke') and count==64) or ((kind=='wispL' or kind=='wispR') and count==1))),'only supplied normal, taunt or original Lost Judgment texture frames');loads=loads+1 end
  function s:LoadFramesNoDirPageSimple(path)self.kind='spark';self.path=path;self.frameCount=1;check(path=='media/textures/ProjectYakuza/ChargeSpark.png','taunt uses existing original spark');loads=loads+1 end
  function s:setAnimate(v)self.animate=v end
  function s:update(i)i.frames=i.frames+1 end
@@ -166,9 +166,10 @@ check(not additive,'taunt has no additive brightness pulse')
 check(s.emitters[1].instance.frames==0,'taunt replaces normal pass without double drawing')
 check(#A.flashes[p].emitters==4,'completion uses only four ordinary heat aura emitters')
 for i,e in ipairs(A.flashes[p].emitters)do
- check(e.sprite.path=='media/textures/ProjectYakuza/HeatWisp' and e.sprite.kind==A.layout[i].kind,'taunt shares the standard aura animation')
+ check(e.sprite.path=='media/textures/ProjectYakuza/TauntAura' and e.sprite.kind==A.layout[i].kind,'taunt shares the standard aura animation')
  check(near(e.instance.scale,A.layout[i].scale*2*1.2) and e.instance.frames==1,'twenty percent larger normal-speed aura at full envelope')
 end
+check(near(A.tauntColor.r,1) and near(A.tauntColor.g,1),'peak taunt uses the full approved 25-percent-whiter pixels')
 check(A.flashes[p].duration==750,'taunt echo lasts exactly 0.75 unpaused seconds')
 local count,alloc=loads,attached
 for i=1,1000 do A.update(p);A.render()end
@@ -227,7 +228,9 @@ clock=clock+751;A.render();check(not s.emitters[1].instance,'remote completion g
 p.localPlayer=true
 A.flash(p);local echo=A.flashes[p]
 clock=clock+50;A.render();check(near(echo.emitters[1].instance.alpha,.5),'zero-heat echo fades in over 100ms')
+check(near(A.tauntColor.r,102/124) and near(A.tauntColor.g,202.5/210),'colour blends halfway from original blue during fade-in')
 clock=clock+625;A.render();check(near(echo.emitters[1].instance.alpha,.5),'zero-heat echo fades out over 150ms')
+check(near(A.tauntColor.r,102/124) and near(A.tauntColor.g,202.5/210),'colour returns smoothly toward original blue during fade-out')
 clock=clock+76;A.render();check(not A.flashes[p],'taunt echo cleans up after fade')
 -- Activation uses the actual started native action, before fuel mode starts.
 ProjectYakuza.HeatActivation={active={}}

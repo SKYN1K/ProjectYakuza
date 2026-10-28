@@ -1,5 +1,5 @@
 {
-  "version": "0.38.0",
+  "version": "0.39.0",
   "operation": "Code-only timing, positioning, animation playback and alpha changes. Reuses supplied textures without creating or altering any media.",
   "activation": {
     "outline": "Starts on native heatActivationStarted and equivalent remote observer activation, before mode fuel. Restored on interruption/end.",
@@ -18,10 +18,11 @@
     "size_multiplier": 1.2,
     "instances": 4,
     "sources": [
-      "heat-aura-assets.json"
+      "heat-aura-assets.json",
+      "taunt-aura-assets.json"
     ],
-    "rendering": "The existing three HeatWisp sequences and four-emitter normal aura layout, normal transparency and normal playback speed. Replaces the normal body pass during the echo; no old flare/sparks, no additive pulse. Existing blue pixels retained; a 25-percent-whiter copy requires user approval.",
+    "rendering": "Normal transparency, original animation and four-emitter layout, 750ms with 100ms-in/150ms-out envelope. Uses user-approved RGB-only copies shifted 25% toward white. A render tint blends their colour smoothly to/from the original blue; the normal body pass is replaced rather than stacked.",
     "pause": "Lifetime and animation pause; cancellation has no echo."
   },
-  "media_unchanged_from": "0.37.0"
+  "original_media_unchanged_from": "0.38.0"
 }

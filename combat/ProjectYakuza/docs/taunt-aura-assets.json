@@ -1,0 +1,978 @@
+{
+  "version": "0.39.0",
+  "authorization": "User explicitly approved non-AI colour-only copies of existing aura frames, preserving shape and animation.",
+  "operation": "RGB = round(0.75 * source RGB + 0.25 * 255), channel-wise integer (3*c+257)//4. Alpha, dimensions and frame order unchanged; no resampling, AI or synthesized shapes.",
+  "source_manifest": "heat-aura-assets.json",
+  "visible_source_rgb": [
+    80,
+    195,
+    255
+  ],
+  "visible_output_rgb": [
+    124,
+    210,
+    255
+  ],
+  "frames": [
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_a_0.png",
+      "source_sha256": "dfdfc7e0e8e36c2ebe7357b7dc0baaae9cafc8af1400ca88b70c9aa15d41a01f",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_a_0.png",
+      "sha256": "d500caf33330ff1c3918a89c37bbf4fe5148092ab06499f5aef2d15fd8733c70",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_a_1.png",
+      "source_sha256": "fe897693157fad31a1f4efebd8101fd7fe743fd3f0364bbb1b378ab5aa4cfa76",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_a_1.png",
+      "sha256": "d11a88c10f8872c26e3b40d795c1cac7509f6842c9c91dfc838df7e46c023811",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_a_2.png",
+      "source_sha256": "4e6c152a830400e9128920e9a764874310a2c591bd1d2f0784db26aad45e9f2d",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_a_2.png",
+      "sha256": "93d21bce162b3f72166498e87420491e6ede4f1ca18c7f90b60a5e3c9c0243c5",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_a_3.png",
+      "source_sha256": "6620ca11917934d3e63d5b9727ce388ae0cd9e1cc58c4c9b8e59faaaf1bb7700",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_a_3.png",
+      "sha256": "4727b59c1fe351336f49611a188ca11c70bb9fa3463bfaa5f2ca81361def8c9c",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_a_4.png",
+      "source_sha256": "05fe9acff19abc64a16b40acc1a18287409a41c875f61d57c2f87625e48e120e",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_a_4.png",
+      "sha256": "fcee407aa782db5f7b73313ff8337ee28937021a123a3265bffd048dda055a92",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_a_5.png",
+      "source_sha256": "21f81186b1c44134054482ed9345fe47a93393c67bc1984ea5df07744a09a243",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_a_5.png",
+      "sha256": "88790c63b10b840fd6a8c10813ebc8319e902ee1416f0d54c475892fb9b9c451",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_a_6.png",
+      "source_sha256": "0ddbac9bbd535d02aac868018db3ac77c5b69e142cf2e338626faa5cbcc186da",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_a_6.png",
+      "sha256": "85d847eb7fa1b43a32c8723ecd896416e46a8de814782d06937b7a980c51e444",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_a_7.png",
+      "source_sha256": "4a7bb04daaa9759d402790990f55c9b4ea5905664d887c2860f29bfcbfda39f9",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_a_7.png",
+      "sha256": "f0b5684e8e343b65c48e3b633d9ca7d474395c258aeb4cb03b8818b98dc30ad3",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_a_8.png",
+      "source_sha256": "a20f8e9926c54b336097e9d10a61154effa0ab6a99038570a168f99124eb936d",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_a_8.png",
+      "sha256": "f5daa99bc0f5502ca13c4d9d455513caa6e7f434cf6ec4d841344beb40585cb1",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_a_9.png",
+      "source_sha256": "453fd4f4c7a54d49a236ed33da3bf29233ef7072d0eeb7c0c175b32dc80b6442",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_a_9.png",
+      "sha256": "8b11f47ad5f1b9a38802731414f7f3cc2da27282cff9e41040e806c8aeb006cc",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_a_10.png",
+      "source_sha256": "54b7a72d1261bf91025c8affb7d6abf4941c38253105a54494c77507ef750dd2",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_a_10.png",
+      "sha256": "495460a07834836a69197d486b3a2f340f2272b2f336701957bac55467db583c",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_a_11.png",
+      "source_sha256": "52c089a4b995e1d0fb2e2f86d3540dc8f48552471e6a50e9295213f2198ffa0b",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_a_11.png",
+      "sha256": "07f8d6ce7c9c7148ae5de13f6e6f943e7b851973169ffc4fd10604de7d337657",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_a_12.png",
+      "source_sha256": "49188ee6a31765eb4b341e3bfe5038594a985794444119031757166abb170b4d",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_a_12.png",
+      "sha256": "93f93c6298eba28971cac9aca97c7fc311fb9443a67e1f4058b86dbe5c9f71b4",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_a_13.png",
+      "source_sha256": "d2fd6b11e0a82ddcf71cc8957b06ba8abb3a5e25c875d1a3ec19f4146ea4fa4c",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_a_13.png",
+      "sha256": "76946586d2d60a81f43a0c5db6876de6641df25c9a5e6412de030ebc31df4f81",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_a_14.png",
+      "source_sha256": "44eaa8276440650c1b2e9dc6e32ff25b815bafa261d3196c2a78cb296c88fb97",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_a_14.png",
+      "sha256": "6e6a4f99bae873b222eefc681a80f06cc3eceedfcdf4b8368c8c4774fb4c5102",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_a_15.png",
+      "source_sha256": "c25edb3942e500099b94822d432b314d80e3f90b5506668a085a77099602c2de",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_a_15.png",
+      "sha256": "ccc95293db497f92e2d974e06c35ea2c6b148430f208e84f173eb498d1acf069",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_a_16.png",
+      "source_sha256": "b9f110137c368dc6494600cad97373d861f38876a80d6c1b91c2e932424cd97f",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_a_16.png",
+      "sha256": "b46510095952e82ee0f6f954c660efe7c0c31ff9a145f4a00683c34e065a85b8",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_a_17.png",
+      "source_sha256": "a3865f3982284d48d38bd52ec8692fc50eeda02961c7bf27913afe229fa5c164",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_a_17.png",
+      "sha256": "1e667862555e179db2e9420ac3ee60afd7bd8d76de0053e27041e6cfb63bc285",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_a_18.png",
+      "source_sha256": "60970159b80868589b67e4b235355794e0794922a59b0268cdbb7a6c1ee362b3",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_a_18.png",
+      "sha256": "b84ed50adbf4bd91a76132d40fa00894dfb68e02c075a65f1e0df2be45b48f4a",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_a_19.png",
+      "source_sha256": "d2e435eae76552ed07f5489a008610749338fc04ee902a131e7ee75e3d4be870",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_a_19.png",
+      "sha256": "2c5f2c1f57a01b662cf7385731922fbd6ea7de0356fbc809a82741f531e04274",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_a_20.png",
+      "source_sha256": "b7c6de0c5433a5a6e1ec68588d3fd67d5b7678327dcbaf8cc90187a2f1e4f8c0",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_a_20.png",
+      "sha256": "83e7932fd1f2593651f07ba33d5f5ec3db9ff7fe265ed35affddf8699b61e759",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_a_21.png",
+      "source_sha256": "a16f0b1a967ffda8fc8bbff71ea75c0aa26cb903998b8452f0dff551a3a8961d",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_a_21.png",
+      "sha256": "825041521dfbdd7519266afba26290473b11356e92a91c2e997db538db982ab0",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_a_22.png",
+      "source_sha256": "418ad159ddacb426cdbd757f7a222ec116b2141e175429d3d336c14579d30d18",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_a_22.png",
+      "sha256": "b2b8a368d1c6f6cfb5d744279522df3b78fd9acdcc085d9c1d8dc9258947f546",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_a_23.png",
+      "source_sha256": "1a87428c46d674e3d6cb419f92112580e9245f5e1df255152652ca52a4d2a60b",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_a_23.png",
+      "sha256": "9f379e1f433f06fd320db0527a392869bdc096fe6e31dd46c53bef71909a3858",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_a_24.png",
+      "source_sha256": "9980886823fa25769ed824eb06b0d8c90ea8cf345644a74055d9eec9d4d1e1f9",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_a_24.png",
+      "sha256": "b05033abaf66a816e0aae75b411133f21dd2ff705043489e05ef30bd725b3793",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_a_25.png",
+      "source_sha256": "0cacdc48e203720e077ea2ecd65b847e6c51debcf82d8e467d3d830e694ff99e",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_a_25.png",
+      "sha256": "490e21968429737e41404c24f92f2d9b83c0ff29f30418889d24f45c25149d39",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_a_26.png",
+      "source_sha256": "586e0b0b126473d5497fee4402c33f26585794fd9c95d12d787cf9258918c7ec",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_a_26.png",
+      "sha256": "1a8e7f4dbb20e3e4dfbe9f0eb9cee9c639501db942fbb47b49910e7b5bafbcc2",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_a_27.png",
+      "source_sha256": "9536c2df27164e56e2797cef1d9f8c1480fcd74d4b06fc146ef718d51e3047f1",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_a_27.png",
+      "sha256": "c467990d6bc2f552342176276ed5596f46c301e796f36e893ecc38aad1cda811",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_a_28.png",
+      "source_sha256": "66a078bd1ca514a82e59f6230c4d838d28d175ddbbe4655a385dc802c4fe34ac",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_a_28.png",
+      "sha256": "4ff54bb8864fb05ed6da2c4ea475f71506a34b25962c840ed88fd38177654ce8",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_a_29.png",
+      "source_sha256": "82ea7b9cf8c5f5692e61a3ca38c7c794453e78455b3bc35f89934673937ef819",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_a_29.png",
+      "sha256": "8b758bd1e7cdeefaf9ee687df67a29367a99ba84b6d15e70100b31d160079afc",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_a_30.png",
+      "source_sha256": "a815b097376c35a61caea46ae6a95f39078c77a52825c60d06140e16224a48d4",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_a_30.png",
+      "sha256": "0f07aee8333791aea9ffaec391680abbcee9273c382442020f679c0611b85318",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_a_31.png",
+      "source_sha256": "953e911c6a2e236d6d3a1675dd08d805b4403922c3dd3e3bb9c9bc4ec6dfde00",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_a_31.png",
+      "sha256": "a2462ebc79f3f362dda177f8f1a1b744a5726f34ba40b1f1cef58c89098d0cba",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_b_0.png",
+      "source_sha256": "52c089a4b995e1d0fb2e2f86d3540dc8f48552471e6a50e9295213f2198ffa0b",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_b_0.png",
+      "sha256": "07f8d6ce7c9c7148ae5de13f6e6f943e7b851973169ffc4fd10604de7d337657",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_b_1.png",
+      "source_sha256": "49188ee6a31765eb4b341e3bfe5038594a985794444119031757166abb170b4d",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_b_1.png",
+      "sha256": "93f93c6298eba28971cac9aca97c7fc311fb9443a67e1f4058b86dbe5c9f71b4",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_b_2.png",
+      "source_sha256": "d2fd6b11e0a82ddcf71cc8957b06ba8abb3a5e25c875d1a3ec19f4146ea4fa4c",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_b_2.png",
+      "sha256": "76946586d2d60a81f43a0c5db6876de6641df25c9a5e6412de030ebc31df4f81",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_b_3.png",
+      "source_sha256": "44eaa8276440650c1b2e9dc6e32ff25b815bafa261d3196c2a78cb296c88fb97",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_b_3.png",
+      "sha256": "6e6a4f99bae873b222eefc681a80f06cc3eceedfcdf4b8368c8c4774fb4c5102",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_b_4.png",
+      "source_sha256": "c25edb3942e500099b94822d432b314d80e3f90b5506668a085a77099602c2de",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_b_4.png",
+      "sha256": "ccc95293db497f92e2d974e06c35ea2c6b148430f208e84f173eb498d1acf069",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_b_5.png",
+      "source_sha256": "b9f110137c368dc6494600cad97373d861f38876a80d6c1b91c2e932424cd97f",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_b_5.png",
+      "sha256": "b46510095952e82ee0f6f954c660efe7c0c31ff9a145f4a00683c34e065a85b8",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_b_6.png",
+      "source_sha256": "a3865f3982284d48d38bd52ec8692fc50eeda02961c7bf27913afe229fa5c164",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_b_6.png",
+      "sha256": "1e667862555e179db2e9420ac3ee60afd7bd8d76de0053e27041e6cfb63bc285",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_b_7.png",
+      "source_sha256": "60970159b80868589b67e4b235355794e0794922a59b0268cdbb7a6c1ee362b3",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_b_7.png",
+      "sha256": "b84ed50adbf4bd91a76132d40fa00894dfb68e02c075a65f1e0df2be45b48f4a",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_b_8.png",
+      "source_sha256": "d2e435eae76552ed07f5489a008610749338fc04ee902a131e7ee75e3d4be870",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_b_8.png",
+      "sha256": "2c5f2c1f57a01b662cf7385731922fbd6ea7de0356fbc809a82741f531e04274",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_b_9.png",
+      "source_sha256": "b7c6de0c5433a5a6e1ec68588d3fd67d5b7678327dcbaf8cc90187a2f1e4f8c0",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_b_9.png",
+      "sha256": "83e7932fd1f2593651f07ba33d5f5ec3db9ff7fe265ed35affddf8699b61e759",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_b_10.png",
+      "source_sha256": "a16f0b1a967ffda8fc8bbff71ea75c0aa26cb903998b8452f0dff551a3a8961d",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_b_10.png",
+      "sha256": "825041521dfbdd7519266afba26290473b11356e92a91c2e997db538db982ab0",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_b_11.png",
+      "source_sha256": "418ad159ddacb426cdbd757f7a222ec116b2141e175429d3d336c14579d30d18",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_b_11.png",
+      "sha256": "b2b8a368d1c6f6cfb5d744279522df3b78fd9acdcc085d9c1d8dc9258947f546",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_b_12.png",
+      "source_sha256": "1a87428c46d674e3d6cb419f92112580e9245f5e1df255152652ca52a4d2a60b",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_b_12.png",
+      "sha256": "9f379e1f433f06fd320db0527a392869bdc096fe6e31dd46c53bef71909a3858",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_b_13.png",
+      "source_sha256": "9980886823fa25769ed824eb06b0d8c90ea8cf345644a74055d9eec9d4d1e1f9",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_b_13.png",
+      "sha256": "b05033abaf66a816e0aae75b411133f21dd2ff705043489e05ef30bd725b3793",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_b_14.png",
+      "source_sha256": "0cacdc48e203720e077ea2ecd65b847e6c51debcf82d8e467d3d830e694ff99e",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_b_14.png",
+      "sha256": "490e21968429737e41404c24f92f2d9b83c0ff29f30418889d24f45c25149d39",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_b_15.png",
+      "source_sha256": "586e0b0b126473d5497fee4402c33f26585794fd9c95d12d787cf9258918c7ec",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_b_15.png",
+      "sha256": "1a8e7f4dbb20e3e4dfbe9f0eb9cee9c639501db942fbb47b49910e7b5bafbcc2",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_b_16.png",
+      "source_sha256": "9536c2df27164e56e2797cef1d9f8c1480fcd74d4b06fc146ef718d51e3047f1",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_b_16.png",
+      "sha256": "c467990d6bc2f552342176276ed5596f46c301e796f36e893ecc38aad1cda811",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_b_17.png",
+      "source_sha256": "66a078bd1ca514a82e59f6230c4d838d28d175ddbbe4655a385dc802c4fe34ac",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_b_17.png",
+      "sha256": "4ff54bb8864fb05ed6da2c4ea475f71506a34b25962c840ed88fd38177654ce8",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_b_18.png",
+      "source_sha256": "82ea7b9cf8c5f5692e61a3ca38c7c794453e78455b3bc35f89934673937ef819",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_b_18.png",
+      "sha256": "8b758bd1e7cdeefaf9ee687df67a29367a99ba84b6d15e70100b31d160079afc",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_b_19.png",
+      "source_sha256": "a815b097376c35a61caea46ae6a95f39078c77a52825c60d06140e16224a48d4",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_b_19.png",
+      "sha256": "0f07aee8333791aea9ffaec391680abbcee9273c382442020f679c0611b85318",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_b_20.png",
+      "source_sha256": "953e911c6a2e236d6d3a1675dd08d805b4403922c3dd3e3bb9c9bc4ec6dfde00",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_b_20.png",
+      "sha256": "a2462ebc79f3f362dda177f8f1a1b744a5726f34ba40b1f1cef58c89098d0cba",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_b_21.png",
+      "source_sha256": "dfdfc7e0e8e36c2ebe7357b7dc0baaae9cafc8af1400ca88b70c9aa15d41a01f",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_b_21.png",
+      "sha256": "d500caf33330ff1c3918a89c37bbf4fe5148092ab06499f5aef2d15fd8733c70",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_b_22.png",
+      "source_sha256": "fe897693157fad31a1f4efebd8101fd7fe743fd3f0364bbb1b378ab5aa4cfa76",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_b_22.png",
+      "sha256": "d11a88c10f8872c26e3b40d795c1cac7509f6842c9c91dfc838df7e46c023811",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_b_23.png",
+      "source_sha256": "4e6c152a830400e9128920e9a764874310a2c591bd1d2f0784db26aad45e9f2d",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_b_23.png",
+      "sha256": "93d21bce162b3f72166498e87420491e6ede4f1ca18c7f90b60a5e3c9c0243c5",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_b_24.png",
+      "source_sha256": "6620ca11917934d3e63d5b9727ce388ae0cd9e1cc58c4c9b8e59faaaf1bb7700",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_b_24.png",
+      "sha256": "4727b59c1fe351336f49611a188ca11c70bb9fa3463bfaa5f2ca81361def8c9c",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_b_25.png",
+      "source_sha256": "05fe9acff19abc64a16b40acc1a18287409a41c875f61d57c2f87625e48e120e",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_b_25.png",
+      "sha256": "fcee407aa782db5f7b73313ff8337ee28937021a123a3265bffd048dda055a92",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_b_26.png",
+      "source_sha256": "21f81186b1c44134054482ed9345fe47a93393c67bc1984ea5df07744a09a243",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_b_26.png",
+      "sha256": "88790c63b10b840fd6a8c10813ebc8319e902ee1416f0d54c475892fb9b9c451",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_b_27.png",
+      "source_sha256": "0ddbac9bbd535d02aac868018db3ac77c5b69e142cf2e338626faa5cbcc186da",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_b_27.png",
+      "sha256": "85d847eb7fa1b43a32c8723ecd896416e46a8de814782d06937b7a980c51e444",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_b_28.png",
+      "source_sha256": "4a7bb04daaa9759d402790990f55c9b4ea5905664d887c2860f29bfcbfda39f9",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_b_28.png",
+      "sha256": "f0b5684e8e343b65c48e3b633d9ca7d474395c258aeb4cb03b8818b98dc30ad3",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_b_29.png",
+      "source_sha256": "a20f8e9926c54b336097e9d10a61154effa0ab6a99038570a168f99124eb936d",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_b_29.png",
+      "sha256": "f5daa99bc0f5502ca13c4d9d455513caa6e7f434cf6ec4d841344beb40585cb1",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_b_30.png",
+      "source_sha256": "453fd4f4c7a54d49a236ed33da3bf29233ef7072d0eeb7c0c175b32dc80b6442",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_b_30.png",
+      "sha256": "8b11f47ad5f1b9a38802731414f7f3cc2da27282cff9e41040e806c8aeb006cc",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_b_31.png",
+      "source_sha256": "54b7a72d1261bf91025c8affb7d6abf4941c38253105a54494c77507ef750dd2",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_b_31.png",
+      "sha256": "495460a07834836a69197d486b3a2f340f2272b2f336701957bac55467db583c",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_c_0.png",
+      "source_sha256": "1a87428c46d674e3d6cb419f92112580e9245f5e1df255152652ca52a4d2a60b",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_c_0.png",
+      "sha256": "9f379e1f433f06fd320db0527a392869bdc096fe6e31dd46c53bef71909a3858",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_c_1.png",
+      "source_sha256": "9980886823fa25769ed824eb06b0d8c90ea8cf345644a74055d9eec9d4d1e1f9",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_c_1.png",
+      "sha256": "b05033abaf66a816e0aae75b411133f21dd2ff705043489e05ef30bd725b3793",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_c_2.png",
+      "source_sha256": "0cacdc48e203720e077ea2ecd65b847e6c51debcf82d8e467d3d830e694ff99e",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_c_2.png",
+      "sha256": "490e21968429737e41404c24f92f2d9b83c0ff29f30418889d24f45c25149d39",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_c_3.png",
+      "source_sha256": "586e0b0b126473d5497fee4402c33f26585794fd9c95d12d787cf9258918c7ec",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_c_3.png",
+      "sha256": "1a8e7f4dbb20e3e4dfbe9f0eb9cee9c639501db942fbb47b49910e7b5bafbcc2",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_c_4.png",
+      "source_sha256": "9536c2df27164e56e2797cef1d9f8c1480fcd74d4b06fc146ef718d51e3047f1",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_c_4.png",
+      "sha256": "c467990d6bc2f552342176276ed5596f46c301e796f36e893ecc38aad1cda811",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_c_5.png",
+      "source_sha256": "66a078bd1ca514a82e59f6230c4d838d28d175ddbbe4655a385dc802c4fe34ac",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_c_5.png",
+      "sha256": "4ff54bb8864fb05ed6da2c4ea475f71506a34b25962c840ed88fd38177654ce8",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_c_6.png",
+      "source_sha256": "82ea7b9cf8c5f5692e61a3ca38c7c794453e78455b3bc35f89934673937ef819",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_c_6.png",
+      "sha256": "8b758bd1e7cdeefaf9ee687df67a29367a99ba84b6d15e70100b31d160079afc",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_c_7.png",
+      "source_sha256": "a815b097376c35a61caea46ae6a95f39078c77a52825c60d06140e16224a48d4",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_c_7.png",
+      "sha256": "0f07aee8333791aea9ffaec391680abbcee9273c382442020f679c0611b85318",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_c_8.png",
+      "source_sha256": "953e911c6a2e236d6d3a1675dd08d805b4403922c3dd3e3bb9c9bc4ec6dfde00",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_c_8.png",
+      "sha256": "a2462ebc79f3f362dda177f8f1a1b744a5726f34ba40b1f1cef58c89098d0cba",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_c_9.png",
+      "source_sha256": "dfdfc7e0e8e36c2ebe7357b7dc0baaae9cafc8af1400ca88b70c9aa15d41a01f",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_c_9.png",
+      "sha256": "d500caf33330ff1c3918a89c37bbf4fe5148092ab06499f5aef2d15fd8733c70",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_c_10.png",
+      "source_sha256": "fe897693157fad31a1f4efebd8101fd7fe743fd3f0364bbb1b378ab5aa4cfa76",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_c_10.png",
+      "sha256": "d11a88c10f8872c26e3b40d795c1cac7509f6842c9c91dfc838df7e46c023811",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_c_11.png",
+      "source_sha256": "4e6c152a830400e9128920e9a764874310a2c591bd1d2f0784db26aad45e9f2d",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_c_11.png",
+      "sha256": "93d21bce162b3f72166498e87420491e6ede4f1ca18c7f90b60a5e3c9c0243c5",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_c_12.png",
+      "source_sha256": "6620ca11917934d3e63d5b9727ce388ae0cd9e1cc58c4c9b8e59faaaf1bb7700",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_c_12.png",
+      "sha256": "4727b59c1fe351336f49611a188ca11c70bb9fa3463bfaa5f2ca81361def8c9c",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_c_13.png",
+      "source_sha256": "05fe9acff19abc64a16b40acc1a18287409a41c875f61d57c2f87625e48e120e",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_c_13.png",
+      "sha256": "fcee407aa782db5f7b73313ff8337ee28937021a123a3265bffd048dda055a92",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_c_14.png",
+      "source_sha256": "21f81186b1c44134054482ed9345fe47a93393c67bc1984ea5df07744a09a243",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_c_14.png",
+      "sha256": "88790c63b10b840fd6a8c10813ebc8319e902ee1416f0d54c475892fb9b9c451",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_c_15.png",
+      "source_sha256": "0ddbac9bbd535d02aac868018db3ac77c5b69e142cf2e338626faa5cbcc186da",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_c_15.png",
+      "sha256": "85d847eb7fa1b43a32c8723ecd896416e46a8de814782d06937b7a980c51e444",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_c_16.png",
+      "source_sha256": "4a7bb04daaa9759d402790990f55c9b4ea5905664d887c2860f29bfcbfda39f9",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_c_16.png",
+      "sha256": "f0b5684e8e343b65c48e3b633d9ca7d474395c258aeb4cb03b8818b98dc30ad3",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_c_17.png",
+      "source_sha256": "a20f8e9926c54b336097e9d10a61154effa0ab6a99038570a168f99124eb936d",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_c_17.png",
+      "sha256": "f5daa99bc0f5502ca13c4d9d455513caa6e7f434cf6ec4d841344beb40585cb1",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_c_18.png",
+      "source_sha256": "453fd4f4c7a54d49a236ed33da3bf29233ef7072d0eeb7c0c175b32dc80b6442",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_c_18.png",
+      "sha256": "8b11f47ad5f1b9a38802731414f7f3cc2da27282cff9e41040e806c8aeb006cc",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_c_19.png",
+      "source_sha256": "54b7a72d1261bf91025c8affb7d6abf4941c38253105a54494c77507ef750dd2",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_c_19.png",
+      "sha256": "495460a07834836a69197d486b3a2f340f2272b2f336701957bac55467db583c",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_c_20.png",
+      "source_sha256": "52c089a4b995e1d0fb2e2f86d3540dc8f48552471e6a50e9295213f2198ffa0b",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_c_20.png",
+      "sha256": "07f8d6ce7c9c7148ae5de13f6e6f943e7b851973169ffc4fd10604de7d337657",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_c_21.png",
+      "source_sha256": "49188ee6a31765eb4b341e3bfe5038594a985794444119031757166abb170b4d",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_c_21.png",
+      "sha256": "93f93c6298eba28971cac9aca97c7fc311fb9443a67e1f4058b86dbe5c9f71b4",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_c_22.png",
+      "source_sha256": "d2fd6b11e0a82ddcf71cc8957b06ba8abb3a5e25c875d1a3ec19f4146ea4fa4c",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_c_22.png",
+      "sha256": "76946586d2d60a81f43a0c5db6876de6641df25c9a5e6412de030ebc31df4f81",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_c_23.png",
+      "source_sha256": "44eaa8276440650c1b2e9dc6e32ff25b815bafa261d3196c2a78cb296c88fb97",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_c_23.png",
+      "sha256": "6e6a4f99bae873b222eefc681a80f06cc3eceedfcdf4b8368c8c4774fb4c5102",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_c_24.png",
+      "source_sha256": "c25edb3942e500099b94822d432b314d80e3f90b5506668a085a77099602c2de",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_c_24.png",
+      "sha256": "ccc95293db497f92e2d974e06c35ea2c6b148430f208e84f173eb498d1acf069",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_c_25.png",
+      "source_sha256": "b9f110137c368dc6494600cad97373d861f38876a80d6c1b91c2e932424cd97f",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_c_25.png",
+      "sha256": "b46510095952e82ee0f6f954c660efe7c0c31ff9a145f4a00683c34e065a85b8",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_c_26.png",
+      "source_sha256": "a3865f3982284d48d38bd52ec8692fc50eeda02961c7bf27913afe229fa5c164",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_c_26.png",
+      "sha256": "1e667862555e179db2e9420ac3ee60afd7bd8d76de0053e27041e6cfb63bc285",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_c_27.png",
+      "source_sha256": "60970159b80868589b67e4b235355794e0794922a59b0268cdbb7a6c1ee362b3",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_c_27.png",
+      "sha256": "b84ed50adbf4bd91a76132d40fa00894dfb68e02c075a65f1e0df2be45b48f4a",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_c_28.png",
+      "source_sha256": "d2e435eae76552ed07f5489a008610749338fc04ee902a131e7ee75e3d4be870",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_c_28.png",
+      "sha256": "2c5f2c1f57a01b662cf7385731922fbd6ea7de0356fbc809a82741f531e04274",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_c_29.png",
+      "source_sha256": "b7c6de0c5433a5a6e1ec68588d3fd67d5b7678327dcbaf8cc90187a2f1e4f8c0",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_c_29.png",
+      "sha256": "83e7932fd1f2593651f07ba33d5f5ec3db9ff7fe265ed35affddf8699b61e759",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_c_30.png",
+      "source_sha256": "a16f0b1a967ffda8fc8bbff71ea75c0aa26cb903998b8452f0dff551a3a8961d",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_c_30.png",
+      "sha256": "825041521dfbdd7519266afba26290473b11356e92a91c2e997db538db982ab0",
+      "size": [
+        128,
+        256
+      ]
+    },
+    {
+      "source": "42/media/textures/ProjectYakuza/HeatWisp_c_31.png",
+      "source_sha256": "418ad159ddacb426cdbd757f7a222ec116b2141e175429d3d336c14579d30d18",
+      "output": "42/media/textures/ProjectYakuza/TauntAura_c_31.png",
+      "sha256": "b2b8a368d1c6f6cfb5d744279522df3b78fd9acdcc085d9c1d8dc9258947f546",
+      "size": [
+        128,
+        256
+      ]
+    }
+  ]
+}
