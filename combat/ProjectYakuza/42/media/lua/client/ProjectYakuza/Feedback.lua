@@ -111,6 +111,11 @@ function F.swing(p,style,step,move)
     local delay=math.max(0,((move.impact or .2)*duration-.07)*1000)
     local time=getTimestampMs()
     F.pending[p]={stamp=s.multiHitToken or s.startedAt,due=time+delay,last=time,sound=swing}
+    local effect=move.attackEffects
+    if effect and type(effect.swingFrame)=="number" and ProjectYakuza.AttackEffects then
+        local job=F.pending[p]
+        job.animation=move.animation;job.sourceTime=effect.swingFrame/30;job.sourceEnd=effect.to;job.waitMs=0
+    end
     if not F.ticking then Events.OnTick.Add(F.tick);F.ticking=true end
 end
 function F.tick()
@@ -121,6 +126,14 @@ function F.tick()
         if not ProjectYakuza.isEquipped(p) or p:isDead() or not s.active or (s.multiHitToken or s.startedAt)~=job.stamp
             then F.pending[p]=nil
         elseif paused then job.due=job.due+dt
+        elseif job.animation then
+            local phase,weight,location=ProjectYakuza.AttackEffects.findTrack(p,job.animation,job.location)
+            job.location=location;job.waitMs=job.waitMs+dt
+            if phase and weight>=.05 and phase>=job.sourceTime and phase<=job.sourceEnd then
+                F.play(p,job.sound,.65)
+                F.pending[p]=nil
+            elseif job.waitMs>350 then F.pending[p]=nil
+            elseif phase and phase>job.sourceEnd then job.location=nil end
         elseif time>=job.due then F.play(p,job.sound,.65);F.pending[p]=nil end
     end
     for p,session in pairs(F.activationSounds) do F.updateActivation(p,session,time,paused) end

@@ -46,3 +46,7 @@
 !/tools/combat-tests/validate_finisher_reference_assets.py
 !/tools/combat-tests/validate_effect_loader_paths.py
 !/tools/combat-tests/validate_charge_source_timing.py
+
+!/tools/combat-tests/PunchTrackProbe.java
+!/tools/combat-tests/build_punch_effects_tests.py
+!/tools/combat-tests/punch-effects-test-fixture.lua

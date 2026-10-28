@@ -204,6 +204,7 @@ function N.applyState(p,packet,s)
             s.actionOverride=true
         end
         s.style=packet.style;s.clip=packet.clip;s.swing=packet.swing;s.action=packet.action or 0
+        if ProjectYakuza.AttackEffects then ProjectYakuza.AttackEffects.remote(p,ProjectYakuza.getPlayerStyle(p),packet) end
     end
     if ProjectYakuza.HeatAura then
         if s.taunt~=nil and (packet.taunt or 0)>s.taunt then ProjectYakuza.HeatAura.flash(p) end

@@ -1,5 +1,6 @@
 require "ProjectYakuza/Runtime"
 require "ProjectYakuza/HitEffects"
+require "ProjectYakuza/AttackEffects"
 require "ProjectYakuza/HeatAura"
 require "ProjectYakuza/CombatMusic"
 require "ProjectYakuza/Defense"

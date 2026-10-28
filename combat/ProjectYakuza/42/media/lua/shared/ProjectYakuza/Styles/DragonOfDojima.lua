@@ -45,7 +45,7 @@ ProjectYakuza.registerStyle({
     lightBufferLimit = 1,
     enemyReactions = true,
     lightAttacks = {
-        { animation="ProjectYakuza_DD_Light01", nodeValue="dd_light_01", damageMultiplier=0.75, duration=1.0/1.6, speed=1.6, impact=0.20, chainAt=0.58, reaction="enemy_01" },
+        { animation="ProjectYakuza_DD_Light01", nodeValue="dd_light_01", damageMultiplier=0.75, duration=1.0/1.6, speed=1.6, impact=0.20, chainAt=0.58, reaction="enemy_01", attackEffects={track="dd_light_01",from=2/30,to=11/30,swingFrame=3} },
         { animation="ProjectYakuza_DD_Light02", nodeValue="dd_light_02", damageMultiplier=0.75, duration=(47/30)/1.6, speed=1.6, impact=8/47, chainAt=0.58, reaction="enemy_02" },
         { animation="ProjectYakuza_DD_Light03", nodeValue="dd_light_03", damageMultiplier=0.75, duration=1.4/1.6, speed=1.6, impact=11/42, chainAt=0.58, reaction="enemy_03" },
         { animation="ProjectYakuza_DD_Light04", nodeValue="dd_light_04", damageMultiplier=0.75, duration=(47/30)/1.6, speed=1.6, impact=11/47, chainAt=0.58, reaction="enemy_04" },

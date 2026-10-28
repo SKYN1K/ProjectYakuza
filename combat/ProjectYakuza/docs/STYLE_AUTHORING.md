@@ -47,6 +47,7 @@ Registered styles appear automatically in the inventory menu and assignment list
 | Extreme Heat | heat=true and heatActivation variants | Activation markers/clips and protection cleanup |
 | New move type | Namespaced kind + scoped handler | Lifecycle, input, native playback and server logic as needed |
 | Audio/visuals | Explicit style profiles | Supplied assets and scoped presentation hooks |
+| Tracked first-light particles | move.attackEffects | Matching source-sampled forearm/wrist/knuckle path; see [Attack effects](ATTACK_EFFECTS.md) |
 | MP playback | Registered catalog + observers | Same addon on server and clients |
 
 Built-in controllers retain their established conventions; arbitrary clips may need a different handler. Grabs are globally disabled even if an addon enables its slot. heatAction has no bundled cinematic implementation. See [API](API_REFERENCE.md), [Actions](ACTIONS.md) and [Animations](ANIMATIONS.md).

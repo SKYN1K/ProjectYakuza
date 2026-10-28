@@ -59,3 +59,8 @@ For 0.32.0 original assets, run `python tools/combat-tests/validate_finisher_ref
 Run `python tools/combat-tests/validate_effect_loader_paths.py` from the root after any animated texture export. It checks native IsoAnim naming recipes and resolves all 229 aura/burst filenames. This prevents exported PNGs passing decoder tests while remaining invisible through the native loader. No game JAR is changed or game launched.
 
 For 0.33.0 run validate_charge_source_timing.py against supplied local BEPs: it independently verifies type-206 pause frames, first hit windows, native looping holds, source playback, alpha-bearing flame pixels and .55 frame speed. validate_finisher_reference_assets.py checks all twelve wind-up/hold/release outputs and their identical endpoint poses. ChargeAssetProbe now parses fourteen nodes with no hold collisions and one collision per release.
+
+
+## Source-tracked first punch (0.34.0)
+
+Compile PunchTrackProbe.java against the installed B42 JARs (`javac -cp "F:/SteamLibrary/steamapps/common/ProjectZomboid/*" tools/combat-tests/PunchTrackProbe.java`). Run build_punch_effects_tests.py from the root; it invokes the offline native importer/FK/projection probe, verifies the shipped numeric path and unchanged media hashes, then embeds current AttackTracks/AttackEffects/Feedback production code. Run LuaRunner punch-effects-tests.lua from this directory in its own JVM. Its 259 assertions cover source-clock visual/audio timing, cached native lookup, eight facings, sprite/lifecycle/MP budgets, cancellation, pause and failure restoration. The native probe writes only ignored JSON code-position data, not media, and does not launch PZ.
