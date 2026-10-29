@@ -50,7 +50,7 @@ function M.onHit(p,v,weapon,damage)
     if M.processing or not p or not instanceof(p,"IsoPlayer") or not p:isLocalPlayer() or not ProjectYakuza.isEquipped(p)
         or not v or not instanceof(v,"IsoZombie") or type(damage)~="number" or damage<=0 then return end
     local s=ProjectYakuza.stateFor(p)
-    if not s.active or not weapon or (not ProjectYakuza.isStyleToken(weapon)
+    if not s.active or not weapon or (not (ProjectYakuza.isStyleToken(weapon) or (ProjectYakuza.Weapons and ProjectYakuza.Weapons.matches(p,weapon)))
         and not (s.groundMove and weapon:getFullType()=="Base.BareHands")) then return end
     local job=M.swings[p]
     if not job or job.stamp~=(s.multiHitToken or s.startedAt) then

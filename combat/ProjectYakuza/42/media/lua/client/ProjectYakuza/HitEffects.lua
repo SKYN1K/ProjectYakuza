@@ -55,7 +55,7 @@ function F.onHit(player,victim,weapon,damage)
         or not victim or not instanceof(victim,"IsoZombie") then return end
     local s=ProjectYakuza.stateFor(player)
     if ProjectYakuza.getPlayerStyle(player).hitEffects~="yakuza6" then return end
-    if not s.active or not weapon or (not ProjectYakuza.isStyleToken(weapon)
+    if not s.active or not weapon or (not (ProjectYakuza.isStyleToken(weapon) or (ProjectYakuza.Weapons and ProjectYakuza.Weapons.matches(player,weapon)))
         and not (s.groundMove and weapon:getFullType()=="Base.BareHands")) then return end
     s.effectVictims=s.effectVictims or setmetatable({}, {__mode="k"})
     if s.effectVictims[victim] then return end

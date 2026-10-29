@@ -24,7 +24,7 @@ function H.stocks(p)return math.min(H.config.maxStocks,math.floor((ProjectYakuza
 function H.isExtreme(p)local s=H.states[p];return s and s.extreme==true or false end
 function H.display(p)local s=H.states[p];return s and s.extreme and s.fuel or ProjectYakuza.getHeat(p)end
 function H.restoreMoveDamage(item)
-    if not item or not ProjectYakuza.isStyleToken(item) then return end
+    if not item then return end
     local d=item:getModData()
     if d.ProjectYakuzaMoveOriginalMin~=nil then
         item:setMinDamage(d.ProjectYakuzaMoveOriginalMin);item:setMaxDamage(d.ProjectYakuzaMoveOriginalMax)
@@ -36,7 +36,7 @@ function H.applyMoveDamage(p,move)
     H.restoreMoveDamage(item)
     local factor=move and move.damageMultiplier or 1
     s.damageWeapon=item;s.damageMultiplier=factor
-    if factor~=1 and item and ProjectYakuza.isStyleToken(item) then
+    if factor~=1 and item and (ProjectYakuza.isStyleToken(item) or (ProjectYakuza.Weapons and ProjectYakuza.Weapons.matches(p,item))) then
         local d=item:getModData()
         d.ProjectYakuzaMoveOriginalMin=item:getMinDamage();d.ProjectYakuzaMoveOriginalMax=item:getMaxDamage()
         item:setMinDamage(d.ProjectYakuzaMoveOriginalMin*factor);item:setMaxDamage(d.ProjectYakuzaMoveOriginalMax*factor)
@@ -47,7 +47,7 @@ function H.endSwing(p)
     H.restoreMoveDamage(s.damageWeapon);s.damageWeapon=nil;s.damageMultiplier=nil
 end
 function H.prepareToken(item)
-    if not item or not ProjectYakuza.isStyleToken(item) then return end
+    if not item then return end
     H.restoreMoveDamage(item)
     local d=item:getModData()
     if d.ProjectYakuzaHeatOriginalMin~=nil then

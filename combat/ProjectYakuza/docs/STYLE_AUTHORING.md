@@ -79,6 +79,10 @@ Optional style.hitResponses defines named flinch/stagger/knockdown profiles with
 
 Optional style.juggling and move.juggle={kind="launch"/"followup"/"ender"} enable bounded launcher/followup windows, hit/relaunch caps, landing cooldown, victim animation variables and start/hit/end events. No airborne assets or physical lift are supplied by the core. SP/server confirmed hits drive the state; optional result metadata and ordered end packets mirror it in MP. DoD remains unconfigured. See [Juggling](JUGGLING.md) for limits, presentation ownership, cancellation and examples.
 
-## Light quickstep cancels (0.43.0)
+## Light quickstep cancels (0.44.0)
 
 While aiming, the bound quickstep input can cancel DoD lights after their native post-hit cancel marker. It has a 150ms input buffer and a 400ms native handoff timeout; quota/cooldown/wall checks are preserved. Other move types are unchanged. Future styles opt in with quickstepCancelLights=true and eligible light.quickstepCancelAt plus the matching native marker. See [Light quickstep cancels](LIGHT_QUICKSTEP_CANCELS.md).
+
+## Style-specific weapons
+
+Register optional [weapon profiles](WEAPONS.md) after the base style. Profiles map explicit item IDs to equipment-specific lights, ground strikes and action slots, while keeping the same style identity, HUD and playlist. No other style inherits the DoD bat profile. Supply source assets and isolated owner/observer nodes; registration creates no animation or model.

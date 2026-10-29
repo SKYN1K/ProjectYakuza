@@ -19,7 +19,7 @@ local function state(p)
     if not s or s.player~=p then s={player=p,seq=-1,event=-1,swings={}};S.players[id]=s end
     return s
 end
-local function token(p)local item=p:getPrimaryHandItem();return item and ProjectYakuza.isStyleToken(item) and item end
+local function token(p)local item=p:getPrimaryHandItem();return item and (ProjectYakuza.isStyleToken(item) or (ProjectYakuza.Weapons and ProjectYakuza.Weapons.matches(p,item))) and item end
 function S.restoreProtection(p,s)
     local protection=s.protection;if not protection then return end
     p:setGhostMode(protection.ghost);p:setInvincible(protection.invincible);s.protection=nil
@@ -42,9 +42,28 @@ function S.snapshot(p,a,s)
     if type(a.style)~="string" or #a.style>100 or (a.style~="none" and not ProjectYakuza.getStyle(a.style)) then return end
     if not P.number(a.heat,0,100) or not P.number(a.fuel,0,100) then return end
     if a.chargePower~=nil and not P.number(a.chargePower,0,1) then return end
-    local equipped=a.equipped==true and ProjectYakuza.getStyle(a.style)~=nil and alive(p) and token(p)~=nil
+    local held=p:getPrimaryHandItem()
+    local profile=ProjectYakuza.Weapons and ProjectYakuza.Weapons.profile(a.style,held) or nil
+    if a.weaponProfile~=nil and (type(a.weaponProfile)~="string" or a.weaponProfile~=(profile or "")) then return end
+    local equipped=a.equipped==true and ProjectYakuza.getStyle(a.style)~=nil and alive(p) and (ProjectYakuza.isStyleToken(held) or profile~=nil)
     local clip=equipped and type(a.clip)=="string" and P.clip(a.style,a.clip) or nil
     local style=ProjectYakuza.getStyle(a.style)
+    if profile then style=ProjectYakuza.Weapons.view(style,profile) end
+    if equipped and ProjectYakuza.Weapons then
+        if a.move~="" and not ProjectYakuza.Weapons.findMove(style,a.move) then return end
+        if clip then
+            local supported=false
+            local actionAnim
+            for _,c in ipairs(clip.conditions) do if c.name=="PerformingAction" then actionAnim=c.value end end
+            for _,move in ipairs(style.lightAttacks or {}) do if move.animation==clip.animation then supported=true end end
+            for _,move in ipairs(style.groundAttacks or {}) do if move.animation==clip.animation then supported=true end end
+            for _,slot in pairs(style.actions) do
+                if slot.enabled and slot.animation==(actionAnim or clip.animation) then supported=true end
+                if slot.enabled then for _,move in pairs(slot.variants or {}) do if move.enabled~=false and move.animation==(actionAnim or clip.animation) then supported=true end end end
+            end
+            if not supported then return end
+        end
+    end
     local kind,activation
     if clip then kind,activation=P.kind(a.style,clip.id) end
     if not equipped or kind~="heatActivation" then S.restoreProtection(p,s);s.wasActivation=false
@@ -55,7 +74,7 @@ function S.snapshot(p,a,s)
             p:setGhostMode(true);p:setInvincible(true)
         end
     end
-    local packet={player=p:getOnlineID(),seq=a.seq,style=a.style,equipped=equipped,
+    local packet={player=p:getOnlineID(),seq=a.seq,style=a.style,weaponProfile=profile or "",equipped=equipped,
         heat=equipped and a.heat or 0,fuel=equipped and a.fuel or 0,extreme=equipped and a.extreme==true and style.heat==true,
         clip=clip and clip.id or "",move=equipped and type(a.move)=="string" and P.move(a.style,a.move) and a.move or "",
         chargePower=equipped and (a.chargePower or 0) or 0,
@@ -77,7 +96,14 @@ function S.equip(p,a,s)
     if now()<(s.nextEquip or 0) then return end
     s.equipRequest=a.request;s.nextEquip=now()+200
     local item
-    if a.style~="none" then
+    local armed=a.weaponProfile and a.weaponProfile~=""
+    if armed then
+        if not P.integer(a.item,-2147483648,2147483647) then return end
+        item=p:getInventory():getItemWithID(a.item)
+        if not item or not ProjectYakuza.Weapons or ProjectYakuza.Weapons.profile(a.style,item)~=a.weaponProfile then return end
+        p:setPrimaryHandItem(item)
+        p:setSecondaryHandItem(item:isTwoHandWeapon() and item or nil)
+    elseif a.style~="none" then
         local inventory=p:getInventory();local items=inventory:getItems()
         for i=0,items:size()-1 do
             local candidate=items:get(i)
@@ -92,10 +118,10 @@ function S.equip(p,a,s)
         -- subsequently resolve this exact server inventory ID.
         if created or a.item~=item:getID() then sendAddItemToContainer(inventory,item) end
         p:setSecondaryHandItem(nil);p:setPrimaryHandItem(item)
-    elseif token(p) then p:setPrimaryHandItem(nil) end
+    elseif ProjectYakuza.isStyleToken(p:getPrimaryHandItem()) then p:setPrimaryHandItem(nil) end
     p:getModData().ProjectYakuzaStyle=a.style
     sendEquip(p)
-    reply(p,"equipReady",{player=p:getOnlineID(),request=a.request,style=a.style,item=item and item:getID() or -1})
+    reply(p,"equipReady",{player=p:getOnlineID(),request=a.request,style=a.style,weaponProfile=armed and a.weaponProfile or "",item=item and item:getID() or -1})
     if a.style=="none" then
         S.restoreProtection(p,s);S.release(p)
         if s.packet then s.packet.equipped=false;s.packet.clip="";S.fanout(p,"state",s.packet) end
@@ -191,7 +217,9 @@ function S.command(module,command,p,a)
         z:setAttackOutcome("fail");S.fanout(p,"guard",{player=p:getOnlineID(),zombie=z:getOnlineID()});return
     end
     if command=="counter" then
-        local style=ProjectYakuza.getStyle(s.packet.style);local z=S.validVictim(p,a.zombie,1.6,.35)
+        local style=ProjectYakuza.getStyle(s.packet.style)
+        if ProjectYakuza.Weapons then style=ProjectYakuza.Weapons.view(style,s.packet.weaponProfile) end
+        local z=S.validVictim(p,a.zombie,1.6,.35)
         if not style.tigerDrop or not z or z:isOnFloor() or z:isKnockedDown() then return end
         if not s.counterUntil or t>s.counterUntil then
             if t<(s.counterReady or 0) or z:getTarget()~=p or not z:isAttacking() or z:getAttackDidDamage() then return end
@@ -203,6 +231,11 @@ function S.command(module,command,p,a)
     if command=="impact" or command=="extra" then
         if not P.integer(a.swing,1,1000000000) then return end
         local move=P.move(s.packet.style,s.packet.move);if not move then return end
+        local held=token(p);if not held then return end
+        local profile=ProjectYakuza.Weapons and ProjectYakuza.Weapons.profile(s.packet.style,held) or ""
+        if (profile or "")~=(s.packet.weaponProfile or "") then return end
+        local view=ProjectYakuza.Weapons and ProjectYakuza.Weapons.view(ProjectYakuza.getStyle(s.packet.style),profile) or ProjectYakuza.getStyle(s.packet.style)
+        if ProjectYakuza.Weapons and not ProjectYakuza.Weapons.findMove(view,s.packet.move) then return end
         local job=s.swings[a.swing]
         if command=="extra" and not job then return end
         if not job then
@@ -213,9 +246,9 @@ function S.command(module,command,p,a)
                 scaled.chargePower=s.packet.chargePower
                 move=scaled
             end
-            s.lastSwing=a.swing;job={seen={},count=0,expires=t+2500,move=move,style=s.packet.style,juggle=ProjectYakuza.Juggling.plan(ProjectYakuza.getStyle(s.packet.style),move)};s.swings[a.swing]=job
+            s.lastSwing=a.swing;job={seen={},count=0,expires=t+2500,weapon=held,extreme=s.packet.extreme,profile=profile,move=move,style=s.packet.style,juggle=ProjectYakuza.Juggling.plan(ProjectYakuza.getStyle(s.packet.style),move)};s.swings[a.swing]=job
         end
-        if t>job.expires or job.count>=ProjectYakuza.MAX_HIT_COUNT or job.seen[a.zombie] then return end
+        if job.weapon~=held or t>job.expires or job.count>=ProjectYakuza.MAX_HIT_COUNT or job.seen[a.zombie] then return end
         local z=S.validVictim(p,a.zombie,1.65)
         if not z and command=="impact" then
             local evidence=s.evidence and s.evidence[a.zombie]
@@ -237,10 +270,10 @@ function S.command(module,command,p,a)
         else
             -- Extra victims use server weapon data; primary native hits are never re-applied.
             if not S.baseWeapon then S.baseWeapon=InventoryItemFactory.CreateItem(ProjectYakuza.TOKEN) end
-            local item=S.baseWeapon;local factor=job.move.damageMultiplier or 1
+            local item=job.profile and job.profile~="" and job.weapon or S.baseWeapon;local factor=job.move.damageMultiplier or 1
             if not item then return end
             local base=math.max(0,math.min(2,(item:getMinDamage()+item:getMaxDamage())*.5))
-            S.damage(p,z,base*factor*(s.packet.extreme and 1.5 or 1),false,false,s,job.move,job.style,job.juggle,a.swing)
+            S.damage(p,z,base*factor*(job.extreme and 1.5 or 1),false,false,s,job.move,job.style,job.juggle,a.swing)
         end
     end
 end

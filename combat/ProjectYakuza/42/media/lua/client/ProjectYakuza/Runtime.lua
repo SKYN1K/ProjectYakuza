@@ -85,6 +85,8 @@ local function setReadyVariables(player, style, s)
     local move = s.groundMove or s.finisherMove or s.pendingFinisher or style.lightAttacks[s.step > 0 and s.step or 1]
     ProjectYakuza.setVisual(player,true,move.nodeValue)
     local visual=ProjectYakuza.visuals[player]
+    local profile=style.weaponProfile or ""
+    if visual.weaponProfile~=profile then player:setVariable("ProjectYakuzaWeaponProfile",profile);visual.weaponProfile=profile end
     local linked=move.double==true and ProjectYakuza.finisherHandoffs[player]~=nil
     if visual.linkedDouble~=linked then player:setVariable("ProjectYakuzaLinkedDouble",linked);visual.linkedDouble=linked end
     if visual.style~=style.id then player:setVariable("ProjectYakuzaStyle",style.id);visual.style=style.id end
@@ -98,12 +100,13 @@ local function pollPress(player, style, s)
     local down = B.down("light")
     if ProjectYakuza.Quicksteps and ProjectYakuza.Quicksteps.isCancelling and ProjectYakuza.Quicksteps.isCancelling(player) then s.lastDown=down;return end
     if ProjectYakuza.activeActions[player] and ProjectYakuza.activeActions[player].kind=="quickstep" then return end
-    if down and not s.lastDown and player:isAiming() and not s.groundMove and not s.finisherMove and not s.pendingFinisher and not s.queuedFinisher and not s.queuedDouble then Combo.press(s, #style.lightAttacks, style.lightBufferLimit) end
+    if down and not s.lastDown and player:isAiming() and not s.groundMove and not s.finisherMove and not s.pendingFinisher and not s.queuedFinisher and not s.queuedDouble and not s.queuedWeaponHeavy then Combo.press(s, #style.lightAttacks, style.lightBufferLimit) end
     s.lastDown = down
 end
 local function onSwing(player, weapon)
+    if localPlayer(player) and ProjectYakuza.Weapons then ProjectYakuza.Weapons.sync(player) end
     if not localPlayer(player) or not ProjectYakuza.isEquipped(player) then return end
-    if not weapon or not ProjectYakuza.isStyleToken(weapon) then return end
+    if not weapon or not (ProjectYakuza.isStyleToken(weapon) or (ProjectYakuza.Weapons and ProjectYakuza.Weapons.matches(player,weapon))) then return end
     local style, s = ProjectYakuza.getPlayerStyle(player), ProjectYakuza.stateFor(player)
     local owned=ProjectYakuza.activeActions[player]
     local firstQuickstepSwing=owned and (owned.kind=="quickstepAttack" or owned.kind=="chargedHeavy") and s.pendingFinisher==owned.action
@@ -185,6 +188,13 @@ function ProjectYakuza.queueFinisher(player)
     if not slot or not slot.enabled then return false, "not_implemented" end
     local first = s.finisherMove or s.pendingFinisher
     if s.groundMove or (first and (first.quickstepAttack or first.runningAttack or (first.chargedHeavy and not first.chargedFinisher))) then return false,"busy" end
+    if style.weaponStandaloneHeavy then
+        if s.active or s.starting then
+            if s.finisherMove or s.pendingFinisher or s.groundMove then return false,"busy" end
+            s.queuedWeaponHeavy=true;s.queued=0;return true
+        end
+        return ProjectYakuza.requestAction(player,"finisher","default")
+    end
     local branch = first and (first.afterLight or first.chargeBranch) or s.queuedFinisher or s.finisherBranch
     if first or s.queuedFinisher or s.finisherBranch then
         if (first and first.double) or s.queuedDouble then return false, "finisher_limit" end
@@ -212,7 +222,7 @@ function ProjectYakuza.tryRecoveryCancel(player, style, s)
     if not s.active or s.groundMove or s.recoveryReleased or not player:isAiming() then return false end
     local move = s.groundMove or s.finisherMove or style.lightAttacks[s.step]
     local finisher=s.finisherMove~=nil
-    local queued = finisher and (not move.double and s.queuedDouble) or (not finisher and (s.queued > 0 or s.queuedFinisher ~= nil))
+    local queued = finisher and (not move.double and s.queuedDouble) or (not finisher and (s.queued > 0 or s.queuedFinisher ~= nil or s.queuedWeaponHeavy==true))
     if not finisher and ProjectYakuza.ChargedHeavy and ProjectYakuza.ChargedHeavy.wantsRecovery and ProjectYakuza.ChargedHeavy.wantsRecovery(player,s,style) then queued=true end
     local marker=finisher and "ProjectYakuzaDoubleReady" or "ProjectYakuzaChainReady"
     if not queued or variable(player, marker) ~= move.nodeValue
@@ -384,6 +394,7 @@ local function onUpdate(player)
     if ProjectYakuza.activeActions[player] and ProjectYakuza.activeActions[player].kind=="heavyCharge" then s.lastDown=B.down("light");return end
     pollPress(player, style, s)
     if not player:isAiming() then
+        s.queuedWeaponHeavy=nil
         s.queued, s.queuedFinisher, s.queuedDouble = 0, nil, nil
         s.finisherBranch, s.finisherFinishedAt = nil, nil
         if not s.active and not s.starting and (s.step~=0 or s.finishedAt or s.queued~=0) then Combo.reset(s) end
@@ -430,6 +441,9 @@ local function onUpdate(player)
         end
         return
     end
+    if s.queuedWeaponHeavy and not s.active and not s.starting and not player:isAttackStarted() and not player:isPerformingAttackAnimation() then
+        s.queuedWeaponHeavy=nil;ProjectYakuza.requestAction(player,"finisher","default");return
+    end
     if s.queuedFinisher == s.step and not s.active and not s.starting and not player:isAttackStarted() and not player:isPerformingAttackAnimation() then
         local branch = s.queuedFinisher
         local ok, reason = ProjectYakuza.requestAction(player, "finisher", "after_" .. branch)
@@ -463,7 +477,7 @@ end
 local function onHit(attacker, victim, weapon, damage)
     if not localPlayer(attacker) or not ProjectYakuza.isEquipped(attacker) then return end
     local s = ProjectYakuza.stateFor(attacker)
-    if not weapon or (not ProjectYakuza.isStyleToken(weapon) and not (s.groundMove and weapon:getFullType()=="Base.BareHands")) then return end
+    if not weapon or (not (ProjectYakuza.isStyleToken(weapon) or (ProjectYakuza.Weapons and ProjectYakuza.Weapons.matches(attacker,weapon))) and not (s.groundMove and weapon:getFullType()=="Base.BareHands")) then return end
     s.confirmedHit = true
     ProjectYakuza.Heat.onHit(attacker,victim,damage,s)
     trace(attacker, "confirmed native hit step=" .. s.step .. " damage=" .. tostring(damage))

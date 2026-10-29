@@ -240,7 +240,7 @@ function Q.processLightCancel(p)
         if not state.active or state.recoveryReleased then Q.clearLightCancel(p);return false end
         if var(p,"ProjectYakuzaQuickstepCancelReady")~=job.move or var(p,"ProjectYakuzaHitMarker")~=job.move then return true end
         job.phase="handoff";job.expires=now()+Q.cancelHandoffMs
-        state.queued=0;state.queuedFinisher=nil;state.queuedDouble=nil;state.recoveryReleased=true
+        state.queued=0;state.queuedFinisher=nil;state.queuedDouble=nil;state.queuedWeaponHeavy=nil;state.recoveryReleased=true
         ProjectYakuza.Bindings.update(p)
         p:setMeleeDelay(0);p:setPerformingAttackAnimation(false)
         p:reportEvent("ActiveAnimFinishing")

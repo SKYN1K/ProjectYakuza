@@ -17,3 +17,5 @@ In 0.33.0, charged first finishers use source pause frames and persistent holds;
 ## Light quickstep cancels (0.43.0)
 
 While aiming, the bound quickstep input can cancel DoD lights after their native post-hit cancel marker. It has a 150ms input buffer and a 400ms native handoff timeout; quota/cooldown/wall checks are preserved. Other move types are unchanged. Future styles opt in with quickstepCancelLights=true and eligible light.quickstepCancelAt plus the matching native marker. See [Light quickstep cancels](LIGHT_QUICKSTEP_CANCELS.md).
+
+With DoD selected and a [supported bat/club](WEAPONS.md) equipped: RMB+LMB runs a three-hit weapon combo, RMB+MMB performs/queues one weapon heavy, RMB+X guards with native walking legs, and ground targeting uses the weapon ground strike. Quicksteps retain their existing binding/quota and can cancel lights. Unarmed special moves require the style item.

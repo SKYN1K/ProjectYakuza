@@ -15,19 +15,31 @@ function N.equip(p,style,playEntry)
     s.equipWanted=style;s.equipReady=nil;s.equipReply=nil
     s.equipRequest=(s.equipRequest or 0)+1;s.nextEquip=now()+1000
     local item=p:getPrimaryHandItem()
-    if not item or not ProjectYakuza.isStyleToken(item) then
+    s.equipSource=item
+    local profile=ProjectYakuza.Weapons and ProjectYakuza.Weapons.profile(style,item)
+    s.equipTarget=profile and item or nil
+    if not profile and (not item or not ProjectYakuza.isStyleToken(item)) then
         local items=p:getInventory():getItems()
         for i=0,items:size()-1 do if ProjectYakuza.isStyleToken(items:get(i)) then item=items:get(i);break end end
     end
     sendClientCommand(p,P.module,"equip",{style=style,request=s.equipRequest,
-        item=item and ProjectYakuza.isStyleToken(item) and item:getID() or -1})
+        weaponProfile=profile or "",item=item and (profile or ProjectYakuza.isStyleToken(item)) and item:getID() or -1})
 end
 function N.finishEquipment(p,s)
     local a=s.equipReply;if not a then return false end
     local item=a.item~=-1 and p:getInventory():getItemWithID(a.item) or nil
-    if a.item~=-1 and (not item or not ProjectYakuza.isStyleToken(item)) then return false end
+    local armed=a.weaponProfile and a.weaponProfile~=""
+    if armed and (s.equipTarget~=p:getPrimaryHandItem() or not item or item~=s.equipTarget) then
+        s.equipReply=nil;s.equipWanted=nil;s.equipTarget=nil;s.entryWanted=nil;s.nextEquip=0;return false
+    end
+    if a.item~=-1 and (not item or (armed and (not ProjectYakuza.Weapons or ProjectYakuza.Weapons.profile(a.style,item)~=a.weaponProfile)) or (not armed and not ProjectYakuza.isStyleToken(item))) then return false end
     if item then ProjectYakuza.prepareToken(item) end
-    p:setSecondaryHandItem(nil);p:setPrimaryHandItem(item);p:resetModelNextFrame()
+    local held=p:getPrimaryHandItem()
+    if not armed and a.style~="none" and held~=s.equipSource and held~=item then
+        s.equipReply=nil;s.equipWanted=nil;s.entryWanted=nil;s.nextEquip=0;return false
+    end
+    if not armed and (a.style~="none" or ProjectYakuza.isStyleToken(held)) then p:setSecondaryHandItem(nil);p:setPrimaryHandItem(item) end
+    p:resetModelNextFrame()
     p:updateHandEquips()
     local entry=s.entryWanted;s.entryWanted=nil
     s.equipReady=item;s.equipStyle=a.style;s.equipReply=nil;s.equipWanted=nil
@@ -87,13 +99,13 @@ function N.capture(p,force)
         if action then s.action=(s.action or 0)+1 end
     end
     local move=combo.groundMove or combo.finisherMove or (style and style.lightAttacks[combo.step>0 and combo.step or 1])
-    local packet={style=style and style.id or "none",equipped=equipped,heat=ProjectYakuza.getHeat(p),fuel=ProjectYakuza.Heat.display(p),extreme=ProjectYakuza.Heat.isExtreme(p),
+    local packet={style=style and style.id or "none",weaponProfile=style and style.weaponProfile or "",equipped=equipped,heat=ProjectYakuza.getHeat(p),fuel=ProjectYakuza.Heat.display(p),extreme=ProjectYakuza.Heat.isExtreme(p),
         clip=equipped and N.pickClip(p,style,combo) or "",move=equipped and move and move.nodeValue or "",
         chargePower=action and action.kind=="heavyCharge" and action.timedAction and (action.timedAction.power or 0) or move and move.chargePower or 0,
         swing=s.swing,action=s.action or 0,taunt=s.taunt or 0,linked=p:GetVariable("ProjectYakuzaLinkedDouble")=="true",ground=combo.groundMove~=nil,phase=p:GetVariable("ProjectYakuzaDefensePhase") or "",
         grabMoving=p:GetVariable("ProjectYakuzaGrabMoving")=="true",grabDirection=action and action.kind=="grab" and action.target:GetVariable("ProjectYakuzaGrabWalkDirection") or "forward"}
     local key=packet.style..tostring(equipped)..math.floor(packet.heat)..math.floor(packet.fuel)..tostring(ProjectYakuza.Heat.stocks(p))..tostring(packet.extreme)..packet.clip..packet.move..packet.phase..tostring(packet.linked)..tostring(packet.grabMoving)..packet.grabDirection..tostring(packet.taunt)..":"..packet.swing..":"..packet.action
-    key=key..":"..math.floor(packet.chargePower*10)
+    key=key..":"..packet.weaponProfile..":"..math.floor(packet.chargePower*10)
     if force or key~=s.key or t>=(s.heartbeat or 0) then
         s.seq=s.seq+1;packet.seq=s.seq;sendClientCommand(p,P.module,"state",packet)
         s.key=key;s.heartbeat=t+1000
@@ -192,6 +204,7 @@ function N.applyState(p,packet,s)
     p:setVariable("ProjectYakuzaActive",packet.equipped);p:setVariable("ProjectYakuzaStyle",packet.equipped and packet.style or "")
     p:setVariable("ProjectYakuzaLinkedDouble",packet.linked);p:setVariable("DFCGroundEnabled",packet.ground)
     p:setVariable("ProjectYakuzaMove",packet.move)
+    p:setVariable("ProjectYakuzaWeaponProfile",packet.equipped and (packet.weaponProfile or "") or "")
     p:setVariable("ProjectYakuzaRemoteChargePower",tostring(packet.chargePower or 0))
     p:setVariable("ProjectYakuzaRemoteObserver",packet.equipped)
     ProjectYakuza.Heat.playback(p,packet.extreme)

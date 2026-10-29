@@ -40,7 +40,7 @@ function R.onHit(attacker,victim,weapon,damage)
     if not victim or not instanceof(victim,"IsoZombie") then return end
     if attacker and instanceof(attacker,"IsoPlayer") and not attacker:isLocalPlayer() then return end
     if not attacker or not instanceof(attacker,"IsoPlayer") or not attacker:isLocalPlayer()
-        or not weapon or not PY.isStyleToken(weapon) or not PY.isEquipped(attacker) then R.clear(victim);return end
+        or not weapon or not (PY.isStyleToken(weapon) or (PY.Weapons and PY.Weapons.matches(attacker,weapon))) or not PY.isEquipped(attacker) then R.clear(victim);return end
     if victim:isDead() or victim:isOnFloor() or victim:isKnockedDown() then R.clear(victim);return end
     local style=PY.getPlayerStyle(attacker);local s=PY.stateFor(attacker)
     local move=s.finisherMove or style.lightAttacks[s.step]

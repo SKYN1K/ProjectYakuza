@@ -55,7 +55,7 @@ end
 
 local ProjectYakuza = ProjectYakuza
 ProjectYakuza.FEATURES={grab=false}
-ProjectYakuza.VERSION = "0.43.0"
+ProjectYakuza.VERSION = "0.44.0"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -227,12 +227,13 @@ end
 function ProjectYakuza.getPlayerStyle(player)
     local data = player:getModData()
     local id = data.ProjectYakuzaStyle or "dragon_of_dojima"
-    return ProjectYakuza.styles[id]
+    local style=ProjectYakuza.styles[id]
+    return ProjectYakuza.Weapons and ProjectYakuza.Weapons.forPlayer(player,style) or style
 end
 function ProjectYakuza.isEquipped(player)
     if ProjectYakuza.Network and not player:isLocalPlayer() then return ProjectYakuza.Network.remoteEquipped(player) end
     local item = player:getPrimaryHandItem()
-    local equipped=ProjectYakuza.isStyleToken(item) and ProjectYakuza.getPlayerStyle(player) ~= nil
+    local equipped=(ProjectYakuza.isStyleToken(item) or (ProjectYakuza.Weapons and ProjectYakuza.Weapons.matches(player,item))) and ProjectYakuza.getPlayerStyle(player) ~= nil
     if equipped and isClient and isClient() and ProjectYakuza.Network and ProjectYakuza.Network.equipmentReady then
         return ProjectYakuza.Network.equipmentReady(player)
     end
@@ -404,3 +405,5 @@ function ProjectYakuza.cancelAction(player, reason,expectedContext)
     ProjectYakuza.emit("actionCancelled", context, reason)
     return true
 end
+
+require "ProjectYakuza/Weapons"

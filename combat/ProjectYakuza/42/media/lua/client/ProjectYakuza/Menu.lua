@@ -19,6 +19,11 @@ function ProjectYakuza.equipStyle(player, styleId)
     -- B42 hit packets carry an inventory item ID, not a serialized weapon.
     -- A client-only AddItem produces a weapon the server can never resolve.
     if isClient() then ProjectYakuza.Network.equip(player,styleId,true);return end
+    local held=player:getPrimaryHandItem()
+    if ProjectYakuza.Weapons and ProjectYakuza.Weapons.profile(styleId,held) then
+        player:setVariable("ProjectYakuzaActive",true)
+        return
+    end
     local items, token = player:getInventory():getItems(), nil
     for i = 0, items:size() - 1 do
         local item = items:get(i)

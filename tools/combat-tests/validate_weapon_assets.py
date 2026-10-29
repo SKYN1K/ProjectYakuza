@@ -1,0 +1,48 @@
+"""Check source provenance, collision timing and isolated weapon selectors without launching PZ."""
+from pathlib import Path
+import hashlib,json,re,struct,xml.etree.ElementTree as E,subprocess
+root=Path(__file__).resolve().parents[2];mod=root/'combat/ProjectYakuza';media=mod/'42/media'
+manifest=json.loads((mod/'docs/weapon-assets.json').read_text(encoding='utf-8'))
+assert len(manifest['clips'])==10
+for rig in manifest['rigInputs']:assert hashlib.sha256(Path(rig['path']).read_bytes()).hexdigest()==rig['sha256']
+for row in manifest['clips']:
+ source=Path(row['source']);output=mod/row['output']
+ assert hashlib.sha256(source.read_bytes()).hexdigest()==row['sourceSha256']
+ assert hashlib.sha256(output.read_bytes()).hexdigest()==row['sha256']
+ assert row['fps']==30 and row['sourceFrames'][0]==0
+ s=output.read_text(encoding='utf-8');assert 'AnimationSet '+output.stem+' {' in s
+ assert not re.search(r'(?i)\b(nan|inf)\b',s)
+ # Every original frame is retained in each of the 35 native channels, with finite values.
+ blocks=re.findall(r'AnimationKey [RST] \{ ([012]); (\d+);\s*(.*?)\n \}',s,re.S)
+ assert len(blocks)==105,(output,len(blocks))
+ for kind,count,body in blocks:
+  rows=re.findall(r'(\d+);(\d+);([^;]+);;',body)
+  assert len(rows)==int(count)==row['sourceFrames'][1]+1
+  for i,(tick,n,values) in enumerate(rows):
+   values=[float(x) for x in values.split(',')]
+   assert int(tick)==i*160 and len(values)==int(n)
+   if kind=='0':assert abs(sum(x*x for x in values)-1)<.00001
+   if kind=='1':assert values==[1,1,1]
+ for key in ('sourceSha256','sha256'):assert len(row[key])==64
+# Contacts are source BEP kind-68 starts, not guessed elapsed milliseconds.
+for label in ['Light01','Light02','Light03','Heavy','Ground']:
+ row=next(x for x in manifest['clips'] if x['output'].endswith('Bat'+label+'.x'))
+ b=Path(row['source']).with_suffix('.bep');b=b.parent.parent/'bep'/b.name;data=b.read_bytes();pos=16;hits=[]
+ while pos+80<=len(data):
+  section,kind,size=struct.unpack_from('<HHI',data,pos+64);payload=data[pos+80:pos+80+size];assert len(payload)==size
+  if section==12 and kind==68:hits.append(struct.unpack_from('<f',payload,4)[0])
+  pos+=80+size
+ assert len(hits)==1
+ node=E.parse(media/f'AnimSets/player/melee/ProjectYakuza_DD_Bat{label}.xml').getroot()
+ collisions=[x for x in node.findall('m_Events') if x.findtext('m_EventName')=='AttackCollisionCheck']
+ assert len(collisions)==1 and abs(float(collisions[0].findtext('m_TimePc'))*row['sourceFrames'][1]-hits[0])<1e-7
+ conditions={c.findtext('m_Name'):c.findtext('m_Value') for c in node.findall('m_Conditions')}
+ assert conditions['ProjectYakuzaStyle']=='dragon_of_dojima' and conditions['ProjectYakuzaWeaponProfile']=='bat'
+ # Moving legs remain native: the imported attack contributes upper body/props only.
+ assert all(x.findtext('boneName')!='Bip01' for x in node.findall('m_SubStateBoneWeights'))
+items=(Path('F:/SteamLibrary/steamapps/common/ProjectZomboid/media/scripts/generated/items/weapon.txt')).read_text(encoding='utf-8-sig')
+style=(media/'lua/shared/ProjectYakuza/Styles/DragonOfDojima.lua').read_text(encoding='utf-8')
+allowed=re.findall(r'"Base\.([A-Za-z0-9_]+)"',style[style.index('items={'):])
+assert len(allowed)==12
+for item in allowed:assert re.search(r'\bitem\s+'+re.escape(item)+r'\s*\{',items),item
+print('PASS 10 source GMT/output hashes, 13,790 source bone samples, original BEP contacts, upper-body masks and 12 real B42 item IDs')

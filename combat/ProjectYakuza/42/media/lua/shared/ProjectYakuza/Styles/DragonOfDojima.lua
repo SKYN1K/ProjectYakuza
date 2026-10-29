@@ -118,3 +118,27 @@ ProjectYakuza.registerStyle({
         heatAction = { enabled=false, requiresTarget=true, heatStocks=1, reason="Requires paired clips, environment checks and a cinematic handler" },
     },
 })
+
+-- Only this style opts in. Other styles keep native weapon combat unless they register their own profile.
+if ProjectYakuza.Weapons then
+    local base=ProjectYakuza.getStyle("dragon_of_dojima")
+    local sounds={};for k,v in pairs(base.sounds) do if k:match("^heat") then sounds[k]=v end end
+    ProjectYakuza.Weapons.register(base.id,{
+        id="bat",attackSpeed=1.4,quickstepCancelLights=true,standaloneHeavy=true,
+        items={"Base.BaseballBat","Base.BaseballBat_Crafted","Base.BaseballBat_Metal","Base.BaseballBat_Nails",
+            "Base.ShortBat","Base.ShortBat_Nails","Base.Nightstick","Base.MetalBar","Base.MetalPipe",
+            "Base.BoneClub","Base.LargeBoneClub","Base.LongSpikedClub"},
+        sounds=sounds,
+        lightAttacks={
+            {animation="ProjectYakuza_DD_BatLight01",nodeValue="dd_bat_light_01",duration=40/30/1.4,speed=1.4,impact=11/40,chainAt=24/40,quickstepCancelAt=12/40,damageMultiplier=1,hitResponse=false},
+            {animation="ProjectYakuza_DD_BatLight02",nodeValue="dd_bat_light_02",duration=35/30/1.4,speed=1.4,impact=13/35,chainAt=25/35,quickstepCancelAt=14/35,damageMultiplier=1,hitResponse=false},
+            {animation="ProjectYakuza_DD_BatLight03",nodeValue="dd_bat_light_03",duration=47/30/1.4,speed=1.4,impact=15/47,chainAt=26/47,quickstepCancelAt=16/47,damageMultiplier=1,hitResponse=false},
+        },
+        groundAttacks={{animation="ProjectYakuza_DD_BatGround",nodeValue="dd_bat_ground",duration=55/30/1.4,speed=1.4,impact=10/55,groundAttack=true,hitResponse=false}},
+        actions={
+            finisher={enabled=true,variants={default={enabled=true,animation="ProjectYakuza_DD_BatHeavy",nodeValue="dd_bat_heavy",duration=53/30/1.4,speed=1.4,impact=14/53,damageMultiplier=1.25,hitResponse=false}}},
+            block={enabled=true,animation="ProjectYakuza_DD_BatGuard",staminaPerHit=.08},
+            quickstep=base.actions.quickstep,
+        },
+    })
+end

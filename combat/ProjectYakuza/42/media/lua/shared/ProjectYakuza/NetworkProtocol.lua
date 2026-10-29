@@ -21,6 +21,9 @@ end
 function P.kind(style,id)
     local clip=P.clip(style,id);local s=ProjectYakuza.getStyle(style)
     if not clip or not s then return nil end
+    if ProjectYakuza.Weapons then
+        for _,c in ipairs(clip.conditions) do if c.name=="ProjectYakuzaWeaponProfile" and c.value~="" then s=ProjectYakuza.Weapons.view(s,c.value) end end
+    end
     local anim
     for _,c in ipairs(clip.conditions) do if c.name=="PerformingAction" then anim=c.value end end
     if not anim then return nil end
@@ -60,6 +63,9 @@ function P.path(p,x,y)
 end
 function P.move(style,node)
     local s=ProjectYakuza.getStyle(style);if not s then return nil end
+    if ProjectYakuza.Weapons then
+        for _,view in pairs(ProjectYakuza.Weapons.views[style] or {}) do local move=ProjectYakuza.Weapons.findMove(view,node);if move then return move end end
+    end
     for _,move in ipairs(s.lightAttacks) do if move.nodeValue==node then return move end end
     for _,move in ipairs(s.groundAttacks or {}) do if move.nodeValue==node then return move end end
     for _,slot in pairs(s.actions) do

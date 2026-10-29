@@ -1,0 +1,158 @@
+require=function()end
+local checks=0
+local function check(v,message)checks=checks+1;assert(v,message)end
+local clock=1000
+getTimestampMs=function()return clock end
+isGamePaused=function()return false end
+isClient=function()return false end
+instanceof=function()return true end
+local function event()local e={callbacks={}};e.Add=function(fn)e.callbacks[#e.callbacks+1]=fn end;e.Remove=function()end;return e end
+Events={OnPlayerGetDamage=event(),OnPlayerUpdate=event(),OnWeaponSwing=event(),OnPlayerAttackFinished=event(),OnWeaponHitCharacter=event(),OnSave=event(),OnMainMenuEnter=event()}
+local function fire(name,...)for _,fn in ipairs(Events[name].callbacks)do fn(...)end end
+local mouse={};isMouseButtonDown=function(i)return mouse[i]==true end
+isKeyDown=function()return false end
+getCore=function()return {isDoingTextEntry=function()return false end}end
+local base={}
+function base:derive()local c={};c.__index=c;setmetatable(c,{__index=self});return c end
+function base.new(class,p)return setmetatable({character=p},class)end
+local completions=0
+function base.perform()completions=completions+1 end
+function base.stop()end
+ISBaseTimedAction=base
+ISTimedActionQueue={add=function()return {}end}
+-- REGISTRY
+-- WEAPONS
+-- COMBO
+-- STYLE
+-- BINDINGS
+local PY=ProjectYakuza
+local swingEvents=0
+-- HEAT
+-- RUNTIME
+-- QUICKSTEPS
+-- MENU_EQUIP
+local Q=PY.Quicksteps
+local token={getFullType=function()return PY.TOKEN end,getMaxHitCount=function()return 3 end,getWeaponSprite=function()return 'ProjectYakuza_EmptyHand' end}
+local p={vars={},data={ProjectYakuzaStyle='dragon_of_dojima'},allowed=true,attacking=false,async=false,reject=false,submissions=0}
+function p:getPlayerNum()return 0 end
+function p:getModData()return self.data end
+function p:isLocalPlayer()return true end
+function p:isDead()return false end
+function p:isAiming()return true end
+function p:getPrimaryHandItem()return self.held or token end
+function p:setVariable(k,v)self.vars[k]=v end
+function p:GetVariable(k)return self.vars[k]end
+function p:isWeaponReady()return true end
+function p:isAttackStarted()return self.attacking end
+function p:isPerformingAttackAnimation()return self.attacking end
+function p:isAuthorizeMeleeAction()return self.allowed end
+function p:setAuthorizeMeleeAction(v)self.allowed=v end
+function p:setMeleeDelay()end
+function p:setBlockMovement(v)self.blocked=v end
+function p:getIgnoreMovement()return false end
+function p:setIgnoreMovement()end
+function p:AttemptAttack()
+ if not self.allowed or self.reject then return false end
+ self.submissions=self.submissions+1;self.attacking=true
+ if not self.async then fire('OnWeaponSwing',self,self:getPrimaryHandItem())end
+ return false -- B42 may return false after accepting the native submission.
+end
+
+function p:isOnFloor()return false end;function p:isKnockedDown()return false end
+function p:isClimbing()return false end;function p:getVehicle()return nil end
+function p:hasTimedActions()return false end;function p:isBlockMovement()return false end
+function p:getHitReaction()return '' end;function p:getCurrentStateName()return self.attacking and 'SwipeStatePlayer' or 'IdleState' end
+function p:isAimAtFloor()return false end;function p:isPerformingStompAnimation()return false end
+function p:setPerformingAttackAnimation(v)self.performing=v end
+function p:reportEvent(name)self.report=name end
+function p:setIgnoreStaggerBack(v)self.stagger=v end;function p:isIgnoreStaggerBack()return self.stagger==true end
+function p:getX()return 0 end;function p:getY()return 0 end;function p:getZ()return 0 end
+function p:getForwardDirection()return {getX=function()return 1 end,getY=function()return 0 end}end
+function p:isDraggingCorpse()return false end;function p:isAsleep()return false end
+local function weapon(id)
+ local w={id=id,min=.8,max=1.2,data={},condition=10}
+ function w:getFullType()return self.id end;function w:getCondition()return self.condition end
+ function w:getMinDamage()return self.min end;function w:getMaxDamage()return self.max end
+ function w:setMinDamage(v)self.min=v end;function w:setMaxDamage(v)self.max=v end
+ function w:getModData()return self.data end
+ return w
+end
+local W=PY.Weapons;local bat=weapon('Base.BaseballBat');local pipe=weapon('Base.MetalPipe');local knife=weapon('Base.HuntingKnife')
+local original=PY.getStyle('dragon_of_dojima')
+local armed=W.views.dragon_of_dojima.bat
+check(armed~=original and armed.id==original.id,'equipment view preserves style identity without mutating base')
+check(#armed.lightAttacks==3 and #original.lightAttacks==4,'three weapon attacks and four original unarmed attacks')
+check(not armed.actions.heavyCharge and not armed.actions.runningAttack and not armed.tigerDrop,'unarmed special moves do not leak into weapons')
+check(armed.actions.quickstep==original.actions.quickstep,'same quota-controlled quickstep retained')
+check(armed.actions.block.animation=='ProjectYakuza_DD_BatGuard','weapon-specific moving guard')
+for _,id in ipairs(W.profiles.dragon_of_dojima.bat.items)do check(W.profile(original.id,weapon(id))=='bat','explicit supplied blunt weapon '..id)end
+check(not W.profile(original.id,knife),'knife retains vanilla combat')
+p.held=bat;p.data.ProjectYakuzaStyle=nil
+check(not PY.isEquipped(p),'weapons require explicit style selection')
+p.data.ProjectYakuzaStyle='dragon_of_dojima';W.sync(p)
+check(PY.isEquipped(p) and PY.getPlayerStyle(p)==armed,'selected DoD and real weapon work simultaneously')
+check(PY.isCombatWeapon(p,bat) and not PY.isCombatWeapon(p,pipe),'hit callback must use actual held item')
+local function finish()
+ p.attacking=false;fire('OnPlayerAttackFinished',p,p:getPrimaryHandItem());clock=clock+40
+end
+for i=1,3 do
+ mouse[0]=false;fire('OnPlayerUpdate',p);mouse[0]=true;fire('OnPlayerUpdate',p)
+ if not p.attacking then p:AttemptAttack() end
+ local state=PY.stateFor(p)
+ check(state.active and state.step==i and p.vars.ProjectYakuzaMove==armed.lightAttacks[i].nodeValue,'native swing routed to weapon combo '..i)
+ check(bat.min==.8 and bat.max==1.2,'lights retain native weapon damage')
+ if i==1 then
+  PY.setHeat(p,0);local victim={};fire('OnWeaponHitCharacter',p,victim,bat,.4)
+  check(math.abs(PY.getHeat(p)-.5)<.00001,'real weapon native hit earns current reduced heat')
+  fire('OnWeaponHitCharacter',p,victim,bat,.4)
+  check(math.abs(PY.getHeat(p)-.5)<.00001,'same victim cannot duplicate heat within a swing')
+ end
+ finish()
+end
+check(PY.queueFinisher(p),'weapon heavy available after combo')
+check(PY.stateFor(p).finisherMove.nodeValue=='dd_bat_heavy','MMB uses weapon heavy instead of unarmed finisher')
+check(math.abs(bat.min-1)<.00001 and math.abs(bat.max-1.5)<.00001,'heavy uses native weapon damage times 1.25')
+check(not PY.queueFinisher(p),'heavy cannot queue itself or a double finisher')
+finish();check(bat.min==.8 and bat.max==1.2,'heavy restores native damage')
+PY.resetPlayer(p,'test');clock=clock+600
+check(PY.queueFinisher(p),'weapon heavy also works without prior light')
+finish();PY.resetPlayer(p,'test')
+p:AttemptAttack();check(PY.queueFinisher(p) and PY.stateFor(p).queuedWeaponHeavy,'heavy queues behind a running light')
+check(not PY.stateFor(p).queuedFinisher,'weapon heavy does not consume an unarmed branch')
+finish();fire('OnPlayerUpdate',p)
+check(PY.stateFor(p).finisherMove and PY.stateFor(p).finisherMove.nodeValue=='dd_bat_heavy','queued heavy starts after native light exits')
+finish();PY.resetPlayer(p,'test')
+PY.Heat.applyMoveDamage(p,{damageMultiplier=1.25});check(bat.min==1,'real weapon gets scoped multiplier')
+p.held=pipe;W.sync(p)
+check(bat.min==.8 and bat.max==1.2 and not bat.data.ProjectYakuzaMoveOriginalMin,'swapping restores the old item')
+check(not PY.stateFor(p).active and PY.groundNext[0]==1,'same-profile weapon swap resets combo and ground variant')
+PY.stateFor(p).active=true;PY.stateFor(p).step=3
+pipe.condition=0;W.sync(p)
+check(not PY.isEquipped(p) and not PY.stateFor(p).active,'breakage safely exits custom combat')
+pipe.condition=10;p.held=knife;W.sync(p)
+check(not PY.isEquipped(p) and PY.getPlayerStyle(p)==original,'unsupported weapon remains native')
+p.held=nil;W.sync(p);check(PY.getPlayerStyle(p)==original and PY.isEquipped(p),'equipping token restores original unarmed style')
+-- Registration is transactional and scoped to each developer's style.
+local addon={};for k,v in pairs(original)do addon[k]=v end;addon.id='tests.other';PY.registerStyle(addon)
+p.data.ProjectYakuzaStyle=addon.id;p.held=bat
+check(not PY.isEquipped(p) and PY.getPlayerStyle(p)==addon,'another style never inherits DoD weapon animations')
+local before=W.byItem[original.id]['Base.HuntingKnife']
+check(not pcall(W.register,original.id,{id='bad',items={'Base.HuntingKnife','Base.BaseballBat'},lightAttacks=armed.lightAttacks}),'duplicate mapping rejected')
+check(W.byItem[original.id]['Base.HuntingKnife']==before and not W.profiles[original.id].bad,'failed registration does not partially publish')
+check(not pcall(W.register,original.id,{id='bad',items={'Base.HuntingKnife'},lightAttacks={}}),'invalid move definitions rejected')
+check(not W.byItem[original.id]['Base.HuntingKnife'],'invalid style view cannot publish item mapping')
+check(not pcall(W.register,original.id,{id='bad',items={'Base.HuntingKnife'},lightAttacks={{animation=original.lightAttacks[1].animation,nodeValue=original.lightAttacks[1].nodeValue,duration=1}}}),'distinct profiles cannot shadow base collision node IDs')
+check(not pcall(W.register,original.id,{id='bad',items={'Base.HuntingKnife'},lightAttacks=armed.lightAttacks,standaloneHeavy=true}),'standalone heavy requires an actual heavy definition')
+PY.resetPlayer(p,'test');p.attacking=false;p.held=bat
+PY.equipStyle(p,original.id)
+check(p.held==bat and PY.getPlayerStyle(p)==armed,'actual style menu retains supported real weapon')
+check(p.data.ProjectYakuzaStyle==original.id,'style identity remains selected while holding weapon')
+-- Current source-pose light markers drive the existing cancellation state machine.
+p.data.ProjectYakuzaStyle=original.id;p.held=bat;W.sync(p);PY.resetPlayer(p,'test');p.attacking=false
+p:AttemptAttack();local state=PY.stateFor(p);local move=armed.lightAttacks[1]
+Q.canMove=function()return true end
+p.vars.ProjectYakuzaHitMarker=move.nodeValue;p.vars.ProjectYakuzaQuickstepCancelReady=move.nodeValue
+check(Q.requestLightCancel(p,'backward',{dx=-1,dy=0,shove=true}) and Q.isCancelling(p),'armed light accepts native quickstep cancel')
+check(state.recoveryReleased and p.report=='ActiveAnimFinishing','cancel releases real native attack without a second collision')
+check(bat.condition==10 and pipe.condition==10,'framework never repairs or manually consumes weapon condition')
+return true,'PASS '..checks..' real-weapon style, combos, heavy, swap, damage and isolation checks'

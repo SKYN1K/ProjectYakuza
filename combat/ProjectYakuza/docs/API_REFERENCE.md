@@ -143,6 +143,10 @@ Optional style.juggling and move.juggle={kind="launch"/"followup"/"ender"} enabl
 
 AttackEffects.registerLimbProvider(id,fn) optionally consumes final forearm/hand world positions from a compatible external adapter; removeLimbProvider(id,fn) unregisters it. No adapter is bundled. See [punch effects](ATTACK_EFFECTS.md). HeatAura now uses the native ColorInfo:set method rather than Lua field writes.
 
-## Light quickstep cancels (0.43.0)
+## Light quickstep cancels (0.44.0)
 
 While aiming, the bound quickstep input can cancel DoD lights after their native post-hit cancel marker. It has a 150ms input buffer and a 400ms native handoff timeout; quota/cooldown/wall checks are preserved. Other move types are unchanged. Future styles opt in with quickstepCancelLights=true and eligible light.quickstepCancelAt plus the matching native marker. See [Light quickstep cancels](LIGHT_QUICKSTEP_CANCELS.md).
+
+## Weapon equipment views
+
+See [Weapons](WEAPONS.md) for Weapons.register, explicit per-style item mappings, equipment views, standalone heavies, native weapon preservation, events and MP authoring contracts. getPlayerStyle returns the current view while getStyle/listStyles retain the base style identity. Register profiles after the base style; every distinct move needs a unique nodeValue and supplied animation nodes.

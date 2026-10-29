@@ -57,3 +57,10 @@
 
 !/tools/combat-tests/ChargeTrackProbe.java
 !/tools/combat-tests/validate_charge_limb_tracks.py
+
+!/tools/combat-tests/build_weapon_tests.py
+!/tools/combat-tests/weapon-test-fixture.lua
+!/tools/combat-tests/build_weapon_mp_tests.py
+!/tools/combat-tests/weapon-mp-test-fixture.lua
+!/tools/combat-tests/WeaponAssetProbe.java
+!/tools/combat-tests/validate_weapon_assets.py

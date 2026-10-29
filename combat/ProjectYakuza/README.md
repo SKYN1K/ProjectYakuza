@@ -2,7 +2,7 @@
 
 Project Yakuza is a Build 42 combat mod and a framework for independent fighting-style addons. Dragon of Dojima uses supplied Yakuza/Kiwami animations, textures and sounds. Other styles register their own moves, assets and controllers without copying the framework.
 
-**Version 0.43.0 Ã‚Â· Lua API 3 Ã‚Â· MP protocol 2.** API 1 style registrations remain supported. Internal namespace/mod dependency: `ProjectYakuza`. Display name: Project Yakuza.
+**Version 0.44.0 Ã‚Â· Lua API 3 Ã‚Â· MP protocol 2.** API 1 style registrations remain supported. Internal namespace/mod dependency: `ProjectYakuza`. Display name: Project Yakuza.
 
 ## Install and play
 
@@ -44,3 +44,7 @@ Grabs remain disabled. Cinematic heat actions, camera control, direct ragdoll im
 Start with [Style authoring](docs/STYLE_AUTHORING.md) and the inactive [starter](templates/StyleSubmod/README.md). The [documentation index](docs/INDEX.md) links the API, custom actions, animation contracts, multiplayer tools, presentation and testing. No tool synthesizes visual/audio media; supply the assets your addon needs.
 
 [Release notes](docs/RELEASE_NOTES.md) cover this version. Asset/source reports remain as provenance; old development notes are not the current manual.
+
+## Bats and clubs
+
+Select Dragon of Dojima and equip a [supported real bat/club](docs/WEAPONS.md). LMB uses its three-hit source weapon combo; MMB uses a standalone or queued heavy; X uses its moving guard. Native models, damage/condition and ordinary item handling remain. Profiles belong to their style and are available to addon developers. Unarmed special moves require the style item. Fully restart after installing; offline checks do not verify live grip/MP appearance.
