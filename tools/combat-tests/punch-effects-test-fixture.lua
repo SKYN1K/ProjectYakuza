@@ -124,10 +124,26 @@ for i=0,15 do
  p.angle=i*math.pi/8;p.twist=(i%3-1)*30;draws={};F.render()
  local ax,ay,az=F.sample(track,p.time,1);local wx,wy,wz=F.sample(track,p.time,2)
  local x,y,z=ax+(wx-ax)*.78,ay+(wy-ay)*.78,az+(wz-az)*.78
- local px,py=F.project(x,y,z,p.angle+math.rad(p.twist),2)
- local cx,cy=centre(draws[6]);check(near(cx,px) and near(cy,py+5),'continuous facing includes live degree-valued shoulder twist '..i)
+ local px,py=F.project(x,y,z,p.angle,2)
+ local cx,cy=centre(draws[6]);check(near(cx,px) and near(cy,py+5),'sampled fallback avoids rotating the arm twice '..i)
 end
 p.twist=0
+local providerCalls=0
+F.registerLimbProvider('live',function(who,animation,time)
+ providerCalls=providerCalls+1
+ check(who==p and animation==move.animation,'live adapter receives actor and exact attack clip')
+ return who.x+.10,who.y-.05,who.z+.4,who.x+.25,who.y+.15,who.z+.45
+end)
+for i=0,7 do
+ p.angle=i*math.pi/4;draws={};F.render()
+ local cx,cy=centre(draws[6]);local tx=(.25-.15)*64;local ty=(.25+.15)*32-.45*192
+ check(near(cx,tx) and near(cy,ty),'live hand coordinates bypass sampled yaw and pixel inset for facing '..i)
+end
+check(providerCalls==8,'live provider is read once per actor draw, not per particle')
+F.removeLimbProvider('live');check(not F.limbProviders.live,'addon can remove its limb provider')
+F.registerLimbProvider('broken',function()error('unavailable native pose')end);F.states[p].config.limbProvider='broken'
+draws={};F.render();check(#draws>0 and F.states[p].providerRetry,'broken provider safely falls back with a retry throttle')
+F.states[p].config.limbProvider=nil;F.removeLimbProvider('broken')
 p.reaction='Bite';F.tick();check(not F.states[p] and not F.hooked and allocated==disposed,'hit interruption disposes everything and removes hooks');p.reaction=''
 p.empty=true;F.start(p,style,1,move);clock=clock+351;F.tick();check(not F.states[p],'missing animation times out without offset fallback');p.empty=false
 F.start(p,style,1,move);p.time=.8;F.tick();check(F.states[p] and not F.states[p].seen,'stale outgoing clip waits for replacement');clock=clock+351;F.tick();check(not F.states[p],'late clip observation skips stale burst')

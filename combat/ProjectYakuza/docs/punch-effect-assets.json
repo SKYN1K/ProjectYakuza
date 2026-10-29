@@ -354,5 +354,5 @@
     "Native walking, torso twist, blend-in/out and occlusion can differ; live GPU/MP appearance has not been tested.",
     "World sprites use the existing IsoSprite world-render path, not UI drawing."
   ],
-  "positioning": "Original native source samples inset along forearm, move-scoped verticalOffset=2.5. All punch particles exactly 1.25 times v0.37.0 scale, normal alpha only. Continuous body angle plus exposed shoulder twist converted from degrees. Existing limb-height world anchors and screen compensation retained. Source path remains an approximation of the final blended pose. No media changes."
+  "positioning": "v0.41 removes the approximate shoulder-yaw addition. Source fallback uses native body angle and existing conservative arm insets. Optional limbProvider supplies six absolute final-pose forearm/hand coordinates and bypasses sampled yaw and screen inset; no live provider is bundled. All source tracks/textures/sounds unchanged."
 }

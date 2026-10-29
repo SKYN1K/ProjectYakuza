@@ -1,6 +1,7 @@
 if not isServer() then return end
 require "ProjectYakuza/Styles/DragonOfDojima"
 require "ProjectYakuza/NetworkProtocol"
+require "ProjectYakuza/Juggling"
 local ProjectYakuza=ProjectYakuza;local P=ProjectYakuza.NetworkProtocol
 local S={players={},grabs={},nextTick=0,reactions={}}
 ProjectYakuza.NetworkServer=S
@@ -133,7 +134,7 @@ function S.validVictim(p,id,range,cone)
     if distance<.001 or length<.001 or (dx*f:getX()+dy*f:getY())/(distance*length)<(cone or .5) then return nil end
     return z
 end
-function S.damage(p,z,amount,knock,kill,s,hitMove,hitStyle)
+function S.damage(p,z,amount,knock,kill,s,hitMove,hitStyle,jugglePlan,swing)
     local item=token(p);if not item then return end
     local dx,dy=z:getX()-p:getX(),z:getY()-p:getY();local n=math.sqrt(dx*dx+dy*dy)
     if n<.001 then return end
@@ -146,9 +147,10 @@ function S.damage(p,z,amount,knock,kill,s,hitMove,hitStyle)
     local styleId=hitStyle or s.packet.style
     local move=hitMove or P.move(styleId,s.packet.move)
     local response=not kill and not knock and ProjectYakuza.HitResponses.resolve(ProjectYakuza.getStyle(styleId),move)
-    if response then ProjectYakuza.HitResponses.apply(p,z,response) end
+    local juggle,juggling=ProjectYakuza.Juggling.hit(p,z,not kill and not knock and (jugglePlan or ProjectYakuza.Juggling.plan(ProjectYakuza.getStyle(styleId),move)) or nil,swing)
+    if response and not juggling then ProjectYakuza.HitResponses.apply(p,z,response) end
     S.fanout(p,"damage",{player=p:getOnlineID(),event=s.result,zombie=z:getOnlineID(),health=math.max(0,z:getHealth()),amount=amount,knock=knock==true,kill=kill==true,
-        dx=dx/n,dy=dy/n,force=z:getHitForce(),hitReaction=z:getHitReaction() or "ShotBelly",reaction=move and move.reaction or "",style=styleId,responseKind=response and response.kind,responseForce=response and response.force})
+        dx=dx/n,dy=dy/n,force=z:getHitForce(),hitReaction=z:getHitReaction() or "ShotBelly",reaction=move and move.reaction or "",style=styleId,juggle=juggle,responseKind=response and response.kind,responseForce=response and response.force})
 end
 function S.command(module,command,p,a)
     if module~=P.module or type(a)~="table" or not p then return end
@@ -211,7 +213,7 @@ function S.command(module,command,p,a)
                 scaled.chargePower=s.packet.chargePower
                 move=scaled
             end
-            s.lastSwing=a.swing;job={seen={},count=0,expires=t+2500,move=move,style=s.packet.style};s.swings[a.swing]=job
+            s.lastSwing=a.swing;job={seen={},count=0,expires=t+2500,move=move,style=s.packet.style,juggle=ProjectYakuza.Juggling.plan(ProjectYakuza.getStyle(s.packet.style),move)};s.swings[a.swing]=job
         end
         if t>job.expires or job.count>=ProjectYakuza.MAX_HIT_COUNT or job.seen[a.zombie] then return end
         local z=S.validVictim(p,a.zombie,1.65)
@@ -226,10 +228,10 @@ function S.command(module,command,p,a)
             local response=ProjectYakuza.HitResponses.resolve(ProjectYakuza.getStyle(job.style),job.move)
             local packet={player=p:getOnlineID(),event=a.event,zombie=a.zombie,style=job.style,reaction=job.move.reaction or "",strong=job.move.afterLight~=nil or job.move.chargedHeavy==true,charged=job.move.chargedHeavy==true,
                 responseKind=response and response.kind,responseForce=response and response.force}
-            if response then
+            if response or job.juggle or ProjectYakuza.Juggling.get(z) then
                 -- Defer until native hit calculation has returned; keep the resolved
                 -- move/power rather than re-reading a later stance/combo snapshot.
-                if #S.reactions<128 then S.reactions[#S.reactions+1]={player=p,zombie=z,response=response,packet=packet,at=t}
+                if #S.reactions<128 then S.reactions[#S.reactions+1]={player=p,zombie=z,response=response,packet=packet,at=t,juggle=job.juggle,swing=a.swing}
                 else packet.responseKind=nil;packet.responseForce=nil;S.fanout(p,"impact",packet) end
             else S.fanout(p,"impact",packet) end
         else
@@ -238,7 +240,7 @@ function S.command(module,command,p,a)
             local item=S.baseWeapon;local factor=job.move.damageMultiplier or 1
             if not item then return end
             local base=math.max(0,math.min(2,(item:getMinDamage()+item:getMaxDamage())*.5))
-            S.damage(p,z,base*factor*(s.packet.extreme and 1.5 or 1),false,false,s,job.move,job.style)
+            S.damage(p,z,base*factor*(s.packet.extreme and 1.5 or 1),false,false,s,job.move,job.style,job.juggle,a.swing)
         end
     end
 end
@@ -248,7 +250,9 @@ function S.tick()
     for _,job in ipairs(reactions) do
         local z=job.zombie
         if t-job.at<=1000 and alive(job.player) and P.near(job.player,z,2.5) then
-            ProjectYakuza.HitResponses.apply(job.player,z,job.response)
+            local juggle,juggling=ProjectYakuza.Juggling.hit(job.player,z,job.juggle,job.swing)
+            job.packet.juggle=juggle
+            if not juggling then ProjectYakuza.HitResponses.apply(job.player,z,job.response) end
             S.fanout(job.player,"impact",job.packet)
         end
     end
@@ -284,4 +288,8 @@ Events.OnTick.Add(S.tick)
 Events.OnWeaponHitCharacter.Add(function(p,z,weapon)
     if S.processing or not p or not instanceof(p,"IsoPlayer") or not z or not instanceof(z,"IsoZombie") or not token(p) then return end
     local s=state(p);s.evidence=s.evidence or {};s.evidence[z:getOnlineID()]={z=z,time=now()}
+end)
+
+ProjectYakuza.on("juggleEnded",function(p,z,a)
+    if not a.fromHit and p and z then S.fanout(p,"juggle",{player=p:getOnlineID(),zombie=z:getOnlineID(),event=a.seq,juggle=a}) end
 end)

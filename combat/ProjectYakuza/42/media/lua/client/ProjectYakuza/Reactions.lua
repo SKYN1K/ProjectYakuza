@@ -1,4 +1,5 @@
 require "ProjectYakuza/Registry"
+require "ProjectYakuza/Juggling"
 local PY=ProjectYakuza
 local R={states=setmetatable({}, {__mode="k"}),pending=setmetatable({}, {__mode="k"}),seen=setmetatable({}, {__mode="k"})}
 PY.Reactions=R
@@ -23,12 +24,14 @@ function R.remote(victim,clip)
     R.states[victim]={clip=clip,startedAt=getTimestampMs(),seenReaction=false}
     victim:setHitFromBehind(false);victim:setHitReaction("HeadLeft");victim:reportEvent("wasHit");hook()
 end
-function R.queue(attacker,victim,response,before)
-    if not PY.HitResponses.valid(response.kind,response.force) then return end
-    R.pending[victim]={attacker=attacker,response=response,before=before,at=getTimestampMs()};hook()
+function R.queue(attacker,victim,response,before,juggle,stamp)
+    if not response and not juggle and not PY.Juggling.get(victim) then return end
+    if response and not PY.HitResponses.valid(response.kind,response.force) then return end
+    R.pending[victim]={attacker=attacker,response=response,before=before,juggle=juggle,stamp=stamp,at=getTimestampMs()};hook()
 end
 -- Only called for a validated, de-duplicated server result. Never deals damage.
 function R.confirmed(attacker,victim,kind,force,clip)
+    if PY.Juggling.get(victim) then R.clear(victim);return true end
     if not PY.HitResponses.valid(kind,force) then return false end
     if kind=="flinch" then R.remote(victim,clip) else R.clear(victim) end
     R.queue(attacker,victim,{kind=kind,force=force});return true
@@ -54,7 +57,7 @@ function R.onHit(attacker,victim,weapon,damage)
     else R.clear(victim) end
     -- Native OnWeaponHitCharacter fires before damage/force calculation finishes.
     -- SP applies next tick; MP waits for the server's resolved response packet.
-    if response and not isClient() then R.queue(attacker,victim,response,victim:getHealth()) end
+    if not isClient() then R.queue(attacker,victim,response,victim:getHealth(),PY.Juggling.plan(style,move),stamp) end
 end
 function R.update(zombie,time)
     local state=R.states[zombie];if not state then return end
@@ -68,7 +71,10 @@ function R.tick()
     if isGamePaused() then return end
     local time=getTimestampMs();local pending=R.pending;R.pending=setmetatable({}, {__mode="k"})
     for z,job in pairs(pending) do
-        if time-job.at<=1000 and (not job.before or z:getHealth()<job.before) then PY.HitResponses.apply(job.attacker,z,job.response) end
+        if time-job.at<=1000 and (not job.before or z:getHealth()<job.before) then
+            local _,juggling=PY.Juggling.hit(job.attacker,z,job.juggle,job.stamp)
+            if juggling then R.clear(z) else PY.HitResponses.apply(job.attacker,z,job.response) end
+        end
     end
     if time>=(R.nextUpdate or 0) then
         R.nextUpdate=time+50;for zombie in pairs(R.states) do R.update(zombie,time) end

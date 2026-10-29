@@ -19,6 +19,12 @@ public class DetachedEffectProbe {
    if((Boolean)inst.getMethod("isCopyTargetAlpha").invoke(i))throw new AssertionError("particle alpha not independent");
    inst.getMethod("Dispose").invoke(i);inst.getMethod("add",inst).invoke(null,i);
   }
+  for(String name:new String[]{"zombie.core.Color","zombie.core.textures.ColorInfo"}){
+   var color=Class.forName(name);var value=color.getConstructor(float.class,float.class,float.class,float.class).newInstance(1f,1f,1f,1f);
+   color.getMethod("set",float.class,float.class,float.class,float.class).invoke(value,80f/124,195f/210,1f,1f);
+   if(Math.abs(color.getField("r").getFloat(value)-80f/124)>.00001f)throw new AssertionError("native colour setter failed");
+  }
+  System.out.println("PASS native colour set(float,float,float,float) on Color and ColorInfo");
   System.out.println("PASS native shared sprite-offset overwrite reproduced; detached offsets stay zero, scales/alpha independent, pool cleanup works (no game/GPU)");
  }
 }

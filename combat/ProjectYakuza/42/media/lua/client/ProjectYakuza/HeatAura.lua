@@ -50,8 +50,7 @@ function A.drawTaunt(p,f,s)
     -- Restore the original baked blue at either end of the envelope so the
     -- replacement never pops from/to a white tint over the sustained aura.
     if not A.tauntColor then A.tauntColor=ColorInfo.new(1,1,1,1) end
-    A.tauntColor.r=(80+44*fade)/124;A.tauntColor.g=(195+15*fade)/210
-    A.tauntColor.b=1;A.tauntColor.a=1
+    A.tauntColor:set((80+44*fade)/124,(195+15*fade)/210,1,1)
     for _,e in ipairs(f.emitters) do
         local point=e.point;local scale=tile*point.scale*size
         e.instance:setScale(scale,scale)

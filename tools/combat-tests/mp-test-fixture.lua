@@ -458,4 +458,83 @@ client.command(P.module,'damage',{player=2,event=9003,zombie=212,health=.7,amoun
 R.tick();check(observer.knock and observer.health==.7 and observer.hits==oldHits,'observer applies native knockdown with absolute health only')
 local lightVictim=responseVictim(213);combo.finisherMove=nil;combo.multiHitToken={}
 R.onHit(p,lightVictim,p.token,.1);R.clearAll();check(lightVictim.vars.ProjectYakuzaEnemyReaction==false and not R.hooked,'world-exit cleanup releases all custom reaction flags and hooks')
+
+-- Future styles opt in to bounded juggling gameplay windows; no media/physics is invented.
+local J=ProjectYakuza.Juggling
+check(not style.juggling and not J.plan(style,style.lightAttacks[1]),'DoD has no juggling opt-in')
+local future=copy(style);future.id='test.juggler';future.name='Test Juggler';future.actions={};future.lightAttacks={}
+future.juggling={windowMs=500,maxDurationMs=1200,maxHits=3,maxRelaunches=1,landingCooldownMs=300,presentation='test.airborne'}
+for i,move in ipairs(style.lightAttacks)do future.lightAttacks[i]=copy(move)end
+future.lightAttacks[1].juggle={kind='launch'};future.lightAttacks[2].juggle={kind='followup'};future.lightAttacks[3].juggle={kind='ender'}
+check(ProjectYakuza.validateStyle(future),'a future style can declare launcher/followup/ender moves')
+future.juggling.enabled=false;check(ProjectYakuza.validateStyle(future) and not J.plan(future,future.lightAttacks[1]),'developers can disable a style juggle config without deleting its move declarations');future.juggling.enabled=true
+ProjectYakuza.registerStyle(future);ProjectYakuza.NetworkCatalog[future.id]=ProjectYakuza.NetworkCatalog.dragon_of_dojima
+local badFuture=copy(future);badFuture.juggling={maxHits=100};check(not ProjectYakuza.validateStyle(badFuture),'oversized juggle budgets rejected')
+badFuture.juggling={windowMs=1500,maxDurationMs=1000};check(not ProjectYakuza.validateStyle(badFuture),'window cannot exceed hard duration')
+badFuture.juggling=false;check(not ProjectYakuza.validateStyle(badFuture),'move spec requires a style opt-in')
+badFuture=copy(future);badFuture.lightAttacks={copy(future.lightAttacks[1])};badFuture.lightAttacks[1].juggle={kind='teleport'}
+check(not ProjectYakuza.validateStyle(badFuture),'unsupported juggle operations rejected')
+badFuture.lightAttacks[1].juggle={kind='launch',windowMs=0/0};check(not ProjectYakuza.validateStyle(badFuture),'NaN window rejected')
+local launch=J.plan(future,future.lightAttacks[1]);local follow=J.plan(future,future.lightAttacks[2]);local ending=J.plan(future,future.lightAttacks[3])
+local unmarked=future.lightAttacks[4]
+p.data.ProjectYakuzaStyle=future.id;combo.finisherMove=nil;combo.step=1;combo.active=true;combo.multiHitToken={}
+R.clearAll();J.clearAll()
+local jug=responseVictim(220);local priorX,priorY,priorHealth=jug.x,jug.y,jug.health
+local a,active=J.hit(p,jug,follow,1);check(not a and not active and not J.get(jug),'followup cannot create a juggle')
+a,active=J.hit(p,jug,launch,2)
+check(a.phase=='launch' and active and J.get(jug).hits==0 and jug.vars.ProjectYakuzaJuggleActive,'launcher starts one bounded state and native animation variables')
+check(jug.vars.ProjectYakuzaJugglePresentation=='test.airborne' and J.hooked,'addon presentation name and active-only tick hook are exposed')
+check(jug.health==priorHealth and jug.x==priorX and jug.y==priorY and jug.hits==0,'logical launch never damages, lifts or teleports a zombie')
+local stateView=J.get(jug);stateView.hits=100;check(J.get(jug).hits==0,'public state snapshot cannot mutate the hit budget')
+a,active=J.hit(p,jug,follow,2);check(not a and active and J.get(jug).hits==0,'same-swing duplicate cannot count a juggling hit')
+clock=clock+200;a,active=J.hit(p,jug,follow,3);check(a.phase=='hit' and active and J.get(jug).hits==1 and a.remaining==500,'followup refreshes only the soft window')
+a,active=J.hit(p,jug,launch,4);check(active and J.get(jug).relaunches==1,'one configured relaunch is permitted')
+a,active=J.hit(p,jug,launch,5);check(a.phase=='end' and a.reason=='relaunch_limit' and not active and not J.get(jug),'relaunch budget prevents infinite launcher loops')
+check(not jug.vars.ProjectYakuzaJuggleActive,'ending clears victim presentation variables')
+a=J.hit(p,jug,launch,6);check(not a and not J.get(jug),'landing cooldown prevents immediate restart')
+clock=clock+301;J.hit(p,jug,launch,7);J.hit(p,jug,follow,8);J.hit(p,jug,follow,9);a,active=J.hit(p,jug,follow,10)
+check(a.reason=='hit_limit' and not active and a.hits==3,'final permitted hit ends the juggle without adding damage')
+clock=clock+301;J.hit(p,jug,launch,11);a,active=J.hit(p,jug,ending,12);check(a.reason=='ender' and not active,'landing ender closes the state')
+clock=clock+301;J.hit(p,jug,launch,13);a=J.hit(p,jug,nil,14);check(a.reason=='unmarked_hit','unmarked attacks cannot keep an aerial window alive')
+clock=clock+301;J.hit(p,jug,launch,15);a=J.hit(remote,jug,follow,16);check(a.reason=='interrupted','another player cannot take ownership of a juggle')
+clock=clock+301;J.hit(p,jug,launch,17);clock=clock+501;J.tick();check(not J.get(jug) and not J.hooked,'soft timeout releases state and idle hook')
+clock=clock+301;J.hit(p,jug,launch,18);local held=J.get(jug).remaining
+isGamePaused=function()return true end;clock=clock+5000;J.tick();isGamePaused=function()return false end
+check(J.get(jug).remaining==held,'pause-aware active tick preserves remaining window')
+J.finish(jug,'test',false);clock=clock+301;J.hit(p,jug,launch,19);jug.floor=true;J.tick();check(not J.get(jug),'native landing immediately clears logical airborne state');jug.floor=false
+clock=clock+301;J.hit(p,jug,launch,20);p.data.ProjectYakuzaStyle='dragon_of_dojima';J.tick();check(not J.get(jug),'style change cancels an active juggle');p.data.ProjectYakuzaStyle=future.id
+clock=clock+301;J.hit(p,jug,launch,21);jug.health=0;J.tick();check(not J.get(jug),'native death clears state');jug.health=1
+J.clearAll();local oldCap=J.maxTargets;J.maxTargets=1
+local jug2=responseVictim(221);J.hit(p,jug,launch,22);J.hit(p,jug2,launch,23);check(not J.get(jug2),'tracked-target cap is enforced')
+J.clearAll();J.maxTargets=oldCap
+J.clearAll();J.hit(p,jug,launch,30);local hardDeadline=J.states[jug].hardEnd
+clock=clock+400;J.hit(p,jug,follow,31);clock=clock+400;J.hit(p,jug,follow,32)
+check(J.states[jug].hardEnd==hardDeadline and J.get(jug).remaining==400,'refresh never extends the hard juggling deadline')
+clock=clock+401;J.tick();check(not J.get(jug),'hard deadline ends repeated refreshes')
+J.clearAll()
+-- SP uses the actual post-native-health-loss queue, and suppresses heavy flags while a juggle is active.
+isClient=function()return false end;combo.step=1;combo.multiHitToken={};jug.health=1
+R.onHit(p,jug,p.token,.1);check(not J.get(jug) and R.pending[jug],'SP launcher waits until native hit returns')
+jug.health=.9;R.tick();check(J.get(jug) and not jug.knock,'SP launcher opens the window after confirmed health loss')
+check(jug.vars.ProjectYakuzaEnemyReaction==false and not R.states[jug],'juggle presentation replaces the ordinary custom flinch controller')
+combo.step=2;combo.multiHitToken={};R.onHit(p,jug,p.token,.1);jug.health=.8;R.tick();check(J.get(jug).hits==1,'SP followup is counted once through the real hit pipeline')
+combo.step=3;combo.multiHitToken={};R.onHit(p,jug,p.token,.1);jug.health=.7;R.tick();check(not J.get(jug),'SP ender closes the real pipeline state')
+J.clearAll();R.clearAll();isClient=function()return true end
+-- MP resolves window state on the server and carries it in the existing impact packet.
+clock=clock+2000;server.reactions={};snapshot(p,{style=future.id,move='dd_light_01',clip='ProjectYakuza_DD_Light01'})
+local networkJug=responseVictim(222);replies={};command('impact',{swing=1200,zombie=222});clock=clock+101;server.tick()
+check(J.get(networkJug) and networkJug.hits==0,'MP primary launcher never calls Hit again')
+local launchPacket
+for _,message in ipairs(replies)do if message.command=='impact' and message.args.zombie==222 then launchPacket=message.args end end
+check(launchPacket and launchPacket.juggle.phase=='launch','server window result is included in impact relay')
+local hits=networkJug.hits;J.clearAll();client.command(P.module,'impact',launchPacket)
+check(J.get(networkJug) and networkJug.hits==hits,'owner mirrors window result without replaying damage')
+local oldSeq=J.received[networkJug];client.command(P.module,'impact',launchPacket);check(J.received[networkJug]==oldSeq,'duplicate impact cannot restart an observer window')
+local malformed=copy(launchPacket.juggle);malformed.seq=malformed.seq+1;malformed.hits=13
+check(not J.receive(p,networkJug,malformed) and J.received[networkJug]==oldSeq,'invalid juggle counters rejected before mutation')
+local endPacket=copy(launchPacket.juggle);endPacket.seq=endPacket.seq+2;endPacket.phase='end';endPacket.reason='timeout'
+client.command(P.module,'juggle',{player=1,zombie=222,event=endPacket.seq,juggle=endPacket})
+check(not J.get(networkJug) and not networkJug.vars.ProjectYakuzaJuggleActive,'standalone timeout/landing result clears the observer')
+check(not J.receive(p,networkJug,launchPacket.juggle) and not J.get(networkJug),'late launch cannot revive a state after a newer landing result')
+J.clearAll();R.clearAll();p.data.ProjectYakuzaStyle='dragon_of_dojima'
 return 'PASS '..count..' MP authority, duplicate, range, lease, cooldown, observer and throttle checks'

@@ -55,7 +55,7 @@ end
 
 local ProjectYakuza = ProjectYakuza
 ProjectYakuza.FEATURES={grab=false}
-ProjectYakuza.VERSION = "0.40.0"
+ProjectYakuza.VERSION = "0.41.0"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -107,10 +107,32 @@ function ProjectYakuza.validateStyle(style)
             end
         end end
     end
+    if type(style)=="table" and style.juggling~=nil and style.juggling~=false then
+        local c=style.juggling
+        if type(c)~="table" then problem("juggling must be false or a configuration table")
+        else
+            if c.enabled~=nil and type(c.enabled)~="boolean" then problem("juggling.enabled must be boolean") end
+            local limits={maxHits={1,12,true},maxRelaunches={0,3,true},windowMs={50,2000},maxDurationMs={50,6000},landingCooldownMs={0,5000}}
+            for k,b in pairs(limits) do local v=c[k]
+                if v~=nil and (not number(v) or v<b[1] or v>b[2] or (b[3] and v~=math.floor(v))) then problem("invalid juggling."..k) end
+            end
+            if number(c.windowMs or 650) and number(c.maxDurationMs or 1800) and (c.windowMs or 650)>(c.maxDurationMs or 1800) then problem("juggling window exceeds hard duration") end
+            if c.presentation~=nil and (not text(c.presentation) or #c.presentation>100) then problem("juggling.presentation must name an addon presentation") end
+        end
+    end
     local function move(value,path,light)
         if type(value)~="table" then problem(path.." must be a table");return end
         if value.hitResponse~=nil and value.hitResponse~=false
             and (not text(value.hitResponse) or type(style.hitResponses)~="table" or not style.hitResponses[value.hitResponse]) then problem(path..".hitResponse must name a hitResponses profile or be false") end
+        if value.juggle~=nil and value.juggle~=false then
+            local j=value.juggle;local c=style.juggling
+            if type(c)~="table" or type(j)~="table" then problem(path..".juggle requires enabled style.juggling")
+            else
+                if j.kind~="launch" and j.kind~="followup" and j.kind~="ender" then problem(path..".juggle.kind must be launch/followup/ender") end
+                if value.groundAttack then problem(path..".juggle is not allowed for ground attacks") end
+                if j.windowMs~=nil and (not number(j.windowMs) or j.windowMs<50 or j.windowMs>2000 or j.windowMs>(number(c.maxDurationMs) and c.maxDurationMs or 1800)) then problem(path..".juggle.windowMs is outside allowed duration") end
+            end
+        end
         if not text(value.animation) then problem(path..".animation is required") end
         if value.holdAnimation~=nil and not text(value.holdAnimation) then problem(path..".holdAnimation must name a native clip") end
         if light and not text(value.nodeValue) then problem(path..".nodeValue is required") end

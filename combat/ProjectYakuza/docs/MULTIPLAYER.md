@@ -56,3 +56,7 @@ Test late joins, delayed inventory/acks, repeated clips, walls/stairs, moving/st
 ## Move-specific responses (0.40.0)
 
 Existing impact/damage packets now optionally carry server-resolved responseKind/responseForce. The move and release power are locked per swing; extra victims use the same captured values. Primary response flags are deferred until the next server tick and mirrored to the attacker and observers. No primary Hit/damage is replayed. Supplemental knockdowns use these fields, not the legacy throw knock flag, so regular combat feedback and heat are preserved. See [Hit responses](HIT_RESPONSES.md). MP protocol remains 2 with additive optional result fields; use matching mod versions on all peers.
+
+## Future-style juggling (0.41.0)
+
+Optional style.juggling and move.juggle={kind="launch"/"followup"/"ender"} enable bounded launcher/followup windows, hit/relaunch caps, landing cooldown, victim animation variables and start/hit/end events. No airborne assets or physical lift are supplied by the core. SP/server confirmed hits drive the state; optional result metadata and ordered end packets mirror it in MP. DoD remains unconfigured. See [Juggling](JUGGLING.md) for limits, presentation ownership, cancellation and examples.

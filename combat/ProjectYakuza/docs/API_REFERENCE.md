@@ -136,3 +136,9 @@ The TauntAura_a/b/c sequences are colour-only copies of the existing HeatWisp se
 ## Move-specific hit responses (0.40.0)
 
 Optional style.hitResponses defines named flinch/stagger/knockdown profiles with finite force 0..1.5 and optional full-charge threshold/response. Moves may select a profile with hitResponse="name" or opt out with false. Defaults distinguish lights, first/double finishers and charged heavies. Ground attacks are excluded. Styles without profiles keep their existing behavior. See [Hit responses](HIT_RESPONSES.md) for fields, native timing, MP ownership and limits.
+
+## Future-style juggling (0.41.0)
+
+Optional style.juggling and move.juggle={kind="launch"/"followup"/"ender"} enable bounded launcher/followup windows, hit/relaunch caps, landing cooldown, victim animation variables and start/hit/end events. No airborne assets or physical lift are supplied by the core. SP/server confirmed hits drive the state; optional result metadata and ordered end packets mirror it in MP. DoD remains unconfigured. See [Juggling](JUGGLING.md) for limits, presentation ownership, cancellation and examples.
+
+AttackEffects.registerLimbProvider(id,fn) optionally consumes final forearm/hand world positions from a compatible external adapter; removeLimbProvider(id,fn) unregisters it. No adapter is bundled. See [punch effects](ATTACK_EFFECTS.md). HeatAura now uses the native ColorInfo:set method rather than Lua field writes.

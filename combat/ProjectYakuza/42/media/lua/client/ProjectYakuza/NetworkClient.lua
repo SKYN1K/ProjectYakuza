@@ -1,3 +1,4 @@
+require "ProjectYakuza/Juggling"
 require "ProjectYakuza/Runtime"
 require "ProjectYakuza/NetworkProtocol"
 local ProjectYakuza=ProjectYakuza;local P=ProjectYakuza.NetworkProtocol
@@ -217,7 +218,7 @@ function N.applyState(p,packet,s)
     s.applied=packet.seq;s.actor=p
 end
 function N.defer(command,a)
-    if command~="impact" and command~="damage" then return end
+    if command~="impact" and command~="damage" and command~="juggle" then return end
     if not P.integer(a.event,0,1000000000) or not P.integer(a.zombie,-32768,32767) then return end
     local key=command..":"..a.player..":"..a.event
     if N.seen[key] or N.deferred[key] then return end
@@ -272,7 +273,7 @@ function N.command(module,command,a)
     local recent=N.victims[a.zombie]
     if not z and recent and now()-recent.time<1500 and P.near(p,recent.z,3) then z=recent.z end
     if not z then N.defer(command,a);return end
-    if command=="impact" or command=="damage" then N.deferred[command..":"..a.player..":"..tostring(a.event)]=nil end
+    if command=="impact" or command=="damage" or command=="juggle" then N.deferred[command..":"..a.player..":"..tostring(a.event)]=nil end
     if command=="grabStart" then
         if p:isLocalPlayer() then
             N.leases[p]=a.zombie;N.pending[p]=nil
@@ -302,9 +303,14 @@ function N.command(module,command,a)
             z:setVariable("ProjectYakuzaGrabMoving",a.moving==true);z:setVariable("ProjectYakuzaGrabWalkDirection",a.direction or "forward")
         end
     elseif command=="guard" then z:setAttackOutcome("fail");z:setTarget(nil)
+    elseif command=="juggle" then
+        local key="juggle:"..a.player..":"..tostring(a.event)
+        if N.seen[key] then return end;N.seen[key]=now()
+        ProjectYakuza.Juggling.receive(p,z,a.juggle)
     elseif command=="impact" then
         local key="impact:"..a.player..":"..tostring(a.event)
         if N.seen[key] then return end;N.seen[key]=now()
+        ProjectYakuza.Juggling.receive(p,z,a.juggle)
         local clip=P.reaction(a.style,a.reaction) and a.reaction or nil
         local response=ProjectYakuza.Reactions and ProjectYakuza.Reactions.confirmed(p,z,a.responseKind,a.responseForce,clip)
         if p:isLocalPlayer() then return end
@@ -321,6 +327,7 @@ function N.command(module,command,a)
         if type(a.hitReaction)=="string" and #a.hitReaction<80 then z:setHitReaction(a.hitReaction);z:reportEvent("wasHit") end
         if a.kill then z:getHitDir():set(a.dx,a.dy);z:setHitForce(12);z:setUsePhysicHitReaction(true);z:setHitReaction("ShotBelly") end
         if a.knock then z:setKnockedDown(true);z:setFallOnFront(false) end
+        ProjectYakuza.Juggling.receive(p,z,a.juggle)
         if not a.kill and not a.knock and ProjectYakuza.Reactions then
             local clip=P.reaction(a.style,a.reaction) and a.reaction or nil
             if not ProjectYakuza.Reactions.confirmed(p,z,a.responseKind,a.responseForce,clip) and clip then ProjectYakuza.Reactions.remote(z,clip) end

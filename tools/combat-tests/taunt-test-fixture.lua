@@ -118,7 +118,11 @@ local loads,draws,pooled,attached=0,0,0,0
 local drawLog={}
 local additive=false
 SpriteRenderer={instance={getDoAdditive=function()return additive end,setDoAdditive=function(self,v)additive=v end}}
-Core={getTileScale=function()return 2 end};IsoDirections={N='N'};ColorInfo={new=function(r,g,b,a)return {r=r,g=g,b=b,a=a}end}
+Core={getTileScale=function()return 2 end};IsoDirections={N='N'};ColorInfo={new=function(r,g,b,a)
+ local data={r=r,g=g,b=b,a=a}
+ data.set=function(self,rr,gg,bb,aa)data.r=rr;data.g=gg;data.b=bb;data.a=aa;return self end
+ return setmetatable({}, {__index=data,__newindex=function()error('native colour fields are not Lua-writable; use set()')end})
+end}
 instanceof=function()return true end
 IsoSprite={CreateSprite=function()
  local s={};function s:LoadFramesNoDirPageDirect(path,kind,count)self.kind=kind;self.path=path;self.frameCount=count;check(((path=='media/textures/ProjectYakuza/HeatWisp' or path=='media/textures/ProjectYakuza/TauntAura') and count==32) or (path=='media/textures/ProjectYakuza/TauntBurst' and count==1) or (path=='media/textures/ProjectYakuza/ExtremeHeat' and (((kind=='flame' or kind=='smoke') and count==64) or ((kind=='wispL' or kind=='wispR') and count==1))),'only supplied normal, taunt or original Lost Judgment texture frames');loads=loads+1 end

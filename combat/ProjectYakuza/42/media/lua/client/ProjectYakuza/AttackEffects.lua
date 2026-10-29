@@ -47,10 +47,43 @@ function F.project(x,y,z,angle,tile)
     local wz=y*.61237234
     return (wx-wy)*32*tile,(wx+wy)*16*tile-wz*96*tile,wx,wy,wz
 end
--- The skeleton can keep turning its shoulders while the body angle lags behind.
--- getShoulderTwist is an exposed degree-valued scalar, unlike live bone matrices.
+-- Optional live-bone adapters return six absolute world coordinates:
+-- forearm XYZ then hand XYZ, sampled from the FINAL blended native pose.
+F.limbProviders={}
+function F.registerLimbProvider(id,fn)
+    assert(type(id)=="string" and id~="" and type(fn)=="function","limb provider requires ID and function")
+    assert(not F.limbProviders[id] or F.limbProviders[id]==fn,"limb provider already registered")
+    F.limbProviders[id]=fn
+end
+function F.removeLimbProvider(id,fn)
+    if F.limbProviders[id] and (not fn or F.limbProviders[id]==fn) then F.limbProviders[id]=nil;return true end
+    return false
+end
+function F.pose(p,s,time)
+    local provider=F.limbProviders[s.config.limbProvider or "live"]
+    if not provider or s.providerRetry and getTimestampMs()<s.providerRetry then return nil end
+    local ok,x,y,z,hx,hy,hz=pcall(provider,p,s.track.animation,time)
+    local values={x,y,z,hx,hy,hz}
+    for i=1,6 do local v=values[i]
+        if not ok or type(v)~="number" or v~=v or math.abs(v)>10000000 then s.providerRetry=getTimestampMs()+1000;return nil end
+    end
+    return values
+end
+function F.sampleLimb(track,time,bone,pose)
+    if pose then local i=(bone-1)*3;return pose[i+1],pose[i+2],pose[i+3] end
+    return F.sample(track,time,bone)
+end
+function F.projectLimb(p,x,y,z,angle,tile,pose)
+    if pose then
+        local dx,dy,dz=x-p:getX(),y-p:getY(),z-p:getZ()
+        return (dx-dy)*32*tile,(dx+dy)*16*tile-dz*96*tile,dx,dy,dz
+    end
+    return F.project(x,y,z,angle,tile)
+end
 function F.facing(p)
-    return p:getAnimAngleRadians()+math.rad(p:getShoulderTwist())
+    -- Shoulder twist is not a uniform yaw of the entire sampled arm. Adding it
+    -- around the actor origin shifts the hand sideways as the player turns.
+    return p:getAnimAngleRadians()
 end
 function F.clear(p)
     local s=F.states[p];if not s then return end
@@ -120,12 +153,13 @@ end
 local function drawPoint(p,point,x,y,alpha,color,glow,wx,wy,wz)
     SpriteRenderer.instance:setDoAdditive(false)
     point.instance:SetAlpha(alpha);point.instance:SetTargetAlpha(alpha)
-    PY.WorldEffects.renderCentered(p,point.instance,point.height,point.scale,x,y+point.verticalOffset*Core.getTileScale(),color,
+    PY.WorldEffects.renderCentered(p,point.instance,point.height,point.scale,x,y+(point.live and 0 or point.verticalOffset*Core.getTileScale()),color,
         wx and wx+.06,wy and wy+.06,wz)
 end
-local function hand(track,time)
-    local wx,wy,wz=F.sample(track,time,2);local ax,ay,az=F.sample(track,time,1)
-    return ax+(wx-ax)*.78,ay+(wy-ay)*.78,az+(wz-az)*.78
+local function hand(track,time,pose)
+    local wx,wy,wz=F.sampleLimb(track,time,2,pose);local ax,ay,az=F.sampleLimb(track,time,1,pose)
+    local t=pose and 1 or .78
+    return ax+(wx-ax)*t,ay+(wy-ay)*t,az+(wz-az)*t
 end
 
 function F.draw()
@@ -135,29 +169,30 @@ function F.draw()
         local time=s.time
         if time and time>=s.config.from and time<=s.config.to+.12 then
             if not s.points then allocate(p,s) end
-            local angle=F.facing(p)
+            local angle=F.facing(p);local pose=F.pose(p,s,time)
+            for _,point in ipairs(s.points) do point.live=pose~=nil end
             local extreme=PY.Heat.isExtreme(p);local color=extreme and F.extreme or F.normal
             local fade=math.min(1,(time-s.config.from)/.035,math.max(0,(s.config.to+.06-time)/.06))*math.min(1,s.weight)
             local strength=extreme and .90 or .82
-            local wx,wy,wz=F.sample(s.track,time,2);local ax,ay,az=F.sample(s.track,time,1)
-            local fx,fy,fz=hand(s.track,time)
-            local hx,hy,hwx,hwy,hwz=F.project(fx,fy,fz,angle,tile)
+            local wx,wy,wz=F.sampleLimb(s.track,time,2,pose);local ax,ay,az=F.sampleLimb(s.track,time,1,pose)
+            local fx,fy,fz=hand(s.track,time,pose)
+            local hx,hy,hwx,hwy,hwz=F.projectLimb(p,fx,fy,fz,angle,tile,pose)
             -- Six overlapping centres lie within the elbow-to-fist path.
             for i=1,6 do
                 local x,y,dx,dy,dz
                 if i==6 then x,y,dx,dy,dz=hx,hy,hwx,hwy,hwz
-                else local t=.08+i*.12;x,y,dx,dy,dz=F.project(ax+(wx-ax)*t,ay+(wy-ay)*t,az+(wz-az)*t,angle,tile) end
+                else local t=.08+i*.12;x,y,dx,dy,dz=F.projectLimb(p,ax+(wx-ax)*t,ay+(wy-ay)*t,az+(wz-az)*t,angle,tile,pose) end
                 drawPoint(p,s.points[i],x,y,fade*strength*(i==6 and 1 or .70),color,false,dx,dy,dz)
             end
             for i=7,8 do
                 if not isGamePaused() then F.flame:update(s.points[i].instance) end
                 local x,y,dx,dy,dz=hx,hy,hwx,hwy,hwz
-                if i==7 then x,y,dx,dy,dz=F.project(ax+(wx-ax)*.65,ay+(wy-ay)*.65,az+(wz-az)*.65,angle,tile) end
+                if i==7 then x,y,dx,dy,dz=F.projectLimb(p,ax+(wx-ax)*.65,ay+(wy-ay)*.65,az+(wz-az)*.65,angle,tile,pose) end
                 drawPoint(p,s.points[i],x,y,fade*strength*.8,color,false,dx,dy,dz)
             end
             for i=9,12 do
-                local lag=(i-8)*.006;local x,y,z=hand(s.track,math.max(s.config.from,time-lag))
-                local dx,dy,dwx,dwy,dwz=F.project(x,y,z,angle,tile)
+                local lag=(i-8)*.006;local x,y,z=hand(s.track,math.max(s.config.from,time-lag),pose)
+                local dx,dy,dwx,dwy,dwz=F.projectLimb(p,x,y,z,angle,tile,pose)
                 drawPoint(p,s.points[i],dx,dy,fade*strength*(13-i)*.10,color,false,dwx,dwy,dwz)
             end
             for i=13,18 do
