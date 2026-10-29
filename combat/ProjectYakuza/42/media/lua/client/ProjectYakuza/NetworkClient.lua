@@ -303,11 +303,13 @@ function N.command(module,command,a)
         end
     elseif command=="guard" then z:setAttackOutcome("fail");z:setTarget(nil)
     elseif command=="impact" then
-        if p:isLocalPlayer() then return end
         local key="impact:"..a.player..":"..tostring(a.event)
         if N.seen[key] then return end;N.seen[key]=now()
+        local clip=P.reaction(a.style,a.reaction) and a.reaction or nil
+        local response=ProjectYakuza.Reactions and ProjectYakuza.Reactions.confirmed(p,z,a.responseKind,a.responseForce,clip)
+        if p:isLocalPlayer() then return end
         if ProjectYakuza.HitEffects then ProjectYakuza.HitEffects.spawn(p,z,a.strong,a.charged) end
-        if ProjectYakuza.Reactions and P.reaction(a.style,a.reaction) then ProjectYakuza.Reactions.remote(z,a.reaction) end
+        if not response and ProjectYakuza.Reactions and clip then ProjectYakuza.Reactions.remote(z,clip) end
     elseif command=="damage" then
         local key="damage:"..a.player..":"..tostring(a.event)
         if N.seen[key] then return end;N.seen[key]=now()
@@ -319,7 +321,10 @@ function N.command(module,command,a)
         if type(a.hitReaction)=="string" and #a.hitReaction<80 then z:setHitReaction(a.hitReaction);z:reportEvent("wasHit") end
         if a.kill then z:getHitDir():set(a.dx,a.dy);z:setHitForce(12);z:setUsePhysicHitReaction(true);z:setHitReaction("ShotBelly") end
         if a.knock then z:setKnockedDown(true);z:setFallOnFront(false) end
-        if not a.kill and not a.knock and ProjectYakuza.Reactions and P.reaction(a.style,a.reaction) then ProjectYakuza.Reactions.remote(z,a.reaction) end
+        if not a.kill and not a.knock and ProjectYakuza.Reactions then
+            local clip=P.reaction(a.style,a.reaction) and a.reaction or nil
+            if not ProjectYakuza.Reactions.confirmed(p,z,a.responseKind,a.responseForce,clip) and clip then ProjectYakuza.Reactions.remote(z,clip) end
+        end
         if p:isLocalPlayer() then
             N.replaying=true
             if a.kill then ProjectYakuza.emit("tigerDrop",p,z)

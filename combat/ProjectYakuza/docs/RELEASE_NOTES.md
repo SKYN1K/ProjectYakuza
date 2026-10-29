@@ -1,11 +1,13 @@
-# Project Yakuza 0.39.0
+# Project Yakuza 0.40.0
 
-- Completed the approved taunt-aura colour change: RGB moves 25% toward white using non-AI colour-only copies of the existing 96 standard aura frames. Alpha, shapes, original dimensions and frame order are identical; no resizing or new particle shapes.
-- Colour blends smoothly to/from the original blue during the existing fades. The taunt echo still grows by 20%, lasts 0.75 seconds, and uses the standard aura animation without stacking a brightness pulse.
-- Punch effects, all combat behavior, normal/Extreme Heat effects, sound and controls are unchanged from v0.38.0. Grabs remain disabled.
+- Added move-specific standing-zombie responses for Dragon of Dojima: lights keep the four supplied Y6 flinches; first finishers and partial charges use native backward stagger; double finishers and fully charged strikes use native knockdown.
+- Applies SP response flags after native damage/force calculation. Skips native deaths, floor/downed targets and hits without health loss; suppresses duplicate same-swing responses. Native movement/collisions handle knockback; no XY teleport or additional damage.
+- MP resolves responses using the validated move and charge power locked per swing. Primary hits are never re-damaged. Existing impact/damage packets carry the result to the attacker and observers; extra victims use the same policy. Reaction work is bounded, and the local tick hook is removed when idle.
+- Added optional, validated hitResponses profiles and per-move hitResponse selection/opt-out for style authors. Unconfigured addon styles keep their existing behavior. See [Hit responses](HIT_RESPONSES.md).
+- No visual/audio/animation assets were created or changed. Combat damage, controls, charge timing, effects and voices are unchanged. Grabs remain disabled.
 
 ## Validation
 
-3,969 offline Kahlua assertions pass; all 40 production Lua files compile. Pixel checks compare every copied RGBA pixel with its source and prove exact colour mapping and identical alpha/dimensions. Native B42 ImageData decodes all 226 aura/copy PNGs and all 325 effect-loader paths resolve. Original media are byte-identical to v0.38.0. See [validation](VALIDATION_0.39.0.md) and [provenance](taunt-aura-assets.json).
+4,014 offline Kahlua assertions pass; all 40 production Lua files compile. New tests exercise policy selection, partial/full power, native post-hit timing, zero-damage/dead/floor exclusions, duplicate suppression, pause/cleanup, owner/observer result handling, server locking and multihit without duplicate damage. Native reflection confirms the B42 setters used. All 551 motion/image/audio files are byte-identical to v0.39.0. See [validation](VALIDATION_0.40.0.md).
 
-Installed locally and published with a versioned install ZIP. PZ was not launched; live appearance remains unverified. Fully restart the game; server and clients need the same version.
+Installed locally and published with a versioned install ZIP. PZ was not launched; live response timing, knockback distance and multiplayer appearance remain unverified. Fully restart; server and clients need the same release.

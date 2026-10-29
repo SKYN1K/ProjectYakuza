@@ -2,7 +2,7 @@ if not isServer() then return end
 require "ProjectYakuza/Styles/DragonOfDojima"
 require "ProjectYakuza/NetworkProtocol"
 local ProjectYakuza=ProjectYakuza;local P=ProjectYakuza.NetworkProtocol
-local S={players={},grabs={},nextTick=0}
+local S={players={},grabs={},nextTick=0,reactions={}}
 ProjectYakuza.NetworkServer=S
 local function now()return getTimestampMs()end
 local function alive(p)return p and not p:isDead() and not p:getVehicle() end
@@ -133,7 +133,7 @@ function S.validVictim(p,id,range,cone)
     if distance<.001 or length<.001 or (dx*f:getX()+dy*f:getY())/(distance*length)<(cone or .5) then return nil end
     return z
 end
-function S.damage(p,z,amount,knock,kill,s)
+function S.damage(p,z,amount,knock,kill,s,hitMove,hitStyle)
     local item=token(p);if not item then return end
     local dx,dy=z:getX()-p:getX(),z:getY()-p:getY();local n=math.sqrt(dx*dx+dy*dy)
     if n<.001 then return end
@@ -143,9 +143,12 @@ function S.damage(p,z,amount,knock,kill,s)
         if not ok then print("[ProjectYakuza] server hit failed: "..tostring(err));return end end
     if knock then z:setKnockedDown(true);z:setFallOnFront(false) end
     s.result=(s.result or 0)+1
-    local move=P.move(s.packet.style,s.packet.move)
+    local styleId=hitStyle or s.packet.style
+    local move=hitMove or P.move(styleId,s.packet.move)
+    local response=not kill and not knock and ProjectYakuza.HitResponses.resolve(ProjectYakuza.getStyle(styleId),move)
+    if response then ProjectYakuza.HitResponses.apply(p,z,response) end
     S.fanout(p,"damage",{player=p:getOnlineID(),event=s.result,zombie=z:getOnlineID(),health=math.max(0,z:getHealth()),amount=amount,knock=knock==true,kill=kill==true,
-        dx=dx/n,dy=dy/n,force=z:getHitForce(),hitReaction=z:getHitReaction() or "ShotBelly",reaction=move and move.reaction or "",style=s.packet.style})
+        dx=dx/n,dy=dy/n,force=z:getHitForce(),hitReaction=z:getHitReaction() or "ShotBelly",reaction=move and move.reaction or "",style=styleId,responseKind=response and response.kind,responseForce=response and response.force})
 end
 function S.command(module,command,p,a)
     if module~=P.module or type(a)~="table" or not p then return end
@@ -205,6 +208,7 @@ function S.command(module,command,p,a)
             if move.chargedHeavy then
                 local scaled={};for key,value in pairs(move) do scaled[key]=value end
                 scaled.damageMultiplier=ProjectYakuza.ChargeRules.damage(move,s.packet.chargePower)
+                scaled.chargePower=s.packet.chargePower
                 move=scaled
             end
             s.lastSwing=a.swing;job={seen={},count=0,expires=t+2500,move=move,style=s.packet.style};s.swings[a.swing]=job
@@ -219,19 +223,35 @@ function S.command(module,command,p,a)
         if command=="extra" and ((z:isOnFloor() or z:isKnockedDown())~=(job.move.groundAttack==true)) then return end
         job.seen[a.zombie]=true;job.count=job.count+1
         if command=="impact" then
-            S.fanout(p,"impact",{player=p:getOnlineID(),event=a.event,zombie=a.zombie,style=job.style,reaction=job.move.reaction or "",strong=job.move.afterLight~=nil or job.move.chargedHeavy==true,charged=job.move.chargedHeavy==true})
+            local response=ProjectYakuza.HitResponses.resolve(ProjectYakuza.getStyle(job.style),job.move)
+            local packet={player=p:getOnlineID(),event=a.event,zombie=a.zombie,style=job.style,reaction=job.move.reaction or "",strong=job.move.afterLight~=nil or job.move.chargedHeavy==true,charged=job.move.chargedHeavy==true,
+                responseKind=response and response.kind,responseForce=response and response.force}
+            if response then
+                -- Defer until native hit calculation has returned; keep the resolved
+                -- move/power rather than re-reading a later stance/combo snapshot.
+                if #S.reactions<128 then S.reactions[#S.reactions+1]={player=p,zombie=z,response=response,packet=packet,at=t}
+                else packet.responseKind=nil;packet.responseForce=nil;S.fanout(p,"impact",packet) end
+            else S.fanout(p,"impact",packet) end
         else
             -- Extra victims use server weapon data; primary native hits are never re-applied.
             if not S.baseWeapon then S.baseWeapon=InventoryItemFactory.CreateItem(ProjectYakuza.TOKEN) end
             local item=S.baseWeapon;local factor=job.move.damageMultiplier or 1
             if not item then return end
             local base=math.max(0,math.min(2,(item:getMinDamage()+item:getMaxDamage())*.5))
-            S.damage(p,z,base*factor*(s.packet.extreme and 1.5 or 1),false,false,s)
+            S.damage(p,z,base*factor*(s.packet.extreme and 1.5 or 1),false,false,s,job.move,job.style)
         end
     end
 end
 function S.tick()
     local t=now();if t<S.nextTick then return end;S.nextTick=t+100
+    local reactions=S.reactions;S.reactions={}
+    for _,job in ipairs(reactions) do
+        local z=job.zombie
+        if t-job.at<=1000 and alive(job.player) and P.near(job.player,z,2.5) then
+            ProjectYakuza.HitResponses.apply(job.player,z,job.response)
+            S.fanout(job.player,"impact",job.packet)
+        end
+    end
     local online={};local players=getOnlinePlayers();for i=0,players:size()-1 do online[players:get(i)]=true end
     for id,s in pairs(S.players) do
         local p=s.player

@@ -70,3 +70,7 @@ The prefix must match owner XML names and the shared `MyStyle_Style.lua` module.
 Declare `ui={heat="my_mod.heat",selectorSlot="my_mod.slot"}` in the shared definition and register the renderers from client code. Omit any channel to keep its default. See the full [UI contract and example](STYLE_UI.md). UI cannot award heat or cause attack collisions.
 
 For a native charged heavy, opt into both `actions.heavyCharge` and `actions.chargedHeavy`, supply native action/melee nodes and register observer entries. See [charged heavy contracts](CHARGED_HEAVY.md). These are built-in action kinds with dedicated controllers; custom move types still use the normal action-kind extension API.
+
+## Move-specific hit responses (0.40.0)
+
+Optional style.hitResponses defines named flinch/stagger/knockdown profiles with finite force 0..1.5 and optional full-charge threshold/response. Moves may select a profile with hitResponse="name" or opt out with false. Defaults distinguish lights, first/double finishers and charged heavies. Ground attacks are excluded. Styles without profiles keep their existing behavior. See [Hit responses](HIT_RESPONSES.md) for fields, native timing, MP ownership and limits.

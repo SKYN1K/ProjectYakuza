@@ -132,3 +132,7 @@ AttackEffects.facing(player) combines getAnimAngleRadians with math.rad(getShoul
 ### 0.39.0 approved taunt colour copies
 
 The TauntAura_a/b/c sequences are colour-only copies of the existing HeatWisp sequences. RGB is rounded 75% source plus 25% white; alpha, dimensions and frame order are identical. drawTaunt fades the colour toward the original blue at either end using a multiplicative tint, independently of the existing size/opacity envelope. Normal and Extreme Heat source assets are unchanged. See taunt-aura-assets.json for hashes and the explicit authorization.
+
+## Move-specific hit responses (0.40.0)
+
+Optional style.hitResponses defines named flinch/stagger/knockdown profiles with finite force 0..1.5 and optional full-charge threshold/response. Moves may select a profile with hitResponse="name" or opt out with false. Defaults distinguish lights, first/double finishers and charged heavies. Ground attacks are excluded. Styles without profiles keep their existing behavior. See [Hit responses](HIT_RESPONSES.md) for fields, native timing, MP ownership and limits.

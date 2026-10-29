@@ -41,3 +41,7 @@ During Extreme Heat, the original dark/blue dragon body/head, six dark orb rings
 Animated pages follow native `LoadFramesNoDirPageDirect(prefix,kind,count)` naming: `prefix_kind_0.png` through `prefix_kind_<count-1>.png`. This applies to normal aura, Extreme Heat flame/smoke and taunt bursts. Export/decode checks alone do not verify native path resolution; run validate_effect_loader_paths.py too. Extreme Heat fire/smoke now begin during the actual started activation action, continue into fuel mode, and restore/clear on interruption or observer clip exit. The HUD uses a protected normal-alpha pass with purple glow behind the solid orb artwork.
 
 0.33.0 uses original alpha-bearing flame crops with normal blending to avoid black rectangles; only Extreme Heat flame frame speeds are multiplied by .55. Charging effects reuse those transparent cells, original ChargeSpark and HitGlint with a ready pulse. No new graphical artwork or audio was generated.
+
+## Move-specific hit responses (0.40.0)
+
+Optional style.hitResponses defines named flinch/stagger/knockdown profiles with finite force 0..1.5 and optional full-charge threshold/response. Moves may select a profile with hitResponse="name" or opt out with false. Defaults distinguish lights, first/double finishers and charged heavies. Ground attacks are excluded. Styles without profiles keep their existing behavior. See [Hit responses](HIT_RESPONSES.md) for fields, native timing, MP ownership and limits.

@@ -11,9 +11,51 @@ function R.damage(move,power)
     return minimum+(maximum-minimum)*power
 end
 
+
+-- Shared data-only policy and native reaction flags. Never calls Hit/Kill or moves XY.
+local H={kinds={flinch=true,stagger=true,knockdown=true}}
+ProjectYakuza.HitResponses=H
+function H.valid(kind,force)
+    return H.kinds[kind]==true and type(force)=="number" and force==force and force>=0 and force<=1.5
+end
+function H.resolve(style,move)
+    if not style or not move or move.groundAttack or move.hitResponse==false then return nil end
+    local profiles=style.hitResponses;if not profiles then return nil end
+    local key=move.hitResponse
+    if not key then
+        if move.chargedHeavy then key="chargedHeavy"
+        elseif move.double then key="doubleFinisher"
+        elseif move.afterLight then key="finisher"
+        else for _,light in ipairs(style.lightAttacks or {}) do
+            if light==move or (move.nodeValue and light.nodeValue==move.nodeValue) then key="light";break end
+        end end
+    end
+    local profile=key and profiles[key];if not profile then return nil end
+    local kind,force=profile.kind,profile.force
+    local power=move.chargePower
+    if move.chargedHeavy and type(power)=="number" and power==power and profile.fullChargeAt
+        and power>=profile.fullChargeAt and power<=1 then kind=profile.fullChargeKind;force=profile.fullChargeForce end
+    if H.valid(kind,force) then return {kind=kind,force=force} end
+end
+function H.apply(attacker,victim,response)
+    if not response or not H.valid(response.kind,response.force) or not attacker or not victim
+        or victim:isDead() or victim:isOnFloor() or victim:isKnockedDown() then return false end
+    local dx,dy=victim:getX()-attacker:getX(),victim:getY()-attacker:getY()
+    local length=math.sqrt(dx*dx+dy*dy);if length<.001 then return false end
+    victim:getHitDir():set(dx/length,dy/length)
+    victim:setHitForce(response.force)
+    if response.kind~="flinch" then
+        victim:setVariable("ProjectYakuzaEnemyReaction",false);victim:setVariable("ProjectYakuzaEnemyHitClip","")
+        victim:setHitReaction("")
+        victim:setStaggerBack(true)
+        if response.kind=="knockdown" then victim:setFallOnFront(false);victim:setKnockedDown(true) end
+    end
+    return true
+end
+
 local ProjectYakuza = ProjectYakuza
 ProjectYakuza.FEATURES={grab=false}
-ProjectYakuza.VERSION = "0.39.0"
+ProjectYakuza.VERSION = "0.40.0"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -53,8 +95,22 @@ function ProjectYakuza.validateStyle(style)
     local function problem(text)errors[#errors+1]=text end
     local function text(value)return type(value)=="string" and value~="" end
     local function number(value)return type(value)=="number" and value==value and value<math.huge and value>-math.huge end
+    if type(style)=="table" and style.hitResponses~=nil then
+        if type(style.hitResponses)~="table" then problem("hitResponses must be a profile table")
+        else for key,profile in pairs(style.hitResponses) do
+            local path="hitResponses."..tostring(key)
+            if not text(key) or type(profile)~="table" or not H.valid(profile.kind,profile.force) then
+                problem(path.." requires kind flinch/stagger/knockdown and force 0..1.5")
+            elseif profile.fullChargeAt~=nil or profile.fullChargeKind~=nil or profile.fullChargeForce~=nil then
+                if not number(profile.fullChargeAt) or profile.fullChargeAt<0 or profile.fullChargeAt>1
+                    or not H.valid(profile.fullChargeKind,profile.fullChargeForce) then problem(path.." requires a fullChargeAt 0..1 and valid full-charge kind/force") end
+            end
+        end end
+    end
     local function move(value,path,light)
         if type(value)~="table" then problem(path.." must be a table");return end
+        if value.hitResponse~=nil and value.hitResponse~=false
+            and (not text(value.hitResponse) or type(style.hitResponses)~="table" or not style.hitResponses[value.hitResponse]) then problem(path..".hitResponse must name a hitResponses profile or be false") end
         if not text(value.animation) then problem(path..".animation is required") end
         if value.holdAnimation~=nil and not text(value.holdAnimation) then problem(path..".holdAnimation must name a native clip") end
         if light and not text(value.nodeValue) then problem(path..".nodeValue is required") end

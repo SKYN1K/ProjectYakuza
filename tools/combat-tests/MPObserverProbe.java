@@ -2,6 +2,10 @@ import java.nio.file.*;import java.util.*;import java.lang.reflect.*;import java
 public class MPObserverProbe {
  public static void main(String[] args)throws Exception {
   Class<?> node=Class.forName("zombie.core.skinnedmodel.advancedanimation.AnimNode"),stateType=Class.forName("zombie.core.skinnedmodel.advancedanimation.AnimState"),variables=Class.forName("zombie.core.skinnedmodel.advancedanimation.AnimationVariableSource"),source=Class.forName("zombie.core.skinnedmodel.advancedanimation.IAnimationVariableSource");
+  Class<?> zombie=Class.forName("zombie.characters.IsoZombie");
+  zombie.getMethod("setStaggerBack",boolean.class);zombie.getMethod("setKnockedDown",boolean.class);
+  zombie.getMethod("setFallOnFront",boolean.class);zombie.getMethod("setHitForce",float.class);
+  zombie.getMethod("getHitDir");zombie.getMethod("setHitReaction",String.class);
   String prefix=args.length>1?args[1]:"ProjectYakuza_MP_";int expected=args.length>2?Integer.parseInt(args[2]):94;
   Method set=variables.getMethod("setVariable",String.class,String.class);int total=0;
   try(var paths=Files.walk(Path.of(args[0]))) {

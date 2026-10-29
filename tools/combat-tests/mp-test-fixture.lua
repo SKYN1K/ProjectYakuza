@@ -3,9 +3,10 @@ local function check(ok,msg)count=count+1;if not ok then error(msg) end end
 require=function()end
 local clock=10000
 getTimestampMs=function()return clock end
+isGamePaused=function()return false end
 isClient=function()return true end;isServer=function()return true end
 local function event()local e={};e.Add=function(fn)e[fn]=true end;e.Remove=function(fn)e[fn]=nil end;return e end
-Events={OnTick=event(),OnClientCommand=event(),OnServerCommand=event(),OnPlayerUpdate=event(),OnZombieUpdate=event(),OnMainMenuEnter=event(),OnWeaponHitCharacter=event()}
+Events={OnSave=event(),OnTick=event(),OnClientCommand=event(),OnServerCommand=event(),OnPlayerUpdate=event(),OnZombieUpdate=event(),OnMainMenuEnter=event(),OnWeaponHitCharacter=event()}
 local actors={}
 local function list(t)return {size=function()return #t end,get=function(_,i)return t[i+1]end}end
 local nextItem=1000
@@ -63,6 +64,7 @@ local function zombie(id,x)
  function z:setAttackOutcome(v)self.outcome=v end
  function z:setAttackedBy(v)self.attacker=v end
  function z:getHitDir()return {set=function(_,x,y)z.dx=x;z.dy=y end}end
+ function z:setStaggerBack(v)self.stagger=v end
  function z:setHitForce(v)self.force=v end;function z:setUsePhysicHitReaction(v)self.physics=v end
  function z:getHitForce()return self.force or 1 end
  function z:setHitReaction(v)self.reaction=v end;function z:getHitReaction()return self.reaction end
@@ -367,4 +369,93 @@ local oldRemote=client.remote[2].packet.seq
 local invalid={player=2,seq=oldRemote+1,style='dragon_of_dojima',equipped=true,heat=0,fuel=0,chargePower=0/0}
 client.command(P.module,'state',invalid)
 check(client.remote[2].packet.seq==oldRemote,'remote state rejects nonfinite charging power')
+
+-- Move-specific responses: real shared rules, deferred client controller and server relay.
+local H=ProjectYakuza.HitResponses;local R=ProjectYakuza.Reactions
+local style=ProjectYakuza.getStyle('dragon_of_dojima')
+local function copy(t)local v={};for k,x in pairs(t)do v[k]=x end;return v end
+for i,move in ipairs(style.lightAttacks)do check(H.resolve(style,move).kind=='flinch','each light retains a short flinch '..i)end
+local first=style.actions.finisher.variants.after_1
+local second=style.actions.finisher.variants.double_after_1
+local charged=copy(style.actions.chargedHeavy.variants.after_1)
+check(H.resolve(style,first).kind=='stagger' and H.resolve(style,first).force==.65,'first finishers select native backward stagger')
+check(H.resolve(style,second).kind=='knockdown','double finishers select knockdown')
+for _,power in ipairs({0,.2,.5,.99})do charged.chargePower=power;check(H.resolve(style,charged).kind=='stagger','partial charges never get full-power knockdown')end
+charged.chargePower=1;check(H.resolve(style,charged).kind=='knockdown' and H.resolve(style,charged).force==1,'full charge selects strongest knockdown')
+charged.chargePower=0/0;check(H.resolve(style,charged).kind=='stagger','nonfinite charge cannot gain full-power response')
+check(not H.resolve(style,style.groundAttacks[1]) and not H.resolve(style,style.actions.runningAttack.variants.knee),'ground/running behavior remains unchanged')
+local custom=copy(first);custom.hitResponse=false;check(not H.resolve(style,custom),'a move can opt out')
+custom.hitResponse='light';check(H.resolve(style,custom).kind=='flinch','a move can select a named custom profile')
+local bad=copy(style);bad.hitResponses={broken={kind='teleport',force=2}}
+check(not ProjectYakuza.validateStyle(bad),'style validation rejects unknown/unsafe response data')
+bad.hitResponses={broken={kind='stagger',force=.5,fullChargeAt=2,fullChargeKind='knockdown',fullChargeForce=1}}
+check(not ProjectYakuza.validateStyle(bad),'style validation rejects invalid full-charge thresholds')
+bad.hitResponses={broken={kind='stagger',force=0/0}};check(not ProjectYakuza.validateStyle(bad),'style validation rejects NaN force')
+local addon={lightAttacks=style.lightAttacks};check(not H.resolve(addon,first),'unconfigured addon styles do not inherit DoD responses')
+R.clearAll();isClient=function()return false end
+local function responseVictim(id)
+ local v=zombie(id,p.x+1)
+ function v:isOnFloor()return self.floor==true end;function v:isKnockedDown()return self.knock==true end
+ return v
+end
+local v=responseVictim(200)
+p.data.ProjectYakuzaStyle='dragon_of_dojima';p.equipped=true;p.hand=p.token
+local combo=ProjectYakuza.stateFor(p);combo.active=true;combo.step=1;combo.finisherMove=first;combo.multiHitToken={}
+local health=v.health;local hitCount=v.hits
+R.onHit(p,v,p.token,.2)
+check(R.pending[v] and not v.stagger,'native pre-damage event only stages the response')
+v.health=v.health-.2;v.force=.1;R.tick()
+check(v.stagger and v.force==.65 and v.reaction=='' and not v.knock,'deferred response survives native force calculation')
+check(v.health==health-.2 and v.hits==hitCount and v.kills==nil and v.x==p.x+1,'response never damages, kills or teleports a zombie')
+R.onHit(p,v,p.token,.2);check(not R.pending[v],'duplicate same-swing event cannot restart stagger')
+combo.multiHitToken={};combo.finisherMove=second;R.onHit(p,v,p.token,.2);v.health=v.health-.2;R.tick()
+check(v.knock and v.front==false and v.force==.85,'second finisher knocks a standing target down through native flags')
+local floor=responseVictim(201);floor.floor=true
+check(not H.apply(p,floor,{kind='knockdown',force=1}) and floor.knock==nil,'floor targets are never lifted or forced into a standing reaction')
+local dead=responseVictim(202);dead.health=0;check(not H.apply(p,dead,{kind='stagger',force=1}),'native deaths take priority')
+local blocked=responseVictim(203);combo.multiHitToken={};R.onHit(p,blocked,p.token,.2);R.tick()
+check(blocked.force==nil and blocked.stagger==nil,'no health loss after a blocked native hit means no forced response')
+combo.multiHitToken={};R.onHit(p,blocked,p.token,0);R.onHit(p,blocked,p.token,0/0)
+check(not R.pending[blocked],'zero/NaN damage cannot schedule a response')
+combo.multiHitToken={};combo.finisherMove=nil;R.onHit(p,blocked,p.token,.2);blocked.health=.8;R.tick()
+check(blocked.vars.ProjectYakuzaEnemyHitClip=='enemy_01' and blocked.force==.25 and not blocked.stagger,'lights preserve supplied Y6 flinches instead of native heavy stagger')
+local frozen=responseVictim(204);combo.multiHitToken={};combo.finisherMove=first;R.onHit(p,frozen,p.token,.2);frozen.health=.8
+isGamePaused=function()return true end;R.tick();check(R.pending[frozen] and not frozen.stagger,'pause does not apply a pending response')
+isGamePaused=function()return false end;R.tick();check(frozen.stagger,'pending response applies after resume')
+R.clearAll();check(not R.hooked,'idle response controller removes its tick hook')
+local expired=responseVictim(205);R.queue(p,expired,{kind='stagger',force=.65});clock=clock+1001;R.tick()
+check(not expired.stagger and not R.hooked,'expired response cannot hit later or leave an idle hook')
+local overlap=responseVictim(206);overlap.x=p.x;check(not H.apply(p,overlap,{kind='stagger',force=.65}),'overlapping origins avoid nonfinite knockback direction')
+isClient=function()return true end
+local authoritative=responseVictim(207);combo.multiHitToken={};combo.finisherMove=first
+R.onHit(p,authoritative,p.token,.2);check(not R.pending[authoritative] and not authoritative.stagger,'MP hit waits for a server-confirmed physics response')
+local beforeEffects=effects
+local responsePacket={player=1,event=9001,zombie=207,style='dragon_of_dojima',reaction='enemy_01',responseKind='stagger',responseForce=.65}
+client.command(P.module,'impact',responsePacket);R.tick()
+check(authoritative.stagger and authoritative.force==.65 and effects==beforeEffects,'owning client accepts server response without duplicating its hit VFX')
+client.command(P.module,'impact',responsePacket);check(not R.pending[authoritative],'duplicate server impact cannot queue another response')
+local invalidTarget=responseVictim(208)
+client.command(P.module,'impact',{player=1,event=9002,zombie=208,responseKind='knockdown',responseForce=12})
+check(not R.pending[invalidTarget] and not invalidTarget.knock,'invalid packet force cannot force knockdown')
+-- Test actual server policy with current movement snapshots changing after a hit.
+clock=clock+2000;server.reactions={};replies={}
+snapshot(p,{move='dd_charged_finisher_01',clip='ProjectYakuza_DD_ChargedFinisher01',chargePower=.5})
+local primary=responseVictim(209);local extra=responseVictim(210)
+command('impact',{swing=1100,zombie=209});check(#server.reactions==1 and not primary.stagger,'server defers primary response until native processing has finished')
+snapshot(p,{move='dd_charged_finisher_01',clip='ProjectYakuza_DD_ChargedFinisher01',chargePower=1})
+command('extra',{swing=1100,zombie=210})
+check(extra.stagger and not extra.knock and extra.force==.75 and extra.hits==1,'supplement uses locked partial power despite later full-charge snapshot')
+clock=clock+101;server.tick()
+check(primary.stagger and not primary.knock and primary.force==.75 and primary.hits==0,'primary uses the same locked partial response without reapplying damage')
+local wire
+for _,message in ipairs(replies)do if message.command=='impact' and message.args.zombie==209 then wire=message.args end end
+check(wire and wire.responseKind=='stagger' and wire.responseForce==.75,'server fans out only its resolved response kind/force')
+clock=clock+1100;snapshot(p,{move='dd_charged_finisher_01',clip='ProjectYakuza_DD_ChargedFinisher01',chargePower=1})
+local full=responseVictim(211);command('impact',{swing=1101,zombie=211});clock=clock+101;server.tick()
+check(full.knock and full.force==1 and full.hits==0,'full-charge primary knocks down without calling Hit')
+local observer=responseVictim(212);observer.x=remote.x+1;local oldHits=observer.hits
+client.command(P.module,'damage',{player=2,event=9003,zombie=212,health=.7,amount=.3,style='dragon_of_dojima',reaction='enemy_02',responseKind='knockdown',responseForce=.85})
+R.tick();check(observer.knock and observer.health==.7 and observer.hits==oldHits,'observer applies native knockdown with absolute health only')
+local lightVictim=responseVictim(213);combo.finisherMove=nil;combo.multiHitToken={}
+R.onHit(p,lightVictim,p.token,.1);R.clearAll();check(lightVictim.vars.ProjectYakuzaEnemyReaction==false and not R.hooked,'world-exit cleanup releases all custom reaction flags and hooks')
 return 'PASS '..count..' MP authority, duplicate, range, lease, cooldown, observer and throttle checks'

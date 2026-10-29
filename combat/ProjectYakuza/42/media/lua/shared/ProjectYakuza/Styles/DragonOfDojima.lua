@@ -44,6 +44,12 @@ ProjectYakuza.registerStyle({
     -- One pending light attack at a time.
     lightBufferLimit = 1,
     enemyReactions = true,
+    hitResponses={
+        light={kind="flinch",force=.25},
+        finisher={kind="stagger",force=.65},
+        doubleFinisher={kind="knockdown",force=.85},
+        chargedHeavy={kind="stagger",force=.75,fullChargeAt=.999,fullChargeKind="knockdown",fullChargeForce=1.0},
+    },
     lightAttacks = {
         { animation="ProjectYakuza_DD_Light01", nodeValue="dd_light_01", damageMultiplier=0.75, duration=1.0/1.6, speed=1.6, impact=0.20, chainAt=0.58, reaction="enemy_01", attackEffects={track="dd_light_01",from=2/30,to=14/30,swingFrame=3,verticalOffset=2.5} },
         { animation="ProjectYakuza_DD_Light02", nodeValue="dd_light_02", damageMultiplier=0.75, duration=(47/30)/1.6, speed=1.6, impact=8/47, chainAt=0.58, reaction="enemy_02" },
