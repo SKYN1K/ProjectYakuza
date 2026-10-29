@@ -2,7 +2,7 @@ require "ProjectYakuza/Registry"
 local ProjectYakuza=ProjectYakuza
 local H={states=setmetatable({}, {__mode="k"})}
 ProjectYakuza.Heat=H
-H.config={maxStocks=6,gainPerDamage=2.5,lossPerDamage=0.5,idleGraceMs=3000,idleLossPerSecond=4,
+H.config={maxStocks=6,gainPerDamage=1.25,lossPerDamage=0.5,idleGraceMs=3000,idleLossPerSecond=4,
     knockdownLoss=8,secondsPerStock=3.75,attackFuelCost=1.5,extremeDamage=1.5,extremeSpeed=1.2}
 local function time()return getTimestampMs()end
 function H.enabled(p)local style=ProjectYakuza.getPlayerStyle(p);return style and style.heat==true or false end
