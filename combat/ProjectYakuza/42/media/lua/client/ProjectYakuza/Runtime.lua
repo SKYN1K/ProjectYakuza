@@ -66,6 +66,7 @@ function ProjectYakuza.resetPlayer(player, reason,keepStance)
     player:setVariable("ProjectYakuzaClipStarted", "")
     player:setVariable("ProjectYakuzaHitMarker", "")
     player:setVariable("ProjectYakuzaChainReady", "")
+    player:setVariable("ProjectYakuzaQuickstepCancelReady", "")
     player:setVariable("ProjectYakuzaDoubleReady", "")
     ProjectYakuza.cancelAction(player, reason or "reset")
     ProjectYakuza.emit("comboCancelled", player, reason)
@@ -95,6 +96,7 @@ end
 -- Poll in both update and OnWeaponSwing: native swing events can precede the Lua update.
 local function pollPress(player, style, s)
     local down = B.down("light")
+    if ProjectYakuza.Quicksteps and ProjectYakuza.Quicksteps.isCancelling and ProjectYakuza.Quicksteps.isCancelling(player) then s.lastDown=down;return end
     if ProjectYakuza.activeActions[player] and ProjectYakuza.activeActions[player].kind=="quickstep" then return end
     if down and not s.lastDown and player:isAiming() and not s.groundMove and not s.finisherMove and not s.pendingFinisher and not s.queuedFinisher and not s.queuedDouble then Combo.press(s, #style.lightAttacks, style.lightBufferLimit) end
     s.lastDown = down
@@ -128,6 +130,7 @@ local function onSwing(player, weapon)
     player:setVariable("ProjectYakuzaClipStarted", "")
     player:setVariable("ProjectYakuzaHitMarker", "")
     player:setVariable("ProjectYakuzaChainReady", "")
+    player:setVariable("ProjectYakuzaQuickstepCancelReady", "")
     player:setVariable("ProjectYakuzaDoubleReady", "")
     setReadyVariables(player, style, s)
     trace(player, "swing style=" .. style.id .. " step=" .. s.step .. " move=" .. move.nodeValue .. " queued=" .. s.queued)
@@ -372,6 +375,7 @@ local function onUpdate(player)
         if ProjectYakuza.RunningAttacks then ProjectYakuza.RunningAttacks.pause(player) end
         s.lastDown=B.down("light");return
     end
+    if ProjectYakuza.Quicksteps and ProjectYakuza.Quicksteps.isCancelling and ProjectYakuza.Quicksteps.isCancelling(player) then s.lastDown=B.down("light");return end
     if ProjectYakuza.RunningAttacks then ProjectYakuza.RunningAttacks.update(player) end
     ProjectYakuza.syncGroundAttack(player,style,s)
     if counterPressed and ProjectYakuza.TigerDrop and ProjectYakuza.TigerDrop.tryCounter(player) then if ProjectYakuza.ChargedHeavy then ProjectYakuza.ChargedHeavy.clearPlayer(player) end;s.lastDown=B.down("light");return end

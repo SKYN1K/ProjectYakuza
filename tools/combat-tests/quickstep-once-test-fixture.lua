@@ -107,4 +107,76 @@ local c={player=p,style=style,action=style.actions.quickstep.variants.forward}
 a=Q.Action:new(c);c.timedAction=a;a.attackHandover=true;a:cleanup(false,'cancelled');a:perform()
 check(not Q.pending[p],'cancelled quickstep cannot dispatch a stale attack from late completion')
 check(Q.limit==3 and Q.windowMs==15000,'existing quickstep quota is unchanged')
+
+-- Real light recovery -> native exit -> timed quickstep handoff.
+local wall,paused,typing=false,false,false
+local keyState={};isKeyDown=function(k)return keyState[k]==true end
+local nativeBindings={FORWARD=17,BACKWARD=31,LEFT=30,RIGHT=32}
+KeybindId={};for id in pairs(nativeBindings)do local name=id;KeybindId[id]={getId=function()return name end}end
+getCore=function()return {isDoingTextEntry=function()return typing end,getKey=function(_,id)return nativeBindings[id]end}end
+isGamePaused=function()return paused end
+function p:getForwardDirection()return {getX=function()return 1 end,getY=function()return 0 end}end
+function p:getX()return 0 end;function p:getY()return 0 end;function p:getZ()return 0 end
+function p:getCurrentStateName()return self.nativeState or (self.attacking and 'SwipeStatePlayer' or 'IdleState')end
+function p:getHitReaction()return self.hit or '' end
+function p:isBlockMovement()return self.blocked==true end
+for _,name in ipairs({'isOnFloor','isKnockedDown','isClimbing','isDraggingCorpse','isAsleep','hasTimedActions'})do p[name]=function()return false end end
+function p:getVehicle()return nil end
+function p:setPerformingAttackAnimation(v)self.performingOverride=v end
+function p:isPerformingAttackAnimation()if self.performingOverride~=nil then return self.performingOverride end;return self.attacking end
+function p:reportEvent(name)check(name=='ActiveAnimFinishing','cancel uses native recovery completion event');self.exitReports=(self.exitReports or 0)+1 end
+getCell=function()return {getGridSquare=function()return {TreatAsSolidFloor=function()return true end,isSolid=function()return false end,isSolidTrans=function()return false end,testCollideAdjacent=function()return wall end}end}end
+local function light(step)
+ clock=clock+2000;Q.clearLightCancel(p);PY.resetPlayer(p,'test');p.attacking=false;p.performingOverride=nil;p.nativeState=nil;p.hit='';p.blocked=false
+ p.data.ProjectYakuzaQuickstepTimes={};Q.nextAllowed[0]=0;Q.shoveDown[p]=nil;Q.shoveAuth[p]=nil;PY.Bindings.restore(p);p.allowed=true
+ local state=PY.stateFor(p);state.active=true;state.step=step or 1;state.multiHitToken={};state.startedAt=clock;state.queued=0
+ p.attacking=true;p.vars.ProjectYakuzaHitMarker='';p.vars.ProjectYakuzaQuickstepCancelReady=''
+ return state,style.lightAttacks[state.step]
+end
+for i=1,4 do
+ local state,move=light(i);state.queued=1;state.queuedFinisher=i
+ p:setVariable('ProjectYakuzaHitMarker',move.nodeValue)
+ p:setVariable('ProjectYakuzaQuickstepCancelReady',move.nodeValue)
+ local before=p.exitReports or 0
+ check(Q.requestLightCancel(p,'backward',{dx=-1,dy=0,shove=true}),'each light accepts a recovery cancel '..i)
+ check(Q.isCancelling(p) and p.exitReports==before+1 and state.recoveryReleased,'one native exit requested '..i)
+ check(state.queued==0 and not state.queuedFinisher and not p.allowed,'handoff clears buffered attacks and gates native submissions '..i)
+ Q.processLightCancel(p);check(not PY.activeActions[p] and Q.isCancelling(p),'dash never starts while native attack still owns hands '..i)
+ p.attacking=false;p.nativeState='IdleState';fire('OnPlayerAttackFinished',p,token)
+ check(Q.processLightCancel(p) and PY.activeActions[p].kind=='quickstep','native exit transfers to real quickstep handler '..i)
+ check(PY.stateFor(p).step==0 and not Q.lightCancels[p] and #p.data.ProjectYakuzaQuickstepTimes==0,'old combo clears and quota waits for actual action start '..i)
+ local ctx=PY.activeActions[p];ctx.timedAction.action={setOverrideHandModelsObject=function()end};ctx.timedAction.setActionAnim=function()end
+ ctx.timedAction:start();check(#p.data.ProjectYakuzaQuickstepTimes==1 and Q.quota(p)==2,'successful native dash start spends exactly one quota unit '..i)
+ PY.cancelAction(p,'test_end')
+end
+local optState=light(1);style.quickstepCancelLights=false
+check(not Q.requestLightCancel(p,'backward',{dx=-1,dy=0,shove=true}),'unconfigured/opted-out styles keep their existing attack behavior');style.quickstepCancelLights=true
+local state,move=light(1);local reports=p.exitReports
+check(Q.requestLightCancel(p,'backward',{dx=-1,dy=0,shove=true}) and not Q.isCancelling(p),'a short pre-window press is buffered without cutting windup')
+p:setVariable('ProjectYakuzaQuickstepCancelReady',move.nodeValue);Q.processLightCancel(p)
+check(p.exitReports==reports,'cancel marker alone cannot skip the collision marker')
+clock=clock+100;p:setVariable('ProjectYakuzaHitMarker',move.nodeValue);Q.processLightCancel(p)
+check(Q.isCancelling(p) and p.exitReports==reports+1,'buffer catches the opening window within 150ms')
+Q.clearLightCancel(p)
+state,move=light(1);Q.requestLightCancel(p,'backward',{dx=-1,dy=0,shove=true});clock=clock+151
+p:setVariable('ProjectYakuzaQuickstepCancelReady',move.nodeValue);p:setVariable('ProjectYakuzaHitMarker',move.nodeValue);reports=p.exitReports
+Q.processLightCancel(p);check(not Q.lightCancels[p] and p.exitReports==reports,'expired early input does not trigger a late dodge')
+state,move=light(1);p.data.ProjectYakuzaQuickstepTimes={clock,clock,clock};reports=p.exitReports
+check(not Q.requestLightCancel(p,'backward',{dx=-1,dy=0,shove=true}) and p.exitReports==reports,'exhausted three-per-15s quota cannot truncate an attack')
+state,move=light(1);Q.nextAllowed[0]=clock+500;check(not Q.requestLightCancel(p,'backward',{dx=-1,dy=0,shove=true}),'cooldown is checked before cancelling')
+state,move=light(1);wall=true;reports=p.exitReports;check(not Q.requestLightCancel(p,'backward',{dx=-1,dy=0,shove=true}) and p.exitReports==reports,'blocked direction cannot cancel into a wall');wall=false
+state,move=light(1);state.finisherMove=style.actions.finisher.variants.after_1;check(not Q.requestLightCancel(p,'backward',{dx=-1,dy=0,shove=true}),'first finishers cannot quickstep cancel')
+state.finisherMove=style.actions.chargedHeavy.variants.after_1;check(not Q.requestLightCancel(p,'backward',{dx=-1,dy=0,shove=true}),'charged attacks cannot quickstep cancel')
+state,move=light(1);Q.requestLightCancel(p,'backward',{dx=-1,dy=0,shove=true});state.multiHitToken={};Q.processLightCancel(p);check(not Q.lightCancels[p],'input cannot transfer to a different light swing')
+state,move=light(1);Q.requestLightCancel(p,'backward',{dx=-1,dy=0,shove=true});p.hit='Bite';Q.processLightCancel(p);check(not Q.lightCancels[p],'being hit cancels the pending request')
+state,move=light(1);Q.requestLightCancel(p,'backward',{dx=-1,dy=0,shove=true});paused=true;Q.processLightCancel(p);paused=false;check(not Q.lightCancels[p],'paused game cannot retain a delayed dodge intent')
+state,move=light(1);p:setVariable('ProjectYakuzaQuickstepCancelReady',move.nodeValue);p:setVariable('ProjectYakuzaHitMarker',move.nodeValue);Q.requestLightCancel(p,'backward',{dx=-1,dy=0,shove=true});clock=clock+401;Q.processLightCancel(p)
+check(not Q.lightCancels[p] and p.allowed,'missing native exit times out and restores the input gate')
+state,move=light(1);Q.requestLightCancel(p,'backward',{dx=-1,dy=0,shove=true});PY.resetPlayer(p,'external_reset');check(not Q.lightCancels[p],'external reset clears cancel ownership')
+state,move=light(1);Q.requestLightCancel(p,'backward',{dx=-1,dy=0,shove=true});Q.restoreAllShoves();check(not Q.lightCancels[p],'save/menu cleanup removes queued cancel input')
+-- The bound quickstep key reaches the same path, and held keys do not repeat.
+state,move=light(1);p:setVariable('ProjectYakuzaQuickstepCancelReady',move.nodeValue);p:setVariable('ProjectYakuzaHitMarker',move.nodeValue)
+keyState[57]=true;check(Q.pollShove(p) and Q.isCancelling(p),'actual quickstep binding triggers the light cancel')
+reports=p.exitReports;Q.pollShove(p);check(p.exitReports==reports,'held quickstep input cannot request another cancel')
+keyState[57]=false;Q.clearLightCancel(p);Q.restoreAllShoves();PY.resetPlayer(p,'test_done')
 return 'PASS '..checks..' one-strike quickstep ownership, native gate, rapid taps, retries and asynchronous handoff checks'

@@ -142,3 +142,7 @@ Optional style.hitResponses defines named flinch/stagger/knockdown profiles with
 Optional style.juggling and move.juggle={kind="launch"/"followup"/"ender"} enable bounded launcher/followup windows, hit/relaunch caps, landing cooldown, victim animation variables and start/hit/end events. No airborne assets or physical lift are supplied by the core. SP/server confirmed hits drive the state; optional result metadata and ordered end packets mirror it in MP. DoD remains unconfigured. See [Juggling](JUGGLING.md) for limits, presentation ownership, cancellation and examples.
 
 AttackEffects.registerLimbProvider(id,fn) optionally consumes final forearm/hand world positions from a compatible external adapter; removeLimbProvider(id,fn) unregisters it. No adapter is bundled. See [punch effects](ATTACK_EFFECTS.md). HeatAura now uses the native ColorInfo:set method rather than Lua field writes.
+
+## Light quickstep cancels (0.43.0)
+
+While aiming, the bound quickstep input can cancel DoD lights after their native post-hit cancel marker. It has a 150ms input buffer and a 400ms native handoff timeout; quota/cooldown/wall checks are preserved. Other move types are unchanged. Future styles opt in with quickstepCancelLights=true and eligible light.quickstepCancelAt plus the matching native marker. See [Light quickstep cancels](LIGHT_QUICKSTEP_CANCELS.md).

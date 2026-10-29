@@ -30,6 +30,7 @@ for _,name in ipairs({'isOnFloor','isKnockedDown','isClimbing','isDraggingCorpse
 instanceof=function(obj,kind)return kind=='IsoPlayer' and obj==p or kind=='IsoZombie' and obj.zombie==true end
 -- MODULES
 local ProjectYakuza=ProjectYakuza;local H=ProjectYakuza.Heat;local Q=ProjectYakuza.Quicksteps
+ProjectYakuza.stateFor=function()return {active=false} end
 local z={zombie=true}
 p.data.ProjectYakuzaStyle='dragon_of_dojima';p.data.ProjectYakuzaHeat=0
 H.states[p]={extreme=true,fuel=45}

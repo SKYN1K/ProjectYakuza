@@ -40,4 +40,5 @@
 		<includeDescendants>false</includeDescendants>
 	</m_SubStateBoneWeights>
 <m_Events><m_EventName>SetVariable</m_EventName><m_TimePc>0.58</m_TimePc><m_ParameterValue>ProjectYakuzaChainReady=dd_light_03</m_ParameterValue></m_Events>
+<m_Events><m_EventName>SetVariable</m_EventName><m_TimePc>0.285714285714</m_TimePc><m_ParameterValue>ProjectYakuzaQuickstepCancelReady=dd_light_03</m_ParameterValue></m_Events>
 </animNode>

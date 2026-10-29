@@ -1,6 +1,6 @@
 # Documentation index
 
-Current manual: Project Yakuza 0.42.0, Lua API 3, MP protocol 2.
+Current manual: Project Yakuza 0.43.0, Lua API 3, MP protocol 2.
 
 | Task | Guide |
 | --- | --- |
@@ -14,6 +14,7 @@ Current manual: Project Yakuza 0.42.0, Lua API 3, MP protocol 2.
 | Music, sounds, voices, HUD and effects | [Presentation](PRESENTATION.md) |
 | Replace a style's HUD and selector art | [Style UI API](STYLE_UI.md) |
 | Charged attacks and assets | [Charged heavies](CHARGED_HEAVY.md) |
+| Cancel lights into quicksteps | [Light quickstep cancels](LIGHT_QUICKSTEP_CANCELS.md) |
 | Future launchers and aerial followup hooks | [Juggling](JUGGLING.md) |
 | Enemy flinch/stagger/knockdown profiles | [Hit responses](HIT_RESPONSES.md) |
 | Heat rules and tuning | [Heat](HEAT.md) |

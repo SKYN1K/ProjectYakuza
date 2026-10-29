@@ -42,3 +42,11 @@ for path in (media / 'AnimSets/zombie/hitreaction').glob('ProjectYakuza_EnemyHit
     repeat = media / 'AnimSets/zombie/hitreaction-hit' / path.name
     assert E.tostring(E.parse(path).getroot()) == E.tostring(E.parse(repeat).getroot())
 print('PASS 188 event-free observer selectors retain their supplied clips/settings; 4 native repeat-hit nodes match originals')
+
+# Recovery-cancel markers are owner-only and occur one source frame after collision.
+for i,(hit,frames) in enumerate([(6,30),(8,47),(11,42),(11,47)],1):
+    source=E.parse(media/f'AnimSets/player/melee/ProjectYakuza_DD_Light0{i}.xml').getroot()
+    events=[e for e in source.findall('m_Events') if e.findtext('m_ParameterValue')==f'ProjectYakuzaQuickstepCancelReady=dd_light_0{i}']
+    assert len(events)==1 and events[0].findtext('m_EventName')=='SetVariable'
+    assert abs(float(events[0].findtext('m_TimePc'))-(hit+1)/frames)<1e-9
+print('PASS four owner light-cancel markers occur exactly one source frame after collision; observers remain event-free')

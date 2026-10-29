@@ -55,7 +55,7 @@ end
 
 local ProjectYakuza = ProjectYakuza
 ProjectYakuza.FEATURES={grab=false}
-ProjectYakuza.VERSION = "0.42.0"
+ProjectYakuza.VERSION = "0.43.0"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -139,7 +139,7 @@ function ProjectYakuza.validateStyle(style)
         if light or value.duration~=nil then
             if not number(value.duration) or value.duration<=0 then problem(path..".duration must be positive seconds") end
         end
-        for _,key in ipairs({"impact","chainAt"}) do
+        for _,key in ipairs({"impact","chainAt","quickstepCancelAt"}) do
             local v=value[key];if v~=nil and (not number(v) or v<0 or v>1) then problem(path.."."..key.." must be 0..1") end
         end
         if value.damageMultiplier~=nil and (not number(value.damageMultiplier) or value.damageMultiplier<0) then problem(path..".damageMultiplier must be nonnegative") end
@@ -164,7 +164,7 @@ function ProjectYakuza.validateStyle(style)
     for _,key in ipairs({"attackSpeed","runningKneeSpeed"}) do
         if style[key]~=nil and (not number(style[key]) or style[key]<=0) then problem(key.." must be positive") end
     end
-    for _,key in ipairs({"heat","combatVoices","quickstepVoices","tigerDrop","enemyReactions"}) do
+    for _,key in ipairs({"heat","combatVoices","quickstepVoices","tigerDrop","enemyReactions","quickstepCancelLights"}) do
         if style[key]~=nil and type(style[key])~="boolean" then problem(key.." must be true or false") end
     end
     if style.combatVoiceVolume~=nil and (not number(style.combatVoiceVolume) or style.combatVoiceVolume<0) then problem("combatVoiceVolume must be nonnegative") end
@@ -282,6 +282,7 @@ function ProjectYakuza.isCustomAction(player)
     return c~=nil and ProjectYakuza.actionDefinitions[c.kind]~=nil
 end
 function ProjectYakuza.blocksNativeAttacks(player)
+    if ProjectYakuza.Quicksteps and ProjectYakuza.Quicksteps.isCancelling and ProjectYakuza.Quicksteps.isCancelling(player) then return true end
     local c=ProjectYakuza.activeActions[player]
     local d=c and ProjectYakuza.actionDefinitions[c.kind]
     return c~=nil and (c.kind=="styleEntry" or c.kind=="quickstepAttack" or c.kind=="heavyCharge" or c.kind=="chargedHeavy" or (d~=nil and d.blocksAttacks)) or false

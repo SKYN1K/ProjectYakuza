@@ -2,7 +2,7 @@ require "ProjectYakuza/Runtime"
 require "TimedActions/ISBaseTimedAction"
 require "TimedActions/ISTimedActionQueue"
 local ProjectYakuza = ProjectYakuza
-local Q = { input={}, nextAllowed={}, pending=setmetatable({}, {__mode="k"}),shoveDown=setmetatable({}, {__mode="k"}),shoveAuth=setmetatable({}, {__mode="k"}) }
+local Q = { input={}, nextAllowed={}, pending=setmetatable({}, {__mode="k"}),shoveDown=setmetatable({}, {__mode="k"}),shoveAuth=setmetatable({}, {__mode="k"}),lightCancels=setmetatable({}, {__mode="k"}) }
 ProjectYakuza.Quicksteps = Q
 local function now() return getTimestampMs() end
 Q.limit=3;Q.windowMs=15000
@@ -191,6 +191,72 @@ ProjectYakuza.registerActionHandler("quickstep",{
         end
     end,
 })
+-- Small input buffer, followed by a native-state handoff (never a state teleport).
+Q.cancelBufferMs=150;Q.cancelHandoffMs=400
+function Q.isCancelling(p)
+    local job=Q.lightCancels[p];return job~=nil and job.phase=="handoff"
+end
+function Q.clearLightCancel(p)
+    if Q.lightCancels[p] then Q.lightCancels[p]=nil;ProjectYakuza.Bindings.update(p) end
+end
+function Q.cancelReady(p,job)
+    local style=ProjectYakuza.getPlayerStyle(p);local slot=style and style.actions.quickstep
+    if not style or style.id~=job.style or style.quickstepCancelLights~=true or not slot or not slot.enabled
+        or not slot.variants or not slot.variants[job.direction] or slot.variants[job.direction].enabled==false
+        or not ProjectYakuza.isEquipped(p) or not p:isAiming() or p:isDead() or p:isOnFloor() or p:isKnockedDown()
+        or p:isClimbing() or p:getVehicle() or p:isDraggingCorpse() or p:isAsleep() or p:hasTimedActions()
+        or p:isBlockMovement() or p:getIgnoreMovement() or (p:getHitReaction() or "")~=""
+        or ProjectYakuza.activeActions[p] or getCore():isDoingTextEntry() then return false,"not_ready" end
+    if Q.quota(p)<=0 then return false,"quickstep_limit" end
+    if now()<(Q.nextAllowed[p:getPlayerNum()] or 0) then return false,"cooldown" end
+    if ProjectYakuza.Network and isClient() and not ProjectYakuza.Network.equipmentReady(p) then return false,"equipment_pending" end
+    if not Q.canMove(p,job.dx*.08,job.dy*.08) then return false,"blocked" end
+    return true
+end
+function Q.requestLightCancel(p,direction,target)
+    local style=ProjectYakuza.getPlayerStyle(p);local state=ProjectYakuza.stateFor(p)
+    if not style or not style.quickstepCancelLights or not state.active or state.starting
+        or state.finisherMove or state.pendingFinisher or state.groundMove or state.recoveryReleased
+        or not style.lightAttacks[state.step] or not style.lightAttacks[state.step].quickstepCancelAt then return false,"not_light" end
+    if Q.lightCancels[p] then return false,"cancel_pending" end
+    if type(target)~="table" or type(target.dx)~="number" or type(target.dy)~="number"
+        or target.dx~=target.dx or target.dy~=target.dy or math.abs(target.dx)>2 or math.abs(target.dy)>2 then return false,"no_direction" end
+    local length=math.sqrt(target.dx*target.dx+target.dy*target.dy);if length<.001 then return false,"no_direction" end
+    local job={style=style.id,direction=direction,dx=target.dx/length,dy=target.dy/length,shove=target.shove,
+        stamp=state.multiHitToken,move=style.lightAttacks[state.step].nodeValue,phase="buffer",expires=now()+Q.cancelBufferMs}
+    local ok,reason=Q.cancelReady(p,job);if not ok then return false,reason end
+    Q.lightCancels[p]=job;Q.processLightCancel(p);return true
+end
+function Q.processLightCancel(p)
+    local job=Q.lightCancels[p];if not job then return false end
+    if isGamePaused() or now()>job.expires then Q.clearLightCancel(p);return false end
+    local state=ProjectYakuza.stateFor(p)
+    local fx,fy=Q.facing(p);local direction=fx and Q.direction(fx,fy,job.dx,job.dy)
+    if not direction then Q.clearLightCancel(p);return false end
+    job.direction=direction
+    local ok=Q.cancelReady(p,job);if not ok then Q.clearLightCancel(p);return false end
+    if state.active and (state.multiHitToken~=job.stamp or state.finisherMove or state.groundMove) then Q.clearLightCancel(p);return false end
+    if job.phase=="buffer" then
+        if not state.active or state.recoveryReleased then Q.clearLightCancel(p);return false end
+        if var(p,"ProjectYakuzaQuickstepCancelReady")~=job.move or var(p,"ProjectYakuzaHitMarker")~=job.move then return true end
+        job.phase="handoff";job.expires=now()+Q.cancelHandoffMs
+        state.queued=0;state.queuedFinisher=nil;state.queuedDouble=nil;state.recoveryReleased=true
+        ProjectYakuza.Bindings.update(p)
+        p:setMeleeDelay(0);p:setPerformingAttackAnimation(false)
+        p:reportEvent("ActiveAnimFinishing")
+        return true
+    end
+    -- SwipeStatePlayer's real exit releases native attack ownership. A setter
+    -- alone does not prove that hands/attack state are free for a timed action.
+    if p:isAttackStarted() or p:isPerformingAttackAnimation() or p:getCurrentStateName()=="SwipeStatePlayer" then return true end
+    local fx,fy=Q.facing(p);local direction=fx and Q.direction(fx,fy,job.dx,job.dy)
+    if not direction then Q.clearLightCancel(p);return false end
+    Q.lightCancels[p]=nil
+    ProjectYakuza.resetPlayer(p,"light_quickstep_cancel",true)
+    local started=ProjectYakuza.requestAction(p,"quickstep",direction,{dx=job.dx,dy=job.dy,shove=job.shove})
+    ProjectYakuza.Bindings.update(p)
+    return started
+end
 local function key(id) local code=getCore():getKey(id:getId());return code and code>0 and isKeyDown(code) end
 function Q.restoreShove(player)
     local saved=Q.shoveAuth[player]
@@ -234,18 +300,24 @@ function Q.pollShove(player)
     if dx==0 and dy==0 then dx,dy=-fx,-fy end
     local direction,x,y=Q.direction(fx,fy,dx,dy)
     if not direction then return false end
-    local ok,reason=ProjectYakuza.requestAction(player,"quickstep",direction,{dx=x,dy=y,shove=true})
+    local target={dx=x,dy=y,shove=true}
+    local combo=ProjectYakuza.stateFor(player)
+    local ok,reason
+    if combo.active and not combo.finisherMove and not combo.groundMove then ok,reason=Q.requestLightCancel(player,direction,target)
+    else ok,reason=ProjectYakuza.requestAction(player,"quickstep",direction,target) end
     if not ok and reason=="quickstep_limit" and ProjectYakuza.Feedback then
         local _,wait=Q.quota(player);ProjectYakuza.Feedback.notice(player,"QUICKSTEP - "..math.ceil(wait/1000).."s")
     end
     return ok
 end
 function Q.restoreAllShoves()
+    for player in pairs(Q.lightCancels) do Q.clearLightCancel(player) end
     for player in pairs(Q.shoveAuth) do Q.restoreShove(player) end
 end
 function Q.update(player)
     if not player or not instanceof(player,"IsoPlayer") or not player:isLocalPlayer() then return end
     if Q.pollShove(player) then return end
+    if Q.processLightCancel(player) then return end
     local pending=Q.pending[player]
     if pending then
         if not ProjectYakuza.isEquipped(player) or not player:isAiming() or player:isDead() or player:isOnFloor() or player:isKnockedDown()
@@ -267,3 +339,6 @@ end
 Events.OnPlayerUpdate.Add(Q.update)
 Events.OnSave.Add(Q.restoreAllShoves)
 Events.OnMainMenuEnter.Add(Q.restoreAllShoves)
+
+ProjectYakuza.on("comboCancelled",function(p)Q.clearLightCancel(p)end)
+ProjectYakuza.on("styleChanged",function(p)Q.clearLightCancel(p)end)
