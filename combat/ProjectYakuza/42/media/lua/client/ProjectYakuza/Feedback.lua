@@ -100,7 +100,7 @@ function F.updateActivation(p,session,time,paused)
 end
 function F.swing(p,style,step,move)
     if style.weaponProfile then return end
-    local s=ProjectYakuza.stateFor(p);local kick=move.groundAttack or move.runningAttack or move.quickstepAttack or move.afterLight or move.chargedFinisher
+    local s=ProjectYakuza.stateFor(p);local kick=move.neutralHeavy or move.groundAttack or move.runningAttack or move.quickstepAttack or move.afterLight or move.chargedFinisher
     local hit=ProjectYakuza.Heat.isExtreme(p) and F.sound(p,"heatImpact") or kick and F.sound(p,"kickImpact") or F.sound(p,"punchImpact") or "BareHandsHit"
 
     local token=p:getPrimaryHandItem()
@@ -142,7 +142,7 @@ end
 function F.hit(p,z,weapon,damage)
     if not p or not ProjectYakuza.isEquipped(p) or type(damage)~="number" or damage<=0 then return end
     local s=ProjectYakuza.stateFor(p);local move=s.groundMove or s.finisherMove
-    if not s.active or not move or (not move.afterLight and not move.groundAttack and not move.chargedHeavy) then return end
+    if not s.active or not move or (not move.neutralHeavy and not move.afterLight and not move.groundAttack and not move.chargedHeavy) then return end
     local stamp=s.multiHitToken or s.startedAt
     if s.feedbackStamp==stamp then return end
     s.feedbackStamp=stamp

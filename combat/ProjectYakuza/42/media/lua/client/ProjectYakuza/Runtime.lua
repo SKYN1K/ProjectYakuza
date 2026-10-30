@@ -71,6 +71,7 @@ function ProjectYakuza.resetPlayer(player, reason,keepStance)
 end
 
 function ProjectYakuza.prepareToken(token)
+    if token and ProjectYakuza.StyleItem and not ProjectYakuza.StyleItem.prepared[token] then ProjectYakuza.StyleItem.clean(token) end
     if token and ProjectYakuza.isStyleToken(token) and token:getMaxHitCount()~=ProjectYakuza.MAX_HIT_COUNT then token:setMaxHitCount(ProjectYakuza.MAX_HIT_COUNT) end
     if token and ProjectYakuza.isStyleToken(token) and token:getWeaponSprite() ~= "ProjectYakuza_EmptyHand" then
         token:setWeaponSprite("ProjectYakuza_EmptyHand")
@@ -161,8 +162,8 @@ local function onFinished(player, weapon)
         if move.runningAttack and ProjectYakuza.RunningAttacks then ProjectYakuza.RunningAttacks.finish(player) end
         ProjectYakuza.completeAction(player)
         Combo.reset(s)
-        if move.quickstepAttack or move.chargedHeavy then setReadyVariables(player,ProjectYakuza.getPlayerStyle(player),s) end
-        if not move.double and not move.quickstepAttack and not move.runningAttack and (not move.chargedHeavy or move.chargedFinisher) then
+        if move.quickstepAttack or move.chargedHeavy or move.neutralHeavy then setReadyVariables(player,ProjectYakuza.getPlayerStyle(player),s) end
+        if not move.neutralHeavy and not move.double and not move.quickstepAttack and not move.runningAttack and (not move.chargedHeavy or move.chargedFinisher) then
             s.finisherBranch, s.finisherFinishedAt = step, now()
             if followup then s.step, s.finishedAt, s.queuedDouble = step, now(), true end
         end
@@ -185,13 +186,21 @@ function ProjectYakuza.queueFinisher(player)
     local slot = style.actions.finisher
     if not slot or not slot.enabled then return false, "not_implemented" end
     local first = s.finisherMove or s.pendingFinisher
-    if s.groundMove or (first and (first.quickstepAttack or first.runningAttack or (first.chargedHeavy and not first.chargedFinisher))) then return false,"busy" end
+    if s.groundMove or (first and (first.neutralHeavy or first.quickstepAttack or first.runningAttack or (first.chargedHeavy and not first.chargedFinisher))) then return false,"busy" end
     if style.weaponStandaloneHeavy then
         if s.active or s.starting then
             if s.finisherMove or s.pendingFinisher or s.groundMove then return false,"busy" end
             s.queuedWeaponHeavy=true;s.queued=0;return true
         end
         return ProjectYakuza.requestAction(player,"finisher","default")
+    end
+    if not first and not s.active and not s.starting then
+        if s.finishedAt and now()-s.finishedAt>style.comboResetMs then Combo.reset(s) end
+        if s.finisherFinishedAt and now()-s.finisherFinishedAt>style.comboResetMs then s.finisherBranch=nil;s.finisherFinishedAt=nil end
+    end
+    if not first and s.step<1 and not s.finisherBranch and not ProjectYakuza.activeActions[player] then
+        local neutral=slot.variants and slot.variants.default
+        if neutral and neutral.enabled and neutral.neutralHeavy then return ProjectYakuza.requestAction(player,"finisher","default") end
     end
     local branch = first and (first.afterLight or first.chargeBranch) or s.queuedFinisher or s.finisherBranch
     if first or s.queuedFinisher or s.finisherBranch then

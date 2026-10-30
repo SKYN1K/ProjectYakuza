@@ -6,121 +6,131 @@
       "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_WPA_ath_01_md.gmt",
       "sourceSha256": "c443bcbf0e2cd5ffb6b2e7e2db8fbf4027974f0d29433c0be5d9ce909efc50b5",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_BatLight01.x",
-      "sha256": "22cf1cd7fc06f735676baaa62ed1d676da286915fb19fa91f4cdc5fde80e704f",
+      "sha256": "51cea2d697834d88d0967d74b080061e25248a5f2ebc029a4616e893fb25fcd1",
       "sourceFrames": [
         0,
         40
       ],
       "fps": 30.0,
-      "duration": 1.3333333333333333
+      "duration": 1.3333333333333333,
+      "prePropSha256": "22cf1cd7fc06f735676baaa62ed1d676da286915fb19fa91f4cdc5fde80e704f"
     },
     {
       "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_WPA_ath_02_md.gmt",
       "sourceSha256": "54750d6dabee4e30962513e772f085a97cbee899c8b2fd782d171a5f2c69e74d",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_BatLight02.x",
-      "sha256": "25ef081bafa89201396a1ea5a13faa419c359b17251364a2cfe9addbb555bd14",
+      "sha256": "7b85fa8ab1d630623edf21fb86154d87b6040df352c8a379d2dee3bb4c673447",
       "sourceFrames": [
         0,
         35
       ],
       "fps": 30.0,
-      "duration": 1.1666666666666667
+      "duration": 1.1666666666666667,
+      "prePropSha256": "25ef081bafa89201396a1ea5a13faa419c359b17251364a2cfe9addbb555bd14"
     },
     {
       "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_WPA_ath_03_md.gmt",
       "sourceSha256": "9b59fb681e387fb9e146fd3fbd00acdc0617dd6d8459e3de7d51127b90d1db72",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_BatLight03.x",
-      "sha256": "86e58dc76f9e9c6117128b037f7401e86b45788e1690d1436ca7fcc3afd49c16",
+      "sha256": "59580c850fd13aabb6d0d5abf7c0d67da0276fa69ffb105455b044581daab743",
       "sourceFrames": [
         0,
         47
       ],
       "fps": 30.0,
-      "duration": 1.5666666666666667
+      "duration": 1.5666666666666667,
+      "prePropSha256": "86e58dc76f9e9c6117128b037f7401e86b45788e1690d1436ca7fcc3afd49c16"
     },
     {
       "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_WPA_ath_hvy_md.gmt",
       "sourceSha256": "d77b7b9d0bcf4aa76e168f09806f1c4d29a6e0f8d7ae59a3635dc44ece01f43c",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_BatHeavy.x",
-      "sha256": "8d90a074eb65ded01bbb467f972af4dff5f37c670d168eb441c41d5d9dc6ff5e",
+      "sha256": "6bdd4ba1ed2741b592e30d78e4e2805656cb55a021c6f7da19ecb021bcd4cb9d",
       "sourceFrames": [
         0,
         53
       ],
       "fps": 30.0,
-      "duration": 1.7666666666666666
+      "duration": 1.7666666666666666,
+      "prePropSha256": "8d90a074eb65ded01bbb467f972af4dff5f37c670d168eb441c41d5d9dc6ff5e"
     },
     {
       "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_WPA_ath_dwn_md.gmt",
       "sourceSha256": "8bba7493bf6df3c3394288dff9f532e82072b85994bed0b5699794f8a635dc89",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_BatGround.x",
-      "sha256": "b707e9a69b8aee60386b0f7def59320795d6acb0e03756c0c36c5347d025d0c1",
+      "sha256": "1aed15235d43dd0c257bf856a3c648381e677704e51565a751c601d5c2b67d95",
       "sourceFrames": [
         0,
         55
       ],
       "fps": 30.0,
-      "duration": 1.8333333333333333
+      "duration": 1.8333333333333333,
+      "prePropSha256": "b707e9a69b8aee60386b0f7def59320795d6acb0e03756c0c36c5347d025d0c1"
     },
     {
       "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_WPA_stdA_lp.gmt",
       "sourceSha256": "3a90d1b146f276c7573650e3d6f85756eedd177cdff2cd667d4017e0ef679d17",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_BatIdle.x",
-      "sha256": "fef63faafd9029c1906dc4a2242ca8d0a1396b13ee67e9be490f61aa0502833b",
+      "sha256": "bf96d6c411b7438240ea2551d758c329490358194122e34a753d497dd5f09219",
       "sourceFrames": [
         0,
         60
       ],
       "fps": 30.0,
-      "duration": 2.0
+      "duration": 2.0,
+      "prePropSha256": "fef63faafd9029c1906dc4a2242ca8d0a1396b13ee67e9be490f61aa0502833b"
     },
     {
       "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_WPA_grd_lp.gmt",
       "sourceSha256": "918fd42f12f7531a48ff095285e87f06653524257acd80eaa45fedc720f3834b",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_BatGuardLoop.x",
-      "sha256": "837e760a943b75b4eb04aeba23d4ff8ce0b3ca1f9b3ff0e6bf38b81b0ec0de27",
+      "sha256": "793dfb3078049ecfcf2f5c3871e0d65950dc35dacd3f464790fa5108cc042617",
       "sourceFrames": [
         0,
         60
       ],
       "fps": 30.0,
-      "duration": 2.0
+      "duration": 2.0,
+      "prePropSha256": "837e760a943b75b4eb04aeba23d4ff8ce0b3ca1f9b3ff0e6bf38b81b0ec0de27"
     },
     {
       "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_WPA_grd_st.gmt",
       "sourceSha256": "d5c02a55735b2395666fb8cd05c89b2cdb0676cd331f5d032f50f0ed379c607c",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_BatGuardEnter.x",
-      "sha256": "07db90f3114abd80e48dd55e8006ac9ac3486a8407ce048083a356ac71e7df08",
+      "sha256": "c0c636da67b27dea9137c86dff28afd90a49e65e2b4aebb7fa1e7ff76b56e8d7",
       "sourceFrames": [
         0,
         6
       ],
       "fps": 30.0,
-      "duration": 0.2
+      "duration": 0.2,
+      "prePropSha256": "07db90f3114abd80e48dd55e8006ac9ac3486a8407ce048083a356ac71e7df08"
     },
     {
       "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_WPA_grd_en.gmt",
       "sourceSha256": "ac0ff04bf47ac78f7e96974a7b5cbb307e107a095d47e8a9c1983c1539d178bf",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_BatGuardExit.x",
-      "sha256": "a6581fcc2d82c37e8bf70a3a424045df1a32075235c56f5103a1de7a9870eeb6",
+      "sha256": "6173991932dc278e56fec117aa8c2598b4ddd26ac2ce122b9fe4fd98fdc7774c",
       "sourceFrames": [
         0,
         10
       ],
       "fps": 30.0,
-      "duration": 0.3333333333333333
+      "duration": 0.3333333333333333,
+      "prePropSha256": "a6581fcc2d82c37e8bf70a3a424045df1a32075235c56f5103a1de7a9870eeb6"
     },
     {
       "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_WPA_grd_rct_f.gmt",
       "sourceSha256": "39756ff511a3cd66b6f2db615a2f93d30cb34cb98fcbb05942cd27cf0bf4343c",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_BatGuardHit.x",
-      "sha256": "a8aebcde6b88d161b00045dc4f09cd7f2bb09ae06879d1ef4e1c96fa859ba982",
+      "sha256": "ac438a4b9fd53d7726fb53d57bd7d5bef6c8376cb026327c8054010425c861cf",
       "sourceFrames": [
         0,
         18
       ],
       "fps": 30.0,
-      "duration": 0.6
+      "duration": 0.6,
+      "prePropSha256": "a8aebcde6b88d161b00045dc4f09cd7f2bb09ae06879d1ef4e1c96fa859ba982"
     }
   ],
   "rigInputs": [
@@ -136,5 +146,6 @@
       "path": "F:/SteamLibrary/steamapps/common/ProjectZomboid/media/anims_X/Bob/Bob_AttackBat01_Hit.x",
       "sha256": "d6ed4e304cce1ccce3e355cfe958cf304c494c850ae0790d669068b861e7075c"
     }
-  ]
+  ],
+  "propAttachmentRepair": "prop-attachment-repair.json"
 }

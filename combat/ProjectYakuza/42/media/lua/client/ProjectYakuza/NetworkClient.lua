@@ -43,6 +43,7 @@ function N.finishEquipment(p,s)
     p:updateHandEquips()
     local entry=s.entryWanted;s.entryWanted=nil
     s.equipReady=item;s.equipStyle=a.style;s.equipReply=nil;s.equipWanted=nil
+    if ProjectYakuza.StyleItem then ProjectYakuza.StyleItem.remember(p) end
     if entry and item and ProjectYakuza.StyleEntry then ProjectYakuza.StyleEntry.request(p,a.style) end
     return true
 end

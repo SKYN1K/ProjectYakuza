@@ -68,3 +68,11 @@
 !/tools/combat-tests/fixture_markers.py
 !/tools/combat-tests/check_source_comments.py
 !/tools/combat-tests/test_source_comments.py
+
+!/tools/combat-tests/build_style_item_tests.py
+!/tools/combat-tests/style-item-test-fixture.lua
+!/tools/combat-tests/build_style_selector_tests.py
+!/tools/combat-tests/style-selector-test-fixture.lua
+!/tools/combat-tests/PropAttachmentProbe.java
+!/tools/combat-tests/StyleItemProbe.java
+!/tools/combat-tests/validate_prop_attachments.py

@@ -44,6 +44,10 @@ local function charge(branch)
  return a,c
 end
 
+H.input(p,true,true,state(),style);H.input(p,false,false,state(),style)
+check(state().finisherMove and state().finisherMove.neutralHeavy,'neutral MMB tap-release executes normal heavy')
+finish();PY.resetPlayer(p,'test')
+check(not state().finisherMove and not state().pendingFinisher and not PY.activeActions[p],'neutral cleanup fully clears action')
 state().step=1;state().finishedAt=clock
 H.input(p,true,true,state(),style);check(not state().queuedFinisher,'press does not fire a finisher')
 H.input(p,false,false,state(),style);check(state().queuedFinisher==1,'tap release queues ordinary finisher')

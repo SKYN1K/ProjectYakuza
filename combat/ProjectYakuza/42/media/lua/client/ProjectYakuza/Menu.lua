@@ -1,4 +1,5 @@
 require "ProjectYakuza/Runtime"
+require "ProjectYakuza/StyleItem"
 require "ProjectYakuza/HitEffects"
 require "ProjectYakuza/AttackEffects"
 require "ProjectYakuza/HeatAura"
@@ -13,14 +14,15 @@ require "ProjectYakuza/CombatVoices"
 require "ProjectYakuza/Taunts"
 require "ProjectYakuza/StyleEntry"
 local ProjectYakuza = ProjectYakuza
-function ProjectYakuza.equipStyle(player, styleId)
+function ProjectYakuza.equipStyle(player, styleId,playEntry)
     local ok, reason = ProjectYakuza.selectStyle(player, styleId)
     if not ok then player:Say("Cannot switch style: " .. tostring(reason)); return end
 
-    if isClient() then ProjectYakuza.Network.equip(player,styleId,true);return end
+    if isClient() then ProjectYakuza.Network.equip(player,styleId,playEntry~=false);return end
     local held=player:getPrimaryHandItem()
     if ProjectYakuza.Weapons and ProjectYakuza.Weapons.profile(styleId,held) then
         player:setVariable("ProjectYakuzaActive",true)
+        if ProjectYakuza.StyleItem then ProjectYakuza.StyleItem.removeUnused(player,nil);ProjectYakuza.StyleItem.remember(player) end
         return
     end
     local items, token = player:getInventory():getItems(), nil
@@ -36,16 +38,26 @@ function ProjectYakuza.equipStyle(player, styleId)
     player:setSecondaryHandItem(nil)
     player:setVariable("ProjectYakuzaActive", true)
     player:setVariable("ProjectYakuzaMove", ProjectYakuza.getPlayerStyle(player).lightAttacks[1].nodeValue)
-    ProjectYakuza.StyleEntry.request(player,styleId)
+    if ProjectYakuza.StyleItem then ProjectYakuza.StyleItem.removeUnused(player,token);ProjectYakuza.StyleItem.remember(player) end
+    if playEntry~=false then ProjectYakuza.StyleEntry.request(player,styleId) end
     print("[ProjectYakuza] equipped " .. styleId)
 end
-local function disable(player)
-    if ProjectYakuza.isBusy(player) then player:Say("Finish the current move first."); return end
-    local item = player:getPrimaryHandItem()
-    ProjectYakuza.selectStyle(player, "none")
-    if isClient() then ProjectYakuza.Network.equip(player,"none") end
-    if item and ProjectYakuza.isStyleToken(item) then player:setPrimaryHandItem(nil) end
+function ProjectYakuza.unequipStyle(player)
+    if ProjectYakuza.isBusy(player) then return false,"busy" end
+    local item=player:getPrimaryHandItem()
+    local ok,reason=ProjectYakuza.selectStyle(player,"none")
+    if not ok then return false,reason end
+    if ProjectYakuza.isStyleToken(item) then player:setPrimaryHandItem(nil);player:resetModelNextFrame();player:updateHandEquips() end
+    if isClient() then ProjectYakuza.Network.equip(player,"none",false)
+    elseif ProjectYakuza.StyleItem then ProjectYakuza.StyleItem.removeUnused(player,nil) end
+    if ProjectYakuza.StyleItem then ProjectYakuza.StyleItem.remember(player) end
+    return true
 end
+local function disable(player)
+    local ok,reason=ProjectYakuza.unequipStyle(player)
+    if not ok then player:Say("Cannot disable style: "..tostring(reason)) end
+end
+
 local function diagnostics(player)
     player:getModData().ProjectYakuzaDiagnostics = not player:getModData().ProjectYakuzaDiagnostics
     print("[ProjectYakuza] " .. ProjectYakuza.diagnosticLine(player))

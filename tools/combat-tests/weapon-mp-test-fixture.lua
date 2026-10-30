@@ -244,4 +244,20 @@ ProjectYakuza.registerNetworkAnimations(baseStyle.id,{{id='Tests_CacheProbe',ani
 check(priorCatalog~=ProjectYakuza.NetworkCatalog[baseStyle.id] and P.clip(baseStyle.id,'Tests_CacheProbe')~=nil,'network registration refreshes catalog indexes')
 local selectors=P.selectors(baseStyle.id,'actions')
 check(selectors[1].id=='Tests_CacheProbe' and selectors[1].conditions[1].value=='mixed_case','refreshed selector cache preserves sorted priority and case-insensitive comparisons')
+isClient=function()return false end
+do local _="ProjectYakuzaFixture:STYLE_ITEM_POLICY" end
+local removed={}
+sendRemoveItemFromContainer=function(_,item)removed[#removed+1]=item end
+function p.inventory:Remove(item)for i=#p.inventoryItems,1,-1 do if p.inventoryItems[i]==item then table.remove(p.inventoryItems,i)end end end
+clock=clock+1000
+server.command(P.module,'equip',p,{style='dragon_of_dojima',weaponProfile='blade',item=703,request=100})
+check(#removed==1 and removed[1]==p.token and p.hand==sword,'server removes unused token while retaining real weapon')
+clock=clock+1000
+server.command(P.module,'equip',p,{style='dragon_of_dojima',weaponProfile='',item=-1,request=101})
+local activeToken=p.hand
+check(ProjectYakuza.isStyleToken(activeToken) and #removed==1,'server retains newly equipped style token')
+clock=clock+1000
+server.command(P.module,'equip',p,{style='none',weaponProfile='',item=-1,request=102})
+check(not p.hand and #removed==2 and removed[2]==activeToken,'server removes style token on authoritative disable')
+check(p.inventory:getItemWithID(703)==sword,'style cleanup retains real inventory weapon')
 return true,'PASS '..count..' sharp/blunt MP equipment, observers, cache invalidation, bridge reads and stale-swing checks; selector reads '..before..' -> '..after

@@ -1,0 +1,604 @@
+{
+  "authorization": "Explicit user approval on 2026-10-30 for native grip-based prop corrections, including existing quicksteps and the new original-source normal heavy.",
+  "operation": "Only the two root-parented prop animation blocks are replaced. Each pose is derived from its corresponding retargeted hand and a fixed B42 authored hand-to-prop offset. Hierarchy, all body/finger tracks, timing, models and textures are unchanged. No AI or invented body motion.",
+  "nativeGrips": {
+    "bat": {
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_AttackBat01_Hit.x",
+      "sha256": "d6ed4e304cce1ccce3e355cfe958cf304c494c850ae0790d669068b861e7075c",
+      "authoredOffsets": {
+        "Bip01_Prop1": [
+          [
+            -0.043478310108184814,
+            -0.030916661024093628,
+            -0.998575747013092,
+            0.06845201551914215
+          ],
+          [
+            0.26906272768974304,
+            0.9622275233268738,
+            -0.04150630533695221,
+            -0.04706887528300285
+          ],
+          [
+            0.9621403813362122,
+            -0.27048417925834656,
+            -0.033517494797706604,
+            0.038814280182123184
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "Bip01_Prop2": [
+          [
+            0.04858189821243286,
+            0.8911296129226685,
+            0.451140433549881,
+            1.1213123798370361e-06
+          ],
+          [
+            0.7025991678237915,
+            0.29054421186447144,
+            -0.6495674252510071,
+            3.855675458908081e-07
+          ],
+          [
+            -0.7099249958992004,
+            0.3485282361507416,
+            -0.6119918823242188,
+            4.209578037261963e-07
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      "nativeOffsets": {
+        "Bip01_Prop1": [
+          [
+            -0.043479062616825104,
+            -0.030914172530174255,
+            -0.9985739588737488,
+            0.06845194101333618
+          ],
+          [
+            0.26905950903892517,
+            0.9622287750244141,
+            -0.04150472581386566,
+            -0.04706816002726555
+          ],
+          [
+            0.9621405601501465,
+            -0.2704819440841675,
+            -0.03351520001888275,
+            0.03881397470831871
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "Bip01_Prop2": [
+          [
+            0.048583902418613434,
+            0.8911311030387878,
+            0.45114317536354065,
+            1.560896635055542e-06
+          ],
+          [
+            0.702595055103302,
+            0.2905443608760834,
+            -0.6495702266693115,
+            3.594905138015747e-07
+          ],
+          [
+            -0.7099281549453735,
+            0.34852519631385803,
+            -0.6119855046272278,
+            3.3527612686157227e-07
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      }
+    },
+    "knife": {
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_AttackKnife01_Hit.x",
+      "sha256": "4f8529807b66a2a59f13fe8a56b9716da39c4af7ec63ca33e24f24e4bd591380",
+      "authoredOffsets": {
+        "Bip01_Prop1": [
+          [
+            -0.0434754341840744,
+            0.12172143161296844,
+            -0.9916114807128906,
+            0.06790950894355774
+          ],
+          [
+            0.2690587043762207,
+            0.9573042392730713,
+            0.10571373254060745,
+            -0.025347888469696045
+          ],
+          [
+            0.9621420502662659,
+            -0.26220598816871643,
+            -0.07436951994895935,
+            0.028079446405172348
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "Bip01_Prop2": [
+          [
+            0.9921079874038696,
+            0.0823412612080574,
+            -0.09455477446317673,
+            0.07919163256883621
+          ],
+          [
+            0.08037111163139343,
+            -0.9964643120765686,
+            -0.024464592337608337,
+            0.015998031944036484
+          ],
+          [
+            -0.09623503684997559,
+            0.01667189598083496,
+            -0.9952189922332764,
+            0.024099081754684448
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      "nativeOffsets": {
+        "Bip01_Prop1": [
+          [
+            -0.04347332566976547,
+            0.12172465771436691,
+            -0.9916120171546936,
+            0.06790901720523834
+          ],
+          [
+            0.2690596282482147,
+            0.9573031067848206,
+            0.10571754723787308,
+            -0.025348640978336334
+          ],
+          [
+            0.9621439576148987,
+            -0.2622075378894806,
+            -0.07436804473400116,
+            0.028079062700271606
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "Bip01_Prop2": [
+          [
+            0.9921097755432129,
+            0.08233784884214401,
+            -0.09455357491970062,
+            0.07919204235076904
+          ],
+          [
+            0.08036819100379944,
+            -0.996465802192688,
+            -0.024462461471557617,
+            0.01599802076816559
+          ],
+          [
+            -0.0962333083152771,
+            0.01667092740535736,
+            -0.9952191710472107,
+            0.02409939467906952
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      }
+    }
+  },
+  "clips": [
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BatGround.x",
+      "beforeSha256": "b707e9a69b8aee60386b0f7def59320795d6acb0e03756c0c36c5347d025d0c1",
+      "sha256": "1aed15235d43dd0c257bf856a3c648381e677704e51565a751c601d5c2b67d95",
+      "frames": 56,
+      "grip": "bat",
+      "editedBones": [
+        "Bip01_Prop1",
+        "Bip01_Prop2"
+      ],
+      "allOtherChannelsIdentical": true
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BatGuardEnter.x",
+      "beforeSha256": "07db90f3114abd80e48dd55e8006ac9ac3486a8407ce048083a356ac71e7df08",
+      "sha256": "c0c636da67b27dea9137c86dff28afd90a49e65e2b4aebb7fa1e7ff76b56e8d7",
+      "frames": 7,
+      "grip": "bat",
+      "editedBones": [
+        "Bip01_Prop1",
+        "Bip01_Prop2"
+      ],
+      "allOtherChannelsIdentical": true
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BatGuardExit.x",
+      "beforeSha256": "a6581fcc2d82c37e8bf70a3a424045df1a32075235c56f5103a1de7a9870eeb6",
+      "sha256": "6173991932dc278e56fec117aa8c2598b4ddd26ac2ce122b9fe4fd98fdc7774c",
+      "frames": 11,
+      "grip": "bat",
+      "editedBones": [
+        "Bip01_Prop1",
+        "Bip01_Prop2"
+      ],
+      "allOtherChannelsIdentical": true
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BatGuardHit.x",
+      "beforeSha256": "a8aebcde6b88d161b00045dc4f09cd7f2bb09ae06879d1ef4e1c96fa859ba982",
+      "sha256": "ac438a4b9fd53d7726fb53d57bd7d5bef6c8376cb026327c8054010425c861cf",
+      "frames": 19,
+      "grip": "bat",
+      "editedBones": [
+        "Bip01_Prop1",
+        "Bip01_Prop2"
+      ],
+      "allOtherChannelsIdentical": true
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BatGuardLoop.x",
+      "beforeSha256": "837e760a943b75b4eb04aeba23d4ff8ce0b3ca1f9b3ff0e6bf38b81b0ec0de27",
+      "sha256": "793dfb3078049ecfcf2f5c3871e0d65950dc35dacd3f464790fa5108cc042617",
+      "frames": 61,
+      "grip": "bat",
+      "editedBones": [
+        "Bip01_Prop1",
+        "Bip01_Prop2"
+      ],
+      "allOtherChannelsIdentical": true
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BatHeavy.x",
+      "beforeSha256": "8d90a074eb65ded01bbb467f972af4dff5f37c670d168eb441c41d5d9dc6ff5e",
+      "sha256": "6bdd4ba1ed2741b592e30d78e4e2805656cb55a021c6f7da19ecb021bcd4cb9d",
+      "frames": 54,
+      "grip": "bat",
+      "editedBones": [
+        "Bip01_Prop1",
+        "Bip01_Prop2"
+      ],
+      "allOtherChannelsIdentical": true
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BatIdle.x",
+      "beforeSha256": "fef63faafd9029c1906dc4a2242ca8d0a1396b13ee67e9be490f61aa0502833b",
+      "sha256": "bf96d6c411b7438240ea2551d758c329490358194122e34a753d497dd5f09219",
+      "frames": 61,
+      "grip": "bat",
+      "editedBones": [
+        "Bip01_Prop1",
+        "Bip01_Prop2"
+      ],
+      "allOtherChannelsIdentical": true
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BatLight01.x",
+      "beforeSha256": "22cf1cd7fc06f735676baaa62ed1d676da286915fb19fa91f4cdc5fde80e704f",
+      "sha256": "51cea2d697834d88d0967d74b080061e25248a5f2ebc029a4616e893fb25fcd1",
+      "frames": 41,
+      "grip": "bat",
+      "editedBones": [
+        "Bip01_Prop1",
+        "Bip01_Prop2"
+      ],
+      "allOtherChannelsIdentical": true
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BatLight02.x",
+      "beforeSha256": "25ef081bafa89201396a1ea5a13faa419c359b17251364a2cfe9addbb555bd14",
+      "sha256": "7b85fa8ab1d630623edf21fb86154d87b6040df352c8a379d2dee3bb4c673447",
+      "frames": 36,
+      "grip": "bat",
+      "editedBones": [
+        "Bip01_Prop1",
+        "Bip01_Prop2"
+      ],
+      "allOtherChannelsIdentical": true
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BatLight03.x",
+      "beforeSha256": "86e58dc76f9e9c6117128b037f7401e86b45788e1690d1436ca7fcc3afd49c16",
+      "sha256": "59580c850fd13aabb6d0d5abf7c0d67da0276fa69ffb105455b044581daab743",
+      "frames": 48,
+      "grip": "bat",
+      "editedBones": [
+        "Bip01_Prop1",
+        "Bip01_Prop2"
+      ],
+      "allOtherChannelsIdentical": true
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_KnifeGround.x",
+      "beforeSha256": "5843958cf997ad5cad5830dd5198c3f70558a4f6f0a7b5fb8dda731507b27def",
+      "sha256": "5c0c65ba7201cb6e777df40085524960e7fd427373d3bf4656f57d3e890e3495",
+      "frames": 53,
+      "grip": "knife",
+      "editedBones": [
+        "Bip01_Prop1",
+        "Bip01_Prop2"
+      ],
+      "allOtherChannelsIdentical": true
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_KnifeHeavy.x",
+      "beforeSha256": "79ad154fff1588c59cbb745620580a8ca47f750e4d75cba8ccb7fe8560b9fb0a",
+      "sha256": "070f6133b2fb1a143ce26a41da706dc8ec4484af39d5884740e8e2f0b8de9e05",
+      "frames": 46,
+      "grip": "knife",
+      "editedBones": [
+        "Bip01_Prop1",
+        "Bip01_Prop2"
+      ],
+      "allOtherChannelsIdentical": true
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_KnifeIdle.x",
+      "beforeSha256": "b1bbf823582f521825ace78d7c1b89566879201b4de8bc6511225e336d8c9a75",
+      "sha256": "5625440f3ffb8fcae8713e7106be45e53ea6836ac73be02135e9fd6c44fdb8a1",
+      "frames": 61,
+      "grip": "knife",
+      "editedBones": [
+        "Bip01_Prop1",
+        "Bip01_Prop2"
+      ],
+      "allOtherChannelsIdentical": true
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_KnifeLight01.x",
+      "beforeSha256": "6ba374f38e347ef145b9cd12637252c37dfdad381e27b1e3e041c866b77ef08b",
+      "sha256": "4db14f906e5fe320af7e2b18c0aa9716f1a0e2ebd639419c99c1ed82331c5139",
+      "frames": 41,
+      "grip": "knife",
+      "editedBones": [
+        "Bip01_Prop1",
+        "Bip01_Prop2"
+      ],
+      "allOtherChannelsIdentical": true
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_KnifeLight02.x",
+      "beforeSha256": "f4aeff648cbe340c374825566abc4bd81d08343eb60b1ca84a5a55ee1e3448a3",
+      "sha256": "041f31263d44e2663b6ef3b4d480354eb82ce7448d30c45f5073320e14ccd1fd",
+      "frames": 41,
+      "grip": "knife",
+      "editedBones": [
+        "Bip01_Prop1",
+        "Bip01_Prop2"
+      ],
+      "allOtherChannelsIdentical": true
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_KnifeLight03.x",
+      "beforeSha256": "25e5ca581574d081e43fa3c4b49e4abadea55c0cacaa0eabe5f7b30f6225a1a7",
+      "sha256": "d44b958c69e7bbfc8aacc2c48a8bffd54228b426789bbf99dc4f1ab5d182ee1c",
+      "frames": 46,
+      "grip": "knife",
+      "editedBones": [
+        "Bip01_Prop1",
+        "Bip01_Prop2"
+      ],
+      "allOtherChannelsIdentical": true
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BladeGround.x",
+      "beforeSha256": "2fbf343f960707c1c72bf79de4f5421cb455761cf3deb6d0d399f5fb67ec471d",
+      "sha256": "3158859cc7c823b075e0ad73d4d444951690ba378adfb32a16d8d357944f0759",
+      "frames": 59,
+      "grip": "bat",
+      "editedBones": [
+        "Bip01_Prop1",
+        "Bip01_Prop2"
+      ],
+      "allOtherChannelsIdentical": true
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BladeGuardEnter.x",
+      "beforeSha256": "ec1bc8f3dbb6964f1e1ace320dcd8a4184f526d21fb0e1b10e0054970f611b9d",
+      "sha256": "d3423111888286cb9faecd9c4c359ac9d8f577cdfa8d7567ec59bed3632bd181",
+      "frames": 7,
+      "grip": "bat",
+      "editedBones": [
+        "Bip01_Prop1",
+        "Bip01_Prop2"
+      ],
+      "allOtherChannelsIdentical": true
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BladeGuardExit.x",
+      "beforeSha256": "ebb52c61eb697f9eacc564879a30bb23d08b7487cc1fbb7f9203f97d6fff9199",
+      "sha256": "29d1ca7b5a1da29441675e5a2f60285c90ff42ceea5ab86867577a2bdd28365e",
+      "frames": 11,
+      "grip": "bat",
+      "editedBones": [
+        "Bip01_Prop1",
+        "Bip01_Prop2"
+      ],
+      "allOtherChannelsIdentical": true
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BladeGuardHit.x",
+      "beforeSha256": "980dd63f927a08638ef4178cc43ec729daedaaaf3850db36844f38b4d468cc2e",
+      "sha256": "192f7de16c20af37d9239cd4d776c1d897290bb6489132bede4acacede306eb0",
+      "frames": 19,
+      "grip": "bat",
+      "editedBones": [
+        "Bip01_Prop1",
+        "Bip01_Prop2"
+      ],
+      "allOtherChannelsIdentical": true
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BladeGuardLoop.x",
+      "beforeSha256": "cd563f04cc6ba1866202b83a420fc80ce3f68860ee1505dbe2be34a043fe4bc2",
+      "sha256": "c0e8aa5d5234d2baa56d937c9c9a2bd3ae7c14eb9053cc92a1f2780a3dd13d5a",
+      "frames": 61,
+      "grip": "bat",
+      "editedBones": [
+        "Bip01_Prop1",
+        "Bip01_Prop2"
+      ],
+      "allOtherChannelsIdentical": true
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BladeHeavy.x",
+      "beforeSha256": "cd99dc49b4e2ea9ea7ac188ab8000c7a6c64c7233eecdac276bde4b9658b121e",
+      "sha256": "2ca1f11382fd3cebc6aad1ba2fabad32dc1282d86ae23df4fd52b28ce74bdcf4",
+      "frames": 71,
+      "grip": "bat",
+      "editedBones": [
+        "Bip01_Prop1",
+        "Bip01_Prop2"
+      ],
+      "allOtherChannelsIdentical": true
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BladeIdle.x",
+      "beforeSha256": "5d7eef9bd38a5aaa5fa83e2311c28db5a4e5b4240a71b6662c869e01a1ab5fc5",
+      "sha256": "e164b8a948c33c2726afe7606129ed404c33e9e1f8521c1598c18c218f01a48b",
+      "frames": 61,
+      "grip": "bat",
+      "editedBones": [
+        "Bip01_Prop1",
+        "Bip01_Prop2"
+      ],
+      "allOtherChannelsIdentical": true
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BladeLight01.x",
+      "beforeSha256": "29b46e99fcf74b873066e0147aeb6f33eae8575ee03f931e18bcd4067564e23e",
+      "sha256": "4d03f929a90af204fd24eec6f4f4de38351b2a04306e591e498dc32b958f6414",
+      "frames": 59,
+      "grip": "bat",
+      "editedBones": [
+        "Bip01_Prop1",
+        "Bip01_Prop2"
+      ],
+      "allOtherChannelsIdentical": true
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BladeLight02.x",
+      "beforeSha256": "e889abe3b2dd59add4e00d67b9cc572f0566d7e43a459094b8ef8e34f75d4f43",
+      "sha256": "1db36e2b54b188af9128ac37c4799b09e4e7ee815abaeb836a0dfd8472058d4b",
+      "frames": 49,
+      "grip": "bat",
+      "editedBones": [
+        "Bip01_Prop1",
+        "Bip01_Prop2"
+      ],
+      "allOtherChannelsIdentical": true
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BladeLight03.x",
+      "beforeSha256": "a8b0e555488fc119df162428c7e62cae479377c349358744a1d36ba6aa7ba86a",
+      "sha256": "4c841469913e681639f604d36cf199744081e95611d22d943485ac817cd3c6c6",
+      "frames": 62,
+      "grip": "bat",
+      "editedBones": [
+        "Bip01_Prop1",
+        "Bip01_Prop2"
+      ],
+      "allOtherChannelsIdentical": true
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Quickstep01.x",
+      "beforeSha256": "346a73a15269c703dc8332db3757d6480624c5fe92779be3e9829094c86a1213",
+      "sha256": "0fd40de55ed9cc935177b198291b53244380815c6b7e7f75236a1ea1f4697a31",
+      "frames": 23,
+      "grip": "bat",
+      "editedBones": [
+        "Bip01_Prop1",
+        "Bip01_Prop2"
+      ],
+      "allOtherChannelsIdentical": true
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Quickstep02.x",
+      "beforeSha256": "170cc951500ba62a4e78e2ea262eb0caff70a42f40f7f7f66cd6785218ec6b59",
+      "sha256": "2e620a386f0ae22b7cc92012b162c4edef8e44b50207b8aa0ead0cdec6dea56d",
+      "frames": 23,
+      "grip": "bat",
+      "editedBones": [
+        "Bip01_Prop1",
+        "Bip01_Prop2"
+      ],
+      "allOtherChannelsIdentical": true
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Quickstep03.x",
+      "beforeSha256": "588a1614c6ad316a937f9c5f29b73dbc6534a68b21d5ed5c1cbf0a24ac0d0d6f",
+      "sha256": "7fd843adf136659161ce543a3b291dd9f1ab9fa2237a2f86fca552249bc32ed2",
+      "frames": 23,
+      "grip": "bat",
+      "editedBones": [
+        "Bip01_Prop1",
+        "Bip01_Prop2"
+      ],
+      "allOtherChannelsIdentical": true
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Quickstep04.x",
+      "beforeSha256": "165132339f4d4e13910a49dba4b425030cf298e6e69887cb90d8d869f4e9fe0f",
+      "sha256": "8782ca0436ff78470cc82f837d5bb17c994732eeb56180d0de4520a8eca92def",
+      "frames": 23,
+      "grip": "bat",
+      "editedBones": [
+        "Bip01_Prop1",
+        "Bip01_Prop2"
+      ],
+      "allOtherChannelsIdentical": true
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Heavy.x",
+      "beforeSha256": "8f26405f834182ac44cf905426a2eb02d8b71ac75263b4f89091310cc2989f2a",
+      "sha256": "6f005523db810da4c68e28f95bb6a2f120df1256ba84d2c5646103ebcbd2b250",
+      "frames": 51,
+      "grip": "bat",
+      "editedBones": [
+        "Bip01_Prop1",
+        "Bip01_Prop2"
+      ],
+      "allOtherChannelsIdentical": true
+    }
+  ]
+}

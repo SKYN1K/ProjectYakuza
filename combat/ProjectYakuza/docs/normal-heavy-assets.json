@@ -1,0 +1,34 @@
+{
+  "authorization": "User approved supplied normal-heavy retarget and native prop-track corrections on 2026-10-30.",
+  "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_SUD_ath_hvy_md.gmt",
+  "sourceSha256": "cd94a94bda20610b2e8600c3fc6757ee59ea79c9c9ea272e05380131d5adc9a5",
+  "bep": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\bep\\P_KRU_BTL_SUD_ath_hvy_md.bep",
+  "bepSha256": "8b360cea07d28a5ed0f64a5a07b5610ad983936918a07b068736eab67413a657",
+  "output": "42/media/anims_X/Bob/ProjectYakuza_DD_Heavy.x",
+  "sha256": "6f005523db810da4c68e28f95bb6a2f120df1256ba84d2c5646103ebcbd2b250",
+  "frames": [
+    0,
+    50
+  ],
+  "fps": 30.0,
+  "events": [
+    {
+      "kind": 68,
+      "start": 9.0,
+      "end": 15.0
+    },
+    {
+      "kind": 77,
+      "start": 9.0,
+      "end": 13.0
+    },
+    {
+      "kind": 75,
+      "start": 28.0,
+      "end": 50.0
+    }
+  ],
+  "operation": "All source body frames retained, horizontal root in place, native punch finger grip. No AI or invented body motion.",
+  "prePropSha256": "8f26405f834182ac44cf905426a2eb02d8b71ac75263b4f89091310cc2989f2a",
+  "propAttachmentRepair": "prop-attachment-repair.json"
+}

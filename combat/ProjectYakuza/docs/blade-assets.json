@@ -26,7 +26,7 @@
       "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_WPB_ath_01_md.gmt",
       "sourceSha256": "80059db773bbfad11d136dc262499e40bb5c2eae04d9ecb26c3a9741b4878e57",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_KnifeLight01.x",
-      "sha256": "6ba374f38e347ef145b9cd12637252c37dfdad381e27b1e3e041c866b77ef08b",
+      "sha256": "4db14f906e5fe320af7e2b18c0aa9716f1a0e2ebd639419c99c1ed82331c5139",
       "sourceFrames": [
         0,
         40
@@ -36,7 +36,8 @@
       "contactFrame": 9.0,
       "chainFrame": 23.0,
       "bepSource": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\bep\\P_KRU_BTL_WPB_ath_01_md.bep",
-      "bepSha256": "d217174dd36fb881e41fadc603bc819e2d35600bd023a682c24ef9401dc2be62"
+      "bepSha256": "d217174dd36fb881e41fadc603bc819e2d35600bd023a682c24ef9401dc2be62",
+      "prePropSha256": "6ba374f38e347ef145b9cd12637252c37dfdad381e27b1e3e041c866b77ef08b"
     },
     {
       "profile": "knife",
@@ -44,7 +45,7 @@
       "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_WPB_ath_02_md.gmt",
       "sourceSha256": "9ebd556a49775fe00c1cd94a81570100a8b5a0aaa6d71d7c35cb497f674f0903",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_KnifeLight02.x",
-      "sha256": "f4aeff648cbe340c374825566abc4bd81d08343eb60b1ca84a5a55ee1e3448a3",
+      "sha256": "041f31263d44e2663b6ef3b4d480354eb82ce7448d30c45f5073320e14ccd1fd",
       "sourceFrames": [
         0,
         40
@@ -54,7 +55,8 @@
       "contactFrame": 12.0,
       "chainFrame": 26.0,
       "bepSource": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\bep\\P_KRU_BTL_WPB_ath_02_md.bep",
-      "bepSha256": "c95caefe9ce76f59e2e7d92fc156f30ba081a312583dc59c0df05b0c4b65c517"
+      "bepSha256": "c95caefe9ce76f59e2e7d92fc156f30ba081a312583dc59c0df05b0c4b65c517",
+      "prePropSha256": "f4aeff648cbe340c374825566abc4bd81d08343eb60b1ca84a5a55ee1e3448a3"
     },
     {
       "profile": "knife",
@@ -62,7 +64,7 @@
       "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_WPB_ath_03_md.gmt",
       "sourceSha256": "ad94780593a94c1b2b4e58fc450c61c1c269b08f0cd545866eee8489138ed7be",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_KnifeLight03.x",
-      "sha256": "25e5ca581574d081e43fa3c4b49e4abadea55c0cacaa0eabe5f7b30f6225a1a7",
+      "sha256": "d44b958c69e7bbfc8aacc2c48a8bffd54228b426789bbf99dc4f1ab5d182ee1c",
       "sourceFrames": [
         0,
         45
@@ -72,7 +74,8 @@
       "contactFrame": 13.0,
       "chainFrame": 23.0,
       "bepSource": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\bep\\P_KRU_BTL_WPB_ath_03_md.bep",
-      "bepSha256": "3fc38cc6eb63af88c7258e2bf3beb28fb9ba21a2ac2e8083db837bb61ce38a65"
+      "bepSha256": "3fc38cc6eb63af88c7258e2bf3beb28fb9ba21a2ac2e8083db837bb61ce38a65",
+      "prePropSha256": "25e5ca581574d081e43fa3c4b49e4abadea55c0cacaa0eabe5f7b30f6225a1a7"
     },
     {
       "profile": "knife",
@@ -80,7 +83,7 @@
       "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_WPB_ath_hvy_md.gmt",
       "sourceSha256": "18461906afb2e7f3f9ca0c75bde1d48e752403f8896ff361c741561121ff6878",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_KnifeHeavy.x",
-      "sha256": "79ad154fff1588c59cbb745620580a8ca47f750e4d75cba8ccb7fe8560b9fb0a",
+      "sha256": "070f6133b2fb1a143ce26a41da706dc8ec4484af39d5884740e8e2f0b8de9e05",
       "sourceFrames": [
         0,
         45
@@ -89,7 +92,8 @@
       "duration": 1.5,
       "contactFrame": 11.0,
       "bepSource": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\bep\\P_KRU_BTL_WPB_ath_hvy_md.bep",
-      "bepSha256": "c091840f07e5c83d3566f9675f7117c0815bd79c73602eeb20266b0f3906304b"
+      "bepSha256": "c091840f07e5c83d3566f9675f7117c0815bd79c73602eeb20266b0f3906304b",
+      "prePropSha256": "79ad154fff1588c59cbb745620580a8ca47f750e4d75cba8ccb7fe8560b9fb0a"
     },
     {
       "profile": "knife",
@@ -97,7 +101,7 @@
       "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_WPB_ath_dwn_md.gmt",
       "sourceSha256": "12f3c91ca0e789b82623751b8059808ff7c19cc65911bb4c3fecf547ff370090",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_KnifeGround.x",
-      "sha256": "5843958cf997ad5cad5830dd5198c3f70558a4f6f0a7b5fb8dda731507b27def",
+      "sha256": "5c0c65ba7201cb6e777df40085524960e7fd427373d3bf4656f57d3e890e3495",
       "sourceFrames": [
         0,
         52
@@ -106,7 +110,8 @@
       "duration": 1.7333333333333334,
       "contactFrame": 13.0,
       "bepSource": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\bep\\P_KRU_BTL_WPB_ath_dwn_md.bep",
-      "bepSha256": "6031c1626b9ca953d495822f6d2ca3c0f518fae0742a14a8902d77ef45fe2829"
+      "bepSha256": "6031c1626b9ca953d495822f6d2ca3c0f518fae0742a14a8902d77ef45fe2829",
+      "prePropSha256": "5843958cf997ad5cad5830dd5198c3f70558a4f6f0a7b5fb8dda731507b27def"
     },
     {
       "profile": "knife",
@@ -114,13 +119,14 @@
       "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_WPB_stdA_lp.gmt",
       "sourceSha256": "1293b07a0fa86cd5e7a6a08d73ac8dfb92e428f65c1327231cef85aadecab721",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_KnifeIdle.x",
-      "sha256": "b1bbf823582f521825ace78d7c1b89566879201b4de8bc6511225e336d8c9a75",
+      "sha256": "5625440f3ffb8fcae8713e7106be45e53ea6836ac73be02135e9fd6c44fdb8a1",
       "sourceFrames": [
         0,
         60
       ],
       "fps": 30.0,
-      "duration": 2.0
+      "duration": 2.0,
+      "prePropSha256": "b1bbf823582f521825ace78d7c1b89566879201b4de8bc6511225e336d8c9a75"
     },
     {
       "profile": "blade",
@@ -128,7 +134,7 @@
       "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_WPD_ath_01_md.gmt",
       "sourceSha256": "4eecb22a47c91905efa3047650c152f46b98247abaa158c22b3d329e85f6a907",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_BladeLight01.x",
-      "sha256": "29b46e99fcf74b873066e0147aeb6f33eae8575ee03f931e18bcd4067564e23e",
+      "sha256": "4d03f929a90af204fd24eec6f4f4de38351b2a04306e591e498dc32b958f6414",
       "sourceFrames": [
         0,
         58
@@ -138,7 +144,8 @@
       "contactFrame": 15.0,
       "chainFrame": 31.0,
       "bepSource": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\bep\\P_KRU_BTL_WPD_ath_01_md.bep",
-      "bepSha256": "85384c9ed45e376da112c392224d00b9f985cea8a5789e1e8c1bc88d767e6d41"
+      "bepSha256": "85384c9ed45e376da112c392224d00b9f985cea8a5789e1e8c1bc88d767e6d41",
+      "prePropSha256": "29b46e99fcf74b873066e0147aeb6f33eae8575ee03f931e18bcd4067564e23e"
     },
     {
       "profile": "blade",
@@ -146,7 +153,7 @@
       "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_WPD_ath_02_md.gmt",
       "sourceSha256": "f6dd8c6721602d0469dce712ece1d8fd6c6b88e5ec4e867c1d398322168b93f9",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_BladeLight02.x",
-      "sha256": "e889abe3b2dd59add4e00d67b9cc572f0566d7e43a459094b8ef8e34f75d4f43",
+      "sha256": "1db36e2b54b188af9128ac37c4799b09e4e7ee815abaeb836a0dfd8472058d4b",
       "sourceFrames": [
         0,
         48
@@ -156,7 +163,8 @@
       "contactFrame": 22.0,
       "chainFrame": 37.0,
       "bepSource": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\bep\\P_KRU_BTL_WPD_ath_02_md.bep",
-      "bepSha256": "c0e89ad28954f25faadd4e5c4e8545634403532ee1bec3b125cd8ab1f0c43a32"
+      "bepSha256": "c0e89ad28954f25faadd4e5c4e8545634403532ee1bec3b125cd8ab1f0c43a32",
+      "prePropSha256": "e889abe3b2dd59add4e00d67b9cc572f0566d7e43a459094b8ef8e34f75d4f43"
     },
     {
       "profile": "blade",
@@ -164,7 +172,7 @@
       "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_WPD_ath_03_md.gmt",
       "sourceSha256": "e41f54a5e33d9b8ab67e50ed3f339ae371f5bd7be0dd6f99369e0a5bdb8955ff",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_BladeLight03.x",
-      "sha256": "a8b0e555488fc119df162428c7e62cae479377c349358744a1d36ba6aa7ba86a",
+      "sha256": "4c841469913e681639f604d36cf199744081e95611d22d943485ac817cd3c6c6",
       "sourceFrames": [
         0,
         61
@@ -174,7 +182,8 @@
       "contactFrame": 16.0,
       "chainFrame": 32.0,
       "bepSource": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\bep\\P_KRU_BTL_WPD_ath_03_md.bep",
-      "bepSha256": "11d4b74a7b3e9322c6aa5b60ce71ab64710297bc1c8e5420741fc24536ddf5fe"
+      "bepSha256": "11d4b74a7b3e9322c6aa5b60ce71ab64710297bc1c8e5420741fc24536ddf5fe",
+      "prePropSha256": "a8b0e555488fc119df162428c7e62cae479377c349358744a1d36ba6aa7ba86a"
     },
     {
       "profile": "blade",
@@ -182,7 +191,7 @@
       "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_WPD_ath_hvy_md.gmt",
       "sourceSha256": "e8e9c93fa0b383432cc2b002e7ad0d6e343fcf540ab51e49088fc8e1790590c5",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_BladeHeavy.x",
-      "sha256": "cd99dc49b4e2ea9ea7ac188ab8000c7a6c64c7233eecdac276bde4b9658b121e",
+      "sha256": "2ca1f11382fd3cebc6aad1ba2fabad32dc1282d86ae23df4fd52b28ce74bdcf4",
       "sourceFrames": [
         0,
         70
@@ -191,7 +200,8 @@
       "duration": 2.3333333333333335,
       "contactFrame": 22.0,
       "bepSource": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\bep\\P_KRU_BTL_WPD_ath_hvy_md.bep",
-      "bepSha256": "d4dcc0ae5dd31e6b8bde37a3f24b6cef7198c7fc686d99dd37242773cef26f95"
+      "bepSha256": "d4dcc0ae5dd31e6b8bde37a3f24b6cef7198c7fc686d99dd37242773cef26f95",
+      "prePropSha256": "cd99dc49b4e2ea9ea7ac188ab8000c7a6c64c7233eecdac276bde4b9658b121e"
     },
     {
       "profile": "blade",
@@ -199,7 +209,7 @@
       "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_WPD_ath_dwn_md.gmt",
       "sourceSha256": "b272c8da986c7a5cb746a3f5c7402b0e608320c580ff690adaa572735b629b33",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_BladeGround.x",
-      "sha256": "2fbf343f960707c1c72bf79de4f5421cb455761cf3deb6d0d399f5fb67ec471d",
+      "sha256": "3158859cc7c823b075e0ad73d4d444951690ba378adfb32a16d8d357944f0759",
       "sourceFrames": [
         0,
         58
@@ -208,7 +218,8 @@
       "duration": 1.9333333333333333,
       "contactFrame": 13.0,
       "bepSource": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\bep\\P_KRU_BTL_WPD_ath_dwn_md.bep",
-      "bepSha256": "0814af805a2e3dbb4329dcc44f4bdc88105f0aa4ba6b380eef58e2358f06bc7d"
+      "bepSha256": "0814af805a2e3dbb4329dcc44f4bdc88105f0aa4ba6b380eef58e2358f06bc7d",
+      "prePropSha256": "2fbf343f960707c1c72bf79de4f5421cb455761cf3deb6d0d399f5fb67ec471d"
     },
     {
       "profile": "blade",
@@ -216,13 +227,14 @@
       "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_WPD_stdA_lp.gmt",
       "sourceSha256": "8cc57d1de1e94375510ac560815dbf23c8c8cc835dba027ffdab582c7bb1d200",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_BladeIdle.x",
-      "sha256": "5d7eef9bd38a5aaa5fa83e2311c28db5a4e5b4240a71b6662c869e01a1ab5fc5",
+      "sha256": "e164b8a948c33c2726afe7606129ed404c33e9e1f8521c1598c18c218f01a48b",
       "sourceFrames": [
         0,
         60
       ],
       "fps": 30.0,
-      "duration": 2.0
+      "duration": 2.0,
+      "prePropSha256": "5d7eef9bd38a5aaa5fa83e2311c28db5a4e5b4240a71b6662c869e01a1ab5fc5"
     },
     {
       "profile": "blade",
@@ -230,13 +242,14 @@
       "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_WPD_grd_lp.gmt",
       "sourceSha256": "2f4eabd31761c708e10279a1a4fd62bb132c1f5e73e476958f10702bcc482760",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_BladeGuardLoop.x",
-      "sha256": "cd563f04cc6ba1866202b83a420fc80ce3f68860ee1505dbe2be34a043fe4bc2",
+      "sha256": "c0e8aa5d5234d2baa56d937c9c9a2bd3ae7c14eb9053cc92a1f2780a3dd13d5a",
       "sourceFrames": [
         0,
         60
       ],
       "fps": 30.0,
-      "duration": 2.0
+      "duration": 2.0,
+      "prePropSha256": "cd563f04cc6ba1866202b83a420fc80ce3f68860ee1505dbe2be34a043fe4bc2"
     },
     {
       "profile": "blade",
@@ -244,13 +257,14 @@
       "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_WPD_grd_st.gmt",
       "sourceSha256": "01b08735caf4c2cb3690fa89b6bec82980df0f61145ddad650f2b3a6176b37ef",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_BladeGuardEnter.x",
-      "sha256": "ec1bc8f3dbb6964f1e1ace320dcd8a4184f526d21fb0e1b10e0054970f611b9d",
+      "sha256": "d3423111888286cb9faecd9c4c359ac9d8f577cdfa8d7567ec59bed3632bd181",
       "sourceFrames": [
         0,
         6
       ],
       "fps": 30.0,
-      "duration": 0.2
+      "duration": 0.2,
+      "prePropSha256": "ec1bc8f3dbb6964f1e1ace320dcd8a4184f526d21fb0e1b10e0054970f611b9d"
     },
     {
       "profile": "blade",
@@ -258,13 +272,14 @@
       "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_WPD_grd_en.gmt",
       "sourceSha256": "26e36ce01b2d05344bc53f7d84b2cd707facb9760dfa18a66ea1d23adc33a6d9",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_BladeGuardExit.x",
-      "sha256": "ebb52c61eb697f9eacc564879a30bb23d08b7487cc1fbb7f9203f97d6fff9199",
+      "sha256": "29d1ca7b5a1da29441675e5a2f60285c90ff42ceea5ab86867577a2bdd28365e",
       "sourceFrames": [
         0,
         10
       ],
       "fps": 30.0,
-      "duration": 0.3333333333333333
+      "duration": 0.3333333333333333,
+      "prePropSha256": "ebb52c61eb697f9eacc564879a30bb23d08b7487cc1fbb7f9203f97d6fff9199"
     },
     {
       "profile": "blade",
@@ -272,13 +287,15 @@
       "source": "E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_WPD_grd_rct_f.gmt",
       "sourceSha256": "b5d82f45bb777aaf652e7fc6f3ad2cf41b6632be0e28e01bc7e0ebdb74bf3f13",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_BladeGuardHit.x",
-      "sha256": "980dd63f927a08638ef4178cc43ec729daedaaaf3850db36844f38b4d468cc2e",
+      "sha256": "192f7de16c20af37d9239cd4d776c1d897290bb6489132bede4acacede306eb0",
       "sourceFrames": [
         0,
         18
       ],
       "fps": 30.0,
-      "duration": 0.6
+      "duration": 0.6,
+      "prePropSha256": "980dd63f927a08638ef4178cc43ec729daedaaaf3850db36844f38b4d468cc2e"
     }
-  ]
+  ],
+  "propAttachmentRepair": "prop-attachment-repair.json"
 }

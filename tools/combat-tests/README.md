@@ -83,3 +83,9 @@ The 0.45.0 weapon fixtures also exercise short/sweeping blades, real supplementa
 ## Source maintenance
 
 Run check_source_comments.py and test_source_comments.py for comment-free source/templates/tests and lexical preservation. Fixtures use fixture_markers.py data markers. The actual-module weapon/MP and aura fixtures count bridge calls and array scans, check registration invalidation, and retain all behavioural checks. See the shipped PERFORMANCE.md for measured scope; no FPS benchmark is implied.
+
+## 0.47.0 equipment and props
+
+Build/run style-item-tests.lua with build_style_item_tests.py and LuaRunner. It embeds the real policy, inventory wrappers, menu and Runtime for manual disable/delete, supported weapon transitions, client authority and neutral-heavy routing. The weapon MP fixture now also loads the policy to check authoritative cleanup and real-weapon preservation. The selector fixture covers top removal; charge/UI checks neutral tap-release alongside hold/double paths.
+
+Compile StyleItemProbe.java and PropAttachmentProbe.java against the local B42 JARs. Run validate_prop_attachments.py with the previous 0.46.0 release ZIP in dist. It verifies supplied/native/output hashes, unchanged body/finger bytes, native FK hand-to-prop offsets across every frame, a failing prior detached-prop regression, and source-heavy contact timing. WeaponAssetProbe covers the extra heavy clip and isolated selector; ChargeAssetProbe covers its single native contact. These tools never launch PZ.

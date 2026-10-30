@@ -11,6 +11,7 @@ public class WeaponAssetProbe {
   String[] labels={"Light01","Light02","Light03","Heavy","Ground","Idle","GuardEnter","GuardLoop","GuardHit","GuardExit"};
   int samples=0;
   var names=new ArrayList<String>();for(String family:new String[]{"Bat","Knife","Blade"})for(String label:labels){if(family.equals("Knife")&&label.startsWith("Guard"))continue;names.add("ProjectYakuza_DD_"+family+label);}
+  names.add("ProjectYakuza_DD_Heavy");
   for(String name:names){
    AiScene scene=Jassimp.importFile(media.resolve("anims_X/Bob/"+name+".x").toString(),EnumSet.of(AiPostProcessSteps.MAKE_LEFT_HANDED,AiPostProcessSteps.REMOVE_REDUNDANT_MATERIALS));
    Object params=pt.getMethod("create").invoke(null);pt.getField("scene").set(params,scene);pt.getField("mode").set(params,Enum.valueOf(mode,"AnimationOnly"));
@@ -36,7 +37,7 @@ public class WeaponAssetProbe {
   var node=Class.forName("zombie.core.skinnedmodel.advancedanimation.AnimNode");var stateType=Class.forName("zombie.core.skinnedmodel.advancedanimation.AnimState");
   var varsType=Class.forName("zombie.core.skinnedmodel.advancedanimation.AnimationVariableSource");var source=Class.forName("zombie.core.skinnedmodel.advancedanimation.IAnimationVariableSource");
   var set=varsType.getMethod("setVariable",String.class,String.class);int nodes=0;
-  try(var files=Files.walk(media.resolve("AnimSets/player"))){for(Path p:files.filter(x->(x.getFileName().toString().startsWith("ProjectYakuza_DD_Bat")||x.getFileName().toString().startsWith("ProjectYakuza_DD_Knife")||x.getFileName().toString().startsWith("ProjectYakuza_DD_Blade"))&&x.toString().endsWith(".xml")).toList()){
+  try(var files=Files.walk(media.resolve("AnimSets/player"))){for(Path p:files.filter(x->(x.getFileName().toString().startsWith("ProjectYakuza_DD_Bat")||x.getFileName().toString().startsWith("ProjectYakuza_DD_Knife")||x.getFileName().toString().startsWith("ProjectYakuza_DD_Blade")||x.getFileName().toString().equals("ProjectYakuza_DD_Heavy.xml"))&&x.toString().endsWith(".xml")).toList()){
    var doc=DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(p.toFile());Object parsed=node.getMethod("Parse",String.class).invoke(null,p.toAbsolutePath().toString());
    var state=stateType.getConstructor().newInstance();stateType.getMethod("addNode",node).invoke(state,parsed);var vars=varsType.getConstructor().newInstance();
    var conditions=doc.getElementsByTagName("m_Conditions");for(int i=0;i<conditions.getLength();i++){
@@ -45,11 +46,11 @@ public class WeaponAssetProbe {
    var method=stateType.getMethod("getAnimNodes",source,List.class);
    if(((List)method.invoke(state,vars,new ArrayList<>())).size()!=1)throw new AssertionError("owner selector "+p);
    set.invoke(vars,"ProjectYakuzaStyle","other.style");if(!((List)method.invoke(state,vars,new ArrayList<>())).isEmpty())throw new AssertionError("style leak");
-   set.invoke(vars,"ProjectYakuzaStyle","dragon_of_dojima");set.invoke(vars,"ProjectYakuzaWeaponProfile","");
+   set.invoke(vars,"ProjectYakuzaStyle","dragon_of_dojima");set.invoke(vars,"ProjectYakuzaWeaponProfile",p.getFileName().toString().equals("ProjectYakuza_DD_Heavy.xml")?"bat":"");
    if(!((List)method.invoke(state,vars,new ArrayList<>())).isEmpty())throw new AssertionError("unarmed leak");nodes++;
   }}
-  if(nodes!=32)throw new AssertionError("owner count "+nodes);
+  if(nodes!=33)throw new AssertionError("owner count "+nodes);
   var hand=Class.forName("zombie.inventory.types.HandWeapon");for(String n:new String[]{"getCondition","isTwoHandWeapon","getMaxRange","getMinDamage","getMaxDamage"})hand.getMethod(n);
-  System.out.println("PASS 26 native weapon clips, "+samples+" finite source bone samples, 32 isolated owner selectors and held-weapon Lua API methods (no game/GPU)");
+  System.out.println("PASS 27 native weapon/normal-heavy clips, "+samples+" finite source bone samples, 33 isolated owner selectors and held-weapon Lua API methods (no game/GPU)");
  }
 }

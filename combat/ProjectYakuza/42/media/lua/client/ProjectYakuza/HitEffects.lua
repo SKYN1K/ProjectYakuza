@@ -61,7 +61,7 @@ function F.onHit(player,victim,weapon,damage)
     if s.effectVictims[victim] then return end
     s.effectVictims[victim]=true
     local move=s.groundMove or s.finisherMove
-    local strong=move and (move.double or move.afterLight or move.chargedHeavy) and not move.runningAttack and not move.quickstepAttack
+    local strong=move and (move.neutralHeavy or move.double or move.afterLight or move.chargedHeavy) and not move.runningAttack and not move.quickstepAttack
     F.spawn(player,victim,strong,move and move.chargedHeavy)
 end
 function F.spawn(player,victim,strong,charged)

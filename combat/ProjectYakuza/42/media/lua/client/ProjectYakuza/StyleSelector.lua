@@ -40,6 +40,7 @@ function Wheel:prerender()
 
             self:drawSubTexture(icon,8,23,112,82,xy[1]-56,xy[2]-41,112,82,alpha,1,1,1)
         elseif icon then self:drawTextureScaled(icon,xy[1]-46,xy[2]-46,92,92,alpha,1,1,1)
+        elseif side=="top" then self:drawTextCentre("UNEQUIP",xy[1],xy[2]-8,1,1,1,alpha,UIFont.Small)
         elseif side=="bottom" then self:drawTextCentre("SETUP",xy[1],xy[2]-8,1,1,1,alpha,UIFont.Small)
         elseif style then self:drawTextCentre(side=="left" and "1" or "2",xy[1],xy[2]-10,1,1,1,alpha,UIFont.Medium) end
         if side=="left" or side=="right" then self:drawTextCentre(side=="left" and "STYLE 1" or "STYLE 2",xy[1],xy[2]+49,1,1,1,alpha,UIFont.Small) end
@@ -47,7 +48,7 @@ function Wheel:prerender()
     end
     local side=self.side
     local id=ProjectYakuza.StyleSlots.id(self.player,side);local style=id and ProjectYakuza.getStyle(id)
-    local label=side=="bottom" and "Assign styles" or style and style.name or "Empty"
+    local label=side=="top" and "Unequip style" or side=="bottom" and "Assign styles" or style and style.name or "Empty"
     self:drawTextCentre(label,170,350,1,1,1,elapsed,UIFont.Medium)
     self:drawTextCentre("Hold "..ProjectYakuza.Bindings.label("styles").." - mouse / arrow keys - release to select",170,380,.85,.85,.85,elapsed,UIFont.Small)
 end
@@ -62,6 +63,7 @@ function S.finish()
     S.cancel()
     if not S.allowed(p) then return end
     if side=="bottom" then S.openSetup(p);return end
+    if side=="top" then ProjectYakuza.unequipStyle(p);return end
     local id=ProjectYakuza.StyleSlots.id(p,side)
     if id then
         if not ProjectYakuza.isEquipped(p) or ProjectYakuza.getPlayerStyle(p).id~=id then ProjectYakuza.equipStyle(p,id)

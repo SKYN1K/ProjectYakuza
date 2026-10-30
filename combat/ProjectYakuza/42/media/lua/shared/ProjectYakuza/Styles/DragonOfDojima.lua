@@ -79,6 +79,7 @@ ProjectYakuza.registerStyle({
         styleEntry = {enabled=true,animation="ProjectYakuza_DD_StyleEntry",duration=50/30},
         taunt = {enabled=true,animation="ProjectYakuza_DD_Taunt01",duration=55/30},
         finisher = { enabled=true, variants={
+            default={enabled=true,animation="ProjectYakuza_DD_Heavy",nodeValue="dd_heavy",duration=50/30/1.6,speed=1.6,impact=9/50,damageMultiplier=1.25,neutralHeavy=true,fullBody=true,hitResponse=false},
             after_1={enabled=true,afterLight=1,animation="ProjectYakuza_DD_Finisher01",nodeValue="dd_finisher_01",damageMultiplier=1.25,duration=1.9/1.6,speed=1.6,impact=0.2807017543859649,reaction="enemy_01",fullBody=true,doubleLinkFrame=25,doubleLinkEndFrame=28},
             after_2={enabled=true,afterLight=2,animation="ProjectYakuza_DD_Finisher02",nodeValue="dd_finisher_02",damageMultiplier=1.25,duration=1.7666666666666666/1.6,speed=1.6,impact=0.4528301886792453,reaction="enemy_02",fullBody=true,doubleLinkFrame=31,doubleLinkEndFrame=34},
             after_3={enabled=true,afterLight=3,animation="ProjectYakuza_DD_Finisher03",nodeValue="dd_finisher_03",damageMultiplier=1.25,duration=2.033333333333333/1.6,speed=1.6,impact=0.32786885245901637,reaction="enemy_03",fullBody=true,doubleLinkFrame=26,doubleLinkEndFrame=29},

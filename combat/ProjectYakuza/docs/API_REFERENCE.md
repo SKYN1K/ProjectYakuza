@@ -154,3 +154,9 @@ See [Weapons](WEAPONS.md) for Weapons.register, explicit per-style item mappings
 Since 0.45.0, Weapons.hitRange(item) bounds registered weapon supplementary reach to its native maximum (framework .25–1.65 bounds); Weapons.extraDamage(item,damage) bounds SP supplementary damage to the current native maximum and 20, avoiding propagation of primary-only close kills. Native primary hit calculation is unchanged. See [weapon rules](WEAPONS.md#sharp-weapons-0450).
 
 Registration-aware internal indexes now accelerate clip and move resolution. Register configuration through the documented APIs and treat published nested tables as immutable. Re-registering a style refreshes its move index; registerNetworkAnimations publishes a fresh catalogue/selector index. See [maintenance notes](PERFORMANCE.md).
+
+## Temporary style equipment (0.47.0)
+
+`ProjectYakuza.equipStyle(player,id,playEntry)` retains a supported real weapon or equips the temporary style item. Optional `playEntry=false` suppresses the entry on automatic return from a real weapon. `ProjectYakuza.unequipStyle(player)` returns `(ok,reason)`, refuses a busy switch, disables the style, removes its temporary items and retains real equipment. Manual token unequip triggers the same disable/removal once native timed equipment changes settle. Multiplayer inventory deletion is server-owned.
+
+`ProjectYakuza.StyleItem` implements token-only cleanliness, protected normal inventory actions and lifecycle tracking. Other item types are unaffected. A finisher variant with `neutralHeavy=true` is eligible as `variants.default` when no combo/follow-up exists; it does not open a double-finisher branch. Styles without that opt-in keep their existing routing.

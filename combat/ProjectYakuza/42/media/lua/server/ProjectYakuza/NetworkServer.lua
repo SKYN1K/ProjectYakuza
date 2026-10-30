@@ -111,6 +111,7 @@ function S.equip(p,a,s)
         local created=not item
         if not item then item=inventory:AddItem(ProjectYakuza.TOKEN) end
         if not item then return end
+        if ProjectYakuza.StyleItem then ProjectYakuza.StyleItem.clean(item) end
         item:setMaxHitCount(ProjectYakuza.MAX_HIT_COUNT)
         item:setWeaponSprite("ProjectYakuza_EmptyHand");item:setOriginalWeaponSprite("ProjectYakuza_EmptyHand")
 
@@ -118,6 +119,7 @@ function S.equip(p,a,s)
         p:setSecondaryHandItem(nil);p:setPrimaryHandItem(item)
     elseif ProjectYakuza.isStyleToken(p:getPrimaryHandItem()) then p:setPrimaryHandItem(nil) end
     p:getModData().ProjectYakuzaStyle=a.style
+    if ProjectYakuza.StyleItem then ProjectYakuza.StyleItem.removeUnused(p,not armed and item or nil) end
     sendEquip(p)
     reply(p,"equipReady",{player=p:getOnlineID(),request=a.request,style=a.style,weaponProfile=armed and a.weaponProfile or "",item=item and item:getID() or -1})
     if a.style=="none" then
@@ -258,7 +260,7 @@ function S.command(module,command,p,a)
         job.seen[a.zombie]=true;job.count=job.count+1
         if command=="impact" then
             local response=ProjectYakuza.HitResponses.resolve(ProjectYakuza.getStyle(job.style),job.move)
-            local packet={player=p:getOnlineID(),event=a.event,zombie=a.zombie,style=job.style,reaction=job.move.reaction or "",strong=job.move.afterLight~=nil or job.move.chargedHeavy==true,charged=job.move.chargedHeavy==true,
+            local packet={player=p:getOnlineID(),event=a.event,zombie=a.zombie,style=job.style,reaction=job.move.reaction or "",strong=job.move.neutralHeavy==true or job.move.afterLight~=nil or job.move.chargedHeavy==true,charged=job.move.chargedHeavy==true,
                 responseKind=response and response.kind,responseForce=response and response.force}
             if response or job.juggle or ProjectYakuza.Juggling.get(z) then
 

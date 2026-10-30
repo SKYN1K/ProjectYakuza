@@ -25,7 +25,7 @@ Each key accepts a client provider ID or `false`. Omit a channel to retain its b
 | selectorSlot | Each assigned slot's drawing, selected from that slot's style; receives its position, alpha and selection state |
 | setup | Assignment panel's drawing; its existing combo boxes/buttons remain children unless the provider explicitly manages them |
 
-The wheel's top remains reserved and bottom opens assignments. Rendering hooks do not change slot policy or combat inputs. Custom selector graphics must keep those actions understandable. Setup callbacks receive `extra.left` and `extra.right` native combo boxes, plus `extra.message`. Slot callbacks receive `extra.side/x/y/alpha/selected/style`; wheel callbacks receive `extra.side`.
+The wheel's top unequips the style and bottom opens assignments. Rendering hooks do not change slot policy or combat inputs. Custom selector graphics must keep those actions understandable. Setup callbacks receive `extra.left` and `extra.right` native combo boxes, plus `extra.message`. Slot callbacks receive `extra.side/x/y/alpha/selected/style`; wheel callbacks receive `extra.side`.
 
 ## Client provider example
 
