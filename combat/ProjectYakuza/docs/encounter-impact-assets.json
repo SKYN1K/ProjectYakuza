@@ -1,0 +1,38 @@
+{
+  "authorization": "User explicitly approved original Yakuza 6 impact asset decoding/crops on 2026-10-30.",
+  "operation": "Exact full DDS RGBA decoding at original resolution; no recolouring, alpha replacement, AI, resizing or invented artwork. Atlas frames selected at runtime.",
+  "assets": [
+    {
+      "source": "C:\\Users\\Nik\\Documents\\Codex\\2026-10-19\\wo\\work\\y6-particle\\raw_event\\e_j_0252_expAnimG1024.dds",
+      "sourceSha256": "41743541cd300442dcfc1ae87d7e050caaeff42e48ae3244cf86a1f8686165e2",
+      "output": "42/media/textures/ProjectYakuza/EncounterExplosion.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "grid": [
+        8,
+        8
+      ],
+      "frames": 64,
+      "sha256": "1a2a23786137ebbf6e8b6f095417d961905af1c4154b1f5e10295e764213724b",
+      "rgbaSha256": "428c9ca64b7dcbb6d7a4f2b66eed463b4b562d93ff796841b259b1cc98d9280b"
+    },
+    {
+      "source": "C:\\Users\\Nik\\Documents\\Codex\\2026-10-19\\wo\\work\\y6-particle\\raw_event\\e_j_0251_explosionA03.dds",
+      "sourceSha256": "2f1f1ac5a991e78b8b1a2963d6c855860a751e34ffb24d84335f39c4ec6f780d",
+      "output": "42/media/textures/ProjectYakuza/EncounterShock.png",
+      "size": [
+        256,
+        256
+      ],
+      "grid": [
+        1,
+        1
+      ],
+      "frames": 1,
+      "sha256": "844483a11ee29f49ffd2c52026d288f076607229ee202bcea430dce66ec7e5bd",
+      "rgbaSha256": "bc2efa4e216a398bc623404e5199a79ca1bc3d773eefc3604396b0e88497c082"
+    }
+  ]
+}

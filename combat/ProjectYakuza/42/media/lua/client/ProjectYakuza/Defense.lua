@@ -185,7 +185,7 @@ function A:guard(dt)
     if (self.phaseName=="hold" or self.phaseName=="hit") and var(p,"ProjectYakuzaDefenseMarker")==self.phaseName.."_started" then self.guardStarted=true end
     if not self.guardStarted then return end
     for z,s in pairs(ProjectYakuza.TigerDrop.tracked) do
-        if s.player==p and ProjectYakuza.TigerDrop.validTarget(p,z) then
+        if s.player==p and ProjectYakuza.TigerDrop.validGuardTarget(p,z) then
             if endurance(p)<.10 then
                 local input=D.input[p];if input then input.brokenUntil=now()+1200;input.mustRelease=true end
                 ProjectYakuza.emit("guardBroken",p);self:phase("exit");return

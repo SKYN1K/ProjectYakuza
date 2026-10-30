@@ -103,3 +103,9 @@ Compile ExtremeAttackProbe.java and run validate_extreme_attacks.py. It checks o
 ## 0.50.0 style-owned encounter intros
 
 Build/run encounter-tests.lua via build_encounter_tests.py and LuaRunner. It embeds current Registry, DoD config, StyleUI, detector, font metrics and real renderer. Checks include inclusive 0/10/11/39/40+ boundaries, circular radius/floor/death exclusion, a 64-entry tick budget and capped counts, throttled native threat reads, pause/rearm, no duplicate intros, mouse-transparent panels, viewport placement, custom providers/sounds, cleanup and no cross-style fallback. validate_encounter_assets.py reconstructs the exact supplied Edo SZ rasterization and original Y6 flare pixels. EncounterAssetProbe verifies native ImageData decode and native Stats/IsoCell API contracts without launching PZ.
+
+## 0.51.0 entry, counter, audio and intro regression
+
+Build/run repair-tests.lua using build_repair_tests.py and LuaRunner for actual heavy-input Tiger Drop timing, cooldown, MP age and independent music gain. Style-entry fixture covers deferred equipment readiness and interruption. build_sound_mod_options_tests.py embeds the installed native ModOptions implementation for persistence and group gain checks.
+
+Run validate_repair_assets.py with the previous 0.50.0 ZIP in dist and supplied DDS sources available. It verifies exact impact pixels/hashes, byte-identical non-prop entry blocks and 102 native hand-prop pairs. Recompile EncounterAssetProbe.java to decode all four intro textures and check native detection APIs without starting PZ.

@@ -103,7 +103,7 @@ ProjectYakuza.registerStyle({
             double_after_4={enabled=true,afterLight=4,animation="ProjectYakuza_DD_DoubleFinisher04",nodeValue="dd_double_04",damageMultiplier=1.25,duration=2.3666666666666667/1.6,speed=1.6,impact=0.36619718309859156,reaction="enemy_04",fullBody=true,double=true},
         } },
         grab = {enabled=false,reason="Temporarily disabled",requiresTarget=true,animation="ProjectYakuza_DD_Grab",targetAnimation="ProjectYakuza_DD_GrabVictimEnter",holdMs=3500},
-        parry = {enabled=true,animation="ProjectYakuza_DD_TigerDrop",nodeValue="dd_tiger_drop",duration=1.1,speed=1,requiresTarget=true,targetAnimation="Zombie_ShotBelly",cooldownMs=60000,windowMs=200},
+        parry = {enabled=true,animation="ProjectYakuza_DD_TigerDrop",nodeValue="dd_tiger_drop",duration=1.1,speed=1,requiresTarget=true,targetAnimation="Zombie_ShotBelly",cooldownMs=60000,windowMs=300},
         block = {enabled=true,animation="ProjectYakuza_DD_Guard",staminaPerHit=.08},
         heatActivation = {enabled=true,variants={
             ["1"]={animation="ProjectYakuza_DD_HeatActivate01",duration=1.5},

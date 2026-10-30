@@ -26,6 +26,7 @@ do local _="ProjectYakuzaFixture:COMBO" end
 do local _="ProjectYakuzaFixture:STYLE" end
 do local _="ProjectYakuzaFixture:BINDINGS" end
 local PY=ProjectYakuza
+PY.StyleEntry={request=function()return true end}
 local swingEvents=0
 do local _="ProjectYakuzaFixture:HEAT" end
 do local _="ProjectYakuzaFixture:RUNTIME" end
@@ -86,6 +87,7 @@ check(armed~=original and armed.id==original.id,'equipment view preserves style 
 check(#armed.lightAttacks==3 and #original.lightAttacks==4,'three weapon attacks and four original unarmed attacks')
 check(not armed.actions.heavyCharge and not armed.actions.runningAttack and not armed.tigerDrop,'unarmed special moves do not leak into weapons')
 check(armed.actions.quickstep==original.actions.quickstep,'same quota-controlled quickstep retained')
+check(armed.actions.styleEntry==original.actions.styleEntry,'armed profiles retain style selection entry')
 check(armed.actions.block.animation=='ProjectYakuza_DD_BatGuard','weapon-specific moving guard')
 for _,id in ipairs(W.profiles.dragon_of_dojima.bat.items)do check(W.profile(original.id,weapon(id))=='bat','explicit supplied blunt weapon '..id)end
 check(not W.profile(original.id,knife),'heavy axe retains vanilla combat')

@@ -10,6 +10,9 @@ for _,style in pairs(ProjectYakuza.styles) do M.registerStyle(style) end
 ProjectYakuza.on("styleRegistered",M.registerStyle)
 local function now()return getTimestampMs()end
 local function optionVolume()return math.max(0,math.min(1,getCore():getOptionMusicVolume()/10))end
+local function musicLevel()
+    return ProjectYakuza.SoundSettings and ProjectYakuza.SoundSettings.musicLevel and ProjectYakuza.SoundSettings.musicLevel() or 1
+end
 local function eligible(p)
     if not p or not instanceof(p,"IsoPlayer") or not p:isLocalPlayer() or p:isDead()
         or not ProjectYakuza.isEquipped(p) or p:getVehicle() then return nil end
@@ -32,7 +35,7 @@ function M.stop()
     if M.ticking then Events.OnTick.Remove(M.tick);M.ticking=false end
 end
 function M.start(p,theme,t,continuing)
-    if not theme or optionVolume()<=0 or (M.failedUntil and t<M.failedUntil) then return false end
+    if not theme or musicLevel()<=0 or (M.failedUntil and t<M.failedUntil) then return false end
     if not M.emitter then
         M.emitter=FMODSoundEmitter.new()
         getSoundManager():unregisterEmitter(M.emitter)
@@ -80,7 +83,7 @@ end
 function M.tick()
     if not M.sound then return end
     local theme=eligible(M.owner)
-    if not theme or not M.contains(theme,M.theme) or optionVolume()<=0 then M.stop();return end
+    if not theme or not M.contains(theme,M.theme) or musicLevel()<=0 then M.stop();return end
     M.emitter:tick()
     local t=now();local elapsed=math.max(0,t-M.lastTick);M.lastTick=t
     if isGamePaused() then M.lastCombat=M.lastCombat+elapsed;return end
@@ -93,7 +96,7 @@ function M.tick()
     if active then M.mix=math.min(1,M.mix+dt/M.fadeIn)
     else M.mix=math.max(0,M.mix-dt/M.fadeOut) end
     if not active and M.mix<=0 then M.stop();return end
-    local base=baseVolume();local gain=base*M.mix;local duck=base*(1-M.mix)
+    local base=baseVolume();local gain=musicLevel()*M.mix;local duck=base*(1-M.mix)
     if not M.lastGain or math.abs(gain-M.lastGain)>=0.001 then M.emitter:setVolume(M.sound,gain);M.lastGain=gain end
     if not M.lastDuck or math.abs(duck-M.lastDuck)>=0.001 then getSoundManager():setMusicVolume(duck);M.lastDuck=duck end
 end

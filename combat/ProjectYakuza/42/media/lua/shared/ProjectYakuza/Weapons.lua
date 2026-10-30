@@ -19,7 +19,9 @@ function W.register(styleId,profile)
     local view={};for key,value in pairs(base) do view[key]=value end
     view.weaponStandaloneHeavy=profile.standaloneHeavy==true
     view.weaponProfile=profile.id;view.lightAttacks=profile.lightAttacks;view.groundAttacks=profile.groundAttacks
-    view.actions=profile.actions or {};view.attackSpeed=profile.attackSpeed or 1
+    view.actions={};for key,value in pairs(profile.actions or {}) do view.actions[key]=value end
+    if view.actions.styleEntry==nil and base.actions then view.actions.styleEntry=base.actions.styleEntry end
+    view.attackSpeed=profile.attackSpeed or 1
     view.quickstepCancelLights=profile.quickstepCancelLights==true
     view.tigerDrop=false;view.enemyReactions=false
     view.hitResponses=profile.hitResponses;view.juggling=profile.juggling

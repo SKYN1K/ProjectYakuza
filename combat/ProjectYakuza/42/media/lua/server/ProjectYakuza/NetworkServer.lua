@@ -240,6 +240,7 @@ function S.command(module,command,p,a)
         local z=S.validVictim(p,a.zombie,1.6,.35)
         if not style.tigerDrop or not z or z:isOnFloor() or z:isKnockedDown() then return end
         if not s.counterUntil or t>s.counterUntil then
+            if not P.number(a.age,0,300) then return end
             if t<(s.counterReady or 0) or z:getTarget()~=p or not z:isAttacking() or z:getAttackDidDamage() then return end
             s.counterReady=t+60000;s.counterUntil=t+400;s.counterSeen={};s.counterCount=0
         end

@@ -24,6 +24,7 @@ function ProjectYakuza.equipStyle(player, styleId,playEntry)
     if ProjectYakuza.Weapons and ProjectYakuza.Weapons.profile(styleId,held) then
         player:setVariable("ProjectYakuzaActive",true)
         if ProjectYakuza.StyleItem then ProjectYakuza.StyleItem.removeUnused(player,nil);ProjectYakuza.StyleItem.remember(player) end
+        if playEntry~=false then ProjectYakuza.StyleEntry.request(player,styleId) end
         return
     end
     local items, token = player:getInventory():getItems(), nil

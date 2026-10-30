@@ -54,7 +54,8 @@ function p:getMovementLastFrame()return {set=function()end}end
 function p:setMoving(v)self.moving=v end
 function p:setRunning(v)self.running=v end
 function p:setSprinting(v)self.sprinting=v end
-function p:getPrimaryHandItem()return {}end
+local entryItem={}
+function p:getPrimaryHandItem()return entryItem end
 function p:isLocalPlayer()return self.localPlayer end
 function p:getOffsetX()return 0 end
 function p:getOffsetY()return 0 end
@@ -71,6 +72,7 @@ local vanilla={0,0,0}
 ISEmoteRadialMenu={onKeyPressed=function()vanilla[1]=vanilla[1]+1 end,onKeyRepeat=function()vanilla[2]=vanilla[2]+1 end,onKeyReleased=function()vanilla[3]=vanilla[3]+1 end}
 
 function p:hasTimedActions()return self.nativeAction~=nil end
+function p:isWeaponReady()return self.ready~=false end
 function p:isAttackStarted()return false end
 function p:isPerformingAttackAnimation()return false end
 function p:isRunning()return self.running==true end
@@ -118,4 +120,16 @@ E.clear();ProjectYakuza.Bindings.update(p);check(a.cleaned and not p.block and n
 a,c=begin();equipped=false;a:update();equipped=true;check(a.stopped and not p.block,'unequipping cancels safely')
 queueFail=true;p.nativeAction=nil;check(not E.request(p,'dragon_of_dojima') and not ProjectYakuza.activeActions[p],'rejected queue has no lock or start cue');queueFail=false
 check(not E.request(p,'different_style'),'stale selected style cannot start entry')
+p.nativeAction=nil;p.hit='';p.ready=false
+check(E.request(p,'dragon_of_dojima') and E.pending[p] and not ProjectYakuza.activeActions[p],'entry waits for unsettled weapon model instead of being lost')
+check(ProjectYakuza.blocksNativeAttacks(p),'pending style selection discards attack input')
+clock=clock+60;E.retry();check(E.pending[p]~=nil,'model readiness is retried with a bounded deadline')
+p.ready=true;clock=clock+60;E.retry()
+check(not E.pending[p] and ProjectYakuza.activeActions[p] and not E.pendingHook,'ready equipment starts queued entry once and unhooks retry')
+E.clear()
+p.ready=false;E.request(p,'dragon_of_dojima');p.hit='Bite';clock=clock+60;E.retry()
+check(not E.pending[p],'getting hit cancels pending entry')
+p.hit='';E.request(p,'dragon_of_dojima');clock=clock+2001;E.retry()
+check(not E.pending[p] and not E.pendingHook,'failed equipment readiness cannot leave an input lock')
+p.ready=true
 return 'PASS '..checks..' locked style entry, vulnerability, completion and cleanup checks'

@@ -4,7 +4,7 @@ require "TimedActions/ISTimedActionQueue"
 local ProjectYakuza=ProjectYakuza
 local P={tracked=setmetatable({}, {__mode="k"}),players=setmetatable({}, {__mode="k"}),flights={}}
 ProjectYakuza.TigerDrop=P
-P.windowMs=200
+P.windowMs=300
 P.cooldownMs=60000
 local function now()return getTimestampMs()end
 local function var(z,n)return z:GetVariable(n) or "" end
@@ -28,17 +28,23 @@ function P.inRange(p,z)
     local length=math.sqrt(fx*fx+fy*fy)
     return length>.001 and (dx*fx+dy*fy)/(math.sqrt(d)*length)>=.35
 end
-function P.validTarget(p,z)
+local function activeAttack(p,z)
     local s=P.tracked[z]
     local outcome=z and z:getAttackOutcome()
-    return s and s.player==p and (outcome=="start" or outcome=="success") and P.inRange(p,z) and z:isAttacking()
-        and not z:getAttackDidDamage() and bool(z,"ProjectYakuzaTigerWindow")
-        and not bool(z,"ZombieBiteDone")
+    return s and s.player==p and (outcome=="start" or outcome=="success")
+        and P.inRange(p,z) and z:isAttacking() and not z:getAttackDidDamage() and not bool(z,"ZombieBiteDone")
 end
-function P.track(p)
+function P.validGuardTarget(p,z)
+    return activeAttack(p,z) and bool(z,"ProjectYakuzaTigerWindow")
+end
+function P.validTarget(p,z)
+    local s=P.tracked[z]
+    return activeAttack(p,z) and s.startedAt and now()-s.startedAt>=0 and now()-s.startedAt<=P.windowMs
+end
+function P.track(p,force)
     local t=now();local ps=P.players[p]
     if not ps then ps={};P.players[p]=ps end
-    if t<(ps.nextScan or 0) then return end
+    if not force and t<(ps.nextScan or 0) then return end
     ps.nextScan=t+50
 
     local canCounter=P.ready(p) or (ProjectYakuza.Guard and ProjectYakuza.Guard.canTrack(p))
@@ -50,7 +56,7 @@ function P.track(p)
             if objects then for i=0,objects:size()-1 do
                 local victim=objects:get(i)
                 if instanceof(victim,"IsoZombie") and not victim:isDead() and not victim:isOnFloor()
-                    and not victim:isAttacking() and not P.tracked[victim] then
+                    and not P.tracked[victim] then
                     local dx,dy=victim:getX()-p:getX(),victim:getY()-p:getY()
                     if dx*dx+dy*dy<=4.41 then
                         P.tracked[victim]={player=p}
@@ -61,6 +67,10 @@ function P.track(p)
         end end
     end
     for victim,s in pairs(P.tracked) do if s.player==p then
+        local attacking=victim:isAttacking() and victim:getTarget()==p and (victim:getAttackOutcome()=="start" or victim:getAttackOutcome()=="success")
+        if attacking and not s.attacking then s.startedAt=t end
+        s.attacking=attacking
+        if not attacking then s.startedAt=nil end
         local dx,dy=victim:getX()-p:getX(),victim:getY()-p:getY()
         if victim:isDead() or ((not canCounter or dx*dx+dy*dy>9) and not victim:isAttacking()) then
             victim:setVariable("ProjectYakuzaTigerTracked",false);victim:setVariable("ProjectYakuzaTigerWindow",false)
@@ -70,6 +80,7 @@ function P.track(p)
 end
 function P.tryCounter(p)
     if not P.ready(p) then return false end
+    P.track(p,true)
     local target,best
     for z,s in pairs(P.tracked) do if P.validTarget(p,z) then
         local d=(z:getX()-p:getX())^2+(z:getY()-p:getY())^2
@@ -103,7 +114,10 @@ function P.tick()
     unhook()
 end
 function P.kill(p,z)
-    if isClient() and ProjectYakuza.Network then ProjectYakuza.Network.send(p,"counter",{zombie=z:getOnlineID()});return end
+    if isClient() and ProjectYakuza.Network then
+        local tracked=P.tracked[z]
+        ProjectYakuza.Network.send(p,"counter",{zombie=z:getOnlineID(),age=tracked and tracked.startedAt and now()-tracked.startedAt or nil});return
+    end
     local dx,dy=z:getX()-p:getX(),z:getY()-p:getY()
     local n=math.sqrt(dx*dx+dy*dy);dx,dy=dx/n,dy/n
     z:setAttackOutcome("fail");z:setVariable("ProjectYakuzaTigerWindow",false)

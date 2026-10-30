@@ -134,7 +134,7 @@ snapshot(p,{weaponProfile='bat',clip='ProjectYakuza_DD_HeatActivate01',move='dd_
 check(state.seq==accepted,'unavailable armed actions rejected')
 check(P.move('dragon_of_dojima','dd_bat_heavy').damageMultiplier==1.25,'network resolver knows weapon heavy')
 check(P.kind('dragon_of_dojima','ProjectYakuza_DD_BatGuardLoop')=='block','network resolver knows weapon guard')
-z1.attacking=true;z1.target=p;command('counter',{zombie=z1.id})
+z1.attacking=true;z1.target=p;command('counter',{zombie=z1.id,age=0})
 check(not z1.kills,'armed profile cannot invoke the unarmed Tiger Drop server command')
 snapshot(p,{weaponProfile='bat',clip='ProjectYakuza_DD_BatGuardLoop',move='dd_bat_light_01',phase='hold'})
 check(state.packet.clip=='ProjectYakuza_DD_BatGuardLoop','weapon guard phase clip is accepted through its action animation contract')

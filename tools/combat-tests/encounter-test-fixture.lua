@@ -27,11 +27,12 @@ function ISPanel:drawSubTexture(t,x,y,w,h,dx,dy,dw,dh,alpha,r,g,b)
  check(dw>0 and dh>0 and alpha>=0 and alpha<=1,'valid glyph destination and transparency')
  draws[#draws+1]={path=t.path,x=dx,y=dy,width=dw,height=dh,alpha=alpha}
 end
+function ISPanel:drawRect(x,y,w,h,alpha)check(alpha>=0 and alpha<=1,'bounded screen tint')end
 function ISPanel:drawTextureScaled(t,x,y,w,h,alpha,r,g,b)
  check(alpha>=0 and alpha<=1,'original flare transparency bounded')
  draws[#draws+1]={path=t.path,alpha=alpha}
 end
-getTexture=function(path)return {path=path,width=path:find('EdoSZ') and 2048 or 512,height=512}end
+getTexture=function(path)return {path=path,width=path:find('EdoSZ') and 2048 or path:find('Explosion') and 1024 or 512,height=path:find('Explosion') and 1024 or 512}end
 do local _="ProjectYakuzaFixture:REGISTRY" end
 do local _="ProjectYakuzaFixture:STYLE" end
 local PY=ProjectYakuza
@@ -77,7 +78,7 @@ for _,case in ipairs({{0,'A bunch of brain eaters'},{10,'A bunch of brain eaters
  local s=finishCount();check(s.context.title==case[2],'radius count selects correct title '..case[1])
  check(s.context.count==math.min(40,case[1]),'count stops at highest title threshold')
  check(s.panel.mouseEvents==false and s.panel.inUI,'intro panel never captures mouse input')
- clock=clock+150;E.tick();s.panel:prerender();check(additive,'style UI restores incoming blend state')
+ clock=clock+150;E.tick();s.panel:prerender();clock=clock+220;E.tick();s.panel:prerender();check(additive,'style UI restores incoming blend state')
 end
 check(#draws>0,'real Edo glyph and original flare provider draws')
 E.clear();crowd(10);zombies[#zombies+1]=zombie(22,12)

@@ -357,6 +357,7 @@ local function onUpdate(player)
         s.lastDown = B.down("light")
         return
     end
+    if ProjectYakuza.StyleEntry and ProjectYakuza.StyleEntry.pending and ProjectYakuza.StyleEntry.pending[player] then s.lastDown=B.down("light");return end
     if ProjectYakuza.StyleSelector and (ProjectYakuza.StyleSelector.wheel or ProjectYakuza.StyleSelector.setup) then s.lastDown=B.down("light");return end
     local handoff=ProjectYakuza.finisherHandoffs[player]
     if handoff then
@@ -406,7 +407,7 @@ local function onUpdate(player)
     if ProjectYakuza.Quicksteps and ProjectYakuza.Quicksteps.isCancelling and ProjectYakuza.Quicksteps.isCancelling(player) then s.lastDown=B.down("light");return end
     if ProjectYakuza.RunningAttacks then ProjectYakuza.RunningAttacks.update(player) end
     ProjectYakuza.syncGroundAttack(player,style,s)
-    if counterPressed and ProjectYakuza.TigerDrop and ProjectYakuza.TigerDrop.tryCounter(player) then if ProjectYakuza.ChargedHeavy then ProjectYakuza.ChargedHeavy.clearPlayer(player) end;s.lastDown=B.down("light");return end
+    if (counterPressed or finisherPressed) and ProjectYakuza.TigerDrop and ProjectYakuza.TigerDrop.tryCounter(player) then if ProjectYakuza.ChargedHeavy then ProjectYakuza.ChargedHeavy.clearPlayer(player) end;s.lastDown=B.down("light");return end
     local heavyInput=ProjectYakuza.ChargedHeavy and ProjectYakuza.ChargedHeavy.input(player,finisherDown,finisherPressed,s,style)
     if finisherPressed and not heavyInput then ProjectYakuza.queueFinisher(player) end
     if ProjectYakuza.activeActions[player] and ProjectYakuza.activeActions[player].kind=="heavyCharge" then s.lastDown=B.down("light");return end
