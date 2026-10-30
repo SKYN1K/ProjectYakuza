@@ -97,3 +97,10 @@
 !/tools/combat-tests/validate_repair_assets.py
 !/tools/combat-tests/build_sound_mod_options_tests.py
 !/tools/combat-tests/sound-mod-options-fixture.lua
+
+!/tools/combat-tests/retarget_locomotion.py
+!/tools/combat-tests/build_locomotion_assets.py
+!/tools/combat-tests/locomotion_math.py
+!/tools/combat-tests/validate_locomotion_assets.py
+!/tools/combat-tests/LocomotionAssetProbe.java
+!/tools/build_locomotion_nodes_052.py

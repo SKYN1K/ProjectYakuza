@@ -1,0 +1,19 @@
+{
+  "nodes": [
+    "42/media/AnimSets/player/run/ProjectYakuza_DD_LocomotionRun.xml",
+    "42/media/AnimSets/player/run/ProjectYakuza_DD_LocomotionBatRun.xml",
+    "42/media/AnimSets/player/idle/ProjectYakuza_DD_LocomotionBatCarry.xml",
+    "42/media/AnimSets/player/movement/ProjectYakuza_DD_LocomotionBatWalk.xml",
+    "42/media/AnimSets/player/run/ProjectYakuza_DD_LocomotionKnifeRun.xml",
+    "42/media/AnimSets/player/idle/ProjectYakuza_DD_LocomotionKnifeCarry.xml",
+    "42/media/AnimSets/player/movement/ProjectYakuza_DD_LocomotionKnifeWalk.xml",
+    "42/media/AnimSets/player/run/ProjectYakuza_DD_LocomotionBladeRun.xml",
+    "42/media/AnimSets/player/idle/ProjectYakuza_DD_LocomotionBladeCarry.xml",
+    "42/media/AnimSets/player/movement/ProjectYakuza_DD_LocomotionBladeWalk.xml"
+  ],
+  "blendSeconds": 0.25,
+  "runHealthySpeedScale": 1.28,
+  "nativeRunCycleSeconds": 0.6666666666666666,
+  "sourceRunCycleSeconds": 1.0666666666666667,
+  "operation": "DoD-only non-aimed run and unlocked weapon carry selectors. Existing injury, tree, overburdened and turn nodes remain native. Carry-walk lower body uses existing native walking. No actor displacement or speed changes."
+}

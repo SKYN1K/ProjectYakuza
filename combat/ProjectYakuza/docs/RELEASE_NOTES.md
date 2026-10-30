@@ -1,10 +1,9 @@
-# Project Yakuza 0.51.0
+# Project Yakuza 0.52.0
 
-- Restored style-selection stance entry while holding supported weapons. Equipment/model readiness now gets a bounded retry instead of silently losing the entry request. Entry still locks movement and attacks, remains vulnerable, and uses the original Kiwami 2 body motion.
-- Repaired only the entry clip's two prop tracks using native hand offsets so held weapons follow the hands; 51 source frames and all body/finger channels are preserved.
-- Heavy input (MMB by default) now prioritizes Tiger Drop during the first 0.3 seconds of an observed frontal zombie attack, before damage. The one-minute cooldown remains. Guard keeps its original native timing. This Lua window is measured from observing the windup, not predicted bite contact.
-- Combat music gain now uses only Project Yakuza's Music slider, independently of PZ's Music option. Vanilla music still ducks/restores according to its own option; overall device/master mixing still applies.
-- Polished DoD's encounter title with a cool screen filter, flight into the centre, a brief shake of the intro graphics, and original Yakuza 6 explosion/shock textures behind the landing text. The world camera stays fixed. Existing crowd thresholds and style-exclusive/custom-provider behavior remain.
-- All texture conversion and prop repair use explicitly approved existing assets. No AI, upscaling, invented artwork or new audio. Grabs remain disabled; the separate voice pack is untouched.
+- Added Kiryu's supplied Yakuza 6 running loop while Dragon of Dojima is selected, for unarmed, bat/club, knife and longer-blade profiles.
+- Added supplied unlocked weapon-hold loops outside aiming, including walking variants with Zomboid's native leg motion. Held weapon props follow the native hand/grip offsets.
+- Added 0.25-second animation blends and transitions between running, relaxed carrying and combat stances. Native walking speed/deferred travel tracks are preserved; the run cadence is matched to the existing healthy native run.
+- Scope is ordinary non-aimed running and relaxed armed idle/walking. Sprinting, crouching, turning, injuries, trees and overburdened movement keep existing native behavior. Other styles and unsupported weapons are unaffected.
+- Uses 13 approved source-derived motion files and 10 style/profile selectors. No extra per-frame Lua checks, zombie scans, timers or network packets. No visual artwork, audio, AI or upscaling.
 
-Offline checks and asset provenance are documented in VALIDATION_0.51.0.md. PZ was not launched. Install matching client/server versions and restart fully to load the repaired clip and textures.
+5,489 Kahlua regression assertions pass, plus native clip/selector, movement-track, source-sample and hand-prop checks. See VALIDATION_0.52.0.md and LOCOMOTION.md. PZ was not launched; assess blending/foot contact after a full restart. Install matching server/client versions. Grabs remain disabled and the separate voice pack is untouched.

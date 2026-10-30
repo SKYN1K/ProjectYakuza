@@ -109,3 +109,7 @@ Build/run encounter-tests.lua via build_encounter_tests.py and LuaRunner. It emb
 Build/run repair-tests.lua using build_repair_tests.py and LuaRunner for actual heavy-input Tiger Drop timing, cooldown, MP age and independent music gain. Style-entry fixture covers deferred equipment readiness and interruption. build_sound_mod_options_tests.py embeds the installed native ModOptions implementation for persistence and group gain checks.
 
 Run validate_repair_assets.py with the previous 0.50.0 ZIP in dist and supplied DDS sources available. It verifies exact impact pixels/hashes, byte-identical non-prop entry blocks and 102 native hand-prop pairs. Recompile EncounterAssetProbe.java to decode all four intro textures and check native detection APIs without starting PZ.
+
+## 0.52.0 running and unlocked weapon holds
+
+Use Blender in background mode with build_locomotion_assets.py to retarget the supplied local sources and combine their upper body with native walking legs. build_locomotion_nodes_052.py installs the 10 scoped selectors. Run validate_locomotion_assets.py for source/native sample, loop, hash and hand-prop checks; it invokes Blender only for math, then native Java probes without starting PZ. Compile LocomotionAssetProbe.java first. It also rejects missing deferred travel and tests native selection/fallback conditions. Source/extraction/intermediate files remain local and are not bundled in Git.

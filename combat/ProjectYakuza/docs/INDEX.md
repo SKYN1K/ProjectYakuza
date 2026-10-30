@@ -1,6 +1,6 @@
 # Documentation index
 
-Current manual: Project Yakuza 0.50.0, Lua API 3, MP protocol 2.
+Current manual: Project Yakuza 0.52.0, Lua API 3, MP protocol 2.
 
 | Task | Guide |
 | --- | --- |
@@ -33,3 +33,5 @@ Current manual: Project Yakuza 0.50.0, Lua API 3, MP protocol 2.
 Older feature notes and JSON/TXT reports record previous development states and asset provenance. They may contain superseded controls/counts/prototype limits. The guides above define the current authoring contract. Keep extraction folders, previews, backups, game libraries, credentials and the separate voice-pack project outside distributed addons.
 
 - [Source-tracked punch effects](ATTACK_EFFECTS.md): first-light prototype, numeric attachment paths, timing, budgets and fidelity limits.
+
+- [Style-exclusive running and relaxed weapon holding](LOCOMOTION.md)
