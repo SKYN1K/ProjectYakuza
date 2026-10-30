@@ -25,8 +25,8 @@ for group in ['melee','stomp','actions']:
     for k,v in [('m_Name',name),('m_Type',typ),('m_Value',value)]:E.SubElement(c,k).text=v
    E.ElementTree(native).write(root/'AnimSets/player'/group/('ProjectYakuza_MP_'+p.name),encoding='utf-8',xml_declaration=True)
 
-# Two event-free nodes let the same clip restart on a new network action/swing
-# serial. Merely assigning the same ProjectYakuzaRemoteClip string leaves the old node live.
+
+
 for p in (root/'AnimSets/player').rglob('ProjectYakuza_MP_*.xml'):
  if '_Cycle1' in p.stem:continue
  node=E.parse(p).getroot()
@@ -37,8 +37,8 @@ for p in (root/'AnimSets/player').rglob('ProjectYakuza_MP_*.xml'):
  other.findall('m_Conditions')[-1].find('m_Value').text='1'
  E.ElementTree(other).write(p.with_stem(p.stem+'_Cycle1'),encoding='utf-8',xml_declaration=True)
 
-# B42 changes from hitreaction to hitreaction-hit on another wasHit event.
-# Keep the supplied reaction clips available in that native repeat-hit group.
+
+
 repeat=root/'AnimSets/zombie/hitreaction-hit';repeat.mkdir(exist_ok=True)
 for p in (root/'AnimSets/zombie/hitreaction').glob('ProjectYakuza_EnemyHit*.xml'):
  E.ElementTree(E.parse(p).getroot()).write(repeat/p.name,encoding='utf-8',xml_declaration=True)

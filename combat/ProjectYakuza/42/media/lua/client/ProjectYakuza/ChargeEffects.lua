@@ -68,7 +68,7 @@ function F.draw()
                 phase,weight,location=PY.AttackEffects.findTrack(p,s.track.animation,s.location)
                 s.location=location;s.retryTrackAt=now+120
             end
-            -- Presentation fallback for a confirmed charging session; never used for attack timing/damage.
+
             if not phase then phase=math.min(s.clock*.001,(#s.track.frames-1)/s.track.fps);weight=1 end
             if phase then
                 local angle=p:getAnimAngleRadians();local fade=math.min(1,s.clock/120)*math.min(1,weight or 1)

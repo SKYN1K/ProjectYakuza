@@ -20,15 +20,15 @@ function base.perform()completions=completions+1 end
 function base.stop()end
 ISBaseTimedAction=base
 ISTimedActionQueue={add=function()return {}end}
--- REGISTRY
--- COMBO
--- STYLE
--- BINDINGS
+do local _="ProjectYakuzaFixture:REGISTRY" end
+do local _="ProjectYakuzaFixture:COMBO" end
+do local _="ProjectYakuzaFixture:STYLE" end
+do local _="ProjectYakuzaFixture:BINDINGS" end
 local PY=ProjectYakuza
 local swingEvents=0
 PY.Heat={onSwing=function()swingEvents=swingEvents+1 end,endSwing=function()end}
--- RUNTIME
--- QUICKSTEPS
+do local _="ProjectYakuzaFixture:RUNTIME" end
+do local _="ProjectYakuzaFixture:QUICKSTEPS" end
 local Q=PY.Quicksteps
 local token={getFullType=function()return PY.TOKEN end,getMaxHitCount=function()return 3 end,getWeaponSprite=function()return 'ProjectYakuza_EmptyHand' end}
 local p={vars={},data={ProjectYakuzaStyle='dragon_of_dojima'},allowed=true,attacking=false,async=false,reject=false,submissions=0}
@@ -53,7 +53,7 @@ function p:AttemptAttack()
  if not self.allowed or self.reject then return false end
  self.submissions=self.submissions+1;self.attacking=true
  if not self.async then fire('OnWeaponSwing',self,token)end
- return false -- B42 may return false after accepting the native submission.
+ return false
 end
 local style=PY.getStyle('dragon_of_dojima')
 local function handover(direction)
@@ -89,18 +89,18 @@ for _,direction in ipairs({'forward','backward','left','right'})do
  check(not ok and why=='quickstep_required','even retained/reinserted consumed ticket cannot replay')
  Q.pending[p]=nil;a:perform();check(not Q.pending[p],'late repeated completion cannot recreate consumed handover')
 end
--- A rejected native attempt is not a completed attack and may retry inside its window.
+
 local a,ticket=handover('forward');p.reject=true
 local ok,why=PY.requestAction(p,'quickstepAttack','forward',ticket)
 check(not ok and why=='native_attack_rejected' and not ticket.consumed and Q.pending[p]==ticket,'failed native submission keeps its one valid retry entitlement')
 p.reject=false;check(PY.requestAction(p,'quickstepAttack','forward',ticket),'valid native retry can use that entitlement once');finish()
--- The first native swing may arrive after requestAction has published its gate.
+
 a,ticket=handover('left');p.async=true;local before=swingEvents
 check(PY.requestAction(p,'quickstepAttack','left',ticket),'asynchronous native submission accepted')
 check(not p.allowed and PY.stateFor(p).pendingFinisher,'pending first swing remains classified despite immediate native input gate')
 fire('OnWeaponSwing',p,token);fire('OnWeaponSwing',p,token)
 check(swingEvents==before+1 and PY.stateFor(p).finisherMove.quickstepAttack,'only first asynchronous swing passes the lock');finish();p.async=false
--- Variant must correspond to the actual dodge, and cancelled completions stay inert.
+
 a,ticket=handover('right');ok,why=PY.requestAction(p,'quickstepAttack','left',ticket)
 check(not ok and why=='quickstep_required' and not ticket.consumed,'handover cannot request another direction');Q.pending[p]=nil
 local c={player=p,style=style,action=style.actions.quickstep.variants.forward}
@@ -108,7 +108,6 @@ a=Q.Action:new(c);c.timedAction=a;a.attackHandover=true;a:cleanup(false,'cancell
 check(not Q.pending[p],'cancelled quickstep cannot dispatch a stale attack from late completion')
 check(Q.limit==3 and Q.windowMs==15000,'existing quickstep quota is unchanged')
 
--- Real light recovery -> native exit -> timed quickstep handoff.
 local wall,paused,typing=false,false,false
 local keyState={};isKeyDown=function(k)return keyState[k]==true end
 local nativeBindings={FORWARD=17,BACKWARD=31,LEFT=30,RIGHT=32}
@@ -174,7 +173,7 @@ state,move=light(1);p:setVariable('ProjectYakuzaQuickstepCancelReady',move.nodeV
 check(not Q.lightCancels[p] and p.allowed,'missing native exit times out and restores the input gate')
 state,move=light(1);Q.requestLightCancel(p,'backward',{dx=-1,dy=0,shove=true});PY.resetPlayer(p,'external_reset');check(not Q.lightCancels[p],'external reset clears cancel ownership')
 state,move=light(1);Q.requestLightCancel(p,'backward',{dx=-1,dy=0,shove=true});Q.restoreAllShoves();check(not Q.lightCancels[p],'save/menu cleanup removes queued cancel input')
--- The bound quickstep key reaches the same path, and held keys do not repeat.
+
 state,move=light(1);p:setVariable('ProjectYakuzaQuickstepCancelReady',move.nodeValue);p:setVariable('ProjectYakuzaHitMarker',move.nodeValue)
 keyState[57]=true;check(Q.pollShove(p) and Q.isCancelling(p),'actual quickstep binding triggers the light cancel')
 reports=p.exitReports;Q.pollShove(p);check(p.exitReports==reports,'held quickstep input cannot request another cancel')

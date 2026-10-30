@@ -23,10 +23,10 @@ function base.stop()end
 ISBaseTimedAction=base
 local queueFail=false
 ISTimedActionQueue={add=function(a)if queueFail then return nil end;return {current=a}end}
--- BINDINGS
--- REGISTRY
+do local _="ProjectYakuzaFixture:BINDINGS" end
+do local _="ProjectYakuzaFixture:REGISTRY" end
 local ProjectYakuza=ProjectYakuza
--- STYLE
+do local _="ProjectYakuzaFixture:STYLE" end
 local p={vars={},data={ProjectYakuzaStyle='dragon_of_dojima',ProjectYakuzaHeat=0},block=false,ignore=false,deferred=true,aim=true,x=10,y=12,localPlayer=true}
 function p:getModData()return self.data end
 function p:GetVariable(k)return self.vars[k]end
@@ -68,7 +68,7 @@ ProjectYakuza.Heat={stockSize=function()return 100/6 end,isExtreme=function()ret
 getSpecificPlayer=function()return p end
 local vanilla={0,0,0}
 ISEmoteRadialMenu={onKeyPressed=function()vanilla[1]=vanilla[1]+1 end,onKeyRepeat=function()vanilla[2]=vanilla[2]+1 end,onKeyReleased=function()vanilla[3]=vanilla[3]+1 end}
--- TAUNTS
+do local _="ProjectYakuzaFixture:TAUNTS" end
 local T=ProjectYakuza.Taunts
 local starts,ends=0,0
 ProjectYakuza.on('tauntStarted',function()starts=starts+1 end)
@@ -113,7 +113,7 @@ p.aim=false;keys[16]=false;ISEmoteRadialMenu.onKeyRepeat(16);ISEmoteRadialMenu.o
 check(vanilla[1]==1 and vanilla[2]==1 and vanilla[3]==1 and not T.consumed[16],'aim release cannot leak shout')
 T.clear();p.aim=true;text=true;ISEmoteRadialMenu.onKeyPressed(16);check(not ProjectYakuza.activeActions[p] and vanilla[1]==2,'text entry does not trigger taunt');text=false
 ISEmoteRadialMenu.onKeyPressed(99);check(vanilla[1]==3,'unrelated keys pass through')
--- AURA STUBS
+
 local loads,draws,pooled,attached=0,0,0,0
 local drawLog={}
 local additive=false
@@ -125,8 +125,7 @@ Core={getTileScale=function()return 2 end};IsoDirections={N='N'};ColorInfo={new=
 end}
 instanceof=function()return true end
 IsoSprite={CreateSprite=function()
- local s={};function s:LoadFramesNoDirPageDirect(path,kind,count)self.kind=kind;self.path=path;self.frameCount=count;check(((path=='media/textures/ProjectYakuza/HeatWisp' or path=='media/textures/ProjectYakuza/TauntAura') and count==32) or (path=='media/textures/ProjectYakuza/TauntBurst' and count==1) or (path=='media/textures/ProjectYakuza/ExtremeHeat' and (((kind=='flame' or kind=='smoke') and count==64) or ((kind=='wispL' or kind=='wispR') and count==1))),'only supplied normal, taunt or original Lost Judgment texture frames');loads=loads+1 end
- function s:LoadFramesNoDirPageSimple(path)self.kind='spark';self.path=path;self.frameCount=1;check(path=='media/textures/ProjectYakuza/ChargeSpark.png','taunt uses existing original spark');loads=loads+1 end
+ local s={};function s:LoadFramesNoDirPageDirect(path,kind,count)self.kind=kind;self.path=path;self.frameCount=count;check(((path=='media/textures/ProjectYakuza/HeatWisp' or path=='media/textures/ProjectYakuza/TauntAura') and count==32) or (path=='media/textures/ProjectYakuza/ExtremeHeat' and ((kind=='flame' or kind=='smoke') and count==64)),'only supplied current normal, taunt and Extreme Heat frames');loads=loads+1 end
  function s:setAnimate(v)self.animate=v end
  function s:update(i)i.frames=i.frames+1 end
  return s
@@ -152,10 +151,10 @@ function p:getOutlineHighlightCol()return self.outlineColor or 0 end
 function p:setOutlineHighlight(_,value)self.outline=value end
 function p:setOutlineHighlightCol(_,r,g,b,a)self.outlineColor=math.floor(r*255)+math.floor(g*255)*256+math.floor(b*255)*65536+math.floor(a*255)*16777216 end
 getPlayer=function()return p end
--- OUTLINE
--- CATALOG
--- PROTOCOL
--- AURA
+do local _="ProjectYakuzaFixture:OUTLINE" end
+do local _="ProjectYakuzaFixture:CATALOG" end
+do local _="ProjectYakuzaFixture:PROTOCOL" end
+do local _="ProjectYakuzaFixture:AURA" end
 local A=ProjectYakuza.HeatAura
 for i,seconds in ipairs({.65,.73,.81,.59})do
  check(near(A.extremeLayout[i].speed,.55*64/(seconds*60)),'Extreme Heat flame playback is exactly 45 percent slower')
@@ -236,7 +235,7 @@ check(near(A.tauntColor.r,102/124) and near(A.tauntColor.g,202.5/210),'colour bl
 clock=clock+625;A.render();check(near(echo.emitters[1].instance.alpha,.5),'zero-heat echo fades out over 150ms')
 check(near(A.tauntColor.r,102/124) and near(A.tauntColor.g,202.5/210),'colour returns smoothly toward original blue during fade-out')
 clock=clock+76;A.render();check(not A.flashes[p],'taunt echo cleans up after fade')
--- Activation uses the actual started native action, before fuel mode starts.
+
 ProjectYakuza.HeatActivation={active={}}
 ProjectYakuza.setHeat(p,0);extreme=false
 local activation={started=true,cleaned=false};ProjectYakuza.HeatActivation.active[p]=activation
@@ -256,14 +255,28 @@ for _,draw in ipairs(drawLog)do
  end end
 end
 check(cloudCentres==4,'four independent smoke centres render from the feet')
-check(A.burstSmokeColor==A.extremeColor and A.smokeColor==A.extremeColor,'activation and sustained smoke exactly match the Extreme Heat aura tint')
+local savedGetters={};local bridgeReads=0;local savedLog=drawLog;drawLog={}
+for _,name in ipairs({'getX','getY','getZ','getOffsetX','getOffsetY'})do
+ local original=p[name];savedGetters[name]=original
+ p[name]=function(self)bridgeReads=bridgeReads+1;return original(self)end
+end
+A.draw(p,A.states[p])
+for name,original in pairs(savedGetters)do p[name]=original end
+drawLog=savedLog
+check(bridgeReads==5,'six-emitter body draw reads five actor coordinates/offsets once instead of thirty calls')
+local matchingSmoke=true;for _,draw in ipairs(drawLog)do if draw.kind=='smoke' and draw.color~=A.extremeColor then matchingSmoke=false end end
+check(matchingSmoke and A.smokeColor==A.extremeColor,'actual activation and sustained smoke renders exactly match the Extreme Heat aura tint')
 local oldCloudLog=drawLog;additive=true;drawLog={};A.render()
 local onlyAlpha=true;for _,draw in ipairs(drawLog)do if draw.additive then onlyAlpha=false end end
 check(additive and onlyAlpha,'aura and transient particles force alpha and restore foreign additive mode');additive=false;drawLog=oldCloudLog
 check(cloud and #cloud.emitters==4 and cloud.remaining==650,'activation smoke is a four-particle one-second cloud')
 local beforeCloudFrames=cloud.emitters[1].instance.frames;paused=true;clock=clock+3000;A.render();paused=false
 check(cloud.remaining==650 and cloud.emitters[1].instance.frames==beforeCloudFrames,'pause freezes activation smoke age and animation')
+local savedHook=A.syncRenderHook;local scans=0
+A.syncRenderHook=function()scans=scans+1;savedHook()end
 for i=1,100 do A.update(p)end
+A.syncRenderHook=savedHook
+check(scans==0,'stable aura updates do not rescan all actors for render-hook ownership')
 check(A.states[p].activationBurst==cloud,'repeated state updates never restart activation cloud')
 clock=clock+651;A.render()
 check(not A.states[p].activationBurst and cloud.emitters[1].instance.disposed,'cloud ends after one unpaused second and returns all instances')

@@ -45,7 +45,7 @@ function M.start(p,theme,t,continuing)
         return false
     end
     M.emitter:set3D(sound,false);M.emitter:setVolume(sound,0)
-    -- Preserve the encounter clock, mix and original vanilla volume at handoff.
+
     if not continuing then
         M.originalMusic=getSoundManager():getMusicVolume();M.originalOption=optionVolume()
         M.mix=0;M.lastCombat=t

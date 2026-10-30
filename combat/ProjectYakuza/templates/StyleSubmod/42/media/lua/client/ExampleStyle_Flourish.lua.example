@@ -40,8 +40,7 @@ function A:update()
 end
 function A:new(c)
     local o=ISBaseTimedAction.new(self,c.player);o.context=c;o.maxTime=-1
-    -- This demonstration does not change movement, AI, damage or protection.
-    -- Walking cancels it. Add and restore your own overrides for another policy.
+
     o.stopOnWalk=true;o.stopOnRun=true;o.stopOnAim=false
     return o
 end
@@ -75,7 +74,7 @@ PY.registerStyleActionHandler("example_mod.my_style",kind,{
 })
 PY.Bindings.register({id="example_mod.flourish",name="Example style flourish",mode=4,code=0})
 PY.registerStyleInputHandler("example_mod.my_style",function(p,input)
-    -- Unbound initially: assign this action in Options > Mods > Project Yakuza.
+
     local pressed=PY.Bindings.pressed(p,"example_mod.flourish")
     if pressed and input.aiming and not PY.isBusy(p) then
         PY.requestAction(p,kind);return true

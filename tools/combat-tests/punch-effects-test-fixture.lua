@@ -62,15 +62,15 @@ ProjectYakuza={listeners={},WorldEffects={attach=function()return instance()end}
  isStyleToken=function()return false end,Heat={isExtreme=function(who)return who.extreme or false end,config={extremeSpeed=1.15}},HeatActivation={active={}}}
 function ProjectYakuza.on(name,fn)local listeners=ProjectYakuza.listeners;listeners[name]=listeners[name] or {};table.insert(listeners[name],fn)end
 local function emit(name,...)for _,f in ipairs(ProjectYakuza.listeners[name] or {})do f(...)end end
--- WORLD
--- TRACKS
--- EFFECTS
+do local _="ProjectYakuzaFixture:WORLD" end
+do local _="ProjectYakuzaFixture:TRACKS" end
+do local _="ProjectYakuzaFixture:EFFECTS" end
 local F=ProjectYakuza.AttackEffects
 local track=ProjectYakuza.AttackTracks.dd_light_01
 local move={animation=track.animation,duration=.625,impact=.2,attackEffects={track='dd_light_01',from=2/30,to=14/30,swingFrame=3,verticalOffset=2.5}}
 style.lightAttacks={move}
 check(not F.hooked and not any(Events.OnTick.hooks),'idle has no tick/render effects')
-local nativeProjection=-- PROJECTION
+local nativeProjection="ProjectYakuzaFixture:PROJECTION"
 for i=0,7 do
  local x,y,wx,wy,wz=F.project(.1,.65,-.4,i*math.pi/4,2)
  check(near(x,nativeProjection[i+1][1]) and near(y,nativeProjection[i+1][2]),'native eight-facing model/world/screen projection '..i)
@@ -159,8 +159,8 @@ local actors={};for i=1,10 do local who=actor();actors[i]=who;F.start(who,style,
 local total=0;for _ in pairs(F.states)do total=total+1 end;check(total==8,'actor effect count bounded under MP load');F.clearAll();check(not any(F.states),'all bounded actors cleaned')
 F.start(p,style,1,move);F.tick();failRender=true;local ok=pcall(F.render);check(not ok and additive and not any(F.states) and not F.hooked,'render error restores graphics flags and disposes state');failRender=false
 for _,event in ipairs({Events.OnSave,Events.OnMainMenuEnter,Events.OnGameStart})do F.start(p,style,1,move);for fn in pairs(event.hooks)do fn()end;check(not any(F.states),'world transition clears state')end
--- CHARGELIMBTRACKS
--- CHARGELIMBEFFECTS
+do local _="ProjectYakuzaFixture:CHARGELIMBTRACKS" end
+do local _="ProjectYakuzaFixture:CHARGELIMBEFFECTS" end
 local C=ProjectYakuza.ChargeEffects
 ProjectYakuza.activeActions={};style.hitEffects='yakuza6';instanceof=function()return true end
 function p:GetVariable(k)return self.vars and self.vars[k] end
@@ -201,7 +201,7 @@ end
 local chargeCount=0;for _ in pairs(C.states)do chargeCount=chargeCount+1 end
 check(chargeCount==8,'charge effect bounds active actors to eight');C.clearAll();ProjectYakuza.activeActions={}
 check(not C.hooked and allocated==disposed,'all arm/leg charge instances return to the pool')
--- FEEDBACK
+do local _="ProjectYakuzaFixture:FEEDBACK" end
 local audio={}
 function p:getPrimaryHandItem()return nil end
 function p:playSound(name)audio[#audio+1]=name;return #audio end

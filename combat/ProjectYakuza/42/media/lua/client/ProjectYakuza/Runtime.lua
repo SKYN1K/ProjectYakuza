@@ -16,7 +16,6 @@ function ProjectYakuza.releaseFinisherHandoff(player)
     if handoff then player:setIgnoreMovement(handoff.oldIgnore==true);ProjectYakuza.finisherHandoffs[player]=nil end
 end
 ProjectYakuza.groundNext = ProjectYakuza.groundNext or {}
-ProjectYakuza.FINISHER_MOUSE_BUTTON = 2
 local function now() return getTimestampMs() end
 local function localPlayer(player)
     return player and instanceof(player, "IsoPlayer") and player:isLocalPlayer()
@@ -35,8 +34,7 @@ function ProjectYakuza.isBusy(player)
     local s = ProjectYakuza.stateFor(player)
     return s.active or s.starting or ProjectYakuza.activeActions[player] ~= nil
 end
--- PZ DoAttack checks the same native authorization used to suppress Space.
--- Lift only our own temporary shove gate, and always restore it after the call.
+
 function ProjectYakuza.attemptAttack(player)
     if ProjectYakuza.blocksNativeAttacks(player) then return false end
     local saved=(B and B.attackGates[player]) or (ProjectYakuza.Quicksteps and ProjectYakuza.Quicksteps.shoveAuth and ProjectYakuza.Quicksteps.shoveAuth[player])
@@ -71,7 +69,7 @@ function ProjectYakuza.resetPlayer(player, reason,keepStance)
     ProjectYakuza.cancelAction(player, reason or "reset")
     ProjectYakuza.emit("comboCancelled", player, reason)
 end
--- Old saves retain the literal "null" sprite from v0.3.0.
+
 function ProjectYakuza.prepareToken(token)
     if token and ProjectYakuza.isStyleToken(token) and token:getMaxHitCount()~=ProjectYakuza.MAX_HIT_COUNT then token:setMaxHitCount(ProjectYakuza.MAX_HIT_COUNT) end
     if token and ProjectYakuza.isStyleToken(token) and token:getWeaponSprite() ~= "ProjectYakuza_EmptyHand" then
@@ -95,7 +93,7 @@ local function setReadyVariables(player, style, s)
     local index=ProjectYakuza.groundNext[player:getPlayerNum()] or 1
     if enabled and visual.groundIndex~=index then player:setVariable("ProjectYakuzaStompVariant",tostring(index));visual.groundIndex=index end
 end
--- Poll in both update and OnWeaponSwing: native swing events can precede the Lua update.
+
 local function pollPress(player, style, s)
     local down = B.down("light")
     if ProjectYakuza.Quicksteps and ProjectYakuza.Quicksteps.isCancelling and ProjectYakuza.Quicksteps.isCancelling(player) then s.lastDown=down;return end
@@ -113,7 +111,7 @@ local function onSwing(player, weapon)
     if ProjectYakuza.isCustomAction(player) or (ProjectYakuza.blocksNativeAttacks(player) and not firstQuickstepSwing) then return end
     s.groundMove=nil
     pollPress(player, style, s)
-    -- Every accepted native attack gets its own collision/armor/LOS calculation.
+
     local move
     if s.pendingFinisher then
         move = s.pendingFinisher
@@ -216,8 +214,7 @@ function ProjectYakuza.queueFinisher(player)
     trace(player, "queued finisher after light=" .. branch)
     return true
 end
--- Only release recovery after the clip itself has passed its hit and chain markers.
--- The normal ActionGroup transition and SwipeStatePlayer.exit handle native cleanup.
+
 function ProjectYakuza.tryRecoveryCancel(player, style, s)
     if not s.active or s.groundMove or s.recoveryReleased or not player:isAiming() then return false end
     local move = s.groundMove or s.finisherMove or style.lightAttacks[s.step]
@@ -308,8 +305,7 @@ ProjectYakuza.registerActionHandler("chargedHeavy", nativeAttackHandler)
 ProjectYakuza.registerActionHandler("finisher", nativeAttackHandler)
 ProjectYakuza.registerActionHandler("quickstepAttack", nativeAttackHandler)
 ProjectYakuza.registerActionHandler("runningAttack", nativeAttackHandler)
--- SwipeStatePlayer publishes AimFloorAnim after OnWeaponSwing. Read the native getter
--- after entry; do not use the inaccessible Java fields on AttackVars.
+
 function ProjectYakuza.syncGroundAttack(player,style,s)
     if not style.groundAttacks or s.groundMove or not player:isAimAtFloor()
         or not (player:isAttackStarted() or player:isPerformingStompAnimation()) then return false end
@@ -412,7 +408,7 @@ local function onUpdate(player)
             ProjectYakuza.resetPlayer(player, "attack_timeout")
             return
         end
-        -- Exit recovery if another mod omitted OnPlayerAttackFinished, only after the engine actually leaves the attack.
+
         if time - s.startedAt > move.duration * 1000 and not player:isAttackStarted()
             and not player:isPerformingAttackAnimation() and player:getCurrentStateName() ~= "SwipeStatePlayer" then
             onFinished(player)
@@ -456,8 +452,7 @@ local function onUpdate(player)
     end
     if not s.finisherMove and not ProjectYakuza.activeActions[player] and Combo.canStartBuffered(s, style, time) and not player:isAttackStarted() and not player:isPerformingAttackAnimation() then
         s.starting, s.startRequestedAt = true, time
-        -- Build 42.21 returns false even after submitting a valid attack.
-        -- OnWeaponSwing clears starting; otherwise retain the lock until the event or timeout.
+
         ProjectYakuza.attemptAttack(player)
         if s.starting and not player:isAttackStarted() then s.starting = false end
     end

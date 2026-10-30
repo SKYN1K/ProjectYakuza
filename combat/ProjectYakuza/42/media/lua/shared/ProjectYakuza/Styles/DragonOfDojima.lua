@@ -41,7 +41,7 @@ ProjectYakuza.registerStyle({
         {sound="ProjectYakuza_KamuroAgain",title="KAMURO again"},
     },
     comboResetMs = 400,
-    -- One pending light attack at a time.
+
     lightBufferLimit = 1,
     quickstepCancelLights=true,
     enemyReactions = true,
@@ -119,7 +119,6 @@ ProjectYakuza.registerStyle({
     },
 })
 
--- Only this style opts in. Other styles keep native weapon combat unless they register their own profile.
 if ProjectYakuza.Weapons then
     local base=ProjectYakuza.getStyle("dragon_of_dojima")
     local sounds={};for k,v in pairs(base.sounds) do if k:match("^heat") then sounds[k]=v end end
@@ -143,7 +142,6 @@ if ProjectYakuza.Weapons then
     })
 end
 
--- Supplied source blade profiles remain owned by Dragon of Dojima only.
 if ProjectYakuza.Weapons then
     local base=ProjectYakuza.getStyle("dragon_of_dojima")
     local sounds={};for k,v in pairs(base.sounds) do if k:match("^heat") then sounds[k]=v end end

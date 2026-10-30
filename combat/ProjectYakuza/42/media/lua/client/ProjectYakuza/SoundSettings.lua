@@ -1,5 +1,5 @@
--- Use PZ's own persisted GameSound user volumes and preview controls.
--- The stock Audio options screen gates its Advanced sound settings button.
+
+
 SystemDisabler.setEnableAdvancedSoundOptions(true)
 require "PZAPI/ModOptions"
 require "ProjectYakuza/Registry"

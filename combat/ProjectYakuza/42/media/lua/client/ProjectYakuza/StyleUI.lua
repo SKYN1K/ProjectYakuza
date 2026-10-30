@@ -3,7 +3,7 @@ local PY=ProjectYakuza
 local U={providers={},sessions=setmetatable({}, {__mode="k"}),textures={}}
 PY.StyleUI=U
 local channels={heat=true,status=true,selector=true,selectorSlot=true,setup=true}
--- Client-only presentation. Providers never enter save data or MP packets.
+
 function PY.registerStyleUI(id,provider)
     assert(type(id)=="string" and string.match(id,"^[%w_.-]+$"),"namespaced UI provider ID required")
     assert(type(provider)=="table" and type(provider.render)=="function","UI render callback required")

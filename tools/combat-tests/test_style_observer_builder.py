@@ -1,4 +1,4 @@
-"""Exercise the shipped addon starter/builder without starting the game."""
+
 from pathlib import Path
 import sys
 sys.dont_write_bytecode=True
@@ -27,6 +27,8 @@ with tempfile.TemporaryDirectory(dir=here) as tmp:
     for rel,data in before.items():assert (addon/rel).read_bytes()==data
     for path,data in outputs.items():
         assert path.read_bytes()==data
+        assert builder.STAMP in data
+        assert b"<!--" not in data and not data.lstrip().startswith(b"--")
         if path.suffix=='.xml':
             node=E.parse(path).getroot()
             assert not node.findall('m_Events')
@@ -40,14 +42,14 @@ with tempfile.TemporaryDirectory(dir=here) as tmp:
         compiled=subprocess.run([str(game/'jre64/bin/java.exe'),'-cp',str(here)+';'+str(game/'projectzomboid.jar'),
                                  'CompileCombatLua',str(addon/'42/media/lua')],cwd=here,check=True,capture_output=True,text=True)
         print(compiled.stdout.strip())
-    # Never overwrite an author's file, even when other destinations are valid.
+
     target=next(p for p in outputs if p.suffix=='.xml');target.write_text('<animNode/>')
     snapshots={p:p.read_bytes() for p in outputs}
     try:builder.build(addon,'example_mod.my_style','ExampleStyle_')
     except AssertionError:pass
     else:raise AssertionError('Author-maintained output was overwritten')
     assert snapshots=={p:p.read_bytes() for p in outputs}
-    # Reject unsupported native condition operators instead of flattening them.
+
     owner=addon/'42/media/AnimSets/player/melee/ExampleStyle_Light01.xml'
     tree=E.parse(owner);E.SubElement(tree.getroot().find('m_Conditions'),'m_CompareTo').text='other'
     tree.write(owner)

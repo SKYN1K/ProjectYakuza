@@ -20,18 +20,18 @@ function base.perform()completions=completions+1 end
 function base.stop()end
 ISBaseTimedAction=base
 ISTimedActionQueue={add=function()return {}end}
--- REGISTRY
--- WEAPONS
--- COMBO
--- STYLE
--- BINDINGS
+do local _="ProjectYakuzaFixture:REGISTRY" end
+do local _="ProjectYakuzaFixture:WEAPONS" end
+do local _="ProjectYakuzaFixture:COMBO" end
+do local _="ProjectYakuzaFixture:STYLE" end
+do local _="ProjectYakuzaFixture:BINDINGS" end
 local PY=ProjectYakuza
 local swingEvents=0
--- HEAT
--- RUNTIME
--- QUICKSTEPS
--- MULTIHIT
--- MENU_EQUIP
+do local _="ProjectYakuzaFixture:HEAT" end
+do local _="ProjectYakuzaFixture:RUNTIME" end
+do local _="ProjectYakuzaFixture:QUICKSTEPS" end
+do local _="ProjectYakuzaFixture:MULTIHIT" end
+do local _="ProjectYakuzaFixture:MENU_EQUIP" end
 local Q=PY.Quicksteps
 local token={getFullType=function()return PY.TOKEN end,getMaxHitCount=function()return 3 end,getWeaponSprite=function()return 'ProjectYakuza_EmptyHand' end}
 local p={vars={},data={ProjectYakuzaStyle='dragon_of_dojima'},allowed=true,attacking=false,async=false,reject=false,submissions=0}
@@ -56,7 +56,7 @@ function p:AttemptAttack()
  if not self.allowed or self.reject then return false end
  self.submissions=self.submissions+1;self.attacking=true
  if not self.async then fire('OnWeaponSwing',self,self:getPrimaryHandItem())end
- return false -- B42 may return false after accepting the native submission.
+ return false
 end
 
 function p:isOnFloor()return false end;function p:isKnockedDown()return false end
@@ -134,7 +134,7 @@ check(not PY.isEquipped(p) and not PY.stateFor(p).active,'breakage safely exits 
 pipe.condition=10;p.held=knife;W.sync(p)
 check(not PY.isEquipped(p) and PY.getPlayerStyle(p)==original,'unsupported weapon remains native')
 p.held=nil;W.sync(p);check(PY.getPlayerStyle(p)==original and PY.isEquipped(p),'equipping token restores original unarmed style')
--- Registration is transactional and scoped to each developer's style.
+
 local addon={};for k,v in pairs(original)do addon[k]=v end;addon.id='tests.other';PY.registerStyle(addon)
 p.data.ProjectYakuzaStyle=addon.id;p.held=bat
 check(not PY.isEquipped(p) and PY.getPlayerStyle(p)==addon,'another style never inherits DoD weapon animations')
@@ -149,7 +149,7 @@ PY.resetPlayer(p,'test');p.attacking=false;p.held=bat
 PY.equipStyle(p,original.id)
 check(p.held==bat and PY.getPlayerStyle(p)==armed,'actual style menu retains supported real weapon')
 check(p.data.ProjectYakuzaStyle==original.id,'style identity remains selected while holding weapon')
--- Current source-pose light markers drive the existing cancellation state machine.
+
 p.data.ProjectYakuzaStyle=original.id;p.held=bat;W.sync(p);PY.resetPlayer(p,'test');p.attacking=false
 p:AttemptAttack();local state=PY.stateFor(p);local move=armed.lightAttacks[1]
 Q.canMove=function()return true end

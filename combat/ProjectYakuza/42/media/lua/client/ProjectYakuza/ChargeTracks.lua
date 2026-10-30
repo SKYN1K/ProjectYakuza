@@ -1,4 +1,4 @@
--- Original native B42 retargeted charge sample positions; numeric code only.
+
 require "ProjectYakuza/Registry"
 ProjectYakuza.ChargeTracks={
     ["ProjectYakuza_DD_ChargeLoop"]={animation="ProjectYakuza_DD_ChargeLoop",fps=30,fixed=false,limbs={1,4},frames={

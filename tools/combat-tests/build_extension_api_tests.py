@@ -1,13 +1,14 @@
+from fixture_markers import fixture_marker
 from pathlib import Path
 w=Path(__file__).parent;m=w.parents[1]/"combat/ProjectYakuza/42/media/lua"
 s=(w/"extension-api-test-fixture.lua").read_text(encoding="utf-8")
 for marker,path in [("REGISTRY","shared/ProjectYakuza/Registry.lua"),("COMBO","shared/ProjectYakuza/Combo.lua"),("BINDINGS","shared/ProjectYakuza/Bindings.lua"),("NETWORK_EXTENSIONS","shared/ProjectYakuza/NetworkExtensions.lua"),("RUNTIME","client/ProjectYakuza/Runtime.lua")]:
- s=s.replace("-- "+marker+"\n","do local moduleResult=(function()\n"+(m/path).read_text(encoding="utf-8")+"\nend)() end\n")
+ s=s.replace(fixture_marker(marker),"do local moduleResult=(function()\n"+(m/path).read_text(encoding="utf-8")+"\nend)() end\n")
 (w/"extension-api-tests.lua").write_text(s,encoding="utf-8")
 starter=m.parents[2]/"templates/StyleSubmod/42/media/lua"
-prefix=(w/"style-entry-test-fixture.lua").read_text(encoding="utf-8").split("-- ENTRY\n")[0]
+prefix=(w/"style-entry-test-fixture.lua").read_text(encoding="utf-8").split(fixture_marker('ENTRY'))[0]
 for marker,path in [("BINDINGS",m/"shared/ProjectYakuza/Bindings.lua"),("REGISTRY",m/"shared/ProjectYakuza/Registry.lua"),("STYLE",starter/"shared/ExampleStyle_Style.lua.example")]:
- prefix=prefix.replace("-- "+marker+"\n","do\n"+path.read_text(encoding="utf-8")+"\nend\n")
+ prefix=prefix.replace(fixture_marker(marker),"do\n"+path.read_text(encoding="utf-8")+"\nend\n")
 prefix+='\np.data.ProjectYakuzaStyle="example_mod.my_style"\ndo\n'+(starter/"client/ExampleStyle_Flourish.lua.example").read_text(encoding="utf-8")+'\nend\n'
 prefix+='''
 local kind="example_mod.flourish"

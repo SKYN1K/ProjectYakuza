@@ -1,4 +1,4 @@
-"""Verify event-free observer nodes using PZ's native parser and selector."""
+
 from pathlib import Path
 import shutil
 import subprocess
@@ -28,7 +28,7 @@ for cycle in ('0', '1'):
             assert node.findtext(tag) == source.findtext(tag), (path, tag)
         assert [E.tostring(n) for n in node.findall('m_SubStateBoneWeights')] == [E.tostring(n) for n in source.findall('m_SubStateBoneWeights')]
         if conditions['ProjectYakuzaRemoteCycle'] == cycle:
-            # Probe intentionally scans files whose names begin ProjectYakuza_MP_.
+
             shutil.copyfile(path, directory / ('ProjectYakuza_MP_' + path.parent.name + '_' + path.name))
             count += 1
     assert count == 138
@@ -43,7 +43,7 @@ for path in (media / 'AnimSets/zombie/hitreaction').glob('ProjectYakuza_EnemyHit
     assert E.tostring(E.parse(path).getroot()) == E.tostring(E.parse(repeat).getroot())
 print('PASS 276 event-free observer selectors retain their supplied clips/settings; 4 native repeat-hit nodes match originals')
 
-# Recovery-cancel markers are owner-only and occur one source frame after collision.
+
 for i,(hit,frames) in enumerate([(6,30),(8,47),(11,42),(11,47)],1):
     source=E.parse(media/f'AnimSets/player/melee/ProjectYakuza_DD_Light0{i}.xml').getroot()
     events=[e for e in source.findall('m_Events') if e.findtext('m_ParameterValue')==f'ProjectYakuzaQuickstepCancelReady=dd_light_0{i}']

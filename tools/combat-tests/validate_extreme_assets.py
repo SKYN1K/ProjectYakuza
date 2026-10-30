@@ -1,4 +1,4 @@
-"""Verify lossless crops from supplied Yakuza 6 DDS files (requires Pillow)."""
+
 from pathlib import Path
 import argparse
 import hashlib

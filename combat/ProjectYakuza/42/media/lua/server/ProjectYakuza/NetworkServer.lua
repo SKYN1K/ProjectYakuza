@@ -34,8 +34,7 @@ function S.release(p)
 end
 function S.snapshot(p,a,s)
     if not P.integer(a.seq,0,1000000000) or a.seq<=s.seq then return end
-    -- Short action/attack transitions can share a millisecond. Dropping the
-    -- second state leaves observers on an old clip until the idle heartbeat.
+
     local t=now()
     if t-(s.stateBucketAt or 0)>=1000 then s.stateBucketAt=t;s.stateBucket=0 end
     s.stateBucket=(s.stateBucket or 0)+1;if s.stateBucket>80 then return end
@@ -114,8 +113,7 @@ function S.equip(p,a,s)
         if not item then return end
         item:setMaxHitCount(ProjectYakuza.MAX_HIT_COUNT)
         item:setWeaponSprite("ProjectYakuza_EmptyHand");item:setOriginalWeaponSprite("ProjectYakuza_EmptyHand")
-        -- These B42 globals only send from a server. Native equip/hit packets
-        -- subsequently resolve this exact server inventory ID.
+
         if created or a.item~=item:getID() then sendAddItemToContainer(inventory,item) end
         p:setSecondaryHandItem(nil);p:setPrimaryHandItem(item)
     elseif ProjectYakuza.isStyleToken(p:getPrimaryHandItem()) then p:setPrimaryHandItem(nil) end
@@ -263,13 +261,12 @@ function S.command(module,command,p,a)
             local packet={player=p:getOnlineID(),event=a.event,zombie=a.zombie,style=job.style,reaction=job.move.reaction or "",strong=job.move.afterLight~=nil or job.move.chargedHeavy==true,charged=job.move.chargedHeavy==true,
                 responseKind=response and response.kind,responseForce=response and response.force}
             if response or job.juggle or ProjectYakuza.Juggling.get(z) then
-                -- Defer until native hit calculation has returned; keep the resolved
-                -- move/power rather than re-reading a later stance/combo snapshot.
+
                 if #S.reactions<128 then S.reactions[#S.reactions+1]={player=p,zombie=z,response=response,packet=packet,at=t,juggle=job.juggle,swing=a.swing}
                 else packet.responseKind=nil;packet.responseForce=nil;S.fanout(p,"impact",packet) end
             else S.fanout(p,"impact",packet) end
         else
-            -- Extra victims use server weapon data; primary native hits are never re-applied.
+
             if not S.baseWeapon then S.baseWeapon=InventoryItemFactory.CreateItem(ProjectYakuza.TOKEN) end
             local item=job.profile and job.profile~="" and job.weapon or S.baseWeapon;local factor=job.move.damageMultiplier or 1
             if not item then return end

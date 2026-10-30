@@ -4,15 +4,14 @@ require "ProjectYakuza/WorldEffects"
 local ProjectYakuza=ProjectYakuza
 local A={states=setmetatable({}, {__mode="k"}),fadeInMs=350,flashMs=750,flashes=setmetatable({}, {__mode="k"})}
 ProjectYakuza.HeatAura=A
--- Four tight overlapping patches on the upper body; no waist/leg emitters.
+
 A.layout={
     {x=0,height=39.6,kind="a",speed=1.00,scale=0.25875},
     {x=-6.9,height=38.3,kind="b",speed=0.96,scale=0.207},
     {x=6.9,height=38.3,kind="c",speed=1.04,scale=0.207},
     {x=0,height=52.6,kind="b",speed=0.98,scale=0.1656},
 }
--- Original Yakuza 6 A8L8 flame alpha: normal blending, without black-backed RGB.
--- Four fast upper-body flames, without static wisps or a broad bloom layer.
+
 A.extremeLayout={
     {x=0,height=39.6,kind="flame",frames=64,frameHeight=32,speed=.55*64/(.65*60),scale=.95,alpha=.85,drift=.6,lift=1.2},
     {x=-6.9,height=38.3,kind="flame",frames=64,frameHeight=32,speed=.55*64/(.73*60),scale=.80,alpha=.75,drift=.5,lift=1},
@@ -21,8 +20,7 @@ A.extremeLayout={
     {x=-7,height=6,kind="smoke",frames=64,frameHeight=64,speed=64/(1.6*60),scale=.40,alpha=.22,drift=-4,lift=9,smoke=true,cycleMs=1600},
     {x=7,height=7,kind="smoke",frames=64,frameHeight=64,speed=64/(1.85*60),scale=.40,alpha=.18,drift=4,lift=10,smoke=true,cycleMs=1850},
 }
--- Completion-only normal-aura echo; approved colour-only copies are 25% whiter.
--- Four detached instances avoid sharing attachment offsets with the sustained aura.
+
 function A.makeTaunt()
     local f={remaining=A.flashMs,duration=A.flashMs,last=getTimestampMs(),emitters={}}
     A.tauntSprites=A.tauntSprites or {};local tile=Core.getTileScale()
@@ -43,12 +41,11 @@ local function smooth(x) x=math.max(0,math.min(1,x));return x*x*(3-2*x) end
 function A.drawTaunt(p,f,s)
     local fade=smooth((f.duration-f.remaining)/100)*smooth(f.remaining/150)
     local tile=Core.getTileScale()
-    -- Replace the normal body pass, rather than stacking the same aura twice.
+
     local baseline=not s.extreme and ProjectYakuza.Heat.stocks(p)>=1 and s.opacity or 0
     local alpha=baseline+(1-baseline)*fade
     local size=1+.20*fade
-    -- Restore the original baked blue at either end of the envelope so the
-    -- replacement never pops from/to a white tint over the sustained aura.
+
     if not A.tauntColor then A.tauntColor=ColorInfo.new(1,1,1,1) end
     A.tauntColor:set((80+44*fade)/124,(195+15*fade)/210,1,1)
     for _,e in ipairs(f.emitters) do
@@ -72,19 +69,18 @@ end
 function A.releaseFlash(p)
     A.releaseBurst(A.flashes[p]);A.flashes[p]=nil
 end
-function A.makeBurst(p,layout,duration)
+function A.makeBurst(layout,duration)
     local f={remaining=duration,duration=duration,last=getTimestampMs(),emitters={}}
     A.burstSprites=A.burstSprites or {};local tile=Core.getTileScale()
     for _,point in ipairs(layout) do
         local sprite=A.burstSprites[point.kind]
         if not sprite then
             sprite=IsoSprite.CreateSprite(nil)
-            if point.kind=="spark" then sprite:LoadFramesNoDirPageSimple("media/textures/ProjectYakuza/ChargeSpark.png")
-            else sprite:LoadFramesNoDirPageDirect("media/textures/ProjectYakuza/ExtremeHeat",point.kind,64) end
-            sprite:setAnimate(point.kind~="spark");A.burstSprites[point.kind]=sprite
+            sprite:LoadFramesNoDirPageDirect("media/textures/ProjectYakuza/ExtremeHeat",point.kind,64)
+            sprite:setAnimate(true);A.burstSprites[point.kind]=sprite
         end
         local scale=tile*point.scale
-        local instance=ProjectYakuza.WorldEffects.detached(sprite,scale,point.kind=="spark" and 0 or 64/((duration/1000)*60))
+        local instance=ProjectYakuza.WorldEffects.detached(sprite,scale,64/((duration/1000)*60))
         instance:SetAlpha(0);instance:SetTargetAlpha(0)
         f.emitters[#f.emitters+1]={instance=instance,point=point,sprite=sprite}
     end
@@ -104,21 +100,17 @@ function A.flash(player)
     A.flashes[player]=A.makeTaunt()
 end
 function A.drawFlash(p,f)
-    if not A.particleColor then
-        A.particleColor=ColorInfo.new(.28,.60,1,1)
-        A.burstSmokeColor=A.extremeColor
-    end
     local t=math.max(0,math.min(1,1-f.remaining/f.duration));local tile=Core.getTileScale()
     local fade=math.sin(math.pi*t)
     for _,e in ipairs(f.emitters) do
         local point=e.point;local alpha=point.alpha*fade
-        local scale=tile*point.scale*(point.kind=="smoke" and (.75+.55*t) or (.9+.15*t))
+        local scale=tile*point.scale*(.75+.55*t)
         e.instance:setScale(scale,scale)
         e.instance:SetAlpha(alpha);e.instance:SetTargetAlpha(alpha)
-        if point.kind~="spark" and not isGamePaused() then e.sprite:update(e.instance) end
+        if not isGamePaused() then e.sprite:update(e.instance) end
         ProjectYakuza.WorldEffects.renderCentered(p,e.instance,point.frameHeight,scale,
             (point.x+point.drift*t)*tile,(-point.height-point.lift*t)*tile,
-            point.kind=="smoke" and A.burstSmokeColor or A.particleColor)
+            A.extremeColor)
     end
 end
 
@@ -134,6 +126,9 @@ end
 function A.draw(p,s)
     local tile=Core.getTileScale()
     local color=s.extreme and A.extremeColor or A.color
+    local x,y,z=p:getX(),p:getY(),p:getZ()
+    local offsetX,offsetY=p:getOffsetX()+tile,p:getOffsetY()-89*tile
+    local paused=isGamePaused()
     for _,e in ipairs(s.emitters) do
         if e.instance and e.instance:getParentSprite()==e.sprite then
             local alpha=s.opacity
@@ -149,10 +144,10 @@ function A.draw(p,s)
                     dx=e.point.drift*cycle;dy=e.point.lift*cycle
                 end
             end
-            if not isGamePaused() and e.frames>1 then e.sprite:update(e.instance) end
+            if not paused and e.frames>1 then e.sprite:update(e.instance) end
             if e.opacity~=alpha then e.instance:SetAlpha(alpha);e.instance:SetTargetAlpha(alpha);e.opacity=alpha end
-            e.instance:render(p,p:getX(),p:getY(),p:getZ(),IsoDirections.N,
-                p:getOffsetX()+tile+dx*tile,p:getOffsetY()-89*tile-dy*tile,e.point.smoke and A.smokeColor or color)
+            e.instance:render(p,x,y,z,IsoDirections.N,
+                offsetX+dx*tile,offsetY-dy*tile,e.point.smoke and A.smokeColor or color)
         end
     end
 end
@@ -199,7 +194,7 @@ function A.clear(player)
     if ProjectYakuza.HeatOutline then ProjectYakuza.HeatOutline.clear(player) end
     A.releaseFlash(player)
     local s=A.states[player]
-    if not s then return end
+    if not s or (s.fadeElapsed==nil and not s.activationBurst and not s.activating) then return end
     A.releaseBurst(s.activationBurst);s.activationBurst=nil;s.activating=false
     for _,e in ipairs(s.emitters) do
         if e.instance then e.instance:Dispose();IsoSpriteInstance.add(e.instance);e.instance=nil end
@@ -227,7 +222,7 @@ function A.update(player)
     local firstActivation=activating and not s.activating
     s.flashing=flashing;s.activating=activating;s.extreme=activating or ProjectYakuza.Heat.isExtreme(player)
     if firstActivation then
-        A.releaseBurst(s.activationBurst);s.activationBurst=A.makeBurst(player,A.activationLayout,1000)
+        A.releaseBurst(s.activationBurst);s.activationBurst=A.makeBurst(A.activationLayout,1000)
     elseif not s.extreme and s.activationBurst then A.releaseBurst(s.activationBurst);s.activationBurst=nil end
     if ProjectYakuza.HeatOutline then
         ProjectYakuza.HeatOutline.update(player,s.extreme)
@@ -235,6 +230,7 @@ function A.update(player)
     end
     local profile=s.extreme and "extreme" or "normal"
     local fresh=not s.emitters[1] or not s.emitters[1].instance
+    local changed=fresh or s.profile~=profile
     if not fresh and s.profile~=profile then
         for _,e in ipairs(s.emitters) do
             if e.instance then e.instance:Dispose();IsoSpriteInstance.add(e.instance);e.instance=nil end
@@ -247,7 +243,7 @@ function A.update(player)
     for i=#s.emitters,#layout+1,-1 do
         local e=s.emitters[i]
         if e.instance then e.instance:Dispose();IsoSpriteInstance.add(e.instance) end
-        table.remove(s.emitters,i)
+        table.remove(s.emitters,i);changed=true
     end
     for i,point in ipairs(layout) do
         local e=s.emitters[i]
@@ -263,13 +259,13 @@ function A.update(player)
         if not e.instance then
             e.instance=ProjectYakuza.WorldEffects.attach(player,e.sprite,point.frameHeight or 256,tile*point.scale,point.height*tile,true,
                 s.extreme and point.speed or point.speed*32/(1.2*60),point.x*tile)
-            -- Transfer ownership without disposing/pooling the instance. It is drawn only by A.render.
+
             player:getAttachedAnimSprite():remove(e.instance)
             local opacity=s.opacity*(s.extreme and point.alpha or 1)
             e.instance:SetAlpha(opacity);e.instance:SetTargetAlpha(opacity);e.opacity=opacity
         end
     end
-    A.syncRenderHook()
+    if changed then A.syncRenderHook() end
 end
 function A.toggle(player)
     local d=player:getModData();d.ProjectYakuzaHeatAuraDisabled=not d.ProjectYakuzaHeatAuraDisabled

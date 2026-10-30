@@ -1,4 +1,4 @@
-"""Verify native B42 limb samples and source-timed charge handover nodes; no media output."""
+
 from pathlib import Path
 import json,re,subprocess,hashlib,xml.etree.ElementTree as E
 w=Path(__file__).resolve().parent;root=w.parents[1];mod=root/'combat/ProjectYakuza';game=Path('F:/SteamLibrary/steamapps/common/ProjectZomboid')

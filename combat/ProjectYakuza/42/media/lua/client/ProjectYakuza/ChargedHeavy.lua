@@ -146,7 +146,7 @@ function H.input(p,down,pressed,s,style)
         return true
     end
     if pressed then
-        -- Second finishers never enter the hold gesture, even if MMB stays held.
+
         if move or s.queuedFinisher or s.queuedDouble or (s.finisherBranch and s.finisherFinishedAt and now()-s.finisherFinishedAt<=style.comboResetMs) then
             H.gestures[p]=nil;PY.queueFinisher(p);return true
         end
@@ -155,8 +155,7 @@ function H.input(p,down,pressed,s,style)
     end
     local gesture=H.gestures[p]
     if not gesture then return true end
-    -- Preserve a valid initial press past combo expiry, but follow any light
-    -- that was already buffered and actually executes before charging starts.
+
     if s.active and not s.finisherMove and not s.groundMove and s.step>0 then gesture.branch=s.step end
     if not down then
         H.gestures[p]=nil;PY.queueFinisher(p);return true

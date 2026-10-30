@@ -52,8 +52,7 @@ function A:start()
     p:setBlockMovement(true);p:setIgnoreMovement(true)
     p:setDeferredMovementEnabled(false)
     self:holdPosition()
-    -- Temporary native flags prevent both new target acquisition and queued bite damage.
-    -- No god mode, wound healing or body-health mutation is involved.
+
     p:setGhostMode(true);p:setInvincible(true)
     E.active[p]=self
     if not E.hooked then Events.OnZombieUpdate.Add(E.protect);Events.OnTick.Add(E.holdPositions);E.hooked=true end

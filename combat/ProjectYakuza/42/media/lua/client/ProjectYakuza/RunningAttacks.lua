@@ -59,8 +59,7 @@ function R.advance(p)
     if not ProjectYakuza.isEquipped(p) or p:isDead() or p:isOnFloor() or p:isKnockedDown() or p:isClimbing()
         or p:getVehicle() or (hit and hit~="") then ProjectYakuza.resetPlayer(p,"running_attack_interrupted");return end
     if t.arming then
-        -- Native run/sprint cannot enter melee. Release locomotion, then use the
-        -- existing idle/movement-to-melee route on the following engine update.
+
         p:setRunning(false);p:setSprinting(false);p:setMoving(false)
         if now()>t.expiresAt then ProjectYakuza.resetPlayer(p,"running_attack_start_timeout");return end
         local state=p:getCurrentActionContextStateName()

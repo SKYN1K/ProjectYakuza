@@ -1,7 +1,6 @@
 import java.nio.file.*;
 import java.util.Arrays;
 
-/** Runs an offline fixture in the installed game's own Kahlua VM. */
 public class LuaRunner {
     public static void main(String[] args) throws Exception {
         Class<?> platformClass = Class.forName("se.krka.kahlua.j2se.J2SEPlatform");

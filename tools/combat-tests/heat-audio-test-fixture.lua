@@ -20,7 +20,7 @@ ProjectYakuza={listeners={},HeatActivation={active={}},Heat={config={extremeSpee
  getPlayerStyle=function()return style end,isEquipped=function(who)return who.equipped end,stateFor=function()return combo end,isStyleToken=function()return false end}
 function ProjectYakuza.on(name,fn)ProjectYakuza.listeners[name]=ProjectYakuza.listeners[name] or {};table.insert(ProjectYakuza.listeners[name],fn)end
 local function emit(name,...)for _,fn in ipairs(ProjectYakuza.listeners[name] or {})do fn(...)end end
--- FEEDBACK
+do local _="ProjectYakuzaFixture:FEEDBACK" end
 local F=ProjectYakuza.Feedback
 local function start()
  F.clear();p.equipped=true;p.dead=false;p.localPlayer=true;style.id='test';style.sounds={heatStart='Charge',heatOnA='Flare',heatOnB='Layer',heatOff='End',punchSwing='Swing'}
@@ -42,26 +42,26 @@ F.tick();check(#calls==layer,'repeated ticks do not replay delayed layer')
 emit('heatActivationStopped',p,true)
 playing[flare]=false;playing[layer]=false;F.tick()
 check(not F.activationSounds[p] and tickHook==nil,'finished native tails release references and idle callback')
--- A short successful animation must not discard its delayed original layer.
+
 charge=start();clock=clock+400;emit('heatActivationFlare',p);flare=#calls
 clock=clock+100;emit('heatActivationStopped',p,true)
 F.pending[p]={stamp=combo.multiHitToken,sound='Swing',last=clock,due=clock}
 F.tick();check(calls[#calls]=='Swing','ordinary swing job remains independent of activation tail')
 clock=clock+200;F.tick();check(calls[#calls]=='Layer','completed animation retains delayed activation layer')
 check(F.activationSounds[p] and F.activationSounds[p].completed,'native SFX tails remain owned after success')
--- Pausing preserves the source delay and charge fade.
+
 charge=start();clock=clock+300;emit('heatActivationFlare',p);flare=#calls
 paused=true;clock=clock+5000;F.tick();paused=false
 check(#calls==flare and volumes[charge]==.28,'pause does not advance delay/fade')
 clock=clock+299;F.tick();check(#calls==flare,'unpaused remainder of source delay is retained')
 clock=clock+1;F.tick();check(calls[#calls]=='Layer','layer resumes after its unpaused delay')
--- Missing transient marker: successful native End still gets one commit burst.
+
 charge=start();clock=clock+1000;emit('heatActivationStopped',p,true);flare=#calls
 check(calls[flare]=='Flare','successful completion provides safe missing-flare fallback')
 emit('heatActivationStopped',p,true);emit('heatActivationFlare',p)
 check(#calls==flare,'duplicate success/late flare never stacks bursts')
 clock=clock+300;F.tick();check(calls[#calls]=='Layer','fallback preserves original second layer')
--- Interruptions silence only this sequence and discard pending layer.
+
 charge=start();clock=clock+300;emit('heatActivationFlare',p);flare=#calls
 emit('heatActivationStopped',p,false);n=#calls;clock=clock+1000;F.tick()
 check(#calls==n and stopped[charge] and stopped[flare] and not F.activationSounds[p] and not tickHook,'interruption stops owned sounds and removes delayed jobs')
@@ -70,7 +70,7 @@ charge=start();p.dead=true;F.tick();check(stopped[charge] and not tickHook,'deat
 charge=start();p.equipped=false;F.tick();check(stopped[charge] and not tickHook,'unequip clears active sequence');p.equipped=true
 charge=start();F.clear();check(stopped[charge] and not F.activationSounds[p] and not tickHook,'save/menu cleanup silences tracked tails')
 charge=start();emit('heatActivationStopped',p,true);clock=clock+2800;F.tick();check(not F.activationSounds[p] and not tickHook,'tail watchdog bounds tracking even if native handle remains playing')
--- Native expiry uses softer end cue; cleanup reasons are silent.
+
 n=#calls;emit('extremeHeatEnded',p,'depleted');check(#calls==n+1 and calls[#calls]=='End' and near(volumes[#calls],.42),'real mode depletion uses original softer ending')
 n=#calls;emit('extremeHeatEnded',p,'death');emit('extremeHeatEnded',p,'style_changed');emit('extremeHeatEnded',p,'unequipped')
 check(#calls==n,'lifecycle cleanup does not play misleading mode-ending flourish')

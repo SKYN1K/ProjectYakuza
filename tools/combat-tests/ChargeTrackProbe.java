@@ -2,7 +2,7 @@ import jassimp.*;
 import java.util.*;
 import java.lang.reflect.*;
 import java.nio.file.*;
-/** Offline only: sample the shipped punch through B42's own importer and matrix helpers. */
+
 public class ChargeTrackProbe {
  static Object field(Object o,String n)throws Exception {var f=o.getClass().getDeclaredField(n);f.setAccessible(true);return f.get(o);}
  static Object obj(Class<?> c)throws Exception{return c.getConstructor().newInstance();}
@@ -44,7 +44,7 @@ public class ChargeTrackProbe {
    float sy=(Float)iso.getMethod("YToScreen",float.class,float.class,float.class,int.class).invoke(null,x,y,z,0);
    if(i>0)out.append(',');out.append(String.format("[%.9f,%.9f]",sx,sy));
   }
-  // Verify the scalar Lua surface on the installed engine. Nested model classes are deliberately not used by the mod.
+
   var character=Class.forName("zombie.characters.IsoGameCharacter");
   for(String method:new String[]{"dbgGetAnimTrackName","dbgGetAnimTrackTime","dbgGetAnimTrackWeight"})character.getMethod(method,int.class,int.class);
   character.getMethod("getAnimAngleRadians");

@@ -1,8 +1,9 @@
+from fixture_markers import fixture_marker
 from pathlib import Path
 w=Path(__file__).parent;m=w.parent.parent/'combat/ProjectYakuza/42/media/lua'
 paths=['shared/ProjectYakuza/Bindings.lua','shared/ProjectYakuza/Registry.lua','shared/ProjectYakuza/Styles/DragonOfDojima.lua','shared/ProjectYakuza/Heat.lua','client/ProjectYakuza/Quicksteps.lua']
 s=(w/'heat-shove-test-fixture.lua').read_text(encoding='utf-8')
-s=s.replace('-- MODULES','\n'.join('do\n'+(m/p).read_text(encoding='utf-8')+'\nend' for p in paths))
+s=s.replace(fixture_marker('MODULES').rstrip("\n"),'\n'.join('do\n'+(m/p).read_text(encoding='utf-8')+'\nend' for p in paths))
 (w/'heat-shove-tests.lua').write_text(s,encoding='utf-8')
 p=w/'framework-tests.lua';s=p.read_text(encoding='utf-8')
 s=s.replace('local bindings={FORWARD=17,BACKWARD=31,LEFT=30,RIGHT=32}','local bindings={FORWARD=17,BACKWARD=31,LEFT=30,RIGHT=32,MELEE=57}')

@@ -28,7 +28,7 @@ function p:getPlayerNum()return 0 end
 function p:getHitReaction()return ''end
 for _,name in ipairs({'isOnFloor','isKnockedDown','isClimbing','isDraggingCorpse','isAsleep','hasTimedActions','isAttackStarted','isPerformingAttackAnimation','isBlockMovement','getIgnoreMovement'})do p[name]=function()return false end end
 instanceof=function(obj,kind)return kind=='IsoPlayer' and obj==p or kind=='IsoZombie' and obj.zombie==true end
--- MODULES
+do local _="ProjectYakuzaFixture:MODULES" end
 local ProjectYakuza=ProjectYakuza;local H=ProjectYakuza.Heat;local Q=ProjectYakuza.Quicksteps
 ProjectYakuza.stateFor=function()return {active=false} end
 local z={zombie=true}

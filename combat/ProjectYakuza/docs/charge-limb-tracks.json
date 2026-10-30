@@ -1,7 +1,7 @@
 {
   "operation": "Numeric positions only; original already-retargeted B42 clips imported through native Jassimp/HelperFunctions. No motion/texture/audio files created or altered. Limb selection inferred from original release trajectory/contact pose, not a claim of decoded Y6 hitbox attachment enums.",
   "output": "42/media/lua/client/ProjectYakuza/ChargeTracks.lua",
-  "sha256": "300f80727e4b6e1cd9cd2c17ffc44250d57731cfbf8eece8934ee93c909cb0c1",
+  "sha256": "960a723a4418c3a9c1793365383090405fc311b91289033553b4561526ecc557",
   "clips": [
     {
       "animation": "ProjectYakuza_DD_ChargeLoop",

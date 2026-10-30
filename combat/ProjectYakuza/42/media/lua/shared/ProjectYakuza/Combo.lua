@@ -16,7 +16,7 @@ end
 function Combo.press(s, count, bufferLimit)
     s.pressSerial = s.pressSerial + 1
     if s.active or s.starting then
-        -- Keep only the next intended attack; repeated early clicks do not fill the chain.
+
         s.queued = math.min(s.queued + 1, bufferLimit or 1, math.max(0, count - s.step))
     end
 end

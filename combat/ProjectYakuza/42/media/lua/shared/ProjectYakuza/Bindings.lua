@@ -1,4 +1,4 @@
--- Input settings are owned by this mod; native aiming/movement remain PZ binds.
+
 ProjectYakuza=ProjectYakuza or {}
 local ProjectYakuza=ProjectYakuza
 local B={edges=setmetatable({}, {__mode="k"}),attackGates=setmetatable({}, {__mode="k"})}

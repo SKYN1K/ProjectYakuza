@@ -37,7 +37,7 @@ function H:prerender()
     if not isGamePaused() then self.frame=math.floor(time/50) end
     local phase=self.frame or 0
     local a=H.loadAssets()
-    -- Raw atlas regions, drawn only at smaller sizes. No added ring or baked dragon animation.
+
     self:drawOriginal(a.glass,10,22,50,50,1,1,1,1)
     if self.heat>0 then
         local h=50*self.heat/100

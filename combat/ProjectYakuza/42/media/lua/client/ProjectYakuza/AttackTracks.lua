@@ -1,5 +1,5 @@
--- Numeric positions extracted through B42 native import/FK from the shipped Y6 punch.
--- Forearm, wrist and knuckle; original 30 Hz samples, no authored motion/media.
+
+
 require "ProjectYakuza/Registry"
 ProjectYakuza.AttackTracks={
     dd_light_01={animation="ProjectYakuza_DD_Light01",fps=30,frames={

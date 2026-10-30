@@ -72,13 +72,16 @@ function N.pickClip(p,style,s)
     local context=ProjectYakuza.activeActions[p]
     if not s.active and not (context and context.timedAction and context.timedAction.started) then return "" end
     local group=s.active and (s.groundMove and p:isPerformingStompAnimation() and "stomp" or "melee") or "actions"
-    for _,entry in ipairs(ProjectYakuza.NetworkCatalog[style.id] or {}) do if entry.group==group then
+    local values={}
+    for _,entry in ipairs(P.selectors(style.id,group) or {}) do
         local matches=true
         for _,condition in ipairs(entry.conditions) do
-            if tostring(p:GetVariable(condition.name) or ""):lower()~=condition.value:lower() then matches=false;break end
+            local value=values[condition.name]
+            if value==nil then value=tostring(p:GetVariable(condition.name) or ""):lower();values[condition.name]=value end
+            if value~=condition.value then matches=false;break end
         end
         if matches then return entry.id end
-    end end
+    end
     return ""
 end
 function N.capture(p,force)
@@ -122,11 +125,7 @@ function N.step(p,action,finished)
     local fx,fy=ProjectYakuza.Quicksteps.facing(p);if not fx then return end
     N.send(p,"step",{step=action.networkID,clip=action.context.action.animation,
         x=p:getX(),y=p:getY(),z=p:getZ(),fx=fx,fy=fy,finished=finished==true})
-    -- Scripted displacement while movement is blocked otherwise waits for the
-    -- native idle position interval. Keep native authority in step as well.
-    -- IsoPlayer.setIgnoreMovement(true) marks its NetworkPlayerAI for a
-    -- reliable update. NetworkPlayerAI itself is not exposed to Lua in B42.
-    -- Quickstep owns this already-true flag and restores it in cleanup.
+
     p:setIgnoreMovement(true)
 end
 function N.updateStep(p,s)
@@ -138,8 +137,7 @@ function N.updateStep(p,s)
     local x=step.fromX+(step.x-step.fromX)*factor
     local y=step.fromY+(step.y-step.fromY)*factor
     if math.abs(p:getZ()-step.z)>.5 or (p:getX()-x)^2+(p:getY()-y)^2>2.5^2 then s.step=nil;return end
-    -- Keep the square/object membership and previous coordinates consistent,
-    -- just as paired-action alignment does, when a sample crosses a tile.
+
     ProjectYakuza.Defense.snapActor(p,x,y)
     p:setTargetAndCurrentDirection(step.fx,step.fy)
 end
@@ -215,8 +213,7 @@ function N.applyState(p,packet,s)
         p:setVariable("ProjectYakuzaRemoteCycle",tostring(s.cycle))
         local clip=P.clip(packet.style,packet.clip)
         if clip and clip.group=="actions" then
-            -- Match BaseAction.setActionAnim's actual native variables. The melee/stomp
-            -- observers stay in their native action groups and use PZ attack replication.
+
             p:setVariable("PerformingAction","ProjectYakuza_MP");p:setVariable("IsPerformingAnAction",true)
             s.actionOverride=true
         end
@@ -333,7 +330,7 @@ function N.command(module,command,a)
         local key="damage:"..a.player..":"..tostring(a.event)
         if N.seen[key] then return end;N.seen[key]=now()
         if not P.number(a.health,0,1000) then return end
-        -- Absolute server result only. Observers never call Hit/Kill or award damage twice.
+
         z:setHealth(math.min(z:getHealth(),a.health));z:setAttackedBy(p)
         if P.number(a.dx,-1,1) and P.number(a.dy,-1,1) then z:getHitDir():set(a.dx,a.dy) end
         if P.number(a.force,0,12) then z:setHitForce(a.force) end

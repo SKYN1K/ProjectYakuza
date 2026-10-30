@@ -1,6 +1,6 @@
 import jassimp.*;
 import java.util.*;import java.nio.file.*;import java.lang.reflect.*;import javax.xml.parsers.*;import org.w3c.dom.*;
-/** Offline native importer/selector checks. Does not start Project Zomboid or create a GL context. */
+
 public class WeaponAssetProbe {
  static Object field(Object o,String n)throws Exception{var f=o.getClass().getDeclaredField(n);f.setAccessible(true);return f.get(o);}
  public static void main(String[]args)throws Exception{

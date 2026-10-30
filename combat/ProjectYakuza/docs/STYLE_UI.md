@@ -11,7 +11,7 @@ ui={
     heat="my_mod.heat",
     status="my_mod.status",
     selectorSlot="my_mod.slot",
-    -- selector="my_mod.wheel", setup="my_mod.assignments",
+
 }
 ```
 
@@ -35,24 +35,24 @@ local PY=ProjectYakuza
 assert(PY.API_VERSION>=3,"This HUD needs Project Yakuza API 3")
 PY.registerStyleUI("my_mod.heat",{
     create=function(c,s)
-        -- Supply this PNG in your addon. Missing assets must not be generated.
+
         s.texture=c.texture("media/textures/MyMod/SuppliedHeatAtlas.png")
     end,
     update=function(c,s)
-        s.phase=c.time -- seconds; frozen while the game is paused
+        s.phase=c.time
     end,
     render=function(c,s)
-        if not s.texture then return false end -- default HUD fallback
-        -- Example atlas crop: use the actual supplied atlas's rectangle.
+        if not s.texture then return false end
+
         local fraction=math.max(0,math.min(1,c.heat/100))
         if fraction>0 then
             c.panel:drawSubTexture(s.texture,0,0,64*fraction,16,
                 20,20,64*fraction,16,.8,1,1,1)
         end
-        return true -- this channel was fully drawn
+        return true
     end,
     destroy=function(c,s)
-        -- Remove any children/listeners/native resources you created here.
+
         s.texture=nil
     end,
 })

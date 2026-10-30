@@ -1,4 +1,4 @@
-"""Check source provenance, collision timing and isolated weapon selectors without launching PZ."""
+
 from pathlib import Path
 import hashlib,json,re,struct,xml.etree.ElementTree as E,subprocess
 root=Path(__file__).resolve().parents[2];mod=root/'combat/ProjectYakuza';media=mod/'42/media'
@@ -14,7 +14,7 @@ for row in manifest['clips']:
  assert row['fps']==30 and row['sourceFrames'][0]==0
  s=output.read_text(encoding='utf-8');assert 'AnimationSet '+output.stem+' {' in s
  assert not re.search(r'(?i)\b(nan|inf)\b',s)
- # Every original frame is retained in each of the 35 native channels, with finite values.
+
  blocks=re.findall(r'AnimationKey [RST] \{ ([012]); (\d+);\s*(.*?)\n \}',s,re.S)
  assert len(blocks)==105,(output,len(blocks))
  for kind,count,body in blocks:
@@ -26,7 +26,7 @@ for row in manifest['clips']:
    if kind=='0':assert abs(sum(x*x for x in values)-1)<.00001
    if kind=='1':assert values==[1,1,1]
  for key in ('sourceSha256','sha256'):assert len(row[key])==64
-# Contacts are source BEP kind-68 starts, not guessed elapsed milliseconds.
+
 for row in manifest['clips']:
  stem=Path(row['output']).stem
  if not any(stem.endswith(label) for label in ['Light01','Light02','Light03','Heavy','Ground']):continue
@@ -43,7 +43,7 @@ for row in manifest['clips']:
  assert len(collisions)==1 and abs(float(collisions[0].findtext('m_TimePc'))*row['sourceFrames'][1]-hits[0])<1e-7
  conditions={c.findtext('m_Name'):c.findtext('m_Value') for c in node.findall('m_Conditions')}
  assert conditions['ProjectYakuzaStyle']=='dragon_of_dojima' and conditions['ProjectYakuzaWeaponProfile']==profile
- # Moving legs remain native: the imported attack contributes upper body/props only.
+
  assert all(x.findtext('boneName')!='Bip01' for x in node.findall('m_SubStateBoneWeights'))
 items=(Path('F:/SteamLibrary/steamapps/common/ProjectZomboid/media/scripts/generated/items/weapon.txt')).read_text(encoding='utf-8-sig')
 style=(media/'lua/shared/ProjectYakuza/Styles/DragonOfDojima.lua').read_text(encoding='utf-8')

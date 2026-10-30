@@ -64,3 +64,7 @@
 !/tools/combat-tests/weapon-mp-test-fixture.lua
 !/tools/combat-tests/WeaponAssetProbe.java
 !/tools/combat-tests/validate_weapon_assets.py
+
+!/tools/combat-tests/fixture_markers.py
+!/tools/combat-tests/check_source_comments.py
+!/tools/combat-tests/test_source_comments.py

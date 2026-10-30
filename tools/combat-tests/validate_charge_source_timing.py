@@ -1,4 +1,4 @@
-"""Verify source BEP charge markers/hit windows, looping holds and true-alpha flame speed."""
+
 from pathlib import Path
 import struct,json,hashlib,xml.etree.ElementTree as E,re
 from PIL import Image

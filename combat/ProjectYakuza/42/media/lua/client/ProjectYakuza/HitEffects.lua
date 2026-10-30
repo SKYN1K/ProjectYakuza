@@ -3,7 +3,7 @@ require "ProjectYakuza/WorldEffects"
 local ProjectYakuza=ProjectYakuza
 local F={bursts={},pool={},maxBursts=6,maxTotal=24}
 ProjectYakuza.HitEffects=F
--- Original Y6 particle exports; no generated frames or direction-dependent pages.
+
 local chargedParticles={
     {kind="chargeCore",path="media/textures/ProjectYakuza/HitGlint.png",size=64,scale=.20,dx=0,dy=0},
 }

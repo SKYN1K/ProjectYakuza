@@ -93,8 +93,8 @@ sendAddItemToContainer=function(inv,item)nativeAdds[#nativeAdds+1]={inventory=in
 sendEquip=function(who)nativeEquips[#nativeEquips+1]={player=who,item=who:getPrimaryHandItem()}end
 sendServerCommand=function(to,module,command,args)replies[#replies+1]={to=to,module=module,command=command,args=args}end
 sendClientCommand=function(from,module,command,args)outgoing[#outgoing+1]={from=from,module=module,command=command,args=args}end
--- SHARED_AND_SERVER
-ProjectYakuza.FEATURES.grab=true;ProjectYakuza.styles.dragon_of_dojima.actions.grab.enabled=true -- isolate dormant grab lifecycle tests
+do local _="ProjectYakuzaFixture:SHARED_AND_SERVER" end
+ProjectYakuza.FEATURES.grab=true;ProjectYakuza.styles.dragon_of_dojima.actions.grab.enabled=true
 local ProjectYakuza=ProjectYakuza;local P=ProjectYakuza.NetworkProtocol;local server=ProjectYakuza.NetworkServer
 local step=0;local seq=0;local eventID=0
 local function snapshot(who,extra)
@@ -162,12 +162,12 @@ ProjectYakuza.stateFor=function(who)who.combo=who.combo or {active=true,step=1};
 ProjectYakuza.Heat={states={},stocks=function(who)return math.floor((who.data.ProjectYakuzaHeat or 0)*6/100)end,display=function(who)return who.data.ProjectYakuzaHeat or 0 end,isExtreme=function()return false end,playback=function(who,e)who.speed=e and 1.92 or 1.6 end,onHit=function()end}
 ProjectYakuza.HeatAura={flash=function(who)who.flashes=(who.flashes or 0)+1 end,update=function(who)who.auraUpdates=(who.auraUpdates or 0)+1 end,clear=function(who)who.auraCleared=true end}
 local effects=0;ProjectYakuza.HitEffects={spawn=function()effects=effects+1 end}
--- REACTIONS_MODULE
+do local _="ProjectYakuzaFixture:REACTIONS_MODULE" end
 ProjectYakuza.Defense={snapActor=function(z,x,y)z.x=x;z.y=y;z.nextX=x;z.nextY=y end}
 ProjectYakuza.requestAction=function()return true end
 ProjectYakuza.cancelAction=function()end
 ProjectYakuza.prepareToken=function(item)item:setMaxHitCount(ProjectYakuza.MAX_HIT_COUNT)end
--- CLIENT_MODULE
+do local _="ProjectYakuzaFixture:CLIENT_MODULE" end
 local client=ProjectYakuza.Network
 remote.data.ProjectYakuzaStyle='dragon_of_dojima';remote.equipped=false
 local packet={player=2,seq=1,style='dragon_of_dojima',equipped=true,heat=40,fuel=35,extreme=true,clip='ProjectYakuza_DD_Light01',move='dd_light_01',swing=1}
@@ -217,15 +217,13 @@ check(server.players[1] and server.players[1].packet.move=='dd_light_01','client
 client.hit(p,z1,p.token,.3);flush();client.extra(p,z2);flush()
 check(z2.hits==wireHits+1,'client supplemental request and server result perform exactly one Hit across the wire')
 check(z1.health==1,'native primary is not applied by command replay')
--- Two different states in the same millisecond must both survive the relay.
+
 clock=clock+1100;snapshot(p,{clip='ProjectYakuza_DD_Quickstep01',action=1})
 local firstSeq=server.players[1].seq
 server.command(P.module,'state',p,{seq=firstSeq+1,style='dragon_of_dojima',equipped=true,heat=30,fuel=30,
  clip='ProjectYakuza_DD_Quickstep02',move='dd_light_01',swing=2,action=2})
 check(server.players[1].packet.clip=='ProjectYakuza_DD_Quickstep02' and server.players[1].packet.action==2,'same-tick action transition is not discarded by a 50ms gate')
 
--- Simulate a server with no copy of the saved client-only token. The two
--- inventories are separate and native inventory delivery can lag the Lua ack.
 clock=clock+1100
 local serverActor=player(3,0);serverActor.inventoryItems={};serverActor.hand=nil;serverActor.equipped=false
 local owner=player(3,0);owner.localPlayer=true;owner.data.ProjectYakuzaStyle='dragon_of_dojima'
@@ -262,7 +260,6 @@ client.command(P.module,'equipReady',replies[#replies].args)
 check(serverActor:getPrimaryHandItem()==nil and owner:getPrimaryHandItem()==nil,'disabling style unequips both peers')
 actors[3]=nil;server.players[3]=nil
 
--- A new serial must restart the same action without replaying gameplay events.
 clock=clock+1100
 local repeated={player=2,seq=100,style='dragon_of_dojima',equipped=true,heat=30,fuel=30,
  extreme=false,clip='ProjectYakuza_DD_Quickstep01',move='',swing=8,action=10}
@@ -281,7 +278,6 @@ check(ProjectYakuza.Reactions.states[z3]~=nil,'reaction survives a delayed nativ
 ProjectYakuza.Reactions.update(z3,clock+800)
 check(ProjectYakuza.Reactions.states[z3]==nil,'reaction that never enters native state times out')
 
--- The quickstep stream is bounded by the registered move, path and server quota.
 clock=clock+1100;p.x=0;p.y=0;remote.x=0;remote.y=0;replies={}
 snapshot(p,{clip='ProjectYakuza_DD_Quickstep01',action=20})
 local function sample(id,x,finished)
@@ -308,7 +304,6 @@ local progress=server.players[1].step.travel
 command('step',{step=4,clip='ProjectYakuza_DD_Quickstep01',x=0/0,y=0,z=0,fx=1,fy=0})
 check(server.players[1].step.travel==progress,'nonfinite step position rejected')
 
--- Interpolate only a remote actor. Late or reordered samples never rewind it.
 remote.x=0;remote.y=0
 local position={player=2,event=100,step=10,x=1,y=0,z=0,fx=1,fy=0}
 client.command(P.module,'step',position);clock=clock+25;client.updateStep(remote,client.remote[2])
@@ -348,7 +343,7 @@ check(#outgoing>messages and outgoing[#outgoing].args.finished,'terminal positio
 ProjectYakuza.FEATURES.grab=false;ProjectYakuza.styles.dragon_of_dojima.actions.grab.enabled=false
 clock=clock+2000;snapshot(p);command('grabRequest',{zombie=z4.id})
 check(not server.players[p.id].grab,'disabled server grab request cannot acquire a lease')
--- Bounded charge state and server-side multihit scaling.
+
 clock=clock+2000;snapshot(p,{clip='ProjectYakuza_DD_ChargedFinisher01',move='dd_charged_finisher_01',chargePower=.5})
 check(server.players[1].packet.chargePower==.5,'server preserves a bounded partial charge')
 local chargePrimary=zombie(150,p.x+1);local chargeExtra=zombie(151,p.x+1.1)
@@ -370,7 +365,6 @@ local invalid={player=2,seq=oldRemote+1,style='dragon_of_dojima',equipped=true,h
 client.command(P.module,'state',invalid)
 check(client.remote[2].packet.seq==oldRemote,'remote state rejects nonfinite charging power')
 
--- Move-specific responses: real shared rules, deferred client controller and server relay.
 local H=ProjectYakuza.HitResponses;local R=ProjectYakuza.Reactions
 local style=ProjectYakuza.getStyle('dragon_of_dojima')
 local function copy(t)local v={};for k,x in pairs(t)do v[k]=x end;return v end
@@ -437,7 +431,7 @@ client.command(P.module,'impact',responsePacket);check(not R.pending[authoritati
 local invalidTarget=responseVictim(208)
 client.command(P.module,'impact',{player=1,event=9002,zombie=208,responseKind='knockdown',responseForce=12})
 check(not R.pending[invalidTarget] and not invalidTarget.knock,'invalid packet force cannot force knockdown')
--- Test actual server policy with current movement snapshots changing after a hit.
+
 clock=clock+2000;server.reactions={};replies={}
 snapshot(p,{move='dd_charged_finisher_01',clip='ProjectYakuza_DD_ChargedFinisher01',chargePower=.5})
 local primary=responseVictim(209);local extra=responseVictim(210)
@@ -459,7 +453,6 @@ R.tick();check(observer.knock and observer.health==.7 and observer.hits==oldHits
 local lightVictim=responseVictim(213);combo.finisherMove=nil;combo.multiHitToken={}
 R.onHit(p,lightVictim,p.token,.1);R.clearAll();check(lightVictim.vars.ProjectYakuzaEnemyReaction==false and not R.hooked,'world-exit cleanup releases all custom reaction flags and hooks')
 
--- Future styles opt in to bounded juggling gameplay windows; no media/physics is invented.
 local J=ProjectYakuza.Juggling
 check(not style.juggling and not J.plan(style,style.lightAttacks[1]),'DoD has no juggling opt-in')
 local future=copy(style);future.id='test.juggler';future.name='Test Juggler';future.actions={};future.lightAttacks={}
@@ -512,7 +505,7 @@ clock=clock+400;J.hit(p,jug,follow,31);clock=clock+400;J.hit(p,jug,follow,32)
 check(J.states[jug].hardEnd==hardDeadline and J.get(jug).remaining==400,'refresh never extends the hard juggling deadline')
 clock=clock+401;J.tick();check(not J.get(jug),'hard deadline ends repeated refreshes')
 J.clearAll()
--- SP uses the actual post-native-health-loss queue, and suppresses heavy flags while a juggle is active.
+
 isClient=function()return false end;combo.step=1;combo.multiHitToken={};jug.health=1
 R.onHit(p,jug,p.token,.1);check(not J.get(jug) and R.pending[jug],'SP launcher waits until native hit returns')
 jug.health=.9;R.tick();check(J.get(jug) and not jug.knock,'SP launcher opens the window after confirmed health loss')
@@ -520,7 +513,7 @@ check(jug.vars.ProjectYakuzaEnemyReaction==false and not R.states[jug],'juggle p
 combo.step=2;combo.multiHitToken={};R.onHit(p,jug,p.token,.1);jug.health=.8;R.tick();check(J.get(jug).hits==1,'SP followup is counted once through the real hit pipeline')
 combo.step=3;combo.multiHitToken={};R.onHit(p,jug,p.token,.1);jug.health=.7;R.tick();check(not J.get(jug),'SP ender closes the real pipeline state')
 J.clearAll();R.clearAll();isClient=function()return true end
--- MP resolves window state on the server and carries it in the existing impact packet.
+
 clock=clock+2000;server.reactions={};snapshot(p,{style=future.id,move='dd_light_01',clip='ProjectYakuza_DD_Light01'})
 local networkJug=responseVictim(222);replies={};command('impact',{swing=1200,zombie=222});clock=clock+101;server.tick()
 check(J.get(networkJug) and networkJug.hits==0,'MP primary launcher never calls Hit again')

@@ -11,8 +11,6 @@ function R.damage(move,power)
     return minimum+(maximum-minimum)*power
 end
 
-
--- Shared data-only policy and native reaction flags. Never calls Hit/Kill or moves XY.
 local H={kinds={flinch=true,stagger=true,knockdown=true}}
 ProjectYakuza.HitResponses=H
 function H.valid(kind,force)
@@ -55,7 +53,7 @@ end
 
 local ProjectYakuza = ProjectYakuza
 ProjectYakuza.FEATURES={grab=false}
-ProjectYakuza.VERSION = "0.45.0"
+ProjectYakuza.VERSION = "0.46.0"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -233,7 +231,9 @@ end
 function ProjectYakuza.isEquipped(player)
     if ProjectYakuza.Network and not player:isLocalPlayer() then return ProjectYakuza.Network.remoteEquipped(player) end
     local item = player:getPrimaryHandItem()
-    local equipped=(ProjectYakuza.isStyleToken(item) or (ProjectYakuza.Weapons and ProjectYakuza.Weapons.matches(player,item))) and ProjectYakuza.getPlayerStyle(player) ~= nil
+    local id=player:getModData().ProjectYakuzaStyle
+    local style=ProjectYakuza.styles[id or "dragon_of_dojima"]
+    local equipped=style~=nil and (ProjectYakuza.isStyleToken(item) or (id~=nil and ProjectYakuza.Weapons and ProjectYakuza.Weapons.profile(id,item)~=nil)) or false
     if equipped and isClient and isClient() and ProjectYakuza.Network and ProjectYakuza.Network.equipmentReady then
         return ProjectYakuza.Network.equipmentReady(player)
     end
@@ -255,7 +255,7 @@ function ProjectYakuza.registerActionHandler(kind, handler)
     assert(handler.update==nil or type(handler.update)=="function","handler.update must be a function")
     ProjectYakuza.actionHandlers[kind] = handler
 end
--- New kinds own their input/lifecycle; built-in kinds retain their controllers.
+
 function ProjectYakuza.registerActionKind(kind,options)
     assert(type(kind)=="string" and string.match(kind,"^[%w_.-]+$"),"namespaced action kind required")
     assert(options==nil or type(options)=="table","action options must be a table")
@@ -288,7 +288,7 @@ function ProjectYakuza.blocksNativeAttacks(player)
     local d=c and ProjectYakuza.actionDefinitions[c.kind]
     return c~=nil and (c.kind=="styleEntry" or c.kind=="quickstepAttack" or c.kind=="heavyCharge" or c.kind=="chargedHeavy" or (d~=nil and d.blocksAttacks)) or false
 end
--- Called only for the current local player's custom action, never world scans.
+
 function ProjectYakuza.updateCustomAction(player)
     local c=ProjectYakuza.activeActions[player]
     if not c or not ProjectYakuza.actionDefinitions[c.kind] then return false end
@@ -338,7 +338,7 @@ function ProjectYakuza.setHeat(player, value)
     player:getModData().ProjectYakuzaHeat = math.max(0, math.min(100, value))
     ProjectYakuza.emit("heatChanged", player, ProjectYakuza.getHeat(player))
 end
--- No unfinished action grants effects, protection, movement or damage.
+
 function ProjectYakuza.requestAction(player, kind, variant, target)
     if kind=="grab" and ProjectYakuza.FEATURES.grab==false then return false,"temporarily_disabled" end
     if not ProjectYakuza.actionKinds[kind] then return false, "unknown_action" end

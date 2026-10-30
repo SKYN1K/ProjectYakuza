@@ -1,8 +1,7 @@
 require "ProjectYakuza/Registry"
 local C={modId="ProjectYakuza",accepted={}}
 ProjectYakuza.CombatVoiceLines=C
--- Canonical definitions for CVF 1.1+ pack manifests. These are optional,
--- explicit calls, never additions to vanilla voice pools or CVF's voice wheel.
+
 C.definitions={
     {id="CombatLightAttack",label="Combat - Light attack",cooldown=.25},
     {id="CombatHeavyAttack",label="Combat - Heavy attack",cooldown=.5},

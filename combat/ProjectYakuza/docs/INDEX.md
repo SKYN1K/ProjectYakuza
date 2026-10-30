@@ -1,6 +1,6 @@
 # Documentation index
 
-Current manual: Project Yakuza 0.45.0, Lua API 3, MP protocol 2.
+Current manual: Project Yakuza 0.46.0, Lua API 3, MP protocol 2.
 
 | Task | Guide |
 | --- | --- |
@@ -19,6 +19,7 @@ Current manual: Project Yakuza 0.45.0, Lua API 3, MP protocol 2.
 | Future launchers and aerial followup hooks | [Juggling](JUGGLING.md) |
 | Enemy flinch/stagger/knockdown profiles | [Hit responses](HIT_RESPONSES.md) |
 | Heat rules and tuning | [Heat](HEAT.md) |
+| Code maintenance, lookup caches and comment checks | [Performance](PERFORMANCE.md) |
 | Validate/package/troubleshoot | [Testing](TESTING.md) |
 | Copy a starter | [StyleSubmod](../templates/StyleSubmod/README.md) |
 | Optional character voice packs | [CVF](CVF_COMBAT_VOICES.md) |

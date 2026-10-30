@@ -93,8 +93,8 @@ sendAddItemToContainer=function(inv,item)nativeAdds[#nativeAdds+1]={inventory=in
 sendEquip=function(who)nativeEquips[#nativeEquips+1]={player=who,item=who:getPrimaryHandItem()}end
 sendServerCommand=function(to,module,command,args)replies[#replies+1]={to=to,module=module,command=command,args=args}end
 sendClientCommand=function(from,module,command,args)outgoing[#outgoing+1]={from=from,module=module,command=command,args=args}end
--- SHARED_AND_SERVER
-ProjectYakuza.FEATURES.grab=true;ProjectYakuza.styles.dragon_of_dojima.actions.grab.enabled=true -- isolate dormant grab lifecycle tests
+do local _="ProjectYakuzaFixture:SHARED_AND_SERVER" end
+ProjectYakuza.FEATURES.grab=true;ProjectYakuza.styles.dragon_of_dojima.actions.grab.enabled=true
 local ProjectYakuza=ProjectYakuza;local P=ProjectYakuza.NetworkProtocol;local server=ProjectYakuza.NetworkServer
 local step=0;local seq=0;local eventID=0
 local function snapshot(who,extra)
@@ -154,11 +154,11 @@ local beforeBroken=state.seq
 snapshot(p,{weaponProfile='bat',clip='ProjectYakuza_DD_BatHeavy',move='dd_bat_heavy'})
 check(state.seq==beforeBroken,'broken item snapshot rejected')
 bat.condition=10
--- Actual client handshake: never exchange weapon for token, and discard a stale equipment acknowledgement.
+
 ProjectYakuza.stateFor=function()return {active=false,step=0}end
 ProjectYakuza.Heat={stocks=function()return 0 end,display=function()return 0 end,isExtreme=function()return false end}
 ProjectYakuza.prepareToken=function()end
--- CLIENT_MODULE
+do local _="ProjectYakuzaFixture:CLIENT_MODULE" end
 local N=ProjectYakuza.Network
 p:setPrimaryHandItem(bat)
 N.equip(p,'dragon_of_dojima',true)
@@ -172,7 +172,7 @@ localState.equipReply={style='dragon_of_dojima',weaponProfile='bat',item=700}
 check(not N.finishEquipment(p,localState) and p.hand==pipe and not localState.equipReply,'late acknowledgement cannot overwrite newer equipment')
 check(not N.ensureEquipment(p,'dragon_of_dojima'),'changed weapon needs fresh readiness acknowledgement')
 check(outgoing[#outgoing].args.item==701,'fresh handshake identifies replacement pipe')
--- Disabling style leaves the ordinary held weapon in place on both peers.
+
 clock=clock+1100;server.command(P.module,'equip',p,{style='none',weaponProfile='',item=-1,request=2})
 check(p.hand==pipe,'server disable preserves the real weapon')
 localState.equipReply={style='none',weaponProfile='',item=-1}
@@ -211,4 +211,37 @@ N.equip(p,'dragon_of_dojima',false);localState.equipReply={style='dragon_of_doji
 check(N.finishEquipment(p,localState) and p.hand==sword and p.secondary==sword,'client retains sword and both hand bindings')
 remote.data.ProjectYakuzaStyle='dragon_of_dojima';N.remote[remote.id]={packet={equipped=true,weaponProfile='knife'}}
 check(ProjectYakuza.getPlayerStyle(remote).weaponProfile=='knife','remote presentation resolves validated knife view before native hand replication')
-return true,'PASS '..count..' sharp/blunt MP equipment, observers, reach, damage and stale-swing checks'
+local W=ProjectYakuza.Weapons;local baseStyle=ProjectYakuza.getStyle('dragon_of_dojima')
+local move=P.move(baseStyle.id,'dd_blade_light_03');P.clip(baseStyle.id,'ProjectYakuza_DD_BladeLight03')
+W.findMove(baseStyle,'dd_light_01')
+local originalIpairs=ipairs;local walks=0
+ipairs=function(t)walks=walks+1;return originalIpairs(t)end
+local correct=true
+for i=1,1000 do correct=correct and P.clip(baseStyle.id,'ProjectYakuza_DD_BladeLight03')~=nil and W.findMove(baseStyle,'dd_light_01')==baseStyle.lightAttacks[1] end
+ipairs=originalIpairs
+check(correct and walks==0,'warm clip/move lookups do not rescan registered arrays over 1000 calls')
+ProjectYakuza.registerStyle(baseStyle)
+check(W.moveIndexes[baseStyle]==nil and W.findMove(baseStyle,'dd_light_01')==baseStyle.lightAttacks[1],'registering the same style table invalidates its move index')
+p.vars.ProjectYakuzaActive=true;p.vars.ProjectYakuzaStyle=baseStyle.id;p.vars.ProjectYakuzaWeaponProfile='blade';p.vars.AimFloorAnim=false;p.vars.ProjectYakuzaMove='dd_blade_light_03'
+local originalGet=p.GetVariable;local reads=0
+p.GetVariable=function(self,name)reads=reads+1;return originalGet(self,name)end
+local function baselineSelector()
+ for _,entry in ipairs(ProjectYakuza.NetworkCatalog[baseStyle.id])do if entry.group=='melee' then
+  local matches=true
+  for _,condition in ipairs(entry.conditions)do if tostring(p:GetVariable(condition.name) or ''):lower()~=condition.value:lower()then matches=false;break end end
+  if matches then return entry.id end
+ end end
+ return ''
+end
+local baseline=baselineSelector();local before=reads;reads=0
+local chosen=N.pickClip(p,W.view(baseStyle,'blade'),{active=true})
+local after=reads;p.GetVariable=originalGet
+check(chosen==baseline and chosen=='ProjectYakuza_DD_BladeLight03','compiled selector preserves original priority and clip result')
+check(after<=6 and after<before,'animator bridge reads are shared once per variable within each selection')
+local priorCatalog=ProjectYakuza.NetworkCatalog[baseStyle.id]
+check(P.clip(baseStyle.id,'Tests_CacheProbe')==nil,'unknown observer lookup stays empty before registration')
+ProjectYakuza.registerNetworkAnimations(baseStyle.id,{{id='Tests_CacheProbe',animation='ProjectYakuza_DD_BladeHeavy',group='actions',loop=false,priority=999,conditions={{name='PerformingAction',value='MIXED_CASE'}}}})
+check(priorCatalog~=ProjectYakuza.NetworkCatalog[baseStyle.id] and P.clip(baseStyle.id,'Tests_CacheProbe')~=nil,'network registration refreshes catalog indexes')
+local selectors=P.selectors(baseStyle.id,'actions')
+check(selectors[1].id=='Tests_CacheProbe' and selectors[1].conditions[1].value=='mixed_case','refreshed selector cache preserves sorted priority and case-insensitive comparisons')
+return true,'PASS '..count..' sharp/blunt MP equipment, observers, cache invalidation, bridge reads and stale-swing checks; selector reads '..before..' -> '..after

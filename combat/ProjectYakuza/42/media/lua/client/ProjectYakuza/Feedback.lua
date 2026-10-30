@@ -65,7 +65,7 @@ function F.finishActivation(p,complete)
     if not session then return end
     if not complete then F.stopActivation(p);return end
     if session.completed then return end
-    -- Slow frames may skip the transient flare marker; successful End is a safe fallback.
+
     if not session.flared then F.flareActivation(p) end
     session.completed=true;session.last=getTimestampMs();session.deadline=session.last+F.heatMix.tailMs
 end
@@ -102,8 +102,7 @@ function F.swing(p,style,step,move)
     if style.weaponProfile then return end
     local s=ProjectYakuza.stateFor(p);local kick=move.groundAttack or move.runningAttack or move.quickstepAttack or move.afterLight or move.chargedFinisher
     local hit=ProjectYakuza.Heat.isExtreme(p) and F.sound(p,"heatImpact") or kick and F.sound(p,"kickImpact") or F.sound(p,"punchImpact") or "BareHandsHit"
-    -- This weapon belongs exclusively to the combat framework. Saved tokens are
-    -- migrated on their next swing; no global BareHands sound is changed.
+
     local token=p:getPrimaryHandItem()
     if token and ProjectYakuza.isStyleToken(token) then token:setZombieHitSound(hit) end
     local swing=kick and F.sound(p,"kickSwing") or F.sound(p,"punchSwing")

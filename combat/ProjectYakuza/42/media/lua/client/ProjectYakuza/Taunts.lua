@@ -70,8 +70,7 @@ function A:cleanup(completed)
 end
 function A:perform()
     if self.cleaned then return end
-    -- Only the actual animation end marker can grant heat. Movement inputs and
-    -- release of aim cannot cut the taunt short; damage can still interrupt it.
+
     local complete=self.started and self.seenClip and self.character:GetVariable("ProjectYakuzaTaunt")=="done" and self:isValid()
     if complete and not ProjectYakuza.Heat.isExtreme(self.character) then
         ProjectYakuza.setHeat(self.character,ProjectYakuza.getHeat(self.character)+ProjectYakuza.Heat.stockSize())
@@ -126,8 +125,7 @@ end
 function T.bindInput()
     if T.bound then return end
     T.bound=true
-    -- Vanilla shouts on release. Remember the whole intercepted key gesture,
-    -- including when aim is released first, so it cannot leak a shout on key-up.
+
     local handlers={{"onKeyPressed",Events.OnKeyStartPressed},{"onKeyRepeat",Events.OnKeyKeepPressed},{"onKeyReleased",Events.OnKeyPressed}}
     for index,entry in ipairs(handlers) do
         local name,event=entry[1],entry[2];local original=ISEmoteRadialMenu[name];local phase=index

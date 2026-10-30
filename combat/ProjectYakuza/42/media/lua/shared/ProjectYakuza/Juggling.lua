@@ -1,6 +1,6 @@
 require "ProjectYakuza/Registry"
 local PY=ProjectYakuza
--- Gameplay windows/animation hooks only. No damage, position, gravity or ragdoll writes.
+
 local J={states=setmetatable({}, {__mode="k"}),cooldowns=setmetatable({}, {__mode="k"}),received=setmetatable({}, {__mode="k"}),sequence=0,maxTargets=64}
 PY.Juggling=J
 local function now()return getTimestampMs() end

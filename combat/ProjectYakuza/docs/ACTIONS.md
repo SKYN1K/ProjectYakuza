@@ -5,7 +5,7 @@ Reuse a kind when its controller protocol fits; register a namespaced kind for a
 ```lua
 require "ProjectYakuza/Registry"
 ProjectYakuza.registerActionKind("my_mod.charge")
--- In your style: actions={["my_mod.charge"]={enabled=true,animation="MyMod_Charge",duration=1.2}}
+
 ```
 
 Client code registers a style-specific handler. Required start(context) queues native playback and returns true only when accepted; optional canStart is side-effect free, update handles watchdog/release polling, and cancel restores all owned effects idempotently. The complete [starter flourish](../templates/StyleSubmod/42/media/lua/client/ExampleStyle_Flourish.lua.example) shows this with an existing clip, custom binding and no damage/heat/protection.

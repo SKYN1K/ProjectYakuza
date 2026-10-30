@@ -29,7 +29,7 @@ function Wheel:prerender()
         local alpha=elapsed*(chosen and 1 or .65)
         local custom=ProjectYakuza.StyleUI.render("selectorSlot",self.player,self,{style=style,side=side,x=xy[1],y=xy[2],alpha=alpha,selected=chosen})
         if not custom then
-        -- Original Kiwami circular frame and highlight; unchanged atlas pixels.
+
         if a.life then
             self:drawSubTexture(a.life,122,74,51,51,xy[1]-42,xy[2]-42,84,84,alpha,1,1,1)
             if chosen then self:drawSubTexture(a.life,0,0,43,44,xy[1]-44,xy[2]-44,88,88,elapsed,1,1,1) end
@@ -37,7 +37,7 @@ function Wheel:prerender()
         local icon=style and style.selectorIcon and getTexture(style.selectorIcon)
         if not icon and id=="dragon_of_dojima" then icon=a.dragon end
         if icon==a.dragon then
-            -- Original 112x82 crop at 1:1 pixels: the 82px circle fills the 84px frame.
+
             self:drawSubTexture(icon,8,23,112,82,xy[1]-56,xy[2]-41,112,82,alpha,1,1,1)
         elseif icon then self:drawTextureScaled(icon,xy[1]-46,xy[2]-46,92,92,alpha,1,1,1)
         elseif side=="bottom" then self:drawTextCentre("SETUP",xy[1],xy[2]-8,1,1,1,alpha,UIFont.Small)

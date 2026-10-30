@@ -1,6 +1,6 @@
--- Style-owned equipment overlays. Never replaces an item or changes its script/model.
+
 local PY=ProjectYakuza
-local W={profiles={},byItem={},views={},equipment=setmetatable({}, {__mode="k"})}
+local W={profiles={},byItem={},views={},moveIndexes=setmetatable({}, {__mode="k"}),equipment=setmetatable({}, {__mode="k"})}
 PY.Weapons=W
 function W.register(styleId,profile)
     local base=PY.getStyle(styleId)
@@ -29,8 +29,7 @@ function W.register(styleId,profile)
         local slot=view.actions.finisher
         assert(slot and slot.enabled and slot.variants and slot.variants.default,"standaloneHeavy requires actions.finisher.variants.default")
     end
-    -- The network resolver addresses moves by nodeValue under the base style ID.
-    -- Shared action objects (e.g. the same quicksteps) may deliberately be reused.
+
     local nodes={}
     local function collect(s)
         local function add(m)
@@ -51,9 +50,9 @@ function W.register(styleId,profile)
     return view
 end
 function W.profile(styleId,item)
-    if not item or PY.isStyleToken(item) then return nil end
+    if not item then return nil end
     local lookup=W.byItem[styleId];local id=lookup and lookup[item:getFullType()]
-    -- No firearms, broken weapons or items merely sharing a display name/category.
+
     if not id or (item.getCondition and item:getCondition()<=0) then return nil end
     return id
 end
@@ -62,12 +61,11 @@ function W.view(style,id)
 end
 function W.forPlayer(p,style)
     if not style then return nil end
-    local id=W.profile(style.id,p:getPrimaryHandItem())
     if PY.Network and not p:isLocalPlayer() then
         local remote=PY.Network.remote[p:getOnlineID()]
-        if remote and remote.packet.equipped then id=remote.packet.weaponProfile end
+        if remote and remote.packet.equipped then return W.view(style,remote.packet.weaponProfile) end
     end
-    return W.view(style,id)
+    return W.view(style,W.profile(style.id,p:getPrimaryHandItem()))
 end
 function W.matches(p,item)
     if not item or item~=p:getPrimaryHandItem() then return false end
@@ -76,19 +74,27 @@ function W.matches(p,item)
     return style and W.profile(style.id,item)~=nil or false
 end
 function W.findMove(style,node)
-    if not style then return nil end
-    for _,m in ipairs(style.lightAttacks or {}) do if m.nodeValue==node then return m end end
-    for _,m in ipairs(style.groundAttacks or {}) do if m.nodeValue==node then return m end end
-    for _,slot in pairs(style.actions or {}) do
-        if slot.nodeValue==node then return slot end
-        for _,m in pairs(slot.variants or {}) do if m.nodeValue==node then return m end end
+    if not style or node==nil then return nil end
+    local index=W.moveIndexes[style]
+    if not index then
+        index={}
+        local function add(move)
+            if move.nodeValue and not index[move.nodeValue] then index[move.nodeValue]=move end
+        end
+        for _,move in ipairs(style.lightAttacks or {}) do add(move) end
+        for _,move in ipairs(style.groundAttacks or {}) do add(move) end
+        for _,slot in pairs(style.actions or {}) do
+            add(slot);for _,move in pairs(slot.variants or {}) do add(move) end
+        end
+        W.moveIndexes[style]=index
     end
+    return index[node]
 end
+
 function PY.isCombatWeapon(p,item)
     return PY.isStyleToken(item) or W.matches(p,item)
 end
--- Supplementary victims use the real weapon's reach, within the framework's
--- existing world/path budget. Native primary-hit collision remains untouched.
+
 function W.hitRange(item)
     local range=item and item.getMaxRange and item:getMaxRange()
     if type(range)~="number" or range~=range or range==math.huge or range==-math.huge then return 1.25 end
@@ -98,7 +104,7 @@ function W.extraDamage(item,damage)
     if type(damage)~="number" or damage~=damage then return 0 end
     local maximum=item and item:getMaxDamage() or 0
     if type(maximum)~="number" or maximum~=maximum or maximum==math.huge or maximum==-math.huge then return 0 end
-    -- Do not copy a primary-only knife jaw kill/critical onto every nearby target.
+
     return math.max(0,math.min(20,maximum,damage))
 end
 function W.sync(p)
@@ -123,3 +129,5 @@ function W.sync(p)
     end
 end
 if Events and Events.OnPlayerUpdate then Events.OnPlayerUpdate.Add(W.sync) end
+
+PY.on("styleRegistered",function(style)W.moveIndexes[style]=nil end)

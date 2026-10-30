@@ -29,7 +29,7 @@ function R.queue(attacker,victim,response,before,juggle,stamp)
     if response and not PY.HitResponses.valid(response.kind,response.force) then return end
     R.pending[victim]={attacker=attacker,response=response,before=before,juggle=juggle,stamp=stamp,at=getTimestampMs()};hook()
 end
--- Only called for a validated, de-duplicated server result. Never deals damage.
+
 function R.confirmed(attacker,victim,kind,force,clip)
     if PY.Juggling.get(victim) then R.clear(victim);return true end
     if not PY.HitResponses.valid(kind,force) then return false end
@@ -55,8 +55,7 @@ function R.onHit(attacker,victim,weapon,damage)
         victim:setVariable("ProjectYakuzaEnemyReaction",true);victim:setVariable("ProjectYakuzaEnemyHitClip",move.reaction)
         R.states[victim]={clip=move.reaction,startedAt=getTimestampMs(),seenReaction=false};hook()
     else R.clear(victim) end
-    -- Native OnWeaponHitCharacter fires before damage/force calculation finishes.
-    -- SP applies next tick; MP waits for the server's resolved response packet.
+
     if not isClient() then R.queue(attacker,victim,response,victim:getHealth(),PY.Juggling.plan(style,move),stamp) end
 end
 function R.update(zombie,time)

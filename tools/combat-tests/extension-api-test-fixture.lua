@@ -19,11 +19,11 @@ isKeyDown=function(i)return keys[i]==true end
 getKeyName=function(i)return tostring(i)end
 Keyboard={}
 getCore=function()return {isDoingTextEntry=function()return false end}end
--- REGISTRY
--- COMBO
--- BINDINGS
+do local _="ProjectYakuzaFixture:REGISTRY" end
+do local _="ProjectYakuzaFixture:COMBO" end
+do local _="ProjectYakuzaFixture:BINDINGS" end
 ProjectYakuza.NetworkCatalog={}
--- NETWORK_EXTENSIONS
+do local _="ProjectYakuzaFixture:NETWORK_EXTENSIONS" end
 local PY=ProjectYakuza
 local kind='test.focus'
 local d=PY.registerActionKind(kind)
@@ -56,7 +56,7 @@ function p:isAuthorizeMeleeAction()return self.allowed end
 function p:setAuthorizeMeleeAction(v)self.allowed=v end
 function p:AttemptAttack()self.attempts=self.attempts+1;return true end
 PY.Heat={endSwing=function()end}
--- RUNTIME
+do local _="ProjectYakuzaFixture:RUNTIME" end
 local starts,updates,cancels=0,0,0
 local handler={canStart=function()return true end,start=function(c)starts=starts+1;c.flag=true;return true end,
  update=function(c)updates=updates+1 end,cancel=function(c,reason)cancels=cancels+1;c.flag=false;c.reason=reason end}

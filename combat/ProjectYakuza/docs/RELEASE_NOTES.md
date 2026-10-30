@@ -1,13 +1,14 @@
-# Project Yakuza 0.45.0
+# Project Yakuza 0.46.0
 
-- Added DoD-only knife and sweeping-blade profiles for 36 additional explicit B42 items (48 total with bats/clubs). Includes hunting/kitchen/fighting knives, small blades, cleavers, machetes, katanas and swords. The selected style and actual weapon remain equipped together; other styles/items do not inherit the animations.
-- Each blade profile has three supplied-source light attacks, standalone/queued heavy, ground strike and source stance with native walking legs. Longer blades also have source guard phases with walking legs; the knife source set has no guard. Both retain light quickstep cancels and the existing three-per-15-second quota. Lights x1, heavies x1.25 of the real item damage.
-- Converted 16 supplied Yakuza 6 motion clips with explicit non-AI retarget authorization. Preserved native weapon models, condition/durability and sounds; no new textures/models/audio, AI or invented motion. All existing media bytes remain unchanged. Separate voice pack untouched.
-- Fixed supplementary blade hits to respect the held weapon's native reach and meaningful high sword damage. Native primary-only knife jaw-kill/critical damage cannot copy onto all SP extra targets. Both SP/MP reject stale supplementary hits after changing the held weapon. Primary native hit and durability handling stay unchanged.
-- Added 56 event-free MP observer selectors, for 276 total. Heavy axes/spears/firearms remain native. Unarmed special moves require the style item; grabs stay disabled and hitstop stays deferred. See [weapons](WEAPONS.md).
+- Optimised repeated animation lookups with registration-aware clip/move indexes and grouped selectors. Animator variables are read once per selection; the same fixture now uses 5 bridge reads rather than 14 while selecting the same clip.
+- Reduced six-emitter aura position/offset reads from 30 to 5 per body draw. Stable aura updates skip global hook-ownership scans, and cleared inactive states avoid repeated detach/hook work. Current visuals, frame clocks, colours and blending are preserved.
+- Reduced redundant equipment/view checks and registration allocations. Removed the unused hard-coded finisher mouse constant and retired aura spark/colour branches. Disabled grabs, future juggling/hooks, addon APIs, attack behaviour and assets are preserved.
+- Removed comments/docstrings from project source, templates, tests/build tools and documentation code examples. Replaced test insertion/observer ownership comment markers with data/metadata, retaining native parsing and overwrite protection. Added a comment checker and lexical preservation tests. Prose documentation remains.
 
 ## Validation
 
-4,292 offline Kahlua assertions across 16 fixtures pass; all 42 production Lua files compile. Native B42 import covers all 26 supplied-source weapon clips and 39,935 finite bone samples. All 32 weapon owner selectors are isolated to their style/profile, and 276 MP observers remain event-free. Original GMT/BEP/rig/output hashes, contact windows and all 48 B42 item IDs verified. All 561 pre-existing motion/image/audio files match 0.44.0. See [validation](VALIDATION_0.45.0.md).
+4,301 offline Kahlua assertions across 16 fixtures pass; all 42 production Lua files compile. Cache tests cover 1,000 warm lookups without array scans, style/catalogue invalidation, selector priority/case and per-selection bridge reads. Aura tests verify the reduced bridge reads, skipped stable hook scans, current tints, pause, cleanup and particle ownership. Six Python lexical tests pass; the source/comment audit reports zero comments across 498 source files and checked documentation examples. All tracked Java probes compile and the publishing PowerShell script parses.
 
-Installed locally and published as a new release ZIP. PZ was not launched; live grip/blending and multiplayer timing remain unverified. Fully restart with matching server/client versions.
+Native clip, observer, addon-builder, original frame/FK, texture/pixel, alpha, loader and provenance checks pass. All 577 motion/image/audio files and existing native animation nodes remain byte-identical to 0.45.0. See [performance notes](PERFORMANCE.md) and [validation](VALIDATION_0.46.0.md).
+
+Installed locally and published as a new release ZIP. PZ was not launched; no live FPS or multiplayer timing measurement is claimed. Fully restart with matching server/client versions.

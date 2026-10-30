@@ -14,14 +14,14 @@ function H.loadAssets()
     if H.assets then return H.assets end
     local base="media/textures/ProjectYakuza/HeatHUD/"
     local a={atlas=getTexture(base.."OriginalDragonAtlas.png"),combat=getTexture(base.."OriginalCombatAtlas.png")}
-    -- Exact rectangles from the game's e/texlist/btl_texlist.bin.
+
     a.body={121,160,118,138};a.head={130,38,129,121}
     a.glass={266,1,68,68};a.core={266,72,68,68}
     a.stockGlass={76,0,37,37};a.stockRing={0,0,37,37}
     a.connector={339,63,77,62};a.tail={416,63,92,62}
     a.glow={0,300,234,212};a.glowLink={314,218,78,137};a.glowTail={393,218,119,137}
     a.kanji={205,36,68,68}
-    -- Original dark/blue counterparts in the same supplied Y6 atlas.
+
     a.extremeBody={0,160,118,138};a.extremeHead={0,38,129,121}
     a.extremeRing={38,0,37,37};a.extremeGlass={114,0,37,37}
     a.extremeConnector={339,0,77,62};a.extremeTail={416,0,92,62}
@@ -36,8 +36,7 @@ function H:drawOriginal(region,x,y,w,h,alpha,texture,color,snap)
         left,top,right-left,bottom-top,alpha or 1,
         color and color[1] or 1,color and color[2] or 1,color and color[3] or 1)
 end
--- Reveal the original pixels from the bottom; crop UVs and destination together.
--- No scaled partial texture, temporary textures or per-orb stencil changes.
+
 function H:drawFill(region,x,y,size,fraction,alpha)
     local f=math.max(0,math.min(1,fraction))
     if f<=0 then return end
@@ -50,8 +49,7 @@ function H:prerender()
     if not p or p:isDead() or not ProjectYakuza.isEquipped(p) then ProjectYakuza.StyleUI.releaseAll(self);return end
     if ProjectYakuza.StyleUI.render("heat",p,self) then return end
     if ProjectYakuza.getPlayerStyle(p).heatHud~="yakuza6" or not ProjectYakuza.Heat.enabled(p) then return end
-    -- World/addon renderers may leave additive mode selected. Dark atlas pixels
-    -- need ordinary alpha blending, otherwise black orb cores become see-through.
+
     local renderer=SpriteRenderer.instance;local previous=renderer:getDoAdditive()
     renderer:setDoAdditive(false)
     local ok,err=pcall(self.drawGauge,self,p)
@@ -80,7 +78,7 @@ function H:drawGauge(p)
         self.visualHeat=self.fillFrom+(self.fillTarget-self.fillFrom)*t*t*(3-2*t)
     end
     local phase=self.frame or 0;local a=H.loadAssets()
-    -- Glow belongs behind the opaque orb cores, frames and serpent artwork.
+
     self.glowState=self.extreme and "extreme" or (self.heat>=99.999 and "ready" or "none")
     local glowAlpha
     if self.extreme then glowAlpha=.38+.06*math.sin(phase*.4)
@@ -96,7 +94,7 @@ function H:drawGauge(p)
     end
     self:drawOriginal(a.glass,-34,-34,68,68)
     self:drawFill(a.core,-34,-34,68,self.visualHeat/100,.8)
-    -- Preserve the original glass highlight above the moving energy crop.
+
     self:drawOriginal(a.glass,-34,-34,68,68,.35)
     if self.activationMs then
         local elapsed=math.max(0,time-self.activationLast);self.activationLast=time
@@ -106,11 +104,11 @@ function H:drawGauge(p)
             self:drawOriginal(a.core,-34,-34,68,68,(1-t*t*(3-2*t))*.7)
         else self.activationMs=nil end
     end
-    -- Native hact_bg offsets: two continuous 77px serpent spans, followed by the native tail.
+
     self:drawOriginal(self.extreme and a.extremeConnector or a.connector,54.5,-6,77,62)
     self:drawOriginal(self.extreme and a.extremeConnector or a.connector,131.5,-6,77,62)
     self:drawOriginal(self.extreme and a.extremeTail or a.tail,208,-6,92,62)
-    -- Native stock centers relative to the main orb. Each orb now represents one complete banked stock.
+
     local centers={56,93,130,169,207,246}
     for i=1,H.visualOrbs do
         local x=centers[i]-18.5;local y=6.5
@@ -124,7 +122,7 @@ function H:drawGauge(p)
     end
     self:drawOriginal(self.extreme and a.extremeBody or a.body,-64,-69,118,138)
     self:drawOriginal(a.kanji,-34,-34,68,68,1,a.combat)
-    -- Native head position (24,-31), native 0.8 head scale, original pivot (64.5,60.5).
+
     self:drawOriginal(self.extreme and a.extremeHead or a.head,-27.6,-79.4,103.2,96.8)
     if ProjectYakuza.TigerDrop then
         local seconds=math.ceil(ProjectYakuza.TigerDrop.remaining(p)/1000)

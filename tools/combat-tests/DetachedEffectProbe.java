@@ -1,4 +1,4 @@
-/** Offline B42 pool/offset contract; does not start the game or touch textures/GPU. */
+
 public class DetachedEffectProbe {
  public static void main(String[] a)throws Exception{
   var sprite=Class.forName("zombie.iso.sprite.IsoSprite");var manager=Class.forName("zombie.iso.sprite.IsoSpriteManager");

@@ -66,8 +66,7 @@ function A:cancel()
     if self.action then
         local list=self.character:getCharacterActions()
         if list:size()==1 and list:contains(self.action) then
-            -- Native cancellation is scoped to our sole action; damage or
-            -- world exit must not leave a native movement/action lock behind.
+
             self.character:StopAllActionQueue()
         else self:forceStop() end
     elseif self.context.queue then

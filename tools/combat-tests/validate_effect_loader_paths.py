@@ -1,4 +1,4 @@
-"""Check native sprite filename rules against every shipped aura/burst frame."""
+
 from pathlib import Path
 import argparse,zipfile,struct
 parser=argparse.ArgumentParser(description=__doc__)
@@ -31,7 +31,7 @@ for prefix,kinds in sequences.items():
             total+=1
 print(f'PASS native IsoAnim filename recipes and all {total} aura/burst frame paths; missing-underscore regression prevented')
 
-# Explicitly approved, deterministic colour-only copies: compare every RGBA pixel.
+
 import hashlib,json
 from PIL import Image
 manifest=json.loads((mod/'docs/taunt-aura-assets.json').read_text(encoding='utf-8'))

@@ -100,8 +100,7 @@ function A:alignPair(snap)
     local dx,dy=p:getX()+fx*.7-z:getX(),p:getY()+fy*.7-z:getY()
     local origin={x=z:getX(),y=z:getY(),z=z:getZ()}
     if not ProjectYakuza.MultiHit.clearPath(z,origin,dx,dy) then return false end
-    -- Movement requests are deferred by PZ. Commit all current/next/render positions
-    -- together after the swept path check so the held actor cannot trail behind.
+
     D.snapActor(z,p:getX()+fx*.7,p:getY()+fy*.7)
     self.context.fx,self.context.fy=fx,fy
     if snap=="throw" then p:setTargetAndCurrentDirection(fx,fy) end
@@ -213,7 +212,7 @@ function A:grab(dt)
     if endurance(p)<.05 then self:forceStop();return end
     local age=now()-self.startedAt
     if self.phaseName=="enter" then
-        -- Bring the pair together through the same swept collision checks as dashes.
+
         local x=p:getX()+self.context.fx*.7-z:getX()
         local y=p:getY()+self.context.fy*.7-z:getY()
         local distance=math.sqrt(x*x+y*y)
@@ -243,7 +242,7 @@ function A:grab(dt)
         z:setTargetAndCurrentDirection(-self.context.fx,-self.context.fy)
         if not self.impacted and var(p,"ProjectYakuzaDefenseMarker")=="throw_impact" and var(z,"ProjectYakuzaGrabMarker")=="throw_impact" then
             self.impacted=true
-            -- A single native weapon hit; armor and health remain native PZ calculations.
+
             z:setIgnoreMovement(self.victimState.ignore);z:setUseless(self.victimState.useless)
             if isClient() and ProjectYakuza.Network then ProjectYakuza.Network.send(p,"throw",{zombie=z:getOnlineID()})
             else
@@ -337,8 +336,7 @@ end
 Events.OnSave.Add(D.clear)
 Events.OnMainMenuEnter.Add(D.clear)
 function D.bindSafetyInput()
-    -- G is also vanilla's safety toggle. Scope interception to this style while
-    -- aiming; every other key and situation still reaches the original callback.
+
     if D.safetyWrapped or not ISEquippedItem or not ISEquippedItem.onKeyPressed then return end
     local original=ISEquippedItem.onKeyPressed
     D.safetyWrapped=true

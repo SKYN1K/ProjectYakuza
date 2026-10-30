@@ -1,4 +1,4 @@
-"""Verify supplied finisher split poses, smoke crops and unchanged original HUD atlas."""
+
 from pathlib import Path
 import argparse,hashlib,json,re,math
 from PIL import Image

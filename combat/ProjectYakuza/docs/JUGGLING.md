@@ -6,13 +6,13 @@ This is an opt-in gameplay-window and animation-integration API. Dragon of Dojim
 
 ```lua
 juggling = {
-    enabled = true,                 -- false disables while preserving move declarations
-    windowMs = 650,                  -- 50..2000, refreshed by permitted hits
-    maxDurationMs = 1800,            -- 50..6000, absolute cap from launch
-    maxHits = 4,                     -- 1..12 followups, including the terminating hit
-    maxRelaunches = 1,               -- 0..3, also consumes followup budget
-    landingCooldownMs = 500,         -- 0..5000 before this victim can be launched again
-    presentation = "yourmod.airborne", -- optional addon identifier, <=100 characters
+    enabled = true,
+    windowMs = 650,
+    maxDurationMs = 1800,
+    maxHits = 4,
+    maxRelaunches = 1,
+    landingCooldownMs = 500,
+    presentation = "yourmod.airborne",
 },
 ```
 

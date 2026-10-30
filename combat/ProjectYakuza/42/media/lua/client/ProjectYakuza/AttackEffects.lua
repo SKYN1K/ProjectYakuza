@@ -10,8 +10,7 @@ local function valid(p,s)
         and not p:getModData().ProjectYakuzaHitEffectsDisabled
         and not p:isOnFloor() and p:getHitReaction()==""
 end
--- These scalar debug accessors are exposed in B42; their returned bone/track objects are not.
--- Search a bounded set once, then use the cached layer/slot until the clip changes.
+
 function F.findTrack(p,animation,cached)
     if cached and p:dbgGetAnimTrackName(cached.layer,cached.slot)==animation then
         return p:dbgGetAnimTrackTime(cached.layer,cached.slot),p:dbgGetAnimTrackWeight(cached.layer,cached.slot),cached
@@ -40,15 +39,14 @@ function F.sample(track,time,bone)
         a[offset+2]+(b[offset+2]-a[offset+2])*fraction,
         a[offset+3]+(b[offset+3]-a[offset+3])*fraction
 end
--- B42 Model.vectorToWorldCoords, including getRenderedAngle's +pi/2 and native scale.
+
 function F.project(x,y,z,angle,tile)
     local a=angle+math.pi/2;local c,s=math.cos(a),math.sin(a)
     local wx=(-x*c-z*s)*1.5;local wy=(-x*s+z*c)*1.5
     local wz=y*.61237234
     return (wx-wy)*32*tile,(wx+wy)*16*tile-wz*96*tile,wx,wy,wz
 end
--- Optional live-bone adapters return six absolute world coordinates:
--- forearm XYZ then hand XYZ, sampled from the FINAL blended native pose.
+
 F.limbProviders={}
 function F.registerLimbProvider(id,fn)
     assert(type(id)=="string" and id~="" and type(fn)=="function","limb provider requires ID and function")
@@ -81,8 +79,7 @@ function F.projectLimb(p,x,y,z,angle,tile,pose)
     return F.project(x,y,z,angle,tile)
 end
 function F.facing(p)
-    -- Shoulder twist is not a uniform yaw of the entire sampled arm. Adding it
-    -- around the actor origin shifts the hand sideways as the player turns.
+
     return p:getAnimAngleRadians()
 end
 function F.clear(p)
@@ -177,7 +174,7 @@ function F.draw()
             local wx,wy,wz=F.sampleLimb(s.track,time,2,pose);local ax,ay,az=F.sampleLimb(s.track,time,1,pose)
             local fx,fy,fz=hand(s.track,time,pose)
             local hx,hy,hwx,hwy,hwz=F.projectLimb(p,fx,fy,fz,angle,tile,pose)
-            -- Six overlapping centres lie within the elbow-to-fist path.
+
             for i=1,6 do
                 local x,y,dx,dy,dz
                 if i==6 then x,y,dx,dy,dz=hx,hy,hwx,hwy,hwz

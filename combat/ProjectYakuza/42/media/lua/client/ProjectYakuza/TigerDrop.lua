@@ -40,8 +40,7 @@ function P.track(p)
     if not ps then ps={};P.players[p]=ps end
     if t<(ps.nextScan or 0) then return end
     ps.nextScan=t+50
-    -- Only 25 nearby squares, only while the local style user can counter.
-    -- Enable the native bite marker nodes before attack entry, never midway through a bite.
+
     local canCounter=P.ready(p) or (ProjectYakuza.Guard and ProjectYakuza.Guard.canTrack(p))
     if canCounter then
         local cell=getCell();local x,y,z=math.floor(p:getX()),math.floor(p:getY()),math.floor(p:getZ())
@@ -97,7 +96,7 @@ function P.tick()
             or not canMove or not canMove(z,s.dx*amount,s.dy*amount) then
             table.remove(P.flights,i)
         elseif amount>0 then
-            -- Native collision movement only; stop once ragdoll physics takes ownership.
+
             z:moveUnmodded(s.dx*amount,s.dy*amount);s.moved=s.moved+amount
         end
     end

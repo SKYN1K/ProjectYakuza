@@ -112,7 +112,7 @@ function H.lose(p,amount)
         if s.fuel<=0 then H.stop(p) end
         return
     end
-    -- Completed stocks are banked; only the unfinished stock can fall away.
+
     local heat=ProjectYakuza.getHeat(p);local floor=H.stocks(p)*H.stockSize()
     local value=math.max(floor,heat-amount)
     if math.abs(value-heat)>0.000001 then ProjectYakuza.setHeat(p,value) end

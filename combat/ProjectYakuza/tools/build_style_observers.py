@@ -1,7 +1,7 @@
-"""Build addon observer XML and shared registration from supplied native nodes.
 
-Python 3 standard library only. This writes code/metadata, never media assets.
-"""
+
+
+
 from pathlib import Path
 import argparse
 import copy
@@ -40,8 +40,8 @@ def build(mod_root, style_id, prefix, dry_run=False):
             ids.add(identifier)
             conditions = [{"name": c.findtext("m_Name"), "value": c.findtext("m_Value")} for c in node.findall("m_Conditions")]
             assert conditions and all(c["name"] and c["value"] for c in conditions), source
-            # The runtime matcher implements conjunctions of simple bool/string
-            # equals conditions. Reject nodes it cannot faithfully describe.
+
+
             for c in node.findall("m_Conditions"):
                 assert c.findtext("m_Type") in ("BOOL", "STRING"), "Only BOOL/STRING conditions supported: " + str(source)
                 assert set(child.tag for child in c) <= {"m_Name", "m_Type", "m_Value"}, "Unsupported condition operator"
@@ -68,13 +68,13 @@ def build(mod_root, style_id, prefix, dry_run=False):
                         for k, v in (("m_Name", cname), ("m_Type", ctype), ("m_Value", value)):
                             ET.SubElement(condition, k).text = v
                     destination = media / "AnimSets/player" / target_group / (name + ".xml")
-                    outputs[destination] = b'<?xml version="1.0" encoding="utf-8"?>\n<!-- ' + STAMP + b' -->\n' + ET.tostring(observer, encoding="utf-8") + b"\n"
+                    outputs[destination] = b'<?xml version="1.0" encoding="utf-8"?>\n<?ProjectYakuzaObserver ' + STAMP + b'?>\n' + ET.tostring(observer, encoding="utf-8") + b"\n"
     assert records, "No matching owner nodes found"
     records.sort(key=lambda r: (-r["priority"], r["id"]))
     module = media / "lua/shared" / (prefix + "Network.lua")
-    outputs[module] = ("-- " + STAMP.decode() + "\nrequire \"ProjectYakuza/NetworkExtensions\"\nrequire \"" + prefix + "Style\"\nProjectYakuza.registerNetworkAnimations(" + lua(style_id) + "," + lua(records) + ")\n").encode("utf-8")
-    # Validate every destination before the first write. Never overwrite an
-    # author-maintained file, and never remove obsolete nodes automatically.
+    outputs[module] = ("local _=" + lua(STAMP.decode()) + "\nrequire \"ProjectYakuza/NetworkExtensions\"\nrequire \"" + prefix + "Style\"\nProjectYakuza.registerNetworkAnimations(" + lua(style_id) + "," + lua(records) + ")\n").encode("utf-8")
+
+
     for path in outputs:
         assert not path.exists() or STAMP in path.read_bytes(), "Refusing to overwrite author file: " + str(path)
     if not dry_run:
@@ -85,7 +85,7 @@ def build(mod_root, style_id, prefix, dry_run=False):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(description="Build addon observer nodes and registration from supplied native owner nodes.")
     parser.add_argument("--mod-root", required=True, type=Path)
     parser.add_argument("--style-id", required=True)
     parser.add_argument("--prefix", required=True, help="Owner XML names and shared style module must start with this prefix (e.g. ExampleStyle_)")

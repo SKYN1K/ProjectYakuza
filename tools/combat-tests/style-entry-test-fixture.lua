@@ -24,10 +24,10 @@ function base.stop()end
 ISBaseTimedAction=base
 local queueFail=false
 ISTimedActionQueue={add=function(a)if queueFail then return nil end;return {current=a}end}
--- BINDINGS
--- REGISTRY
+do local _="ProjectYakuzaFixture:BINDINGS" end
+do local _="ProjectYakuzaFixture:REGISTRY" end
 local ProjectYakuza=ProjectYakuza
--- STYLE
+do local _="ProjectYakuzaFixture:STYLE" end
 local p={vars={},data={ProjectYakuzaStyle='dragon_of_dojima',ProjectYakuzaHeat=0},block=false,ignore=false,deferred=true,aim=true,x=10,y=12,localPlayer=true}
 function p:getModData()return self.data end
 function p:GetVariable(k)return self.vars[k]end
@@ -85,7 +85,7 @@ function p:setGhostMode()error('entry must not grant ghost mode')end
 function p:setInvincible()error('entry must remain vulnerable')end
 function base.perform(a)a.character.nativeAction=nil end
 function base.stop(a)a.character.nativeAction=nil end
--- ENTRY
+do local _="ProjectYakuzaFixture:ENTRY" end
 local E=ProjectYakuza.StyleEntry
 local starts,stops=0,0
 ProjectYakuza.on('styleEntryStarted',function()starts=starts+1 end)

@@ -16,8 +16,7 @@ local ProjectYakuza = ProjectYakuza
 function ProjectYakuza.equipStyle(player, styleId)
     local ok, reason = ProjectYakuza.selectStyle(player, styleId)
     if not ok then player:Say("Cannot switch style: " .. tostring(reason)); return end
-    -- B42 hit packets carry an inventory item ID, not a serialized weapon.
-    -- A client-only AddItem produces a weapon the server can never resolve.
+
     if isClient() then ProjectYakuza.Network.equip(player,styleId,true);return end
     local held=player:getPrimaryHandItem()
     if ProjectYakuza.Weapons and ProjectYakuza.Weapons.profile(styleId,held) then

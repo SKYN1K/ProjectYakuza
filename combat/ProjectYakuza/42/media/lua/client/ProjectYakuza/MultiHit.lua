@@ -76,14 +76,14 @@ function M.tick()
             and p:getPrimaryHandItem()==job.held then
             local count=math.max(0,ProjectYakuza.MAX_HIT_COUNT-job.count)
             if count>0 then
-                -- Native collision finishes reporting victims before this supplement runs.
+
                 local targets=M.targets(p,job.origin,job.ground,job.seen,count)
                 M.processing=true
                 for _,entry in ipairs(targets) do
                     local v=entry.victim
                     if not v:isDead() then
                         job.seen[v]=true;job.count=job.count+1
-                        -- Native Hit supplies damage, armor, death and normal hit events.
+
                         local ok,err
                         if isClient() and ProjectYakuza.Network then ok=ProjectYakuza.Network.extra(p,v)
                         else ok,err=pcall(v.Hit,v,job.weapon,p,job.damage,false,1) end

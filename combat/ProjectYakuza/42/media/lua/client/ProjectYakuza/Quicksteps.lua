@@ -20,7 +20,7 @@ local function var(player, name) return player:GetVariable(name) or "" end
 function Q.facing(player)
     local vector=player:getForwardDirection()
     if not vector then return nil end
-    -- Kahlua exposes Vector2 getters; its public Java fields are not Lua properties.
+
     local x,y=vector:getX(),vector:getY()
     if type(x)~="number" or type(y)~="number" then return nil end
     return x,y
@@ -68,7 +68,7 @@ function A:start()
     p:setVariable("ProjectYakuzaQuickstepStarted","")
     p:setVariable("ProjectYakuzaQuickstepDone","")
     self:setActionAnim(self.context.action.animation)
-    -- A native hand-model override also prevents native melee submission during the action.
+
     self.action:setOverrideHandModelsObject(p:getPrimaryHandItem(),nil,false)
     if ProjectYakuza.Network then ProjectYakuza.Network.step(p,self,false) end
     if p:getModData().ProjectYakuzaDiagnostics then print("[ProjectYakuza] quickstep "..self.context.action.direction) end
@@ -191,7 +191,7 @@ ProjectYakuza.registerActionHandler("quickstep",{
         end
     end,
 })
--- Small input buffer, followed by a native-state handoff (never a state teleport).
+
 Q.cancelBufferMs=150;Q.cancelHandoffMs=400
 function Q.isCancelling(p)
     local job=Q.lightCancels[p];return job~=nil and job.phase=="handoff"
@@ -246,8 +246,7 @@ function Q.processLightCancel(p)
         p:reportEvent("ActiveAnimFinishing")
         return true
     end
-    -- SwipeStatePlayer's real exit releases native attack ownership. A setter
-    -- alone does not prove that hands/attack state are free for a timed action.
+
     if p:isAttackStarted() or p:isPerformingAttackAnimation() or p:getCurrentStateName()=="SwipeStatePlayer" then return true end
     local fx,fy=Q.facing(p);local direction=fx and Q.direction(fx,fy,job.dx,job.dy)
     if not direction then Q.clearLightCancel(p);return false end
@@ -289,8 +288,7 @@ function Q.pollShove(player)
     local down=ProjectYakuza.Bindings.down("quickstep")
     if not down then Q.restoreShove(player);return false end
     if not Q.shoveAuth[player] then Q.shoveAuth[player]={allowed=(ProjectYakuza.Bindings.attackGates[player] and ProjectYakuza.Bindings.attackGates[player].allowed) or player:isAuthorizeMeleeAction()} end
-    -- Gate native shove only while its key is held. Framework attacks temporarily
-    -- lift our gate because PZ DoAttack also checks this permission.
+
     player:setAuthorizeMeleeAction(false)
     local pressed=not Q.shoveDown[player]
     Q.shoveDown[player]=down

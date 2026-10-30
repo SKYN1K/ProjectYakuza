@@ -14,8 +14,7 @@ function V.allowed(p)
 end
 function V.play(p,id)
     if not C.byId[id] or not V.allowed(p) or not V.ready() or not C.accepted[id] then return false,"unavailable" end
-    -- CVF resolves the current descriptor prefix, checks server voice policy,
-    -- recording availability, cooldown/busy state, and transmits exactly once.
+
     local level=ProjectYakuza.SoundSettings and ProjectYakuza.SoundSettings.voiceLevel() or 1
     if level<=0 then return false,"muted" end
     local ok,played,reason=pcall(CustomVoice.playLine,p,C.modId,id)
@@ -23,8 +22,7 @@ function V.play(p,id)
     if played==true and type(reason)=="number" and reason~=0 then
         local scale=(ProjectYakuza.getPlayerStyle(p).combatVoiceVolume or 1)*level
         if type(scale)=="number" and scale>0 and scale~=1 then
-            -- CVF returns the native voice handle; adjust its mix without
-            -- changing a recording or replaying/transmitting it a second time.
+
             local emitter=p:getEmitter()
             pcall(emitter.setVolume,emitter,reason,scale)
         end
@@ -80,8 +78,7 @@ function V.update(p)
         local combo=ProjectYakuza.stateFor(p)
         if not stunned and combo.active and (combo.multiHitToken or combo.startedAt)==pending.stamp then
             local id=pending.id
-            -- Native floor targeting is published after OnWeaponSwing. Let the
-            -- runtime classify the move before choosing its voice category.
+
             if combo.groundMove then id="CombatHeavyAttack" end
             V.play(p,id)
         end

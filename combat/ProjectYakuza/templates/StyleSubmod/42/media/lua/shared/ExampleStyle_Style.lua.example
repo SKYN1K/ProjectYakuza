@@ -19,8 +19,5 @@ ProjectYakuza.registerStyle({
     heat=false,
     music=false,
     sounds=false,
-    -- Optional explicit opt-ins; omitted profiles never inherit DoD's assets:
-    -- hitEffects="yakuza6",
-    -- music={{sound="ExampleMod_MyTheme",title="My supplied track"}},
-    -- sounds={punchImpact="ExampleMod_MyPunchSound"},
+
 })
