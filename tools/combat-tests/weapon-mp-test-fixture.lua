@@ -110,8 +110,9 @@ end
 local function realWeapon(id,name)
  local w={min=.8,max=1.2,condition=10}
  function w:getID()return id end;function w:getFullType()return name end
+ function w:getMaxRange()return self.range or 1.25 end
  function w:getMinDamage()return self.min end;function w:getMaxDamage()return self.max end
- function w:getCondition()return self.condition end;function w:isTwoHandWeapon()return name=='Base.BaseballBat' end
+ function w:getCondition()return self.condition end;function w:isTwoHandWeapon()return name=='Base.BaseballBat' or name=='Base.Katana' end
  return w
 end
 local bat=realWeapon(700,'Base.BaseballBat');local pipe=realWeapon(701,'Base.MetalPipe')
@@ -176,4 +177,38 @@ clock=clock+1100;server.command(P.module,'equip',p,{style='none',weaponProfile='
 check(p.hand==pipe,'server disable preserves the real weapon')
 localState.equipReply={style='none',weaponProfile='',item=-1}
 check(N.finishEquipment(p,localState) and p.hand==pipe,'client disable preserves real weapon and hand models')
-return true,'PASS '..count..' armed MP equipment, observers, damage and stale-swing checks'
+
+local knife=realWeapon(702,'Base.HuntingKnife');knife.range=.9
+local sword=realWeapon(703,'Base.Katana');sword.range=1.4;sword.min=8;sword.max=8
+p.inventoryItems[#p.inventoryItems+1]=knife;p.inventoryItems[#p.inventoryItems+1]=sword
+clock=clock+2000;p:setPrimaryHandItem(knife)
+server.command(P.module,'equip',p,{style='dragon_of_dojima',weaponProfile='knife',item=702,request=3})
+check(p.hand==knife and replies[#replies].args.weaponProfile=='knife','MP real knife handshake uses its own profile')
+snapshot(p,{weaponProfile='knife',clip='ProjectYakuza_DD_KnifeLight01',move='dd_knife_light_01'})
+check(state.packet.weaponProfile=='knife' and state.packet.clip=='ProjectYakuza_DD_KnifeLight01','MP knife source animation accepted')
+local priorSeq=state.seq
+snapshot(p,{weaponProfile='knife',clip='ProjectYakuza_DD_BladeLight01',move='dd_blade_light_01'})
+check(state.seq==priorSeq,'knife cannot borrow sword clips/moves')
+z1.health=10;local before=z2.hits
+command('impact',{swing=2,zombie=z1.id})
+command('extra',{swing=2,zombie=z2.id})
+check(z2.hits==before,'knife extra victim outside actual .9 reach rejected')
+z2.x=.85;z2.health=10;command('extra',{swing=2,zombie=z2.id})
+check(z2.hits==before+1 and math.abs(z2.health-9)<.00001,'knife extra victim inside real reach gets native server weapon damage')
+clock=clock+2000;p:setPrimaryHandItem(sword)
+server.command(P.module,'equip',p,{style='dragon_of_dojima',weaponProfile='blade',item=703,request=4})
+check(p.hand==sword and p.secondary==sword,'MP preserves actual two-handed sword')
+snapshot(p,{weaponProfile='blade',clip='ProjectYakuza_DD_BladeHeavy',move='dd_blade_heavy'})
+z1.health=10;z2.health=100;z2.x=1.1
+command('impact',{swing=3,zombie=z1.id});command('extra',{swing=3,zombie=z2.id})
+check(math.abs(z2.health-90)<.00001,'katana extra heavy uses 8 x 1.25 instead of old unarmed damage cap')
+z4.x=1.5;before=z4.hits;command('extra',{swing=3,zombie=z4.id})
+check(z4.hits==before,'sword extras remain within actual 1.4 range')
+snapshot(p,{weaponProfile='blade',clip='ProjectYakuza_DD_BladeGuardLoop',move='dd_blade_light_01',phase='hold'})
+check(state.packet.clip=='ProjectYakuza_DD_BladeGuardLoop','source blade guard phase accepted')
+check(P.kind('dragon_of_dojima','ProjectYakuza_DD_BladeGuardLoop')=='block','blade guard resolves through shared action contract')
+N.equip(p,'dragon_of_dojima',false);localState.equipReply={style='dragon_of_dojima',weaponProfile='blade',item=703}
+check(N.finishEquipment(p,localState) and p.hand==sword and p.secondary==sword,'client retains sword and both hand bindings')
+remote.data.ProjectYakuzaStyle='dragon_of_dojima';N.remote[remote.id]={packet={equipped=true,weaponProfile='knife'}}
+check(ProjectYakuza.getPlayerStyle(remote).weaponProfile=='knife','remote presentation resolves validated knife view before native hand replication')
+return true,'PASS '..count..' sharp/blunt MP equipment, observers, reach, damage and stale-swing checks'

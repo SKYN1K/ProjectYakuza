@@ -249,7 +249,8 @@ function S.command(module,command,p,a)
             s.lastSwing=a.swing;job={seen={},count=0,expires=t+2500,weapon=held,extreme=s.packet.extreme,profile=profile,move=move,style=s.packet.style,juggle=ProjectYakuza.Juggling.plan(ProjectYakuza.getStyle(s.packet.style),move)};s.swings[a.swing]=job
         end
         if job.weapon~=held or t>job.expires or job.count>=ProjectYakuza.MAX_HIT_COUNT or job.seen[a.zombie] then return end
-        local z=S.validVictim(p,a.zombie,1.65)
+        local range=command=="extra" and profile~="" and ProjectYakuza.Weapons and ProjectYakuza.Weapons.hitRange(held) or 1.65
+        local z=S.validVictim(p,a.zombie,range)
         if not z and command=="impact" then
             local evidence=s.evidence and s.evidence[a.zombie]
             if evidence and t-evidence.time<2000 and P.near(p,evidence.z,1.65) and P.path(p,evidence.z:getX(),evidence.z:getY()) then z=evidence.z end
@@ -272,7 +273,8 @@ function S.command(module,command,p,a)
             if not S.baseWeapon then S.baseWeapon=InventoryItemFactory.CreateItem(ProjectYakuza.TOKEN) end
             local item=job.profile and job.profile~="" and job.weapon or S.baseWeapon;local factor=job.move.damageMultiplier or 1
             if not item then return end
-            local base=math.max(0,math.min(2,(item:getMinDamage()+item:getMaxDamage())*.5))
+            local cap=job.profile and job.profile~="" and 20 or 2
+            local base=math.max(0,math.min(cap,(item:getMinDamage()+item:getMaxDamage())*.5))
             S.damage(p,z,base*factor*(job.extreme and 1.5 or 1),false,false,s,job.move,job.style,job.juggle,a.swing)
         end
     end

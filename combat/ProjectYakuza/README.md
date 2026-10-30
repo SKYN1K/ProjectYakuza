@@ -2,7 +2,7 @@
 
 Project Yakuza is a Build 42 combat mod and a framework for independent fighting-style addons. Dragon of Dojima uses supplied Yakuza/Kiwami animations, textures and sounds. Other styles register their own moves, assets and controllers without copying the framework.
 
-**Version 0.44.0 Ã‚Â· Lua API 3 Ã‚Â· MP protocol 2.** API 1 style registrations remain supported. Internal namespace/mod dependency: `ProjectYakuza`. Display name: Project Yakuza.
+**Version 0.45.0 Ã‚Â· Lua API 3 Ã‚Â· MP protocol 2.** API 1 style registrations remain supported. Internal namespace/mod dependency: `ProjectYakuza`. Display name: Project Yakuza.
 
 ## Install and play
 
@@ -48,3 +48,7 @@ Start with [Style authoring](docs/STYLE_AUTHORING.md) and the inactive [starter]
 ## Bats and clubs
 
 Select Dragon of Dojima and equip a [supported real bat/club](docs/WEAPONS.md). LMB uses its three-hit source weapon combo; MMB uses a standalone or queued heavy; X uses its moving guard. Native models, damage/condition and ordinary item handling remain. Profiles belong to their style and are available to addon developers. Unarmed special moves require the style item. Fully restart after installing; offline checks do not verify live grip/MP appearance.
+
+## Sharp weapons
+
+DoD also supports [23 knives and 13 cleavers/machetes/swords](docs/WEAPONS.md#sharp-weapons-0450). Equip a supported real blade while the style is selected: LMB runs its distinct three-hit combo, MMB performs/queues its heavy, and ordinary ground targeting uses its ground strike. The longer-blade set supports X guard; the supplied knife set has no guard. Both support light quickstep cancels. Native held models, damage, durability and sounds remain; supplementary targets respect blade reach and do not inherit knife jaw-kill damage. Heavy axes/spears retain native behavior.

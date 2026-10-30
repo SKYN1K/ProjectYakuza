@@ -77,3 +77,5 @@ For 0.36.0 compile ChargeTrackProbe.java against the installed B42 JARs, then ru
 ## 0.44.0 style-owned weapons
 
 Build with build_weapon_tests.py and build_weapon_mp_tests.py, then run LuaRunner weapon-tests.lua weapon-mp-tests.lua. WeaponAssetProbe.java uses the native B42 importer/selector without launching PZ. validate_weapon_assets.py verifies supplied GMT/output/rig provenance, BEP contacts and actual B42 item IDs. The weapon docs distinguish these offline checks from live grip/MP appearance.
+
+The 0.45.0 weapon fixtures also exercise short/sweeping blades, real supplementary reach and native maximum damage, prevention of spreading a primary knife close kill, actual SP extra-hit queue ownership, high-damage sword MP extras, source blade guard and remote profile resolution. Native weapon validation now covers weapon-assets.json plus blade-assets.json (26 source clips, 32 owner nodes, 276 observers and 48 explicit item IDs).

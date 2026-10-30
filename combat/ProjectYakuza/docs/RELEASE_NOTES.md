@@ -1,13 +1,13 @@
-# Project Yakuza 0.44.0
+# Project Yakuza 0.45.0
 
-- Added a Dragon of Dojima bat/club equipment profile: three light attacks, standalone/queued heavy, ground strike, walking guard and source weapon idle. Ten supplied Yakuza 6 clips converted with explicit user authorization; no AI, invented animation, new textures/models or audio.
-- Select the style and equip a supported real weapon at the same time. Selecting DoD while holding one retains it. Twelve explicit B42 blunt items supported; other styles/items keep their native behavior. Equipping the style item returns to unarmed combat.
-- Preserve native held weapon models, primary hit calculation, condition/durability and weapon audio. Lights x1 weapon damage, heavy x1.25 with scoped restoration. Existing heat gain, hit sparks, controls and quota-limited light-to-quickstep cancels support these native weapon hits.
-- Added public style-owned weapon profile registration, isolated owner nodes, equipment-change cleanup, validated MP inventory acknowledgements and real-weapon supplementary damage. Added 32 event-free observers, for 220 total. Grabs remain disabled; hitstop remains deferred; the separate voice pack is untouched.
-- Initial armed actions are lights, heavy, ground attack, block and quickstep. Unarmed charges/doubles/counters/running/quickstep strikes/taunt/entry/Extreme activation require the unarmed style item. See [weapon guide](WEAPONS.md).
+- Added DoD-only knife and sweeping-blade profiles for 36 additional explicit B42 items (48 total with bats/clubs). Includes hunting/kitchen/fighting knives, small blades, cleavers, machetes, katanas and swords. The selected style and actual weapon remain equipped together; other styles/items do not inherit the animations.
+- Each blade profile has three supplied-source light attacks, standalone/queued heavy, ground strike and source stance with native walking legs. Longer blades also have source guard phases with walking legs; the knife source set has no guard. Both retain light quickstep cancels and the existing three-per-15-second quota. Lights x1, heavies x1.25 of the real item damage.
+- Converted 16 supplied Yakuza 6 motion clips with explicit non-AI retarget authorization. Preserved native weapon models, condition/durability and sounds; no new textures/models/audio, AI or invented motion. All existing media bytes remain unchanged. Separate voice pack untouched.
+- Fixed supplementary blade hits to respect the held weapon's native reach and meaningful high sword damage. Native primary-only knife jaw-kill/critical damage cannot copy onto all SP extra targets. Both SP/MP reject stale supplementary hits after changing the held weapon. Primary native hit and durability handling stay unchanged.
+- Added 56 event-free MP observer selectors, for 276 total. Heavy axes/spears/firearms remain native. Unarmed special moves require the style item; grabs stay disabled and hitstop stays deferred. See [weapons](WEAPONS.md).
 
 ## Validation
 
-4,211 offline Kahlua assertions across 16 fixtures; all 42 production Lua files compile. Native B42 import validates all 10 weapon clips and 13,790 finite source bone samples; 12 weapon owner selectors parse/select exclusively for the DoD weapon profile; all 220 MP observers are event-free. Source GMT/output/rig hashes, original BEP contact timings and all 12 B42 item IDs verified. Existing motion/texture/audio assets remain byte-identical to 0.43.0. See [validation](VALIDATION_0.44.0.md).
+4,292 offline Kahlua assertions across 16 fixtures pass; all 42 production Lua files compile. Native B42 import covers all 26 supplied-source weapon clips and 39,935 finite bone samples. All 32 weapon owner selectors are isolated to their style/profile, and 276 MP observers remain event-free. Original GMT/BEP/rig/output hashes, contact windows and all 48 B42 item IDs verified. All 561 pre-existing motion/image/audio files match 0.44.0. See [validation](VALIDATION_0.45.0.md).
 
-Installed locally and published as a separate release ZIP. PZ was not launched. Live weapon grip, blend appearance and MP behavior remain unverified; fully restart with matching server/client versions.
+Installed locally and published as a new release ZIP. PZ was not launched; live grip/blending and multiplayer timing remain unverified. Fully restart with matching server/client versions.

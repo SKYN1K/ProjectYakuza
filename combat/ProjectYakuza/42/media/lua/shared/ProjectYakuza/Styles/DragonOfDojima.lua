@@ -142,3 +142,32 @@ if ProjectYakuza.Weapons then
         },
     })
 end
+
+-- Supplied source blade profiles remain owned by Dragon of Dojima only.
+if ProjectYakuza.Weapons then
+    local base=ProjectYakuza.getStyle("dragon_of_dojima")
+    local sounds={};for k,v in pairs(base.sounds) do if k:match("^heat") then sounds[k]=v end end
+    ProjectYakuza.Weapons.register(base.id,{
+        id="knife",attackSpeed=1.5,standaloneHeavy=true,quickstepCancelLights=true,
+        items={"Base.HuntingKnife","Base.HuntingKnifeForged","Base.KitchenKnife","Base.KitchenKnifeForged","Base.SteakKnife","Base.BreadKnife","Base.FightingKnife","Base.KnifeButterfly","Base.KnifeFillet","Base.KnifeParing","Base.KnifePocket","Base.KnifeShiv","Base.KnifeSushi","Base.LargeKnife","Base.LargeKnife_Scrap","Base.SmallKnife","Base.SwitchKnife","Base.CrudeKnife","Base.LongCrudeKnife","Base.MacheteKnife","Base.StoneKnifeLong","Base.FlintKnife","Base.RailroadSpikeKnife"},
+        sounds=sounds,
+        lightAttacks={{animation="ProjectYakuza_DD_KnifeLight01",nodeValue="dd_knife_light_01",duration=40/30/1.5,speed=1.5,impact=9/40,hitResponse=false,chainAt=23/40,quickstepCancelAt=10/40,damageMultiplier=1},{animation="ProjectYakuza_DD_KnifeLight02",nodeValue="dd_knife_light_02",duration=40/30/1.5,speed=1.5,impact=12/40,hitResponse=false,chainAt=26/40,quickstepCancelAt=13/40,damageMultiplier=1},{animation="ProjectYakuza_DD_KnifeLight03",nodeValue="dd_knife_light_03",duration=45/30/1.5,speed=1.5,impact=13/45,hitResponse=false,chainAt=23/45,quickstepCancelAt=14/45,damageMultiplier=1}},
+        groundAttacks={{animation="ProjectYakuza_DD_KnifeGround",nodeValue="dd_knife_ground",duration=52/30/1.5,speed=1.5,impact=13/52,hitResponse=false,groundAttack=true}},
+        actions={
+            finisher={enabled=true,variants={default={animation="ProjectYakuza_DD_KnifeHeavy",nodeValue="dd_knife_heavy",duration=45/30/1.5,speed=1.5,impact=11/45,hitResponse=false,enabled=true,damageMultiplier=1.25}}},
+            quickstep=base.actions.quickstep,
+        },
+    })
+    ProjectYakuza.Weapons.register(base.id,{
+        id="blade",attackSpeed=1.4,standaloneHeavy=true,quickstepCancelLights=true,
+        items={"Base.Katana","Base.Machete","Base.Machete_Crude","Base.MacheteForged","Base.ShortSword","Base.ShortSword_Scrap","Base.Sword","Base.Sword_Scrap","Base.CrudeShortSword","Base.CrudeSword","Base.MeatCleaver","Base.MeatCleaverForged","Base.MeatCleaver_Scrap"},
+        sounds=sounds,
+        lightAttacks={{animation="ProjectYakuza_DD_BladeLight01",nodeValue="dd_blade_light_01",duration=58/30/1.4,speed=1.4,impact=15/58,hitResponse=false,chainAt=31/58,quickstepCancelAt=16/58,damageMultiplier=1},{animation="ProjectYakuza_DD_BladeLight02",nodeValue="dd_blade_light_02",duration=48/30/1.4,speed=1.4,impact=22/48,hitResponse=false,chainAt=37/48,quickstepCancelAt=23/48,damageMultiplier=1},{animation="ProjectYakuza_DD_BladeLight03",nodeValue="dd_blade_light_03",duration=61/30/1.4,speed=1.4,impact=16/61,hitResponse=false,chainAt=32/61,quickstepCancelAt=17/61,damageMultiplier=1}},
+        groundAttacks={{animation="ProjectYakuza_DD_BladeGround",nodeValue="dd_blade_ground",duration=58/30/1.4,speed=1.4,impact=13/58,hitResponse=false,groundAttack=true}},
+        actions={
+            finisher={enabled=true,variants={default={animation="ProjectYakuza_DD_BladeHeavy",nodeValue="dd_blade_heavy",duration=70/30/1.4,speed=1.4,impact=22/70,hitResponse=false,enabled=true,damageMultiplier=1.25}}},
+            quickstep=base.actions.quickstep,
+            block={enabled=true,animation="ProjectYakuza_DD_BladeGuard",staminaPerHit=.08},
+        },
+    })
+end

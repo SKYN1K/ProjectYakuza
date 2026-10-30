@@ -150,3 +150,5 @@ While aiming, the bound quickstep input can cancel DoD lights after their native
 ## Weapon equipment views
 
 See [Weapons](WEAPONS.md) for Weapons.register, explicit per-style item mappings, equipment views, standalone heavies, native weapon preservation, events and MP authoring contracts. getPlayerStyle returns the current view while getStyle/listStyles retain the base style identity. Register profiles after the base style; every distinct move needs a unique nodeValue and supplied animation nodes.
+
+Since 0.45.0, Weapons.hitRange(item) bounds registered weapon supplementary reach to its native maximum (framework .25–1.65 bounds); Weapons.extraDamage(item,damage) bounds SP supplementary damage to the current native maximum and 20, avoiding propagation of primary-only close kills. Native primary hit calculation is unchanged. See [weapon rules](WEAPONS.md#sharp-weapons-0450).

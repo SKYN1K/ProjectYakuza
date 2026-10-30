@@ -54,8 +54,11 @@ function M.onHit(p,v,weapon,damage)
         and not (s.groundMove and weapon:getFullType()=="Base.BareHands")) then return end
     local job=M.swings[p]
     if not job or job.stamp~=(s.multiHitToken or s.startedAt) then
-        local origin=M.origin(p,1.25);if not origin then return end
-        job={stamp=(s.multiHitToken or s.startedAt),origin=origin,ground=s.groundMove~=nil,weapon=weapon,damage=damage,seen={},count=0}
+        local real=ProjectYakuza.Weapons and ProjectYakuza.Weapons.matches(p,weapon)
+        local range=real and ProjectYakuza.Weapons.hitRange(weapon) or 1.25
+        local origin=M.origin(p,range);if not origin then return end
+        if real then damage=ProjectYakuza.Weapons.extraDamage(weapon,damage) end
+        job={stamp=(s.multiHitToken or s.startedAt),origin=origin,ground=s.groundMove~=nil,held=p:getPrimaryHandItem(),weapon=weapon,damage=damage,seen={},count=0}
         M.swings[p]=job
     end
     if job.seen[v] then return end
@@ -69,7 +72,8 @@ function M.tick()
     unhook()
     for p,job in pairs(jobs) do
         local s=ProjectYakuza.stateFor(p)
-        if not p:isDead() and ProjectYakuza.isEquipped(p) and s.active and (s.multiHitToken or s.startedAt)==job.stamp then
+        if not p:isDead() and ProjectYakuza.isEquipped(p) and s.active and (s.multiHitToken or s.startedAt)==job.stamp
+            and p:getPrimaryHandItem()==job.held then
             local count=math.max(0,ProjectYakuza.MAX_HIT_COUNT-job.count)
             if count>0 then
                 -- Native collision finishes reporting victims before this supplement runs.

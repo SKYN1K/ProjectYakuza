@@ -7,7 +7,7 @@ isGamePaused=function()return false end
 isClient=function()return false end
 instanceof=function()return true end
 local function event()local e={callbacks={}};e.Add=function(fn)e.callbacks[#e.callbacks+1]=fn end;e.Remove=function()end;return e end
-Events={OnPlayerGetDamage=event(),OnPlayerUpdate=event(),OnWeaponSwing=event(),OnPlayerAttackFinished=event(),OnWeaponHitCharacter=event(),OnSave=event(),OnMainMenuEnter=event()}
+Events={OnTick=event(),OnPlayerGetDamage=event(),OnPlayerUpdate=event(),OnWeaponSwing=event(),OnPlayerAttackFinished=event(),OnWeaponHitCharacter=event(),OnSave=event(),OnMainMenuEnter=event()}
 local function fire(name,...)for _,fn in ipairs(Events[name].callbacks)do fn(...)end end
 local mouse={};isMouseButtonDown=function(i)return mouse[i]==true end
 isKeyDown=function()return false end
@@ -30,6 +30,7 @@ local swingEvents=0
 -- HEAT
 -- RUNTIME
 -- QUICKSTEPS
+-- MULTIHIT
 -- MENU_EQUIP
 local Q=PY.Quicksteps
 local token={getFullType=function()return PY.TOKEN end,getMaxHitCount=function()return 3 end,getWeaponSprite=function()return 'ProjectYakuza_EmptyHand' end}
@@ -71,13 +72,14 @@ function p:getForwardDirection()return {getX=function()return 1 end,getY=functio
 function p:isDraggingCorpse()return false end;function p:isAsleep()return false end
 local function weapon(id)
  local w={id=id,min=.8,max=1.2,data={},condition=10}
+ function w:getMaxRange()return self.range or 1.25 end
  function w:getFullType()return self.id end;function w:getCondition()return self.condition end
  function w:getMinDamage()return self.min end;function w:getMaxDamage()return self.max end
  function w:setMinDamage(v)self.min=v end;function w:setMaxDamage(v)self.max=v end
  function w:getModData()return self.data end
  return w
 end
-local W=PY.Weapons;local bat=weapon('Base.BaseballBat');local pipe=weapon('Base.MetalPipe');local knife=weapon('Base.HuntingKnife')
+local W=PY.Weapons;local bat=weapon('Base.BaseballBat');local pipe=weapon('Base.MetalPipe');local knife=weapon('Base.WoodAxe')
 local original=PY.getStyle('dragon_of_dojima')
 local armed=W.views.dragon_of_dojima.bat
 check(armed~=original and armed.id==original.id,'equipment view preserves style identity without mutating base')
@@ -86,7 +88,7 @@ check(not armed.actions.heavyCharge and not armed.actions.runningAttack and not 
 check(armed.actions.quickstep==original.actions.quickstep,'same quota-controlled quickstep retained')
 check(armed.actions.block.animation=='ProjectYakuza_DD_BatGuard','weapon-specific moving guard')
 for _,id in ipairs(W.profiles.dragon_of_dojima.bat.items)do check(W.profile(original.id,weapon(id))=='bat','explicit supplied blunt weapon '..id)end
-check(not W.profile(original.id,knife),'knife retains vanilla combat')
+check(not W.profile(original.id,knife),'heavy axe retains vanilla combat')
 p.held=bat;p.data.ProjectYakuzaStyle=nil
 check(not PY.isEquipped(p),'weapons require explicit style selection')
 p.data.ProjectYakuzaStyle='dragon_of_dojima';W.sync(p)
@@ -136,13 +138,13 @@ p.held=nil;W.sync(p);check(PY.getPlayerStyle(p)==original and PY.isEquipped(p),'
 local addon={};for k,v in pairs(original)do addon[k]=v end;addon.id='tests.other';PY.registerStyle(addon)
 p.data.ProjectYakuzaStyle=addon.id;p.held=bat
 check(not PY.isEquipped(p) and PY.getPlayerStyle(p)==addon,'another style never inherits DoD weapon animations')
-local before=W.byItem[original.id]['Base.HuntingKnife']
-check(not pcall(W.register,original.id,{id='bad',items={'Base.HuntingKnife','Base.BaseballBat'},lightAttacks=armed.lightAttacks}),'duplicate mapping rejected')
-check(W.byItem[original.id]['Base.HuntingKnife']==before and not W.profiles[original.id].bad,'failed registration does not partially publish')
-check(not pcall(W.register,original.id,{id='bad',items={'Base.HuntingKnife'},lightAttacks={}}),'invalid move definitions rejected')
-check(not W.byItem[original.id]['Base.HuntingKnife'],'invalid style view cannot publish item mapping')
-check(not pcall(W.register,original.id,{id='bad',items={'Base.HuntingKnife'},lightAttacks={{animation=original.lightAttacks[1].animation,nodeValue=original.lightAttacks[1].nodeValue,duration=1}}}),'distinct profiles cannot shadow base collision node IDs')
-check(not pcall(W.register,original.id,{id='bad',items={'Base.HuntingKnife'},lightAttacks=armed.lightAttacks,standaloneHeavy=true}),'standalone heavy requires an actual heavy definition')
+local before=W.byItem[original.id]['Tests.UnmappedBlade']
+check(not pcall(W.register,original.id,{id='bad',items={'Tests.UnmappedBlade','Base.BaseballBat'},lightAttacks=armed.lightAttacks}),'duplicate mapping rejected')
+check(W.byItem[original.id]['Tests.UnmappedBlade']==before and not W.profiles[original.id].bad,'failed registration does not partially publish')
+check(not pcall(W.register,original.id,{id='bad',items={'Tests.UnmappedBlade'},lightAttacks={}}),'invalid move definitions rejected')
+check(not W.byItem[original.id]['Tests.UnmappedBlade'],'invalid style view cannot publish item mapping')
+check(not pcall(W.register,original.id,{id='bad',items={'Tests.UnmappedBlade'},lightAttacks={{animation=original.lightAttacks[1].animation,nodeValue=original.lightAttacks[1].nodeValue,duration=1}}}),'distinct profiles cannot shadow base collision node IDs')
+check(not pcall(W.register,original.id,{id='bad',items={'Tests.UnmappedBlade'},lightAttacks=armed.lightAttacks,standaloneHeavy=true}),'standalone heavy requires an actual heavy definition')
 PY.resetPlayer(p,'test');p.attacking=false;p.held=bat
 PY.equipStyle(p,original.id)
 check(p.held==bat and PY.getPlayerStyle(p)==armed,'actual style menu retains supported real weapon')
@@ -155,4 +157,54 @@ p.vars.ProjectYakuzaHitMarker=move.nodeValue;p.vars.ProjectYakuzaQuickstepCancel
 check(Q.requestLightCancel(p,'backward',{dx=-1,dy=0,shove=true}) and Q.isCancelling(p),'armed light accepts native quickstep cancel')
 check(state.recoveryReleased and p.report=='ActiveAnimFinishing','cancel releases real native attack without a second collision')
 check(bat.condition==10 and pipe.condition==10,'framework never repairs or manually consumes weapon condition')
-return true,'PASS '..checks..' real-weapon style, combos, heavy, swap, damage and isolation checks'
+
+Q.clearLightCancel(p);PY.resetPlayer(p,'test');p.attacking=false;mouse[0]=false
+local realKnife=weapon('Base.HuntingKnife');realKnife.range=.9
+local blade=weapon('Base.Katana');blade.range=1.4;blade.min=8;blade.max=8
+for _,case in ipairs({{id='knife',item=realKnife,prefix='Knife'},{id='blade',item=blade,prefix='Blade'}})do
+ p.held=case.item;W.sync(p);PY.resetPlayer(p,'test');p.attacking=false;mouse[0]=false
+ local view=PY.getPlayerStyle(p)
+ check(view.weaponProfile==case.id and view.id==original.id,'sharp equipment keeps DoD identity '..case.id)
+ check(#view.lightAttacks==3 and not view.actions.heavyCharge and not view.actions.runningAttack,'three sharp lights without unarmed action leakage '..case.id)
+ check((view.actions.block~=nil)==(case.id=='blade'),'guard only when supplied source clips exist '..case.id)
+ for _,id in ipairs(W.profiles[original.id][case.id].items)do check(W.profile(original.id,weapon(id))==case.id,'explicit sharp weapon mapping '..id)end
+ for i=1,3 do
+  mouse[0]=false;fire('OnPlayerUpdate',p);mouse[0]=true;fire('OnPlayerUpdate',p)
+  if not p.attacking then p:AttemptAttack() end
+  check(PY.stateFor(p).step==i and p.vars.ProjectYakuzaMove==view.lightAttacks[i].nodeValue,'source sharp combo routing '..case.id..i)
+  finish()
+ end
+ local min,max=case.item.min,case.item.max
+ check(PY.queueFinisher(p),'sharp heavy available '..case.id)
+ check(PY.stateFor(p).finisherMove.animation=='ProjectYakuza_DD_'..case.prefix..'Heavy','sharp heavy uses distinct source clip '..case.id)
+ check(math.abs(case.item.min-min*1.25)<.00001 and math.abs(case.item.max-max*1.25)<.00001,'sharp heavy uses real native damage '..case.id)
+ finish();check(case.item.min==min and case.item.max==max,'sharp heavy restores real item '..case.id)
+ PY.resetPlayer(p,'test');p:AttemptAttack()
+ local state=PY.stateFor(p);local move=view.lightAttacks[1]
+ p.vars.ProjectYakuzaHitMarker=move.nodeValue;p.vars.ProjectYakuzaQuickstepCancelReady=move.nodeValue
+ check(Q.requestLightCancel(p,'backward',{dx=-1,dy=0,shove=true}) and Q.isCancelling(p),'sharp light can quickstep cancel '..case.id)
+ Q.clearLightCancel(p);PY.resetPlayer(p,'test');p.attacking=false;mouse[0]=false
+end
+check(W.hitRange(realKnife)==.9 and W.hitRange(blade)==1.4,'supplementary reach comes from the real blade')
+realKnife.range=math.huge;check(W.hitRange(realKnife)==1.25,'nonfinite reach falls back safely');realKnife.range=.9
+blade.range=10;check(W.hitRange(blade)==1.65,'supplementary range retains framework world-check budget');blade.range=1.4
+check(W.extraDamage(realKnife,100)==realKnife.max,'native knife close-kill damage cannot spread to extra victims')
+check(W.extraDamage(blade,8)==8,'high native sword damage is not reduced to unarmed damage')
+check(W.extraDamage(realKnife,0/0)==0,'invalid supplementary damage fails closed')
+local M=PY.MultiHit;M.clear();p.held=realKnife;W.sync(p);p.attacking=false;PY.resetPlayer(p,'test');p:AttemptAttack()
+local first={};M.onHit(p,first,realKnife,100)
+check(M.pending[p].origin.range==.9 and M.pending[p].damage==realKnife.max,'actual extra-hit queue captures knife reach and bounded damage')
+local extra={isDead=function()return false end,Hit=function(self,w,actor,damage)self.damage=damage;self.weapon=w end}
+M.targets=function()return {{victim=extra}}end
+M.tick();check(extra.damage==realKnife.max and extra.weapon==realKnife,'native SP supplement uses held knife without copying jaw-kill damage')
+M.clear();p.held=blade;W.sync(p);p.attacking=false;PY.resetPlayer(p,'test');p:AttemptAttack();M.onHit(p,{},blade,8)
+p.held=realKnife;extra.damage=nil;M.tick()
+check(extra.damage==nil,'SP pending extra hit cannot survive an equipment swap before next player update')
+W.sync(p);PY.resetPlayer(p,'test');p.attacking=false;p:AttemptAttack()
+local current=PY.stateFor(p);current.groundMove=PY.getPlayerStyle(p).groundAttacks[1]
+M.onHit(p,{},weapon('Base.BareHands'),.4);p.held=blade;extra.damage=nil;M.tick()
+check(extra.damage==nil,'native BareHands ground collision also retains the real held-item owner')
+W.sync(p);PY.resetPlayer(p,'test');p.attacking=false
+p.data.ProjectYakuzaStyle=addon.id
+check(not PY.isEquipped(p),'sharp profile remains unavailable in unrelated styles')
+return true,'PASS '..checks..' real-weapon style, sharp/blunt combo, heavy, reach, damage and isolation checks'

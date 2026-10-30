@@ -2,6 +2,23 @@
 
 Available in Project Yakuza 0.44.0, Lua API 3. A weapon profile is an equipment view of an existing style. It is not another selector slot, inventory item or global weapon replacement.
 
+## Sharp weapons (0.45.0)
+
+Dragon of Dojima now also owns two distinct supplied-source blade profiles. Select DoD and equip the actual item; existing bindings apply. Each profile has three lights, a standalone/queued x1.25 heavy, a native-targeted ground strike, an upper-body source stance with native walking legs, and post-contact light quickstep cancels. Lights use x1 of the held weapon's damage. The sweeping-blade profile adds source guard entry/hold/hit/exit with native walking legs. The knife source set supplies no guard clips, so knife blocking is unavailable.
+
+| Profile | Explicit supported B42 IDs (Base module) |
+| --- | --- |
+| knife (23) | HuntingKnife, HuntingKnifeForged, KitchenKnife, KitchenKnifeForged, SteakKnife, BreadKnife, FightingKnife, KnifeButterfly, KnifeFillet, KnifeParing, KnifePocket, KnifeShiv, KnifeSushi, LargeKnife, LargeKnife_Scrap, SmallKnife, SwitchKnife, CrudeKnife, LongCrudeKnife, MacheteKnife, StoneKnifeLong, FlintKnife, RailroadSpikeKnife |
+| blade (13) | Katana, Machete, Machete_Crude, MacheteForged, ShortSword, ShortSword_Scrap, Sword, Sword_Scrap, CrudeShortSword, CrudeSword, MeatCleaver, MeatCleaverForged, MeatCleaver_Scrap |
+
+Heavy axes, spears, firearms and unmapped items retain native combat. These profiles belong only to DoD; other styles must explicitly register their own mappings. Item models, critical/close-kill handling on primary hits, condition/durability and native weapon sounds remain PZ-owned. No item script, blade model, texture or sound is replaced. Existing unarmed special moves still require the style item, as with the bat profile.
+
+Supplementary victims now use the real registered weapon's declared maximum reach, bounded to .25–1.65 world tiles by the existing path/scan budget. Primary collision is unchanged. SP extras copy no more than that weapon's current maximum damage (hard cap 20); this prevents a native primary-only knife jaw kill/critical from becoming an area instant kill. Server extras derive damage from the real item's average min/max, bounded to 20 before the move/Extreme multiplier, retaining x1/x1.25 weapon attack rules instead of the old unarmed 2-point cap. Primary native hits are never replayed; native durability stays native. Different armour/critical outcomes can still make primary and secondary damage differ.
+
+`Weapons.hitRange(item)` and `Weapons.extraDamage(item,observedPrimaryDamage)` implement those supplementary limits. Only recognised real combat weapons use them; unarmed token rules are unchanged. Pending SP extras also retain exact held-item ownership, matching MP's existing swap protection.
+
+Six WPB short-blade clips and ten WPD sweeping-blade/guard clips were retargeted with explicit authorization. See blade-assets.json for every original GMT/BEP/rig/grip/output hash and frame range. All source frames are retained. PZ's native knife finger grip is used for short blades and native bat grip for long blades; Yakuza runtime prop IK is not imported. Importer/selector checks do not prove live grip appearance. Restart with 0.45.0 on server and all clients.
+
 ## Playing Dragon of Dojima with a weapon
 
 Select Dragon of Dojima, then equip a supported real weapon normally. You can also select Dragon of Dojima while already holding a supported weapon: it stays in your hands. The style, HUD, music, heat gains and optional combat voices remain Dragon of Dojima's. A fresh character holding a bat does not opt in automatically: select the style explicitly first.
@@ -57,6 +74,6 @@ Owner selectors must test ProjectYakuzaActive, ProjectYakuzaStyle and ProjectYak
 
 ## Multiplayer and fidelity limits
 
-The existing normal launcher/Lua-only MP flow remains. The server verifies the actual inventory ID, item type/condition and owning style; acknowledges it without replacing it with a token; derives the equipment profile itself; and accepts only matching profile moves/clips. Peers receive weaponProfile and event-free observer selections. Late acknowledgements cannot exchange a newly equipped weapon, and swings retain exact item ownership for extra victims. Extra-target damage comes from the server's real held weapon, subject to the existing supplementary damage/range/count limits. Primary native hits are never replayed. Server and clients must all install 0.44.0.
+The normal launcher/Lua-only MP flow remains. The server verifies the actual inventory ID, item type/condition and owning style; acknowledges it without replacing it with a token; derives the equipment profile itself; and accepts only matching profile moves/clips. Peers receive weaponProfile and event-free observer selections. Late acknowledgements cannot exchange a newly equipped weapon, and swings retain exact item ownership for extra victims. Extra-target damage comes from the server's real held weapon, subject to the supplementary damage/range/count limits described above. Primary native hits are never replayed. Server and clients must all install 0.45.0.
 
-All ten animations retain the original supplied WPA frames retargeted to B42, with native bat finger grip and in-place horizontal root. The shared blunt profile does not reproduce Yakuza's runtime prop/IK constraints. Native importer/selector checks verify files and isolation, not live grip appearance or multiplayer timing. PZ has not been launched for this release; test those in game after a full restart.
+The ten original blunt animations retain the original supplied WPA frames retargeted to B42, with native bat finger grip and in-place horizontal root. The shared blunt profile does not reproduce Yakuza's runtime prop/IK constraints. Native importer/selector checks verify files and isolation, not live grip appearance or multiplayer timing. PZ has not been launched for this release; test those in game after a full restart.

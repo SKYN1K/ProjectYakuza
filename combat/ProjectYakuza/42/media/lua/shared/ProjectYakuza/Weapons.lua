@@ -87,6 +87,20 @@ end
 function PY.isCombatWeapon(p,item)
     return PY.isStyleToken(item) or W.matches(p,item)
 end
+-- Supplementary victims use the real weapon's reach, within the framework's
+-- existing world/path budget. Native primary-hit collision remains untouched.
+function W.hitRange(item)
+    local range=item and item.getMaxRange and item:getMaxRange()
+    if type(range)~="number" or range~=range or range==math.huge or range==-math.huge then return 1.25 end
+    return math.max(.25,math.min(1.65,range))
+end
+function W.extraDamage(item,damage)
+    if type(damage)~="number" or damage~=damage then return 0 end
+    local maximum=item and item:getMaxDamage() or 0
+    if type(maximum)~="number" or maximum~=maximum or maximum==math.huge or maximum==-math.huge then return 0 end
+    -- Do not copy a primary-only knife jaw kill/critical onto every nearby target.
+    return math.max(0,math.min(20,maximum,damage))
+end
 function W.sync(p)
     if not p or not p:isLocalPlayer() then return end
     local item=p:getPrimaryHandItem();local id=p:getModData().ProjectYakuzaStyle
