@@ -93,3 +93,9 @@ Compile StyleItemProbe.java and PropAttachmentProbe.java against the local B42 J
 ## 0.48.0 original blood
 
 Run build_blood_tests.py, then LuaRunner blood-tests.lua from this directory. The fixture embeds WorldEffects/BloodEffects/HitEffects and verifies real confirmed-hit routing, per-victim deduplication, every source frame, pause/expiry, detached world coordinates in eight facings, grounded height, observer presentation, style opt-in, budgets, idle hooks, pooled disposal and render-failure blend restoration. Run validate_blood_assets.py for exact DDS crop/alpha/hash checks. Compile BloodAssetProbe.java and run it against the texture directory using B42 runtime/JARs to validate native ImageData decoding without launching the game.
+
+## 0.49.0 Extreme attack variations
+
+Build/run extreme-attack-tests.lua with build_extreme_attack_tests.py and LuaRunner. It embeds actual Heat, Runtime and weapon/style modules for active mode, original fallbacks, four branch pairs, marker-gated recovery, full playback without input, depletion, matching follow-ups, expiry, damage and weapon/style isolation. The weapon MP fixture covers mode gating, repeat/depleted swings, pairing leases and final cost depletion.
+
+Compile ExtremeAttackProbe.java and run validate_extreme_attacks.py. It checks original fighter command strings, GMT/BEP/rig/output hashes, all finite native channels, original single contacts, source-only pair poses/root gaps, prop attachments through B42 FK, and native owner selection without style/weapon leaks. If the local converter intermediates exist it also compares every retained non-prop numeric sample against the original full retarget. No game startup or graphics synthesis.

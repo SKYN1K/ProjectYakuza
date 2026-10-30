@@ -260,4 +260,35 @@ clock=clock+1000
 server.command(P.module,'equip',p,{style='none',weaponProfile='',item=-1,request=102})
 check(not p.hand and #removed==2 and removed[2]==activeToken,'server removes style token on authoritative disable')
 check(p.inventory:getItemWithID(703)==sword,'style cleanup retains real inventory weapon')
+clock=clock+1000
+server.command(P.module,'equip',p,{style='dragon_of_dojima',weaponProfile='',item=-1,request=103})
+local normalSequence=server.players[p.id].seq
+snapshot(p,{clip='ProjectYakuza_DD_ExtremeFinisher01',move='dd_extreme_after_1',swing=700,extreme=false})
+check(server.players[p.id].seq==normalSequence,'server rejects a new Extreme variation outside mode')
+snapshot(p,{clip='ProjectYakuza_DD_ExtremeFinisher01',move='dd_extreme_after_1',swing=700,extreme=true})
+check(server.players[p.id].packet.move=='dd_extreme_after_1' and server.players[p.id].extremeFinisher.branch==1,'server accepts active mode first and records paired branch')
+snapshot(p,{clip='ProjectYakuza_DD_ExtremeFinisher01',move='dd_extreme_after_1',swing=700,extreme=false})
+check(not server.players[p.id].packet.extreme and server.players[p.id].packet.move=='dd_extreme_after_1','same in-progress swing remains visible after depletion')
+local firstSequence=server.players[p.id].seq
+snapshot(p,{clip='ProjectYakuza_DD_ExtremeDoubleFinisher02',move='dd_extreme_double_after_2',swing=701,extreme=false})
+check(server.players[p.id].seq==firstSequence,'depleted follow-up cannot switch branch')
+snapshot(p,{clip='ProjectYakuza_DD_ExtremeDoubleFinisher01',move='dd_extreme_double_after_1',swing=701,extreme=false})
+check(server.players[p.id].packet.move=='dd_extreme_double_after_1' and not server.players[p.id].extremeFinisher,'matching depleted pair consumes server continuation lease')
+local pairedSequence=server.players[p.id].seq
+snapshot(p,{clip='ProjectYakuza_DD_ExtremeDoubleFinisher01',move='dd_extreme_double_after_1',swing=702,extreme=false})
+check(server.players[p.id].seq==pairedSequence,'depleted pair cannot mint another finisher')
+snapshot(p,{clip='ProjectYakuza_DD_ExtremeFinisher01',move='dd_extreme_after_1',swing=703,extreme=true})
+clock=server.players[p.id].extremeFinisher.expires+1
+local beforeExpiry=server.players[p.id].seq
+snapshot(p,{clip='ProjectYakuza_DD_ExtremeDoubleFinisher01',move='dd_extreme_double_after_1',swing=704,extreme=false})
+check(server.players[p.id].seq==beforeExpiry,'server expires mode continuation lease')
+check(P.move('dragon_of_dojima','dd_extreme_double_after_4').extremeHeat,'protocol indexes actual mode definitions')
+p.vars.ProjectYakuzaActive='true';p.vars.ProjectYakuzaStyle='dragon_of_dojima';p.vars.ProjectYakuzaWeaponProfile='';p.vars.ProjectYakuzaMove='dd_extreme_after_3';p.vars.AimFloorAnim='false'
+check(N.pickClip(p,baseStyle,{active=true})=='ProjectYakuza_DD_ExtremeFinisher03','network selector finds unique mode owner clip')
+snapshot(p,{clip='ProjectYakuza_DD_Light01',move='dd_light_01',swing=705,extreme=true})
+snapshot(p,{clip='ProjectYakuza_DD_ExtremeHeavy',move='dd_extreme_default',swing=706,extreme=false})
+check(server.players[p.id].packet.move=='dd_extreme_default','server presents a final valid mode attack whose swing cost depleted Heat before capture')
+local lastCostSequence=server.players[p.id].seq
+snapshot(p,{clip='ProjectYakuza_DD_ExtremeFinisher02',move='dd_extreme_after_2',swing=707,extreme=false})
+check(server.players[p.id].seq==lastCostSequence,'final-swing grace cannot chain new inactive mode attacks')
 return true,'PASS '..count..' sharp/blunt MP equipment, observers, cache invalidation, bridge reads and stale-swing checks; selector reads '..before..' -> '..after

@@ -1,6 +1,6 @@
 # Documentation index
 
-Current manual: Project Yakuza 0.48.0, Lua API 3, MP protocol 2.
+Current manual: Project Yakuza 0.49.0, Lua API 3, MP protocol 2.
 
 | Task | Guide |
 | --- | --- |
@@ -26,6 +26,7 @@ Current manual: Project Yakuza 0.48.0, Lua API 3, MP protocol 2.
 | Four-slot selector | [Selector](STYLE_SELECTOR.md) |
 | Temporary item, style removal and neutral heavy | [Equipment and heavy](STYLE_ITEM_AND_HEAVY.md) |
 | Original blood effects | [Blood effects](BLOOD_EFFECTS.md) |
+| Extreme Heat attack variations | [Extreme attacks](EXTREME_ATTACKS.md) |
 | Current changes | [Release notes](RELEASE_NOTES.md) |
 
 Older feature notes and JSON/TXT reports record previous development states and asset provenance. They may contain superseded controls/counts/prototype limits. The guides above define the current authoring contract. Keep extraction folders, previews, backups, game libraries, credentials and the separate voice-pack project outside distributed addons.

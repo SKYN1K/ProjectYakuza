@@ -2,7 +2,7 @@
 
 Project Yakuza is a Build 42 combat mod and a framework for independent fighting-style addons. Dragon of Dojima uses supplied Yakuza/Kiwami animations, textures and sounds. Other styles register their own moves, assets and controllers without copying the framework.
 
-**Version 0.48.0 Ã‚Â· Lua API 3 Ã‚Â· MP protocol 2.** API 1 style registrations remain supported. Internal namespace/mod dependency: `ProjectYakuza`. Display name: Project Yakuza.
+**Version 0.49.0 Ã‚Â· Lua API 3 Ã‚Â· MP protocol 2.** API 1 style registrations remain supported. Internal namespace/mod dependency: `ProjectYakuza`. Display name: Project Yakuza.
 
 ## Install and play
 
@@ -56,3 +56,5 @@ DoD also supports [23 knives and 13 cleavers/machetes/swords](docs/WEAPONS.md#sh
 The style item remains required for unarmed combat. It is temporary, kept clean and protected from normal dropping/transfers. Manually unequipping it disables the style and deletes it. The selector top slot also unequips the style. Supported real weapons stay equipped on style removal; unequipping a real weapon while retaining the style restores its unarmed item without replaying entry. See [Style item and neutral heavy](docs/STYLE_ITEM_AND_HEAVY.md).
 
 Confirmed DoD hits now include [original animated Yakuza 6 blood](docs/BLOOD_EFFECTS.md), rendered at the zombie in world space. Heavy/charged hits use a slightly larger burst. Inventory context menu > Combat styles > Toggle hit effects controls sparks and blood together.
+
+[Extreme Heat variations](docs/EXTREME_ATTACKS.md) now replace the unarmed neutral heavy and four first/double finisher pairs automatically during the mode, using supplied Kiryu motions. Controls and damage bonuses stay the same; the normal LMB chain and charged attacks retain their current clips.

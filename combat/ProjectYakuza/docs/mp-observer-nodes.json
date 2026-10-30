@@ -1,2293 +1,1148 @@
 [
-
   {
-
     "id": "ProjectYakuza_DD_GrabEnter",
-
     "animation": "ProjectYakuza_DD_GrabEnter",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "PerformingAction",
-
         "value": "ProjectYakuza_DD_Grab"
-
       },
-
       {
-
         "name": "ProjectYakuzaDefensePhase",
-
         "value": "enter"
-
       }
-
     ],
-
     "priority": 180,
-
     "group": "actions"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_GrabHold",
-
     "animation": "ProjectYakuza_DD_GrabHold",
-
     "loop": true,
-
     "conditions": [
-
       {
-
         "name": "PerformingAction",
-
         "value": "ProjectYakuza_DD_Grab"
-
       },
-
       {
-
         "name": "ProjectYakuzaDefensePhase",
-
         "value": "hold"
-
       },
-
       {
-
         "name": "ProjectYakuzaGrabMoving",
-
         "value": "false"
-
       }
-
     ],
-
     "priority": 180,
-
     "group": "actions"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_GrabWalk",
-
     "animation": "ProjectYakuza_DD_GrabWalk",
-
     "loop": true,
-
     "conditions": [
-
       {
-
         "name": "PerformingAction",
-
         "value": "ProjectYakuza_DD_Grab"
-
       },
-
       {
-
         "name": "ProjectYakuzaDefensePhase",
-
         "value": "hold"
-
       },
-
       {
-
         "name": "ProjectYakuzaGrabMoving",
-
         "value": "true"
-
       }
-
     ],
-
     "priority": 180,
-
     "group": "actions"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_GuardEnter",
-
     "animation": "ProjectYakuza_DD_GuardEnter",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "PerformingAction",
-
         "value": "ProjectYakuza_DD_Guard"
-
       },
-
       {
-
         "name": "ProjectYakuzaDefensePhase",
-
         "value": "enter"
-
       }
-
     ],
-
     "priority": 180,
-
     "group": "actions"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_GuardExit",
-
     "animation": "ProjectYakuza_DD_GuardExit",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "PerformingAction",
-
         "value": "ProjectYakuza_DD_Guard"
-
       },
-
       {
-
         "name": "ProjectYakuzaDefensePhase",
-
         "value": "exit"
-
       }
-
     ],
-
     "priority": 180,
-
     "group": "actions"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_GuardHit",
-
     "animation": "ProjectYakuza_DD_GuardHit",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "PerformingAction",
-
         "value": "ProjectYakuza_DD_Guard"
-
       },
-
       {
-
         "name": "ProjectYakuzaDefensePhase",
-
         "value": "hit"
-
       }
-
     ],
-
     "priority": 180,
-
     "group": "actions"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_GuardLoop",
-
     "animation": "ProjectYakuza_DD_GuardLoop",
-
     "loop": true,
-
     "conditions": [
-
       {
-
         "name": "PerformingAction",
-
         "value": "ProjectYakuza_DD_Guard"
-
       },
-
       {
-
         "name": "ProjectYakuzaDefensePhase",
-
         "value": "hold"
-
       }
-
     ],
-
     "priority": 180,
-
     "group": "actions"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_Throw",
-
     "animation": "ProjectYakuza_DD_Throw",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "PerformingAction",
-
         "value": "ProjectYakuza_DD_Grab"
-
       },
-
       {
-
         "name": "ProjectYakuzaDefensePhase",
-
         "value": "throw"
-
       }
-
     ],
-
     "priority": 180,
-
     "group": "actions"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_ChargeHold01",
-
     "animation": "ProjectYakuza_DD_ChargeHold01",
-
     "loop": true,
-
     "conditions": [
-
       {
-
         "name": "PerformingAction",
-
         "value": "ProjectYakuza_DD_ChargeHold01"
-
       }
-
     ],
-
     "priority": 150,
-
     "group": "actions"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_ChargeHold02",
-
     "animation": "ProjectYakuza_DD_ChargeHold02",
-
     "loop": true,
-
     "conditions": [
-
       {
-
         "name": "PerformingAction",
-
         "value": "ProjectYakuza_DD_ChargeHold02"
-
       }
-
     ],
-
     "priority": 150,
-
     "group": "actions"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_ChargeHold03",
-
     "animation": "ProjectYakuza_DD_ChargeHold03",
-
     "loop": true,
-
     "conditions": [
-
       {
-
         "name": "PerformingAction",
-
         "value": "ProjectYakuza_DD_ChargeHold03"
-
       }
-
     ],
-
     "priority": 150,
-
     "group": "actions"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_ChargeHold04",
-
     "animation": "ProjectYakuza_DD_ChargeHold04",
-
     "loop": true,
-
     "conditions": [
-
       {
-
         "name": "PerformingAction",
-
         "value": "ProjectYakuza_DD_ChargeHold04"
-
       }
-
     ],
-
     "priority": 150,
-
     "group": "actions"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_ChargeLoop",
-
     "animation": "ProjectYakuza_DD_ChargeLoop",
-
     "loop": true,
-
     "conditions": [
-
       {
-
         "name": "PerformingAction",
-
         "value": "ProjectYakuza_DD_ChargeLoop"
-
       }
-
     ],
-
     "priority": 150,
-
     "group": "actions"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_ChargeWindup01",
-
     "animation": "ProjectYakuza_DD_ChargeWindup01",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "PerformingAction",
-
         "value": "ProjectYakuza_DD_ChargeWindup01"
-
       }
-
     ],
-
     "priority": 150,
-
     "group": "actions"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_ChargeWindup02",
-
     "animation": "ProjectYakuza_DD_ChargeWindup02",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "PerformingAction",
-
         "value": "ProjectYakuza_DD_ChargeWindup02"
-
       }
-
     ],
-
     "priority": 150,
-
     "group": "actions"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_ChargeWindup03",
-
     "animation": "ProjectYakuza_DD_ChargeWindup03",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "PerformingAction",
-
         "value": "ProjectYakuza_DD_ChargeWindup03"
-
       }
-
     ],
-
     "priority": 150,
-
     "group": "actions"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_ChargeWindup04",
-
     "animation": "ProjectYakuza_DD_ChargeWindup04",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "PerformingAction",
-
         "value": "ProjectYakuza_DD_ChargeWindup04"
-
       }
-
     ],
-
     "priority": 150,
-
     "group": "actions"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_HeatActivate01",
-
     "animation": "ProjectYakuza_DD_HeatActivate01",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "PerformingAction",
-
         "value": "ProjectYakuza_DD_HeatActivate01"
-
       }
-
     ],
-
     "priority": 150,
-
     "group": "actions"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_HeatActivate02",
-
     "animation": "ProjectYakuza_DD_HeatActivate02",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "PerformingAction",
-
         "value": "ProjectYakuza_DD_HeatActivate02"
-
       }
-
     ],
-
     "priority": 150,
-
     "group": "actions"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_HeatActivate03",
-
     "animation": "ProjectYakuza_DD_HeatActivate03",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "PerformingAction",
-
         "value": "ProjectYakuza_DD_HeatActivate03"
-
       }
-
     ],
-
     "priority": 150,
-
     "group": "actions"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_HeatActivate04",
-
     "animation": "ProjectYakuza_DD_HeatActivate04",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "PerformingAction",
-
         "value": "ProjectYakuza_DD_HeatActivate04"
-
       }
-
     ],
-
     "priority": 150,
-
     "group": "actions"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_StyleEntry",
-
     "animation": "ProjectYakuza_DD_StyleEntry",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "PerformingAction",
-
         "value": "ProjectYakuza_DD_StyleEntry"
-
       }
-
     ],
-
     "priority": 150,
-
     "group": "actions"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_Taunt01",
-
     "animation": "ProjectYakuza_DD_Taunt01",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "PerformingAction",
-
         "value": "ProjectYakuza_DD_Taunt01"
-
       }
-
     ],
-
     "priority": 150,
-
     "group": "actions"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_TigerDrop",
-
     "animation": "ProjectYakuza_DD_TigerDrop",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "PerformingAction",
-
         "value": "ProjectYakuza_DD_TigerDrop"
-
       }
-
     ],
-
     "priority": 150,
-
     "group": "actions"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_ChargedFinisher01",
-
     "animation": "ProjectYakuza_DD_ChargedFinisher01",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "ProjectYakuzaActive",
-
         "value": "true"
-
       },
-
       {
-
         "name": "ProjectYakuzaMove",
-
         "value": "dd_charged_finisher_01"
-
       },
-
       {
-
         "name": "AimFloorAnim",
-
         "value": "false"
-
       }
-
     ],
-
     "priority": 100,
-
     "group": "melee"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_ChargedFinisher02",
-
     "animation": "ProjectYakuza_DD_ChargedFinisher02",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "ProjectYakuzaActive",
-
         "value": "true"
-
       },
-
       {
-
         "name": "ProjectYakuzaMove",
-
         "value": "dd_charged_finisher_02"
-
       },
-
       {
-
         "name": "AimFloorAnim",
-
         "value": "false"
-
       }
-
     ],
-
     "priority": 100,
-
     "group": "melee"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_ChargedFinisher03",
-
     "animation": "ProjectYakuza_DD_ChargedFinisher03",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "ProjectYakuzaActive",
-
         "value": "true"
-
       },
-
       {
-
         "name": "ProjectYakuzaMove",
-
         "value": "dd_charged_finisher_03"
-
       },
-
       {
-
         "name": "AimFloorAnim",
-
         "value": "false"
-
       }
-
     ],
-
     "priority": 100,
-
     "group": "melee"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_ChargedFinisher04",
-
     "animation": "ProjectYakuza_DD_ChargedFinisher04",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "ProjectYakuzaActive",
-
         "value": "true"
-
       },
-
       {
-
         "name": "ProjectYakuzaMove",
-
         "value": "dd_charged_finisher_04"
-
       },
-
       {
-
         "name": "AimFloorAnim",
-
         "value": "false"
-
       }
-
     ],
-
     "priority": 100,
-
     "group": "melee"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_ChargeEnd",
-
     "animation": "ProjectYakuza_DD_ChargeEnd",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "ProjectYakuzaActive",
-
         "value": "true"
-
       },
-
       {
-
         "name": "ProjectYakuzaMove",
-
         "value": "dd_charged_heavy"
-
       },
-
       {
-
         "name": "AimFloorAnim",
-
         "value": "false"
-
       }
-
     ],
-
     "priority": 100,
-
     "group": "melee"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_DoubleFinisher01",
-
     "animation": "ProjectYakuza_DD_DoubleFinisher01",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "ProjectYakuzaActive",
-
         "value": "true"
-
       },
-
       {
-
         "name": "ProjectYakuzaMove",
-
         "value": "dd_double_01"
-
       },
-
       {
-
         "name": "AimFloorAnim",
-
         "value": "false"
-
       },
-
       {
-
         "name": "ProjectYakuzaLinkedDouble",
-
         "value": "false"
-
       }
-
     ],
-
     "priority": 100,
-
     "group": "melee"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_DoubleFinisher02",
-
     "animation": "ProjectYakuza_DD_DoubleFinisher02",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "ProjectYakuzaActive",
-
         "value": "true"
-
       },
-
       {
-
         "name": "ProjectYakuzaMove",
-
         "value": "dd_double_02"
-
       },
-
       {
-
         "name": "AimFloorAnim",
-
         "value": "false"
-
       },
-
       {
-
         "name": "ProjectYakuzaLinkedDouble",
-
         "value": "false"
-
       }
-
     ],
-
     "priority": 100,
-
     "group": "melee"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_DoubleFinisher03",
-
     "animation": "ProjectYakuza_DD_DoubleFinisher03",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "ProjectYakuzaActive",
-
         "value": "true"
-
       },
-
       {
-
         "name": "ProjectYakuzaMove",
-
         "value": "dd_double_03"
-
       },
-
       {
-
         "name": "AimFloorAnim",
-
         "value": "false"
-
       },
-
       {
-
         "name": "ProjectYakuzaLinkedDouble",
-
         "value": "false"
-
       }
-
     ],
-
     "priority": 100,
-
     "group": "melee"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_DoubleFinisher04",
-
     "animation": "ProjectYakuza_DD_DoubleFinisher04",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "ProjectYakuzaActive",
-
         "value": "true"
-
       },
-
       {
-
         "name": "ProjectYakuzaMove",
-
         "value": "dd_double_04"
-
       },
-
       {
-
         "name": "AimFloorAnim",
-
         "value": "false"
-
       },
-
       {
-
         "name": "ProjectYakuzaLinkedDouble",
-
         "value": "false"
-
       }
-
     ],
-
     "priority": 100,
-
     "group": "melee"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_Finisher01",
-
     "animation": "ProjectYakuza_DD_Finisher01",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "ProjectYakuzaActive",
-
         "value": "true"
-
       },
-
       {
-
         "name": "ProjectYakuzaMove",
-
         "value": "dd_finisher_01"
-
       },
-
       {
-
         "name": "AimFloorAnim",
-
         "value": "false"
-
       }
-
     ],
-
     "priority": 100,
-
     "group": "melee"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_Finisher02",
-
     "animation": "ProjectYakuza_DD_Finisher02",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "ProjectYakuzaActive",
-
         "value": "true"
-
       },
-
       {
-
         "name": "ProjectYakuzaMove",
-
         "value": "dd_finisher_02"
-
       },
-
       {
-
         "name": "AimFloorAnim",
-
         "value": "false"
-
       }
-
     ],
-
     "priority": 100,
-
     "group": "melee"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_Finisher03",
-
     "animation": "ProjectYakuza_DD_Finisher03",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "ProjectYakuzaActive",
-
         "value": "true"
-
       },
-
       {
-
         "name": "ProjectYakuzaMove",
-
         "value": "dd_finisher_03"
-
       },
-
       {
-
         "name": "AimFloorAnim",
-
         "value": "false"
-
       }
-
     ],
-
     "priority": 100,
-
     "group": "melee"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_Finisher04",
-
     "animation": "ProjectYakuza_DD_Finisher04",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "ProjectYakuzaActive",
-
         "value": "true"
-
       },
-
       {
-
         "name": "ProjectYakuzaMove",
-
         "value": "dd_finisher_04"
-
       },
-
       {
-
         "name": "AimFloorAnim",
-
         "value": "false"
-
       }
-
     ],
-
     "priority": 100,
-
     "group": "melee"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_GroundStomp01",
-
     "animation": "ProjectYakuza_DD_GroundStomp01",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "ProjectYakuzaActive",
-
         "value": "true"
-
       },
-
       {
-
         "name": "DFCGroundEnabled",
-
         "value": "true"
-
       },
-
       {
-
         "name": "ProjectYakuzaStompVariant",
-
         "value": "1"
-
       },
-
       {
-
         "name": "AimFloorAnim",
-
         "value": "true"
-
       }
-
     ],
-
     "priority": 100,
-
     "group": "melee"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_GroundStomp02",
-
     "animation": "ProjectYakuza_DD_GroundStomp02",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "ProjectYakuzaActive",
-
         "value": "true"
-
       },
-
       {
-
         "name": "DFCGroundEnabled",
-
         "value": "true"
-
       },
-
       {
-
         "name": "ProjectYakuzaStompVariant",
-
         "value": "2"
-
       },
-
       {
-
         "name": "AimFloorAnim",
-
         "value": "true"
-
       }
-
     ],
-
     "priority": 100,
-
     "group": "melee"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_Light01",
-
     "animation": "ProjectYakuza_DD_Light01",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "ProjectYakuzaActive",
-
         "value": "true"
-
       },
-
       {
-
         "name": "ProjectYakuzaMove",
-
         "value": "dd_light_01"
-
       },
-
       {
-
         "name": "AimFloorAnim",
-
         "value": "false"
-
       }
-
     ],
-
     "priority": 100,
-
     "group": "melee"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_Light02",
-
     "animation": "ProjectYakuza_DD_Light02",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "ProjectYakuzaActive",
-
         "value": "true"
-
       },
-
       {
-
         "name": "ProjectYakuzaMove",
-
         "value": "dd_light_02"
-
       },
-
       {
-
         "name": "AimFloorAnim",
-
         "value": "false"
-
       }
-
     ],
-
     "priority": 100,
-
     "group": "melee"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_Light03",
-
     "animation": "ProjectYakuza_DD_Light03",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "ProjectYakuzaActive",
-
         "value": "true"
-
       },
-
       {
-
         "name": "ProjectYakuzaMove",
-
         "value": "dd_light_03"
-
       },
-
       {
-
         "name": "AimFloorAnim",
-
         "value": "false"
-
       }
-
     ],
-
     "priority": 100,
-
     "group": "melee"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_Light04",
-
     "animation": "ProjectYakuza_DD_Light04",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "ProjectYakuzaActive",
-
         "value": "true"
-
       },
-
       {
-
         "name": "ProjectYakuzaMove",
-
         "value": "dd_light_04"
-
       },
-
       {
-
         "name": "AimFloorAnim",
-
         "value": "false"
-
       }
-
     ],
-
     "priority": 100,
-
     "group": "melee"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_LinkedDoubleFinisher01",
-
     "animation": "ProjectYakuza_DD_LinkedDoubleFinisher01",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "ProjectYakuzaActive",
-
         "value": "true"
-
       },
-
       {
-
         "name": "ProjectYakuzaMove",
-
         "value": "dd_double_01"
-
       },
-
       {
-
         "name": "AimFloorAnim",
-
         "value": "false"
-
       },
-
       {
-
         "name": "ProjectYakuzaLinkedDouble",
-
         "value": "true"
-
       }
-
     ],
-
     "priority": 100,
-
     "group": "melee"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_LinkedDoubleFinisher02",
-
     "animation": "ProjectYakuza_DD_LinkedDoubleFinisher02",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "ProjectYakuzaActive",
-
         "value": "true"
-
       },
-
       {
-
         "name": "ProjectYakuzaMove",
-
         "value": "dd_double_02"
-
       },
-
       {
-
         "name": "AimFloorAnim",
-
         "value": "false"
-
       },
-
       {
-
         "name": "ProjectYakuzaLinkedDouble",
-
         "value": "true"
-
       }
-
     ],
-
     "priority": 100,
-
     "group": "melee"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_LinkedDoubleFinisher03",
-
     "animation": "ProjectYakuza_DD_LinkedDoubleFinisher03",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "ProjectYakuzaActive",
-
         "value": "true"
-
       },
-
       {
-
         "name": "ProjectYakuzaMove",
-
         "value": "dd_double_03"
-
       },
-
       {
-
         "name": "AimFloorAnim",
-
         "value": "false"
-
       },
-
       {
-
         "name": "ProjectYakuzaLinkedDouble",
-
         "value": "true"
-
       }
-
     ],
-
     "priority": 100,
-
     "group": "melee"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_LinkedDoubleFinisher04",
-
     "animation": "ProjectYakuza_DD_LinkedDoubleFinisher04",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "ProjectYakuzaActive",
-
         "value": "true"
-
       },
-
       {
-
         "name": "ProjectYakuzaMove",
-
         "value": "dd_double_04"
-
       },
-
       {
-
         "name": "AimFloorAnim",
-
         "value": "false"
-
       },
-
       {
-
         "name": "ProjectYakuzaLinkedDouble",
-
         "value": "true"
-
       }
-
     ],
-
     "priority": 100,
-
     "group": "melee"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_QuickstepAttack01",
-
     "animation": "ProjectYakuza_DD_QuickstepAttack01",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "ProjectYakuzaActive",
-
         "value": "true"
-
       },
-
       {
-
         "name": "ProjectYakuzaMove",
-
         "value": "dd_quickattack_01"
-
       },
-
       {
-
         "name": "AimFloorAnim",
-
         "value": "false"
-
       }
-
     ],
-
     "priority": 100,
-
     "group": "melee"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_QuickstepAttack02",
-
     "animation": "ProjectYakuza_DD_QuickstepAttack02",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "ProjectYakuzaActive",
-
         "value": "true"
-
       },
-
       {
-
         "name": "ProjectYakuzaMove",
-
         "value": "dd_quickattack_02"
-
       },
-
       {
-
         "name": "AimFloorAnim",
-
         "value": "false"
-
       }
-
     ],
-
     "priority": 100,
-
     "group": "melee"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_QuickstepAttack03",
-
     "animation": "ProjectYakuza_DD_QuickstepAttack03",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "ProjectYakuzaActive",
-
         "value": "true"
-
       },
-
       {
-
         "name": "ProjectYakuzaMove",
-
         "value": "dd_quickattack_03"
-
       },
-
       {
-
         "name": "AimFloorAnim",
-
         "value": "false"
-
       }
-
     ],
-
     "priority": 100,
-
     "group": "melee"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_QuickstepAttack04",
-
     "animation": "ProjectYakuza_DD_QuickstepAttack04",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "ProjectYakuzaActive",
-
         "value": "true"
-
       },
-
       {
-
         "name": "ProjectYakuzaMove",
-
         "value": "dd_quickattack_04"
-
       },
-
       {
-
         "name": "AimFloorAnim",
-
         "value": "false"
-
       }
-
     ],
-
     "priority": 100,
-
     "group": "melee"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_RunningAttack01",
-
     "animation": "ProjectYakuza_DD_RunningAttack01",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "ProjectYakuzaActive",
-
         "value": "true"
-
       },
-
       {
-
         "name": "ProjectYakuzaMove",
-
         "value": "dd_run_01"
-
       },
-
       {
-
         "name": "AimFloorAnim",
-
         "value": "false"
-
       }
-
     ],
-
     "priority": 100,
-
     "group": "melee"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_RunningAttack02",
-
     "animation": "ProjectYakuza_DD_RunningAttack02",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "ProjectYakuzaActive",
-
         "value": "true"
-
       },
-
       {
-
         "name": "ProjectYakuzaMove",
-
         "value": "dd_run_02"
-
       },
-
       {
-
         "name": "AimFloorAnim",
-
         "value": "false"
-
       }
-
     ],
-
     "priority": 100,
-
     "group": "melee"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_RunningAttack03",
-
     "animation": "ProjectYakuza_DD_RunningAttack03",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "ProjectYakuzaActive",
-
         "value": "true"
-
       },
-
       {
-
         "name": "ProjectYakuzaMove",
-
         "value": "dd_run_03"
-
       },
-
       {
-
         "name": "AimFloorAnim",
-
         "value": "false"
-
       }
-
     ],
-
     "priority": 100,
-
     "group": "melee"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_RunningAttack04",
-
     "animation": "ProjectYakuza_DD_RunningAttack04",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "ProjectYakuzaActive",
-
         "value": "true"
-
       },
-
       {
-
         "name": "ProjectYakuzaMove",
-
         "value": "dd_run_04"
-
       },
-
       {
-
         "name": "AimFloorAnim",
-
         "value": "false"
-
       }
-
     ],
-
     "priority": 100,
-
     "group": "melee"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_NativeStomp01",
-
     "animation": "ProjectYakuza_DD_GroundStomp01",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "ProjectYakuzaActive",
-
         "value": "true"
-
       },
-
       {
-
         "name": "DFCGroundEnabled",
-
         "value": "true"
-
       },
-
       {
-
         "name": "ProjectYakuzaStompVariant",
-
         "value": "1"
-
       },
-
       {
-
         "name": "AimFloorAnim",
-
         "value": "true"
-
       }
-
     ],
-
     "priority": 100,
-
     "group": "stomp"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_NativeStomp02",
-
     "animation": "ProjectYakuza_DD_GroundStomp02",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "ProjectYakuzaActive",
-
         "value": "true"
-
       },
-
       {
-
         "name": "DFCGroundEnabled",
-
         "value": "true"
-
       },
-
       {
-
         "name": "ProjectYakuzaStompVariant",
-
         "value": "2"
-
       },
-
       {
-
         "name": "AimFloorAnim",
-
         "value": "true"
-
       }
-
     ],
-
     "priority": 100,
-
     "group": "stomp"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_Quickstep01",
-
     "animation": "ProjectYakuza_DD_Quickstep01",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "PerformingAction",
-
         "value": "ProjectYakuza_DD_Quickstep01"
-
       }
-
     ],
-
     "priority": 100,
-
     "group": "actions"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_Quickstep02",
-
     "animation": "ProjectYakuza_DD_Quickstep02",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "PerformingAction",
-
         "value": "ProjectYakuza_DD_Quickstep02"
-
       }
-
     ],
-
     "priority": 100,
-
     "group": "actions"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_Quickstep03",
-
     "animation": "ProjectYakuza_DD_Quickstep03",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "PerformingAction",
-
         "value": "ProjectYakuza_DD_Quickstep03"
-
       }
-
     ],
-
     "priority": 100,
-
     "group": "actions"
-
   },
-
   {
-
     "id": "ProjectYakuza_DD_Quickstep04",
-
     "animation": "ProjectYakuza_DD_Quickstep04",
-
     "loop": false,
-
     "conditions": [
-
       {
-
         "name": "PerformingAction",
-
         "value": "ProjectYakuza_DD_Quickstep04"
-
       }
-
     ],
-
     "priority": 100,
-
     "group": "actions"
-
   },
   {
     "id": "ProjectYakuza_DD_BatLight01",
@@ -3011,33 +1866,294 @@
     "priority": 180,
     "group": "actions"
   },
-{
-  "id": "ProjectYakuza_DD_Heavy",
-  "animation": "ProjectYakuza_DD_Heavy",
-  "group": "melee",
-  "loop": false,
-  "priority": 100,
-  "conditions": [
-    {
-      "name": "ProjectYakuzaActive",
-      "value": "true"
-    },
-    {
-      "name": "ProjectYakuzaMove",
-      "value": "dd_heavy"
-    },
-    {
-      "name": "AimFloorAnim",
-      "value": "false"
-    },
-    {
-      "name": "ProjectYakuzaStyle",
-      "value": "dragon_of_dojima"
-    },
-    {
-      "name": "ProjectYakuzaWeaponProfile",
-      "value": ""
-    }
-  ]
-}
+  {
+    "id": "ProjectYakuza_DD_Heavy",
+    "animation": "ProjectYakuza_DD_Heavy",
+    "group": "melee",
+    "loop": false,
+    "priority": 100,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "ProjectYakuzaMove",
+        "value": "dd_heavy"
+      },
+      {
+        "name": "AimFloorAnim",
+        "value": "false"
+      },
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "dragon_of_dojima"
+      },
+      {
+        "name": "ProjectYakuzaWeaponProfile",
+        "value": ""
+      }
+    ]
+  },
+  {
+    "id": "ProjectYakuza_DD_ExtremeHeavy",
+    "animation": "ProjectYakuza_DD_ExtremeHeavy",
+    "group": "melee",
+    "loop": false,
+    "priority": 100,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "ProjectYakuzaMove",
+        "value": "dd_extreme_default"
+      },
+      {
+        "name": "AimFloorAnim",
+        "value": "false"
+      },
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "dragon_of_dojima"
+      },
+      {
+        "name": "ProjectYakuzaWeaponProfile",
+        "value": ""
+      }
+    ]
+  },
+  {
+    "id": "ProjectYakuza_DD_ExtremeFinisher01",
+    "animation": "ProjectYakuza_DD_ExtremeFinisher01",
+    "group": "melee",
+    "loop": false,
+    "priority": 100,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "ProjectYakuzaMove",
+        "value": "dd_extreme_after_1"
+      },
+      {
+        "name": "AimFloorAnim",
+        "value": "false"
+      },
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "dragon_of_dojima"
+      },
+      {
+        "name": "ProjectYakuzaWeaponProfile",
+        "value": ""
+      }
+    ]
+  },
+  {
+    "id": "ProjectYakuza_DD_ExtremeDoubleFinisher01",
+    "animation": "ProjectYakuza_DD_ExtremeDoubleFinisher01",
+    "group": "melee",
+    "loop": false,
+    "priority": 100,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "ProjectYakuzaMove",
+        "value": "dd_extreme_double_after_1"
+      },
+      {
+        "name": "AimFloorAnim",
+        "value": "false"
+      },
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "dragon_of_dojima"
+      },
+      {
+        "name": "ProjectYakuzaWeaponProfile",
+        "value": ""
+      }
+    ]
+  },
+  {
+    "id": "ProjectYakuza_DD_ExtremeFinisher02",
+    "animation": "ProjectYakuza_DD_ExtremeFinisher02",
+    "group": "melee",
+    "loop": false,
+    "priority": 100,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "ProjectYakuzaMove",
+        "value": "dd_extreme_after_2"
+      },
+      {
+        "name": "AimFloorAnim",
+        "value": "false"
+      },
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "dragon_of_dojima"
+      },
+      {
+        "name": "ProjectYakuzaWeaponProfile",
+        "value": ""
+      }
+    ]
+  },
+  {
+    "id": "ProjectYakuza_DD_ExtremeDoubleFinisher02",
+    "animation": "ProjectYakuza_DD_ExtremeDoubleFinisher02",
+    "group": "melee",
+    "loop": false,
+    "priority": 100,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "ProjectYakuzaMove",
+        "value": "dd_extreme_double_after_2"
+      },
+      {
+        "name": "AimFloorAnim",
+        "value": "false"
+      },
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "dragon_of_dojima"
+      },
+      {
+        "name": "ProjectYakuzaWeaponProfile",
+        "value": ""
+      }
+    ]
+  },
+  {
+    "id": "ProjectYakuza_DD_ExtremeFinisher03",
+    "animation": "ProjectYakuza_DD_ExtremeFinisher03",
+    "group": "melee",
+    "loop": false,
+    "priority": 100,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "ProjectYakuzaMove",
+        "value": "dd_extreme_after_3"
+      },
+      {
+        "name": "AimFloorAnim",
+        "value": "false"
+      },
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "dragon_of_dojima"
+      },
+      {
+        "name": "ProjectYakuzaWeaponProfile",
+        "value": ""
+      }
+    ]
+  },
+  {
+    "id": "ProjectYakuza_DD_ExtremeDoubleFinisher03",
+    "animation": "ProjectYakuza_DD_ExtremeDoubleFinisher03",
+    "group": "melee",
+    "loop": false,
+    "priority": 100,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "ProjectYakuzaMove",
+        "value": "dd_extreme_double_after_3"
+      },
+      {
+        "name": "AimFloorAnim",
+        "value": "false"
+      },
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "dragon_of_dojima"
+      },
+      {
+        "name": "ProjectYakuzaWeaponProfile",
+        "value": ""
+      }
+    ]
+  },
+  {
+    "id": "ProjectYakuza_DD_ExtremeFinisher04",
+    "animation": "ProjectYakuza_DD_ExtremeFinisher04",
+    "group": "melee",
+    "loop": false,
+    "priority": 100,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "ProjectYakuzaMove",
+        "value": "dd_extreme_after_4"
+      },
+      {
+        "name": "AimFloorAnim",
+        "value": "false"
+      },
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "dragon_of_dojima"
+      },
+      {
+        "name": "ProjectYakuzaWeaponProfile",
+        "value": ""
+      }
+    ]
+  },
+  {
+    "id": "ProjectYakuza_DD_ExtremeDoubleFinisher04",
+    "animation": "ProjectYakuza_DD_ExtremeDoubleFinisher04",
+    "group": "melee",
+    "loop": false,
+    "priority": 100,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "ProjectYakuzaMove",
+        "value": "dd_extreme_double_after_4"
+      },
+      {
+        "name": "AimFloorAnim",
+        "value": "false"
+      },
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "dragon_of_dojima"
+      },
+      {
+        "name": "ProjectYakuzaWeaponProfile",
+        "value": ""
+      }
+    ]
+  }
 ]

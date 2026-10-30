@@ -81,3 +81,8 @@
 !/tools/combat-tests/blood-test-fixture.lua
 !/tools/combat-tests/validate_blood_assets.py
 !/tools/combat-tests/BloodAssetProbe.java
+
+!/tools/combat-tests/build_extreme_attack_tests.py
+!/tools/combat-tests/extreme-attack-test-fixture.lua
+!/tools/combat-tests/validate_extreme_attacks.py
+!/tools/combat-tests/ExtremeAttackProbe.java

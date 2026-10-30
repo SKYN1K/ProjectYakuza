@@ -32,6 +32,15 @@ function S.release(p)
     if not z:isDead() and z:getTarget()==nil and lease.target then z:setTarget(lease.target) end
     S.fanout(p,"grabEnd",{player=p:getOnlineID(),zombie=z:getOnlineID(),useless=lease.useless,ignore=lease.ignore,deferred=lease.deferred})
 end
+function S.extremeMoveAllowed(s,style,move,swing,active)
+    if not move or not move.extremeHeat or active then return true end
+    local previous=s.packet
+    if previous and previous.equipped and previous.style==style.id and previous.move==move.nodeValue and previous.swing==swing then return true end
+    if not move.double and previous and previous.equipped and previous.style==style.id and previous.extreme
+        and now()-(s.seen or 0)<=250 then return true end
+    local first=s.extremeFinisher
+    return move.double==true and first~=nil and first.style==style.id and first.branch==move.afterLight and now()<=first.expires
+end
 function S.snapshot(p,a,s)
     if not P.integer(a.seq,0,1000000000) or a.seq<=s.seq then return end
 
@@ -64,6 +73,8 @@ function S.snapshot(p,a,s)
         end
     end
     local kind,activation
+    local move=equipped and P.move(a.style,a.move) or nil
+    if move and not S.extremeMoveAllowed(s,style,move,a.swing,a.extreme==true and style.heat==true) then return end
     if clip then kind,activation=P.kind(a.style,clip.id) end
     if not equipped or kind~="heatActivation" then S.restoreProtection(p,s);s.wasActivation=false
     elseif not s.wasActivation then
@@ -83,6 +94,12 @@ function S.snapshot(p,a,s)
         protected=s.protection~=nil,grabMoving=a.grabMoving==true,
         grabDirection=(a.grabDirection=="forward" or a.grabDirection=="backward" or a.grabDirection=="left" or a.grabDirection=="right") and a.grabDirection or "forward",
         linked=a.linked==true,ground=a.ground==true,phase=(a.phase=="enter" or a.phase=="hold" or a.phase=="hit" or a.phase=="throw" or a.phase=="exit") and a.phase or ""}
+    local previous=s.packet
+    if move and (not previous or previous.move~=packet.move or previous.swing~=packet.swing) then
+        if move.extremeHeat and move.afterLight and not move.double then
+            s.extremeFinisher={style=style.id,branch=move.afterLight,expires=now()+(move.duration or 2)*1000+style.comboResetMs+500}
+        else s.extremeFinisher=nil end
+    elseif not equipped then s.extremeFinisher=nil end
     s.seq=a.seq;s.packet=packet;s.seen=now()
     p:getModData().ProjectYakuzaStyle=a.style;p:getModData().ProjectYakuzaHeat=packet.heat
     if not equipped then S.release(p) end
@@ -119,6 +136,7 @@ function S.equip(p,a,s)
         p:setSecondaryHandItem(nil);p:setPrimaryHandItem(item)
     elseif ProjectYakuza.isStyleToken(p:getPrimaryHandItem()) then p:setPrimaryHandItem(nil) end
     p:getModData().ProjectYakuzaStyle=a.style
+    s.extremeFinisher=nil
     if ProjectYakuza.StyleItem then ProjectYakuza.StyleItem.removeUnused(p,not armed and item or nil) end
     sendEquip(p)
     reply(p,"equipReady",{player=p:getOnlineID(),request=a.request,style=a.style,weaponProfile=armed and a.weaponProfile or "",item=item and item:getID() or -1})

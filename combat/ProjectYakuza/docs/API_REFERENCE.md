@@ -164,3 +164,7 @@ Registration-aware internal indexes now accelerate clip and move resolution. Reg
 ## Blood presentation (0.48.0)
 
 A style opts into supplied Y6 blood via `bloodEffects="yakuza6"`; the built-in confirmed-hit pipeline also requires `hitEffects="yakuza6"`. `ProjectYakuza.BloodEffects.spawn(player,victim,strong,charged)` creates a bounded client world burst; `clear(player)` releases that player’s bursts, or all bursts when omitted. Existing hit-effect preferences apply. Other styles have no default blood opt-in. See [Blood effects](BLOOD_EFFECTS.md) for source provenance, lifecycle and limits.
+
+## Extreme finisher variants (0.49.0)
+
+Unarmed finisher routing recognizes enabled `extreme_default`, `extreme_after_N` and `extreme_double_after_N` variants while Heat is active. Define `extremeHeat=true` on those moves, retain ordinary move contracts and register their isolated native nodes/observers. First finishers latch mode for their paired double; the existing afterLight/window checks remain. Ordinary variants are the fallback. Standalone weapon heavies remain owned by their weapon profile. See [Extreme attacks](EXTREME_ATTACKS.md).
