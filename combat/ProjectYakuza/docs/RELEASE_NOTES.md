@@ -1,9 +1,9 @@
-# Project Yakuza 0.47.0
+# Project Yakuza 0.48.0
 
-- Added Kiryu's ordinary neutral heavy: aim and tap-release MMB without a combo. Holding still charges; combo finishers, doubles and Tiger Drop retain their routing.
-- Repaired hand-following prop tracks for all bat/knife/blade clips and four quicksteps using native B42 grip offsets. Body/finger motion is preserved.
-- Kept the unarmed style item, with cleanliness and normal drop/transfer protection. Manually unequipping it disables the style and deletes it. Supported weapon equips retain the style; removing a real weapon restores the temporary unarmed item without entry replay.
-- Top style-selector circle now unequips the style. Real weapons remain equipped; left/right style slots and bottom setup remain.
-- Added actual-module equipment/heavy tests and native prop attachment/provenance checks. No game startup or live MP test; see VALIDATION_0.47.0.md for offline evidence and limits.
+- Added original animated Yakuza 6 blood splashes to confirmed Dragon of Dojima hits, alongside existing sparks. Heavy/charged hits have slightly larger bursts; downed targets use a low world anchor.
+- Blood uses 16 exact original atlas crops, normal transparency and detached native world sprites. No AI, upscaling, invented artwork or audio changes.
+- Existing multiplayer confirmed-impact presentation uses the same blood path. Misses/duplicate hit callbacks do not add bursts. Cached sprites, four-per-attacker/sixteen-global limits, pooled instances and idle hook removal bound the effect's cost.
+- Renamed the existing menu toggle to Toggle hit effects; it controls sparks and blood together.
+- Added source-pixel/provenance, native B42 image decoder and actual-module lifecycle tests. See VALIDATION_0.48.0.md. PZ was not launched.
 
-Install the same version on server and clients, then fully restart. Approved source animation edits only; no new generated graphical/audio assets. Grabs remain temporarily disabled. Separate voice pack unchanged.
+Fully restart with matching server/client versions. Native damage, wounds, decals and blood on real equipment remain unchanged. Grabs remain disabled; separate voice pack untouched.

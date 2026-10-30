@@ -76,7 +76,7 @@ local function menu(playerIndex, context)
     sub:addOption("Assign style slots", player, ProjectYakuza.StyleSelector.openSetup)
     if ProjectYakuza.Taunts.available(player) then sub:addOption("Taunt (aim + "..ProjectYakuza.Bindings.label("taunt")..")",player,ProjectYakuza.Taunts.request) end
     sub:addOption("Toggle combat diagnostics", player, diagnostics)
-    sub:addOption("Toggle hit sparks", player, ProjectYakuza.HitEffects.toggle)
+    sub:addOption("Toggle hit effects", player, ProjectYakuza.HitEffects.toggle)
     sub:addOption("Toggle heat aura", player, ProjectYakuza.HeatAura.toggle)
 end
 Events.OnFillInventoryObjectContextMenu.Add(menu)

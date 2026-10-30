@@ -1,5 +1,6 @@
 require "ProjectYakuza/Runtime"
 require "ProjectYakuza/WorldEffects"
+require "ProjectYakuza/BloodEffects"
 local ProjectYakuza=ProjectYakuza
 local F={bursts={},pool={},maxBursts=6,maxTotal=24}
 ProjectYakuza.HitEffects=F
@@ -26,6 +27,7 @@ local function stopIfEmpty()
     end
 end
 function F.clear(player)
+    if ProjectYakuza.BloodEffects then ProjectYakuza.BloodEffects.clear(player) end
     for i=#F.bursts,1,-1 do
         local b=F.bursts[i]
         if not player or b.player==player then detach(b);table.remove(F.bursts,i) end
@@ -68,6 +70,7 @@ function F.spawn(player,victim,strong,charged)
     local style=ProjectYakuza.getPlayerStyle(player)
     if not style or style.hitEffects~="yakuza6" then return end
     if player:getModData().ProjectYakuzaHitEffectsDisabled then return end
+    if ProjectYakuza.BloodEffects then ProjectYakuza.BloodEffects.spawn(player,victim,strong,charged) end
     local count=0
     for _,b in ipairs(F.bursts) do if b.player==player then count=count+1 end end
     if count>=F.maxBursts or #F.bursts>=F.maxTotal then

@@ -76,3 +76,8 @@
 !/tools/combat-tests/PropAttachmentProbe.java
 !/tools/combat-tests/StyleItemProbe.java
 !/tools/combat-tests/validate_prop_attachments.py
+
+!/tools/combat-tests/build_blood_tests.py
+!/tools/combat-tests/blood-test-fixture.lua
+!/tools/combat-tests/validate_blood_assets.py
+!/tools/combat-tests/BloodAssetProbe.java

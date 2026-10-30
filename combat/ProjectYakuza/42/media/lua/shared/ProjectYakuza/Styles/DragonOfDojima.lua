@@ -12,6 +12,7 @@ ProjectYakuza.registerStyle({
     heatHud="yakuza6",
     heatAura="kiryu",
     hitEffects="yakuza6",
+    bloodEffects="yakuza6",
     sounds={
         punchImpact="ProjectYakuza_Y6_PunchImpact",kickImpact="ProjectYakuza_Y6_KickImpact",heatImpact="ProjectYakuza_Y6_HeatImpact",
         punchSwing="ProjectYakuza_Y6_PunchSwing",kickSwing="ProjectYakuza_Y6_KickSwing",finisher="ProjectYakuza_Y6_Finisher",

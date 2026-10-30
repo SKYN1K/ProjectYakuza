@@ -1,0 +1,205 @@
+{
+  "game": "Yakuza 6",
+  "authorization": "User approved exact decode/crops of existing blood assets on 2026-10-30.",
+  "source": "C:\\Users\\Nik\\Documents\\Codex\\2026-10-19\\wo\\work\\y6-particle\\raw_event\\e_j_0035_bfBloodSplash03.dds",
+  "sourceSha256": "8153d1084e2390a1076047385ad8247f22e47f64f51e978ad6083f880e18c0e3",
+  "size": [
+    512,
+    512
+  ],
+  "operation": "Exact DDS-to-RGBA decode and 4x4 row-major 128x128 crops. All RGBA pixels, including alpha, are preserved. No AI, upscaling, recolouring, invented artwork or interpolated frames. Runtime 400ms one-shot clock, scale and opacity only.",
+  "frames": [
+    {
+      "frame": 0,
+      "crop": [
+        0,
+        0,
+        128,
+        128
+      ],
+      "output": "42/media/textures/ProjectYakuza/Blood_splash_0.png",
+      "sha256": "2341dad702aeec405dd764e809b25bd77b1e98c225da6a78661166a455917918",
+      "rgbaSha256": "623f9de5b0c59768c756b3ee31fb375d56aa9f2aa5d69cbae7f42eabf987657d"
+    },
+    {
+      "frame": 1,
+      "crop": [
+        128,
+        0,
+        256,
+        128
+      ],
+      "output": "42/media/textures/ProjectYakuza/Blood_splash_1.png",
+      "sha256": "de3deb183940bf768d3cc450ca019219ea73e1e6d0c7588d8c7dc6afaefc4031",
+      "rgbaSha256": "ffca6a4701e0facd873a25fdbd20dad25cf537062908aa0a91a8634979a1129e"
+    },
+    {
+      "frame": 2,
+      "crop": [
+        256,
+        0,
+        384,
+        128
+      ],
+      "output": "42/media/textures/ProjectYakuza/Blood_splash_2.png",
+      "sha256": "962e228f5e4c5955d0fde87f5db2493f785ec3fd841e28636c46f3bd95b4f179",
+      "rgbaSha256": "efe9ced5d780d32a715807d764ad775c2fd19b63baab4ba16f8b26ce8e7ebb21"
+    },
+    {
+      "frame": 3,
+      "crop": [
+        384,
+        0,
+        512,
+        128
+      ],
+      "output": "42/media/textures/ProjectYakuza/Blood_splash_3.png",
+      "sha256": "a3d99bdd71c34110f0307fb05da0cf1d975d118079052b974c5165af5c2dda95",
+      "rgbaSha256": "ac70bbb1581c9758a35be7225fdcfbd2a54dd4c5f58561b34a77a17cece61df2"
+    },
+    {
+      "frame": 4,
+      "crop": [
+        0,
+        128,
+        128,
+        256
+      ],
+      "output": "42/media/textures/ProjectYakuza/Blood_splash_4.png",
+      "sha256": "20a0d3cc900a989ba88f3931594df4b3a9a98fb965264c80de87857e794b0a9e",
+      "rgbaSha256": "6746f79b417a244d614489421b435699f40cac1d42d078e209c3a92848c8e2c2"
+    },
+    {
+      "frame": 5,
+      "crop": [
+        128,
+        128,
+        256,
+        256
+      ],
+      "output": "42/media/textures/ProjectYakuza/Blood_splash_5.png",
+      "sha256": "be0b94618776e176ff8f76ca9f5300625bf6f4e584d1b56d21afea0c49ae2138",
+      "rgbaSha256": "6dc561301c86d734f3864bb7fbf3162f5f20b756b7dfb391ff90b36911b12a9c"
+    },
+    {
+      "frame": 6,
+      "crop": [
+        256,
+        128,
+        384,
+        256
+      ],
+      "output": "42/media/textures/ProjectYakuza/Blood_splash_6.png",
+      "sha256": "a116049e1bbf62a93386e0a079f105457a749911d42af2f8c84588e995f5381e",
+      "rgbaSha256": "b0071e4aa81d454ef3f60ee3733d0690d4a34220c9711529daa330808e8b894c"
+    },
+    {
+      "frame": 7,
+      "crop": [
+        384,
+        128,
+        512,
+        256
+      ],
+      "output": "42/media/textures/ProjectYakuza/Blood_splash_7.png",
+      "sha256": "5c5930b6ba5e64efb93fe5d08834c069edecb0b01e71eb5ddd188397dabe525b",
+      "rgbaSha256": "0930bdcf23c99407cbb034fa5e46ed0548c2633de06cdf60d0ff385a26540f28"
+    },
+    {
+      "frame": 8,
+      "crop": [
+        0,
+        256,
+        128,
+        384
+      ],
+      "output": "42/media/textures/ProjectYakuza/Blood_splash_8.png",
+      "sha256": "018c4d012448e0ec33a83b00b36ec402dae5c747bb151ff5034028fb029d550c",
+      "rgbaSha256": "995388abe4e05924ed4b7b4981e1852ff297d55183a5ccfec2c23f0f6b14fef2"
+    },
+    {
+      "frame": 9,
+      "crop": [
+        128,
+        256,
+        256,
+        384
+      ],
+      "output": "42/media/textures/ProjectYakuza/Blood_splash_9.png",
+      "sha256": "c1f502b1deebad9c091cb80ccf618c841ee4685a695e9e7bb69560975ced2516",
+      "rgbaSha256": "5e089835d8b7a178ad55a9d5a1e25616231fa114ebfbc4bfb401599c337e7187"
+    },
+    {
+      "frame": 10,
+      "crop": [
+        256,
+        256,
+        384,
+        384
+      ],
+      "output": "42/media/textures/ProjectYakuza/Blood_splash_10.png",
+      "sha256": "1d761590ce978a47b1295149328c646a4f787f6f8bc25115ca7b3cb49c77970f",
+      "rgbaSha256": "d8e65cec8d80eb618b8d6e039e7bb9a72873a2a4266b5a61736e226500aaa9bd"
+    },
+    {
+      "frame": 11,
+      "crop": [
+        384,
+        256,
+        512,
+        384
+      ],
+      "output": "42/media/textures/ProjectYakuza/Blood_splash_11.png",
+      "sha256": "1b0e04ff4c5e90fb0e567682058d4696ea718b3355872f0a3f2f3bf67bd63ac2",
+      "rgbaSha256": "e7247b6ea6b358593b7702d1f761a54cc4cc054f1ecebb57fe519bd03be784aa"
+    },
+    {
+      "frame": 12,
+      "crop": [
+        0,
+        384,
+        128,
+        512
+      ],
+      "output": "42/media/textures/ProjectYakuza/Blood_splash_12.png",
+      "sha256": "e64721c597f658f5b2ae815647a853c3e4c35b3017fec3391604cdf32504d34a",
+      "rgbaSha256": "2f40b77dc49cf203e50e5901d51c2bbd76296bd43ca858cc7aca84ae967ac4df"
+    },
+    {
+      "frame": 13,
+      "crop": [
+        128,
+        384,
+        256,
+        512
+      ],
+      "output": "42/media/textures/ProjectYakuza/Blood_splash_13.png",
+      "sha256": "5a6bba7f97740b54b66232da2e8882504b9b36c82caf601a8fcf3cd1cbf2fb7a",
+      "rgbaSha256": "c1468f2d5dc29fafed41de52c3973877c3f0662cbccb8910b114a7c5caf2c4b1"
+    },
+    {
+      "frame": 14,
+      "crop": [
+        256,
+        384,
+        384,
+        512
+      ],
+      "output": "42/media/textures/ProjectYakuza/Blood_splash_14.png",
+      "sha256": "bf6df3af88874b09d49d8f45c2728cafbd3e6db47ca87c49bf8e78edabaefb4c",
+      "rgbaSha256": "7e6767f27aa58798b3d4f8b8de3e4fe8dc959e885176b5aa218b03356c019c9f"
+    },
+    {
+      "frame": 15,
+      "crop": [
+        384,
+        384,
+        512,
+        512
+      ],
+      "output": "42/media/textures/ProjectYakuza/Blood_splash_15.png",
+      "sha256": "556df45b42dcc45b8092d66570fdb060b75f11e27294a3365d04dc7f52c47da3",
+      "rgbaSha256": "f585ae2cd13a56ac381d74c3af5b2d7a38c6c4d1f7675fd12c42636804588da5"
+    }
+  ]
+}

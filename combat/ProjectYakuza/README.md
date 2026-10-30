@@ -2,7 +2,7 @@
 
 Project Yakuza is a Build 42 combat mod and a framework for independent fighting-style addons. Dragon of Dojima uses supplied Yakuza/Kiwami animations, textures and sounds. Other styles register their own moves, assets and controllers without copying the framework.
 
-**Version 0.47.0 Ã‚Â· Lua API 3 Ã‚Â· MP protocol 2.** API 1 style registrations remain supported. Internal namespace/mod dependency: `ProjectYakuza`. Display name: Project Yakuza.
+**Version 0.48.0 Ã‚Â· Lua API 3 Ã‚Â· MP protocol 2.** API 1 style registrations remain supported. Internal namespace/mod dependency: `ProjectYakuza`. Display name: Project Yakuza.
 
 ## Install and play
 
@@ -54,3 +54,5 @@ Select Dragon of Dojima and equip a [supported real bat/club](docs/WEAPONS.md). 
 DoD also supports [23 knives and 13 cleavers/machetes/swords](docs/WEAPONS.md#sharp-weapons-0450). Equip a supported real blade while the style is selected: LMB runs its distinct three-hit combo, MMB performs/queues its heavy, and ordinary ground targeting uses its ground strike. The longer-blade set supports X guard; the supplied knife set has no guard. Both support light quickstep cancels. Native held models, damage, durability and sounds remain; supplementary targets respect blade reach and do not inherit knife jaw-kill damage. Heavy axes/spears retain native behavior.
 
 The style item remains required for unarmed combat. It is temporary, kept clean and protected from normal dropping/transfers. Manually unequipping it disables the style and deletes it. The selector top slot also unequips the style. Supported real weapons stay equipped on style removal; unequipping a real weapon while retaining the style restores its unarmed item without replaying entry. See [Style item and neutral heavy](docs/STYLE_ITEM_AND_HEAVY.md).
+
+Confirmed DoD hits now include [original animated Yakuza 6 blood](docs/BLOOD_EFFECTS.md), rendered at the zombie in world space. Heavy/charged hits use a slightly larger burst. Inventory context menu > Combat styles > Toggle hit effects controls sparks and blood together.

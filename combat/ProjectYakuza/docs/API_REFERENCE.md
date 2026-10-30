@@ -160,3 +160,7 @@ Registration-aware internal indexes now accelerate clip and move resolution. Reg
 `ProjectYakuza.equipStyle(player,id,playEntry)` retains a supported real weapon or equips the temporary style item. Optional `playEntry=false` suppresses the entry on automatic return from a real weapon. `ProjectYakuza.unequipStyle(player)` returns `(ok,reason)`, refuses a busy switch, disables the style, removes its temporary items and retains real equipment. Manual token unequip triggers the same disable/removal once native timed equipment changes settle. Multiplayer inventory deletion is server-owned.
 
 `ProjectYakuza.StyleItem` implements token-only cleanliness, protected normal inventory actions and lifecycle tracking. Other item types are unaffected. A finisher variant with `neutralHeavy=true` is eligible as `variants.default` when no combo/follow-up exists; it does not open a double-finisher branch. Styles without that opt-in keep their existing routing.
+
+## Blood presentation (0.48.0)
+
+A style opts into supplied Y6 blood via `bloodEffects="yakuza6"`; the built-in confirmed-hit pipeline also requires `hitEffects="yakuza6"`. `ProjectYakuza.BloodEffects.spawn(player,victim,strong,charged)` creates a bounded client world burst; `clear(player)` releases that player’s bursts, or all bursts when omitted. Existing hit-effect preferences apply. Other styles have no default blood opt-in. See [Blood effects](BLOOD_EFFECTS.md) for source provenance, lifecycle and limits.
