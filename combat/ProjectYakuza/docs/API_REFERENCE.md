@@ -168,3 +168,7 @@ A style opts into supplied Y6 blood via `bloodEffects="yakuza6"`; the built-in c
 ## Extreme finisher variants (0.49.0)
 
 Unarmed finisher routing recognizes enabled `extreme_default`, `extreme_after_N` and `extreme_double_after_N` variants while Heat is active. Define `extremeHeat=true` on those moves, retain ordinary move contracts and register their isolated native nodes/observers. First finishers latch mode for their paired double; the existing afterLight/window checks remain. Ordinary variants are the fallback. Standalone weapon heavies remain owned by their weapon profile. See [Extreme attacks](EXTREME_ATTACKS.md).
+
+## Style-owned encounter intros (0.50.0)
+
+`style.encounterIntro` configures enabled/radius/durationMs/quietMs/pollMs/titles and optional soundKey/soundVolume. `style.ui.encounter` names a `registerStyleUI` provider; no provider or style is inherited automatically. The client `ProjectYakuza.EncounterIntro` API exposes request, clear, title, layoutText and drawText; lifecycle events are encounterIntroStarted, encounterIntroEnded and encounterEnded. Counts are local, batched and capped by the configured highest tier. [Complete contract and examples](ENCOUNTER_INTROS.md).

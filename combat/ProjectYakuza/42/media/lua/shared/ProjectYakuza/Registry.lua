@@ -53,7 +53,7 @@ end
 
 local ProjectYakuza = ProjectYakuza
 ProjectYakuza.FEATURES={grab=false}
-ProjectYakuza.VERSION = "0.49.0"
+ProjectYakuza.VERSION = "0.50.0"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -154,11 +154,34 @@ function ProjectYakuza.validateStyle(style)
     if style.ui~=nil then
         if type(style.ui)~="table" then problem("ui must be a channel/provider table")
         else for key,value in pairs(style.ui) do
-            if not ({heat=true,status=true,selector=true,selectorSlot=true,setup=true})[key] then problem("unknown UI channel: "..tostring(key)) end
+            if not ({heat=true,status=true,selector=true,selectorSlot=true,setup=true,encounter=true})[key] then problem("unknown UI channel: "..tostring(key)) end
             if value~=false and not text(value) then problem("ui."..tostring(key).." must be a provider ID or false") end
         end end
     end
     if style.selectorIcon~=nil and not text(style.selectorIcon) then problem("selectorIcon must name a supplied texture") end
+    if style.encounterIntro~=nil and style.encounterIntro~=false then
+        local intro=style.encounterIntro
+        if type(intro)~="table" then problem("encounterIntro must be false or a configuration table")
+        else
+            if intro.enabled~=nil and type(intro.enabled)~="boolean" then problem("encounterIntro.enabled must be boolean") end
+            for key,limits in pairs({radius={1,30},durationMs={100,10000},quietMs={1000,120000},pollMs={100,5000},soundVolume={0,2}}) do
+                local value=intro[key]
+                if value~=nil and (not number(value) or value<limits[1] or value>limits[2]) then problem("invalid encounterIntro."..key) end
+            end
+            if intro.soundKey~=nil and not text(intro.soundKey) then problem("encounterIntro.soundKey must name a style sound") end
+            if type(intro.titles)~="table" or #intro.titles<1 or #intro.titles>16 then problem("encounterIntro.titles requires 1..16 entries")
+            else
+                local previous=-1
+                for i,entry in ipairs(intro.titles) do
+                    if type(entry)~="table" or not text(entry.text) or #entry.text>120 then problem("invalid encounterIntro title")
+                    elseif entry.max==nil then if i~=#intro.titles then problem("only final encounterIntro title may omit max") end
+                    elseif not number(entry.max) or entry.max<0 or entry.max~=math.floor(entry.max) or entry.max<=previous then problem("encounterIntro title maxima must increase")
+                    else previous=entry.max end
+                end
+                if type(intro.titles[#intro.titles])=="table" and intro.titles[#intro.titles].max~=nil then problem("final encounterIntro title must omit max") end
+            end
+        end
+    end
     for _,key in ipairs({"attackSpeed","runningKneeSpeed"}) do
         if style[key]~=nil and (not number(style[key]) or style[key]<=0) then problem(key.." must be positive") end
     end

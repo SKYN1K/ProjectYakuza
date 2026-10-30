@@ -13,6 +13,7 @@ require "ProjectYakuza/NetworkClient"
 require "ProjectYakuza/CombatVoices"
 require "ProjectYakuza/Taunts"
 require "ProjectYakuza/StyleEntry"
+require "ProjectYakuza/EncounterIntroY6"
 local ProjectYakuza = ProjectYakuza
 function ProjectYakuza.equipStyle(player, styleId,playEntry)
     local ok, reason = ProjectYakuza.selectStyle(player, styleId)

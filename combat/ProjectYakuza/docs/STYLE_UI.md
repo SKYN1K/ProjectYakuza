@@ -69,3 +69,7 @@ Context contains `player`, `style`, native `panel`, `channel`, `extra`, `heat` (
 Use `dt/time`, not wall-clock time, for paused HUD animation. Avoid disk reads, texture loads, zombie scans or new event handlers per frame. Draw with panel texture/atlas helpers or existing native text methods; this API does not add shaders. Custom world effects use their own world renderer, not these UI hooks.
 
 Errors are caught once per session, logged and quarantined; built-in rendering resumes. The renderer's additive flag is restored, including failed cleanup. Providers remain responsible for balancing their own stencil/clip state, removing created children/listeners and releasing other native resources. Re-registering with a new provider table resets the session on the next draw. `PY.unregisterStyleUI(id)` immediately destroys matching sessions and restores fallback. No callbacks/state are serialized or sent across MP; clients render from synchronized combat/heat state.
+
+## Encounter channel (0.50.0)
+
+`ui.encounter` selects a style-specific intro provider. It uses the same create/update/render/destroy lifecycle and isolated context as other channels, with extra title/count/radius/elapsed/duration data. `encounterIntro` opt-in configuration controls detection and title tiers. Missing configs/providers do not inherit DoD visuals. See [Encounter intros](ENCOUNTER_INTROS.md) for the complete configuration, callbacks, supplied font helper and limitations.

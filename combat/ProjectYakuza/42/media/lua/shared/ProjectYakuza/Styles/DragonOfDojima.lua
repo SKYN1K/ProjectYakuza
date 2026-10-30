@@ -13,6 +13,9 @@ ProjectYakuza.registerStyle({
     heatAura="kiryu",
     hitEffects="yakuza6",
     bloodEffects="yakuza6",
+    ui={encounter="ProjectYakuza.y6Encounter"},
+    encounterIntro={enabled=true,radius=12,durationMs=2300,quietMs=12000,pollMs=400,
+        titles={{max=10,text="A bunch of brain eaters"},{max=39,text="Zombies"},{text="The Horde"}}},
     sounds={
         punchImpact="ProjectYakuza_Y6_PunchImpact",kickImpact="ProjectYakuza_Y6_KickImpact",heatImpact="ProjectYakuza_Y6_HeatImpact",
         punchSwing="ProjectYakuza_Y6_PunchSwing",kickSwing="ProjectYakuza_Y6_KickSwing",finisher="ProjectYakuza_Y6_Finisher",

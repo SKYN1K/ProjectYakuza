@@ -2,7 +2,7 @@
 
 Project Yakuza is a Build 42 combat mod and a framework for independent fighting-style addons. Dragon of Dojima uses supplied Yakuza/Kiwami animations, textures and sounds. Other styles register their own moves, assets and controllers without copying the framework.
 
-**Version 0.49.0 Ã‚Â· Lua API 3 Ã‚Â· MP protocol 2.** API 1 style registrations remain supported. Internal namespace/mod dependency: `ProjectYakuza`. Display name: Project Yakuza.
+**Version 0.50.0 Ã‚Â· Lua API 3 Ã‚Â· MP protocol 2.** API 1 style registrations remain supported. Internal namespace/mod dependency: `ProjectYakuza`. Display name: Project Yakuza.
 
 ## Install and play
 
@@ -58,3 +58,5 @@ The style item remains required for unarmed combat. It is temporary, kept clean 
 Confirmed DoD hits now include [original animated Yakuza 6 blood](docs/BLOOD_EFFECTS.md), rendered at the zombie in world space. Heavy/charged hits use a slightly larger burst. Inventory context menu > Combat styles > Toggle hit effects controls sparks and blood together.
 
 [Extreme Heat variations](docs/EXTREME_ATTACKS.md) now replace the unarmed neutral heavy and four first/double finisher pairs automatically during the mode, using supplied Kiryu motions. Controls and damage bonuses stay the same; the normal LMB chain and charged attacks retain their current clips.
+
+[Encounter intros](docs/ENCOUNTER_INTROS.md) add a DoD-only Edo SZ title animation: 0–10 nearby zombies show “A bunch of brain eaters”, 11–39 “Zombies”, and 40+ “The Horde”, within 12 tiles. The framework supports independent per-style title rules, renderers and supplied sounds; other styles have no automatic intro.

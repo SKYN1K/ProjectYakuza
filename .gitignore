@@ -86,3 +86,8 @@
 !/tools/combat-tests/extreme-attack-test-fixture.lua
 !/tools/combat-tests/validate_extreme_attacks.py
 !/tools/combat-tests/ExtremeAttackProbe.java
+
+!/tools/combat-tests/build_encounter_tests.py
+!/tools/combat-tests/encounter-test-fixture.lua
+!/tools/combat-tests/validate_encounter_assets.py
+!/tools/combat-tests/EncounterAssetProbe.java
