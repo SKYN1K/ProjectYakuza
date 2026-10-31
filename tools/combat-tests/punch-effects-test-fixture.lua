@@ -97,14 +97,15 @@ for j=1,6 do
  local d=draws[j];local x,y,z
  if j==6 then
   local ax,ay,az=F.sample(track,.2,1);local wx,wy,wz=F.sample(track,.2,2)
-  x,y,z=ax+(wx-ax)*.78,ay+(wy-ay)*.78,az+(wz-az)*.78
+  local kx,ky,kz=F.sample(track,.2,3)
+  x,y,z=wx+(kx-wx)*.35,wy+(ky-wy)*.35,wz+(kz-wz)*.35
  else
   local ax,ay,az=F.sample(track,.2,1);local wx,wy,wz=F.sample(track,.2,2);local t=.08+j*.12
   x,y,z=ax+(wx-ax)*t,ay+(wy-ay)*t,az+(wz-az)*t
  end
  local px,py=F.project(x,y,z,p.angle,2)
  local cx,cy=centre(d)
- check(near(cx,px) and near(cy,py+5) and d.z>d.rootZ,'lowered punch centre retains native limb-height depth')
+ check(near(cx,px) and near(cy,py) and d.z>d.rootZ,'punch palm uses native height without fixed screen offset')
 end
 check(#draws>=14,'forearm glow, two flames, trails and several sparks are visible together')
 
@@ -117,15 +118,17 @@ check(near(time,.12) and where.slot==1,'new native track wins over fading copy o
 
 local last=draws[#draws];check(last.p==p and math.abs(last.x-p:getX())<1 and math.abs(last.y-p:getY())<1 and last.z>p:getZ(),'world renderer anchors particles at the nearby limb height')
 local a=allocated;F.render();check(allocated==a,'no sprite allocation on repeated frames')
+p.time=.24;draws={};F.render();check(near(F.states[p].time,.24),'render samples the current clip phase without waiting for OnTick');p.time=.2;F.states[p].time=.2
 local ticks=F.states[p].clock;local beforeUpdate=updated;paused=true;clock=clock+1000;p.time=.3;F.tick();F.render()
 check(F.states[p].time==.2 and F.states[p].clock==ticks and updated==beforeUpdate,'pause freezes clock, source position and flame')
 paused=false;p.time=.25;p.extreme=true;F.tick();draws={};F.render();check(draws[1].color==F.extreme and draws[1].alpha>.5,'extreme tint and stronger glow without touching body aura')
 for i=0,15 do
  p.angle=i*math.pi/8;p.twist=(i%3-1)*30;draws={};F.render()
  local ax,ay,az=F.sample(track,p.time,1);local wx,wy,wz=F.sample(track,p.time,2)
- local x,y,z=ax+(wx-ax)*.78,ay+(wy-ay)*.78,az+(wz-az)*.78
+ local kx,ky,kz=F.sample(track,p.time,3)
+ local x,y,z=wx+(kx-wx)*.35,wy+(ky-wy)*.35,wz+(kz-wz)*.35
  local px,py=F.project(x,y,z,p.angle,2)
- local cx,cy=centre(draws[6]);check(near(cx,px) and near(cy,py+5),'sampled fallback avoids rotating the arm twice '..i)
+ local cx,cy=centre(draws[6]);check(near(cx,px) and near(cy,py),'native palm remains centred without legacy inset '..i)
 end
 p.twist=0
 local providerCalls=0
@@ -215,5 +218,10 @@ p.time=.02;A.swing(p,style,1,move);combo.active=false;p.time=.2;A.tick();check(#
 p.time=.02;A.swing(p,style,1,move);p.clip='Other';clock=clock+351;A.tick();check(not A.pending[p] and #audio==2,'missing native clip discards stale whoosh');p.clip=nil
 p.time=.02;A.swing(p,style,1,move);p.time=.6;A.tick();check(#audio==2,'late frame never plays delayed whoosh')
 p.time=.2;p.localPlayer=false;A.swing(p,style,1,move);A.tick();check(#audio==2,'remote visuals do not duplicate local-only swing audio');p.localPlayer=true
+A.clear();combo.active=true;p.clip='ProjectYakuza_DD_Heavy';p.time=.1;style.sounds.kickSwing='KickWhoosh'
+local beforeHeavy=#audio;local heavy={animation=p.clip,duration=1,speed=1,impact=.6,neutralHeavy=true}
+A.swing(p,style,0,heavy);clock=clock+400;A.tick();check(#audio==beforeHeavy and A.pending[p],'heavy whoosh waits past old 350ms cutoff for its source phase')
+p.time=.54;A.tick();check(#audio==beforeHeavy+1 and audio[#audio]=='KickWhoosh','heavy whoosh follows actual clip phase instead of elapsed wall time')
+A.tick();check(#audio==beforeHeavy+1,'heavy source-phase cue fires once');p.clip=nil
 A.clear();check(not A.ticking and not F.hooked and allocated==disposed,'complete effects/audio cleanup')
 return 'PASS '..count..' original-punch tracking, world projection, lifecycle, bounded MP and source-clock audio checks'

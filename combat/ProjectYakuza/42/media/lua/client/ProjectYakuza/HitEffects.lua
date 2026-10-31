@@ -16,6 +16,11 @@ local particles={
     {kind="spark",path="media/textures/ProjectYakuza/HitGlint.png",size=64,scale=.06,dx=-5,dy=7},
     {kind="spark",path="media/textures/ProjectYakuza/HitGlint.png",size=64,scale=.07,dx=10,dy=5},
 }
+local shock={kind="shock",path="media/textures/ProjectYakuza/EncounterShock.png",size=256,scale=.13,dx=0,dy=0}
+local guardParticles={
+    {kind="guardCore",path="media/textures/ProjectYakuza/HitGlint.png",size=64,scale=.09,dx=0,dy=0},
+}
+for i=1,4 do local a=i*math.pi/2+.3;guardParticles[#guardParticles+1]={kind="guardSpark",path="media/textures/ProjectYakuza/ChargeSpark.png",size=32,scale=.16,dx=math.cos(a)*9,dy=math.sin(a)*7} end
 local function detach(b)
     for _,e in ipairs(b.emitters) do
         e.instance:Dispose();IsoSpriteInstance.add(e.instance);e.slot.busy=false
@@ -66,11 +71,11 @@ function F.onHit(player,victim,weapon,damage)
     local strong=move and (move.neutralHeavy or move.double or move.afterLight or move.chargedHeavy) and not move.runningAttack and not move.quickstepAttack
     F.spawn(player,victim,strong,move and move.chargedHeavy)
 end
-function F.spawn(player,victim,strong,charged)
+function F.spawn(player,victim,strong,charged,guard)
     local style=ProjectYakuza.getPlayerStyle(player)
     if not style or style.hitEffects~="yakuza6" then return end
     if player:getModData().ProjectYakuzaHitEffectsDisabled then return end
-    if ProjectYakuza.BloodEffects then ProjectYakuza.BloodEffects.spawn(player,victim,strong,charged) end
+    if not guard and ProjectYakuza.BloodEffects then ProjectYakuza.BloodEffects.spawn(player,victim,strong,charged) end
     local count=0
     for _,b in ipairs(F.bursts) do if b.player==player then count=count+1 end end
     if count>=F.maxBursts or #F.bursts>=F.maxTotal then
@@ -79,14 +84,23 @@ function F.spawn(player,victim,strong,charged)
         end
     end
     local tile=Core.getTileScale()
-    local b={player=player,victim=victim,emitters={},last=getTimestampMs(),age=0,life=charged and 340 or strong and 280 or 240,strong=strong,charged=charged}
-    for _,point in ipairs(charged and chargedParticles or particles) do
+    local b={player=player,victim=victim,emitters={},last=getTimestampMs(),age=0,life=charged and 340 or strong and 280 or 240,strong=strong,charged=charged,guard=guard}
+    local selected=guard and guardParticles or charged and chargedParticles or particles
+    local points={};for _,point in ipairs(selected) do points[#points+1]=point end
+    if strong or charged then points[#points+1]=shock end
+    if guard then
+        b.life=180
+        local dx,dy=victim:getX()-player:getX(),victim:getY()-player:getY()
+        if b.victim==player then dx,dy=0,0 end
+        local length=math.sqrt(dx*dx+dy*dy)
+        if length>.001 then b.gx,b.gy=dx/length*.28,dy/length*.28 else b.gx,b.gy=0,0 end
+        b.victim=player
+    end
+    for _,point in ipairs(points) do
         local slot=acquire(point)
         if slot then
             local scale=tile*point.scale*(strong and 1.15 or 1)
-            local height=(victim:isOnFloor() and 6 or 26)*tile
-            local instance=ProjectYakuza.WorldEffects.attach(victim,slot.sprite,point.size,scale,height,true,0)
-            victim:getAttachedAnimSprite():remove(instance)
+            local instance=ProjectYakuza.WorldEffects.detached(slot.sprite,scale,0)
             instance:SetAlpha(1);instance:SetTargetAlpha(1)
             b.emitters[#b.emitters+1]={slot=slot,instance=instance,point=point,scale=scale}
         end
@@ -110,25 +124,38 @@ function F.update()
     end
     stopIfEmpty()
 end
-function F.render()
+function F.draw()
     F.update()
-    if not F.color then F.color=ColorInfo.new(1,1,1,1);F.chargeColor=ColorInfo.new(.3,.7,1,1) end
+    if not F.color then F.color=ColorInfo.new(1,1,1,1);F.chargeColor=ColorInfo.new(.6,.78,1,1);F.guardColor=ColorInfo.new(.8,.9,1,1) end
     local tile=Core.getTileScale()
     for _,b in ipairs(F.bursts) do
         local v=b.victim;local t=b.age/b.life
         local alpha=math.min(1,(1-t)*1.1)
+        local height=(v:isOnFloor() and 6 or 35)*tile
+        local wx,wy=b.gx or 0,b.gy or 0
+        local bx,by=(wx-wy)*32*tile,(wx+wy)*16*tile
         for _,e in ipairs(b.emitters) do
-            local growth=e.point.kind=="core" and (.65+.6*math.sin(t*math.pi)) or (1-.6*t)
+            local ring=e.point.kind=="shock"
+            local growth=ring and (.6+1.5*t) or e.point.kind=="core" and (.65+.6*math.sin(t*math.pi)) or (1-.6*t)
             local scale=e.scale*growth
             e.instance:setScale(scale,scale)
-            e.instance:SetAlpha(alpha);e.instance:SetTargetAlpha(alpha)
-            e.instance:render(v,v:getX(),v:getY(),v:getZ(),IsoDirections.N,
-                v:getOffsetX()+tile-e.point.dx*t*tile,
-                v:getOffsetY()-89*tile+e.point.size*(e.scale-scale)/2-e.point.dy*t*tile,b.charged and F.chargeColor or F.color)
+            e.instance:SetAlpha(alpha*(ring and .20 or b.guard and .65 or 1));e.instance:SetTargetAlpha(alpha*(ring and .20 or b.guard and .65 or 1))
+            ProjectYakuza.WorldEffects.renderCentered(v,e.instance,e.point.size,scale,
+                bx+e.point.dx*t*tile,by-height+e.point.dy*t*tile,b.guard and F.guardColor or b.charged and F.chargeColor or F.color,wx,wy,height/(96*tile))
         end
     end
 end
+function F.render()
+    local renderer=SpriteRenderer.instance;local previous=renderer:getDoAdditive();renderer:setDoAdditive(false)
+    local ok,err=pcall(F.draw);renderer:setDoAdditive(previous)
+    if not ok then F.clear();error(err) end
+end
+function F.guard(p,z)
+    if not p or not z or not ProjectYakuza.isEquipped(p) then return end
+    F.spawn(p,z,false,false,true)
+end
 ProjectYakuza.on("combatHit",F.onHit)
+ProjectYakuza.on("guardHit",F.guard)
 ProjectYakuza.on("tigerDrop",function(p,z)F.spawn(p,z,true)end)
 ProjectYakuza.on("throwHit",function(p,z)F.spawn(p,z,true)end)
 Events.OnGameStart.Add(function()F.clear()end)

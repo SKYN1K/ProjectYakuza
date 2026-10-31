@@ -19,7 +19,8 @@ public class LocomotionAssetProbe {
    if(clips.size()!=1||!clips.containsKey(name))throw new AssertionError("clip name "+name);
    var clip=clips.get(name);Class<?> ct=clip.getClass();float duration=(Float)ct.getMethod("getDuration").invoke(clip);
    if(!Float.isFinite(duration)||duration<=0)throw new AssertionError("duration");
-   var indices=(Map)field(sk,"boneIndices");if(indices.size()!=(name.endsWith("Carry")?35:45))throw new AssertionError("B42 skeleton "+name+" "+indices.size()+" "+indices.keySet());
+   var indices=(Map)field(sk,"boneIndices");if(indices.size()!=35&&indices.size()!=45)throw new AssertionError("B42 skeleton "+name+" "+indices.size());
+   for(String required:new String[]{"Bip01_Head","Bip01_Spine1","Bip01_L_Hand","Bip01_R_Hand","Bip01_L_Foot","Bip01_R_Foot","Bip01_Prop1","Bip01_Prop2","Translation_Data"})if(!indices.containsKey(required))throw new AssertionError("missing native bone "+required);
    if(name.endsWith("Run")||name.endsWith("CarryWalk")||name.endsWith("CarrySlow")){
     Object[] movement=(Object[])ct.getMethod("getBoneFramesAt",int.class).invoke(clip,indices.get("Translation_Data"));
     var first=movement[0].getClass().getField("position").get(movement[0]);var last=movement[movement.length-1].getClass().getField("position").get(movement[movement.length-1]);float distance=0;

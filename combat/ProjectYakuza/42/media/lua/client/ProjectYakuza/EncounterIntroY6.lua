@@ -34,15 +34,11 @@ PY.registerStyleUI("ProjectYakuza.y6Encounter",{
                 panel:drawTextureScaled(s.shock,centerX-size/2,centerY-size/2,size,size,(1-wave)*.36,1,.92,.88)
             end
             if s.explosion then
-                for i=1,3 do
-                    local localAge=age-(i-1)*.035
-                    if localAge>=0 and localAge<.72 then
-                        local frame=math.min(63,math.floor(localAge/.72*64))
-                        local size=math.min(260,width*.22)
-                        local bx=centerX+(i-2)*math.min(s.layout.width*scale*.24,180)
-                        panel:drawSubTexture(s.explosion,(frame%8)*128,math.floor(frame/8)*128,128,128,
-                            bx-size/2,centerY-size*.45,size,size,clamp((.72-localAge)/.20)*.65,1,1,1)
-                    end
+                if age<.72 then
+                    local frame=math.min(63,math.floor(age/.72*64))
+                    local size=math.min(520,width*.45)
+                    panel:drawSubTexture(s.explosion,(frame%8)*128,math.floor(frame/8)*128,128,128,
+                        centerX-size/2,centerY-size*.45,size,size,clamp((.72-age)/.20)*.65,1,1,1)
                 end
             end
         end

@@ -824,5 +824,59 @@ module Base
 
     }
 
+    sound ProjectYakuza_Y6_GuardImpact
+    {
+        category = ProjectYakuza_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_018.ogg,
+            volume = 0.32,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+        clip
+        {
+            file = media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_021.ogg,
+            volume = 0.32,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+        clip
+        {
+            file = media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_022.ogg,
+            volume = 0.32,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+    }
+    sound ProjectYakuza_Y6_HeavyFinisher
+    {
+        category = ProjectYakuza_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_007.ogg,
+            volume = 0.45,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+        clip
+        {
+            file = media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_008.ogg,
+            volume = 0.45,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+        clip
+        {
+            file = media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_009.ogg,
+            volume = 0.45,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+    }
 }
 

@@ -314,6 +314,7 @@ function N.command(module,command,a)
             z:setVariable("ProjectYakuzaGrabMoving",a.moving==true);z:setVariable("ProjectYakuzaGrabWalkDirection",a.direction or "forward")
         end
     elseif command=="guard" then z:setAttackOutcome("fail");z:setTarget(nil)
+        if not p:isLocalPlayer() and ProjectYakuza.HitEffects then ProjectYakuza.HitEffects.guard(p,z) end
     elseif command=="juggle" then
         local key="juggle:"..a.player..":"..tostring(a.event)
         if N.seen[key] then return end;N.seen[key]=now()

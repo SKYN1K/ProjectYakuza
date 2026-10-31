@@ -15,7 +15,7 @@ ProjectYakuza.SoundSettings={
     musicLevel=function()return math.max(0,math.min(2,(tonumber(music:getValue()) or 100)/100))end,
 }
 ProjectYakuza.Bindings.configure(options)
-local impacts={punchImpact=true,kickImpact=true,heatImpact=true,finisher=true,throwImpact=true,guardHit=true,guardBreak=true}
+local impacts={punchImpact=true,kickImpact=true,heatImpact=true,finisher=true,doubleFinisher=true,throwImpact=true,guardHit=true,guardBreak=true}
 function options:apply()
     local musicNames,hitNames={},{}
     for _,style in pairs(ProjectYakuza.styles) do

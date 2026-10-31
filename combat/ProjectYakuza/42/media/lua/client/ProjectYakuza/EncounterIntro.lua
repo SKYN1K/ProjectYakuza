@@ -2,7 +2,7 @@ require "ProjectYakuza/Runtime"
 require "ProjectYakuza/StyleUI"
 require "ISUI/ISPanel"
 local PY=ProjectYakuza
-local E={states=setmetatable({}, {__mode="k"}),countBudget=64}
+local E={states=setmetatable({}, {__mode="k"}),countBudget=192,squareBudget=256,offsetCache={}}
 PY.EncounterIntro=E
 local Panel=ISPanel:derive("ProjectYakuzaEncounterIntro")
 E.Panel=Panel
@@ -92,29 +92,44 @@ function E.request(p,reason)
     if not style or isGamePaused() then return false,"not_available" end
     local s=E.states[p]
     if s and s.inEncounter then return false,"already_in_encounter" end
-    local cell=getCell();local list=cell and cell:getZombieList()
-    if not list then return false,"world_not_ready" end
+    local cell=getCell()
+    if not cell then return false,"world_not_ready" end
     s=s or {};E.states[p]=s
     s.style=style;s.config=config;s.inEncounter=true;s.lastThreat=now();s.nextPoll=now()+(config.pollMs or 400);s.reason=reason or "manual"
     local cap
     for _,title in ipairs(config.titles or {}) do if title.max then cap=math.max(cap or 0,title.max+1) end end
-    s.job={list=list,index=0,limit=list:size(),count=0,cap=cap,x=p:getX(),y=p:getY(),z=p:getZ(),radius2=(config.radius or 12)^2,seen=setmetatable({}, {__mode="k"})}
+    local radius=config.radius or 12;local offsets=E.offsetCache[radius]
+    if not offsets then
+        offsets={};local limit=math.ceil(radius)
+        for dx=-limit,limit do for dy=-limit,limit do offsets[#offsets+1]={dx,dy,d=dx*dx+dy*dy} end end
+        table.sort(offsets,function(a,b)return a.d<b.d end);E.offsetCache[radius]=offsets
+    end
+    s.job={cell=cell,offsets=offsets,square=1,index=0,count=0,cap=cap,x=p:getX(),y=p:getY(),z=p:getZ(),radius2=radius^2,seen=setmetatable({}, {__mode="k"})}
     syncHook();return true
 end
 function E.count(p,s)
-    local job=s.job;local stop=math.min(job.limit,job.list:size(),job.index+E.countBudget)
-    while job.index<stop do
-        local z=job.list:get(job.index);job.index=job.index+1
-        if z and not job.seen[z] then
-            job.seen[z]=true
-            if not z:isDead() and math.abs(z:getZ()-job.z)<.5 then
-                local dx,dy=z:getX()-job.x,z:getY()-job.y
-                if dx*dx+dy*dy<=job.radius2 then job.count=job.count+1 end
-            end
+    local job=s.job;local squares,reads=0,0
+    while squares<E.squareBudget and reads<E.countBudget do
+        if not job.objects then
+            local offset=job.offsets[job.square]
+            if not offset then E.show(p,job.count,false);return end
+            job.square=job.square+1;squares=squares+1
+            local square=job.cell:getGridSquare(math.floor(job.x)+offset[1],math.floor(job.y)+offset[2],math.floor(job.z))
+            job.objects=square and square:getMovingObjects();job.index=0
         end
-        if job.cap and job.count>=job.cap then E.show(p,job.count,true);return end
+        local objects=job.objects
+        if objects and job.index<objects:size() then
+            local z=objects:get(job.index);job.index=job.index+1;reads=reads+1
+            if z and instanceof(z,"IsoZombie") and not job.seen[z] then
+                job.seen[z]=true
+                if not z:isDead() and math.abs(z:getZ()-job.z)<.5 then
+                    local dx,dy=z:getX()-job.x,z:getY()-job.y
+                    if dx*dx+dy*dy<=job.radius2 then job.count=job.count+1 end
+                end
+            end
+            if job.cap and job.count>=job.cap then E.show(p,job.count,true);return end
+        else job.objects=nil end
     end
-    if job.index>=math.min(job.limit,job.list:size()) then E.show(p,job.count,false) end
 end
 function E.tick()
     local t=now();local paused=isGamePaused()

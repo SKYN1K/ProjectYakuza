@@ -116,4 +116,26 @@ local ok=pcall(B.render)
 check(not ok and additive and #B.bursts==0 and not B.hooked,'render failure restores blend and disposes instances')
 z.fail=false
 check(allocated==disposed,'every allocated instance was released')
+F.clear();p.active=true;p.localPlayer=true;p.md.ProjectYakuzaHitEffectsDisabled=nil;p.style={hitEffects='yakuza6',bloodEffects='yakuza6'}
+p.x=10;p.y=12;z.x=11;z.y=12;z.floor=false
+local attachedBefore=attaches
+F.spawn(p,z,true,false)
+check(#F.bursts==1 and #F.bursts[1].emitters==6,'strong hit adds one bounded supplied shock ring')
+check(attaches==attachedBefore,'spark and shock sprites never mutate native attachment offsets')
+clock=clock+100;renders={};F.render()
+local foundRing=false
+for _,r in ipairs(renders)do
+ if r.path:find('EncounterShock',1,true) then foundRing=true;check(r.alpha<=.20 and not r.additive,'heavy ring stays subtle with normal alpha') end
+end
+check(foundRing and additive,'strong ring uses supplied texture and restores additive state')
+F.clear();local bloodBefore=#B.bursts
+F.guard(p,z)
+check(#F.bursts==1 and F.bursts[1].victim==p and F.bursts[1].guard,'guard sparks follow defender instead of attacker')
+check(#B.bursts==bloodBefore,'successful guard never emits blood')
+check(#F.bursts[1].emitters==5 and F.bursts[1].life==180,'guard flash is small and short-lived')
+clock=clock+90;F.render();check(additive,'guard drawing restores renderer state')
+clock=clock+91;F.update();check(#F.bursts==0 and not F.ticking,'guard burst expires and removes idle hooks')
+F.spawn(p,z,true,true);z.fail=true
+local renderOK=pcall(F.render);check(not renderOK and additive and #F.bursts==0,'impact render failure cleans sprites and restores global blend state');z.fail=false
+F.clear()
 return true,'PASS '..checks..' source-frame blood animation, confirmed hit, world anchor, MP budgets and cleanup checks'

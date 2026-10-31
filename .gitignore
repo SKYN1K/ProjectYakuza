@@ -104,3 +104,7 @@
 !/tools/combat-tests/validate_locomotion_assets.py
 !/tools/combat-tests/LocomotionAssetProbe.java
 !/tools/build_locomotion_nodes_052.py
+
+!/tools/combat-tests/repair_carry_053.py
+
+!/tools/combat-tests/CombatSoundProbe.java

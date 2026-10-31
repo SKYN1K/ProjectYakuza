@@ -144,19 +144,20 @@ local function allocate(p,s)
         local height=(i==7 or i==8 or i>=13) and 32 or 64
         local scale=(i==6 and .16 or i==7 and .30 or i==8 and .36 or i>=13 and .20 or .105)*tile*1.25
         local instance=PY.WorldEffects.detached(sp,scale,(i==7 and 1 or i==8 and .85 or 0))
-        s.points[i]={instance=instance,height=height,scale=scale,verticalOffset=s.config.verticalOffset or 0}
+        s.points[i]={instance=instance,height=height,scale=scale}
     end
 end
 local function drawPoint(p,point,x,y,alpha,color,glow,wx,wy,wz)
     SpriteRenderer.instance:setDoAdditive(false)
     point.instance:SetAlpha(alpha);point.instance:SetTargetAlpha(alpha)
-    PY.WorldEffects.renderCentered(p,point.instance,point.height,point.scale,x,y+(point.live and 0 or point.verticalOffset*Core.getTileScale()),color,
+    PY.WorldEffects.renderCentered(p,point.instance,point.height,point.scale,x,y,color,
         wx and wx+.06,wy and wy+.06,wz)
 end
 local function hand(track,time,pose)
     local wx,wy,wz=F.sampleLimb(track,time,2,pose);local ax,ay,az=F.sampleLimb(track,time,1,pose)
-    local t=pose and 1 or .78
-    return ax+(wx-ax)*t,ay+(wy-ay)*t,az+(wz-az)*t
+    if pose then return wx,wy,wz end
+    local kx,ky,kz=F.sample(track,time,3)
+    return wx+(kx-wx)*.35,wy+(ky-wy)*.35,wz+(kz-wz)*.35
 end
 
 function F.draw()
@@ -164,10 +165,13 @@ function F.draw()
     if not F.normal then F.normal=ColorInfo.new(.70,.86,1,1);F.extreme=ColorInfo.new(.62,.76,1,1) end
     for p,s in pairs(F.states) do
         local time=s.time
+        if not isGamePaused() then
+            local current,weight,location=F.findTrack(p,s.track.animation,s.location)
+            if current and weight>=.05 and (not time or current>=time-.02) then time=current;s.time=current;s.weight=weight;s.location=location end
+        end
         if time and time>=s.config.from and time<=s.config.to+.12 then
             if not s.points then allocate(p,s) end
             local angle=F.facing(p);local pose=F.pose(p,s,time)
-            for _,point in ipairs(s.points) do point.live=pose~=nil end
             local extreme=PY.Heat.isExtreme(p);local color=extreme and F.extreme or F.normal
             local fade=math.min(1,(time-s.config.from)/.035,math.max(0,(s.config.to+.06-time)/.06))*math.min(1,s.weight)
             local strength=extreme and .90 or .82

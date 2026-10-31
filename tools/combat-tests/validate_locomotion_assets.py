@@ -20,11 +20,19 @@ for r in d['clips']:
   assert sha(r['source'])==r['sourceSha256'] and sha(r['fingerSource'])==r['fingerSha256']
   scratch=root/('tools/locomotion-build/ProjectYakuza/42/media/anims_X/Bob/'+r['name']+'.x');assert sha(scratch)==r['retargetSha256'];_,ff,aa,_=read(scratch)
  else:
-  assert sha(r['native'])==r['nativeSha256'];_,ff,aa,_=read(r['native']);assert sha(mod/r['carry'])==r['carrySha256'];_,cf,ca,_=read(mod/r['carry']);ce=max(t for c in ca.values() for keys in c.values() for t,v in keys)
+  assert sha(r['native'])==r['nativeSha256'];_,ff,aa,_=read(r['native'])
+  if r['kind']=='stableCarryComposite':
+   assert set(frames)==set(ff),'native carry hierarchy must be preserved'
+   assert sha(r['armSource'])==r['armSourceSha256'];_,cf,ca,_=read(r['armSource'])
+  else:
+   assert sha(mod/r['carry'])==r['carrySha256'];_,cf,ca,_=read(mod/r['carry']);ce=max(t for c in ca.values() for keys in c.values() for t,v in keys)
  for t in times:
   actual=locals_at(frames,anim,t);expected=locals_at(ff,aa,t)
   if r['kind']=='sourceRunNativeTravel':
    assert sha(r['native'])==r['nativeSha256'];_,nf,na,_=read(r['native']);ne=max(k for c in na.values() for keys in c.values() for k,v in keys);nativeExpected=locals_at(nf,na,t/times[-1]*ne);nativeExpected.update({n:v for n,v in expected.items() if n not in ['Body','Translation_Data']});expected=nativeExpected
+  if r['kind']=='stableCarryComposite':
+   hold=locals_at(cf,ca,0)
+   for n in r['upperBones']:expected[n]=hold[n]
   if r['kind']=='nativeLegComposite':
    hold=locals_at(cf,ca,t/times[-1]*ce)
    for n in r['upperBones']:expected[n]=hold[n]

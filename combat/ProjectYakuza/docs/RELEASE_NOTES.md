@@ -1,9 +1,10 @@
-# Project Yakuza 0.52.0
+# Project Yakuza 0.53.0
 
-- Added Kiryu's supplied Yakuza 6 running loop while Dragon of Dojima is selected, for unarmed, bat/club, knife and longer-blade profiles.
-- Added supplied unlocked weapon-hold loops outside aiming, including walking variants with Zomboid's native leg motion. Held weapon props follow the native hand/grip offsets.
-- Added 0.25-second animation blends and transitions between running, relaxed carrying and combat stances. Native walking speed/deferred travel tracks are preserved; the run cadence is matched to the existing healthy native run.
-- Scope is ordinary non-aimed running and relaxed armed idle/walking. Sprinting, crouching, turning, injuries, trees and overburdened movement keep existing native behavior. Other styles and unsupported weapons are unaffected.
-- Uses 13 approved source-derived motion files and 10 style/profile selectors. No extra per-frame Lua checks, zombie scans, timers or network packets. No visual artwork, audio, AI or upscaling.
+- Corrected first-punch effect alignment: removed the old forearm inset and fixed downward screen offset, centred the core between the imported wrist/knuckle, and read the native attack phase at draw time. The optional live limb provider remains supported; pure Lua still samples the source pose rather than reading the final blended mesh.
+- Added small white-blue guard sparks and subtle heavy/charged impact rings using existing original textures. Impact sprites now use detached world rendering with normal alpha and blend restoration. Existing MP guard/impact messages carry the presentation without extra traffic.
+- Swing whooshes now follow native animation phase for all unarmed strikes, with longer timing allowance for heavies. Guard and double-finisher cues get distinct groups of existing Yakuza sound clips, with modest gains. Music/Sounds/Voices controls remain separate; no new audio files or voice-pack changes.
+- Repaired the nine RMB-released weapon carry clips. Native torso/head/legs retain their normal motion; a consistent supplied arm pose removes the changing upper-body cycle during walking. Native idle grips replace attack-grip offsets, including katana/long-blade holding. Aimed combat stance and attack clips are untouched.
+- The encounter title now has one larger landing explosion instead of three staggered bursts. It does not replay after completion.
+- Intro counting now visits nearby grid squares rather than scanning the loaded zombie list. It reads at most 256 squares and 192 nearby moving objects per tick, stops at the highest title threshold, and removes its hook afterward. The usual 12-tile count completes within three ticks in the regression fixture and never reads its 5,000 distant zombies. Title thresholds and 400ms threat polling are unchanged.
 
-5,489 Kahlua regression assertions pass, plus native clip/selector, movement-track, source-sample and hand-prop checks. See VALIDATION_0.52.0.md and LOCOMOTION.md. PZ was not launched; assess blending/foot contact after a full restart. Install matching server/client versions. Grabs remain disabled and the separate voice pack is untouched.
+5,761 Kahlua assertions and native import, source-sample, hand-prop, sound-script and asset checks pass. See VALIDATION_0.53.0.md. PZ was not launched; live alignment, katana clearance and visual blending still need in-game assessment after a full restart. Install matching clients/server. Grabs remain disabled.

@@ -1,0 +1,50 @@
+{
+  "operation": "Approved supplied motion repair: Kiryu running unchanged. Relaxed holds reuse the existing source frame-zero arm pose, native moving torso/head/legs and native idle hand-to-prop grips. No resampled upper-body loop, invented poses, AI or graphical/audio generation.",
+  "changed": [
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BatCarry.x",
+      "beforeSha256": "61f76c0277dfe05ff9001defd362df9a84205901fcc1dcfba661a8f7c85574b8",
+      "sha256": "ecb41fbf57ddf03be0257f74f846a8f116403aeba5b563ee3a53a565917f17c8"
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BatCarryWalk.x",
+      "beforeSha256": "f20604b314080e5363e26e43a519e02d0df6e675f0a73c76b3bd7fa615012510",
+      "sha256": "23b9e310781d051e4a1bfbcce897f4d3d4c46db476d388774aa2d74c17be74f2"
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BatCarrySlow.x",
+      "beforeSha256": "b4a43077127a7df814ce54a6e4a8859ff4db277045dbc10aa1c8344224f0c017",
+      "sha256": "383e630ad5a7f8e064014eeb7fc6bce9a7e16713a99b0f55a0e9eab918056e6b"
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_KnifeCarry.x",
+      "beforeSha256": "7cb6f6f145e66b72bd3227b1dbde0ecf562abc41490663ef9c1b7b25c7d28abd",
+      "sha256": "0df4df66e2c1436b8173bdf52c87504edb8173f70c691b42719062f740e0db7a"
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_KnifeCarryWalk.x",
+      "beforeSha256": "420867bd39465362dcdeb545165624ee082f25bf828abffe8294b101021fa71e",
+      "sha256": "7d7c69058c4aea4cd12c6778cc419764954204d3adb3239908baf55820fe5e20"
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_KnifeCarrySlow.x",
+      "beforeSha256": "b1e69009172cde110d339efd8b2736cf827386313b1d4f91dc518bd817148868",
+      "sha256": "6e3eeefca23fb8cc216ed612508be82146a6635d1fdfdbf96a300aef1140c338"
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BladeCarry.x",
+      "beforeSha256": "c19e210634e93ca489c8d8c91116f8844357a7689a9308f228e7394182aaf00d",
+      "sha256": "ab21d1130624d0c7ef0615dcf324b37430affa433041fef3b4e327839785eb73"
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BladeCarryWalk.x",
+      "beforeSha256": "c9f7c8e9e66f080ac2912c1a7c9b7d58a86bc4fb4c8d0a4a8275db5fc9f71775",
+      "sha256": "d6140448b4e37b8e69a8d874ff757dc2c83e5788596d7dd95afb3adca8f4f022"
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BladeCarrySlow.x",
+      "beforeSha256": "57500df3635ac4a399bb69e2abc7c58b774d00ede158b4a322c53eb0dfd9e8db",
+      "sha256": "ffec8b6ad23c3a394cde20befe9ef742c61be82b071550c617d099650894ce92"
+    }
+  ]
+}

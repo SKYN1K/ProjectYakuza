@@ -45,3 +45,9 @@ Animated pages follow native `LoadFramesNoDirPageDirect(prefix,kind,count)` nami
 ## Move-specific hit responses (0.40.0)
 
 Optional style.hitResponses defines named flinch/stagger/knockdown profiles with finite force 0..1.5 and optional full-charge threshold/response. Moves may select a profile with hitResponse="name" or opt out with false. Defaults distinguish lights, first/double finishers and charged heavies. Ground attacks are excluded. Styles without profiles keep their existing behavior. See [Hit responses](HIT_RESPONSES.md) for fields, native timing, MP ownership and limits.
+
+## Feedback polish (0.53.0)
+
+Optional style sound keys include guardHit and doubleFinisher; doubleFinisher falls back to finisher when absent. They use the mod Sounds group, leaving Voices and Music independent. Built-in unarmed whooshes use current native clip phase when the exposed track API is available; custom moves retain the timing fallback. No audio waveform is generated.
+
+HitEffects.guard(player,zombie) presents a short defender-side spark burst without blood. Existing confirmed heavy/charged impacts add a low-opacity original shock texture. Both use detached world sprites and existing presentation budgets. The existing MP guard/impact messages relay them without additional packets. Pure Lua punch positions are corrected source samples, not final blended bone attachments; an optional live limb provider can supply those coordinates.

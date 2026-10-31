@@ -1,8 +1,8 @@
-# Dragon of Dojima locomotion (0.52.0)
+# Dragon of Dojima locomotion (0.53.0)
 
 Ordinary non-aimed running uses Kiryu's full Yakuza 6 P_KRU_MOV_run_ftl loop. The ftl/ftr files are complete phase-offset cycles, so a single complete ftl cycle is used without concatenation or invented motion. Unarmed, bat, knife and blade variants use native finger/prop grip conventions. This does not add a sprint or new run-start/stop/turn motion.
 
-Supported weapons use their supplied P_KRU_BTL_WPA/WPB/WPN_stdB_lp alternate unlocked holds while standing without RMB. Walking combines that source upper body with native Bob_WalkBat/Bob_WalkSlow_Bat lower-body samples. The complete hold loop is fitted to each native walk cycle so it joins cleanly; the leg pose samples, root motion and step events remain native. These are the existing game's alternate weapon holds, rather than newly posed relaxed animations. Aiming still selects the existing combat stance.
+Supported weapons use a consistent existing source arm pose from P_KRU_BTL_WPA/WPB/WPN_stdB_lp while RMB is released. Native idle/walk/slow-walk clips supply torso, neck, head, legs and travel. The arms hold the same source pose across those variants instead of independently cycling through a resampled upper-body loop. Native idle hand-to-prop offsets replace the earlier attack grip, including long blades. Aiming selects the existing combat stance unchanged.
 
 ## Movement and blending
 
@@ -22,6 +22,6 @@ Preserve a valid native deferred-movement track when replacing running/walking; 
 
 ## Validation and remaining limits
 
-Native B42 import checks cover 13 clips and 18,015 finite bone samples, plus nonzero deferred travel. Source comparison checks 17,574 local bone samples and exact source/native hashes. Native FK validates 816 hand-prop pairs. Native selector evaluation tests 100 style/profile/aim/injury/tree/sneak/turn/overburdened selection cases. Source run/hold endpoints are closed; the walking composites retain the native lower-body seam instead of editing it.
+Native import checks cover 13 clips / 13,605 finite bone samples, 100 selector/fallback contracts and nonzero movement tracks. Source/native comparison covers 13,284 local samples, including unchanged native torso/head/legs. Native FK validates 576 hand-prop pairs. See VALIDATION_0.53.0.md and carry-repair-053.json.
 
-The animation is retargeted to a different skeleton and blended by PZ, so perfect Dragon Engine foot planting or its IK is not claimed. Visual transitions, clothing and contact need checking in game after restarting. PZ was kept closed.
+Native body movement plus source arm holding is a retargeted composition; it does not import Dragon Engine IK. GPU appearance, weapon clearance and exact foot planting remain live verification items. PZ was kept closed.

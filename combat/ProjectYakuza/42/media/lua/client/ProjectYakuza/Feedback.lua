@@ -111,10 +111,17 @@ function F.swing(p,style,step,move)
     local delay=math.max(0,((move.impact or .2)*duration-.07)*1000)
     local time=getTimestampMs()
     F.pending[p]={stamp=s.multiHitToken or s.startedAt,due=time+delay,last=time,sound=swing}
+    local sourceDuration=move.duration*(move.speed or style.attackSpeed or 1)
+    if type(move.animation)=="string" and p.dbgGetAnimTrackName and ProjectYakuza.AttackEffects and sourceDuration>0 then
+        local job=F.pending[p];job.animation=move.animation
+        job.sourceTime=math.max(0,(move.impact or .2)*sourceDuration-.07*(move.speed or style.attackSpeed or 1))
+        job.sourceEnd=math.min(sourceDuration,job.sourceTime+.18*(move.speed or style.attackSpeed or 1));job.waitMs=0
+        job.timeout=math.min(5000,math.max(350,duration*1000+500))
+    end
     local effect=move.attackEffects
     if effect and type(effect.swingFrame)=="number" and ProjectYakuza.AttackEffects then
         local job=F.pending[p]
-        job.animation=move.animation;job.sourceTime=effect.swingFrame/30;job.sourceEnd=effect.to;job.waitMs=0
+        job.animation=move.animation;job.sourceTime=effect.swingFrame/30;job.sourceEnd=effect.to;job.waitMs=0;job.timeout=350
     end
     if not F.ticking then Events.OnTick.Add(F.tick);F.ticking=true end
 end
@@ -132,7 +139,7 @@ function F.tick()
             if phase and weight>=.05 and phase>=job.sourceTime and phase<=job.sourceEnd then
                 F.play(p,job.sound,.65)
                 F.pending[p]=nil
-            elseif job.waitMs>350 then F.pending[p]=nil
+            elseif job.waitMs>(job.timeout or 350) then F.pending[p]=nil
             elseif phase and phase>job.sourceEnd then job.location=nil end
         elseif time>=job.due then F.play(p,job.sound,.65);F.pending[p]=nil end
     end
@@ -146,7 +153,7 @@ function F.hit(p,z,weapon,damage)
     local stamp=s.multiHitToken or s.startedAt
     if s.feedbackStamp==stamp then return end
     s.feedbackStamp=stamp
-    F.play(p,move.groundAttack and F.sound(p,"kickImpact") or F.sound(p,"finisher"),move.double and .65 or .45)
+    F.play(p,move.groundAttack and F.sound(p,"kickImpact") or move.double and F.sound(p,"doubleFinisher") or F.sound(p,"finisher"),move.double and .55 or .45)
 end
 function F.heatChanged(p)
     if not p or not p:isLocalPlayer() then return end

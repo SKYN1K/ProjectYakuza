@@ -113,3 +113,9 @@ Run validate_repair_assets.py with the previous 0.50.0 ZIP in dist and supplied 
 ## 0.52.0 running and unlocked weapon holds
 
 Use Blender in background mode with build_locomotion_assets.py to retarget the supplied local sources and combine their upper body with native walking legs. build_locomotion_nodes_052.py installs the 10 scoped selectors. Run validate_locomotion_assets.py for source/native sample, loop, hash and hand-prop checks; it invokes Blender only for math, then native Java probes without starting PZ. Compile LocomotionAssetProbe.java first. It also rejects missing deferred travel and tests native selection/fallback conditions. Source/extraction/intermediate files remain local and are not bundled in Git.
+
+## 0.53.0 feedback, carry and encounter repair
+
+CombatSoundProbe.java natively parses all combat sound definitions and resolves original source paths. Punch tests cover rotated palm coordinates, removed screen inset, render-time phase and heavy whoosh timing. Blood/impact tests include detached ownership, guard/no-blood, subtle shock rings and error cleanup. Encounter tests exercise near-grid counting, distant-zombie exclusion, three-tick ordinary counts and one enlarged nonrepeating explosion.
+
+repair_carry_053.py combines the existing source arm pose with native torso/head/legs and idle grips. The locomotion builder applies that repair; the existing source/native/FK probes verify every output. The validator requires native hierarchy and body samples to remain intact. These tools never start PZ.

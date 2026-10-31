@@ -57,7 +57,15 @@ function p:getStats()
 end
 local zombies={}
 local list={size=function()return #zombies end,get=function(_,i)zombieReads=zombieReads+1;return zombies[i+1]end}
-getCell=function()return {getZombieList=function()return list end}end
+local squareReads=0
+getCell=function()
+ local cells={}
+ for _,v in ipairs(zombies)do local key=math.floor(v:getX())..':'..math.floor(v:getY())..':'..math.floor(v:getZ());cells[key]=cells[key] or {};table.insert(cells[key],v)end
+ return {getGridSquare=function(_,x,y,z)
+  squareReads=squareReads+1;local items=cells[x..':'..y..':'..z] or {}
+  return {getMovingObjects=function()return {size=function()return #items end,get=function(_,i)zombieReads=zombieReads+1;return items[i+1]end}end}
+ end}
+end
 local function zombie(x,y,z,dead)
  return {kind='IsoZombie',getX=function()return x end,getY=function()return y end,getZ=function()return z or 0 end,isDead=function()return dead==true end}
 end
@@ -66,10 +74,12 @@ local function crowd(n)
  zombies[#zombies+1]=zombie(23,12);zombies[#zombies+1]=zombie(10,12,1);zombies[#zombies+1]=zombie(10,12,0,true)
 end
 local function finishCount()
+ local ticks=0
  for i=1,100 do if E.states[p] and E.states[p].job then
-  local reads=zombieReads;E.tick();check(zombieReads-reads<=64,'at most 64 zombies read per tick')
+  ticks=ticks+1
+  local reads=zombieReads;local squares=squareReads;E.tick();check(squareReads-squares<=256,'bounded nearby grid queries per tick');check(zombieReads-reads<=192,'at most 192 nearby moving objects read per tick')
  end end
- check(E.states[p] and E.states[p].panel,'count finishes into intro panel')
+ check(E.states[p] and E.states[p].panel,'count finishes into intro panel');check(ticks<=3,'ordinary 12-tile count completes within three bounded ticks')
  return E.states[p]
 end
 for _,case in ipairs({{0,'A bunch of brain eaters'},{10,'A bunch of brain eaters'},{11,'Zombies'},{39,'Zombies'},{40,'The Horde'},{100,'The Horde'}})do
@@ -81,6 +91,15 @@ for _,case in ipairs({{0,'A bunch of brain eaters'},{10,'A bunch of brain eaters
  clock=clock+150;E.tick();s.panel:prerender();clock=clock+220;E.tick();s.panel:prerender();check(additive,'style UI restores incoming blend state')
 end
 check(#draws>0,'real Edo glyph and original flare provider draws')
+E.clear();crowd(10)
+for i=1,5000 do zombies[#zombies+1]=zombie(500+i,500)end
+local beforeReads=zombieReads;E.request(p);finishCount();check(zombieReads-beforeReads==11,'five thousand distant zombies are never read by nearby counting')
+local current=E.states[p];current.age=370;draws={};current.panel:prerender();local explosions=0
+for _,draw in ipairs(draws)do if draw.path:find('EncounterExplosion',1,true)then explosions=explosions+1;check(draw.width>=500,'landing explosion is enlarged')end end
+check(explosions==1,'landing renders one burst without staggered repeats')
+current.age=1100;draws={};current.panel:prerender()
+for _,draw in ipairs(draws)do check(not draw.path:find('EncounterExplosion',1,true),'explosion does not restart after completion')end
+
 E.clear();crowd(10);zombies[#zombies+1]=zombie(22,12)
 check(E.request(p),'exact radius case starts');local s=finishCount()
 check(s.context.count==11 and s.context.title=='Zombies','12-tile boundary included; outside/dead/other floor excluded')

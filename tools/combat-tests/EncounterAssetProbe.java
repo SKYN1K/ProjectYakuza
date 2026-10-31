@@ -13,7 +13,8 @@ public class EncounterAssetProbe {
   }
   var player=Class.forName("zombie.characters.IsoPlayer");var stats=player.getMethod("getStats").getReturnType();
   for(String method:new String[]{"getNumChasingZombies","getNumVisibleZombies","getNumVeryCloseZombies"})stats.getMethod(method);
-  Class.forName("zombie.iso.IsoCell").getMethod("getZombieList");
-  System.out.println("PASS 4 native intro image decodes and native threat-count/zombie-list API contracts; no game/GPU startup");
+  Class.forName("zombie.iso.IsoCell").getMethod("getGridSquare",int.class,int.class,int.class);
+  Class.forName("zombie.iso.IsoGridSquare").getMethod("getMovingObjects");
+  System.out.println("PASS 4 native intro image decodes and native threat-count/grid-square API contracts; no game/GPU startup");
  }
 }

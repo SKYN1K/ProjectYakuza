@@ -1,0 +1,45 @@
+{
+  "operation": "Only existing installed game textures and sounds are referenced; no images/audio exported or generated. Nine previously approved source/native motion composites are repaired separately in carry-repair-053.json.",
+  "reused": [
+    {
+      "path": "42/media/textures/ProjectYakuza/HitGlint.png",
+      "sha256": "599e27ec206cfe4d4122a5f3c64c87cb2763039a3b7124aff50bc77391eaa9a9"
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/ChargeSpark.png",
+      "sha256": "3e94b064a111841796b1e057955559bbff1d5df9d83a5998a56facc3a828c85a"
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/EncounterShock.png",
+      "sha256": "844483a11ee29f49ffd2c52026d288f076607229ee202bcea430dce66ec7e5bd"
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/EncounterExplosion.png",
+      "sha256": "1a2a23786137ebbf6e8b6f095417d961905af1c4154b1f5e10295e764213724b"
+    },
+    {
+      "path": "42/media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_007.ogg",
+      "sha256": "60e371b12f9ba455fa3241983a39b1a10df82d00b7e463fba43a54cb65f1f8ad"
+    },
+    {
+      "path": "42/media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_008.ogg",
+      "sha256": "916c19c370cdd09edc2c31a07460ced631ffa084142cd8243ec9725d2c50c5a3"
+    },
+    {
+      "path": "42/media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_009.ogg",
+      "sha256": "8db2a09fb30e64d9d83fdc3eb9218e118526d005d14ca11b4a5d19e8b2623bb4"
+    },
+    {
+      "path": "42/media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_018.ogg",
+      "sha256": "3b8525f2f2882c26330ad99a8efc292cbf0ea29a6aedad8c561b617594903e72"
+    },
+    {
+      "path": "42/media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_021.ogg",
+      "sha256": "13b672562fc8da3e6cf3465292375d83b8086d687995ff0bbe0841f631dfe835"
+    },
+    {
+      "path": "42/media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_022.ogg",
+      "sha256": "107cf30e8d9e3be0e4248d5cd609e1f52968f9cad64cf025ba758aea7581fe7e"
+    }
+  ]
+}

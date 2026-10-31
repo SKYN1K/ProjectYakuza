@@ -1,6 +1,6 @@
 {
   "authorization": "User explicitly approved conversion of supplied Kiryu running and weapon-hold motion on 2026-10-30.",
-  "operation": "Original Y6 full run loop and alternate unlocked weapon holds retargeted in place; native finger grips and hand-prop offsets. Running retains the native Translation_Data movement track at matched cadence. Walking variants combine existing native lower-body samples with source upper-body motion, fitting the complete source hold loop to each native walk cycle. No AI, invented motion or new artwork/audio.",
+  "operation": "Approved supplied motion repair: Kiryu running unchanged. Relaxed holds reuse the existing source frame-zero arm pose, native moving torso/head/legs and native idle hand-to-prop grips. No resampled upper-body loop, invented poses, AI or graphical/audio generation.",
   "clips": [
     {
       "name": "ProjectYakuza_DD_Run",
@@ -43,86 +43,89 @@
     {
       "name": "ProjectYakuza_DD_BatCarry",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_BatCarry.x",
-      "source": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\gmt\\P_KRU_BTL_WPA_stdB_lp.gmt",
-      "sourceSha256": "eb40b0d0c67e2521b74a0231782d69ae4affdd4c10e23de0717f29ce1d1c6779",
-      "frames": 61,
+      "kind": "stableCarryComposite",
+      "native": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleBat.x",
+      "nativeSha256": "4f34bc95eb8eeb0882163e7b7c149cc0df4a6bf473f001f31d46dd1c4c542c03",
+      "armSource": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\locomotion-build\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BatCarry.x",
+      "armSourceSha256": "aada00ca3a575ae5304c335ac52f31717069709bad73ed953368498406e37191",
+      "armFrame": 0,
+      "upperBones": [
+        "Bip01_L_Clavicle",
+        "Bip01_L_Finger0",
+        "Bip01_L_Finger1",
+        "Bip01_L_Forearm",
+        "Bip01_L_Hand",
+        "Bip01_L_UpperArm",
+        "Bip01_R_Clavicle",
+        "Bip01_R_Finger0",
+        "Bip01_R_Finger1",
+        "Bip01_R_Forearm",
+        "Bip01_R_Hand",
+        "Bip01_R_UpperArm"
+      ],
+      "frames": 21,
       "fps": 30,
-      "duration": 2.0,
-      "grip": "bat",
-      "fingerSource": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_AttackBat01_Hit.x",
-      "fingerSha256": "d6ed4e304cce1ccce3e355cfe958cf304c494c850ae0790d669068b861e7075c",
-      "kind": "source",
-      "retargetSha256": "aada00ca3a575ae5304c335ac52f31717069709bad73ed953368498406e37191",
-      "sourceSampleReport": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\ProjectYakuza_DD_BatCarry-source.json",
-      "sha256": "61f76c0277dfe05ff9001defd362df9a84205901fcc1dcfba661a8f7c85574b8"
+      "duration": 0.6666666666666666,
+      "grip": "carryBat",
+      "sha256": "ecb41fbf57ddf03be0257f74f846a8f116403aeba5b563ee3a53a565917f17c8"
     },
     {
       "name": "ProjectYakuza_DD_BatCarryWalk",
-      "kind": "nativeLegComposite",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_BatCarryWalk.x",
-      "sha256": "f20604b314080e5363e26e43a519e02d0df6e675f0a73c76b3bd7fa615012510",
+      "kind": "stableCarryComposite",
       "native": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkBat.x",
       "nativeSha256": "3fb1dbf21d717844fad0cc9571a8c98e1b04c8840a69ede7f2388fd09b8bcf00",
-      "carry": "42/media/anims_X/Bob/ProjectYakuza_DD_BatCarry.x",
-      "carrySha256": "61f76c0277dfe05ff9001defd362df9a84205901fcc1dcfba661a8f7c85574b8",
+      "armSource": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\locomotion-build\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BatCarry.x",
+      "armSourceSha256": "aada00ca3a575ae5304c335ac52f31717069709bad73ed953368498406e37191",
+      "armFrame": 0,
       "upperBones": [
-        "Bip01_BackPack",
-        "Bip01_Head",
         "Bip01_L_Clavicle",
         "Bip01_L_Finger0",
         "Bip01_L_Finger1",
         "Bip01_L_Forearm",
         "Bip01_L_Hand",
         "Bip01_L_UpperArm",
-        "Bip01_Neck",
-        "Bip01_Prop1",
-        "Bip01_Prop2",
         "Bip01_R_Clavicle",
         "Bip01_R_Finger0",
         "Bip01_R_Finger1",
         "Bip01_R_Forearm",
         "Bip01_R_Hand",
-        "Bip01_R_UpperArm",
-        "Bip01_Spine1"
+        "Bip01_R_UpperArm"
       ],
       "frames": 21,
       "fps": 30,
       "duration": 0.6666666666666666,
-      "grip": "bat"
+      "grip": "carryBat",
+      "sha256": "23b9e310781d051e4a1bfbcce897f4d3d4c46db476d388774aa2d74c17be74f2"
     },
     {
       "name": "ProjectYakuza_DD_BatCarrySlow",
-      "kind": "nativeLegComposite",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_BatCarrySlow.x",
-      "sha256": "b4a43077127a7df814ce54a6e4a8859ff4db277045dbc10aa1c8344224f0c017",
+      "kind": "stableCarryComposite",
       "native": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkSlow_Bat.x",
       "nativeSha256": "cf6a953adbea195f3d7e6f3a4a3a4955204ebe7b97530c26f82809c325e2c2f9",
-      "carry": "42/media/anims_X/Bob/ProjectYakuza_DD_BatCarry.x",
-      "carrySha256": "61f76c0277dfe05ff9001defd362df9a84205901fcc1dcfba661a8f7c85574b8",
+      "armSource": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\locomotion-build\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BatCarry.x",
+      "armSourceSha256": "aada00ca3a575ae5304c335ac52f31717069709bad73ed953368498406e37191",
+      "armFrame": 0,
       "upperBones": [
-        "Bip01_BackPack",
-        "Bip01_Head",
         "Bip01_L_Clavicle",
         "Bip01_L_Finger0",
         "Bip01_L_Finger1",
         "Bip01_L_Forearm",
         "Bip01_L_Hand",
         "Bip01_L_UpperArm",
-        "Bip01_Neck",
-        "Bip01_Prop1",
-        "Bip01_Prop2",
         "Bip01_R_Clavicle",
         "Bip01_R_Finger0",
         "Bip01_R_Finger1",
         "Bip01_R_Forearm",
         "Bip01_R_Hand",
-        "Bip01_R_UpperArm",
-        "Bip01_Spine1"
+        "Bip01_R_UpperArm"
       ],
       "frames": 21,
       "fps": 30,
       "duration": 0.6666666666666666,
-      "grip": "bat"
+      "grip": "carryBat",
+      "sha256": "383e630ad5a7f8e064014eeb7fc6bce9a7e16713a99b0f55a0e9eab918056e6b"
     },
     {
       "name": "ProjectYakuza_DD_KnifeRun",
@@ -146,86 +149,89 @@
     {
       "name": "ProjectYakuza_DD_KnifeCarry",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_KnifeCarry.x",
-      "source": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\gmt\\P_KRU_BTL_WPB_stdB_lp.gmt",
-      "sourceSha256": "d691c890a39edc1ed70e3bc10413c884248108a7c5b2673eb953a50e685c6945",
-      "frames": 61,
+      "kind": "stableCarryComposite",
+      "native": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_Idle.x",
+      "nativeSha256": "255303336122d5d8470366512e8ad948adf2e46bf61259cc51f201a3ed27d45e",
+      "armSource": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\locomotion-build\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_KnifeCarry.x",
+      "armSourceSha256": "5e90e0cac126a32b180fde842253baafc6a50073812f1c30c8b698d5a5225945",
+      "armFrame": 0,
+      "upperBones": [
+        "Bip01_L_Clavicle",
+        "Bip01_L_Finger0",
+        "Bip01_L_Finger1",
+        "Bip01_L_Forearm",
+        "Bip01_L_Hand",
+        "Bip01_L_UpperArm",
+        "Bip01_R_Clavicle",
+        "Bip01_R_Finger0",
+        "Bip01_R_Finger1",
+        "Bip01_R_Forearm",
+        "Bip01_R_Hand",
+        "Bip01_R_UpperArm"
+      ],
+      "frames": 21,
       "fps": 30,
-      "duration": 2.0,
-      "grip": "knife",
-      "fingerSource": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_AttackKnife01_Hit.x",
-      "fingerSha256": "4f8529807b66a2a59f13fe8a56b9716da39c4af7ec63ca33e24f24e4bd591380",
-      "kind": "source",
-      "retargetSha256": "5e90e0cac126a32b180fde842253baafc6a50073812f1c30c8b698d5a5225945",
-      "sourceSampleReport": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\ProjectYakuza_DD_KnifeCarry-source.json",
-      "sha256": "7cb6f6f145e66b72bd3227b1dbde0ecf562abc41490663ef9c1b7b25c7d28abd"
+      "duration": 0.6666666666666666,
+      "grip": "carryKnife",
+      "sha256": "0df4df66e2c1436b8173bdf52c87504edb8173f70c691b42719062f740e0db7a"
     },
     {
       "name": "ProjectYakuza_DD_KnifeCarryWalk",
-      "kind": "nativeLegComposite",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_KnifeCarryWalk.x",
-      "sha256": "420867bd39465362dcdeb545165624ee082f25bf828abffe8294b101021fa71e",
-      "native": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkBat.x",
-      "nativeSha256": "3fb1dbf21d717844fad0cc9571a8c98e1b04c8840a69ede7f2388fd09b8bcf00",
-      "carry": "42/media/anims_X/Bob/ProjectYakuza_DD_KnifeCarry.x",
-      "carrySha256": "7cb6f6f145e66b72bd3227b1dbde0ecf562abc41490663ef9c1b7b25c7d28abd",
+      "kind": "stableCarryComposite",
+      "native": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_Walk.x",
+      "nativeSha256": "cd6b5b79efc06e6064b8cc9b333bf832254dcefe68319fe3d5849437eae678ce",
+      "armSource": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\locomotion-build\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_KnifeCarry.x",
+      "armSourceSha256": "5e90e0cac126a32b180fde842253baafc6a50073812f1c30c8b698d5a5225945",
+      "armFrame": 0,
       "upperBones": [
-        "Bip01_BackPack",
-        "Bip01_Head",
         "Bip01_L_Clavicle",
         "Bip01_L_Finger0",
         "Bip01_L_Finger1",
         "Bip01_L_Forearm",
         "Bip01_L_Hand",
         "Bip01_L_UpperArm",
-        "Bip01_Neck",
-        "Bip01_Prop1",
-        "Bip01_Prop2",
         "Bip01_R_Clavicle",
         "Bip01_R_Finger0",
         "Bip01_R_Finger1",
         "Bip01_R_Forearm",
         "Bip01_R_Hand",
-        "Bip01_R_UpperArm",
-        "Bip01_Spine1"
+        "Bip01_R_UpperArm"
       ],
       "frames": 21,
       "fps": 30,
       "duration": 0.6666666666666666,
-      "grip": "knife"
+      "grip": "carryKnife",
+      "sha256": "7d7c69058c4aea4cd12c6778cc419764954204d3adb3239908baf55820fe5e20"
     },
     {
       "name": "ProjectYakuza_DD_KnifeCarrySlow",
-      "kind": "nativeLegComposite",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_KnifeCarrySlow.x",
-      "sha256": "b1e69009172cde110d339efd8b2736cf827386313b1d4f91dc518bd817148868",
-      "native": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkSlow_Bat.x",
-      "nativeSha256": "cf6a953adbea195f3d7e6f3a4a3a4955204ebe7b97530c26f82809c325e2c2f9",
-      "carry": "42/media/anims_X/Bob/ProjectYakuza_DD_KnifeCarry.x",
-      "carrySha256": "7cb6f6f145e66b72bd3227b1dbde0ecf562abc41490663ef9c1b7b25c7d28abd",
+      "kind": "stableCarryComposite",
+      "native": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkSlow.x",
+      "nativeSha256": "833b715fff865799302a212dcced3ec38befae7f6d6b452e0190a34cb6deeaf0",
+      "armSource": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\locomotion-build\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_KnifeCarry.x",
+      "armSourceSha256": "5e90e0cac126a32b180fde842253baafc6a50073812f1c30c8b698d5a5225945",
+      "armFrame": 0,
       "upperBones": [
-        "Bip01_BackPack",
-        "Bip01_Head",
         "Bip01_L_Clavicle",
         "Bip01_L_Finger0",
         "Bip01_L_Finger1",
         "Bip01_L_Forearm",
         "Bip01_L_Hand",
         "Bip01_L_UpperArm",
-        "Bip01_Neck",
-        "Bip01_Prop1",
-        "Bip01_Prop2",
         "Bip01_R_Clavicle",
         "Bip01_R_Finger0",
         "Bip01_R_Finger1",
         "Bip01_R_Forearm",
         "Bip01_R_Hand",
-        "Bip01_R_UpperArm",
-        "Bip01_Spine1"
+        "Bip01_R_UpperArm"
       ],
       "frames": 21,
       "fps": 30,
       "duration": 0.6666666666666666,
-      "grip": "knife"
+      "grip": "carryKnife",
+      "sha256": "6e3eeefca23fb8cc216ed612508be82146a6635d1fdfdbf96a300aef1140c338"
     },
     {
       "name": "ProjectYakuza_DD_BladeRun",
@@ -249,86 +255,89 @@
     {
       "name": "ProjectYakuza_DD_BladeCarry",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_BladeCarry.x",
-      "source": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\gmt\\P_KRU_BTL_WPN_stdB_lp.gmt",
-      "sourceSha256": "c85c65771970156faa97d84384c2fab3d9da930bc90616f18aec016fe8d1e900",
-      "frames": 61,
+      "kind": "stableCarryComposite",
+      "native": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleBat.x",
+      "nativeSha256": "4f34bc95eb8eeb0882163e7b7c149cc0df4a6bf473f001f31d46dd1c4c542c03",
+      "armSource": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\locomotion-build\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BladeCarry.x",
+      "armSourceSha256": "0aca841667bf4971cdca04c250794211e77937545a1a0be21133e5f947da3e32",
+      "armFrame": 0,
+      "upperBones": [
+        "Bip01_L_Clavicle",
+        "Bip01_L_Finger0",
+        "Bip01_L_Finger1",
+        "Bip01_L_Forearm",
+        "Bip01_L_Hand",
+        "Bip01_L_UpperArm",
+        "Bip01_R_Clavicle",
+        "Bip01_R_Finger0",
+        "Bip01_R_Finger1",
+        "Bip01_R_Forearm",
+        "Bip01_R_Hand",
+        "Bip01_R_UpperArm"
+      ],
+      "frames": 21,
       "fps": 30,
-      "duration": 2.0,
-      "grip": "bat",
-      "fingerSource": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_AttackBat01_Hit.x",
-      "fingerSha256": "d6ed4e304cce1ccce3e355cfe958cf304c494c850ae0790d669068b861e7075c",
-      "kind": "source",
-      "retargetSha256": "0aca841667bf4971cdca04c250794211e77937545a1a0be21133e5f947da3e32",
-      "sourceSampleReport": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\ProjectYakuza_DD_BladeCarry-source.json",
-      "sha256": "c19e210634e93ca489c8d8c91116f8844357a7689a9308f228e7394182aaf00d"
+      "duration": 0.6666666666666666,
+      "grip": "carryBat",
+      "sha256": "ab21d1130624d0c7ef0615dcf324b37430affa433041fef3b4e327839785eb73"
     },
     {
       "name": "ProjectYakuza_DD_BladeCarryWalk",
-      "kind": "nativeLegComposite",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_BladeCarryWalk.x",
-      "sha256": "c9f7c8e9e66f080ac2912c1a7c9b7d58a86bc4fb4c8d0a4a8275db5fc9f71775",
+      "kind": "stableCarryComposite",
       "native": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkBat.x",
       "nativeSha256": "3fb1dbf21d717844fad0cc9571a8c98e1b04c8840a69ede7f2388fd09b8bcf00",
-      "carry": "42/media/anims_X/Bob/ProjectYakuza_DD_BladeCarry.x",
-      "carrySha256": "c19e210634e93ca489c8d8c91116f8844357a7689a9308f228e7394182aaf00d",
+      "armSource": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\locomotion-build\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BladeCarry.x",
+      "armSourceSha256": "0aca841667bf4971cdca04c250794211e77937545a1a0be21133e5f947da3e32",
+      "armFrame": 0,
       "upperBones": [
-        "Bip01_BackPack",
-        "Bip01_Head",
         "Bip01_L_Clavicle",
         "Bip01_L_Finger0",
         "Bip01_L_Finger1",
         "Bip01_L_Forearm",
         "Bip01_L_Hand",
         "Bip01_L_UpperArm",
-        "Bip01_Neck",
-        "Bip01_Prop1",
-        "Bip01_Prop2",
         "Bip01_R_Clavicle",
         "Bip01_R_Finger0",
         "Bip01_R_Finger1",
         "Bip01_R_Forearm",
         "Bip01_R_Hand",
-        "Bip01_R_UpperArm",
-        "Bip01_Spine1"
+        "Bip01_R_UpperArm"
       ],
       "frames": 21,
       "fps": 30,
       "duration": 0.6666666666666666,
-      "grip": "bat"
+      "grip": "carryBat",
+      "sha256": "d6140448b4e37b8e69a8d874ff757dc2c83e5788596d7dd95afb3adca8f4f022"
     },
     {
       "name": "ProjectYakuza_DD_BladeCarrySlow",
-      "kind": "nativeLegComposite",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_BladeCarrySlow.x",
-      "sha256": "57500df3635ac4a399bb69e2abc7c58b774d00ede158b4a322c53eb0dfd9e8db",
+      "kind": "stableCarryComposite",
       "native": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkSlow_Bat.x",
       "nativeSha256": "cf6a953adbea195f3d7e6f3a4a3a4955204ebe7b97530c26f82809c325e2c2f9",
-      "carry": "42/media/anims_X/Bob/ProjectYakuza_DD_BladeCarry.x",
-      "carrySha256": "c19e210634e93ca489c8d8c91116f8844357a7689a9308f228e7394182aaf00d",
+      "armSource": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\locomotion-build\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BladeCarry.x",
+      "armSourceSha256": "0aca841667bf4971cdca04c250794211e77937545a1a0be21133e5f947da3e32",
+      "armFrame": 0,
       "upperBones": [
-        "Bip01_BackPack",
-        "Bip01_Head",
         "Bip01_L_Clavicle",
         "Bip01_L_Finger0",
         "Bip01_L_Finger1",
         "Bip01_L_Forearm",
         "Bip01_L_Hand",
         "Bip01_L_UpperArm",
-        "Bip01_Neck",
-        "Bip01_Prop1",
-        "Bip01_Prop2",
         "Bip01_R_Clavicle",
         "Bip01_R_Finger0",
         "Bip01_R_Finger1",
         "Bip01_R_Forearm",
         "Bip01_R_Hand",
-        "Bip01_R_UpperArm",
-        "Bip01_Spine1"
+        "Bip01_R_UpperArm"
       ],
       "frames": 21,
       "fps": 30,
       "duration": 0.6666666666666666,
-      "grip": "bat"
+      "grip": "carryBat",
+      "sha256": "ffec8b6ad23c3a394cde20befe9ef742c61be82b071550c617d099650894ce92"
     }
   ],
   "nativeGrips": {
@@ -546,6 +555,232 @@
             0.01667092740535736,
             -0.9952191710472107,
             0.02409939467906952
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      }
+    },
+    "carryBat": {
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleBat.x",
+      "sha256": "4f34bc95eb8eeb0882163e7b7c149cc0df4a6bf473f001f31d46dd1c4c542c03",
+      "frame": 0,
+      "authoredOffsets": {
+        "Bip01_Prop1": [
+          [
+            0.7657402157783508,
+            0.0550323948264122,
+            -0.6407909989356995,
+            0.05655297636985779
+          ],
+          [
+            -0.13542887568473816,
+            0.9877898693084717,
+            -0.0770030990242958,
+            -0.0454341396689415
+          ],
+          [
+            0.6287294030189514,
+            0.1457461714744568,
+            0.7638435959815979,
+            0.009300058707594872
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "Bip01_Prop2": [
+          [
+            0.9921084642410278,
+            0.0823422223329544,
+            -0.0945550799369812,
+            0.07919152081012726
+          ],
+          [
+            0.08037157356739044,
+            -0.9964644312858582,
+            -0.02446615695953369,
+            0.015998205170035362
+          ],
+          [
+            -0.09623582661151886,
+            0.016673460602760315,
+            -0.9952188730239868,
+            0.02409953437745571
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      "nativeOffsets": {
+        "Bip01_Prop1": [
+          [
+            0.7657402157783508,
+            0.0550323948264122,
+            -0.6407909989356995,
+            0.05655297636985779
+          ],
+          [
+            -0.13542887568473816,
+            0.9877898693084717,
+            -0.0770030990242958,
+            -0.0454341396689415
+          ],
+          [
+            0.6287294030189514,
+            0.1457461714744568,
+            0.7638435959815979,
+            0.009300058707594872
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "Bip01_Prop2": [
+          [
+            0.9921084642410278,
+            0.0823422223329544,
+            -0.0945550799369812,
+            0.07919152081012726
+          ],
+          [
+            0.08037157356739044,
+            -0.9964644312858582,
+            -0.02446615695953369,
+            0.015998205170035362
+          ],
+          [
+            -0.09623582661151886,
+            0.016673460602760315,
+            -0.9952188730239868,
+            0.02409953437745571
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      }
+    },
+    "carryKnife": {
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_Idle.x",
+      "sha256": "255303336122d5d8470366512e8ad948adf2e46bf61259cc51f201a3ed27d45e",
+      "frame": 0,
+      "authoredOffsets": {
+        "Bip01_Prop1": [
+          [
+            -0.22790050506591797,
+            0.06707128882408142,
+            -0.9713713526725769,
+            0.07851645350456238
+          ],
+          [
+            -0.08029230684041977,
+            0.992932140827179,
+            0.08739777654409409,
+            -0.013595787808299065
+          ],
+          [
+            0.9703678488731384,
+            0.09791162610054016,
+            -0.22090491652488708,
+            0.019019797444343567
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "Bip01_Prop2": [
+          [
+            0.9921086430549622,
+            0.08234314620494843,
+            -0.09455431997776031,
+            0.07919111102819443
+          ],
+          [
+            0.08037282526493073,
+            -0.996464729309082,
+            -0.024467185139656067,
+            0.015998128801584244
+          ],
+          [
+            -0.09623484313488007,
+            0.016674531623721123,
+            -0.9952189922332764,
+            0.024099169299006462
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      "nativeOffsets": {
+        "Bip01_Prop1": [
+          [
+            -0.22790050506591797,
+            0.06707128882408142,
+            -0.9713713526725769,
+            0.07851645350456238
+          ],
+          [
+            -0.08029230684041977,
+            0.992932140827179,
+            0.08739777654409409,
+            -0.013595787808299065
+          ],
+          [
+            0.9703678488731384,
+            0.09791162610054016,
+            -0.22090491652488708,
+            0.019019797444343567
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "Bip01_Prop2": [
+          [
+            0.9921086430549622,
+            0.08234314620494843,
+            -0.09455431997776031,
+            0.07919111102819443
+          ],
+          [
+            0.08037282526493073,
+            -0.996464729309082,
+            -0.024467185139656067,
+            0.015998128801584244
+          ],
+          [
+            -0.09623484313488007,
+            0.016674531623721123,
+            -0.9952189922332764,
+            0.024099169299006462
           ],
           [
             0.0,
