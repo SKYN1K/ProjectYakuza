@@ -242,7 +242,7 @@ function S.barrageHit(p,a,s)
     local expected=R.time(move,a.index);local age=t-lease.start
     if age<expected-80 or age>expected+650 then return end
     lease.index=a.index
-    if not S.baseWeapon then S.baseWeapon=InventoryItemFactory.CreateItem(ProjectYakuza.TOKEN)end
+    if not S.baseWeapon then S.baseWeapon=instanceItem(ProjectYakuza.TOKEN)end
     if not S.baseWeapon then return end
     local damage=R.damage(move,a.index,(S.baseWeapon:getMinDamage()+S.baseWeapon:getMaxDamage())*.5,s.packet.extreme)
     local seen={};local terminal=a.index==#move.contactFrames
@@ -356,7 +356,7 @@ function S.command(module,command,p,a)
             else S.fanout(p,"impact",packet) end
         else
 
-            if not S.baseWeapon then S.baseWeapon=InventoryItemFactory.CreateItem(ProjectYakuza.TOKEN) end
+            if not S.baseWeapon then S.baseWeapon=instanceItem(ProjectYakuza.TOKEN) end
             local item=job.profile and job.profile~="" and job.weapon or S.baseWeapon;local factor=job.move.damageMultiplier or 1
             if not item then return end
             local cap=job.profile and job.profile~="" and 20 or 2

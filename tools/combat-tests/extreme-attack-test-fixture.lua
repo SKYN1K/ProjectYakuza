@@ -41,7 +41,13 @@ function p:setMoving()end;function p:setRunning()end;function p:setSprinting()en
 function base:setActionAnim(v)self.animation=v end
 function base:forceComplete()self:perform()end
 function base:forceStop()self:stop()end
-InventoryItemFactory={CreateItem=function()return {getMinDamage=function()return .3 end,getMaxDamage=function()return .5 end}end}
+InventoryItemFactory=nil
+local itemCreates,itemMissing=0,false
+instanceItem=function(name)
+ check(name==PY.TOKEN,'barrage requests the registered style token through B42 global');itemCreates=itemCreates+1
+ if itemMissing then return end
+ return {getMinDamage=function()return .3 end,getMaxDamage=function()return .5 end}
+end
 do local _="ProjectYakuzaFixture:BARRAGE_RULES" end
 do local _="ProjectYakuzaFixture:BARRAGES" end
 local F=PY.Barrages;local R=PY.BarrageRules;local cfg=style.actions.barrage.variants
@@ -92,6 +98,9 @@ local pulseEvents=0;PY.on('barragePulse',function()pulseEvents=pulseEvents+1 end
 a:pulse(1);a:pulse(2)
 check(victim.hits==2 and math.abs(victim.total-.6)<.000001,'native SP damage uses source contact factor and mode once')
 check(scans==1 and pulseEvents==2,'contacts reuse live targets and emit one feedback cue each')
+check(InventoryItemFactory==nil and itemCreates==1,'SP barrage works without Java factory global and caches base item')
+F.base=nil;itemMissing=true;local beforeHits=victim.hits;a:pulse(2)
+check(victim.hits==beforeHits,'missing base item skips damage safely');itemMissing=false
 victim.dead=true;a:pulse(3);check(scans==2 and victim.hits==2,'dead target triggers bounded reacquisition without damage')
 PY.cancelAction(p,'test');PY.MultiHit.origin=oldOrigin;PY.MultiHit.targets=oldTargets;PY.MultiHit.clearPath=oldPath
 return true,'PASS '..checks..' boost, barrage, depletion, input, pause, expiry, damage and weapon isolation checks'

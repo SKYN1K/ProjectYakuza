@@ -67,7 +67,7 @@ function A:pulse(index)
         local ids={};for _,v in ipairs(valid)do ids[#ids+1]=v:getOnlineID()end
         PY.Network.send(p,"barrage",{index=index,action=PY.Network.localState(p).action,zombies=ids});return
     end
-    if not F.base then F.base=InventoryItemFactory.CreateItem(PY.TOKEN)end
+    if not F.base then F.base=instanceItem(PY.TOKEN)end
     if not F.base then return end
     local damage=R.damage(move,index,(F.base:getMinDamage()+F.base:getMaxDamage())*.5,PY.Heat.isExtreme(p));local hit=false
     for _,v in ipairs(valid)do

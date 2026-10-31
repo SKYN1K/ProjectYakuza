@@ -86,7 +86,8 @@ local square={TreatAsSolidFloor=function()return true end,isSolid=function()retu
 getCell=function()return {getGridSquare=function()return square end}end
 getOnlinePlayers=function()local all={};for _,a in pairs(actors) do all[#all+1]=a end;return list(all)end
 getPlayerByOnlineID=function(id)return actors[id]end
-InventoryItemFactory={CreateItem=function()return p.token end}
+InventoryItemFactory=nil
+instanceItem=function(name)check(name==ProjectYakuza.TOKEN,'MP damage uses B42 instanceItem token factory');return p.token end
 local replies,outgoing={},{}
 local nativeAdds,nativeEquips={},{}
 sendAddItemToContainer=function(inv,item)nativeAdds[#nativeAdds+1]={inventory=inv,item=item}end
