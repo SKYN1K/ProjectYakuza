@@ -46,4 +46,19 @@ local other={id='tests.no_directional',name='No automatic opt-in',lightAttacks=s
 PY.registerStyle(other);check(not D.select(p,state(),other),'other styles do not inherit directional moves')
 local invalid={id='tests.bad_directional',name='Invalid',lightAttacks=style.lightAttacks,actions={},directionalAttacks={minimumDegrees=160,rearDegrees=80,moves={}}}
 check(not PY.validateStyle(invalid),'invalid turn thresholds and empty move maps rejected')
+for branch=1,4 do
+ reset()
+ for i=1,branch do PY.Combo.press(state(),4,1);p:AttemptAttack();finish()end
+ fx,fy=-1,0;check(PY.queueFinisher(p),'rear finisher input accepted '..branch)
+ check(state().queuedFinisherVariant=='reverse_after_'..branch,'rear first source branch selected '..branch)
+ fire('OnPlayerUpdate',p)
+ check(state().finisherMove==style.actions.finisher.variants['reverse_after_'..branch],'native rear finisher starts '..branch)
+ check(PY.queueFinisher(p),'rear double input accepted '..branch)
+ check(state().queuedDoubleVariant=='reverse_double_after_'..branch,'matching reverse double queued during first '..branch)
+ finish();fire('OnPlayerUpdate',p)
+ check(state().finisherMove==style.actions.finisher.variants['reverse_double_after_'..branch],'matching reverse double starts '..branch)
+ finish()
+end
+reset();p:AttemptAttack();finish();fx,fy=0,1;check(PY.queueFinisher(p),'side-facing ordinary finisher input accepted')
+check(state().queuedFinisherVariant=='after_1','unverified side finisher motion is not invented')
 return true,'PASS '..checks..' directional sectors, actual Runtime routing, damage, enders, interruption and style/weapon isolation checks'

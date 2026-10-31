@@ -18,7 +18,7 @@ Set `soundVariety=true` on a registered style and configure `sounds` normally. E
 
 `Feedback.play(player, cue, gain)` selects shuffled clips only when the active style opts in and the cue appears in that style's `sounds` table. Other cues/styles retain the normal `player:playSound` path. Gains remain 0..1. Weapon views use their own sound configuration, preserving native weapon audio rather than inheriting unarmed strikes.
 
-Optional `sounds.heavyImpact`, `chargedImpact`, `parryImpact` and `barrageFinisher` override the scripted confirmed-hit accent for normal heavy, charged, Tiger Drop and final barrage contacts. Missing overrides fall back to `sounds.finisher`. Existing `doubleFinisher`, `guardHit`, `punchSwing` and `kickSwing` slots retain their roles. Only one heavy accent is emitted per attack stamp, including multihit.
+Optional `sounds.heavyImpact`, `chargedImpact` and `parryImpact` override the scripted confirmed-hit accent for normal heavy, charged and Tiger Drop contacts. Missing overrides fall back to `sounds.finisher`. Existing `doubleFinisher`, `guardHit`, `punchSwing` and `kickSwing` slots retain their roles. Only one heavy accent is emitted per attack stamp, including multihit.
 
 ## Addon pools
 

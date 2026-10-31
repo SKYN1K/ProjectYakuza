@@ -10,7 +10,7 @@ if '--inside-blender'not in sys.argv:
  raise SystemExit(0)
 sys.path.insert(0,str(w));from locomotion_math import read,locals_at
 sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
-d=json.loads((mod/'docs/boost-attack-assets.json').read_text());assert len(d['clips'])==6 and sha(d['rig'])==d['rigSha256'];contracts=[];samples=0
+d=json.loads((mod/'docs/boost-attack-assets.json').read_text());assert len(d['clips'])==4 and sha(d['rig'])==d['rigSha256'];contracts=[];samples=0
 assert sha(d['nativeGrip']['source'])==d['nativeGrip']['sha256']
 for i,r in enumerate(d['clips']):
  p=mod/r['output'];assert sha(p)==r['sha256']and sha(r['source'])==r['sourceSha256']and sha(r['bep'])==r['bepSha256']
@@ -19,7 +19,7 @@ for i,r in enumerate(d['clips']):
   section,kind,size=struct.unpack_from('<HHI',data,pos+64);payload=data[pos+80:pos+80+size];assert len(payload)==size
   if section==12 and kind==68:contacts.append(int(struct.unpack_from('<f',payload,4)[0]))
   pos+=80+size
- assert contacts==r['contacts']and len(contacts)==(1 if i<4 else 13 if i==4 else 5)
+ assert contacts==r['contacts']and len(contacts)==1
  raw=root/f'tools/boost-build/ProjectYakuza/42/media/anims_X/Bob/{r["animation"]}.x';assert sha(raw)==r['retargetSha256']
  _,frames,anim,_=read(p);_,ff,aa,_=read(raw);assert set(frames)==set(ff)
  for bone,curves in anim.items():
@@ -36,4 +36,4 @@ for i,r in enumerate(d['clips']):
  offsets=[','.join(str(v)for row in d['nativeGrip']['nativeOffsets'][prop]for v in row)for prop in ['Bip01_Prop1','Bip01_Prop2']];contracts.append('\t'.join([str(p),*offsets,str(r['frames'])]))
 (w/'boost-prop-contract.tsv').write_text('\n'.join(contracts),encoding='utf-8')
 assert not list((mod/'42/media/anims_X/Bob').glob('ProjectYakuza_DD_Extreme*.x'))
-print('PASS supplied boost source GMT/BEP, all source frames,',samples,'finite source bone samples, 13/5 barrage contacts and removed directional clips')
+print('PASS supplied boost source GMT/BEP, all source frames,',samples,'finite source bone samples, four source contacts and removed automatic special clips')

@@ -26,3 +26,21 @@ function D.record(p,s,move)
     local f=p:getForwardDirection();local x,y=unit(f:getX(),f:getY())
     s.lightFacing=x and {x=x,y=y}or nil;s.directionalLight=move.directional==true
 end
+function D.finisher(p,s,style,key)
+    local cfg=style.directionalFinishers;if not cfg or style.weaponProfile then return key end
+    local variants=style.actions.finisher.variants
+    if key:match("^double_after_")then
+        local first=s.finisherMove or s.pendingFinisher
+        if (s.finisherReverse or first and first.reverseFinisher or s.queuedFinisherVariant and s.queuedFinisherVariant:sub(1,#cfg.prefix)==cfg.prefix)and variants[cfg.prefix..key]then return cfg.prefix..key end
+        return key
+    end
+    local previous=s.lightFacing
+    if not previous or not key:match("^after_")then return key end
+    local f=p:getForwardDirection();local x,y=unit(f:getX(),f:getY());local fx,fy=unit(previous.x,previous.y)
+    if not x or not fx then return key end
+    if fx*x+fy*y<=math.cos(cfg.minimumDegrees*math.pi/180)and variants[cfg.prefix..key]then return cfg.prefix..key end
+    return key
+end
+function D.branch(style,step)
+    return step>0 and style.finisherBranches and (step-1)%style.finisherBranches+1 or step
+end

@@ -397,25 +397,16 @@ function N.command(module,command,a)
             local clip=P.reaction(a.style,a.reaction) and a.reaction or nil
             if not ProjectYakuza.Reactions.confirmed(p,z,a.responseKind,a.responseForce,clip) and clip then ProjectYakuza.Reactions.remote(z,clip) end
         end
-        if a.barrage then
-            if ProjectYakuza.HitEffects then ProjectYakuza.HitEffects.spawn(p,z,a.terminal==true)end
-            local pulse="barrage:"..a.player..":"..tostring(a.action)..":"..tostring(a.index)
-            if not N.seen[pulse]then
-                N.seen[pulse]=now();local move=P.move(a.style,a.move)
-                if move then ProjectYakuza.emit("barragePulse",p,move,a.index)end
-            end
-        end
         if p:isLocalPlayer() then
             N.replaying=true
-            if a.barrage then ProjectYakuza.emit("combatHit",p,z,p:getPrimaryHandItem(),a.amount,0)
-            elseif a.kill then ProjectYakuza.emit("tigerDrop",p,z)
+            if a.kill then ProjectYakuza.emit("tigerDrop",p,z)
             elseif a.knock then ProjectYakuza.emit("throwHit",p,z)
             elseif P.number(a.amount,0,10) then
                 local combo=ProjectYakuza.stateFor(p);ProjectYakuza.Heat.onHit(p,z,a.amount,combo)
                 ProjectYakuza.emit("combatHit",p,z,p:getPrimaryHandItem(),a.amount,combo.step)
             end
             N.replaying=false
-        elseif not a.barrage and ProjectYakuza.HitEffects then ProjectYakuza.HitEffects.spawn(p,z,true) end
+        elseif ProjectYakuza.HitEffects then ProjectYakuza.HitEffects.spawn(p,z,true) end
     end
 end
 function N.update(p)

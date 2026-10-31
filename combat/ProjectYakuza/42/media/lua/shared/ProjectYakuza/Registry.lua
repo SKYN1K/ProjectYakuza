@@ -1,4 +1,58 @@
 ProjectYakuza = ProjectYakuza or {}
+do
+local Q={};ProjectYakuza.QTE=Q
+local function finite(x)return type(x)=="number"and x==x and x<math.huge and x>-math.huge end
+function Q.valid(def,durationMs)
+    if type(def)~="table"or type(def.prompts)~="table"or #def.prompts<1 or #def.prompts>32 then return false,"QTE requires 1..32 prompts"end
+    local last=0
+    for _,v in ipairs(def.prompts)do
+        if type(v)~="table"or not finite(v.atMs)or v.atMs<=last or v.atMs>120000 or not finite(v.windowMs)or v.windowMs<50 or v.windowMs>2000 or v.atMs-v.windowMs<last or type(v.binding)~="string"or not v.binding:match("^[%w_.-]+$")or #v.binding>80 then return false,"invalid QTE prompt timing or binding"end
+        if durationMs and v.atMs>durationMs then return false,"QTE prompt exceeds animation duration"end
+        if v.damageMultiplier~=nil and (not finite(v.damageMultiplier)or v.damageMultiplier<0 or v.damageMultiplier>10)then return false,"invalid QTE damage multiplier"end
+        last=v.atMs
+    end
+    return true
+end
+function Q.window(def,index,timeMs,earlyMs,lateMs)
+    local v=def and def.prompts and def.prompts[index]
+    return v~=nil and finite(timeMs)and timeMs>=v.atMs-v.windowMs-(earlyMs or 0)and timeMs<v.atMs+(lateMs or 0)
+end
+function Q.create(def,down,context)
+    local valid,reason=Q.valid(def);assert(valid,reason)
+    local s={definition=def,context=context,index=1,accepted={},results={},downs={},lastTime=0,successes=0}
+    for _,v in ipairs(def.prompts)do s.downs[v.binding]=down and down(v.binding)==true or false end
+    return s
+end
+local function emit(s,name,...)
+    if ProjectYakuza.emit then ProjectYakuza.emit(name,s.context,...)end
+end
+function Q.update(s,timeMs,down,callback)
+    if s.closed then return false,"closed"end
+    if not finite(timeMs)or timeMs<s.lastTime then return false,"invalid_time"end
+    s.lastTime=timeMs
+    local current={};for binding in pairs(s.downs)do current[binding]=down(binding)==true end
+    local v=s.definition.prompts[s.index]
+    if v and Q.window(s.definition,s.index,timeMs)then
+        if not s.prompted then s.prompted=true;emit(s,"qtePrompt",s.index,v)end
+        if current[v.binding]and not s.downs[v.binding]and not s.accepted[s.index]then
+            s.accepted[s.index]=true;emit(s,"qteInput",s.index,v)
+            if callback then callback("input",s.index,true,v)end
+        end
+    end
+    s.downs=current
+    while s.index<=#s.definition.prompts and timeMs>=s.definition.prompts[s.index].atMs do
+        local i=s.index;local prompt=s.definition.prompts[i];local success=s.accepted[i]==true
+        s.results[i]=success;if success then s.successes=s.successes+1 end
+        s.index=i+1;s.prompted=nil;emit(s,"qteResult",i,success,prompt)
+        if callback then callback("result",i,success,prompt)end
+    end
+    if s.index>#s.definition.prompts then s.closed=true;emit(s,"qteFinished",s.successes,#s.definition.prompts)end
+    return true
+end
+function Q.cancel(s,reason)
+    if not s or s.closed then return end;s.closed=true;emit(s,"qteCancelled",reason or "interrupted")
+end
+end
 local R={}
 ProjectYakuza.ChargeRules=R
 function R.power(age,minimum,maximum)
@@ -53,7 +107,7 @@ end
 
 local ProjectYakuza = ProjectYakuza
 ProjectYakuza.FEATURES={grab=false}
-ProjectYakuza.VERSION = "0.58.1"
+ProjectYakuza.VERSION = "0.59.0"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -61,7 +115,7 @@ ProjectYakuza.actionHandlers = ProjectYakuza.actionHandlers or {}
 ProjectYakuza.styleActionHandlers = ProjectYakuza.styleActionHandlers or {}
 ProjectYakuza.styleInputHandlers = ProjectYakuza.styleInputHandlers or {}
 ProjectYakuza.listeners = ProjectYakuza.listeners or {}
-ProjectYakuza.actionKinds = { finisher=true, grab=true, parry=true, block=true, quickstep=true, quickstepAttack=true, runningAttack=true, heatAction=true, heatActivation=true, taunt=true, styleEntry=true, heavyCharge=true, chargedHeavy=true, barrage=true }
+ProjectYakuza.actionKinds = { finisher=true, grab=true, parry=true, block=true, quickstep=true, quickstepAttack=true, runningAttack=true, heatAction=true, heatActivation=true, taunt=true, styleEntry=true, heavyCharge=true, chargedHeavy=true }
 ProjectYakuza.actionDefinitions = ProjectYakuza.actionDefinitions or {}
 ProjectYakuza.activeActions = ProjectYakuza.activeActions or setmetatable({}, {__mode="k"})
 ProjectYakuza.MAX_HIT_COUNT = 3
@@ -120,6 +174,7 @@ function ProjectYakuza.validateStyle(style)
     end
     local function move(value,path,light)
         if type(value)~="table" then problem(path.." must be a table");return end
+        if value.qte~=nil then local ok,reason=ProjectYakuza.QTE.valid(value.qte,type(value.duration)=="number"and value.duration*1000 or nil);if not ok then problem(path..".qte: "..reason)end end
         if value.hitResponse~=nil and value.hitResponse~=false
             and (not text(value.hitResponse) or type(style.hitResponses)~="table" or not style.hitResponses[value.hitResponse]) then problem(path..".hitResponse must name a hitResponses profile or be false") end
         if value.juggle~=nil and value.juggle~=false then
@@ -203,8 +258,17 @@ function ProjectYakuza.validateStyle(style)
     if type(style.lightAttacks)~="table" or #style.lightAttacks==0 then problem("lightAttacks must contain at least one move")
     else for i,value in ipairs(style.lightAttacks) do move(value,"lightAttacks["..i.."]",true) end end
     if style.extremeLightAttacks~=nil then
-        if type(style.extremeLightAttacks)~="table" or type(style.lightAttacks)~="table" or #style.extremeLightAttacks~=#style.lightAttacks then problem("extremeLightAttacks must match light chain length")
+        if type(style.extremeLightAttacks)~="table" or #style.extremeLightAttacks<1 or #style.extremeLightAttacks>16 then problem("extremeLightAttacks requires 1..16 moves")
         else for i,value in ipairs(style.extremeLightAttacks)do move(value,"extremeLightAttacks["..i.."]",true)end end
+    end
+    if style.finisherBranches~=nil and (not number(style.finisherBranches)or style.finisherBranches<1 or style.finisherBranches~=math.floor(style.finisherBranches))then problem("finisherBranches must be a positive integer")end
+    if style.directionalFinishers~=nil then
+        local cfg=style.directionalFinishers
+        if type(cfg)~="table"or not number(cfg.minimumDegrees)or cfg.minimumDegrees<90 or cfg.minimumDegrees>180 or not text(cfg.prefix)then problem("directionalFinishers requires a reverse angle and variant prefix")end
+    end
+    if style.heatRush~=nil then
+        local cfg=style.heatRush
+        if type(cfg)~="table"or not number(cfg.hits)or cfg.hits<4 or cfg.hits>16 or cfg.hits~=math.floor(cfg.hits)or not number(cfg.windowMs)or cfg.windowMs<100 or cfg.windowMs>1500 then problem("heatRush requires hits 4..16 and windowMs 100..1500")end
     end
     if style.directionalAttacks~=nil then
         local cfg=style.directionalAttacks
@@ -345,10 +409,9 @@ end
 function ProjectYakuza.blocksNativeAttacks(player)
     if ProjectYakuza.StyleEntry and ProjectYakuza.StyleEntry.pending and ProjectYakuza.StyleEntry.pending[player] then return true end
     if ProjectYakuza.Quicksteps and ProjectYakuza.Quicksteps.isCancelling and ProjectYakuza.Quicksteps.isCancelling(player) then return true end
-    if ProjectYakuza.Barrages and ProjectYakuza.Barrages.pending[player] then return true end
     local c=ProjectYakuza.activeActions[player]
     local d=c and ProjectYakuza.actionDefinitions[c.kind]
-    return c~=nil and (c.kind=="styleEntry" or c.kind=="barrage" or c.kind=="quickstepAttack" or c.kind=="heavyCharge" or c.kind=="chargedHeavy" or (d~=nil and d.blocksAttacks)) or false
+    return c~=nil and (c.kind=="styleEntry" or c.kind=="heatAction" or c.kind=="quickstepAttack" or c.kind=="heavyCharge" or c.kind=="chargedHeavy" or (d~=nil and d.blocksAttacks)) or false
 end
 
 function ProjectYakuza.updateCustomAction(player)
@@ -421,6 +484,7 @@ function ProjectYakuza.requestAction(player, kind, variant, target)
     if ProjectYakuza.getHeat(player) < cost then return false, "insufficient_heat" end
     local combo = ProjectYakuza.stateFor and ProjectYakuza.stateFor(player) or nil
     local comboStep = combo and combo.step or 0
+    if action.afterLight and style.finisherBranches and comboStep>style.finisherBranches then comboStep=(comboStep-1)%style.finisherBranches+1 end
     if action.afterLight then
         if comboStep ~= action.afterLight then return false, "wrong_combo_step" end
         if not combo.finishedAt or getTimestampMs() - combo.finishedAt > style.comboResetMs then return false, "combo_window_closed" end

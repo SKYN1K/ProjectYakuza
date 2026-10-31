@@ -23,3 +23,5 @@ With DoD selected and a [supported bat/club](WEAPONS.md) equipped: RMB+LMB runs 
 The same weapon controls now apply to supported knives and longer blades. X guard is available on the sweeping-blade profile (cleavers/machetes/swords); the knife profile has no source guard and does not block. Full item lists and supplementary-hit rules: [Weapons](WEAPONS.md#sharp-weapons-0450).
 
 Heavy input (MMB by default) checks Tiger Drop before charging/finishers during the first 300ms of an observed frontal zombie attack windup. Damage already registered or a completed bite cannot be undone. The existing 60-second cooldown and unarmed DoD requirement remain. A separately bound counter key also works.
+
+In Extreme Heat, eight connected LMB lights can flow into DoD's paired three-hit finish if the last target survives and there is clear space. Press the currently configured finisher binding (MMB by default) freshly for each prompt. A held button does not count. Turning at least 145 degrees between a light and a first finisher selects its original reverse variant; a second finisher retains the matching variant.

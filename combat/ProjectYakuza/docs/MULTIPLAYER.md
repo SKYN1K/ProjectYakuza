@@ -65,7 +65,7 @@ Optional style.juggling and move.juggle={kind="launch"/"followup"/"ender"} enabl
 
 Server states, equipment acknowledgements and relayed combat results carry an additive session serial. A new native player object receives a new monotonic server session, even when its online ID is recycled. Clients accept fresh session counters without retaining the old high sequence number, discard older-session messages, and clear only that peer's result/deferred caches. Replaced actors also release old protection/retained leases. Session state is reset on world exit; restart matching server/client versions after updating.
 
-Melee/stomp playback restarts on a new swing serial, and timed-action playback restarts on a new action serial. Updating the other counter no longer restarts an already-playing clip. Clip/style changes still transition normally. Repeated same-clip barrages and native finishers therefore use their own serial type. Same-sequence server protection-expiry corrections remain accepted.
+Melee/stomp playback restarts on a new swing serial, and timed-action playback restarts on a new action serial. Updating the other counter no longer restarts an already-playing clip. Clip/style changes still transition normally. Repeated same-clip paired actions and native finishers therefore use their own serial type. Same-sequence server protection-expiry corrections remain accepted.
 
 Combat commands force an immediate state check but reuse an unchanged snapshot. Changed state is sent before the dependent command; periodic heartbeats and explicit forced snapshots are retained. This avoids sending the same full state alongside every hit/dash sample.
 
@@ -81,4 +81,8 @@ Directional lights use the normal native swing serial, isolated catalogued clips
 
 ## Scripted sound variety (0.58.0)
 
-Styles can opt in with `soundVariety=true` and register existing multi-clip sound pools with `ProjectYakuza.SoundVariety.registerPool(name, count)` in shared code. Scripted Feedback uses shuffled native clips with original parent volumes and validated MP relays. See [Sound variety](SOUND_VARIETY.md) for configuration, heavy/counter/barrage sound slots, limits and lifecycle.
+Styles can opt in with `soundVariety=true` and register existing multi-clip sound pools with `ProjectYakuza.SoundVariety.registerPool(name, count)` in shared code. Scripted Feedback uses shuffled native clips with original parent volumes and validated MP relays. See [Sound variety](SOUND_VARIETY.md) for configuration, heavy/counter sound slots, limits and lifecycle.
+
+## Paired Heat Rush and QTEs (0.59.0)
+
+DoD uses source-order connected-light proof, a single actor/target lease, validated source-time input windows and canonical server-calculated QTE damage. Completed/expired/disconnected sequences restore victim flags. Wrong serials, replayed hits and stale/late pose messages cannot restart or repeat them. Observers are event-free. See [rush details](EXTREME_ATTACKS.md) and [QTE authoring](QTE.md).

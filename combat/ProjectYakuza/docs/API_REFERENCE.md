@@ -177,9 +177,9 @@ Unarmed finisher routing recognizes enabled `extreme_default`, `extreme_after_N`
 
 registerEncounterDetector(id,fn) and unregisterEncounterDetector(id,fn) manage namespaced, per-style opt-in detection callbacks. See ENCOUNTER_INTROS.md for trigger fields, minimum counts, no-count/player intros, target context, text fitting, custom effects and failure/rejection events. Defaults retain existing zombie-only behavior.
 
-## Extreme boost lights and source-contact barrages (0.55.0)
+## Extreme Heat rush and reusable QTEs (0.59.0)
 
-Styles can opt into an `extremeLightAttacks` array matching their regular chain and an `actions.barrage` slot. `barrageInput` selects light-chain/heavy variants and the short buffer. Shared `BarrageRules` validates source frame contacts and calculates timing/damage; native timed-action track phase drives the client, while the server authorizes bounded contact leases. Weapon profiles do not inherit these unarmed moves. See [complete contracts, events and multiplayer limits](EXTREME_ATTACKS.md).
+extremeLightAttacks supports 1..16 independently sized moves, with finisherBranches mapping extended chains to authored branches. The removed automatic-contact modules/action kind are no longer registered. DoD now uses a paired heatAction with source paths, validated QTE inputs and a style-scoped handler. ProjectYakuza.QTE exposes valid, create, window, update and cancel, plus qtePrompt, qteInput, qteResult, qteFinished and qteCancelled events. See [QTE API](QTE.md), [rush contracts](EXTREME_ATTACKS.md) and [directional finishers](DIRECTIONAL_AND_TAUNTS.md).
 
 ## Directional light routing and taunt attention (0.57.0)
 
@@ -187,4 +187,4 @@ Styles can opt into `directionalAttacks` and `tauntReactions`. Runtime latches a
 
 ## Scripted sound variety (0.58.0)
 
-Styles can opt in with `soundVariety=true` and register existing multi-clip sound pools with `ProjectYakuza.SoundVariety.registerPool(name, count)` in shared code. Scripted Feedback uses shuffled native clips with original parent volumes and validated MP relays. See [Sound variety](SOUND_VARIETY.md) for configuration, heavy/counter/barrage sound slots, limits and lifecycle.
+Styles can opt in with `soundVariety=true` and register existing multi-clip sound pools with `ProjectYakuza.SoundVariety.registerPool(name, count)` in shared code. Scripted Feedback uses shuffled native clips with original parent volumes and validated MP relays. See [Sound variety](SOUND_VARIETY.md) for configuration, heavy/counter sound slots, limits and lifecycle.

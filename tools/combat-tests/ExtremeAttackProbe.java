@@ -9,7 +9,7 @@ public class ExtremeAttackProbe {
   var variables=Class.forName("zombie.core.skinnedmodel.advancedanimation.AnimationVariableSource");
   var source=Class.forName("zombie.core.skinnedmodel.advancedanimation.IAnimationVariableSource");
   var set=variables.getMethod("setVariable",String.class,String.class);int count=0;
-  try(var files=Files.walk(Path.of(args[0]))){for(var path:files.filter(p->(p.getFileName().toString().startsWith("ProjectYakuza_DD_BoostLight")||p.getFileName().toString().startsWith("ProjectYakuza_DD_Barrage"))&&p.toString().endsWith(".xml")).toList()){
+  try(var files=Files.walk(Path.of(args[0]))){for(var path:files.filter(p->p.getFileName().toString().startsWith("ProjectYakuza_DD_BoostLight")&&p.toString().endsWith(".xml")).toList()){
    var doc=DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(path.toFile());
    var parsed=node.getMethod("Parse",String.class).invoke(null,path.toAbsolutePath().toString());
    Object state=stateType.getConstructor().newInstance(),vars=variables.getConstructor().newInstance();stateType.getMethod("addNode",node).invoke(state,parsed);
@@ -24,7 +24,7 @@ public class ExtremeAttackProbe {
    for(int i=0;i<events.getLength();i++)if(events.item(i).getTextContent().equals("AttackCollisionCheck"))hits++;
    if(hits!=(path.toString().contains("BoostLight")?1:0))throw new AssertionError("collision count "+path);count++;
   }}
-  if(count!=6)throw new AssertionError("owner count "+count);
-  System.out.println("PASS 6 native boost/barrage owner nodes parse/select, native collision count, style/weapon isolation");
+  if(count!=4)throw new AssertionError("owner count "+count);
+  System.out.println("PASS 4 native boost-light owner nodes parse/select, native collision count, style/weapon isolation");
  }
 }

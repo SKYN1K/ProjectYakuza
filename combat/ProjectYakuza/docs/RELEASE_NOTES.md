@@ -1,7 +1,10 @@
-# Project Yakuza 0.58.1
+# Project Yakuza 0.59.0
 
-- Fixed the barrage error at Barrages.lua:70: the client used a Java item-factory global that is not exposed in this B42 build. Base-damage item creation now uses the native Lua instanceItem function.
-- Fixed the same API calls in multiplayer barrage and supplementary-hit damage paths. Existing damage factors, source contact timing, item caching and missing-item handling remain unchanged.
-- Regression fixtures now leave InventoryItemFactory absent, exercise SP barrage contacts and MP damage through instanceItem, and verify item reuse and safe missing-item behavior. A native probe checks the installed B42 global function signature.
+- Removed the two automatic barrage animations, their native owners/observers, Lua action modules, input routing, action kind and network damage command.
+- Extreme Heat now uses eight individually pressed native light attacks, followed by a paired three-hit finish when all eight connect and the last target survives. Three fresh finisher-button prompts determine the extra hits. Holding or missing inputs adds no bonus hit. The original recovery continues.
+- Converted the approved original Kiryu/victim pair from Yakuza 6 h23590_3combo.par. Source vector movement, native animation phase, bounded space checks, interruption cleanup and multiplayer target leases keep the paired action scoped to DoD. No cinematic camera override is included.
+- Added original rear-turn first and second finishers for all four light branches, using the verified AttackRevFin/AttackRevFinW source mappings. Side turns keep ordinary finishers because no distinct source side-finisher mapping was verified. No auto targeting is added.
+- Added the reusable ProjectYakuza.QTE API: per-action prompt definitions, configurable existing/addon bindings, fresh-press tracking, result and cancellation events, deterministic sequence progression and authoring documentation. Other styles retain their own handlers and presentation.
+- Added source/native importer, prop, MP observer, QTE/SP lifecycle, replay/session and authoritative MP damage checks. Original images, audio recordings and voice-pack files are unchanged.
 
-No visual/audio/animation assets were created or changed. PZ was not launched or operated during this update. Quit and restart PZ after installation; servers and clients must use the same version. See VALIDATION_0.58.1.md.
+Only the explicitly approved non-AI motion conversions create assets. PZ was not launched or operated. Live animation fit, UI appearance and multiplayer latency require an in-game check after restart. Install matching 0.59.0 versions on server and clients. See VALIDATION_0.59.0.md.

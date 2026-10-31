@@ -2,7 +2,7 @@
 
 ## Dragon of Dojima controls
 
-While aiming, start an unarmed light combo with LMB. Make a substantial manual turn before the next light: turns of 65–145 degrees select the corresponding side strike, and turns of at least 145 degrees select the rear kick. Smaller changes retain the normal chain. The reference heading is the previous light's starting heading; expired combos start normally. Both ordinary and Extreme Heat unarmed lights support this routing. A turn input takes priority over the fifth-click barrage; MMB retains its existing behavior outside a directional ender.
+While aiming, start an unarmed light combo with LMB. Make a substantial manual turn before the next light: turns of 65–145 degrees select the corresponding side strike, and turns of at least 145 degrees select the rear kick. Smaller changes retain the normal chain. The reference heading is the previous light's starting heading; expired combos start normally. Both ordinary and Extreme Heat unarmed lights support this routing. Turning strikes retain priority over continuing the Extreme Heat light chain.
 
 A directional strike ends that light chain. It retains x0.75 light damage and the existing active Extreme Heat bonus, uses one native collision and the existing three-target hit cap, and plays its full supplied recovery. A new combo starts after it finishes. Heavy/charged follow-ups are blocked during the directional ender. The ordinary quickstep quota/cooldown and post-contact cancel marker apply; cancelling or interruption releases its movement lock. Real weapon profiles keep their own movesets.
 
@@ -33,3 +33,11 @@ Three owner nodes have twelve event-free observer copies, supporting both repeat
 The server observes a timed taunt action before accepting a new completion counter, checks its source duration with a 250 ms timing allowance, binds the lease to style and held item, and consumes completion once. It selects targets itself. Clients cannot send their own victim list or directly request a taunt effect. Server result packets carry the current player session and authorized zombie IDs; zombie-owning clients apply native AI once. Missing streamed targets have a 750 ms retry window and per-target deduplication. Other observers rely on native AI replication. Retained grabs remain disabled.
 
 PZ was not launched. Offline input, source/native import, budgets, ownership, completion authorization and duplicate tests pass. Live pose blending, collision alignment, ownership migration and network latency still need an in-game check after a full matching client/server restart.
+
+## Rear-turn finishers (0.59.0)
+
+After any of the four ordinary light branches, turn at least 145 degrees relative to the previous light's committed heading and tap-release the finisher input. The queued first finisher latches reverse_after_1 through reverse_after_4. An optional second finisher uses the corresponding reverse_double_after branch, including when buffered during the first. Without follow-up input the full first motion plays. Regular and Extreme Heat unarmed combat can use these moves; weapons and directional-light enders keep their own rules.
+
+The verified original command mappings are AttackRevFin1..4 and AttackRevFinW1..4, using ath_01..04_B_fin_md and ath_01..04_B_finW_md. These are reverse motions, not replacement Extreme Heat attacks. No distinct side-finisher mapping was verified, so side turns retain normal finishers. Reverse first/second clips use their original matching pose windows; only one leading source frame is removed from the second branch-2 clip. No bridge poses are invented. See reverse-finisher-assets.json.
+
+Framework styles opt in with directionalFinishers={minimumDegrees=145,prefix="reverse_"}, register the corresponding first/double finisher variants, owners and observers, and may use finisherBranches to map extended rush chains to authored branches. Selection reads manual headings and never turns the player or acquires a target. Charged releases retain their separately authored charge animations.

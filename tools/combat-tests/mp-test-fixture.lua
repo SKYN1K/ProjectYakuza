@@ -185,16 +185,6 @@ local damage={player=2,zombie=z3.id,event=1,health=.25,amount=.4,kill=false,knoc
 local hitsBefore=z3.hits
 client.command(P.module,'damage',damage);client.command(P.module,'damage',damage)
 check(z3.health==.25 and z3.hits==hitsBefore and effects==2,'server result mirrors absolute health without observer Hit calls')
-local barrageCues=0;ProjectYakuza.on('barragePulse',function()barrageCues=barrageCues+1 end)
-local barragePacket={player=2,zombie=z3.id,event=900,health=.25,amount=.1,barrage=true,terminal=false,action=90,index=1,move='dd_barrage_punch',style='dragon_of_dojima'}
-client.command(P.module,'damage',barragePacket);client.command(P.module,'damage',barragePacket)
-check(effects==3 and barrageCues==1,'remote barrage hit effect and cue are deduplicated')
-barragePacket.zombie=z2.id;barragePacket.event=901;client.command(P.module,'damage',barragePacket)
-check(effects==4 and barrageCues==1,'three-target contact has separate effects and one sound')
-local heatHits=0;local oldHeatHit=ProjectYakuza.Heat.onHit;ProjectYakuza.Heat.onHit=function()heatHits=heatHits+1 end
-barragePacket.player=1;barragePacket.event=902;client.command(P.module,'damage',barragePacket)
-check(effects==5 and barrageCues==2 and heatHits==0,'owner renders barrage feedback without earning heat after depletion')
-ProjectYakuza.Heat.onHit=oldHeatHit
 packet={player=2,seq=2,style='dragon_of_dojima',equipped=true,heat=40,fuel=35,extreme=true,clip='ProjectYakuza_DD_Light01',move='dd_light_01',swing=2}
 client.command(P.module,'state',packet);check(client.remote[2].swing==2,'same clip tracks a new attack serial')
 packet.seq=3;packet.clip='ProjectYakuza_DD_Quickstep01';client.command(P.module,'state',packet)
@@ -558,16 +548,16 @@ peer=copy(peer);peer.seq=901;peer.action=11;client.command(P.module,'state',peer
 check(observer.vars.ProjectYakuzaRemoteCycle==cycle,'late action-context counter cannot restart a melee finisher')
 peer=copy(peer);peer.seq=902;peer.swing=11;client.command(P.module,'state',peer)
 check(observer.vars.ProjectYakuzaRemoteCycle~=cycle,'a new melee swing restarts the same supplied clip')
-peer=copy(peer);peer.seq=903;peer.clip='ProjectYakuza_DD_BarragePunch';peer.move='dd_barrage_punch';client.command(P.module,'state',peer);cycle=observer.vars.ProjectYakuzaRemoteCycle
+peer=copy(peer);peer.seq=903;peer.clip='ProjectYakuza_DD_HeatRush';peer.move='dd_heat_rush';client.command(P.module,'state',peer);cycle=observer.vars.ProjectYakuzaRemoteCycle
 peer=copy(peer);peer.seq=904;peer.swing=12;client.command(P.module,'state',peer)
-check(observer.vars.ProjectYakuzaRemoteCycle==cycle,'unrelated swing counter cannot restart a timed barrage')
+check(observer.vars.ProjectYakuzaRemoteCycle==cycle,'unrelated swing counter cannot restart a paired Heat Rush')
 peer=copy(peer);peer.seq=905;peer.action=12;client.command(P.module,'state',peer)
-check(observer.vars.ProjectYakuzaRemoteCycle~=cycle,'new timed-action serial restarts repeated barrage')
-client.seen['damage:50:1']=clock;client.seen['barrage:50:12:1']=clock;client.seen['damage:2:1']=clock
+check(observer.vars.ProjectYakuzaRemoteCycle~=cycle,'new timed-action serial restarts repeated paired action')
+client.seen['damage:50:1']=clock;client.seen['heatRush:50:12:1']=clock;client.seen['damage:2:1']=clock
 client.deferred['damage:50:2']={args={player=50},expires=clock+750}
 peer=copy(peer);peer.seq=1;peer.session=1001;peer.action=1;peer.swing=1;client.command(P.module,'state',peer)
 check(client.remote[50].packet.seq==1 and client.sessions[50]==1001,'new server session accepts restarted player sequence')
-check(not client.seen['damage:50:1']and not client.seen['barrage:50:12:1']and not client.deferred['damage:50:2']and client.seen['damage:2:1'],'new session clears only that peer replay/deferred caches')
+check(not client.seen['damage:50:1']and not client.seen['heatRush:50:12:1']and not client.deferred['damage:50:2']and client.seen['damage:2:1'],'new session clears only that peer replay/deferred caches')
 local accepted=client.remote[50].packet
 local oldPeer=copy(peer);oldPeer.session=1000;oldPeer.seq=999;client.command(P.module,'state',oldPeer)
 check(client.remote[50].packet==accepted,'late old-session snapshot cannot overwrite respawn state')
@@ -656,4 +646,28 @@ client.command(P.module,'sfx',soundPacket);check(heard==1,'owner echo cannot dou
 remoteSound=copy(remoteSound);remoteSound.event=999001;remoteSound.index=99;client.command(P.module,'sfx',remoteSound)
 check(heard==1,'remote invalid clip cannot invoke playback')
 variety.play=oldPlay
+clock=clock+2000;p.x=0;p.y=0;p.equipped=true;p.hand=p.token;p.dead=false;p.data.ProjectYakuzaStyle='dragon_of_dojima';z1.x=1.1;z1.y=0;z1.health=10;z1.useless=false;z1.ignore=false;z1.deferred=true;z1.attacking=false
+snapshot(p,{extreme=true,clip='ProjectYakuza_DD_BoostLight04',move='dd_boost_light_04',swing=1600})
+local hs=server.players[p.id];local rush=ProjectYakuza.HeatRushServer;local rules=ProjectYakuza.HeatRushRules
+hs.rushCount=0;command('heatRushBegin',{zombie=z1.id,request=1});check(not rush.leases[p],'MP QTE sequence requires eight confirmed boost contacts')
+local boost=ProjectYakuza.getStyle('dragon_of_dojima').extremeLightAttacks[1]
+for i=1,8 do rush.record(hs,{extreme=true,profile='',move=ProjectYakuza.getStyle('dragon_of_dojima').extremeLightAttacks[i],style='dragon_of_dojima'},z1,1700+i);clock=clock+50 end
+check(hs.rushCount==8,'one server proof per distinct validated boost swing')
+rush.record(hs,{extreme=true,profile='',move=boost,style='dragon_of_dojima'},z1,1708);check(hs.rushCount==8,'duplicate victim evidence cannot inflate combo proof')
+wall=true;command('heatRushBegin',{zombie=z1.id,request=2});check(not rush.leases[p],'paired source motion cannot start through walls');wall=false
+command('heatRushBegin',{zombie=z1.id,request=3});local lease=rush.leases[p];check(lease and rush.held[z1]==lease,'server grants one target/action lease')
+command('heatRushReady',{action=lease.action});check(lease.started and z1.useless and z1.ignore,'server owns paired victim lock only after ready')
+local before=z1.hits;command('heatRushHit',{action=lease.action,index=1,damage=999});check(z1.hits==before,'no QTE input means no hit')
+for i,prompt in ipairs(lease.definition.prompts)do
+ clock=lease.started+prompt.atMs-100;snapshot(p,{extreme=true,clip='ProjectYakuza_DD_HeatRush',move='dd_heat_rush',action=lease.action,swing=1800})
+ command('heatRushPress',{action=lease.action,index=i});check(lease.presses[i],'source-time prompt accepted '..i)
+ command('heatRushHit',{action=lease.action+1,index=i});check(z1.hits==before+i-1,'wrong action serial rejects QTE damage')
+ clock=lease.started+prompt.atMs+10;command('heatRushHit',{action=lease.action,index=i,damage=999})
+ check(z1.hits==before+i,'successful timed prompt applies exactly one canonical server hit')
+ command('heatRushHit',{action=lease.action,index=i});check(z1.hits==before+i,'replayed QTE hit cannot duplicate damage')
+end
+check(math.abs(z1.health-7.75)<.000001,'server ignores arbitrary client damage and applies one Extreme bonus')
+clock=lease.started+rules.duration*1000+10;command('heatRushEnd',{action=lease.action,completed=true})
+check(not rush.leases[p]and not rush.held[z1]and not z1.useless and not z1.ignore and z1.deferred and z1.knock,'server completion restores victim state and terminal knockdown')
+command('heatRushHit',{action=lease.action,index=3});check(z1.hits==before+3,'ended action cannot replay a QTE hit')
 return 'PASS '..count..' MP authority, duplicate, range, lease, cooldown, observer and throttle checks'

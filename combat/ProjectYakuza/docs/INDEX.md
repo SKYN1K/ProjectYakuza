@@ -1,6 +1,6 @@
 # Documentation index
 
-Current manual: Project Yakuza 0.58.1, Lua API 3, MP protocol 2.
+Current manual: Project Yakuza 0.59.0, Lua API 3, MP protocol 2.
 
 | Task | Guide |
 | --- | --- |
@@ -9,6 +9,7 @@ Current manual: Project Yakuza 0.58.1, Lua API 3, MP protocol 2.
 | Build an independent addon | [Style authoring](STYLE_AUTHORING.md) |
 | Look up fields/functions/events | [API reference](API_REFERENCE.md) |
 | Add style-specific weapon moves | [Weapons](WEAPONS.md) |
+| Add configurable QTE sequences | [QTE API](QTE.md) |
 | Add new move types | [Actions and lifecycle](ACTIONS.md) |
 | Native nodes, collisions and walking legs | [Animation contracts](ANIMATIONS.md) |
 | MP ownership and observer builder | [Multiplayer](MULTIPLAYER.md) |

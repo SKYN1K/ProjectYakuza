@@ -2,8 +2,11 @@ require "ProjectYakuza/Registry"
 ProjectYakuza.registerStyle({
     id = "dragon_of_dojima",
     name = "Dragon of Dojima",
-    description = "Kiryu's four-hit chain with Extreme Heat boost attacks and barrages.",
+    description = "Kiryu's four-hit chain with Extreme Heat boost attacks.",
     heat=true,
+    finisherBranches=4,
+    directionalFinishers={minimumDegrees=145,prefix="reverse_"},
+    heatRush={hits=8,windowMs=700},
     tigerDrop=true,
     combatVoiceVolume=2.25,
     quickstepVoices=false,
@@ -20,7 +23,7 @@ ProjectYakuza.registerStyle({
     sounds={
         punchImpact="ProjectYakuza_Y6_PunchImpact",kickImpact="ProjectYakuza_Y6_KickImpact",heatImpact="ProjectYakuza_Y6_HeatImpact",
         punchSwing="ProjectYakuza_Y6_PunchSwing",kickSwing="ProjectYakuza_Y6_KickSwing",finisher="ProjectYakuza_Y6_Finisher",
-        heavyImpact="ProjectYakuza_Y6_HeavyFinisher",chargedImpact="ProjectYakuza_Y6_HeavyFinisher",parryImpact="ProjectYakuza_Y6_HeavyFinisher",barrageFinisher="ProjectYakuza_Y6_HeavyFinisher",
+        heavyImpact="ProjectYakuza_Y6_HeavyFinisher",chargedImpact="ProjectYakuza_Y6_HeavyFinisher",parryImpact="ProjectYakuza_Y6_HeavyFinisher",
         grab="ProjectYakuza_Y6_Grab",throwImpact="ProjectYakuza_Y6_ThrowImpact",guardHit="ProjectYakuza_Y6_GuardImpact",doubleFinisher="ProjectYakuza_Y6_HeavyFinisher",guardBreak="ProjectYakuza_Y6_GuardBreak",
         heatGain="ProjectYakuza_Y6_HeatGain",heatFull="ProjectYakuza_Y6_HeatFull",heatStart="ProjectYakuza_Y6_ChargeStart",
         heatOnA="ProjectYakuza_Y6_HeatOnA",heatOnB="ProjectYakuza_Y6_HeatOnB",heatOff="ProjectYakuza_Y6_HeatOff",
@@ -66,13 +69,11 @@ ProjectYakuza.registerStyle({
         { animation="ProjectYakuza_DD_Light04", nodeValue="dd_light_04", quickstepCancelAt=0.255319148936, damageMultiplier=0.75, duration=(47/30)/1.6, speed=1.6, impact=11/47, chainAt=0.58, reaction="enemy_04" },
     },
     extremeLightAttacks = {{["animation"]="ProjectYakuza_DD_BoostLight01",["nodeValue"]="dd_boost_light_01",["duration"]=0.6875,["speed"]=1.6,["impact"]=0.21212121212121213,["chainAt"]=0.5454545454545454,["quickstepCancelAt"]=0.24242424242424243,["damageMultiplier"]=0.75,["extremeHeat"]=true,["hitResponse"]=false},{["animation"]="ProjectYakuza_DD_BoostLight02",["nodeValue"]="dd_boost_light_02",["duration"]=0.625,["speed"]=1.6,["impact"]=0.16666666666666666,["chainAt"]=0.5666666666666667,["quickstepCancelAt"]=0.2,["damageMultiplier"]=0.75,["extremeHeat"]=true,["hitResponse"]=false},{["animation"]="ProjectYakuza_DD_BoostLight03",["nodeValue"]="dd_boost_light_03",["duration"]=0.6458333333333334,["speed"]=1.6,["impact"]=0.16129032258064516,["chainAt"]=0.5161290322580645,["quickstepCancelAt"]=0.1935483870967742,["damageMultiplier"]=0.75,["extremeHeat"]=true,["hitResponse"]=false},{["animation"]="ProjectYakuza_DD_BoostLight04",["nodeValue"]="dd_boost_light_04",["duration"]=0.625,["speed"]=1.6,["impact"]=0.16666666666666666,["chainAt"]=0.5666666666666667,["quickstepCancelAt"]=0.2,["damageMultiplier"]=0.75,["extremeHeat"]=true,["hitResponse"]=false}},
-    barrageInput={afterLights=4,lightVariant="punch",heavyVariant="kick",bufferMs=350},
     groundAttacks = {
         {animation="ProjectYakuza_DD_GroundStomp01",nodeValue="dd_ground_01",duration=1.8/1.6,speed=1.6,impact=0.25925925925925924,groundAttack=true,fullBody=true},
         {animation="ProjectYakuza_DD_GroundStomp02",nodeValue="dd_ground_02",duration=1.8/1.6,speed=1.6,impact=0.25925925925925924,groundAttack=true,fullBody=true},
     },
     actions = {
-        barrage={enabled=true,variants={["punch"]={["animation"]="ProjectYakuza_DD_BarragePunch",["nodeValue"]="dd_barrage_punch",["duration"]=2.5507246376811596,["speed"]=1.15,["fps"]=30,["contactFrames"]={5,10,15,20,25,30,34,40,45,50,55,59,64},["range"]=1.25,["damageMultiplier"]=0.28,["finalMultiplier"]=0.9,["extremeHeat"]=true,["hitResponse"]=false,["fullBody"]=true},["kick"]={["animation"]="ProjectYakuza_DD_BarrageKick",["nodeValue"]="dd_barrage_kick",["duration"]=1.7391304347826089,["speed"]=1.15,["fps"]=30,["contactFrames"]={5,14,24,32,40},["range"]=1.25,["damageMultiplier"]=0.5,["finalMultiplier"]=1,["extremeHeat"]=true,["hitResponse"]=false,["fullBody"]=true}}},
         heavyCharge={enabled=true,holdMs=350,variants={
             default={animation="ProjectYakuza_DD_ChargeLoop",duration=3.5,minChargeMs=350,maxHoldMs=1200},
             after_1={animation="ProjectYakuza_DD_ChargeWindup01",holdAnimation="ProjectYakuza_DD_ChargeHold01",duration=3.5,holdMs=200.000000,windupMs=200.000000,minChargeMs=200.000000,maxHoldMs=1200,chargeBranch=1},
@@ -90,6 +91,15 @@ ProjectYakuza.registerStyle({
         styleEntry = {enabled=true,animation="ProjectYakuza_DD_StyleEntry",duration=50/30},
         taunt = {enabled=true,animation="ProjectYakuza_DD_Taunt01",duration=55/30},
         finisher = { enabled=true, variants={
+            reverse_after_1={["enabled"]=true,["afterLight"]=1,["animation"]="ProjectYakuza_DD_ReverseFinisher01",["nodeValue"]="dd_reverse_finisher_1",["damageMultiplier"]=1.25,["duration"]=1.3958333333333333,["speed"]=1.6,["impact"]=0.22388059701492538,["fullBody"]=true,["reverseFinisher"]=true,["hitResponse"]="finisher",["doubleLinkFrame"]=27,["doubleLinkEndFrame"]=30},
+            reverse_double_after_1={["enabled"]=true,["afterLight"]=1,["animation"]="ProjectYakuza_DD_ReverseDoubleFinisher01",["nodeValue"]="dd_reverse_double_1",["damageMultiplier"]=1.25,["duration"]=1.0416666666666667,["speed"]=1.6,["impact"]=0.46,["fullBody"]=true,["reverseFinisher"]=true,["hitResponse"]="finisher",["double"]=true},
+            reverse_after_2={["enabled"]=true,["afterLight"]=2,["animation"]="ProjectYakuza_DD_ReverseFinisher02",["nodeValue"]="dd_reverse_finisher_2",["damageMultiplier"]=1.25,["duration"]=1.125,["speed"]=1.6,["impact"]=0.2962962962962963,["fullBody"]=true,["reverseFinisher"]=true,["hitResponse"]="finisher",["doubleLinkFrame"]=23,["doubleLinkEndFrame"]=26},
+            reverse_double_after_2={["enabled"]=true,["afterLight"]=2,["animation"]="ProjectYakuza_DD_ReverseDoubleFinisher02",["nodeValue"]="dd_reverse_double_2",["damageMultiplier"]=1.25,["duration"]=1.5416666666666667,["speed"]=1.6,["impact"]=0.22972972972972974,["fullBody"]=true,["reverseFinisher"]=true,["hitResponse"]="finisher",["double"]=true},
+            reverse_after_3={["enabled"]=true,["afterLight"]=3,["animation"]="ProjectYakuza_DD_ReverseFinisher03",["nodeValue"]="dd_reverse_finisher_3",["damageMultiplier"]=1.25,["duration"]=1.3541666666666665,["speed"]=1.6,["impact"]=0.16923076923076924,["fullBody"]=true,["reverseFinisher"]=true,["hitResponse"]="finisher",["doubleLinkFrame"]=26,["doubleLinkEndFrame"]=29},
+            reverse_double_after_3={["enabled"]=true,["afterLight"]=3,["animation"]="ProjectYakuza_DD_ReverseDoubleFinisher03",["nodeValue"]="dd_reverse_double_3",["damageMultiplier"]=1.25,["duration"]=1.5625,["speed"]=1.6,["impact"]=0.24,["fullBody"]=true,["reverseFinisher"]=true,["hitResponse"]="finisher",["double"]=true},
+            reverse_after_4={["enabled"]=true,["afterLight"]=4,["animation"]="ProjectYakuza_DD_ReverseFinisher04",["nodeValue"]="dd_reverse_finisher_4",["damageMultiplier"]=1.25,["duration"]=1.3333333333333333,["speed"]=1.6,["impact"]=0.1875,["fullBody"]=true,["reverseFinisher"]=true,["hitResponse"]="finisher",["doubleLinkFrame"]=29,["doubleLinkEndFrame"]=32},
+            reverse_double_after_4={["enabled"]=true,["afterLight"]=4,["animation"]="ProjectYakuza_DD_ReverseDoubleFinisher04",["nodeValue"]="dd_reverse_double_4",["damageMultiplier"]=1.25,["duration"]=0.8541666666666666,["speed"]=1.6,["impact"]=0.36585365853658536,["fullBody"]=true,["reverseFinisher"]=true,["hitResponse"]="finisher",["double"]=true},
+
             default={enabled=true,animation="ProjectYakuza_DD_Heavy",nodeValue="dd_heavy",duration=50/30/1.6,speed=1.6,impact=9/50,damageMultiplier=1.25,neutralHeavy=true,fullBody=true,hitResponse=false},
             after_1={enabled=true,afterLight=1,animation="ProjectYakuza_DD_Finisher01",nodeValue="dd_finisher_01",damageMultiplier=1.25,duration=1.9/1.6,speed=1.6,impact=0.2807017543859649,reaction="enemy_01",fullBody=true,doubleLinkFrame=25,doubleLinkEndFrame=28},
             after_2={enabled=true,afterLight=2,animation="ProjectYakuza_DD_Finisher02",nodeValue="dd_finisher_02",damageMultiplier=1.25,duration=1.7666666666666666/1.6,speed=1.6,impact=0.4528301886792453,reaction="enemy_02",fullBody=true,doubleLinkFrame=31,doubleLinkEndFrame=34},
@@ -127,9 +137,12 @@ ProjectYakuza.registerStyle({
             knee={enabled=true,variant="knee",animation="ProjectYakuza_DD_RunningAttack03",nodeValue="dd_run_03",duration=1.6666666666666667/1.2,speed=1.2,impact=0.24,distance=1,reaction="enemy_03",fullBody=true,runningAttack=true},
             dropkick={enabled=true,variant="dropkick",animation="ProjectYakuza_DD_RunningAttack04",nodeValue="dd_run_04",duration=2.1333333333333333/1.6,speed=1.6,impact=0.21875,distance=1.2,reaction="enemy_04",fullBody=true,runningAttack=true},
         }},
-        heatAction = { enabled=false, requiresTarget=true, heatStocks=1, reason="Requires paired clips, environment checks and a cinematic handler" },
+        heatAction={enabled=true,animation="ProjectYakuza_DD_HeatRush",targetAnimation="ProjectYakuza_DD_HeatRushVictim",nodeValue="dd_heat_rush",requiresTarget=true,extremeHeat=true,heatRush=true,duration=130/30,hitResponse=false,qte={prompts={{atMs=29/30*1000,windowMs=10/30*1000,binding="finisher",damageMultiplier=.75},{atMs=40/30*1000,windowMs=10/30*1000,binding="finisher",damageMultiplier=1},{atMs=65/30*1000,windowMs=10/30*1000,binding="finisher",damageMultiplier=2}}}},
     },
 })
+
+local rushStyle=ProjectYakuza.getStyle("dragon_of_dojima")
+for i=5,8 do rushStyle.extremeLightAttacks[i]=rushStyle.extremeLightAttacks[(i-5)%2+1]end
 
 if ProjectYakuza.Weapons then
     local base=ProjectYakuza.getStyle("dragon_of_dojima")

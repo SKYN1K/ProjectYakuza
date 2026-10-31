@@ -10,3 +10,5 @@ Copy to your addon root under Zomboid/mods; keep common/. This folder is not loa
 6. For MP run ProjectYakuza/tools/build_style_observers.py --mod-root YourAddon --style-id example_mod.my_style --prefix ExampleStyle_ --dry-run, inspect, then run without dry-run. Install generated XML/Lua plus addon on all peers. New gameplay still needs server support.
 
 Music/sounds/heat/Kiryu effects are off. Leave the sound script inactive until recordings exist; use two distinct tracks for continuous non-repeating shuffle. Existing PZ playback is referenced, not generated. See [authoring](../../docs/STYLE_AUTHORING.md), [actions](../../docs/ACTIONS.md) and [testing](../../docs/TESTING.md).
+
+Custom actions can use the shared ProjectYakuza.QTE sequence engine with configurable timing, registered bindings and result/cancellation events. See the framework docs/QTE.md guide; style handlers still own supplied animations, UI, effects and multiplayer authority.

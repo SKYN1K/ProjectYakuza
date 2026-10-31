@@ -23,7 +23,7 @@ function W.register(styleId,profile)
     if view.actions.styleEntry==nil and base.actions then view.actions.styleEntry=base.actions.styleEntry end
     view.attackSpeed=profile.attackSpeed or 1
     view.quickstepCancelLights=profile.quickstepCancelLights==true
-    view.tigerDrop=false;view.enemyReactions=false;view.extremeLightAttacks=nil;view.barrageInput=nil;view.directionalAttacks=nil
+    view.tigerDrop=false;view.enemyReactions=false;view.extremeLightAttacks=nil;view.directionalAttacks=nil;view.directionalFinishers=nil;view.heatRush=nil;view.finisherBranches=nil
     view.hitResponses=profile.hitResponses;view.juggling=profile.juggling
     view.sounds=profile.sounds or false
     local valid,errors=PY.validateStyle(view);assert(valid,table.concat(errors,"; "))

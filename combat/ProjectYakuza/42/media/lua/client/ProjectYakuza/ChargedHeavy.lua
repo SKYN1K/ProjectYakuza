@@ -129,8 +129,9 @@ function H.wantsRecovery(p,s,style)
         or not s.active or s.finisherMove or s.groundMove or s.queued>0 or PY.activeActions[p] then return false end
     local slot=style.actions.heavyCharge
     if not slot or not slot.enabled then return false end
-    local branch=slot.variants and slot.variants["after_"..s.step]
-    return gesture.branch==s.step and now()-gesture.at>=((branch and branch.holdMs) or slot.holdMs or 350)
+    local step=style.finisherBranches and (s.step-1)%style.finisherBranches+1 or s.step
+    local branch=slot.variants and slot.variants["after_"..step]
+    return gesture.branch==step and now()-gesture.at>=((branch and branch.holdMs) or slot.holdMs or 350)
 end
 function H.input(p,down,pressed,s,style)
     local slot=style.actions.heavyCharge
@@ -151,12 +152,12 @@ function H.input(p,down,pressed,s,style)
             H.gestures[p]=nil;PY.queueFinisher(p);return true
         end
         local branch=(s.active or (s.finishedAt and now()-s.finishedAt<=style.comboResetMs)) and s.step or 0
-        H.gestures[p]={at=now(),branch=branch}
+        H.gestures[p]={at=now(),branch=(branch>0 and style.finisherBranches and (branch-1)%style.finisherBranches+1 or branch)}
     end
     local gesture=H.gestures[p]
     if not gesture then return true end
 
-    if s.active and not s.finisherMove and not s.groundMove and s.step>0 then gesture.branch=s.step end
+    if s.active and not s.finisherMove and not s.groundMove and s.step>0 then gesture.branch=(style.finisherBranches and (s.step-1)%style.finisherBranches+1 or s.step) end
     if not down then
         H.gestures[p]=nil;PY.queueFinisher(p);return true
     end

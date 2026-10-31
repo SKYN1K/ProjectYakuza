@@ -276,42 +276,6 @@ snapshot(p,{clip='ProjectYakuza_DD_BoostLight02',move='dd_boost_light_02',swing=
 check(server.players[p.id].seq==normalSequence,'inactive mode cannot chain new boost')
 p.vars.ProjectYakuzaActive='true';p.vars.ProjectYakuzaStyle='dragon_of_dojima';p.vars.ProjectYakuzaWeaponProfile='';p.vars.ProjectYakuzaMove='dd_boost_light_03';p.vars.AimFloorAnim='false'
 check(N.pickClip(p,baseStyle,{active=true})=='ProjectYakuza_DD_BoostLight03','network selects boost owner')
-snapshot(p,{clip='ProjectYakuza_DD_BarragePunch',move='dd_barrage_punch',action=800,swing=702,extreme=true})
-local bs=server.players[p.id];check(bs.barrage and bs.barrage.action==800,'server leases source barrage')
-local start=bs.barrage.start;local move=bs.barrage.move;local rules=ProjectYakuza.BarrageRules
-check(P.move('dragon_of_dojima','dd_barrage_punch')==move,'protocol indexes barrage definition')
-local beforeHits=z1.hits;z1.health=100;z2.health=100
-command('barrage',{action=800,index=1,zombies={z1.id}})
-check(z1.hits==beforeHits,'too-early barrage contact rejected')
-clock=start+rules.time(move,1)+10
-command('barrage',{action=800,index=1,zombies={z1.id,z1.id,z2.id}})
-check(z1.hits==beforeHits+1,'duplicate IDs damage once')
-command('barrage',{action=800,index=1,zombies={z1.id}})
-check(z1.hits==beforeHits+1,'duplicate contact cannot replay')
-clock=start+rules.time(move,2)+10
-command('barrage',{action=801,index=2,zombies={z1.id}})
-check(z1.hits==beforeHits+1,'wrong action serial rejected')
-z1.x=1.05;wall=true;command('barrage',{action=800,index=2,zombies={z1.id}});wall=false;z1.x=.8
-check(z1.hits==beforeHits+1,'barrage cannot hit through wall')
-clock=start+rules.time(move,3)+10
-command('barrage',{action=800,index=3,zombies={z1.id,z2.id,z3.id,z4.id}})
-check(bs.barrage.index==2,'over-cap request rejected without consuming valid index')
-command('barrage',{action=800,index=3,zombies={z1.id},damage=999})
-check(z1.hits==beforeHits+2 and z1.health>98,'server ignores client damage')
-clock=start+rules.time(move,4)+10
-snapshot(p,{clip='ProjectYakuza_DD_BarragePunch',move='dd_barrage_punch',action=800,swing=702,extreme=false})
-local depletedHealth=z1.health
-command('barrage',{action=800,index=4,zombies={z1.id}})
-check(math.abs(z1.health-(depletedHealth-.4*.28))<.000001,'depleted barrage loses mode damage bonus')
-local leasedSequence=bs.seq
-snapshot(p,{clip='ProjectYakuza_DD_BarragePunch',move='dd_barrage_punch',action=801,swing=702,extreme=false})
-check(bs.seq==leasedSequence,'inactive mode cannot mint a new barrage lease')
-clock=start+rules.time(move,13)+10
-command('barrage',{action=800,index=13,zombies={z1.id}})
-check(bs.barrage.index==13 and z1.knock,'terminal source contact knocks down')
-clock=bs.barrage.expires+1;local endHits=z1.hits
-command('barrage',{action=800,index=13,zombies={z1.id}})
-check(z1.hits==endHits,'expired/replayed barrage cannot deal damage')
 clock=clock+1100;p:setPrimaryHandItem(bat);bat.condition=10
 snapshot(p,{weaponProfile='bat',clip='ProjectYakuza_DD_BatLight01',move='dd_bat_light_01',swing=900})
 local responses=ProjectYakuza.HitResponses;local juggle=ProjectYakuza.Juggling
@@ -333,4 +297,4 @@ check(server.players[p.id].packet.move=='dd_directional_left'and P.move(baseStyl
 z1.health=100;z2.health=100;command('impact',{swing=901,zombie=z1.id});local oldHits=z2.hits
 command('extra',{swing=901,zombie=z2.id});command('extra',{swing=901,zombie=z2.id})
 check(z1.health==100 and z2.hits==oldHits+1 and math.abs(z2.health-99.7)<.000001,'directional primary stays native and secondary damage is x0.75 once')
-return true,'PASS '..count..' weapon MP, boost authorization, barrage source timing, duplicates, caps, walls, damage authority and depletion checks'
+return true,'PASS '..count..' weapon MP, boost authorization, duplicates, caps, walls, damage authority and depletion checks'

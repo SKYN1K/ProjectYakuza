@@ -121,3 +121,10 @@
 !/tools/combat-tests/build_sound_variety_tests.py
 !/tools/combat-tests/sound-variety-test-fixture.lua
 !/tools/combat-tests/SoundVarietyProbe.java
+
+!/tools/combat-tests/build_reverse_assets.py
+!/tools/combat-tests/build_heat_rush_assets.py
+!/tools/combat-tests/build_heat_rush_tests.py
+!/tools/combat-tests/heat-rush-test-fixture.lua
+!/tools/combat-tests/validate_heat_rush_assets.py
+!/tools/combat-tests/HeatRushAssetProbe.java
