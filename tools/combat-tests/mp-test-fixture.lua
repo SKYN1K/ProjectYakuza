@@ -595,4 +595,44 @@ check(#replies==0,'old actor cannot fan out with replacement session')
 server.fanout(secondPeer,'state',{player=60})
 check(#replies>0 and replies[1].args.session==server.players[60].session,'server relays tag the authoritative current session')
 client.clear();local sessionCount=0;for _ in pairs(client.sessions)do sessionCount=sessionCount+1 end;check(sessionCount==0,'world exit clears session ownership')
+for _,z in ipairs(zombies)do
+ z.health=0
+ function z:addAggro(who,amount)self.aggro=(self.aggro or 0)+amount;self.aggroTarget=who end
+end
+p:setPrimaryHandItem(p.token);p.data.ProjectYakuzaStyle='dragon_of_dojima';server.players[p.id]=nil;clock=clock+2000
+z1.health=100;z1.aggro=0;z1.attacking=false;z1.x=.8;z1.y=0;z1.target=nil
+z2.health=100;z2.x=8;z3.health=100;z3.attacking=true;z4.health=100;z4.floor=true
+function z4:isOnFloor()return self.floor==true end
+snapshot(p,{clip='ProjectYakuza_DD_Taunt01',action=2000,taunt=0});local tauntState=server.players[p.id]
+check(tauntState.tauntLease and tauntState.tauntLease.action==2000,'server observes source taunt action before authorizing reactions')
+clock=clock+900;snapshot(p,{clip='',action=2000,taunt=1})
+check(z1.aggro==0 and not tauntState.tauntLease,'too-early completion cannot draw zombie attention')
+snapshot(p,{clip='ProjectYakuza_DD_Taunt01',action=2001,taunt=1});clock=clock+1850;replies={};local nativeHits=z1.hits
+snapshot(p,{clip='',action=2001,taunt=2})
+check(z1.aggro==3 and z1.target==p and z1.hits==nativeHits,'completed taunt adds native aggro without dealing damage')
+check(not z2.aggro and not z3.aggro and not z4.aggro,'taunt skips distant, attacking and downed zombies')
+local tauntPacket
+for _,message in ipairs(replies)do if message.command=='taunt'then tauntPacket=message.args end end
+check(tauntPacket and #tauntPacket.zombies==1 and tauntPacket.zombies[1]==z1.id,'server chooses and bounds taunt victim IDs')
+snapshot(p,{clip='',action=2001,taunt=2});snapshot(p,{clip='',action=2001,taunt=3})
+check(z1.aggro==3,'heartbeat/replayed completion cannot repeat native aggro')
+client.command(P.module,'taunt',tauntPacket);client.command(P.module,'taunt',tauntPacket)
+check(z1.aggro==6,'zombie-owning client applies each authorized taunt once')
+local remoteTaunt=copy(tauntPacket);remoteTaunt.event=remoteTaunt.event+100;z1.remote=true;client.command(P.module,'taunt',remoteTaunt)
+check(z1.aggro==6,'non-owning client does not override zombie AI');z1.remote=false
+snapshot(p,{clip='ProjectYakuza_DD_Taunt01',action=2002,taunt=3});clock=clock+1850;z1.x=1.1;wall=true;snapshot(p,{clip='',action=2002,taunt=4});wall=false;z1.x=.8
+check(z1.aggro==6,'blocked taunt paths do not acquire targets')
+local missingTaunt=copy(tauntPacket);missingTaunt.event=missingTaunt.event+200;missingTaunt.zombies={1500};client.command(P.module,'taunt',missingTaunt)
+local missingKey='taunt:'..p.id..':'..missingTaunt.event
+check(client.deferred[missingKey]~=nil,'streaming-delayed taunt target is retained briefly')
+local arriving=zombie(1500,.9);function arriving:addAggro(who,amount)self.aggro=(self.aggro or 0)+amount;self.target=who end
+clock=clock+50;client.tick();check(arriving.aggro==3 and not client.deferred[missingKey],'native owner applies a streamed-in taunt target once')
+clock=clock+50;client.tick();check(arriving.aggro==3,'deferred taunt cannot duplicate attention')
+local cfg=ProjectYakuza.TauntReactions.config(ProjectYakuza.getStyle('dragon_of_dojima'));local pathCalls=0;local oldPath=P.path
+P.path=function()pathCalls=pathCalls+1;return false end
+for i=1,300 do local v=zombie(1600+i,.5);v.y=.2 end
+local blockedTargets=ProjectYakuza.TauntReactions.targets(p,cfg)
+check(#blockedTargets==0 and pathCalls<=32,'dense taunt path checks have a hard per-completion budget')
+P.path=oldPath
+check(not ProjectYakuza.TauntReactions.config({actions={},tauntReactions={radius=5,maxTargets=8}}),'other styles need an enabled taunt and explicit opt-in')
 return 'PASS '..count..' MP authority, duplicate, range, lease, cooldown, observer and throttle checks'

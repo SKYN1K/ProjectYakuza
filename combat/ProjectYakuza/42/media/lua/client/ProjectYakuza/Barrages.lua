@@ -14,8 +14,10 @@ local function eligible(p,style)
 end
 function F.input(p,s,style,heavyPressed)
     if not eligible(p,style) then F.pending[p]=nil;return false end
+    if s.directionalLight then F.pending[p]=nil;return true end
     local cfg=style.barrageInput;local light=PY.Bindings.down("light") and not s.lastDown
-    if heavyPressed or (light and s.step==cfg.afterLights and (s.active or s.finishedAt and now()-s.finishedAt<=style.comboResetMs)) then
+    local turning=light and s.step==cfg.afterLights and PY.DirectionalAttacks and PY.DirectionalAttacks.select(p,s,style)
+    if heavyPressed or (light and not turning and s.step==cfg.afterLights and (s.active or s.finishedAt and now()-s.finishedAt<=style.comboResetMs)) then
         F.pending[p]={variant=heavyPressed and cfg.heavyVariant or cfg.lightVariant,expires=now()+(cfg.bufferMs or 250)};s.queued=0
         if PY.Bindings then PY.Bindings.update(p)end
     end

@@ -5,6 +5,7 @@ local function near(a,b)return math.abs(a-b)<.000001 end
 local clock,paused,text=1000,false,false
 getTimestampMs=function()return clock end
 isGamePaused=function()return paused end
+isClient=function()return false end
 local function event()return {Add=function()end,Remove=function()end}end
 Events={OnPlayerUpdate=event(),OnTick=event(),OnGameStart=event(),OnSave=event(),OnMainMenuEnter=event(),OnKeyStartPressed=event(),OnKeyKeepPressed=event(),OnKeyPressed=event(),OnPostRender=event()}
 local keys={}
@@ -53,7 +54,8 @@ function p:getMovementLastFrame()return {set=function()end}end
 function p:setMoving(v)self.moving=v end
 function p:setRunning(v)self.running=v end
 function p:setSprinting(v)self.sprinting=v end
-function p:getPrimaryHandItem()return {}end
+local heldItem={}
+function p:getPrimaryHandItem()return self.held or heldItem end
 function p:isLocalPlayer()return self.localPlayer end
 function p:getOffsetX()return 0 end
 function p:getOffsetY()return 0 end
@@ -68,6 +70,8 @@ ProjectYakuza.Heat={stockSize=function()return 100/6 end,isExtreme=function()ret
 getSpecificPlayer=function()return p end
 local vanilla={0,0,0}
 ISEmoteRadialMenu={onKeyPressed=function()vanilla[1]=vanilla[1]+1 end,onKeyRepeat=function()vanilla[2]=vanilla[2]+1 end,onKeyReleased=function()vanilla[3]=vanilla[3]+1 end}
+local reactionCalls=0
+ProjectYakuza.TauntReactions={react=function()reactionCalls=reactionCalls+1 end}
 do local _="ProjectYakuzaFixture:TAUNTS" end
 local T=ProjectYakuza.Taunts
 local starts,ends=0,0
@@ -90,10 +94,14 @@ p.aim=false;p:setVariable('ProjectYakuzaTaunt','started');a:update();check(a:isV
 clock=clock+2000;a:update();check(ProjectYakuza.getHeat(p)==0,'incomplete playback grants nothing')
 p:setVariable('ProjectYakuzaTaunt','done');a:update()
 check(near(ProjectYakuza.getHeat(p),100/6),'full playback grants exactly one orb')
+check(reactionCalls==1,'SP taunt draws attention only after native completion')
 check(not p.block and not p.ignore and p.deferred and not ProjectYakuza.activeActions[p],'flags and ownership restored')
 a:perform();a:cleanup(true);check(near(ProjectYakuza.getHeat(p),100/6) and ends==1,'completion cannot double reward')
 p.aim=true;a=begin();p.hit='Bite';a:update();p.hit=''
 check(a.stopped and near(ProjectYakuza.getHeat(p),100/6),'damage interrupts without reward')
+check(reactionCalls==1,'interrupted taunt cannot draw attention')
+local reward=ProjectYakuza.getHeat(p);a=begin();p.held={};a:update();p.held=nil
+check(a.stopped and ProjectYakuza.getHeat(p)==reward and reactionCalls==1,'changing held equipment interrupts taunt before heat/attention')
 a=begin();p.block=true;p.ignore=true;p.deferred=false;a:stop();check(not p.block and not p.ignore and p.deferred,'cancel restores captured flags')
 local heat=ProjectYakuza.getHeat(p);a=begin();clock=clock+601;a:update();check(a.stopped and ProjectYakuza.getHeat(p)==heat,'missing animation marker fails closed')
 a=begin();p:setVariable('ProjectYakuzaTaunt','started');a:update();local start=a.startedAt

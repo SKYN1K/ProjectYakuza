@@ -1,0 +1,222 @@
+{
+  "authorization": "User explicitly approved supplied Kiryu side/rear clip retargets on 2026-10-31.",
+  "operation": "All supplied frames retained in place with native punch fingers and native hand-prop offsets. Original source body poses, root rotations and timing are retained by the existing retargeter. No AI, invented motion or image/audio generation.",
+  "rig": "E:/Blender/Yakuza Rips/yakuza6/chara.par.unpack/bone/c_man_bone.gmd",
+  "rigSha256": "00638d8baeef2d4d761c3b8d59797ab8d1553bab4410790314aeea2030fc0632",
+  "nativeGrip": {
+    "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_AttackBat01_Hit.x",
+    "sha256": "d6ed4e304cce1ccce3e355cfe958cf304c494c850ae0790d669068b861e7075c",
+    "authoredOffsets": {
+      "Bip01_Prop1": [
+        [
+          -0.043478310108184814,
+          -0.030916661024093628,
+          -0.998575747013092,
+          0.06845201551914215
+        ],
+        [
+          0.26906272768974304,
+          0.9622275233268738,
+          -0.04150630533695221,
+          -0.04706887528300285
+        ],
+        [
+          0.9621403813362122,
+          -0.27048417925834656,
+          -0.033517494797706604,
+          0.038814280182123184
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "Bip01_Prop2": [
+        [
+          0.04858189821243286,
+          0.8911296129226685,
+          0.451140433549881,
+          1.1213123798370361e-06
+        ],
+        [
+          0.7025991678237915,
+          0.29054421186447144,
+          -0.6495674252510071,
+          3.855675458908081e-07
+        ],
+        [
+          -0.7099249958992004,
+          0.3485282361507416,
+          -0.6119918823242188,
+          4.209578037261963e-07
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    "nativeOffsets": {
+      "Bip01_Prop1": [
+        [
+          -0.043479062616825104,
+          -0.030914172530174255,
+          -0.9985739588737488,
+          0.06845194101333618
+        ],
+        [
+          0.26905950903892517,
+          0.9622287750244141,
+          -0.04150472581386566,
+          -0.04706816002726555
+        ],
+        [
+          0.9621405601501465,
+          -0.2704819440841675,
+          -0.03351520001888275,
+          0.03881397470831871
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "Bip01_Prop2": [
+        [
+          0.048583902418613434,
+          0.8911311030387878,
+          0.45114317536354065,
+          1.560896635055542e-06
+        ],
+        [
+          0.702595055103302,
+          0.2905443608760834,
+          -0.6495702266693115,
+          3.594905138015747e-07
+        ],
+        [
+          -0.7099281549453735,
+          0.34852519631385803,
+          -0.6119855046272278,
+          3.3527612686157227e-07
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    }
+  },
+  "commandSource": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\command\\fighter_command.cfc",
+  "commandSha256": "45ccc0cc5772b01145adc51a212688b5dfc614967b0c39f79b26612e844b91bd",
+  "commandMappings": {
+    "AttackRevL": "P_KRU_BTL_SUD_ath_BBL_lf_md",
+    "AttackRevR": "P_KRU_BTL_SUD_ath_BBR_lf_md",
+    "Heavy_Rev": "P_KRU_BTL_SUD_ath_BKL_lf_md"
+  },
+  "clips": [
+    {
+      "animation": "ProjectYakuza_DD_DirectionalLeft",
+      "direction": "left",
+      "source": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\gmt\\P_KRU_BTL_SUD_ath_BBL_lf_md.gmt",
+      "sourceSha256": "022809c25c4302d7bcacbb1adf5427494c129a9b534da6e07836dcbed64a4791",
+      "bep": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\bep\\P_KRU_BTL_SUD_ath_BBL_lf_md.bep",
+      "bepSha256": "8f8c8267344bcfa5b8cb9001bc23d80d4f23b6e95658e5d61b1ca61e3972101e",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_DirectionalLeft.x",
+      "sha256": "7860b61cd21445c7fbc6d3eee76f1fe6e9089e617a908ce9081a61986f8ed09d",
+      "retargetSha256": "307abbd76e1ed601d5c7a7e97ffbae0845a21d6e48ba059c00796157b1d92a08",
+      "frames": 46,
+      "fps": 30,
+      "events": [
+        {
+          "kind": 68,
+          "start": 10.0,
+          "end": 16.0
+        },
+        {
+          "kind": 77,
+          "start": 10.0,
+          "end": 14.0
+        },
+        {
+          "kind": 75,
+          "start": 23.0,
+          "end": 45.0
+        }
+      ],
+      "contactFrame": 10
+    },
+    {
+      "animation": "ProjectYakuza_DD_DirectionalRight",
+      "direction": "right",
+      "source": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\gmt\\P_KRU_BTL_SUD_ath_BBR_lf_md.gmt",
+      "sourceSha256": "aabafb6495283328a1ad0538819af12e1f40b355f47a9d4fe45c73fb5f9fec33",
+      "bep": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\bep\\P_KRU_BTL_SUD_ath_BBR_lf_md.bep",
+      "bepSha256": "142a9c125b7a97af9d40496adc4c3bb5bd2c912f1eca567cb6d8f53bda0562eb",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_DirectionalRight.x",
+      "sha256": "e874d050ac2dd9e96a87c149e08ec0aeabd87ba62f955e837e1602bcda080439",
+      "retargetSha256": "ab666b0cbda7af3b8209fa6f9059d9a03338b57a118d602f4ec235f3b1033892",
+      "frames": 46,
+      "fps": 30,
+      "events": [
+        {
+          "kind": 68,
+          "start": 10.0,
+          "end": 16.0
+        },
+        {
+          "kind": 77,
+          "start": 10.0,
+          "end": 14.0
+        },
+        {
+          "kind": 75,
+          "start": 25.0,
+          "end": 45.0
+        }
+      ],
+      "contactFrame": 10
+    },
+    {
+      "animation": "ProjectYakuza_DD_DirectionalRear",
+      "direction": "rear",
+      "source": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\gmt\\P_KRU_BTL_SUD_ath_BKL_lf_md.gmt",
+      "sourceSha256": "5f73a289118dddf180550f4e2379ccf9704766f0cf56a7a7bd99d2d9de9a78be",
+      "bep": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\bep\\P_KRU_BTL_SUD_ath_BKL_lf_md.bep",
+      "bepSha256": "d328ccaf5dc0f255109afd7e242dd6f4c6f9f75b012c07df77ddd5803746c002",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_DirectionalRear.x",
+      "sha256": "a2bdf13061feb82113f8c9a82a200ada05fde2f6fdba191c596327a1f841ffef",
+      "retargetSha256": "b3ad8fb30514b0cf38ebf00266ffc46e69a39fa8f29475fa366b0da9f7b4c3d0",
+      "frames": 58,
+      "fps": 30,
+      "events": [
+        {
+          "kind": 68,
+          "start": 11.0,
+          "end": 17.0
+        },
+        {
+          "kind": 77,
+          "start": 11.0,
+          "end": 15.0
+        },
+        {
+          "kind": 75,
+          "start": 33.0,
+          "end": 57.0
+        }
+      ],
+      "contactFrame": 11
+    }
+  ],
+  "nativeFingerSource": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_AttackPunch01_Hit.x",
+  "nativeFingerSha256": "41209136aeefddf039c4486d682fb4943dafc4a6e0de000dcb077d76076d4461"
+}

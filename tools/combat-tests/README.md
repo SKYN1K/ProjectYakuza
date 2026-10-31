@@ -133,3 +133,7 @@ adjust_run_cadence.py slows run playback from 1.28 to 1.0 and scales only the ex
 ## 0.56.0 multiplayer lifecycle and relaxed holds
 
 MP fixtures cover split melee/action restart counters, fresh session counters on recycled player IDs, old-session state/damage rejection, scoped replay/deferred reset, actor replacement, stale heat/limb-effect cleanup, unavailable styles and old protection release. Weapon MP fixtures verify profile-specific hit-response/juggling lookup for native and supplemental hits. Native locomotion validation imports the six existing relaxed hold clips, verifies their hashes, and rejects frozen source-arm composites in relaxed selectors. No asset files are created or edited by this update.
+
+## 0.57.0 directional moves and taunt attention
+
+Build and run directional-tests.lua through build_directional_tests.py. It embeds actual Runtime, heading selection, move damage and quickstep readiness. Compile DirectionalAttackProbe.java, then run validate_directional_assets.py for native import/selectors, all original frames and command mappings, BEP contact markers, native AI methods and hand-prop FK. MP/weapon fixtures cover completion-only taunt leases, early/replay rejection, target eligibility, blocked paths, zombie ownership, streaming retries, hard path budgets and directional damage/profile isolation. Taunt lifecycle tests retain SP completion/interruption reward checks and attention timing. All tests run offline without launching PZ.

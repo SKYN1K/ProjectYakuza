@@ -111,3 +111,9 @@
 
 !/tools/combat-tests/build_boost_assets.py
 !/tools/combat-tests/adjust_run_cadence.py
+
+!/tools/combat-tests/build_directional_assets.py
+!/tools/combat-tests/build_directional_tests.py
+!/tools/combat-tests/directional-test-fixture.lua
+!/tools/combat-tests/validate_directional_assets.py
+!/tools/combat-tests/DirectionalAttackProbe.java

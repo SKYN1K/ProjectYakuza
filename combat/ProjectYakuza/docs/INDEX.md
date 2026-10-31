@@ -35,3 +35,5 @@ Older feature notes and JSON/TXT reports record previous development states and 
 - [Source-tracked punch effects](ATTACK_EFFECTS.md): first-light prototype, numeric attachment paths, timing, budgets and fidelity limits.
 
 - [Style-exclusive running and relaxed weapon holding](LOCOMOTION.md)
+
+- [Manual directional attacks and taunt attention](DIRECTIONAL_AND_TAUNTS.md)

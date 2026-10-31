@@ -74,3 +74,7 @@ Stale/replaced remote actors release observer action flags, weapon-profile/charg
 Server primary response planning and supplemental damage now resolve the equipped weapon's style view for hit responses and future juggling configuration, matching SP behavior. Native primary damage remains native and is never replayed. Music/UI preferences remain local; CVF retains its own network policy. Grabs remain disabled.
 
 The audit validates offline client/server command paths and native resource selection. It does not replace a real two-client test for network latency, native zombie ownership migration, corpse/death timing or GPU appearance. PZ was not started.
+
+## Directional lights and taunt attention (0.57.0)
+
+Directional lights use the normal native swing serial, isolated catalogued clips and supplemental hit limits; real weapon profiles cannot select DoD's unarmed directional map. Taunt attention is authorized from an observed timed-action lease and a fresh completion counter, then server-selected zombie IDs are relayed to their native AI owners. Per-completion/per-target deduplication, player sessions, path/range/eligibility limits and a 750 ms streaming retry bound apply. See DIRECTIONAL_AND_TAUNTS.md. Observer count is now 316 across both repeat cycles.

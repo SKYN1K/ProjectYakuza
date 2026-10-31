@@ -3,6 +3,7 @@ require "ProjectYakuza/Styles/DragonOfDojima"
 require "ProjectYakuza/NetworkProtocol"
 require "ProjectYakuza/Juggling"
 require "ProjectYakuza/BarrageRules"
+require "ProjectYakuza/TauntReactions"
 local ProjectYakuza=ProjectYakuza;local P=ProjectYakuza.NetworkProtocol
 local S={players={},grabs={},nextTick=0,reactions={},nextSession=0}
 ProjectYakuza.NetworkServer=S
@@ -70,6 +71,7 @@ function S.snapshot(p,a,s)
             for _,c in ipairs(clip.conditions) do if c.name=="PerformingAction" then actionAnim=c.value end end
             for _,move in ipairs(style.lightAttacks or {}) do if move.animation==clip.animation then supported=true end end
             for _,move in ipairs(style.extremeLightAttacks or {})do if move.animation==clip.animation then supported=true end end
+            for _,move in pairs(style.directionalAttacks and style.directionalAttacks.moves or {})do if move.animation==clip.animation then supported=true end end
             for _,move in ipairs(style.groundAttacks or {}) do if move.animation==clip.animation then supported=true end end
             for _,slot in pairs(style.actions) do
                 if slot.enabled and slot.animation==(actionAnim or clip.animation) then supported=true end
@@ -118,6 +120,24 @@ function S.snapshot(p,a,s)
     p:getModData().ProjectYakuzaStyle=a.style;p:getModData().ProjectYakuzaHeat=packet.heat
     if not equipped then S.release(p) end
     S.fanout(p,"state",packet)
+    S.tauntUpdate(p,packet,s,style,kind,activation,previous)
+end
+function S.tauntUpdate(p,packet,s,style,kind,action,previous)
+    local cfg=packet.equipped and ProjectYakuza.TauntReactions.config(style);local t=now()
+    if not cfg then s.tauntLease=nil;return end
+    local held=p:getPrimaryHandItem();local lease=s.tauntLease
+    if lease and (lease.style~=packet.style or lease.weapon~=held or t>lease.expires)then lease=nil;s.tauntLease=nil end
+    if kind=="taunt"and packet.action>0 and packet.action>(s.lastTauntAction or 0)then
+        s.lastTauntAction=packet.action
+        lease={action=packet.action,style=packet.style,weapon=held,started=t,duration=action.duration*1000,expires=t+action.duration*1000+1000};s.tauntLease=lease
+    end
+    if previous and packet.taunt>(previous.taunt or 0)then
+        s.tauntLease=nil
+        if not lease or packet.taunt~=(previous.taunt or 0)+1 or t-lease.started<lease.duration-250 then return end
+        local targets=ProjectYakuza.TauntReactions.react(p,style);local ids={};local seen={}
+        for _,z in ipairs(targets)do local id=z:getOnlineID();if P.integer(id,-32768,32767)and id~=-1 and not seen[id]then ids[#ids+1]=id;seen[id]=true end end
+        if #ids>0 then s.tauntResult=(s.tauntResult or 0)+1;S.fanout(p,"taunt",{player=p:getOnlineID(),event=s.tauntResult,style=packet.style,zombies=ids})end
+    elseif lease and packet.clip~=""and kind~="taunt"then s.tauntLease=nil end
 end
 function S.equip(p,a,s)
     if not alive(p) or not P.integer(a.request,1,1000000000) or type(a.style)~="string"

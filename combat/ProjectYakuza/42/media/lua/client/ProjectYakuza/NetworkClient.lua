@@ -1,6 +1,7 @@
 require "ProjectYakuza/Juggling"
 require "ProjectYakuza/Runtime"
 require "ProjectYakuza/NetworkProtocol"
+require "ProjectYakuza/TauntReactions"
 local ProjectYakuza=ProjectYakuza;local P=ProjectYakuza.NetworkProtocol
 local N={locals=setmetatable({}, {__mode="k"}),remote={},leases=setmetatable({}, {__mode="k"}),pending=setmetatable({}, {__mode="k"}),seen={},victims={},deferred={},sessions={},nextRemote=0}
 ProjectYakuza.Network=N
@@ -250,8 +251,10 @@ function N.applyState(p,packet,s)
     s.applied=packet.seq;s.actor=p
 end
 function N.defer(command,a)
-    if command~="impact" and command~="damage" and command~="juggle" then return end
-    if not P.integer(a.event,0,1000000000) or not P.integer(a.zombie,-32768,32767) then return end
+    if command~="impact" and command~="damage" and command~="juggle"and command~="taunt"then return end
+    if not P.integer(a.event,0,1000000000)then return end
+    if command=="taunt"then if type(a.zombies)~="table"or #a.zombies<1 or #a.zombies>8 then return end
+    elseif not P.integer(a.zombie,-32768,32767)then return end
     local key=command..":"..a.player..":"..a.event
     if N.seen[key] or N.deferred[key] then return end
     local count=0;for _ in pairs(N.deferred) do count=count+1 end
@@ -306,6 +309,20 @@ function N.command(module,command,a)
         return
     end
     if not p then N.defer(command,a);return end
+    if command=="taunt"then
+        local cfg=ProjectYakuza.TauntReactions.config(ProjectYakuza.getStyle(a.style))
+        if not cfg or not P.integer(a.event,0,1000000000)or type(a.zombies)~="table"or #a.zombies<1 or #a.zombies>cfg.maxTargets then return end
+        local key="taunt:"..a.player..":"..a.event;if N.seen[key]then return end
+        local ids={};local count=0
+        for _,id in ipairs(a.zombies)do if not P.integer(id,-32768,32767)or id==-1 or ids[id]then return end;ids[id]=true;count=count+1 end
+        local matched=0
+        for _,z in ipairs(ProjectYakuza.TauntReactions.targets(p,cfg,ids))do
+            matched=matched+1;local targetKey="tauntTarget:"..a.player..":"..a.event..":"..z:getOnlineID()
+            if not N.seen[targetKey]then N.seen[targetKey]=now();ProjectYakuza.TauntReactions.apply(p,z,cfg)end
+        end
+        if matched<count then N.defer(command,a)else N.seen[key]=now();N.deferred[key]=nil end
+        return
+    end
     local z=P.zombie(p,a.zombie)
     local recent=N.victims[a.zombie]
     if not z and recent and now()-recent.time<1500 and P.near(p,recent.z,3) then z=recent.z end

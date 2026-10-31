@@ -323,4 +323,13 @@ check(responseView==weaponView and planView==weaponView,'server supplemental dam
 responseView=nil;planView=nil;command('impact',{swing=900,zombie=z1.id})
 check(responseView==weaponView and planView==weaponView,'server native primary responses use the same weapon profile as SP')
 responses.resolve=oldResolve;juggle.plan=oldPlan
+local beforeDirectional=server.players[p.id].seq
+snapshot(p,{weaponProfile='bat',clip='ProjectYakuza_DD_DirectionalLeft',move='dd_directional_left',swing=901})
+check(server.players[p.id].seq==beforeDirectional,'real weapons cannot send unarmed directional attacks')
+p:setPrimaryHandItem(p.token);clock=clock+1100
+snapshot(p,{weaponProfile='',clip='ProjectYakuza_DD_DirectionalLeft',move='dd_directional_left',swing=901})
+check(server.players[p.id].packet.move=='dd_directional_left'and P.move(baseStyle.id,'dd_directional_left').directional,'server resolves newly supplied manual-turn light')
+z1.health=100;z2.health=100;command('impact',{swing=901,zombie=z1.id});local oldHits=z2.hits
+command('extra',{swing=901,zombie=z2.id});command('extra',{swing=901,zombie=z2.id})
+check(z1.health==100 and z2.hits==oldHits+1 and math.abs(z2.health-99.7)<.000001,'directional primary stays native and secondary damage is x0.75 once')
 return true,'PASS '..count..' weapon MP, boost authorization, barrage source timing, duplicates, caps, walls, damage authority and depletion checks'

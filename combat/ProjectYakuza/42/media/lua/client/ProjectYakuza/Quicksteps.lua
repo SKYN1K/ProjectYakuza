@@ -201,11 +201,13 @@ function Q.clearLightCancel(p)
 end
 function Q.cancelReady(p,job)
     local style=ProjectYakuza.getPlayerStyle(p);local slot=style and style.actions.quickstep
+    local state=ProjectYakuza.stateFor(p)
+    local directionalLock=state.active and state.directionalLight and state.activeLightMove and state.activeLightMove.directional and state.multiHitToken==job.stamp
     if not style or style.id~=job.style or style.quickstepCancelLights~=true or not slot or not slot.enabled
         or not slot.variants or not slot.variants[job.direction] or slot.variants[job.direction].enabled==false
         or not ProjectYakuza.isEquipped(p) or not p:isAiming() or p:isDead() or p:isOnFloor() or p:isKnockedDown()
         or p:isClimbing() or p:getVehicle() or p:isDraggingCorpse() or p:isAsleep() or p:hasTimedActions()
-        or p:isBlockMovement() or p:getIgnoreMovement() or (p:getHitReaction() or "")~=""
+        or (p:isBlockMovement()and not directionalLock) or p:getIgnoreMovement() or (p:getHitReaction() or "")~=""
         or ProjectYakuza.activeActions[p] or getCore():isDoingTextEntry() then return false,"not_ready" end
     if Q.quota(p)<=0 then return false,"quickstep_limit" end
     if now()<(Q.nextAllowed[p:getPlayerNum()] or 0) then return false,"cooldown" end

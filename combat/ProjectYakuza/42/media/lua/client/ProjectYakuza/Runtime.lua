@@ -4,6 +4,7 @@ require "ProjectYakuza/Styles/DragonOfDojima"
 require "ProjectYakuza/Reactions"
 require "ProjectYakuza/Heat"
 require "ProjectYakuza/Bindings"
+require "ProjectYakuza/DirectionalAttacks"
 local ProjectYakuza = ProjectYakuza
 local B=ProjectYakuza.Bindings
 local Combo = ProjectYakuza.Combo
@@ -58,7 +59,7 @@ function ProjectYakuza.resetPlayer(player, reason,keepStance)
     ProjectYakuza.Heat.endSwing(player)
     if ProjectYakuza.Quicksteps then ProjectYakuza.Quicksteps.pending[player]=nil end
     if ProjectYakuza.RunningAttacks then ProjectYakuza.RunningAttacks.finish(player) end
-    if s.groundMove or s.finisherMove or s.pendingFinisher then player:setBlockMovement(false) end
+    if s.groundMove or s.finisherMove or s.pendingFinisher or s.directionalLight then player:setBlockMovement(false) end
     Combo.reset(s)
     ProjectYakuza.setVisual(player,keepStance==true,"")
     player:setVariable("ProjectYakuzaClipStarted", "")
@@ -121,9 +122,13 @@ local function onSwing(player, weapon)
         s.queued, s.queuedFinisher = 0, nil
     else
         s.finisherBranch, s.finisherFinishedAt, s.finisherExtreme = nil, nil, nil
+        local directional=ProjectYakuza.DirectionalAttacks and ProjectYakuza.DirectionalAttacks.select(player,s,style)
         if s.lightMode~=nil and s.lightMode~=(style.extremeView==true) then Combo.reset(s) end
         s.lightMode=style.extremeView==true
-        move = Combo.begin(s, style, now());s.activeLightMove=move
+        move = Combo.begin(s, style, now())
+        if directional then move=directional;s.step=#style.lightAttacks;s.queued=0 end
+        s.activeLightMove=move
+        if ProjectYakuza.DirectionalAttacks then ProjectYakuza.DirectionalAttacks.record(player,s,move)end
     end
     if move.chargeBranch then s.step=move.chargeBranch end
     s.multiHitToken={};s.effectVictims=nil
@@ -179,6 +184,7 @@ local function onFinished(player, weapon)
         return
     end
     if Combo.finish(s, now()) then
+        if s.directionalLight then player:setBlockMovement(false);Combo.reset(s)end
         s.activeLightMove=nil
         trace(player, "finished step=" .. s.step .. " queued=" .. s.queued)
         ProjectYakuza.emit("lightAttackFinished", player, s.step)
@@ -194,6 +200,7 @@ end
 function ProjectYakuza.queueFinisher(player)
     if not ProjectYakuza.isEquipped(player) or not player:isAiming() or player:isDead() then return false, "not_ready" end
     local s, style = ProjectYakuza.stateFor(player), ProjectYakuza.getPlayerStyle(player)
+    if s.directionalLight then return false,"directional_ender"end
     local slot = style.actions.finisher
     if not slot or not slot.enabled then return false, "not_implemented" end
     local first = s.finisherMove or s.pendingFinisher
@@ -412,6 +419,7 @@ local function onUpdate(player)
     if ProjectYakuza.RunningAttacks then ProjectYakuza.RunningAttacks.update(player) end
     ProjectYakuza.syncGroundAttack(player,style,s)
     if (counterPressed or finisherPressed) and ProjectYakuza.TigerDrop and ProjectYakuza.TigerDrop.tryCounter(player) then if ProjectYakuza.ChargedHeavy then ProjectYakuza.ChargedHeavy.clearPlayer(player) end;s.lastDown=B.down("light");return end
+    if s.directionalLight then finisherPressed=false;finisherDown=false end
     local barrageInput,barrageStarted
     if ProjectYakuza.Barrages then barrageInput,barrageStarted=ProjectYakuza.Barrages.input(player,s,style,finisherPressed) end
     if barrageStarted then s.lastDown=B.down("light");return end

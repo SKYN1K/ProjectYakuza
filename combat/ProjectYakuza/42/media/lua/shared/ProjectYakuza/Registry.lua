@@ -53,7 +53,7 @@ end
 
 local ProjectYakuza = ProjectYakuza
 ProjectYakuza.FEATURES={grab=false}
-ProjectYakuza.VERSION = "0.56.0"
+ProjectYakuza.VERSION = "0.57.0"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -204,6 +204,21 @@ function ProjectYakuza.validateStyle(style)
     if style.extremeLightAttacks~=nil then
         if type(style.extremeLightAttacks)~="table" or type(style.lightAttacks)~="table" or #style.extremeLightAttacks~=#style.lightAttacks then problem("extremeLightAttacks must match light chain length")
         else for i,value in ipairs(style.extremeLightAttacks)do move(value,"extremeLightAttacks["..i.."]",true)end end
+    end
+    if style.directionalAttacks~=nil then
+        local cfg=style.directionalAttacks
+        if type(cfg)~="table"or type(cfg.moves)~="table"then problem("directionalAttacks requires moves")
+        else
+            local minimum,rear=cfg.minimumDegrees or 65,cfg.rearDegrees or 145
+            if not number(minimum)or not number(rear)or minimum<30 or rear<=minimum or rear>180 then problem("invalid directional turn thresholds")end
+            local count=0
+            for key,value in pairs(cfg.moves)do count=count+1;if key~="left"and key~="right"and key~="rear"then problem("invalid directional move key")end;move(value,"directionalAttacks.moves."..tostring(key),true)end
+            if count==0 then problem("directionalAttacks requires at least one move")end
+        end
+    end
+    if style.tauntReactions~=nil then
+        local cfg=style.tauntReactions
+        if type(cfg)~="table"or not number(cfg.radius)or cfg.radius<1 or cfg.radius>6 or not number(cfg.maxTargets)or cfg.maxTargets<1 or cfg.maxTargets>8 or cfg.maxTargets~=math.floor(cfg.maxTargets)then problem("tauntReactions requires radius 1..6 and maxTargets 1..8")end
     end
     if style.comboResetMs~=nil and (not number(style.comboResetMs) or style.comboResetMs<0) then problem("comboResetMs must be nonnegative milliseconds") end
     if style.lightBufferLimit~=nil and (not number(style.lightBufferLimit) or style.lightBufferLimit<1 or style.lightBufferLimit~=math.floor(style.lightBufferLimit)) then problem("lightBufferLimit must be a positive integer") end

@@ -1,5 +1,6 @@
 require "ProjectYakuza/Runtime"
 require "ProjectYakuza/Defense"
+require "ProjectYakuza/TauntReactions"
 require "ISUI/ISEmoteRadialMenu"
 require "TimedActions/ISBaseTimedAction"
 require "TimedActions/ISTimedActionQueue"
@@ -28,6 +29,7 @@ function A:isUsingTimeout()return false end
 function A:isValid()
     local p=self.character
     return ProjectYakuza.isEquipped(p) and ProjectYakuza.getPlayerStyle(p).id==self.context.style.id
+        and p:getPrimaryHandItem()==self.held
         and not p:isDead() and not p:isOnFloor() and not p:isKnockedDown()
         and not p:isClimbing() and not p:getVehicle() and not p:isAsleep()
         and not p:isDraggingCorpse() and (p:getHitReaction() or "")==""
@@ -75,6 +77,7 @@ function A:perform()
     if complete and not ProjectYakuza.Heat.isExtreme(self.character) then
         ProjectYakuza.setHeat(self.character,ProjectYakuza.getHeat(self.character)+ProjectYakuza.Heat.stockSize())
     end
+    if complete and not isClient()and ProjectYakuza.TauntReactions then ProjectYakuza.TauntReactions.react(self.character,self.context.style)end
     self:cleanup(complete==true);ISBaseTimedAction.perform(self)
 end
 function A:stop()self:cleanup(false);ISBaseTimedAction.stop(self)end
@@ -100,7 +103,7 @@ function A:update()
     elseif t-self.startedAt>self.context.action.duration*1000+800 or (t-self.startedAt>600 and not self.seenClip) then self:forceStop() end
 end
 function A:new(c)
-    local o=ISBaseTimedAction.new(self,c.player);o.context=c
+    local o=ISBaseTimedAction.new(self,c.player);o.context=c;o.held=c.player:getPrimaryHandItem()
     o.maxTime=-1;o.stopOnWalk=false;o.stopOnRun=false;o.stopOnAim=false;o.ignoreHandsWounds=true
     return o
 end

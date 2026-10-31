@@ -93,6 +93,7 @@ function P.move(style,node)
     if ProjectYakuza.Weapons then return ProjectYakuza.Weapons.findMove(s,node) end
     for _,move in ipairs(s.lightAttacks) do if move.nodeValue==node then return move end end
     for _,move in ipairs(s.extremeLightAttacks or {})do if move.nodeValue==node then return move end end
+    for _,move in pairs(s.directionalAttacks and s.directionalAttacks.moves or {})do if move.nodeValue==node then return move end end
     for _,move in ipairs(s.groundAttacks or {}) do if move.nodeValue==node then return move end end
     for _,slot in pairs(s.actions) do
         if slot.nodeValue==node then return slot end
