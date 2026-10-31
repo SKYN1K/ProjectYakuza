@@ -110,8 +110,10 @@ function N.capture(p,force,onlyChanged)
         chargePower=action and action.kind=="heavyCharge" and action.timedAction and (action.timedAction.power or 0) or move and move.chargePower or 0,
         swing=s.swing,action=s.action or 0,taunt=s.taunt or 0,linked=p:GetVariable("ProjectYakuzaLinkedDouble")=="true",ground=combo.groundMove~=nil,phase=p:GetVariable("ProjectYakuzaDefensePhase") or "",
         grabMoving=p:GetVariable("ProjectYakuzaGrabMoving")=="true",grabDirection=action and action.kind=="grab" and action.target:GetVariable("ProjectYakuzaGrabWalkDirection") or "forward"}
+    if equipped and type(style.heatAttackSpeed)=="table"and (combo.active or action and action.timedAction and action.timedAction.started)then packet.attackHeatSpeed=ProjectYakuza.Heat.attackHeatMultiplier and ProjectYakuza.Heat.attackHeatMultiplier(p)or 1 end
     local key=packet.style..tostring(equipped)..math.floor(packet.heat)..math.floor(packet.fuel)..tostring(ProjectYakuza.Heat.stocks(p))..tostring(packet.extreme)..packet.clip..packet.move..packet.phase..tostring(packet.linked)..tostring(packet.grabMoving)..packet.grabDirection..tostring(packet.taunt)..":"..packet.swing..":"..packet.action
     key=key..":"..packet.weaponProfile..":"..math.floor(packet.chargePower*10)
+    if packet.attackHeatSpeed then key=key..":"..tostring(packet.attackHeatSpeed)end
     if (force and not onlyChanged) or key~=s.key or t>=(s.heartbeat or 0) then
         s.seq=s.seq+1;packet.seq=s.seq;sendClientCommand(p,P.module,"state",packet)
         s.key=key;s.heartbeat=t+1000
@@ -222,14 +224,14 @@ function N.applyState(p,packet,s)
     if p:isLocalPlayer() then return end
     p:getModData().ProjectYakuzaStyle=packet.style;p:getModData().ProjectYakuzaHeat=packet.heat
     ProjectYakuza.Heat.states[p]=ProjectYakuza.Heat.states[p] or {}
-    local heat=ProjectYakuza.Heat.states[p];heat.extreme=packet.extreme;heat.fuel=packet.fuel
+    local heat=ProjectYakuza.Heat.states[p];heat.extreme=packet.extreme;heat.fuel=packet.fuel;heat.attackHeatSpeed=packet.attackHeatSpeed
     p:setVariable("ProjectYakuzaActive",packet.equipped);p:setVariable("ProjectYakuzaStyle",packet.equipped and packet.style or "")
     p:setVariable("ProjectYakuzaLinkedDouble",packet.linked);p:setVariable("DFCGroundEnabled",packet.ground)
     p:setVariable("ProjectYakuzaMove",packet.move)
     p:setVariable("ProjectYakuzaWeaponProfile",packet.equipped and (packet.weaponProfile or "") or "")
     p:setVariable("ProjectYakuzaRemoteChargePower",tostring(packet.chargePower or 0))
     p:setVariable("ProjectYakuzaRemoteObserver",packet.equipped)
-    ProjectYakuza.Heat.playback(p,packet.extreme)
+    ProjectYakuza.Heat.playback(p,packet.extreme,packet.attackHeatSpeed or 1)
     local clip=P.clip(packet.style,packet.clip)
     local serialChanged=clip and (clip.group=="actions" and s.action~=(packet.action or 0) or clip.group~="actions" and s.swing~=packet.swing)
     if s.style~=packet.style or s.clip~=packet.clip or serialChanged then
@@ -311,6 +313,9 @@ function N.command(module,command,a)
         if s and p and s.actor and s.actor~=p then N.clearRemote(a.player);N.resetPeerEvents(a.player);s=nil end
         if s and a.seq<s.packet.seq then return end
         if type(a.style)~="string"or (a.style~="none"and not ProjectYakuza.getStyle(a.style))then N.clearRemote(a.player);return end
+        local speedStyle=ProjectYakuza.getStyle(a.style)
+        if speedStyle and ProjectYakuza.Weapons then speedStyle=ProjectYakuza.Weapons.view(speedStyle,a.weaponProfile)end
+        if not ProjectYakuza.HeatSpeed.allowed(speedStyle,a.attackHeatSpeed,a.extreme==true)then return end
         if p and p:isLocalPlayer() then return end
         if not s then s={};N.remote[a.player]=s end
         s.packet=a;s.last=now()

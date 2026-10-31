@@ -1,6 +1,6 @@
 # Documentation index
 
-Current manual: Project Yakuza 0.60.0, Lua API 3, MP protocol 2.
+Current manual: Project Yakuza 0.61.0, Lua API 3, MP protocol 2.
 
 | Task | Guide |
 | --- | --- |
@@ -21,6 +21,7 @@ Current manual: Project Yakuza 0.60.0, Lua API 3, MP protocol 2.
 | Future launchers and aerial followup hooks | [Juggling](JUGGLING.md) |
 | Enemy flinch/stagger/knockdown profiles | [Hit responses](HIT_RESPONSES.md) |
 | Attack endurance costs and tuning | [Exertion](EXERTION.md) |
+| Optional speed curves for addon styles | [Heat attack speed](HEAT_ATTACK_SPEED.md) |
 | Heat rules and tuning | [Heat](HEAT.md) |
 | Code maintenance, lookup caches and comment checks | [Performance](PERFORMANCE.md) |
 | Validate/package/troubleshoot | [Testing](TESTING.md) |
@@ -43,4 +44,4 @@ The JSON records identify original supplied files, conversions and hashes for re
 
 - [Manual directional attacks and taunt attention](DIRECTIONAL_AND_TAUNTS.md)
 
-- [Current validation](VALIDATION_0.60.0.md)
+- [Current validation](VALIDATION_0.61.0.md)

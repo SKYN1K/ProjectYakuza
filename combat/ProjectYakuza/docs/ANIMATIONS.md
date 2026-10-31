@@ -48,3 +48,7 @@ Upper-body stance/guard masks use Bip01_Spine1 descendants/props while native wa
 enemyReactions=true opts into existing move reaction mappings. New reaction IDs also need victim clips/conditions, repeat-hit states and MP validation. A new string alone creates no victim animation.
 
 Remote nodes preserve clip/speed/blends/masks but contain zero events. Both ProjectYakuzaRemoteCycle variants permit repeated same-clip actions. Use the [observer builder](MULTIPLAYER.md) and native parser checks. Conversion/cropping must preserve supplied provenance; do not generate/upscale missing assets.
+
+## Optional Heat attack speed (0.61.0)
+
+Addon styles can opt in with heatAttackSpeed={max=1.25,power=1,useExtremeFuel=false}, with per-weapon overrides. The curve is sampled per committed attack, applies to the existing native speed variables and is bounded/replicated in MP snapshots. Fixed-speed timed clips are not automatically retimed. Dragon of Dojima does not enable this feature. See [Heat-based attack speed](HEAT_ATTACK_SPEED.md) for validation, timing and authoring contracts.

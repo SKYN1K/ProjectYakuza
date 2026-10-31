@@ -20,3 +20,7 @@ Activation chooses enabled clips without immediate repetition when alternatives 
 Require ProjectYakuza/Heat. getHeat/setHeat use ordinary raw points. Heat.stockSize(), stocks(player), display(player), isExtreme(player) provide UI/status. Heat.toggle requests activation; start/stop are lower-level lifecycle helpers, not input shortcuts. Heat.lose removes partial charge/active fuel. Configured action costs debit only on accepted start and are not automatically refunded on cancel. Put costs on variants themselves. Ordinary heat transfers on activation: custom moves spending Extreme Heat fuel need explicit validated fuel behavior instead of ordinary heatStocks costs. Native strike hooks already apply damage/gain once.
 
 Version 0.42.0 halves confirmed-hit heat gain relative to 0.41.0 (2.5 to 1.25 raw points per damage). The taunt reward remains one stock; losses, Extreme Heat duration/fuel and its no-gain rule are unchanged.
+
+## Optional Heat attack speed (0.61.0)
+
+Addon styles can opt in with heatAttackSpeed={max=1.25,power=1,useExtremeFuel=false}, with per-weapon overrides. The curve is sampled per committed attack, applies to the existing native speed variables and is bounded/replicated in MP snapshots. Fixed-speed timed clips are not automatically retimed. Dragon of Dojima does not enable this feature. See [Heat-based attack speed](HEAT_ATTACK_SPEED.md) for validation, timing and authoring contracts.

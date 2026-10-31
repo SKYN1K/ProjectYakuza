@@ -87,3 +87,7 @@ Moving from the style item to a supported weapon keeps DoD selected and deletes 
 ## Attack endurance (0.60.0)
 
 Styles can opt in with exertion={}, weapon profiles can override that table, and individual moves can provide enduranceCost. Actual attacks publish attackCommitted once; the local owner applies native fitness/trait scaling and reports attackEnduranceSpent. Hits, remote playback, charge holds and queue requests do not charge again. See [Exertion](EXERTION.md) for defaults, validation, custom actions and lifecycle.
+
+## Optional Heat attack speed (0.61.0)
+
+Addon styles can opt in with heatAttackSpeed={max=1.25,power=1,useExtremeFuel=false}, with per-weapon overrides. The curve is sampled per committed attack, applies to the existing native speed variables and is bounded/replicated in MP snapshots. Fixed-speed timed clips are not automatically retimed. Dragon of Dojima does not enable this feature. See [Heat-based attack speed](HEAT_ATTACK_SPEED.md) for validation, timing and authoring contracts.

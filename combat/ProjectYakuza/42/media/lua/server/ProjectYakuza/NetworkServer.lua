@@ -83,6 +83,9 @@ function S.snapshot(p,a,s)
     local kind,activation
     local move=equipped and P.move(a.style,a.move) or nil
     if move and not S.extremeMoveAllowed(s,style,move,a.swing,a.extreme==true and style.heat==true) then return end
+    if not ProjectYakuza.HeatSpeed.allowed(style,a.attackHeatSpeed,a.extreme==true)then return end
+    local old=s.packet
+    if old and old.style==a.style and old.weaponProfile==(profile or"")and old.clip~=""and clip and old.clip==clip.id and old.move==a.move and old.swing==a.swing and old.action==(a.action or 0)and (old.attackHeatSpeed or 1)~=(a.attackHeatSpeed or 1)then return end
     if clip then kind,activation=P.kind(a.style,clip.id) end
     if not equipped or kind~="heatActivation" then S.restoreProtection(p,s);s.wasActivation=false
     elseif not s.wasActivation then
@@ -96,6 +99,7 @@ function S.snapshot(p,a,s)
         heat=equipped and a.heat or 0,fuel=equipped and a.fuel or 0,extreme=equipped and a.extreme==true and style.heat==true,
         clip=clip and clip.id or "",move=equipped and type(a.move)=="string" and P.move(a.style,a.move) and a.move or "",
         chargePower=equipped and (a.chargePower or 0) or 0,
+        attackHeatSpeed=equipped and type(style.heatAttackSpeed)=="table"and a.attackHeatSpeed or nil,
         swing=P.integer(a.swing,0,1000000000) and a.swing or 0,
         action=P.integer(a.action,0,1000000000) and a.action or 0,
         taunt=equipped and style.actions.taunt and P.integer(a.taunt,0,1000000000) and a.taunt or 0,

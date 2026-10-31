@@ -1,5 +1,31 @@
 ProjectYakuza = ProjectYakuza or {}
 do
+local S={};ProjectYakuza.HeatSpeed=S
+local function finite(v)return type(v)=="number"and v==v and v<math.huge and v>-math.huge end
+function S.valid(cfg)
+    if cfg==nil or cfg==false then return true end
+    if type(cfg)~="table"or not finite(cfg.max)or cfg.max<1 or cfg.max>2 then return false end
+    if cfg.power~=nil and (not finite(cfg.power)or cfg.power<.25 or cfg.power>4)then return false end
+    if cfg.useExtremeFuel~=nil and type(cfg.useExtremeFuel)~="boolean"then return false end
+    for key in pairs(cfg)do if key~="max"and key~="power"and key~="useExtremeFuel"then return false end end
+    return true
+end
+function S.factor(style,heat,fuel,extreme)
+    local cfg=style and style.heatAttackSpeed
+    if not style or style.heat~=true or type(cfg)~="table"or not S.valid(cfg)or extreme and not cfg.useExtremeFuel then return 1 end
+    local value=extreme and fuel or heat
+    if not finite(value)then return 1 end
+    return 1+(cfg.max-1)*(math.max(0,math.min(100,value))/100)^(cfg.power or 1)
+end
+function S.allowed(style,value,extreme)
+    if value==nil then return true end
+    if not finite(value)or value<1 or value>2 then return false end
+    local cfg=style and style.heatAttackSpeed
+    if not style or style.heat~=true or type(cfg)~="table"or not S.valid(cfg)or extreme and not cfg.useExtremeFuel then return value==1 end
+    return value<=cfg.max
+end
+end
+do
 local Q={};ProjectYakuza.QTE=Q
 local function finite(x)return type(x)=="number"and x==x and x<math.huge and x>-math.huge end
 function Q.valid(def,durationMs)
@@ -107,7 +133,7 @@ end
 
 local ProjectYakuza = ProjectYakuza
 ProjectYakuza.FEATURES={grab=false}
-ProjectYakuza.VERSION = "0.60.0"
+ProjectYakuza.VERSION = "0.61.0"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -254,6 +280,7 @@ function ProjectYakuza.validateStyle(style)
     for _,key in ipairs({"heat","combatVoices","quickstepVoices","tigerDrop","enemyReactions","quickstepCancelLights"}) do
         if style[key]~=nil and type(style[key])~="boolean" then problem(key.." must be true or false") end
     end
+    if not ProjectYakuza.HeatSpeed.valid(style.heatAttackSpeed)then problem("heatAttackSpeed requires max 1..2, optional power 0.25..4 and useExtremeFuel boolean")end
     if style.exertion~=nil and style.exertion~=false then
         local allowed={light=true,directional=true,quickstepAttack=true,ground=true,running=true,dropkick=true,heavy=true,finisher=true,double=true,charged=true,counter=true,heatAction=true}
         if type(style.exertion)~="table"then problem("exertion must be a cost table or false")

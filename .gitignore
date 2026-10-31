@@ -132,3 +132,6 @@
 !/tools/combat-tests/build_exertion_tests.py
 !/tools/combat-tests/exertion-test-fixture.lua
 !/tools/combat-tests/ExertionProbe.java
+
+!/tools/combat-tests/build_heat_speed_tests.py
+!/tools/combat-tests/heat-speed-test-fixture.lua

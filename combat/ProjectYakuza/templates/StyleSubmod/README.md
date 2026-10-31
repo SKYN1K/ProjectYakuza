@@ -12,3 +12,5 @@ Copy to your addon root under Zomboid/mods; keep common/. This folder is not loa
 Music/sounds/heat/Kiryu effects are off. Leave the sound script inactive until recordings exist; use two distinct tracks for continuous non-repeating shuffle. Existing PZ playback is referenced, not generated. See [authoring](../../docs/STYLE_AUTHORING.md), [actions](../../docs/ACTIONS.md) and [testing](../../docs/TESTING.md).
 
 Custom actions can use the shared ProjectYakuza.QTE sequence engine with configurable timing, registered bindings and result/cancellation events. See the framework docs/QTE.md guide; style handlers still own supplied animations, UI, effects and multiplayer authority.
+
+Optional heatAttackSpeed={max=1.25} adds a captured per-attack Heat multiplier for your style, provided its native nodes use the framework speed variables. See docs/HEAT_ATTACK_SPEED.md for weapon overrides, Extreme policy, MP bounds and fixed-speed clip limits. DoD does not opt in.

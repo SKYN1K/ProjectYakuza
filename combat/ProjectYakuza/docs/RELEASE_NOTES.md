@@ -1,9 +1,9 @@
-# Project Yakuza 0.60.0
+# Project Yakuza 0.61.0
 
-- Added graded attack-endurance costs to Dragon of Dojima, including its supported weapon profiles. Lights cost the least; heavies, finishers, charged attacks and paired finishes cost more. Normal PZ exhaustion and recovery handle the resulting endurance loss.
-- Costs apply once when an attack commits, including misses, with native fitness/trait scaling. Rejected/queued input and cancelled charge holds are free. Multi-target hits, automatic ground rerouting, QTE hits and remote observers do not stack duplicate costs. Unlimited-endurance mode is respected and costs cannot exceed available endurance.
-- Native weapon expenditure remains intact. Added optional per-style/per-weapon cost tables, per-move enduranceCost and documented commitment/spending events for addon authors.
-- Removed 109 obsolete docs files: superseded feature notes, old release validations, raw test logs and outdated verification reports. Retained current guides and asset-source records, including disabled grab assets. Only the current validation report is distributed; history remains in earlier Git commits/releases.
-- Added offline Runtime/exertion, paired-action commitment and native API checks. All new source and tools are comment-free. No visual/audio/animation assets were created or modified, and the separate voice pack is untouched.
+- Added optional Heat-based attack-speed curves for addon styles: maximum multiplier, curve power and optional remaining-fuel scaling during Extreme Heat.
+- Captured the curve once per committed attack, with weapon overrides and cleanup on swing/style/equipment changes. Native variable-speed clips and whoosh timing use the captured value; fixed-speed timed/QTE scenes keep their authored timing.
+- Added bounded multiplayer factor replication and rejection of mid-clip factor changes, invalid values and attempts to enable the feature on unconfigured styles.
+- Dragon of Dojima and its weapon profiles do not enable the feature. Its complete style definition and all existing media/native definitions are byte-identical to 0.60.0; its normal and Extreme speeds are unchanged.
+- Added developer documentation and offline curve/lifecycle, fixed-style behavior, feedback and multiplayer checks. Code remains comment-free; no graphical/audio/animation assets or separate voice-pack files were changed.
 
-PZ was not launched. Restart matching 0.60.0 client/server installations before testing. See EXERTION.md and VALIDATION_0.60.0.md.
+PZ was not launched. The feature has no gameplay effect on the current style. Restart matching 0.61.0 installations before testing future addon styles. See HEAT_ATTACK_SPEED.md and VALIDATION_0.61.0.md.

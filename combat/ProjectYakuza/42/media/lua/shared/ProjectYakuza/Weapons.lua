@@ -27,6 +27,7 @@ function W.register(styleId,profile)
     view.hitResponses=profile.hitResponses;view.juggling=profile.juggling
     view.sounds=profile.sounds or false
     if profile.exertion~=nil then view.exertion=profile.exertion end
+    if profile.heatAttackSpeed~=nil then view.heatAttackSpeed=profile.heatAttackSpeed end
     local valid,errors=PY.validateStyle(view);assert(valid,table.concat(errors,"; "))
     if view.weaponStandaloneHeavy then
         local slot=view.actions.finisher

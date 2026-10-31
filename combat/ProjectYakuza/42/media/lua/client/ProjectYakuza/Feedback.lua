@@ -117,15 +117,16 @@ function F.swing(p,style,step,move)
     if token and ProjectYakuza.isStyleToken(token) then token:setZombieHitSound(hit) end
     local swing=kick and F.sound(p,"kickSwing") or F.sound(p,"punchSwing")
     if not swing then return end
-    local duration=move.duration/(ProjectYakuza.Heat.isExtreme(p) and ProjectYakuza.Heat.config.extremeSpeed or 1)
+    local heatSpeed=ProjectYakuza.Heat.attackHeatMultiplier and ProjectYakuza.Heat.attackHeatMultiplier(p)or 1
+    local duration=move.duration/(ProjectYakuza.Heat.isExtreme(p) and ProjectYakuza.Heat.config.extremeSpeed or 1)/heatSpeed
     local delay=math.max(0,((move.impact or .2)*duration-.07)*1000)
     local time=getTimestampMs()
     F.pending[p]={stamp=s.multiHitToken or s.startedAt,due=time+delay,last=time,sound=swing}
     local sourceDuration=move.duration*(move.speed or style.attackSpeed or 1)
     if type(move.animation)=="string" and p.dbgGetAnimTrackName and ProjectYakuza.AttackEffects and sourceDuration>0 then
         local job=F.pending[p];job.animation=move.animation
-        job.sourceTime=math.max(0,(move.impact or .2)*sourceDuration-.07*(move.speed or style.attackSpeed or 1))
-        job.sourceEnd=math.min(sourceDuration,job.sourceTime+.18*(move.speed or style.attackSpeed or 1));job.waitMs=0
+        job.sourceTime=math.max(0,(move.impact or .2)*sourceDuration-.07*(move.speed or style.attackSpeed or 1)*heatSpeed)
+        job.sourceEnd=math.min(sourceDuration,job.sourceTime+.18*(move.speed or style.attackSpeed or 1)*heatSpeed);job.waitMs=0
         job.timeout=math.min(5000,math.max(350,duration*1000+500))
     end
     local effect=move.attackEffects

@@ -6,10 +6,15 @@ H.config={maxStocks=6,gainPerDamage=1.25,lossPerDamage=0.5,idleGraceMs=3000,idle
     knockdownLoss=8,secondsPerStock=3.75,attackFuelCost=1.5,extremeDamage=1.5,extremeSpeed=1.2}
 local function time()return getTimestampMs()end
 function H.enabled(p)local style=ProjectYakuza.getPlayerStyle(p);return style and style.heat==true or false end
-function H.playback(p,extreme)
+function H.attackHeatMultiplier(p)
+    local s=H.states[p];return s and s.attackHeatSpeed or 1
+end
+function H.playback(p,extreme,heatFactor)
     local style=ProjectYakuza.getPlayerStyle(p) or {}
     local speed=style.attackSpeed or 1
-    local factor=extreme and H.config.extremeSpeed or 1
+    local heat=type(style.heatAttackSpeed)=="table"and (heatFactor or H.attackHeatMultiplier(p))or 1
+    if not ProjectYakuza.HeatSpeed.allowed(style,heat,extreme)then heat=1 end
+    local factor=(extreme and H.config.extremeSpeed or 1)*heat
     p:setVariable("ProjectYakuzaCombatSpeed",speed*factor)
     p:setVariable("ProjectYakuzaChargedHeavySpeed",(((style.actions and style.actions.chargedHeavy) or {}).speed or speed)*factor)
     p:setVariable("ProjectYakuzaRunningKneeSpeed",(style.runningKneeSpeed or speed)*factor)
@@ -44,7 +49,7 @@ function H.applyMoveDamage(p,move)
 end
 function H.endSwing(p)
     local s=H.states[p];if not s then return end
-    H.restoreMoveDamage(s.damageWeapon);s.damageWeapon=nil;s.damageMultiplier=nil
+    H.restoreMoveDamage(s.damageWeapon);s.damageWeapon=nil;s.damageMultiplier=nil;s.attackHeatSpeed=nil
 end
 function H.prepareToken(item)
     if not item then return end
@@ -119,7 +124,9 @@ function H.lose(p,amount)
 end
 function H.onSwing(p,move)
     local s=state(p);initialize(p,s);s.lastAction=time()
-    if s.extreme then H.lose(p,H.config.attackFuelCost)
+    local style=ProjectYakuza.getPlayerStyle(p);local curve=style and type(style.heatAttackSpeed)=="table"
+    s.attackHeatSpeed=curve and ProjectYakuza.HeatSpeed.factor(style,ProjectYakuza.getHeat(p),s.fuel,s.extreme)or nil
+    if s.extreme then H.lose(p,H.config.attackFuelCost);if curve then H.playback(p,s.extreme,s.attackHeatSpeed)end
     else H.prepareToken(p:getPrimaryHandItem());H.playback(p,false) end
     H.applyMoveDamage(p,move)
 end
@@ -169,4 +176,4 @@ function H.update(p)
 end
 Events.OnPlayerUpdate.Add(H.update)
 Events.OnPlayerGetDamage.Add(H.onDamage)
-ProjectYakuza.on("styleChanged",function(p)H.stop(p,"style_changed");H.playback(p,false)end)
+ProjectYakuza.on("styleChanged",function(p)local s=H.states[p];if s and s.attackHeatSpeed~=nil then H.endSwing(p)end;H.stop(p,"style_changed");H.playback(p,false)end)

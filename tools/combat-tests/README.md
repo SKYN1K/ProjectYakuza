@@ -145,3 +145,7 @@ Run build_sound_variety_tests.py, then LuaRunner sound-variety-tests.lua from th
 ## Attack endurance
 
 Build build_exertion_tests.py and run LuaRunner exertion-tests.lua from this directory. The fixture covers committed native attacks, ground deduplication, weapon profiles, misses, rejected attempts, native modifiers, owner-only stats and cost bounds. ExertionProbe verifies the installed native fitness/trait/stat API and actual endurance removal clamp without game launch.
+
+## Optional Heat speed
+
+Build build_heat_speed_tests.py and run LuaRunner heat-speed-tests.lua. Checks cover 0..100 interpolation, curve validation, native swing sampling, Extreme fuel, unmodified DoD speeds, weapon overrides, cleanup and fallback/source-phase feedback. MP fixtures cover bounded frozen factors and observer relay.

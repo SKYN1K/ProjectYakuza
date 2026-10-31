@@ -670,4 +670,34 @@ check(math.abs(z1.health-7.75)<.000001,'server ignores arbitrary client damage a
 clock=lease.started+rules.duration*1000+10;command('heatRushEnd',{action=lease.action,completed=true})
 check(not rush.leases[p]and not rush.held[z1]and not z1.useless and not z1.ignore and z1.deferred and z1.knock,'server completion restores victim state and terminal knockdown')
 command('heatRushHit',{action=lease.action,index=3});check(z1.hits==before+3,'ended action cannot replay a QTE hit')
+clock=clock+2000;p.x=0;p.y=0;p.equipped=true;p.hand=p.token;p.dead=false;p.data.ProjectYakuzaStyle='dragon_of_dojima'
+snapshot(p,{clip='ProjectYakuza_DD_Light01',move='dd_light_01',swing=2100})
+local speedPeer=server.players[p.id];check(speedPeer.packet.attackHeatSpeed==nil,'DoD server snapshots keep the heat-speed feature absent')
+local speedStyle=ProjectYakuza.getStyle('dragon_of_dojima');check(speedStyle.heatAttackSpeed==nil,'current production style has no heat curve')
+speedStyle.heatAttackSpeed={max=1.5}
+snapshot(p,{clip='ProjectYakuza_DD_Light01',move='dd_light_01',swing=2101,heat=50,attackHeatSpeed=1.25})
+check(speedPeer.packet.attackHeatSpeed==1.25,'opted-in style relays its captured attack multiplier')
+snapshot(p,{clip='ProjectYakuza_DD_Light01',move='dd_light_01',swing=2101,heat=100,attackHeatSpeed=1.25})
+check(speedPeer.packet.heat==100 and speedPeer.packet.attackHeatSpeed==1.25,'Heat may change while the current attack speed stays captured')
+local speedSeq=speedPeer.seq
+snapshot(p,{clip='ProjectYakuza_DD_Light01',move='dd_light_01',swing=2101,heat=100,attackHeatSpeed=1.5})
+check(speedPeer.seq==speedSeq,'same attack cannot change its speed through a new packet')
+snapshot(p,{clip='ProjectYakuza_DD_Light02',move='dd_light_02',swing=2102,attackHeatSpeed=2})
+check(speedPeer.seq==speedSeq,'server rejects speed above the registered curve')
+snapshot(p,{clip='ProjectYakuza_DD_Light02',move='dd_light_02',swing=2102,attackHeatSpeed=0/0})
+check(speedPeer.seq==speedSeq,'server rejects nonfinite speed')
+snapshot(p,{clip='ProjectYakuza_DD_Light02',move='dd_light_02',swing=2102,attackHeatSpeed=1.5})
+check(speedPeer.packet.attackHeatSpeed==1.5,'next native attack may use the new heat value')
+local oldPlayback=ProjectYakuza.Heat.playback;local receivedSpeed
+ProjectYakuza.Heat.playback=function(who,extreme,factor)receivedSpeed=factor;who.speed=1.6*(extreme and 1.2 or 1)*(factor or 1)end
+local remoteCurve={player=2,seq=10000,style='dragon_of_dojima',weaponProfile='',equipped=true,heat=50,fuel=0,extreme=false,clip='ProjectYakuza_DD_Light01',move='dd_light_01',swing=9000,action=0,attackHeatSpeed=1.25}
+client.command(P.module,'state',remoteCurve);check(receivedSpeed==1.25 and remote.speed==2,'remote observer uses the relayed factor')
+remoteCurve=copy(remoteCurve);remoteCurve.seq=10001;remoteCurve.heat=100;client.command(P.module,'state',remoteCurve);check(remote.speed==2,'remote Heat changes do not resample attack speed')
+remoteCurve=copy(remoteCurve);remoteCurve.seq=10002;remoteCurve.attackHeatSpeed=10;client.command(P.module,'state',remoteCurve)
+check(client.remote[2].packet.seq==10001,'observer rejects out-of-bounds factors')
+ProjectYakuza.Heat.playback=oldPlayback;speedStyle.heatAttackSpeed=nil
+local current=speedPeer.seq;snapshot(p,{clip='ProjectYakuza_DD_Light03',move='dd_light_03',swing=2103,attackHeatSpeed=1.5})
+check(speedPeer.seq==current,'unconfigured style cannot use the speed feature')
+snapshot(p,{clip='ProjectYakuza_DD_Light03',move='dd_light_03',swing=2103})
+check(speedPeer.packet.attackHeatSpeed==nil,'opting out restores old packet shape')
 return 'PASS '..count..' MP authority, duplicate, range, lease, cooldown, observer and throttle checks'

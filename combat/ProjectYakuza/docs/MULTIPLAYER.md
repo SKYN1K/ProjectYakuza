@@ -86,3 +86,7 @@ Styles can opt in with `soundVariety=true` and register existing multi-clip soun
 ## Paired Heat Rush and QTEs (0.59.0)
 
 DoD uses source-order connected-light proof, a single actor/target lease, validated source-time input windows and canonical server-calculated QTE damage. Completed/expired/disconnected sequences restore victim flags. Wrong serials, replayed hits and stale/late pose messages cannot restart or repeat them. Observers are event-free. See [rush details](EXTREME_ATTACKS.md) and [QTE authoring](QTE.md).
+
+## Optional Heat attack speed (0.61.0)
+
+Addon styles can opt in with heatAttackSpeed={max=1.25,power=1,useExtremeFuel=false}, with per-weapon overrides. The curve is sampled per committed attack, applies to the existing native speed variables and is bounded/replicated in MP snapshots. Fixed-speed timed clips are not automatically retimed. Dragon of Dojima does not enable this feature. See [Heat-based attack speed](HEAT_ATTACK_SPEED.md) for validation, timing and authoring contracts.
