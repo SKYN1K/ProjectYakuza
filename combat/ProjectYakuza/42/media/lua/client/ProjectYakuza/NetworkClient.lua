@@ -102,7 +102,7 @@ function N.capture(p,force)
         s.actionRef=action
         if action then s.action=(s.action or 0)+1 end
     end
-    local move=combo.groundMove or combo.finisherMove or (style and style.lightAttacks[combo.step>0 and combo.step or 1])
+    local move=combo.groundMove or combo.finisherMove or combo.activeLightMove or (style and style.lightAttacks[combo.step>0 and combo.step or 1])
     local packet={style=style and style.id or "none",weaponProfile=style and style.weaponProfile or "",equipped=equipped,heat=ProjectYakuza.getHeat(p),fuel=ProjectYakuza.Heat.display(p),extreme=ProjectYakuza.Heat.isExtreme(p),
         clip=equipped and N.pickClip(p,style,combo) or "",move=equipped and move and move.nodeValue or "",
         chargePower=action and action.kind=="heavyCharge" and action.timedAction and (action.timedAction.power or 0) or move and move.chargePower or 0,
@@ -344,16 +344,25 @@ function N.command(module,command,a)
             local clip=P.reaction(a.style,a.reaction) and a.reaction or nil
             if not ProjectYakuza.Reactions.confirmed(p,z,a.responseKind,a.responseForce,clip) and clip then ProjectYakuza.Reactions.remote(z,clip) end
         end
+        if a.barrage then
+            if ProjectYakuza.HitEffects then ProjectYakuza.HitEffects.spawn(p,z,a.terminal==true)end
+            local pulse="barrage:"..a.player..":"..tostring(a.action)..":"..tostring(a.index)
+            if not N.seen[pulse]then
+                N.seen[pulse]=now();local move=P.move(a.style,a.move)
+                if move then ProjectYakuza.emit("barragePulse",p,move,a.index)end
+            end
+        end
         if p:isLocalPlayer() then
             N.replaying=true
-            if a.kill then ProjectYakuza.emit("tigerDrop",p,z)
+            if a.barrage then ProjectYakuza.emit("combatHit",p,z,p:getPrimaryHandItem(),a.amount,0)
+            elseif a.kill then ProjectYakuza.emit("tigerDrop",p,z)
             elseif a.knock then ProjectYakuza.emit("throwHit",p,z)
             elseif P.number(a.amount,0,10) then
                 local combo=ProjectYakuza.stateFor(p);ProjectYakuza.Heat.onHit(p,z,a.amount,combo)
                 ProjectYakuza.emit("combatHit",p,z,p:getPrimaryHandItem(),a.amount,combo.step)
             end
             N.replaying=false
-        elseif ProjectYakuza.HitEffects then ProjectYakuza.HitEffects.spawn(p,z,true) end
+        elseif not a.barrage and ProjectYakuza.HitEffects then ProjectYakuza.HitEffects.spawn(p,z,true) end
     end
 end
 function N.update(p)

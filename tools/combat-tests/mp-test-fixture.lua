@@ -184,6 +184,16 @@ local damage={player=2,zombie=z3.id,event=1,health=.25,amount=.4,kill=false,knoc
 local hitsBefore=z3.hits
 client.command(P.module,'damage',damage);client.command(P.module,'damage',damage)
 check(z3.health==.25 and z3.hits==hitsBefore and effects==2,'server result mirrors absolute health without observer Hit calls')
+local barrageCues=0;ProjectYakuza.on('barragePulse',function()barrageCues=barrageCues+1 end)
+local barragePacket={player=2,zombie=z3.id,event=900,health=.25,amount=.1,barrage=true,terminal=false,action=90,index=1,move='dd_barrage_punch',style='dragon_of_dojima'}
+client.command(P.module,'damage',barragePacket);client.command(P.module,'damage',barragePacket)
+check(effects==3 and barrageCues==1,'remote barrage hit effect and cue are deduplicated')
+barragePacket.zombie=z2.id;barragePacket.event=901;client.command(P.module,'damage',barragePacket)
+check(effects==4 and barrageCues==1,'three-target contact has separate effects and one sound')
+local heatHits=0;local oldHeatHit=ProjectYakuza.Heat.onHit;ProjectYakuza.Heat.onHit=function()heatHits=heatHits+1 end
+barragePacket.player=1;barragePacket.event=902;client.command(P.module,'damage',barragePacket)
+check(effects==5 and barrageCues==2 and heatHits==0,'owner renders barrage feedback without earning heat after depletion')
+ProjectYakuza.Heat.onHit=oldHeatHit
 packet={player=2,seq=2,style='dragon_of_dojima',equipped=true,heat=40,fuel=35,extreme=true,clip='ProjectYakuza_DD_Light01',move='dd_light_01',swing=2}
 client.command(P.module,'state',packet);check(client.remote[2].swing==2,'same clip tracks a new attack serial')
 packet.seq=3;packet.clip='ProjectYakuza_DD_Quickstep01';client.command(P.module,'state',packet)

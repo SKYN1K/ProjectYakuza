@@ -1,6 +1,6 @@
 {
   "authorization": "User explicitly approved conversion of supplied Kiryu running and weapon-hold motion on 2026-10-30.",
-  "operation": "Approved supplied motion repair: Kiryu running unchanged. Relaxed holds reuse the existing source frame-zero arm pose, native moving torso/head/legs and native idle hand-to-prop grips. No resampled upper-body loop, invented poses, AI or graphical/audio generation.",
+  "operation": "Supplied Kiryu run motion with native travel. Healthy cadence is 1.0, reduced from 1.28; native Translation_Data distance is multiplied by 1.28 to preserve travel per second. Body poses and timings are unchanged. Carry composites retain native legs and torso. No AI or invented motion.",
   "clips": [
     {
       "name": "ProjectYakuza_DD_Run",
@@ -19,7 +19,9 @@
       "native": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_Run.x",
       "nativeSha256": "d9dd32db99f540cf32152bcbee02ec200c83c34816a98f60f49ccc5799eeba65",
       "nativeDuration": 0.6666666666666666,
-      "sha256": "92c282c412ce6442b836ced631e90b57843c74de10a2ad243ea901869ec0aa7b"
+      "sha256": "77bd5950a2bcd6eafdbb05c5ef3af9f02c0840b4c4b2fd5a96ef679bd52fa74d",
+      "nativeTravelScale": 1.28,
+      "runSpeedScale": 1
     },
     {
       "name": "ProjectYakuza_DD_BatRun",
@@ -38,7 +40,9 @@
       "native": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_Run.x",
       "nativeSha256": "d9dd32db99f540cf32152bcbee02ec200c83c34816a98f60f49ccc5799eeba65",
       "nativeDuration": 0.6666666666666666,
-      "sha256": "0ee7a6e106d7f77cb60b9983dcc5413e5704821cad811f98a75b20eb68ffd18f"
+      "sha256": "b64c704d3c0bc29719d6e81aa030fb2a1b85b1f54623343b2a44b9dd679e31ba",
+      "nativeTravelScale": 1.28,
+      "runSpeedScale": 1
     },
     {
       "name": "ProjectYakuza_DD_BatCarry",
@@ -144,7 +148,9 @@
       "native": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_Run.x",
       "nativeSha256": "d9dd32db99f540cf32152bcbee02ec200c83c34816a98f60f49ccc5799eeba65",
       "nativeDuration": 0.6666666666666666,
-      "sha256": "f26f24d58bd7bc3e740730da42b7ff777b0027b415fff356c03d04a55269df78"
+      "sha256": "251d65c443747804831f76020120bff07a1fb9166c2050807bf54715690e812b",
+      "nativeTravelScale": 1.28,
+      "runSpeedScale": 1
     },
     {
       "name": "ProjectYakuza_DD_KnifeCarry",
@@ -250,7 +256,9 @@
       "native": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_Run.x",
       "nativeSha256": "d9dd32db99f540cf32152bcbee02ec200c83c34816a98f60f49ccc5799eeba65",
       "nativeDuration": 0.6666666666666666,
-      "sha256": "02cfacdaf4ec2ba4b6998cf11c377c88ed56620c74ba323ed731ea5a35d6ffd7"
+      "sha256": "916634f8196d04270d336c9f48a32eb0c163d05ef63d2cefb22f9f6c1246f17d",
+      "nativeTravelScale": 1.28,
+      "runSpeedScale": 1
     },
     {
       "name": "ProjectYakuza_DD_BladeCarry",

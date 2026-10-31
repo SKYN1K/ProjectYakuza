@@ -43,3 +43,4 @@ report={'authorization':'User explicitly approved conversion of supplied Kiryu r
 (mod/'docs/locomotion-assets.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8');print('EXPORTED',len(records),'running/carry/native-leg clips')
 
 exec(compile((root/"tools/combat-tests/repair_carry_053.py").read_text(),"repair_carry_053.py","exec"))
+exec(compile((root/"tools/combat-tests/adjust_run_cadence.py").read_text(),"adjust_run_cadence.py","exec"))

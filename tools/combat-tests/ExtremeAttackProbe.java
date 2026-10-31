@@ -9,7 +9,7 @@ public class ExtremeAttackProbe {
   var variables=Class.forName("zombie.core.skinnedmodel.advancedanimation.AnimationVariableSource");
   var source=Class.forName("zombie.core.skinnedmodel.advancedanimation.IAnimationVariableSource");
   var set=variables.getMethod("setVariable",String.class,String.class);int count=0;
-  try(var files=Files.list(Path.of(args[0]))){for(var path:files.filter(p->p.getFileName().toString().startsWith("ProjectYakuza_DD_Extreme")&&p.toString().endsWith(".xml")).toList()){
+  try(var files=Files.walk(Path.of(args[0]))){for(var path:files.filter(p->(p.getFileName().toString().startsWith("ProjectYakuza_DD_BoostLight")||p.getFileName().toString().startsWith("ProjectYakuza_DD_Barrage"))&&p.toString().endsWith(".xml")).toList()){
    var doc=DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(path.toFile());
    var parsed=node.getMethod("Parse",String.class).invoke(null,path.toAbsolutePath().toString());
    Object state=stateType.getConstructor().newInstance(),vars=variables.getConstructor().newInstance();stateType.getMethod("addNode",node).invoke(state,parsed);
@@ -22,9 +22,9 @@ public class ExtremeAttackProbe {
    if(!((List)select.invoke(state,vars,new ArrayList<>())).isEmpty())throw new AssertionError("weapon leak "+path);
    var events=doc.getElementsByTagName("m_EventName");int hits=0;
    for(int i=0;i<events.getLength();i++)if(events.item(i).getTextContent().equals("AttackCollisionCheck"))hits++;
-   if(hits!=1)throw new AssertionError("collision count "+path);count++;
+   if(hits!=(path.toString().contains("BoostLight")?1:0))throw new AssertionError("collision count "+path);count++;
   }}
-  if(count!=9)throw new AssertionError("owner count "+count);
-  System.out.println("PASS 9 native Extreme Heat owner nodes parse/select with exactly one collision and no style/weapon leaks");
+  if(count!=6)throw new AssertionError("owner count "+count);
+  System.out.println("PASS 6 native boost/barrage owner nodes parse/select, native collision count, style/weapon isolation");
  }
 }

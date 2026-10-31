@@ -2,93 +2,96 @@ token.min=.3;token.max=.5;token.data={}
 function token:getMinDamage()return self.min end;function token:getMaxDamage()return self.max end
 function token:setMinDamage(v)self.min=v end;function token:setMaxDamage(v)self.max=v end
 function token:getModData()return self.data end
-local H=PY.Heat
-local style=PY.getStyle('dragon_of_dojima')
+local H=PY.Heat;local style=PY.getStyle('dragon_of_dojima')
 local function state()return PY.stateFor(p)end
-local function finish()
- p.attacking=false;fire('OnPlayerAttackFinished',p,p:getPrimaryHandItem());PY.Bindings.update(p);clock=clock+30
-end
-local function reset()
- p.attacking=false;p.held=nil;H.stop(p,'test');PY.resetPlayer(p,'test');PY.Weapons.sync(p);PY.Bindings.update(p);clock=clock+100
-end
-local function activate()
- PY.setHeat(p,100);check(H.start(p),'real Extreme Heat activates with stored heat')
- check(H.isExtreme(p) and math.abs(token.max-.75)<.00001,'existing Extreme Heat multiplier applied once')
-end
-local function queue(branch)
- state().step=branch;state().finishedAt=clock
- check(PY.queueFinisher(p),'MMB queues branch '..branch)
- fire('OnPlayerUpdate',p)
- return state().finisherMove
-end
+local function finish()p.attacking=false;fire('OnPlayerAttackFinished',p,p:getPrimaryHandItem());PY.Bindings.update(p);clock=clock+30 end
+local function reset()p.attacking=false;p.held=nil;mouse[0]=false;mouse[2]=false;H.stop(p,'test');PY.resetPlayer(p,'test');PY.Weapons.sync(p);PY.Bindings.update(p);clock=clock+100 end
+local function activate()PY.setHeat(p,100);check(H.start(p),'mode starts');check(H.isExtreme(p),'mode is active')end
 reset()
-local ok,reason=PY.requestAction(p,'finisher','extreme_default')
-check(not ok and reason=='extreme_heat_required','direct Extreme heavy cannot bypass mode gate')
-check(PY.queueFinisher(p) and state().finisherMove.nodeValue=='dd_heavy','normal neutral heavy retained')
-finish();reset();activate()
-check(PY.queueFinisher(p) and state().finisherMove.nodeValue=='dd_extreme_default','Extreme neutral heavy uses Heavy_Rev source')
-check(math.abs(token.max-.9375)<.00001,'mode variation retains x1.25 heavy and existing x1.5 Extreme bonus')
-check(not PY.queueFinisher(p),'Extreme neutral heavy has no double')
-finish();check(not state().finisherBranch and not state().finisherExtreme,'neutral cleanup opens no mode branch')
-reset();activate();H.states[p].fuel=1
-check(PY.queueFinisher(p) and state().finisherMove.extremeHeat and not H.isExtreme(p),'last valid Extreme attack survives fuel depletion from its own swing cost')
-finish()
-for branch=1,4 do
- reset()
- local ordinary=queue(branch)
- check(ordinary==style.actions.finisher.variants['after_'..branch],'ordinary branch remains unchanged '..branch)
- finish();reset();activate()
- local first=queue(branch)
- check(first==style.actions.finisher.variants['extreme_after_'..branch] and first.afterLight==branch,'Extreme first variant '..branch)
- check(first.damageMultiplier==1.25 and not first.chargedHeavy,'mode variation does not stack extra damage or charging '..branch)
- local report=p.report;p.vars.ProjectYakuzaHitMarker='';p.vars.ProjectYakuzaDoubleReady=''
- check(PY.queueFinisher(p) and not state().recoveryReleased and p.report==report,'double input waits for source pose window '..branch)
- p.vars.ProjectYakuzaHitMarker=first.nodeValue;p.vars.ProjectYakuzaDoubleReady=first.nodeValue
- check(PY.tryRecoveryCancel(p,style,state()) and state().recoveryReleased,'source markers release queued recovery '..branch)
- check(PY.finisherHandoffs[p]~=nil,'handoff holds movement between clips '..branch)
- finish();fire('OnPlayerUpdate',p)
- local second=state().finisherMove
- check(second==style.actions.finisher.variants['extreme_double_after_'..branch] and second.double,'matching Extreme double starts '..branch)
- check(not PY.queueFinisher(p),'third finisher refused '..branch)
- finish();check(not state().finisherBranch and not PY.finisherHandoffs[p],'double completion clears latch and movement handoff '..branch)
+check(#style.extremeLightAttacks==4,'four verified boost lights')
+check(not style.actions.finisher.variants.extreme_default,'directional heavy removed')
+for i=1,4 do
+ check(not style.actions.finisher.variants['extreme_after_'..i] and not style.actions.finisher.variants['extreme_double_after_'..i],'directional pair removed '..i)
+ local m=style.extremeLightAttacks[i];check(m.extremeHeat and m.hitResponse==false,'mode-only source hit response '..i)
+ check(PY.Weapons.findMove(style,m.nodeValue)==m,'server lookup indexes boost '..i)
 end
-reset();activate();local first=queue(2)
-clock=clock+100;fire('OnPlayerUpdate',p)
-check(state().active and not state().recoveryReleased and state().finisherMove==first,'without second input first continues its full animation')
-H.stop(p,'depleted')
-check(state().finisherMove==first and state().active,'depletion does not replace an in-progress clip')
-finish()
-check(state().finisherExtreme==true and not H.isExtreme(p),'first finisher remembers mode after depletion')
-state().step=2;state().finishedAt=state().finisherFinishedAt
-local accepted,why=PY.requestAction(p,'finisher','double_after_2')
-check(not accepted and why=='finisher_mode_mismatch','mismatched normal double cannot follow Extreme first')
-check(PY.queueFinisher(p),'depleted first can still request its matching double')
-fire('OnPlayerUpdate',p)
-check(state().finisherMove==style.actions.finisher.variants.extreme_double_after_2,'matching source double retained after depletion')
-check(math.abs(token.max-.625)<.00001,'depleted double loses Extreme damage bonus without changing heavy balance')
-finish();clock=clock+style.comboResetMs+1
-check(PY.queueFinisher(p) and state().finisherMove.nodeValue=='dd_heavy','future neutral attacks return to ordinary mode')
-finish();reset();activate();queue(1);finish();clock=clock+style.comboResetMs+1
-state().step=1;state().finishedAt=state().finisherFinishedAt
-accepted,why=PY.requestAction(p,'finisher','extreme_double_after_1')
-check(not accepted and why=='combo_window_closed','source mode latch does not bypass normal follow-up expiry')
-reset();local normal=queue(3);finish();activate()
-check(PY.queueFinisher(p),'normal first can request its original double after mode activation')
-fire('OnPlayerUpdate',p)
-check(state().finisherMove==style.actions.finisher.variants.double_after_3,'first mode determines paired double even if Heat changes')
-finish();reset();activate()
-local bat=weapon('Base.BaseballBat');p.held=bat;PY.Weapons.sync(p)
-check(PY.queueFinisher(p) and state().finisherMove.nodeValue=='dd_bat_heavy','real weapon uses its own heavy, without unarmed mode leak')
-finish();p.held=nil
-for _,profile in ipairs({'bat','knife','blade'}) do
- local view=PY.Weapons.views[style.id][profile]
- check(not view.actions.finisher.variants.extreme_default and not view.actions.finisher.variants.extreme_after_1,'weapon profile isolated '..profile)
+p:AttemptAttack();check(state().activeLightMove==style.lightAttacks[1],'ordinary light retained');finish();reset();activate()
+local view=PY.getPlayerStyle(p);check(view.extremeView and view.lightAttacks==style.extremeLightAttacks,'active mode switches light chain')
+for i=1,4 do
+ PY.Combo.press(state(),4,1);p:AttemptAttack()
+ check(state().step==i and state().activeLightMove==style.extremeLightAttacks[i],'native boost light '..i)
+ check(p.vars.ProjectYakuzaMove==style.extremeLightAttacks[i].nodeValue,'owner selector '..i)
+ finish()
 end
-reset();activate();p:AttemptAttack()
-check(state().step==1 and not state().finisherMove and p.vars.ProjectYakuzaMove==style.lightAttacks[1].nodeValue,'Extreme mode retains original LMB chain')
-finish();reset()
-local other={id='tests.mode_isolation',name='Mode isolation',lightAttacks=style.lightAttacks,actions={finisher={enabled=true,variants={default=style.actions.finisher.variants.default}}}}
-PY.registerStyle(other);p.data.ProjectYakuzaStyle=other.id;PY.Weapons.sync(p)
-check(PY.queueFinisher(p) and state().finisherMove.nodeValue=='dd_heavy','another style needs explicit variation definitions')
-finish()
-return true,'PASS '..checks..' actual Extreme Heat finisher, paired handoff, depletion, damage, weapon and style isolation checks'
+reset();activate();H.states[p].fuel=1;p:AttemptAttack()
+check(not H.isExtreme(p) and state().activeLightMove==style.extremeLightAttacks[1],'final cost-depleted swing retains boost clip')
+fire('OnPlayerUpdate',p);check(p.vars.ProjectYakuzaMove==style.extremeLightAttacks[1].nodeValue,'depletion cannot change playing boost pose')
+finish();p:AttemptAttack();check(state().step==1 and state().activeLightMove==style.lightAttacks[1],'normal chain restarts after mode ends');finish();reset()
+for _,profile in ipairs({'bat','knife','blade'})do
+ local v=PY.Weapons.views[style.id][profile];check(not v.extremeLightAttacks and not v.barrageInput and not v.actions.barrage,'weapons isolate boost input '..profile)
+end
+local phase=0;local weight=1;local paused=false
+isGamePaused=function()return paused end
+PY.AttackEffects={findTrack=function()return phase,weight,{layer=0,slot=0}end}
+PY.Defense={snapActor=function()end};PY.HitEffects={spawn=function()end};PY.HitResponses={apply=function()end}
+function p:isDeferredMovementEnabled()return self.deferred~=false end
+function p:setDeferredMovementEnabled(v)self.deferred=v end
+function p:getMovementLastFrame()return {set=function()end}end
+function p:setMoving()end;function p:setRunning()end;function p:setSprinting()end
+function base:setActionAnim(v)self.animation=v end
+function base:forceComplete()self:perform()end
+function base:forceStop()self:stop()end
+InventoryItemFactory={CreateItem=function()return {getMinDamage=function()return .3 end,getMaxDamage=function()return .5 end}end}
+do local _="ProjectYakuzaFixture:BARRAGE_RULES" end
+do local _="ProjectYakuzaFixture:BARRAGES" end
+local F=PY.Barrages;local R=PY.BarrageRules;local cfg=style.actions.barrage.variants
+check(R.valid(cfg.punch)and R.valid(cfg.kick),'source barrage configuration valid')
+check(#cfg.punch.contactFrames==13 and #cfg.kick.contactFrames==5,'source BEP contact counts')
+check(math.abs(R.damage(cfg.punch,1,.4,true)-.168)<.000001,'first contact damage')
+check(math.abs(R.damage(cfg.punch,13,.4,true)-.54)<.000001,'terminal contact damage')
+for _,key in ipairs({'fps','speed','duration','damageMultiplier','finalMultiplier','range'})do
+ local copy={};for k,v in pairs(cfg.punch)do copy[k]=v end;copy[key]=0/0;check(not R.valid(copy),'invalid numeric configuration rejected '..key)
+end
+reset();local ok=PY.requestAction(p,'barrage','kick');check(not ok,'mode required for direct barrage')
+activate();state().step=4;state().finishedAt=clock;state().lastDown=false;mouse[0]=true
+local consumed,started=F.input(p,state(),PY.getPlayerStyle(p),false)
+check(consumed and started,'fifth click requests punch barrage')
+local c=PY.activeActions[p];check(c and c.kind=='barrage'and c.variant=='punch','dedicated punch action context')
+check(PY.blocksNativeAttacks(p),'native attacks blocked during barrage')
+local a=c.timedAction;a.action={setOverrideHandModelsObject=function()end};a:start()
+check(p.blocked and not p.deferred and a.animation==cfg.punch.animation,'barrage locks player and uses source animation')
+local pulses={};a.pulse=function(_,i)pulses[#pulses+1]=i end
+for _,frame in ipairs(cfg.punch.contactFrames)do phase=frame/30+.001;clock=clock+150;a:update()end
+check(#pulses==13 and pulses[1]==1 and pulses[13]==13,'all thirteen source-timed contacts occur once')
+a:update();check(#pulses==13,'update repeats cannot duplicate contact')
+p.vars.ProjectYakuzaBarrage='done';a:update();check(a.cleaned and not PY.activeActions[p]and not p.blocked and p.deferred,'end marker restores controls')
+mouse[0]=false;reset();activate()
+consumed,started=F.input(p,state(),PY.getPlayerStyle(p),true);check(consumed and started and PY.activeActions[p].variant=='kick','heavy starts five-hit barrage')
+c=PY.activeActions[p];a=c.timedAction;a.action={setOverrideHandModelsObject=function()end};p.vars.ProjectYakuzaBarrage='';a:start();pulses={};a.pulse=function(_,i)pulses[#pulses+1]=i end
+phase=cfg.kick.contactFrames[1]/30+.001;paused=true;a:update();check(#pulses==0,'paused barrage does not strike');paused=false;a:update();check(#pulses==1,'resume uses native source phase')
+phase=cfg.kick.contactFrames[4]/30+.001;a:update();check(#pulses==2 and pulses[2]==4,'late frames skipped rather than burst replayed')
+H.stop(p,'depleted');phase=cfg.kick.contactFrames[5]/30+.001;a:update();check(pulses[3]==5,'started source motion finishes after depletion')
+PY.cancelAction(p,'test');check(a.cleaned and not p.blocked and p.deferred,'interruption restores movement')
+reset();activate();state().step=4;state().active=true;state().lastDown=false;state().queued=1;mouse[0]=true
+consumed,started=F.input(p,state(),PY.getPlayerStyle(p),false);check(consumed and not started and F.pending[p] and state().queued==0,'buffer avoids duplicate native light')
+state().lastDown=true;clock=clock+400;F.input(p,state(),PY.getPlayerStyle(p),false);check(not F.pending[p],'short barrage buffer expires')
+reset();activate();p.held=weapon('Base.BaseballBat');PY.Weapons.sync(p)
+check(not F.input(p,state(),PY.getPlayerStyle(p),true),'weapons never consume barrage input')
+reset();activate();consumed,started=F.input(p,state(),PY.getPlayerStyle(p),true)
+c=PY.activeActions[p];a=c.timedAction;a.action={setOverrideHandModelsObject=function()end};a:start()
+local victim={hits=0,total=0,dead=false}
+function victim:isDead()return self.dead end;function victim:isOnFloor()return false end;function victim:isKnockedDown()return false end
+function victim:getX()return .8 end;function victim:getY()return 0 end;function victim:getZ()return 0 end
+function victim:Hit(item,attacker,damage)check(item==token and attacker==p,'native hit uses current item/player');self.hits=self.hits+1;self.total=self.total+damage end
+function p:CanSee()return true end
+local scans=0;local oldOrigin,oldTargets,oldPath=PY.MultiHit.origin,PY.MultiHit.targets,PY.MultiHit.clearPath
+PY.MultiHit.origin=function()return {fx=1,fy=0}end
+PY.MultiHit.clearPath=function()return true end
+PY.MultiHit.targets=function(_,_,_,_,cap)scans=scans+1;check(cap==3,'bounded barrage scan');return victim.dead and {}or{{victim=victim}}end
+local pulseEvents=0;PY.on('barragePulse',function()pulseEvents=pulseEvents+1 end)
+a:pulse(1);a:pulse(2)
+check(victim.hits==2 and math.abs(victim.total-.6)<.000001,'native SP damage uses source contact factor and mode once')
+check(scans==1 and pulseEvents==2,'contacts reuse live targets and emit one feedback cue each')
+victim.dead=true;a:pulse(3);check(scans==2 and victim.hits==2,'dead target triggers bounded reacquisition without damage')
+PY.cancelAction(p,'test');PY.MultiHit.origin=oldOrigin;PY.MultiHit.targets=oldTargets;PY.MultiHit.clearPath=oldPath
+return true,'PASS '..checks..' boost, barrage, depletion, input, pause, expiry, damage and weapon isolation checks'

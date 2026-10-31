@@ -1,4 +1,4 @@
-# Dragon of Dojima locomotion (0.53.0)
+# Dragon of Dojima locomotion (0.55.0)
 
 Ordinary non-aimed running uses Kiryu's full Yakuza 6 P_KRU_MOV_run_ftl loop. The ftl/ftr files are complete phase-offset cycles, so a single complete ftl cycle is used without concatenation or invented motion. Unarmed, bat, knife and blade variants use native finger/prop grip conventions. This does not add a sprint or new run-start/stop/turn motion.
 
@@ -8,7 +8,7 @@ Supported weapons use a consistent existing source arm pose from P_KRU_BTL_WPA/W
 
 All new nodes blend in/out over 0.25 seconds, with explicit blend transitions among the new nodes and existing weapon combat idles. They do not force heading, lock input, teleport the character or poll controls. The native animation state machine chooses the correct movement group. Native healthy walk blends and the existing walk-speed scalar remain in use.
 
-B42 consumes Translation_Data for deferred travel. The running clips therefore keep the existing native Bob_Run movement track, resampled to Kiryu's full 32/30-second loop, while using his supplied body motion. The healthy run blend speed is 1.28 versus native 0.80 for the 20/30-second native cycle, preserving its cadence and travel per second. Native clothing/helper bones are retained. The original body run loop has no seam adjustment or invented frames. Runtime crossfades provide the transitions.
+B42 consumes Translation_Data for deferred travel. The running clips therefore keep the existing native Bob_Run movement track, resampled to Kiryu's full 32/30-second loop, while using his supplied body motion. The healthy run blend speed is now 1.0 rather than 1.28, slowing visible stride cadence by 21.875%. Translation_Data distances are multiplied by 1.28, preserving the previous travel per second. All existing body/finger/prop keyframes and their source times remain unchanged; only the deferred travel track changes. Native running is the reference, and exact live foot planting remains a visual test. Native clothing/helper bones are retained. The original body run loop has no seam adjustment or invented frames. Runtime crossfades provide the transitions.
 
 The selectors require ProjectYakuzaActive=true, ProjectYakuzaStyle=dragon_of_dojima, the matching ProjectYakuzaWeaponProfile, Aim=false, no injury, no trees, no sneaking, no overburdened state and no turn-around. Idle holds additionally exclude native 90-degree turns. Existing sprint, crouch, limp, tree and special-action nodes remain available. The unarmed walking/idle and aimed stance/leg behavior remain unchanged.
 

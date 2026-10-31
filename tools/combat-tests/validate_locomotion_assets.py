@@ -1,5 +1,5 @@
 from pathlib import Path
-import sys,json,hashlib,re,subprocess,math
+import sys,json,hashlib,re,subprocess,math,zipfile
 root=Path(__file__).resolve().parents[2];w=root/'tools/combat-tests';mod=root/'combat/ProjectYakuza'
 if '--inside-blender' not in sys.argv:
  result=subprocess.run(['F:/SteamLibrary/steamapps/common/Blender/blender.exe','-b','--python',str(Path(__file__).resolve()),'--','--inside-blender'],cwd=root,capture_output=True,text=True,encoding='utf-8',errors='replace')
@@ -19,6 +19,13 @@ for r in d['clips']:
  if r['kind'] in ['source','sourceRunNativeTravel']:
   assert sha(r['source'])==r['sourceSha256'] and sha(r['fingerSource'])==r['fingerSha256']
   scratch=root/('tools/locomotion-build/ProjectYakuza/42/media/anims_X/Bob/'+r['name']+'.x');assert sha(scratch)==r['retargetSha256'];_,ff,aa,_=read(scratch)
+  if r['kind']=='sourceRunNativeTravel':
+   with zipfile.ZipFile(root/'dist/ProjectYakuza-B42-v0.54.0.zip')as previous:before=previous.read('ProjectYakuza/'+r['output']).decode('utf-8').replace('\r\n','\n')
+   def without_travel(text):
+    match=re.search(r'Animation\s*\{\s*\{\s*Translation_Data\s*\}',text);assert match;start=text.index('{',match.start());end=start+1;depth=1
+    while depth:depth+=(text[end]=='{')-(text[end]=='}');end+=1
+    return text[:match.start()]+text[end:]
+   assert without_travel(before)==without_travel(s),'running body/finger/prop bytes must remain unchanged'
  else:
   assert sha(r['native'])==r['nativeSha256'];_,ff,aa,_=read(r['native'])
   if r['kind']=='stableCarryComposite':
@@ -29,7 +36,8 @@ for r in d['clips']:
  for t in times:
   actual=locals_at(frames,anim,t);expected=locals_at(ff,aa,t)
   if r['kind']=='sourceRunNativeTravel':
-   assert sha(r['native'])==r['nativeSha256'];_,nf,na,_=read(r['native']);ne=max(k for c in na.values() for keys in c.values() for k,v in keys);nativeExpected=locals_at(nf,na,t/times[-1]*ne);nativeExpected.update({n:v for n,v in expected.items() if n not in ['Body','Translation_Data']});expected=nativeExpected
+   assert sha(r['native'])==r['nativeSha256'];_,nf,na,_=read(r['native']);ne=max(k for c in na.values() for keys in c.values() for k,v in keys);nativeExpected=locals_at(nf,na,t/times[-1]*ne);nativeExpected['Translation_Data'].translation*=r.get('nativeTravelScale',1);nativeExpected.update({n:v for n,v in expected.items() if n not in ['Body','Translation_Data']});expected=nativeExpected
+   assert r['nativeTravelScale']*r['runSpeedScale']==1.28 and r['runSpeedScale']==1
   if r['kind']=='stableCarryComposite':
    hold=locals_at(cf,ca,0)
    for n in r['upperBones']:expected[n]=hold[n]

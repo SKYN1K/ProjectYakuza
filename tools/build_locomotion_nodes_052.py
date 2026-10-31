@@ -27,7 +27,7 @@ def scoped(n,family):
 for family in ['','Bat','Knife','Blade']:
  n=E.parse(native/'run/defaultRun.xml').getroot();name='ProjectYakuza_DD_Locomotion'+family+'Run';put(n,'m_Name',name);put(n,'m_AnimName','ProjectYakuza_DD_'+family+'Run');scoped(n,family)
  for b in n.findall('m_2DBlends'):
-  if b.findtext('m_AnimName')=='Bob_Run':put(b,'m_AnimName','ProjectYakuza_DD_'+family+'Run');put(b,'m_SpeedScale',1.28)
+  if b.findtext('m_AnimName')=='Bob_Run':put(b,'m_AnimName','ProjectYakuza_DD_'+family+'Run');put(b,'m_SpeedScale',1.0)
   elif b.findtext('m_AnimName')=='Bob_Walk' and family:put(b,'m_AnimName','ProjectYakuza_DD_'+family+'CarryWalk')
  put(n,'m_SyncTrackingEnabled',True)
  for i,e in enumerate(n.findall('m_Events')):put(e,'m_TimePc',.03+i*.5)
@@ -42,5 +42,5 @@ for family in ['','Bat','Knife','Blade']:
   old=b.findtext('m_AnimName')
   if old in ['Bob_Walk','Bob_WalkSlow']:put(b,'m_AnimName','ProjectYakuza_DD_'+family+'Carry'+('Slow' if old=='Bob_WalkSlow' else 'Walk'))
  save(n,'movement',name)
-(mod/'docs/locomotion-nodes.json').write_text(json.dumps({'nodes':records,'blendSeconds':.25,'runHealthySpeedScale':1.28,'nativeRunCycleSeconds':2/3,'sourceRunCycleSeconds':32/30,'operation':'DoD-only non-aimed run and unlocked weapon carry selectors. Existing injury, tree, overburdened and turn nodes remain native. Carry-walk lower body uses existing native walking. No actor displacement or speed changes.'},indent=2)+'\n',encoding='utf-8')
+(mod/'docs/locomotion-nodes.json').write_text(json.dumps({'nodes':records,'blendSeconds':.25,'runHealthySpeedScale':1.0,'nativeTravelScale':1.28,'nativeRunCycleSeconds':2/3,'sourceRunCycleSeconds':32/30,'operation':'DoD-only non-aimed run and unlocked weapon carry selectors. Existing injury, tree, overburdened and turn nodes remain native. Carry-walk lower body uses existing native walking. No actor displacement or speed changes.'},indent=2)+'\n',encoding='utf-8')
 print('BUILT',len(records),'isolated locomotion selectors')

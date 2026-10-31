@@ -262,33 +262,53 @@ check(not p.hand and #removed==2 and removed[2]==activeToken,'server removes sty
 check(p.inventory:getItemWithID(703)==sword,'style cleanup retains real inventory weapon')
 clock=clock+1000
 server.command(P.module,'equip',p,{style='dragon_of_dojima',weaponProfile='',item=-1,request=103})
+
 local normalSequence=server.players[p.id].seq
-snapshot(p,{clip='ProjectYakuza_DD_ExtremeFinisher01',move='dd_extreme_after_1',swing=700,extreme=false})
-check(server.players[p.id].seq==normalSequence,'server rejects a new Extreme variation outside mode')
-snapshot(p,{clip='ProjectYakuza_DD_ExtremeFinisher01',move='dd_extreme_after_1',swing=700,extreme=true})
-check(server.players[p.id].packet.move=='dd_extreme_after_1' and server.players[p.id].extremeFinisher.branch==1,'server accepts active mode first and records paired branch')
-snapshot(p,{clip='ProjectYakuza_DD_ExtremeFinisher01',move='dd_extreme_after_1',swing=700,extreme=false})
-check(not server.players[p.id].packet.extreme and server.players[p.id].packet.move=='dd_extreme_after_1','same in-progress swing remains visible after depletion')
-local firstSequence=server.players[p.id].seq
-snapshot(p,{clip='ProjectYakuza_DD_ExtremeDoubleFinisher02',move='dd_extreme_double_after_2',swing=701,extreme=false})
-check(server.players[p.id].seq==firstSequence,'depleted follow-up cannot switch branch')
-snapshot(p,{clip='ProjectYakuza_DD_ExtremeDoubleFinisher01',move='dd_extreme_double_after_1',swing=701,extreme=false})
-check(server.players[p.id].packet.move=='dd_extreme_double_after_1' and not server.players[p.id].extremeFinisher,'matching depleted pair consumes server continuation lease')
-local pairedSequence=server.players[p.id].seq
-snapshot(p,{clip='ProjectYakuza_DD_ExtremeDoubleFinisher01',move='dd_extreme_double_after_1',swing=702,extreme=false})
-check(server.players[p.id].seq==pairedSequence,'depleted pair cannot mint another finisher')
-snapshot(p,{clip='ProjectYakuza_DD_ExtremeFinisher01',move='dd_extreme_after_1',swing=703,extreme=true})
-clock=server.players[p.id].extremeFinisher.expires+1
-local beforeExpiry=server.players[p.id].seq
-snapshot(p,{clip='ProjectYakuza_DD_ExtremeDoubleFinisher01',move='dd_extreme_double_after_1',swing=704,extreme=false})
-check(server.players[p.id].seq==beforeExpiry,'server expires mode continuation lease')
-check(P.move('dragon_of_dojima','dd_extreme_double_after_4').extremeHeat,'protocol indexes actual mode definitions')
-p.vars.ProjectYakuzaActive='true';p.vars.ProjectYakuzaStyle='dragon_of_dojima';p.vars.ProjectYakuzaWeaponProfile='';p.vars.ProjectYakuzaMove='dd_extreme_after_3';p.vars.AimFloorAnim='false'
-check(N.pickClip(p,baseStyle,{active=true})=='ProjectYakuza_DD_ExtremeFinisher03','network selector finds unique mode owner clip')
-snapshot(p,{clip='ProjectYakuza_DD_Light01',move='dd_light_01',swing=705,extreme=true})
-snapshot(p,{clip='ProjectYakuza_DD_ExtremeHeavy',move='dd_extreme_default',swing=706,extreme=false})
-check(server.players[p.id].packet.move=='dd_extreme_default','server presents a final valid mode attack whose swing cost depleted Heat before capture')
-local lastCostSequence=server.players[p.id].seq
-snapshot(p,{clip='ProjectYakuza_DD_ExtremeFinisher02',move='dd_extreme_after_2',swing=707,extreme=false})
-check(server.players[p.id].seq==lastCostSequence,'final-swing grace cannot chain new inactive mode attacks')
-return true,'PASS '..count..' sharp/blunt MP equipment, observers, cache invalidation, bridge reads and stale-swing checks; selector reads '..before..' -> '..after
+snapshot(p,{clip='ProjectYakuza_DD_BoostLight01',move='dd_boost_light_01',swing=700,extreme=false})
+check(server.players[p.id].seq==normalSequence,'server rejects boost start outside mode')
+snapshot(p,{clip='ProjectYakuza_DD_BoostLight01',move='dd_boost_light_01',swing=700,extreme=true})
+check(server.players[p.id].packet.move=='dd_boost_light_01','boost accepted during mode')
+snapshot(p,{clip='ProjectYakuza_DD_BoostLight01',move='dd_boost_light_01',swing=700,extreme=false})
+check(not server.players[p.id].packet.extreme,'same source swing survives depletion')
+normalSequence=server.players[p.id].seq
+snapshot(p,{clip='ProjectYakuza_DD_BoostLight02',move='dd_boost_light_02',swing=701,extreme=false})
+check(server.players[p.id].seq==normalSequence,'inactive mode cannot chain new boost')
+p.vars.ProjectYakuzaActive='true';p.vars.ProjectYakuzaStyle='dragon_of_dojima';p.vars.ProjectYakuzaWeaponProfile='';p.vars.ProjectYakuzaMove='dd_boost_light_03';p.vars.AimFloorAnim='false'
+check(N.pickClip(p,baseStyle,{active=true})=='ProjectYakuza_DD_BoostLight03','network selects boost owner')
+snapshot(p,{clip='ProjectYakuza_DD_BarragePunch',move='dd_barrage_punch',action=800,swing=702,extreme=true})
+local bs=server.players[p.id];check(bs.barrage and bs.barrage.action==800,'server leases source barrage')
+local start=bs.barrage.start;local move=bs.barrage.move;local rules=ProjectYakuza.BarrageRules
+check(P.move('dragon_of_dojima','dd_barrage_punch')==move,'protocol indexes barrage definition')
+local beforeHits=z1.hits;z1.health=100;z2.health=100
+command('barrage',{action=800,index=1,zombies={z1.id}})
+check(z1.hits==beforeHits,'too-early barrage contact rejected')
+clock=start+rules.time(move,1)+10
+command('barrage',{action=800,index=1,zombies={z1.id,z1.id,z2.id}})
+check(z1.hits==beforeHits+1,'duplicate IDs damage once')
+command('barrage',{action=800,index=1,zombies={z1.id}})
+check(z1.hits==beforeHits+1,'duplicate contact cannot replay')
+clock=start+rules.time(move,2)+10
+command('barrage',{action=801,index=2,zombies={z1.id}})
+check(z1.hits==beforeHits+1,'wrong action serial rejected')
+z1.x=1.05;wall=true;command('barrage',{action=800,index=2,zombies={z1.id}});wall=false;z1.x=.8
+check(z1.hits==beforeHits+1,'barrage cannot hit through wall')
+clock=start+rules.time(move,3)+10
+command('barrage',{action=800,index=3,zombies={z1.id,z2.id,z3.id,z4.id}})
+check(bs.barrage.index==2,'over-cap request rejected without consuming valid index')
+command('barrage',{action=800,index=3,zombies={z1.id},damage=999})
+check(z1.hits==beforeHits+2 and z1.health>98,'server ignores client damage')
+clock=start+rules.time(move,4)+10
+snapshot(p,{clip='ProjectYakuza_DD_BarragePunch',move='dd_barrage_punch',action=800,swing=702,extreme=false})
+local depletedHealth=z1.health
+command('barrage',{action=800,index=4,zombies={z1.id}})
+check(math.abs(z1.health-(depletedHealth-.4*.28))<.000001,'depleted barrage loses mode damage bonus')
+local leasedSequence=bs.seq
+snapshot(p,{clip='ProjectYakuza_DD_BarragePunch',move='dd_barrage_punch',action=801,swing=702,extreme=false})
+check(bs.seq==leasedSequence,'inactive mode cannot mint a new barrage lease')
+clock=start+rules.time(move,13)+10
+command('barrage',{action=800,index=13,zombies={z1.id}})
+check(bs.barrage.index==13 and z1.knock,'terminal source contact knocks down')
+clock=bs.barrage.expires+1;local endHits=z1.hits
+command('barrage',{action=800,index=13,zombies={z1.id}})
+check(z1.hits==endHits,'expired/replayed barrage cannot deal damage')
+return true,'PASS '..count..' weapon MP, boost authorization, barrage source timing, duplicates, caps, walls, damage authority and depletion checks'

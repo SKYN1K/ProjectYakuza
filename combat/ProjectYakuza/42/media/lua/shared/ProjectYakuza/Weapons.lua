@@ -23,7 +23,7 @@ function W.register(styleId,profile)
     if view.actions.styleEntry==nil and base.actions then view.actions.styleEntry=base.actions.styleEntry end
     view.attackSpeed=profile.attackSpeed or 1
     view.quickstepCancelLights=profile.quickstepCancelLights==true
-    view.tigerDrop=false;view.enemyReactions=false
+    view.tigerDrop=false;view.enemyReactions=false;view.extremeLightAttacks=nil;view.barrageInput=nil
     view.hitResponses=profile.hitResponses;view.juggling=profile.juggling
     view.sounds=profile.sounds or false
     local valid,errors=PY.validateStyle(view);assert(valid,table.concat(errors,"; "))
@@ -41,6 +41,7 @@ function W.register(styleId,profile)
             end
         end
         for _,m in ipairs(s.lightAttacks or {}) do add(m) end
+        for _,m in ipairs(s.extremeLightAttacks or {})do add(m)end
         for _,m in ipairs(s.groundAttacks or {}) do add(m) end
         for _,slot in pairs(s.actions or {}) do add(slot);for _,m in pairs(slot.variants or {}) do add(m) end end
     end
@@ -84,6 +85,7 @@ function W.findMove(style,node)
             if move.nodeValue and not index[move.nodeValue] then index[move.nodeValue]=move end
         end
         for _,move in ipairs(style.lightAttacks or {}) do add(move) end
+        for _,move in ipairs(style.extremeLightAttacks or {}) do add(move) end
         for _,move in ipairs(style.groundAttacks or {}) do add(move) end
         for _,slot in pairs(style.actions or {}) do
             add(slot);for _,move in pairs(slot.variants or {}) do add(move) end

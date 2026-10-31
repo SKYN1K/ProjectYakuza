@@ -215,15 +215,16 @@ function Q.cancelReady(p,job)
 end
 function Q.requestLightCancel(p,direction,target)
     local style=ProjectYakuza.getPlayerStyle(p);local state=ProjectYakuza.stateFor(p)
+    local move=state.activeLightMove or style and style.lightAttacks[state.step]
     if not style or not style.quickstepCancelLights or not state.active or state.starting
         or state.finisherMove or state.pendingFinisher or state.groundMove or state.recoveryReleased
-        or not style.lightAttacks[state.step] or not style.lightAttacks[state.step].quickstepCancelAt then return false,"not_light" end
+        or not move or not move.quickstepCancelAt then return false,"not_light" end
     if Q.lightCancels[p] then return false,"cancel_pending" end
     if type(target)~="table" or type(target.dx)~="number" or type(target.dy)~="number"
         or target.dx~=target.dx or target.dy~=target.dy or math.abs(target.dx)>2 or math.abs(target.dy)>2 then return false,"no_direction" end
     local length=math.sqrt(target.dx*target.dx+target.dy*target.dy);if length<.001 then return false,"no_direction" end
     local job={style=style.id,direction=direction,dx=target.dx/length,dy=target.dy/length,shove=target.shove,
-        stamp=state.multiHitToken,move=style.lightAttacks[state.step].nodeValue,phase="buffer",expires=now()+Q.cancelBufferMs}
+        stamp=state.multiHitToken,move=move.nodeValue,phase="buffer",expires=now()+Q.cancelBufferMs}
     local ok,reason=Q.cancelReady(p,job);if not ok then return false,reason end
     Q.lightCancels[p]=job;Q.processLightCancel(p);return true
 end

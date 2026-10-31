@@ -2,6 +2,7 @@ if not isServer() then return end
 require "ProjectYakuza/Styles/DragonOfDojima"
 require "ProjectYakuza/NetworkProtocol"
 require "ProjectYakuza/Juggling"
+require "ProjectYakuza/BarrageRules"
 local ProjectYakuza=ProjectYakuza;local P=ProjectYakuza.NetworkProtocol
 local S={players={},grabs={},nextTick=0,reactions={}}
 ProjectYakuza.NetworkServer=S
@@ -64,6 +65,7 @@ function S.snapshot(p,a,s)
             local actionAnim
             for _,c in ipairs(clip.conditions) do if c.name=="PerformingAction" then actionAnim=c.value end end
             for _,move in ipairs(style.lightAttacks or {}) do if move.animation==clip.animation then supported=true end end
+            for _,move in ipairs(style.extremeLightAttacks or {})do if move.animation==clip.animation then supported=true end end
             for _,move in ipairs(style.groundAttacks or {}) do if move.animation==clip.animation then supported=true end end
             for _,slot in pairs(style.actions) do
                 if slot.enabled and slot.animation==(actionAnim or clip.animation) then supported=true end
@@ -95,6 +97,14 @@ function S.snapshot(p,a,s)
         grabDirection=(a.grabDirection=="forward" or a.grabDirection=="backward" or a.grabDirection=="left" or a.grabDirection=="right") and a.grabDirection or "forward",
         linked=a.linked==true,ground=a.ground==true,phase=(a.phase=="enter" or a.phase=="hold" or a.phase=="hit" or a.phase=="throw" or a.phase=="exit") and a.phase or ""}
     local previous=s.packet
+    if kind=="barrage" then
+        if not move or move~=activation or not ProjectYakuza.BarrageRules.valid(move) or profile or not P.integer(a.action,1,1000000000) then return end
+        local lease=s.barrage
+        if not lease or lease.action~=a.action then
+            if a.action<=(s.lastBarrage or 0) or not (packet.extreme or previous and previous.extreme and previous.equipped and previous.style==packet.style and t-(s.seen or 0)<=250) then return end
+            s.lastBarrage=a.action;s.barrage={action=a.action,move=move,weapon=held,style=packet.style,start=t,expires=t+move.duration*1000+800,index=0}
+        elseif lease.weapon~=held or lease.move~=move or t>lease.expires then return end
+    elseif s.barrage then s.barrage=nil end
     if move and (not previous or previous.move~=packet.move or previous.swing~=packet.swing) then
         if move.extremeHeat and move.afterLight and not move.double then
             s.extremeFinisher={style=style.id,branch=move.afterLight,expires=now()+(move.duration or 2)*1000+style.comboResetMs+500}
@@ -178,7 +188,7 @@ function S.validVictim(p,id,range,cone)
     if distance<.001 or length<.001 or (dx*f:getX()+dy*f:getY())/(distance*length)<(cone or .5) then return nil end
     return z
 end
-function S.damage(p,z,amount,knock,kill,s,hitMove,hitStyle,jugglePlan,swing)
+function S.damage(p,z,amount,knock,kill,s,hitMove,hitStyle,jugglePlan,swing,barrage)
     local item=token(p);if not item then return end
     local dx,dy=z:getX()-p:getX(),z:getY()-p:getY();local n=math.sqrt(dx*dx+dy*dy)
     if n<.001 then return end
@@ -194,7 +204,27 @@ function S.damage(p,z,amount,knock,kill,s,hitMove,hitStyle,jugglePlan,swing)
     local juggle,juggling=ProjectYakuza.Juggling.hit(p,z,not kill and not knock and (jugglePlan or ProjectYakuza.Juggling.plan(ProjectYakuza.getStyle(styleId),move)) or nil,swing)
     if response and not juggling then ProjectYakuza.HitResponses.apply(p,z,response) end
     S.fanout(p,"damage",{player=p:getOnlineID(),event=s.result,zombie=z:getOnlineID(),health=math.max(0,z:getHealth()),amount=amount,knock=knock==true,kill=kill==true,
-        dx=dx/n,dy=dy/n,force=z:getHitForce(),hitReaction=z:getHitReaction() or "ShotBelly",reaction=move and move.reaction or "",style=styleId,juggle=juggle,responseKind=response and response.kind,responseForce=response and response.force})
+        dx=dx/n,dy=dy/n,force=z:getHitForce(),hitReaction=z:getHitReaction() or "ShotBelly",reaction=move and move.reaction or "",style=styleId,juggle=juggle,responseKind=response and response.kind,responseForce=response and response.force,
+        barrage=barrage~=nil,terminal=barrage and barrage.terminal,action=barrage and barrage.action,index=barrage and barrage.index,move=barrage and move.nodeValue})
+end
+function S.barrageHit(p,a,s)
+    local lease=s.barrage;local t=now()
+    if not lease or lease.action~=a.action or lease.weapon~=p:getPrimaryHandItem() or lease.style~=s.packet.style or s.packet.move~=lease.move.nodeValue or t>lease.expires then return end
+    local move=lease.move;local R=ProjectYakuza.BarrageRules
+    if not P.integer(a.index,1,#move.contactFrames) or a.index<=lease.index or type(a.zombies)~="table" or #a.zombies>ProjectYakuza.MAX_HIT_COUNT then return end
+    local expected=R.time(move,a.index);local age=t-lease.start
+    if age<expected-80 or age>expected+650 then return end
+    lease.index=a.index
+    if not S.baseWeapon then S.baseWeapon=InventoryItemFactory.CreateItem(ProjectYakuza.TOKEN)end
+    if not S.baseWeapon then return end
+    local damage=R.damage(move,a.index,(S.baseWeapon:getMinDamage()+S.baseWeapon:getMaxDamage())*.5,s.packet.extreme)
+    local seen={};local terminal=a.index==#move.contactFrames
+    for _,id in ipairs(a.zombies)do
+        if P.integer(id,-32768,32767) and not seen[id]then
+            seen[id]=true;local z=S.validVictim(p,id,move.range)
+            if z and not z:isOnFloor() and not z:isKnockedDown()then S.damage(p,z,damage,terminal,false,s,move,lease.style,nil,nil,{terminal=terminal,action=a.action,index=a.index})end
+        end
+    end
 end
 function S.command(module,command,p,a)
     if module~=P.module or type(a)~="table" or not p then return end
@@ -213,6 +243,7 @@ function S.command(module,command,p,a)
     if t-s.bucketAt>=1000 then s.bucketAt=t;s.bucket=0 end
     s.bucket=s.bucket+1;if s.bucket>60 then return end
     if command=="step" then S.step(p,a,s);return end
+    if command=="barrage"then S.barrageHit(p,a,s);return end
     if command=="grabRequest" then
         if ProjectYakuza.FEATURES.grab==false then S.release(p);reply(p,"grabDenied",{});return end
         local slot=ProjectYakuza.getStyle(s.packet.style).actions.grab
@@ -250,6 +281,7 @@ function S.command(module,command,p,a)
     if command=="impact" or command=="extra" then
         if not P.integer(a.swing,1,1000000000) then return end
         local move=P.move(s.packet.style,s.packet.move);if not move then return end
+        if move.contactFrames then return end
         local held=token(p);if not held then return end
         local profile=ProjectYakuza.Weapons and ProjectYakuza.Weapons.profile(s.packet.style,held) or ""
         if (profile or "")~=(s.packet.weaponProfile or "") then return end

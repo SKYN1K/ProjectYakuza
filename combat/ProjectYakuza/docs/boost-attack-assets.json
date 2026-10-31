@@ -1,0 +1,494 @@
+{
+  "authorization": "User explicitly approved supplied Kiryu bct_ath boost/barrage conversion on 2026-10-31.",
+  "operation": "All original source frames retained in place with native punch finger pose and native hand-prop offsets. No AI, invented poses, new textures or audio. The source special clips contain 13 and 5 separate hit windows.",
+  "nativeGrip": {
+    "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_AttackBat01_Hit.x",
+    "sha256": "d6ed4e304cce1ccce3e355cfe958cf304c494c850ae0790d669068b861e7075c",
+    "authoredOffsets": {
+      "Bip01_Prop1": [
+        [
+          -0.043478310108184814,
+          -0.030916661024093628,
+          -0.998575747013092,
+          0.06845201551914215
+        ],
+        [
+          0.26906272768974304,
+          0.9622275233268738,
+          -0.04150630533695221,
+          -0.04706887528300285
+        ],
+        [
+          0.9621403813362122,
+          -0.27048417925834656,
+          -0.033517494797706604,
+          0.038814280182123184
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "Bip01_Prop2": [
+        [
+          0.04858189821243286,
+          0.8911296129226685,
+          0.451140433549881,
+          1.1213123798370361e-06
+        ],
+        [
+          0.7025991678237915,
+          0.29054421186447144,
+          -0.6495674252510071,
+          3.855675458908081e-07
+        ],
+        [
+          -0.7099249958992004,
+          0.3485282361507416,
+          -0.6119918823242188,
+          4.209578037261963e-07
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    "nativeOffsets": {
+      "Bip01_Prop1": [
+        [
+          -0.043479062616825104,
+          -0.030914172530174255,
+          -0.9985739588737488,
+          0.06845194101333618
+        ],
+        [
+          0.26905950903892517,
+          0.9622287750244141,
+          -0.04150472581386566,
+          -0.04706816002726555
+        ],
+        [
+          0.9621405601501465,
+          -0.2704819440841675,
+          -0.03351520001888275,
+          0.03881397470831871
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "Bip01_Prop2": [
+        [
+          0.048583902418613434,
+          0.8911311030387878,
+          0.45114317536354065,
+          1.560896635055542e-06
+        ],
+        [
+          0.702595055103302,
+          0.2905443608760834,
+          -0.6495702266693115,
+          3.594905138015747e-07
+        ],
+        [
+          -0.7099281549453735,
+          0.34852519631385803,
+          -0.6119855046272278,
+          3.3527612686157227e-07
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    }
+  },
+  "rig": "E:/Blender/Yakuza Rips/yakuza6/chara.par.unpack/bone/c_man_bone.gmd",
+  "rigSha256": "00638d8baeef2d4d761c3b8d59797ab8d1553bab4410790314aeea2030fc0632",
+  "clips": [
+    {
+      "animation": "ProjectYakuza_DD_BoostLight01",
+      "source": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\gmt\\P_KRU_BTL_SUD_bct_ath_01.gmt",
+      "sourceSha256": "c3b98b06f3ed3c30b2a77d7b3a45404c59a2b71fbea4b5655d3f5d5356dbebcc",
+      "bep": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\bep\\P_KRU_BTL_SUD_bct_ath_01.bep",
+      "bepSha256": "98e6fdf1c7c6f726f20fc54cc8a48fe2d16aba85f700d9e501cb1fca9264bd15",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_BoostLight01.x",
+      "sha256": "041e97849c61e5b1495ef97cce0eabe810cd6d6d7482ae380cad8f35e8609177",
+      "retargetSha256": "7cc339a113a3a074f252591d66ab3351ac32b04c01449eba59af0e6000022f81",
+      "frames": 34,
+      "fps": 30,
+      "events": [
+        {
+          "kind": 68,
+          "start": 7.0,
+          "end": 12.0
+        },
+        {
+          "kind": 77,
+          "start": 7.0,
+          "end": 10.0
+        },
+        {
+          "kind": 75,
+          "start": 18.0,
+          "end": 33.0
+        }
+      ],
+      "contacts": [
+        7
+      ],
+      "nodeValue": "dd_boost_light_01"
+    },
+    {
+      "animation": "ProjectYakuza_DD_BoostLight02",
+      "source": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\gmt\\P_KRU_BTL_SUD_bct_ath_02.gmt",
+      "sourceSha256": "33e9984b82eca278937cbb17b42a59dc138eedb36ac0a91be9f12349e44dd75e",
+      "bep": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\bep\\P_KRU_BTL_SUD_bct_ath_02.bep",
+      "bepSha256": "f255c697a0ee7926a4fd251018ca13e7292ac1e8f67f6f505866cf0ba181b7dd",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_BoostLight02.x",
+      "sha256": "00d074276d3e29fc5a5abf8f34677a120cf2bb6d35aa52f358b17db00b15a86e",
+      "retargetSha256": "cf5561e037ebca6e1b9f796d8ca3e9eab6da4676806e9e89c0e02d013d4e2381",
+      "frames": 31,
+      "fps": 30,
+      "events": [
+        {
+          "kind": 68,
+          "start": 5.0,
+          "end": 11.0
+        },
+        {
+          "kind": 77,
+          "start": 5.0,
+          "end": 9.0
+        },
+        {
+          "kind": 75,
+          "start": 17.0,
+          "end": 30.0
+        }
+      ],
+      "contacts": [
+        5
+      ],
+      "nodeValue": "dd_boost_light_02"
+    },
+    {
+      "animation": "ProjectYakuza_DD_BoostLight03",
+      "source": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\gmt\\P_KRU_BTL_SUD_bct_ath_03.gmt",
+      "sourceSha256": "9ef4cb58a3e12de5a69fc048b3b7862e82a8b7ee2bc826597d11e312d94eb93e",
+      "bep": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\bep\\P_KRU_BTL_SUD_bct_ath_03.bep",
+      "bepSha256": "815f4541705e80ede1760f2d97f83dbc1f53c7115e2521f828a77ce06f4193c4",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_BoostLight03.x",
+      "sha256": "f18300a5659fd1c666e9aca4c6c28dbc20f9bd8f4a30c207d0587ab256883db4",
+      "retargetSha256": "383a582bc48b5a6377fdc0c08745fc9a174e4c90eab5af576e044823d6c8c209",
+      "frames": 32,
+      "fps": 30,
+      "events": [
+        {
+          "kind": 68,
+          "start": 5.0,
+          "end": 10.0
+        },
+        {
+          "kind": 77,
+          "start": 5.0,
+          "end": 8.0
+        },
+        {
+          "kind": 75,
+          "start": 16.0,
+          "end": 31.0
+        }
+      ],
+      "contacts": [
+        5
+      ],
+      "nodeValue": "dd_boost_light_03"
+    },
+    {
+      "animation": "ProjectYakuza_DD_BoostLight04",
+      "source": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\gmt\\P_KRU_BTL_SUD_bct_ath_04.gmt",
+      "sourceSha256": "db458076c2a5e2f21bb5e244424ecdef7c71e0366bc8053a22789998be062fc4",
+      "bep": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\bep\\P_KRU_BTL_SUD_bct_ath_04.bep",
+      "bepSha256": "f2c6b95c184fa4d95c98bbd22ba9d81b821fd78ef343e71982a293e64b768c02",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_BoostLight04.x",
+      "sha256": "c4a957e23801abf904526e87b9a0fa29dc4ab4c5599f736eccf87677ca9da761",
+      "retargetSha256": "f2cf430a23d95e50f0e8ae34b1bed4d9c0a577414b8c2106644fdeae52561b02",
+      "frames": 31,
+      "fps": 30,
+      "events": [
+        {
+          "kind": 68,
+          "start": 5.0,
+          "end": 11.0
+        },
+        {
+          "kind": 77,
+          "start": 5.0,
+          "end": 9.0
+        },
+        {
+          "kind": 75,
+          "start": 17.0,
+          "end": 30.0
+        }
+      ],
+      "contacts": [
+        5
+      ],
+      "nodeValue": "dd_boost_light_04"
+    },
+    {
+      "animation": "ProjectYakuza_DD_BarragePunch",
+      "source": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\gmt\\P_KRU_BTL_SUD_bct_ath_sp.gmt",
+      "sourceSha256": "2b5770a870533e377f927441d73a40f5dee10af60e9f0edaabf81081517f46be",
+      "bep": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\bep\\P_KRU_BTL_SUD_bct_ath_sp.bep",
+      "bepSha256": "b509bb778fa5ec15977423061961ef0b8e2970be2c66e28f02179566d875bbcc",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_BarragePunch.x",
+      "sha256": "57ec565fca81a4bf349434eeace9bf90af8e83295fd876015e62a41a44820f26",
+      "retargetSha256": "b6d2feec5468e0193d5cfbc41c987ebdec55fb93f3affe0dbcdff6ba2190bc79",
+      "frames": 89,
+      "fps": 30,
+      "events": [
+        {
+          "kind": 68,
+          "start": 5.0,
+          "end": 7.0
+        },
+        {
+          "kind": 68,
+          "start": 10.0,
+          "end": 12.0
+        },
+        {
+          "kind": 68,
+          "start": 15.0,
+          "end": 17.0
+        },
+        {
+          "kind": 68,
+          "start": 20.0,
+          "end": 22.0
+        },
+        {
+          "kind": 68,
+          "start": 25.0,
+          "end": 27.0
+        },
+        {
+          "kind": 68,
+          "start": 30.0,
+          "end": 32.0
+        },
+        {
+          "kind": 68,
+          "start": 34.0,
+          "end": 36.0
+        },
+        {
+          "kind": 68,
+          "start": 40.0,
+          "end": 42.0
+        },
+        {
+          "kind": 68,
+          "start": 45.0,
+          "end": 47.0
+        },
+        {
+          "kind": 68,
+          "start": 50.0,
+          "end": 52.0
+        },
+        {
+          "kind": 68,
+          "start": 55.0,
+          "end": 57.0
+        },
+        {
+          "kind": 68,
+          "start": 59.0,
+          "end": 61.0
+        },
+        {
+          "kind": 68,
+          "start": 64.0,
+          "end": 70.0
+        },
+        {
+          "kind": 77,
+          "start": 5.0,
+          "end": 7.0
+        },
+        {
+          "kind": 77,
+          "start": 10.0,
+          "end": 12.0
+        },
+        {
+          "kind": 77,
+          "start": 15.0,
+          "end": 17.0
+        },
+        {
+          "kind": 77,
+          "start": 20.0,
+          "end": 22.0
+        },
+        {
+          "kind": 77,
+          "start": 25.0,
+          "end": 27.0
+        },
+        {
+          "kind": 77,
+          "start": 30.0,
+          "end": 32.0
+        },
+        {
+          "kind": 77,
+          "start": 35.0,
+          "end": 37.0
+        },
+        {
+          "kind": 77,
+          "start": 40.0,
+          "end": 42.0
+        },
+        {
+          "kind": 77,
+          "start": 45.0,
+          "end": 47.0
+        },
+        {
+          "kind": 77,
+          "start": 50.0,
+          "end": 52.0
+        },
+        {
+          "kind": 77,
+          "start": 55.0,
+          "end": 57.0
+        },
+        {
+          "kind": 77,
+          "start": 59.0,
+          "end": 61.0
+        },
+        {
+          "kind": 77,
+          "start": 64.0,
+          "end": 68.0
+        },
+        {
+          "kind": 75,
+          "start": 82.0,
+          "end": 88.0
+        }
+      ],
+      "contacts": [
+        5,
+        10,
+        15,
+        20,
+        25,
+        30,
+        34,
+        40,
+        45,
+        50,
+        55,
+        59,
+        64
+      ],
+      "nodeValue": "dd_barrage_punch"
+    },
+    {
+      "animation": "ProjectYakuza_DD_BarrageKick",
+      "source": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\gmt\\P_KRU_BTL_SUD_bct_ath_sp2.gmt",
+      "sourceSha256": "b67825c15a11949e922f66094bfdbd8d49e0b6decb24b6be5a4cc7a7af793085",
+      "bep": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\bep\\P_KRU_BTL_SUD_bct_ath_sp2.bep",
+      "bepSha256": "d5b2f731b1b1d6b8d9de33f484516b8cc381ff8cabd1076b080235a4921b291a",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_BarrageKick.x",
+      "sha256": "d483004354b74e2b114ad86b7016a8ed4912cbb59e74acdc08509b6c16c1b861",
+      "retargetSha256": "a8c80b0ba241baac56697009b047c69f13f5f3ffecd5805a5c2d75bfe9362a59",
+      "frames": 61,
+      "fps": 30,
+      "events": [
+        {
+          "kind": 68,
+          "start": 5.0,
+          "end": 8.0
+        },
+        {
+          "kind": 68,
+          "start": 14.0,
+          "end": 17.0
+        },
+        {
+          "kind": 68,
+          "start": 24.0,
+          "end": 27.0
+        },
+        {
+          "kind": 68,
+          "start": 32.0,
+          "end": 35.0
+        },
+        {
+          "kind": 68,
+          "start": 40.0,
+          "end": 44.0
+        },
+        {
+          "kind": 77,
+          "start": 5.0,
+          "end": 7.0
+        },
+        {
+          "kind": 77,
+          "start": 14.0,
+          "end": 17.0
+        },
+        {
+          "kind": 77,
+          "start": 23.0,
+          "end": 26.0
+        },
+        {
+          "kind": 77,
+          "start": 32.0,
+          "end": 36.0
+        },
+        {
+          "kind": 77,
+          "start": 40.0,
+          "end": 43.0
+        },
+        {
+          "kind": 75,
+          "start": 50.0,
+          "end": 60.0
+        }
+      ],
+      "contacts": [
+        5,
+        14,
+        24,
+        32,
+        40
+      ],
+      "nodeValue": "dd_barrage_kick"
+    }
+  ]
+}

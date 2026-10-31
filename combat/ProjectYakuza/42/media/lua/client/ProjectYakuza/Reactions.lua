@@ -43,7 +43,7 @@ function R.onHit(attacker,victim,weapon,damage)
         or not weapon or not (PY.isStyleToken(weapon) or (PY.Weapons and PY.Weapons.matches(attacker,weapon))) or not PY.isEquipped(attacker) then R.clear(victim);return end
     if victim:isDead() or victim:isOnFloor() or victim:isKnockedDown() then R.clear(victim);return end
     local style=PY.getPlayerStyle(attacker);local s=PY.stateFor(attacker)
-    local move=s.finisherMove or style.lightAttacks[s.step]
+    local move=s.finisherMove or s.activeLightMove or style.lightAttacks[s.step]
     if not s.active or type(damage)~="number" or damage~=damage or damage<=0 or not move then return end
     local response=PY.HitResponses.resolve(style,move)
     local stamp=s.multiHitToken or s.startedAt

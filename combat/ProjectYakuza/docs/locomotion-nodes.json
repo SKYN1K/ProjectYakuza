@@ -12,8 +12,9 @@
     "42/media/AnimSets/player/movement/ProjectYakuza_DD_LocomotionBladeWalk.xml"
   ],
   "blendSeconds": 0.25,
-  "runHealthySpeedScale": 1.28,
+  "runHealthySpeedScale": 1,
   "nativeRunCycleSeconds": 0.6666666666666666,
   "sourceRunCycleSeconds": 1.0666666666666667,
-  "operation": "DoD-only non-aimed run and unlocked weapon carry selectors. Existing injury, tree, overburdened and turn nodes remain native. Carry-walk lower body uses existing native walking. No actor displacement or speed changes."
+  "operation": "DoD-only non-aimed running uses 21.875% slower stride cadence with compensated native travel. Actual running speed is unchanged. Existing injury/tree/turn fallbacks and native walking legs are retained.",
+  "nativeTravelScale": 1.28
 }

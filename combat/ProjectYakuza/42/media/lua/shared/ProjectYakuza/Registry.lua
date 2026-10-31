@@ -53,7 +53,7 @@ end
 
 local ProjectYakuza = ProjectYakuza
 ProjectYakuza.FEATURES={grab=false}
-ProjectYakuza.VERSION = "0.54.0"
+ProjectYakuza.VERSION = "0.55.0"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -61,7 +61,7 @@ ProjectYakuza.actionHandlers = ProjectYakuza.actionHandlers or {}
 ProjectYakuza.styleActionHandlers = ProjectYakuza.styleActionHandlers or {}
 ProjectYakuza.styleInputHandlers = ProjectYakuza.styleInputHandlers or {}
 ProjectYakuza.listeners = ProjectYakuza.listeners or {}
-ProjectYakuza.actionKinds = { finisher=true, grab=true, parry=true, block=true, quickstep=true, quickstepAttack=true, runningAttack=true, heatAction=true, heatActivation=true, taunt=true, styleEntry=true, heavyCharge=true, chargedHeavy=true }
+ProjectYakuza.actionKinds = { finisher=true, grab=true, parry=true, block=true, quickstep=true, quickstepAttack=true, runningAttack=true, heatAction=true, heatActivation=true, taunt=true, styleEntry=true, heavyCharge=true, chargedHeavy=true, barrage=true }
 ProjectYakuza.actionDefinitions = ProjectYakuza.actionDefinitions or {}
 ProjectYakuza.activeActions = ProjectYakuza.activeActions or setmetatable({}, {__mode="k"})
 ProjectYakuza.MAX_HIT_COUNT = 3
@@ -201,6 +201,10 @@ function ProjectYakuza.validateStyle(style)
     if style.combatVoiceVolume~=nil and (not number(style.combatVoiceVolume) or style.combatVoiceVolume<0) then problem("combatVoiceVolume must be nonnegative") end
     if type(style.lightAttacks)~="table" or #style.lightAttacks==0 then problem("lightAttacks must contain at least one move")
     else for i,value in ipairs(style.lightAttacks) do move(value,"lightAttacks["..i.."]",true) end end
+    if style.extremeLightAttacks~=nil then
+        if type(style.extremeLightAttacks)~="table" or type(style.lightAttacks)~="table" or #style.extremeLightAttacks~=#style.lightAttacks then problem("extremeLightAttacks must match light chain length")
+        else for i,value in ipairs(style.extremeLightAttacks)do move(value,"extremeLightAttacks["..i.."]",true)end end
+    end
     if style.comboResetMs~=nil and (not number(style.comboResetMs) or style.comboResetMs<0) then problem("comboResetMs must be nonnegative milliseconds") end
     if style.lightBufferLimit~=nil and (not number(style.lightBufferLimit) or style.lightBufferLimit<1 or style.lightBufferLimit~=math.floor(style.lightBufferLimit)) then problem("lightBufferLimit must be a positive integer") end
     if style.groundAttacks~=nil then
@@ -259,7 +263,14 @@ function ProjectYakuza.getPlayerStyle(player)
     local data = player:getModData()
     local id = data.ProjectYakuzaStyle or "dragon_of_dojima"
     local style=ProjectYakuza.styles[id]
-    return ProjectYakuza.Weapons and ProjectYakuza.Weapons.forPlayer(player,style) or style
+    style=ProjectYakuza.Weapons and ProjectYakuza.Weapons.forPlayer(player,style) or style
+    if style and not style.weaponProfile and style.extremeLightAttacks and ProjectYakuza.Heat and ProjectYakuza.Heat.states and ProjectYakuza.Heat.states[player] and ProjectYakuza.Heat.states[player].extreme then
+        ProjectYakuza.extremeViews=ProjectYakuza.extremeViews or setmetatable({}, {__mode="k"})
+        local view=ProjectYakuza.extremeViews[style]
+        if not view then view={};for k,v in pairs(style)do view[k]=v end;view.lightAttacks=style.extremeLightAttacks;view.extremeView=true;ProjectYakuza.extremeViews[style]=view end
+        return view
+    end
+    return style
 end
 function ProjectYakuza.isEquipped(player)
     if ProjectYakuza.Network and not player:isLocalPlayer() then return ProjectYakuza.Network.remoteEquipped(player) end
@@ -318,9 +329,10 @@ end
 function ProjectYakuza.blocksNativeAttacks(player)
     if ProjectYakuza.StyleEntry and ProjectYakuza.StyleEntry.pending and ProjectYakuza.StyleEntry.pending[player] then return true end
     if ProjectYakuza.Quicksteps and ProjectYakuza.Quicksteps.isCancelling and ProjectYakuza.Quicksteps.isCancelling(player) then return true end
+    if ProjectYakuza.Barrages and ProjectYakuza.Barrages.pending[player] then return true end
     local c=ProjectYakuza.activeActions[player]
     local d=c and ProjectYakuza.actionDefinitions[c.kind]
-    return c~=nil and (c.kind=="styleEntry" or c.kind=="quickstepAttack" or c.kind=="heavyCharge" or c.kind=="chargedHeavy" or (d~=nil and d.blocksAttacks)) or false
+    return c~=nil and (c.kind=="styleEntry" or c.kind=="barrage" or c.kind=="quickstepAttack" or c.kind=="heavyCharge" or c.kind=="chargedHeavy" or (d~=nil and d.blocksAttacks)) or false
 end
 
 function ProjectYakuza.updateCustomAction(player)

@@ -81,7 +81,7 @@ function ProjectYakuza.prepareToken(token)
     return false
 end
 local function setReadyVariables(player, style, s)
-    local move = s.groundMove or s.finisherMove or s.pendingFinisher or style.lightAttacks[s.step > 0 and s.step or 1]
+    local move = s.groundMove or s.finisherMove or s.pendingFinisher or s.activeLightMove or style.lightAttacks[s.step > 0 and s.step or 1]
     ProjectYakuza.setVisual(player,true,move.nodeValue)
     local visual=ProjectYakuza.visuals[player]
     local profile=style.weaponProfile or ""
@@ -121,7 +121,9 @@ local function onSwing(player, weapon)
         s.queued, s.queuedFinisher = 0, nil
     else
         s.finisherBranch, s.finisherFinishedAt, s.finisherExtreme = nil, nil, nil
-        move = Combo.begin(s, style, now())
+        if s.lightMode~=nil and s.lightMode~=(style.extremeView==true) then Combo.reset(s) end
+        s.lightMode=style.extremeView==true
+        move = Combo.begin(s, style, now());s.activeLightMove=move
     end
     if move.chargeBranch then s.step=move.chargeBranch end
     s.multiHitToken={};s.effectVictims=nil
@@ -177,6 +179,7 @@ local function onFinished(player, weapon)
         return
     end
     if Combo.finish(s, now()) then
+        s.activeLightMove=nil
         trace(player, "finished step=" .. s.step .. " queued=" .. s.queued)
         ProjectYakuza.emit("lightAttackFinished", player, s.step)
     end
@@ -236,9 +239,9 @@ end
 
 function ProjectYakuza.tryRecoveryCancel(player, style, s)
     if not s.active or s.groundMove or s.recoveryReleased or not player:isAiming() then return false end
-    local move = s.groundMove or s.finisherMove or style.lightAttacks[s.step]
+    local move = s.groundMove or s.finisherMove or s.activeLightMove or style.lightAttacks[s.step]
     local finisher=s.finisherMove~=nil
-    local queued = finisher and (not move.double and s.queuedDouble) or (not finisher and (s.queued > 0 or s.queuedFinisher ~= nil or s.queuedWeaponHeavy==true))
+    local queued = finisher and (not move.double and s.queuedDouble) or (not finisher and (s.queued > 0 or s.queuedFinisher ~= nil or s.queuedWeaponHeavy==true or (ProjectYakuza.Barrages and ProjectYakuza.Barrages.pending[player]~=nil)))
     if not finisher and ProjectYakuza.ChargedHeavy and ProjectYakuza.ChargedHeavy.wantsRecovery and ProjectYakuza.ChargedHeavy.wantsRecovery(player,s,style) then queued=true end
     local marker=finisher and "ProjectYakuzaDoubleReady" or "ProjectYakuzaChainReady"
     if not queued or variable(player, marker) ~= move.nodeValue
@@ -389,6 +392,7 @@ local function onUpdate(player)
     end
     if ProjectYakuza.Defense and ProjectYakuza.Defense.update(player,throwPressed) then s.lastDown=B.down("light");return end
     local context=ProjectYakuza.activeActions[player]
+    if context and context.kind=="barrage" then if ProjectYakuza.Barrages then ProjectYakuza.Barrages.watch(player,context) end;s.lastDown=B.down("light");return end
     if context and (context.kind=="parry" or context.kind=="heatActivation" or context.kind=="taunt") then
         if context.kind=="heatActivation" and ProjectYakuza.HeatActivation then ProjectYakuza.HeatActivation.watch(player,context) end
         if context.kind=="taunt" and ProjectYakuza.Taunts then ProjectYakuza.Taunts.watch(player,context) end
@@ -408,10 +412,13 @@ local function onUpdate(player)
     if ProjectYakuza.RunningAttacks then ProjectYakuza.RunningAttacks.update(player) end
     ProjectYakuza.syncGroundAttack(player,style,s)
     if (counterPressed or finisherPressed) and ProjectYakuza.TigerDrop and ProjectYakuza.TigerDrop.tryCounter(player) then if ProjectYakuza.ChargedHeavy then ProjectYakuza.ChargedHeavy.clearPlayer(player) end;s.lastDown=B.down("light");return end
-    local heavyInput=ProjectYakuza.ChargedHeavy and ProjectYakuza.ChargedHeavy.input(player,finisherDown,finisherPressed,s,style)
+    local barrageInput,barrageStarted
+    if ProjectYakuza.Barrages then barrageInput,barrageStarted=ProjectYakuza.Barrages.input(player,s,style,finisherPressed) end
+    if barrageStarted then s.lastDown=B.down("light");return end
+    local heavyInput=barrageInput or ProjectYakuza.ChargedHeavy and ProjectYakuza.ChargedHeavy.input(player,finisherDown,finisherPressed,s,style)
     if finisherPressed and not heavyInput then ProjectYakuza.queueFinisher(player) end
     if ProjectYakuza.activeActions[player] and ProjectYakuza.activeActions[player].kind=="heavyCharge" then s.lastDown=B.down("light");return end
-    pollPress(player, style, s)
+    if barrageInput then s.lastDown=B.down("light") else pollPress(player, style, s) end
     if not player:isAiming() then
         s.queuedWeaponHeavy=nil
         s.queued, s.queuedFinisher, s.queuedDouble = 0, nil, nil
@@ -424,7 +431,7 @@ local function onUpdate(player)
         local clip, hit = variable(player, "ProjectYakuzaClipStarted"), variable(player, "ProjectYakuzaHitMarker")
         if clip ~= "" and clip ~= s.seenClip then s.seenClip = clip; trace(player, "clip-start " .. clip) end
         if hit ~= "" and hit ~= s.seenHit then s.seenHit = hit; trace(player, "collision-marker " .. hit) end
-        local move = s.groundMove or s.finisherMove or style.lightAttacks[s.step]
+        local move = s.groundMove or s.finisherMove or s.activeLightMove or style.lightAttacks[s.step]
         ProjectYakuza.tryRecoveryCancel(player, style, s)
         if time - s.startedAt > move.duration * 1000 + 1200 then
             trace(player, "attack timeout; " .. ProjectYakuza.diagnosticLine(player), true)

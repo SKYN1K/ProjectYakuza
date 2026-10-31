@@ -9,10 +9,11 @@ root = here.parents[1]
 media = root / 'combat/ProjectYakuza/42/media'
 game = Path('F:/SteamLibrary/steamapps/common/ProjectZomboid')
 nodes = list((media / 'AnimSets/player').rglob('ProjectYakuza_MP_*.xml'))
-assert len(nodes) == 316, len(nodes)
+assert len(nodes) == 304, len(nodes)
 for cycle in ('0', '1'):
     directory = here / ('native-observers-cycle' + cycle)
     directory.mkdir(exist_ok=True)
+    for stale in directory.glob('*.xml'):stale.unlink()
     count = 0
     for path in nodes:
         node = E.parse(path).getroot()
@@ -26,14 +27,15 @@ for cycle in ('0', '1'):
         source = E.parse(original).getroot()
         for tag in ['m_AnimName', 'm_SpeedScale', 'm_BlendTime', 'm_BlendOutTime', 'm_Looped']:
             assert node.findtext(tag) == source.findtext(tag), (path, tag)
-        assert [E.tostring(n) for n in node.findall('m_SubStateBoneWeights')] == [E.tostring(n) for n in source.findall('m_SubStateBoneWeights')]
+        def semantic(n):return n.tag,(n.text or '').strip(),n.attrib,tuple(semantic(c)for c in n)
+        assert [semantic(n) for n in node.findall('m_SubStateBoneWeights')] == [semantic(n) for n in source.findall('m_SubStateBoneWeights')],path
         if conditions['ProjectYakuzaRemoteCycle'] == cycle:
 
             shutil.copyfile(path, directory / ('ProjectYakuza_MP_' + path.parent.name + '_' + path.name))
             count += 1
-    assert count == 158
+    assert count == 152
     result = subprocess.run([str(game / 'jre64/bin/java.exe'), '-cp', str(here) + ';' + str(game / 'projectzomboid.jar'),
-                             'MPObserverProbe', str(directory), 'ProjectYakuza_MP_', '158'], cwd=here, capture_output=True, text=True)
+                             'MPObserverProbe', str(directory), 'ProjectYakuza_MP_', '152'], cwd=here, capture_output=True, text=True)
     print(result.stdout, end='')
     if result.returncode:
         print(result.stderr)
@@ -41,7 +43,7 @@ for cycle in ('0', '1'):
 for path in (media / 'AnimSets/zombie/hitreaction').glob('ProjectYakuza_EnemyHit*.xml'):
     repeat = media / 'AnimSets/zombie/hitreaction-hit' / path.name
     assert E.tostring(E.parse(path).getroot()) == E.tostring(E.parse(repeat).getroot())
-print('PASS 316 event-free observer selectors retain their supplied clips/settings; 4 native repeat-hit nodes match originals')
+print('PASS 304 event-free observer selectors retain their supplied clips/settings; 4 native repeat-hit nodes match originals')
 
 
 for i,(hit,frames) in enumerate([(6,30),(8,47),(11,42),(11,47)],1):

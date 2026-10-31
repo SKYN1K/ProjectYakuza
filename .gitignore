@@ -108,3 +108,6 @@
 !/tools/combat-tests/repair_carry_053.py
 
 !/tools/combat-tests/CombatSoundProbe.java
+
+!/tools/combat-tests/build_boost_assets.py
+!/tools/combat-tests/adjust_run_cadence.py
