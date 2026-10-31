@@ -7,6 +7,12 @@ local ProjectYakuza=ProjectYakuza;local P=ProjectYakuza.NetworkProtocol
 local N={locals=setmetatable({}, {__mode="k"}),remote={},leases=setmetatable({}, {__mode="k"}),pending=setmetatable({}, {__mode="k"}),seen={},victims={},deferred={},sessions={},nextRemote=0}
 ProjectYakuza.Network=N
 local function now()return getTimestampMs()end
+local stateFields={"style","weaponProfile","equipped","extreme","clip","move","phase","linked","ground","grabMoving","grabDirection","taunt","swing","action","attackHeatSpeed"}
+local function changed(previous,packet)
+    if not previous then return true end
+    for _,key in ipairs(stateFields)do if previous[key]~=packet[key]then return true end end
+    return math.floor(previous.heat)~=math.floor(packet.heat)or math.floor(previous.fuel)~=math.floor(packet.fuel)or math.floor(previous.chargePower*10)~=math.floor(packet.chargePower*10)
+end
 function N.localState(p)
     local s=N.locals[p];if not s then s={seq=0,event=0,swing=0};N.locals[p]=s end;return s
 end
@@ -111,12 +117,10 @@ function N.capture(p,force,onlyChanged)
         swing=s.swing,action=s.action or 0,taunt=s.taunt or 0,linked=p:GetVariable("ProjectYakuzaLinkedDouble")=="true",ground=combo.groundMove~=nil,phase=p:GetVariable("ProjectYakuzaDefensePhase") or "",
         grabMoving=p:GetVariable("ProjectYakuzaGrabMoving")=="true",grabDirection=action and action.kind=="grab" and action.target:GetVariable("ProjectYakuzaGrabWalkDirection") or "forward"}
     if equipped and type(style.heatAttackSpeed)=="table"and (combo.active or action and action.timedAction and action.timedAction.started)then packet.attackHeatSpeed=ProjectYakuza.Heat.attackHeatMultiplier and ProjectYakuza.Heat.attackHeatMultiplier(p)or 1 end
-    local key=packet.style..tostring(equipped)..math.floor(packet.heat)..math.floor(packet.fuel)..tostring(ProjectYakuza.Heat.stocks(p))..tostring(packet.extreme)..packet.clip..packet.move..packet.phase..tostring(packet.linked)..tostring(packet.grabMoving)..packet.grabDirection..tostring(packet.taunt)..":"..packet.swing..":"..packet.action
-    key=key..":"..packet.weaponProfile..":"..math.floor(packet.chargePower*10)
-    if packet.attackHeatSpeed then key=key..":"..tostring(packet.attackHeatSpeed)end
-    if (force and not onlyChanged) or key~=s.key or t>=(s.heartbeat or 0) then
+    local stocks=ProjectYakuza.Heat.stocks(p)
+    if (force and not onlyChanged)or changed(s.lastPacket,packet)or stocks~=s.lastStocks or t>=(s.heartbeat or 0)then
         s.seq=s.seq+1;packet.seq=s.seq;sendClientCommand(p,P.module,"state",packet)
-        s.key=key;s.heartbeat=t+1000
+        s.lastPacket=packet;s.lastStocks=stocks;s.heartbeat=t+(equipped and 1000 or 3000)
     end
     if not s.hello then sendClientCommand(p,P.module,"hello",{});s.hello=true end
 end
@@ -318,8 +322,9 @@ function N.command(module,command,a)
         if not ProjectYakuza.HeatSpeed.allowed(speedStyle,a.attackHeatSpeed,a.extreme==true)then return end
         if p and p:isLocalPlayer() then return end
         if not s then s={};N.remote[a.player]=s end
+        local protectionChanged=not s.packet or s.packet.protected~=a.protected
         s.packet=a;s.last=now()
-        N.protectionHook()
+        if protectionChanged then N.protectionHook()end
         if p then N.applyState(p,a,s) end
         return
     end
@@ -423,18 +428,25 @@ function N.update(p)
 end
 function N.tick()
     if not isClient() then return end
-    if now()>=(N.nextDeferred or 0) then
-        N.nextDeferred=now()+50
-        local queued={};for key,entry in pairs(N.deferred) do queued[#queued+1]={key=key,entry=entry} end
-        for _,job in ipairs(queued) do
-            if now()>job.entry.expires then N.deferred[job.key]=nil
-            else N.command(P.module,job.entry.command,job.entry.args) end
+    local t=now()
+    if t>=(N.nextDeferred or 0)then
+        N.nextDeferred=t+50
+        local hasDeferred=false;for _ in pairs(N.deferred)do hasDeferred=true;break end
+        if hasDeferred then
+            local keys={};for key in pairs(N.deferred)do keys[#keys+1]=key end
+            for _,key in ipairs(keys)do
+                local entry=N.deferred[key]
+                if entry then
+                    if t>entry.expires then N.deferred[key]=nil
+                    else N.command(P.module,entry.command,entry.args)end
+                end
+            end
         end
     end
-    if now()<N.nextRemote then return end;N.nextRemote=now()+500
-    for id,s in pairs(N.remote) do if now()-s.last>4000 then N.clearRemote(id) end end
-    for key,t in pairs(N.seen) do if now()-t>5000 then N.seen[key]=nil end end
-    for key,entry in pairs(N.victims) do if now()-entry.time>1500 then N.victims[key]=nil end end
+    if t<N.nextRemote then return end;N.nextRemote=t+500
+    for id,s in pairs(N.remote)do if t-s.last>4000 then N.clearRemote(id)end end
+    for key,time in pairs(N.seen)do if t-time>5000 then N.seen[key]=nil end end
+    for key,entry in pairs(N.victims)do if t-entry.time>1500 then N.victims[key]=nil end end
 end
 function N.protect(z)
     if not isClient() or z:isRemoteZombie() then return end

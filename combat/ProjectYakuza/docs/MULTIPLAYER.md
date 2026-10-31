@@ -94,3 +94,7 @@ Addon styles can opt in with heatAttackSpeed={max=1.25,power=1,useExtremeFuel=fa
 ## Weapon feedback (0.62.0)
 
 Primary impact packets and supplementary damage results include server-derived `impactFeedback` and heavy/charged strength. The originating client cannot select the family; the server obtains it from the registered style/weapon view. Observers pass the captured family to the existing bounded world effect renderer, so equipment changes do not reinterpret an in-flight hit. Primary damage is never replayed. Duplicate and owner suppression remain in place. Matching server/client versions are required. Optional heavy accents use the existing supplied-sound/emitter routes and audio controls.
+
+## Runtime optimization (0.63.0)
+
+Unchanged inactive equipment sends a three-second heartbeat; equipped combat retains one second, and state transitions/forced events keep their existing immediate capture path. Typed comparison includes ground mode and preserves the existing Heat/fuel/charge thresholds. Definition support and action-kind metadata use per-view indexes; official style registration invalidates them. Target/range/path/replay authority checks still run for every attack. Path traversal reuses tiles only within one synchronous call and zombie lookup searches near tiles first without a persistent cache. See [Performance](PERFORMANCE.md) for operation counts, regression coverage and preserved limits. Protocol remains 2; matching versions are recommended.

@@ -54,4 +54,4 @@ HitEffects.guard(player,zombie) presents a short defender-side spark burst witho
 
 ## Scripted sound variety (0.58.0)
 
-Styles can opt in with `soundVariety=true` and register existing multi-clip sound pools with `ProjectYakuza.SoundVariety.registerPool(name, count)` in shared code. Scripted Feedback uses shuffled native clips with original parent volumes and validated MP relays. See [Sound variety](SOUND_VARIETY.md) for configuration, heavy/counter/barrage sound slots, limits and lifecycle.
+Styles can opt in with `soundVariety=true` and register existing multi-clip sound pools with `ProjectYakuza.SoundVariety.registerPool(name, count)` in shared code. Scripted Feedback uses shuffled native clips with original parent volumes and validated MP relays. See [Sound variety](SOUND_VARIETY.md) for configuration, heavy/counter sound slots, limits and lifecycle.

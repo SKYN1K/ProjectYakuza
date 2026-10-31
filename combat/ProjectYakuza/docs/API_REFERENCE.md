@@ -201,3 +201,7 @@ Addon styles can opt in with heatAttackSpeed={max=1.25,power=1,useExtremeFuel=fa
 ## Weapon-specific feedback (0.62.0)
 
 See [Weapons](WEAPONS.md) for `impactFeedback`, profile cue maps, native weapon audio, heavy/ground accent deduplication and style isolation. `HitEffects.spawn(player,victim,strong,charged,guard,feedback)` accepts an optional final preset for authoritative observer playback; omitted values use the current style view. `BloodEffects.spawn(player,victim,strong,charged,feedback)` accepts the same optional family, captures size/timing on creation and preserves the existing burst budgets. Callers supplying `false` select legacy visuals. These are client presentation APIs and never apply damage.
+
+## Network definition lookups (0.63.0)
+
+`NetworkProtocol.supports(styleView,clipEntry)` checks whether the registered equipment view supports a native animation or enabled action contract. `NetworkProtocol.kind(styleId,clipId)` retains its kind/move metadata result, including disabled definitions. The per-definition index is invalidated by official style registration or replacement of its move/action collections. Keep registered nested tables immutable during play and re-register changes. This cache does not bypass per-hit range/path/ownership/replay validation. See [Performance](PERFORMANCE.md).

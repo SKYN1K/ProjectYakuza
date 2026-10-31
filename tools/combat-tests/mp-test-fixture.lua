@@ -700,4 +700,125 @@ local current=speedPeer.seq;snapshot(p,{clip='ProjectYakuza_DD_Light03',move='dd
 check(speedPeer.seq==current,'unconfigured style cannot use the speed feature')
 snapshot(p,{clip='ProjectYakuza_DD_Light03',move='dd_light_03',swing=2103})
 check(speedPeer.packet.attackHeatSpeed==nil,'opting out restores old packet shape')
+;(function()
+do
+ local style=ProjectYakuza.getStyle('dragon_of_dojima')
+ ProjectYakuza.registerStyle(style)
+ local function baseline(view,clip)
+  local actionAnim
+  for _,c in ipairs(clip.conditions)do if c.name=='PerformingAction'then actionAnim=c.value end end
+  for _,move in ipairs(view.lightAttacks or {})do if move.animation==clip.animation then return true end end
+  for _,move in ipairs(view.extremeLightAttacks or {})do if move.animation==clip.animation then return true end end
+  for _,move in pairs(view.directionalAttacks and view.directionalAttacks.moves or {})do if move.animation==clip.animation then return true end end
+  for _,move in ipairs(view.groundAttacks or {})do if move.animation==clip.animation then return true end end
+  for _,slot in pairs(view.actions)do
+   if slot.enabled and slot.animation==(actionAnim or clip.animation)then return true end
+   if slot.enabled then for _,move in pairs(slot.variants or {})do if move.enabled~=false and move.animation==(actionAnim or clip.animation)then return true end end end
+  end
+  return false
+ end
+ for _,clip in ipairs(ProjectYakuza.NetworkCatalog[style.id])do check(P.supports(style,clip)==baseline(style,clip),'indexed support agrees with source catalogue '..clip.id)end
+ local clip=P.clip(style.id,'ProjectYakuza_DD_StyleEntry');P.supports(style,clip);P.kind(style.id,clip.id)
+ local originalPairs,originalIpairs=pairs,ipairs;local scans=0
+ pairs=function(t)if t==style.actions then scans=scans+1 end;return originalPairs(t)end
+ ipairs=function(t)if t==style.lightAttacks or t==style.extremeLightAttacks or t==style.groundAttacks then scans=scans+1 end;return originalIpairs(t)end
+ for n=1,1000 do check(P.supports(style,clip)and P.kind(style.id,clip.id)=='styleEntry','warm indexed action support')end
+ pairs=originalPairs;ipairs=originalIpairs
+ check(scans==0,'1000 warm action/support lookups do not rescan definition arrays')
+ local slot=style.actions.styleEntry;local enabled=slot.enabled;slot.enabled=false
+ ProjectYakuza.registerStyle(style)
+ check(not P.supports(style,clip),'official same-table registration invalidates definition index')
+ check(P.kind(style.id,clip.id)=='styleEntry','disabled action metadata remains available')
+ slot.enabled=enabled;ProjectYakuza.registerStyle(style)
+ check(P.supports(style,clip),'restored registered action rebuilds support')
+end
+do
+ local oldCell=getCell;local grid,calls,collisions={},0,{}
+ local missing,solid,trans,floorless,blocked
+ local function key(x,y)return x..':'..y end
+ local function square(x,y)
+  local k=key(x,y)
+  if not grid[k]then grid[k]={TreatAsSolidFloor=function()return floorless~=k end,isSolid=function()return solid==k end,isSolidTrans=function()return trans==k end,
+   testCollideAdjacent=function(_,who,dx,dy)collisions[#collisions+1]=k..':'..dx..':'..dy;return blocked==k end}end
+  return grid[k]
+ end
+ getCell=function()return {getGridSquare=function(_,x,y,z)calls=calls+1;if key(x,y)==missing then return nil end;return square(x,y)end}end
+ local actor={x=.2,y=.2,getX=function(self)return self.x end,getY=function(self)return self.y end,getZ=function()return 0 end}
+ local function oldPath(p,x,y)
+  local sx,sy=p:getX(),p:getY();local dx,dy=x-sx,y-sy;local length=math.sqrt(dx*dx+dy*dy)
+  if length<.001 then return true end
+  local cell=getCell();local z=math.floor(p:getZ());local steps=math.ceil(length/.08)
+  for i=1,steps do
+   local nx,ny=p:getX()+dx*i/steps,p:getY()+dy*i/steps
+   local a=cell:getGridSquare(math.floor(sx),math.floor(sy),z);local b=cell:getGridSquare(math.floor(nx),math.floor(ny),z)
+   if not a or not b or not b:TreatAsSolidFloor()or b:isSolid()or b:isSolidTrans()then return false end
+   local tx,ty=math.floor(nx)-math.floor(sx),math.floor(ny)-math.floor(sy)
+   if (tx~=0 or ty~=0)and a:testCollideAdjacent(p,tx,ty,0)then return false end
+   sx,sy=nx,ny
+  end
+  return true
+ end
+ for case=1,6 do
+  missing=case==2 and '1:0'or nil;solid=case==3 and '0:0'or nil;trans=case==4 and '-1:0'or nil;floorless=case==5 and '0:1'or nil;blocked=case==6 and '0:0'or nil
+  for origin=1,3 do
+   actor.x=origin==1 and .2 or origin==2 and .99 or -.03;actor.y=origin==1 and .4 or origin==2 and .01 or -.98
+   for direction=1,16 do
+    local a=direction*math.pi/8;local x,y=actor.x+math.cos(a)*1.8,actor.y+math.sin(a)*1.8
+    collisions={};local expected=oldPath(actor,x,y);local crossing=table.concat(collisions,',')
+    collisions={};local actual=P.path(actor,x,y)
+    check(actual==expected and table.concat(collisions,',')==crossing,'path result and wall crossing match in all directions')
+   end
+  end
+ end
+ missing=nil;solid=nil;trans=nil;floorless=nil;blocked=nil;actor.x=.2;actor.y=.2
+ calls=0;oldPath(actor,1.8,.2);local oldCalls=calls
+ calls=0;check(P.path(actor,1.8,.2),'optimized open path stays valid');local newCalls=calls
+ check(oldCalls==40 and newCalls==2,'1.6-tile path reduces grid lookups from 40 to 2')
+ local wanted=zombie(300,.3);local centre=0
+ getCell=function()return {getGridSquare=function(_,x,y,z)centre=centre+1;return {getMovingObjects=function()return list(x==0 and y==0 and {wanted}or {})end}end}end
+ check(P.zombie(actor,300)==wanted and centre==1,'nearest tile is checked first for a nearby zombie')
+ centre=0;check(not P.zombie(actor,301)and centre==49,'unknown zombie search retains full 49-tile limit')
+ getCell=oldCell
+end
+do
+ local n=client.localState(p);local oldEquipped,oldStyle,oldState=ProjectYakuza.isEquipped,ProjectYakuza.getPlayerStyle,ProjectYakuza.stateFor
+ local style=ProjectYakuza.getStyle('dragon_of_dojima');local equipped=true;local combo={active=false,step=1}
+ ProjectYakuza.isEquipped=function()return equipped end;ProjectYakuza.getPlayerStyle=function()return style end;ProjectYakuza.stateFor=function()return combo end
+ n.equipReady=p:getPrimaryHandItem();n.equipStyle=style.id;n.equipWanted=nil;n.equipReply=nil;n.lastPacket=nil;n.heartbeat=0;n.hello=true;n.nextCapture=0
+ local function countStates()local total=0;for _,message in ipairs(outgoing)do if message.command=='state'then total=total+1 end end;return total end
+ local before=countStates();client.capture(p,true);check(countStates()==before+1,'first active snapshot sends immediately')
+ clock=clock+60;client.capture(p);check(countStates()==before+1,'unchanged typed snapshot is suppressed')
+ combo.groundMove=style.lightAttacks[1];clock=clock+60;client.capture(p)
+ check(countStates()==before+2,'ground-state-only changes cannot be hidden by snapshot comparison')
+ equipped=false;clock=clock+60;client.capture(p);local start=clock;before=countStates()
+ for i=1,29 do clock=start+i*100;client.capture(p)end
+ check(countStates()==before,'inactive heartbeat has no intermediate one-second sends')
+ clock=start+3000;client.capture(p);check(countStates()==before+1,'inactive heartbeat is retained at three seconds')
+ equipped=true;clock=clock+60;client.capture(p);check(countStates()==before+2,'reactivation sends without waiting for inactive heartbeat')
+ ProjectYakuza.isEquipped=oldEquipped;ProjectYakuza.getPlayerStyle=oldStyle;ProjectYakuza.stateFor=oldState
+end
+
+
+do
+ local hook=client.protectionHook;local hookCalls=0
+ client.protectionHook=function()hookCalls=hookCalls+1;return hook()end
+ local packet=copy(client.remote[2].packet);packet.attackHeatSpeed=nil;packet.protected=false;packet.seq=packet.seq+100
+ client.command(P.module,'state',packet);hookCalls=0
+ for i=1,5 do local a=copy(packet);a.seq=packet.seq+i;client.command(P.module,'state',a)end
+ check(hookCalls==0,'unchanged protection heartbeats do not rescan every remote actor')
+ packet=copy(packet);packet.seq=packet.seq+6;packet.protected=true;client.command(P.module,'state',packet)
+ check(hookCalls==1,'protection transition still synchronizes zombie hook')
+ packet=copy(packet);packet.seq=packet.seq+1;packet.protected=false;client.command(P.module,'state',packet)
+ check(hookCalls==2,'protection ending still removes the zombie hook')
+ client.protectionHook=hook
+ local command=client.command;local deferred=client.deferred;local nextRetry,nextRemote=client.nextDeferred,client.nextRemote;local calls=0
+ client.deferred={first={command='audit',args={},expires=clock+100},second={command='audit',args={},expires=clock+100}}
+ client.nextDeferred=0;client.nextRemote=clock+1000
+ client.command=function()calls=calls+1;client.deferred={}end
+ client.tick();check(calls==1,'retry batch skips entries removed by lifecycle cleanup')
+ client.command=command;client.deferred=deferred;client.nextDeferred=nextRetry;client.nextRemote=nextRemote
+end
+
+end)()
+
 return 'PASS '..count..' MP authority, duplicate, range, lease, cooldown, observer and throttle checks'

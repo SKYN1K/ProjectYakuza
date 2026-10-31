@@ -14,9 +14,9 @@ function S.fanout(p,command,args)
     local peer=S.players[p:getOnlineID()]
     if peer and peer.player~=p then return end
     if peer then args.session=peer.session end
-    local all=getOnlinePlayers()
+    local all=getOnlinePlayers();local x,y,z=p:getX(),p:getY(),p:getZ();local rangeSquared=P.range*P.range
     for i=0,all:size()-1 do local other=all:get(i)
-        if math.abs(other:getZ()-p:getZ())<2 and (other:getX()-p:getX())^2+(other:getY()-p:getY())^2<=P.range^2 then reply(other,command,args) end
+        if math.abs(other:getZ()-z)<2 and (other:getX()-x)^2+(other:getY()-y)^2<=rangeSquared then reply(other,command,args) end
     end
 end
 local function state(p)
@@ -65,23 +65,10 @@ function S.snapshot(p,a,s)
     if profile then style=ProjectYakuza.Weapons.view(style,profile) end
     if equipped and ProjectYakuza.Weapons then
         if a.move~="" and not ProjectYakuza.Weapons.findMove(style,a.move) then return end
-        if clip then
-            local supported=false
-            local actionAnim
-            for _,c in ipairs(clip.conditions) do if c.name=="PerformingAction" then actionAnim=c.value end end
-            for _,move in ipairs(style.lightAttacks or {}) do if move.animation==clip.animation then supported=true end end
-            for _,move in ipairs(style.extremeLightAttacks or {})do if move.animation==clip.animation then supported=true end end
-            for _,move in pairs(style.directionalAttacks and style.directionalAttacks.moves or {})do if move.animation==clip.animation then supported=true end end
-            for _,move in ipairs(style.groundAttacks or {}) do if move.animation==clip.animation then supported=true end end
-            for _,slot in pairs(style.actions) do
-                if slot.enabled and slot.animation==(actionAnim or clip.animation) then supported=true end
-                if slot.enabled then for _,move in pairs(slot.variants or {}) do if move.enabled~=false and move.animation==(actionAnim or clip.animation) then supported=true end end end
-            end
-            if not supported then return end
-        end
+        if clip and not P.supports(style,clip)then return end
     end
     local kind,activation
-    local move=equipped and P.move(a.style,a.move) or nil
+    local move=equipped and (ProjectYakuza.Weapons and ProjectYakuza.Weapons.findMove(style,a.move)or P.move(a.style,a.move)) or nil
     if move and not S.extremeMoveAllowed(s,style,move,a.swing,a.extreme==true and style.heat==true) then return end
     if not ProjectYakuza.HeatSpeed.allowed(style,a.attackHeatSpeed,a.extreme==true)then return end
     local old=s.packet
@@ -97,7 +84,7 @@ function S.snapshot(p,a,s)
     end
     local packet={player=p:getOnlineID(),session=s.session,seq=a.seq,style=a.style,weaponProfile=profile or "",equipped=equipped,
         heat=equipped and a.heat or 0,fuel=equipped and a.fuel or 0,extreme=equipped and a.extreme==true and style.heat==true,
-        clip=clip and clip.id or "",move=equipped and type(a.move)=="string" and P.move(a.style,a.move) and a.move or "",
+        clip=clip and clip.id or "",move=move and a.move or "",
         chargePower=equipped and (a.chargePower or 0) or 0,
         attackHeatSpeed=equipped and type(style.heatAttackSpeed)=="table"and a.attackHeatSpeed or nil,
         swing=P.integer(a.swing,0,1000000000) and a.swing or 0,

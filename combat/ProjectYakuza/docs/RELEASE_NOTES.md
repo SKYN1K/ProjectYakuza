@@ -1,9 +1,9 @@
-# Project Yakuza 0.62.0
+# Project Yakuza 0.63.0
 
-- Added style/profile-owned unarmed, blunt and blade impact feedback using existing unchanged Y6 textures. Blunt hits have a broader warm burst; blades have fewer short pale sparks and a stronger blood emphasis. Fists retain their existing feedback.
-- Kept each real weapon's native audio. Weapon heavy/ground strikes add a quiet existing Y6 accent once per swing; light hits add no punch layer. Existing volume controls and sound-pool replication remain in use.
-- Replicated server-derived visual family and heavy strength for primary and supplementary weapon impacts, with captured family, duplicate suppression and no additional primary damage.
-- Replaced DoD armed ready/run selector references with existing B42 weapon-safe poses to address source torso/head twisting and long-blade neck clipping. Native walking legs and Yakuza attack/guard clips remain. No animation assets were created or edited; disabled source holds/runs remain available.
-- Added regression coverage and developer documentation. Heat-based speed remains disabled for DoD; grabs remain disabled. No new graphical/audio assets, generated artwork, voice-pack edits or game launch.
+- Optimized MP state authorization with cached style/weapon animation support and action-kind indexes, invalidated by official registration. Server snapshots reuse their validated equipment-view move.
+- Reworked path traversal to avoid repeatedly reading the same tiles while retaining the same wall/diagonal checks. Zombie-ID searches inspect nearby tiles first, with the existing full search limit and no persistent target cache.
+- Replaced concatenated client state signatures with typed comparisons, including ground changes. Unchanged inactive clients send three-second heartbeats; active combat and changed/forced updates retain their existing timing.
+- Reduced unchanged protection-hook scans, idle deferred-queue allocation and repeated sender-coordinate reads. Replay batches skip entries removed during lifecycle cleanup.
+- Removed unused internal attached-sprite search/removal helpers and stale barrage documentation. Preserved disabled grabs, retained assets, future-style hooks, gameplay tuning, weapon poses and the separate voice pack. Made the no-code-comments rule explicit in AGENTS.md.
 
-Offline tests and native importer/selector checks pass. Live appearance and multiplayer latency were not tested. Restart the game and use matching 0.62.0 on server and clients. See VALIDATION_0.62.0.md and WEAPONS.md.
+Offline operation-count, authority and regression checks pass. No game/FPS or live MP benchmark was run; PZ stayed closed. No graphical/audio/animation assets or native selector definitions changed. See PERFORMANCE.md and VALIDATION_0.63.0.md. Restart with matching server/client installations.
