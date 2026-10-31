@@ -7,6 +7,7 @@ ProjectYakuza.registerStyle({
     tigerDrop=true,
     combatVoiceVolume=2.25,
     quickstepVoices=false,
+    soundVariety=true,
     attackSpeed=1.6,
     runningKneeSpeed=1.2,
     heatHud="yakuza6",
@@ -19,6 +20,7 @@ ProjectYakuza.registerStyle({
     sounds={
         punchImpact="ProjectYakuza_Y6_PunchImpact",kickImpact="ProjectYakuza_Y6_KickImpact",heatImpact="ProjectYakuza_Y6_HeatImpact",
         punchSwing="ProjectYakuza_Y6_PunchSwing",kickSwing="ProjectYakuza_Y6_KickSwing",finisher="ProjectYakuza_Y6_Finisher",
+        heavyImpact="ProjectYakuza_Y6_HeavyFinisher",chargedImpact="ProjectYakuza_Y6_HeavyFinisher",parryImpact="ProjectYakuza_Y6_HeavyFinisher",barrageFinisher="ProjectYakuza_Y6_HeavyFinisher",
         grab="ProjectYakuza_Y6_Grab",throwImpact="ProjectYakuza_Y6_ThrowImpact",guardHit="ProjectYakuza_Y6_GuardImpact",doubleFinisher="ProjectYakuza_Y6_HeavyFinisher",guardBreak="ProjectYakuza_Y6_GuardBreak",
         heatGain="ProjectYakuza_Y6_HeatGain",heatFull="ProjectYakuza_Y6_HeatFull",heatStart="ProjectYakuza_Y6_ChargeStart",
         heatOnA="ProjectYakuza_Y6_HeatOnA",heatOnB="ProjectYakuza_Y6_HeatOnB",heatOff="ProjectYakuza_Y6_HeatOff",

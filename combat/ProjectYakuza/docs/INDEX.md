@@ -1,6 +1,6 @@
 # Documentation index
 
-Current manual: Project Yakuza 0.54.0, Lua API 3, MP protocol 2.
+Current manual: Project Yakuza 0.58.0, Lua API 3, MP protocol 2.
 
 | Task | Guide |
 | --- | --- |
@@ -12,6 +12,7 @@ Current manual: Project Yakuza 0.54.0, Lua API 3, MP protocol 2.
 | Add new move types | [Actions and lifecycle](ACTIONS.md) |
 | Native nodes, collisions and walking legs | [Animation contracts](ANIMATIONS.md) |
 | MP ownership and observer builder | [Multiplayer](MULTIPLAYER.md) |
+| Shuffled combat sounds and addon pools | [Sound variety](SOUND_VARIETY.md) |
 | Music, sounds, voices, HUD and effects | [Presentation](PRESENTATION.md) |
 | Replace a style's HUD and selector art | [Style UI API](STYLE_UI.md) |
 | Charged attacks and assets | [Charged heavies](CHARGED_HEAVY.md) |

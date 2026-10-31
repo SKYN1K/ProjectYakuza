@@ -4,6 +4,7 @@ require "ProjectYakuza/NetworkProtocol"
 require "ProjectYakuza/Juggling"
 require "ProjectYakuza/BarrageRules"
 require "ProjectYakuza/TauntReactions"
+require "ProjectYakuza/SoundVariety"
 local ProjectYakuza=ProjectYakuza;local P=ProjectYakuza.NetworkProtocol
 local S={players={},grabs={},nextTick=0,reactions={},nextSession=0}
 ProjectYakuza.NetworkServer=S
@@ -270,6 +271,15 @@ function S.command(module,command,p,a)
     s.bucket=s.bucket+1;if s.bucket>60 then return end
     if command=="step" then S.step(p,a,s);return end
     if command=="barrage"then S.barrageHit(p,a,s);return end
+    if command=="sfx"then
+        local style=ProjectYakuza.getStyle(s.packet.style);local profile=ProjectYakuza.Weapons and ProjectYakuza.Weapons.profile(style.id,p:getPrimaryHandItem())or""
+        if (profile or"")~=(s.packet.weaponProfile or"")then return end
+        if ProjectYakuza.Weapons then style=ProjectYakuza.Weapons.view(style,profile)end
+        if not P.number(a.gain,0,1)or not ProjectYakuza.SoundVariety.allowed(style,a.cue,a.index)then return end
+        if t-(s.sfxAt or 0)>=1000 then s.sfxAt=t;s.sfxCount=0 end
+        s.sfxCount=(s.sfxCount or 0)+1;if s.sfxCount>12 then return end
+        S.fanout(p,"sfx",{player=p:getOnlineID(),event=a.event,style=style.id,weaponProfile=profile or"",cue=a.cue,index=a.index,gain=a.gain});return
+    end
     if command=="grabRequest" then
         if ProjectYakuza.FEATURES.grab==false then S.release(p);reply(p,"grabDenied",{});return end
         local slot=ProjectYakuza.getStyle(s.packet.style).actions.grab

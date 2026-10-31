@@ -635,4 +635,24 @@ local blockedTargets=ProjectYakuza.TauntReactions.targets(p,cfg)
 check(#blockedTargets==0 and pathCalls<=32,'dense taunt path checks have a hard per-completion budget')
 P.path=oldPath
 check(not ProjectYakuza.TauntReactions.config({actions={},tauntReactions={radius=5,maxTargets=8}}),'other styles need an enabled taunt and explicit opt-in')
+clock=clock+2000;replies={};snapshot(p)
+command('sfx',{cue='ProjectYakuza_Y6_PunchSwing',index=2,gain=.65})
+local soundPacket
+for _,message in ipairs(replies)do if message.command=='sfx'then soundPacket=message.args end end
+check(soundPacket and soundPacket.index==2 and soundPacket.gain==.65,'server relays a selected supplied SFX clip and existing gain')
+local sent=#replies
+command('sfx',{cue='ProjectYakuza_FunkGoesOn',index=1,gain=1});command('sfx',{cue='ProjectYakuza_Y6_PunchSwing',index=99,gain=.65});command('sfx',{cue='ProjectYakuza_Y6_PunchSwing',index=1,gain=2})
+check(#replies==sent,'music, unregistered clips and excessive gains cannot be broadcast as combat SFX')
+for i=1,13 do command('sfx',{cue='ProjectYakuza_Y6_PunchSwing',index=1,gain=.65})end
+local soundResults=0;for _,message in ipairs(replies)do if message.to==p and message.command=='sfx'then soundResults=soundResults+1 end end
+check(soundResults==12,'combat SFX have a separate twelve-per-second actor budget')
+local variety=ProjectYakuza.SoundVariety;local oldPlay=variety.play;local heard=0;local heardIndex
+variety.play=function(who,style,cue,index,gain)heard=heard+1;heardIndex=index;return 1 end
+local remoteSound=copy(soundPacket);remoteSound.player=2;remoteSound.session=3000;remoteSound.event=999000
+client.command(P.module,'sfx',remoteSound);client.command(P.module,'sfx',remoteSound)
+check(heard==1 and heardIndex==2,'remote listener plays the exact selected clip once')
+client.command(P.module,'sfx',soundPacket);check(heard==1,'owner echo cannot double its local SFX')
+remoteSound=copy(remoteSound);remoteSound.event=999001;remoteSound.index=99;client.command(P.module,'sfx',remoteSound)
+check(heard==1,'remote invalid clip cannot invoke playback')
+variety.play=oldPlay
 return 'PASS '..count..' MP authority, duplicate, range, lease, cooldown, observer and throttle checks'

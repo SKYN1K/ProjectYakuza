@@ -51,3 +51,7 @@ Optional style.hitResponses defines named flinch/stagger/knockdown profiles with
 Optional style sound keys include guardHit and doubleFinisher; doubleFinisher falls back to finisher when absent. They use the mod Sounds group, leaving Voices and Music independent. Built-in unarmed whooshes use current native clip phase when the exposed track API is available; custom moves retain the timing fallback. No audio waveform is generated.
 
 HitEffects.guard(player,zombie) presents a short defender-side spark burst without blood. Existing confirmed heavy/charged impacts add a low-opacity original shock texture. Both use detached world sprites and existing presentation budgets. The existing MP guard/impact messages relay them without additional packets. Pure Lua punch positions are corrected source samples, not final blended bone attachments; an optional live limb provider can supply those coordinates.
+
+## Scripted sound variety (0.58.0)
+
+Styles can opt in with `soundVariety=true` and register existing multi-clip sound pools with `ProjectYakuza.SoundVariety.registerPool(name, count)` in shared code. Scripted Feedback uses shuffled native clips with original parent volumes and validated MP relays. See [Sound variety](SOUND_VARIETY.md) for configuration, heavy/counter/barrage sound slots, limits and lifecycle.

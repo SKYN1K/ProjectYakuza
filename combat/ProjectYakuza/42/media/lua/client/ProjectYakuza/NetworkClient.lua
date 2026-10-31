@@ -2,6 +2,7 @@ require "ProjectYakuza/Juggling"
 require "ProjectYakuza/Runtime"
 require "ProjectYakuza/NetworkProtocol"
 require "ProjectYakuza/TauntReactions"
+require "ProjectYakuza/SoundVariety"
 local ProjectYakuza=ProjectYakuza;local P=ProjectYakuza.NetworkProtocol
 local N={locals=setmetatable({}, {__mode="k"}),remote={},leases=setmetatable({}, {__mode="k"}),pending=setmetatable({}, {__mode="k"}),seen={},victims={},deferred={},sessions={},nextRemote=0}
 ProjectYakuza.Network=N
@@ -153,6 +154,7 @@ function N.swing(p)
     if not isClient() or not p:isLocalPlayer() then return end
     local s=N.localState(p);s.swing=s.swing+1;N.capture(p,true)
 end
+function N.sound(p,cue,index,gain)return N.send(p,"sfx",{cue=cue,index=index,gain=gain})end
 function N.hit(p,z,weapon,damage)
     if N.replaying or not isClient() or not p or not p:isLocalPlayer() or not z or not instanceof(z,"IsoZombie") or type(damage)~="number" or damage<=0 then return end
     local s=N.localState(p);if s.swing<1 then return end
@@ -277,6 +279,14 @@ function N.command(module,command,a)
     if not P.integer(a.player,0,32767) then return end
     local p=getPlayerByOnlineID(a.player)
     if command~="state"and not N.acceptSession(a.player,a.session)then return end
+    if command=="sfx"then
+        if not p or p:isLocalPlayer()or not P.integer(a.event,0,1000000000)or not P.number(a.gain,0,1)then return end
+        local style=ProjectYakuza.getStyle(a.style);if not style then return end
+        if ProjectYakuza.Weapons then style=ProjectYakuza.Weapons.view(style,a.weaponProfile)end
+        if not ProjectYakuza.SoundVariety.allowed(style,a.cue,a.index)then return end
+        local key="sfx:"..a.player..":"..a.event;if N.seen[key]then return end;N.seen[key]=now()
+        ProjectYakuza.SoundVariety.play(p,style,a.cue,a.index,a.gain);return
+    end
     if command=="step" then
         if not p or p:isLocalPlayer() then return end
         local s=N.remote[a.player];if not s or not s.packet.equipped then return end

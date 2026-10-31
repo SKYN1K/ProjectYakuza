@@ -137,3 +137,7 @@ MP fixtures cover split melee/action restart counters, fresh session counters on
 ## 0.57.0 directional moves and taunt attention
 
 Build and run directional-tests.lua through build_directional_tests.py. It embeds actual Runtime, heading selection, move damage and quickstep readiness. Compile DirectionalAttackProbe.java, then run validate_directional_assets.py for native import/selectors, all original frames and command mappings, BEP contact markers, native AI methods and hand-prop FK. MP/weapon fixtures cover completion-only taunt leases, early/replay rejection, target eligibility, blocked paths, zombie ownership, streaming retries, hard path budgets and directional damage/profile isolation. Taunt lifecycle tests retain SP completion/interruption reward checks and attention timing. All tests run offline without launching PZ.
+
+## Sound variety
+
+Run build_sound_variety_tests.py, then LuaRunner sound-variety-tests.lua from this directory. SoundVarietyProbe parses the unchanged sound definitions and checks native clip parent volumes, public methods through the PZ Kahlua exposer and world-emitter method signatures without playback. MP fixtures cover selected-clip relay, style/index/gain validation, throttling and duplicate/owner suppression.

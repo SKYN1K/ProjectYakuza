@@ -78,3 +78,7 @@ The audit validates offline client/server command paths and native resource sele
 ## Directional lights and taunt attention (0.57.0)
 
 Directional lights use the normal native swing serial, isolated catalogued clips and supplemental hit limits; real weapon profiles cannot select DoD's unarmed directional map. Taunt attention is authorized from an observed timed-action lease and a fresh completion counter, then server-selected zombie IDs are relayed to their native AI owners. Per-completion/per-target deduplication, player sessions, path/range/eligibility limits and a 750 ms streaming retry bound apply. See DIRECTIONAL_AND_TAUNTS.md. Observer count is now 316 across both repeat cycles.
+
+## Scripted sound variety (0.58.0)
+
+Styles can opt in with `soundVariety=true` and register existing multi-clip sound pools with `ProjectYakuza.SoundVariety.registerPool(name, count)` in shared code. Scripted Feedback uses shuffled native clips with original parent volumes and validated MP relays. See [Sound variety](SOUND_VARIETY.md) for configuration, heavy/counter/barrage sound slots, limits and lifecycle.

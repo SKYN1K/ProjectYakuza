@@ -184,3 +184,7 @@ Styles can opt into an `extremeLightAttacks` array matching their regular chain 
 ## Directional light routing and taunt attention (0.57.0)
 
 Styles can opt into `directionalAttacks` and `tauntReactions`. Runtime latches a manual-turn light replacement and ends the chain; native primary/supplemental hit paths and quickstep budgets remain in force. Taunt attention uses completion-only native AI with server authorization and zombie-owning client replay. See [configuration, limits, supplied motion and MP contracts](DIRECTIONAL_AND_TAUNTS.md).
+
+## Scripted sound variety (0.58.0)
+
+Styles can opt in with `soundVariety=true` and register existing multi-clip sound pools with `ProjectYakuza.SoundVariety.registerPool(name, count)` in shared code. Scripted Feedback uses shuffled native clips with original parent volumes and validated MP relays. See [Sound variety](SOUND_VARIETY.md) for configuration, heavy/counter/barrage sound slots, limits and lifecycle.

@@ -53,7 +53,7 @@ end
 
 local ProjectYakuza = ProjectYakuza
 ProjectYakuza.FEATURES={grab=false}
-ProjectYakuza.VERSION = "0.57.0"
+ProjectYakuza.VERSION = "0.58.0"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -199,6 +199,7 @@ function ProjectYakuza.validateStyle(style)
         if style[key]~=nil and type(style[key])~="boolean" then problem(key.." must be true or false") end
     end
     if style.combatVoiceVolume~=nil and (not number(style.combatVoiceVolume) or style.combatVoiceVolume<0) then problem("combatVoiceVolume must be nonnegative") end
+    if style.soundVariety~=nil and type(style.soundVariety)~="boolean"then problem("soundVariety must be boolean")end
     if type(style.lightAttacks)~="table" or #style.lightAttacks==0 then problem("lightAttacks must contain at least one move")
     else for i,value in ipairs(style.lightAttacks) do move(value,"lightAttacks["..i.."]",true) end end
     if style.extremeLightAttacks~=nil then
