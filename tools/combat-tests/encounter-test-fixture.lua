@@ -5,7 +5,7 @@ local clock,paused=1000,false
 getTimestampMs=function()return clock end
 isGamePaused=function()return paused end
 local function event()local e={};e.Add=function(fn)e[fn]=true end;e.Remove=function(fn)e[fn]=nil end;return e end
-Events={OnTick=event(),OnPlayerUpdate=event(),OnGameStart=event(),OnSave=event(),OnMainMenuEnter=event()}
+Events={OnWeaponHitCharacter=event(),OnTick=event(),OnPlayerUpdate=event(),OnGameStart=event(),OnSave=event(),OnMainMenuEnter=event()}
 getPlayerScreenLeft=function(n)return n*1280 end
 getPlayerScreenTop=function()return 0 end
 getPlayerScreenWidth=function()return 1280 end
@@ -149,5 +149,58 @@ invalid({titles={{max=10,text='Low'}}})
 invalid({radius=0,titles={{text='All'}}})
 invalid({titles={{max=10,text='Low'},{max=5,text='Bad'},{text='All'}}})
 invalid({titles={{text='Early fallback'},{text='All'}}})
+
+local short=E.layoutText(PY.EncounterFont,'Zombies');local long=E.layoutText(PY.EncounterFont,string.rep('Zombies ',40))
+local smallScale=E.textScale(short,PY.EncounterFont,1280,720,{},1)
+local longScale=E.textScale(long,PY.EncounterFont,1280,720,{},1.08)
+check(smallScale>.72 and smallScale<=1,'short title is larger without upscaling its source font')
+check(longScale<smallScale and long.width*longScale<=1280*.88,'long titles shrink to viewport width including landing pulse')
+check(E.textScale(short,PY.EncounterFont,320,180,{},1)<=180*.22/PY.EncounterFont.lineHeight,'small viewports limit title height')
+local detectorStyle={id='tests.detect',name='Detector',lightAttacks=other.lightAttacks,ui={encounter='ProjectYakuza.y6Encounter'},encounterIntro={enabled=true,countZombies=false,playerRadius=15,playerFov=140,pollMs=100,quietMs=1000,triggers={visiblePlayer=true},titles={{text='A rival'}}}}
+PY.registerStyle(detectorStyle);E.clear();p.styleId=detectorStyle.id;p.chasing=100
+p.getForwardDirection=function()return {getX=function()return 1 end,getY=function()return 0 end}end
+p.CanSee=function(_,target)return not target.hidden end
+local rival={kind='IsoPlayer',x=11,y=12,dead=false,hidden=false}
+function rival:getX()return self.x end;function rival:getY()return self.y end;function rival:getZ()return 0 end
+function rival:isDead()return self.dead end
+function rival:getForwardDirection()return {getX=function()return -1 end,getY=function()return 0 end}end
+function rival:CanSee(target)return not self.blocked end
+local playerReads=0;local online={rival,p}
+getOnlinePlayers=function()return {size=function()return #online end,get=function(_,i)playerReads=playerReads+1;return online[i+1]end}end
+local cellsBefore=squareReads;local statsBefore=statReads;clock=clock+100;E.update(p)
+check(E.states[p].panel and E.states[p].context.target==rival and E.states[p].context.reason=='player_seen','visible player triggers own style and exposes target context')
+check(squareReads==cellsBefore and statReads==statsBefore,'player-only intro performs no zombie count or native threat reads')
+E.clear();rival.hidden=true;clock=clock+100;E.update(p);check(not E.states[p].panel,'occluded player cannot trigger intro')
+rival.hidden=false;rival.x=9;clock=clock+100;E.update(p);check(not E.states[p].panel,'player behind viewer fails configured field of view')
+rival.x=100;clock=clock+100;E.update(p);check(not E.states[p].panel,'distant player cannot trigger intro')
+rival.x=11;rival.dead=true;clock=clock+100;E.update(p);check(not E.states[p].panel,'dead players cannot trigger intro');rival.dead=false
+E.clear();detectorStyle.encounterIntro.triggers={seenByPlayer=true};p.CanSee=function()return false end;clock=clock+100;E.update(p)
+check(E.states[p].panel and E.states[p].context.target==rival,'seen-by-player uses the other actor visibility direction')
+E.clear();detectorStyle.encounterIntro.triggers={visiblePlayer=true};p.CanSee=function()return true end
+online={};for i=1,40 do online[i]=p end;online[36]=rival
+for i=1,3 do local reads=playerReads;clock=clock+100;E.update(p);check(playerReads-reads<=16,'player candidate scan has a bounded per-poll budget')end
+check(E.states[p].panel,'bounded cursor eventually detects a later visible player')
+local reads=playerReads;clock=clock+100;E.update(p);check(playerReads==reads,'visible target is cached without rescanning the player list')
+online={rival,p}
+E.clear();detectorStyle.encounterIntro.triggers={};detectorStyle.encounterIntro.detector='tests.detector'
+local detectorCalls=0;PY.registerEncounterDetector('tests.detector',function(who,style,ctx)detectorCalls=detectorCalls+1;check(who==p and style==detectorStyle and ctx.inEncounter==false,'detector receives its style and local state');return true,rival end)
+clock=clock+100;E.update(p);check(E.states[p].panel and E.states[p].context.reason=='custom','registered detector can independently request its own intro')
+E.update(p);check(detectorCalls==1,'custom detector obeys poll throttle')
+PY.unregisterEncounterDetector('tests.detector');E.clear();clock=clock+100;E.update(p);check(not E.states[p].panel,'removed detector causes no DoD fallback')
+PY.registerEncounterDetector('tests.detector',function()error('bad addon')end);clock=clock+100;E.update(p);clock=clock+100;E.update(p);check(not E.states[p].panel,'failing detector is quarantined without an intro');PY.unregisterEncounterDetector('tests.detector')
+E.clear();detectorStyle.encounterIntro.detector=nil;detectorStyle.encounterIntro.triggers={playerHit=true}
+for fn,enabled in pairs(Events.OnWeaponHitCharacter)do if type(fn)=="function" and enabled then fn(p,rival,nil,1)end end
+check(E.states[p] and E.states[p].panel and E.states[p].context.reason=='hit','native player-hit event can trigger an opted-in player style')
+E.clear();p.styleId=style.id;p.CanSee=nil;crowd(2);local originalMin=cfg.minZombies;cfg.minZombies=3;E.request(p)
+for i=1,4 do E.tick()end
+check(not E.states[p].panel and not E.states[p].inEncounter,'style minimum rejects insufficient zombie count without latching encounter')
+E.onHit(p,zombie(11,12),nil,1);check(not E.states[p].job,'automatic hits respect rejected-count backoff')
+crowd(3);E.request(p);finishCount();check(E.states[p].panel,'minimum allows the exact threshold');cfg.minZombies=originalMin
+invalid({minZombies='wrong',titles={{text='All'}}})
+invalid({countZombies=false,minZombies=1,titles={{text='All'}}})
+invalid({textScale=2,titles={{text='All'}}})
+invalid({triggers={unknown=true},titles={{text='All'}}})
+invalid({triggers={visiblePlayer='yes'},titles={{text='All'}}})
+getOnlinePlayers=nil
 E.clear();check(removed==created,'all created panels removed')
 return true,'PASS '..checks..' encounter thresholds, bounded radius counts, native-font UI, style providers, lifecycle and mouse isolation checks'

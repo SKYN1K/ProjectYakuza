@@ -53,7 +53,7 @@ end
 
 local ProjectYakuza = ProjectYakuza
 ProjectYakuza.FEATURES={grab=false}
-ProjectYakuza.VERSION = "0.53.0"
+ProjectYakuza.VERSION = "0.54.0"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -164,9 +164,19 @@ function ProjectYakuza.validateStyle(style)
         if type(intro)~="table" then problem("encounterIntro must be false or a configuration table")
         else
             if intro.enabled~=nil and type(intro.enabled)~="boolean" then problem("encounterIntro.enabled must be boolean") end
-            for key,limits in pairs({radius={1,30},durationMs={100,10000},quietMs={1000,120000},pollMs={100,5000},soundVolume={0,2}}) do
+            for key,limits in pairs({radius={1,30},durationMs={100,10000},quietMs={1000,120000},pollMs={100,5000},soundVolume={0,2},minZombies={0,1000},playerRadius={1,100},playerFov={1,360},textScale={.1,1},textWidth={.1,1},rejectRetryMs={100,30000}}) do
                 local value=intro[key]
                 if value~=nil and (not number(value) or value<limits[1] or value>limits[2]) then problem("invalid encounterIntro."..key) end
+            end
+            if intro.minZombies and number(intro.minZombies) and intro.minZombies~=math.floor(intro.minZombies) then problem("encounterIntro.minZombies must be an integer") end
+            if intro.countZombies~=nil and type(intro.countZombies)~="boolean" then problem("encounterIntro.countZombies must be boolean") end
+            if intro.countZombies==false and number(intro.minZombies) and intro.minZombies>0 then problem("minZombies requires counting") end
+            if intro.detector~=nil and not text(intro.detector) then problem("encounterIntro.detector must name a registered detector") end
+            if intro.triggers~=nil then
+                if type(intro.triggers)~="table" then problem("encounterIntro.triggers must be a table")
+                else for k,v in pairs(intro.triggers) do
+                    if not ({threat=true,hit=true,playerHit=true,visiblePlayer=true,seenByPlayer=true})[k] or type(v)~="boolean" then problem("invalid encounterIntro trigger: "..tostring(k)) end
+                end end
             end
             if intro.soundKey~=nil and not text(intro.soundKey) then problem("encounterIntro.soundKey must name a style sound") end
             if type(intro.titles)~="table" or #intro.titles<1 or #intro.titles>16 then problem("encounterIntro.titles requires 1..16 entries")

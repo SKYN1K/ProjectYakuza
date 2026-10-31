@@ -172,3 +172,7 @@ Unarmed finisher routing recognizes enabled `extreme_default`, `extreme_after_N`
 ## Style-owned encounter intros (0.50.0)
 
 `style.encounterIntro` configures enabled/radius/durationMs/quietMs/pollMs/titles and optional soundKey/soundVolume. `style.ui.encounter` names a `registerStyleUI` provider; no provider or style is inherited automatically. The client `ProjectYakuza.EncounterIntro` API exposes request, clear, title, layoutText and drawText; lifecycle events are encounterIntroStarted, encounterIntroEnded and encounterEnded. Counts are local, batched and capped by the configured highest tier. [Complete contract and examples](ENCOUNTER_INTROS.md).
+
+## Encounter detector extensions (0.54.0)
+
+registerEncounterDetector(id,fn) and unregisterEncounterDetector(id,fn) manage namespaced, per-style opt-in detection callbacks. See ENCOUNTER_INTROS.md for trigger fields, minimum counts, no-count/player intros, target context, text fitting, custom effects and failure/rejection events. Defaults retain existing zombie-only behavior.

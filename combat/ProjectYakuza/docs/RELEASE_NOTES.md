@@ -1,10 +1,9 @@
-# Project Yakuza 0.53.0
+# Project Yakuza 0.54.0
 
-- Corrected first-punch effect alignment: removed the old forearm inset and fixed downward screen offset, centred the core between the imported wrist/knuckle, and read the native attack phase at draw time. The optional live limb provider remains supported; pure Lua still samples the source pose rather than reading the final blended mesh.
-- Added small white-blue guard sparks and subtle heavy/charged impact rings using existing original textures. Impact sprites now use detached world rendering with normal alpha and blend restoration. Existing MP guard/impact messages carry the presentation without extra traffic.
-- Swing whooshes now follow native animation phase for all unarmed strikes, with longer timing allowance for heavies. Guard and double-finisher cues get distinct groups of existing Yakuza sound clips, with modest gains. Music/Sounds/Voices controls remain separate; no new audio files or voice-pack changes.
-- Repaired the nine RMB-released weapon carry clips. Native torso/head/legs retain their normal motion; a consistent supplied arm pose removes the changing upper-body cycle during walking. Native idle grips replace attack-grip offsets, including katana/long-blade holding. Aimed combat stance and attack clips are untouched.
-- The encounter title now has one larger landing explosion instead of three staggered bursts. It does not replay after completion.
-- Intro counting now visits nearby grid squares rather than scanning the loaded zombie list. It reads at most 256 squares and 192 nearby moving objects per tick, stops at the highest title threshold, and removes its hook afterward. The usual 12-tile count completes within three ticks in the regression fixture and never reads its 5,000 distant zombies. Title thresholds and 400ms threat polling are unchanged.
+- Enlarged short encounter titles and automatically shrunk longer titles to fit the viewport, including the landing pulse. Source font/image files are unchanged and the stock font is never drawn above native raster scale.
+- Expanded style-exclusive intro configuration with minimum zombie counts, optional no-count intros, trigger selection, player range/field-of-view, rejection backoff and stock title-size controls.
+- Added opt-in visible-player, seen-by-player and player-hit triggers. Detection is local, range/facing/LOS based and bounded to 16 online candidates per poll plus local split-screen slots, with target caching. DoD retains its zombie-only defaults.
+- Added namespaced custom encounter detectors with failure quarantine and target context. Existing per-style renderer lifecycles support custom effects, assets, timing, title tiers and supplied sounds; other styles receive no DoD fallback.
+- Documented addon examples and new context/events in ENCOUNTER_INTROS.md. No graphical/audio asset was created or modified, and no combat, music or network protocol behavior changed.
 
-5,761 Kahlua assertions and native import, source-sample, hand-prop, sound-script and asset checks pass. See VALIDATION_0.53.0.md. PZ was not launched; live alignment, katana clearance and visual blending still need in-game assessment after a full restart. Install matching clients/server. Grabs remain disabled.
+Offline regression, native API, source-asset and Lua compilation checks pass. PZ was not launched. See VALIDATION_0.54.0.md. Restart matching server/client installations after updating. Grabs remain disabled; the separate voice pack is untouched.

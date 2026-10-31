@@ -18,7 +18,7 @@ PY.registerStyleUI("ProjectYakuza.y6Encounter",{
         local age=t-.30;local impact=age>=0 and clamp(1-age/.26) or 0
         local shakeX=math.sin(math.max(0,age)*95)*5*impact*impact
         local shakeY=math.cos(math.max(0,age)*73)*3*impact*impact
-        local scale=math.min(.72,width*.78/math.max(1,s.layout.width))*(.58+.42*settle+.08*impact)
+        local scale=PY.EncounterIntro.textScale(s.layout,font,width,height,c.extra.config or {},.58+.42*settle+.08*impact)
         local centerX=width/2-width*.72*(1-settle)+(1-leave)*width*.035+shakeX
         local centerY=height*.47-height*.20*(1-settle)+shakeY
         local x=centerX-s.layout.width*scale/2;local y=centerY-font.lineHeight*scale/2

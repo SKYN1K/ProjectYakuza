@@ -2,7 +2,7 @@ require "ProjectYakuza/Runtime"
 require "ProjectYakuza/StyleUI"
 require "ISUI/ISPanel"
 local PY=ProjectYakuza
-local E={states=setmetatable({}, {__mode="k"}),countBudget=192,squareBudget=256,offsetCache={}}
+local E={states=setmetatable({}, {__mode="k"}),countBudget=192,squareBudget=256,offsetCache={},detectors={},playerBudget=16}
 PY.EncounterIntro=E
 local Panel=ISPanel:derive("ProjectYakuzaEncounterIntro")
 E.Panel=Panel
@@ -13,6 +13,61 @@ local function eligible(p)
     if type(config)~="table" or config.enabled~=true or not style.ui or type(style.ui.encounter)~="string"
         or not PY.StyleUI.providers[style.ui.encounter] then return end
     return style,config
+end
+function PY.registerEncounterDetector(id,fn)
+    assert(type(id)=="string" and string.match(id,"^[%w_.-]+$") and type(fn)=="function","namespaced encounter detector and function required")
+    E.detectors[id]=fn
+end
+function PY.unregisterEncounterDetector(id,fn)
+    if E.detectors[id] and (not fn or E.detectors[id]==fn) then E.detectors[id]=nil;return true end
+    return false
+end
+local function trigger(config,key)
+    if config.triggers==nil then return key=="threat" or key=="hit" end
+    return config.triggers[key]==true
+end
+function E.canSee(observer,target,config)
+    if not observer or not target or observer==target or target:isDead() or observer:isDead() or math.abs(observer:getZ()-target:getZ())>.5 then return false end
+    local dx,dy=target:getX()-observer:getX(),target:getY()-observer:getY();local d=dx*dx+dy*dy
+    if d<.0001 or d>(config.playerRadius or config.radius or 12)^2 then return false end
+    local f=observer:getForwardDirection();local fx,fy=f:getX(),f:getY();local length=math.sqrt(fx*fx+fy*fy)
+    if length<.001 or (dx*fx+dy*fy)/(math.sqrt(d)*length)<math.cos((config.playerFov or 140)*math.pi/360) then return false end
+    return observer:CanSee(target)==true
+end
+function E.playerThreat(p,s,config)
+    if not trigger(config,"visiblePlayer") and not trigger(config,"seenByPlayer") then return end
+    local function matches(other)
+        return other and instanceof(other,"IsoPlayer") and ((trigger(config,"visiblePlayer") and E.canSee(p,other,config)) or (trigger(config,"seenByPlayer") and E.canSee(other,p,config)))
+    end
+    if matches(s.target) then return s.target end
+    local list=getOnlinePlayers and getOnlinePlayers()
+    if list and list:size()>0 then
+        local size=list:size();local cursor=(s.playerCursor or 0)%size
+        for i=1,math.min(size,E.playerBudget) do
+            local other=list:get(cursor);cursor=(cursor+1)%size;s.playerCursor=cursor
+            if matches(other) then return other end
+        end
+    end
+    if getSpecificPlayer then for i=0,3 do local other=getSpecificPlayer(i);if matches(other) then return other end end end
+end
+function E.detect(p,s,style,config)
+    local target=E.playerThreat(p,s,config)
+    if target then return true,"player_seen",target end
+    local fn=config.detector and E.detectors[config.detector]
+    if fn and s.failedDetector~=fn then
+        local ok,found,other=pcall(fn,p,style,{inEncounter=s.inEncounter==true,lastThreat=s.lastThreat,target=s.target})
+        if not ok then s.failedDetector=fn;PY.emit("encounterDetectorFailed",p,style,config.detector,found)
+        elseif found==true then return true,"custom",other end
+    end
+    if trigger(config,"threat") then
+        local stats=p:getStats()
+        if stats:getNumChasingZombies()>0 or (stats:getNumVeryCloseZombies()>0 and stats:getNumVisibleZombies()>0) then return true,"threat" end
+    end
+    return false
+end
+function E.textScale(layout,font,width,height,config,pulse)
+    pulse=pulse or 1
+    return math.min(1,(config.textScale or 1)*pulse,width*(config.textWidth or .88)/math.max(1,layout.width),height*.22/math.max(1,font.lineHeight))
 end
 function E.title(config,count)
     for _,entry in ipairs(config.titles or {}) do if entry.max==nil or count<=entry.max then return entry.text end end
@@ -72,14 +127,19 @@ function Panel:prerender()
     self:setX(getPlayerScreenLeft(n));self:setY(getPlayerScreenTop(n))
     self:setWidth(getPlayerScreenWidth(n));self:setHeight(getPlayerScreenHeight(n))
     local context={style=s.style,title=s.context.title,count=s.context.count,capped=s.context.capped,
-        radius=s.config.radius or 12,elapsed=s.age/1000,duration=(s.config.durationMs or 2300)/1000,reason=s.context.reason}
+        radius=s.config.radius or 12,elapsed=s.age/1000,duration=(s.config.durationMs or 2300)/1000,reason=s.context.reason,target=s.context.target,config=s.config}
     PY.StyleUI.render("encounter",p,self,context)
 end
 function E.show(p,count,capped)
     local s=E.states[p];local style,config=eligible(p)
     if not s or not style or config~=s.config then E.clear(p,"style_changed");return false end
-    s.job=nil;s.age=0;s.last=now()
-    s.context={title=E.title(config,count),count=count,capped=capped==true,reason=s.reason,radius=config.radius or 12}
+    s.job=nil
+    if count<(config.minZombies or 0) then
+        s.inEncounter=false;s.target=nil;s.nextPoll=now()+math.max(config.pollMs or 400,config.rejectRetryMs or 1500)
+        s.rejectUntil=s.nextPoll;PY.emit("encounterRejected",p,style,count,config.minZombies,s.reason);syncHook();return false
+    end
+    s.rejectUntil=nil;s.age=0;s.last=now()
+    s.context={title=E.title(config,count),count=count,capped=capped==true,reason=s.reason,radius=config.radius or 12,target=s.target}
     local panel=Panel:new(0,0,getPlayerScreenWidth(p:getPlayerNum()),getPlayerScreenHeight(p:getPlayerNum()))
     panel.player=p;panel:initialise();panel:setWantMouseEvents(false);panel:addToUIManager();s.panel=panel
     local name=config.soundKey and PY.Feedback and PY.Feedback.sound(p,config.soundKey)
@@ -87,17 +147,19 @@ function E.show(p,count,capped)
     PY.emit("encounterIntroStarted",p,s.style,s.context)
     syncHook();return true
 end
-function E.request(p,reason)
+function E.request(p,reason,target)
     local style,config=eligible(p)
     if not style or isGamePaused() then return false,"not_available" end
     local s=E.states[p]
     if s and s.inEncounter then return false,"already_in_encounter" end
-    local cell=getCell()
-    if not cell then return false,"world_not_ready" end
+    local cell=config.countZombies~=false and getCell() or nil
+    if config.countZombies~=false and not cell then return false,"world_not_ready" end
     s=s or {};E.states[p]=s
-    s.style=style;s.config=config;s.inEncounter=true;s.lastThreat=now();s.nextPoll=now()+(config.pollMs or 400);s.reason=reason or "manual"
+    s.style=style;s.config=config;s.inEncounter=true;s.lastThreat=now();s.nextPoll=now()+(config.pollMs or 400);s.reason=reason or "manual";s.target=target
+    if config.countZombies==false then E.show(p,0,false);return true end
     local cap
     for _,title in ipairs(config.titles or {}) do if title.max then cap=math.max(cap or 0,title.max+1) end end
+    if (config.minZombies or 0)>0 then cap=math.max(cap or 0,config.minZombies) end
     local radius=config.radius or 12;local offsets=E.offsetCache[radius]
     if not offsets then
         offsets={};local limit=math.ceil(radius)
@@ -157,25 +219,30 @@ function E.update(p)
     if not s then s={style=style,config=config,nextPoll=0,lastThreat=t};E.states[p]=s end
     if t<(s.nextPoll or 0) then return end
     s.nextPoll=t+(config.pollMs or 400)
-    local stats=p:getStats()
-    local threat=stats:getNumChasingZombies()>0 or (stats:getNumVeryCloseZombies()>0 and stats:getNumVisibleZombies()>0)
+    local threat,reason,target=E.detect(p,s,style,config)
     if threat then
+        if target then s.target=target end
         s.lastThreat=t
-        if not s.inEncounter then E.request(p,"threat") end
+        if not s.inEncounter then E.request(p,reason,target) end
     elseif s.inEncounter and t-s.lastThreat>=(config.quietMs or 12000) then
         E.close(p,"encounter_ended");s.inEncounter=false
         PY.emit("encounterEnded",p,style,"quiet")
     end
 end
 function E.onHit(p,victim,weapon,damage)
-    if not p or not p:isLocalPlayer() or not victim or not instanceof(victim,"IsoZombie") or type(damage)~="number" or damage<=0 then return end
+    if not p or not p:isLocalPlayer() or not victim or type(damage)~="number" or damage<=0 then return end
     local style,config=eligible(p);if not style or isGamePaused() then return end
+    if not ((instanceof(victim,"IsoZombie") and trigger(config,"hit")) or (instanceof(victim,"IsoPlayer") and victim~=p and trigger(config,"playerHit"))) then return end
     local s=E.states[p]
     if s and (s.style.id~=style.id or s.config~=config) then E.clear(p,"style_changed");s=nil end
+    if s and s.rejectUntil and now()<s.rejectUntil then return end
     if not s or not s.inEncounter then E.request(p,"hit") end
     s=E.states[p];if s then s.lastThreat=now() end
 end
 PY.on("combatHit",E.onHit)
+Events.OnWeaponHitCharacter.Add(function(p,victim,weapon,damage)
+    if victim and instanceof(victim,"IsoPlayer") then E.onHit(p,victim,weapon,damage) end
+end)
 PY.on("styleChanged",function(p)E.clear(p,"style_changed")end)
 Events.OnPlayerUpdate.Add(E.update)
 Events.OnGameStart.Add(function()E.clear()end)

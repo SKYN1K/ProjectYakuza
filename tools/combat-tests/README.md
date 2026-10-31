@@ -119,3 +119,7 @@ Use Blender in background mode with build_locomotion_assets.py to retarget the s
 CombatSoundProbe.java natively parses all combat sound definitions and resolves original source paths. Punch tests cover rotated palm coordinates, removed screen inset, render-time phase and heavy whoosh timing. Blood/impact tests include detached ownership, guard/no-blood, subtle shock rings and error cleanup. Encounter tests exercise near-grid counting, distant-zombie exclusion, three-tick ordinary counts and one enlarged nonrepeating explosion.
 
 repair_carry_053.py combines the existing source arm pose with native torso/head/legs and idle grips. The locomotion builder applies that repair; the existing source/native/FK probes verify every output. The validator requires native hierarchy and body samples to remain intact. These tools never start PZ.
+
+## 0.54.0 style-owned intro triggers
+
+The encounter fixture checks larger bounded text, long-title fitting, per-style player visibility/seen-by-player, range/occlusion/death/facing rejection, bounded player-list cursors and cached targets, native player-hit opt-in, no-count intros, minimum rejection/retry, detector registration/throttling/removal/quarantine and invalid config rejection. EncounterAssetProbe reflects the native online/local player and LOS/facing APIs without starting PZ. Existing per-style renderer and cleanup tests remain.
