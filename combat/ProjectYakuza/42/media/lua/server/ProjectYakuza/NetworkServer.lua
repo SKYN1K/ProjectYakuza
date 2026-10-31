@@ -226,7 +226,7 @@ function S.damage(p,z,amount,knock,kill,s,hitMove,hitStyle,jugglePlan,swing)
     local juggle,juggling=ProjectYakuza.Juggling.hit(p,z,not kill and not knock and (jugglePlan or ProjectYakuza.Juggling.plan(style,move)) or nil,swing)
     if response and not juggling then ProjectYakuza.HitResponses.apply(p,z,response) end
     S.fanout(p,"damage",{player=p:getOnlineID(),event=s.result,zombie=z:getOnlineID(),health=math.max(0,z:getHealth()),amount=amount,knock=knock==true,kill=kill==true,
-        dx=dx/n,dy=dy/n,force=z:getHitForce(),hitReaction=z:getHitReaction() or "ShotBelly",reaction=move and move.reaction or "",style=styleId,juggle=juggle,responseKind=response and response.kind,responseForce=response and response.force})
+        dx=dx/n,dy=dy/n,force=z:getHitForce(),hitReaction=z:getHitReaction() or "ShotBelly",reaction=move and move.reaction or "",style=styleId,impactFeedback=style and style.impactFeedback,strong=move and ((style.weaponStandaloneHeavy and style.actions.finisher.variants.default.nodeValue==move.nodeValue)or move.neutralHeavy==true or move.afterLight~=nil or move.chargedHeavy==true),charged=move and move.chargedHeavy==true,juggle=juggle,responseKind=response and response.kind,responseForce=response and response.force})
 end
 function S.command(module,command,p,a)
     if module~=P.module or type(a)~="table" or not p then return end
@@ -308,7 +308,7 @@ function S.command(module,command,p,a)
                 scaled.chargePower=s.packet.chargePower
                 move=scaled
             end
-            s.lastSwing=a.swing;job={seen={},count=0,expires=t+2500,weapon=held,extreme=s.packet.extreme,profile=profile,move=move,style=s.packet.style,juggle=ProjectYakuza.Juggling.plan(view,move)};s.swings[a.swing]=job
+            s.lastSwing=a.swing;job={seen={},count=0,expires=t+2500,feedback=view.impactFeedback,heavy=view.weaponStandaloneHeavy and view.actions.finisher.variants.default.nodeValue==move.nodeValue,weapon=held,extreme=s.packet.extreme,profile=profile,move=move,style=s.packet.style,juggle=ProjectYakuza.Juggling.plan(view,move)};s.swings[a.swing]=job
         end
         if job.weapon~=held or t>job.expires or job.count>=ProjectYakuza.MAX_HIT_COUNT or job.seen[a.zombie] then return end
         local range=command=="extra" and profile~="" and ProjectYakuza.Weapons and ProjectYakuza.Weapons.hitRange(held) or 1.65
@@ -323,7 +323,7 @@ function S.command(module,command,p,a)
         if command=="impact" then
             if ProjectYakuza.HeatRushServer then ProjectYakuza.HeatRushServer.record(s,job,z,a.swing)end
             local response=ProjectYakuza.HitResponses.resolve(view,job.move)
-            local packet={player=p:getOnlineID(),event=a.event,zombie=a.zombie,style=job.style,reaction=job.move.reaction or "",strong=job.move.neutralHeavy==true or job.move.afterLight~=nil or job.move.chargedHeavy==true,charged=job.move.chargedHeavy==true,
+            local packet={player=p:getOnlineID(),event=a.event,zombie=a.zombie,style=job.style,impactFeedback=job.feedback,reaction=job.move.reaction or "",strong=job.heavy or job.move.neutralHeavy==true or job.move.afterLight~=nil or job.move.chargedHeavy==true,charged=job.move.chargedHeavy==true,
                 responseKind=response and response.kind,responseForce=response and response.force}
             if response or job.juggle or ProjectYakuza.Juggling.get(z) then
 

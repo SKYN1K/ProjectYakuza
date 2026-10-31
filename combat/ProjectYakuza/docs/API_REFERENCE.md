@@ -19,6 +19,7 @@ Require `ProjectYakuza/Registry` for shared definitions, `ProjectYakuza/Runtime`
 | actions | Kind -> slot/variants map; default empty |
 | heat | Shared heat opt-in; otherwise off |
 | heatHud/heatAura/hitEffects | Explicit supplied profiles; see presentation |
+| impactFeedback | Optional `unarmed`, `blunt`, `blade` visual preset; weapon profiles inherit or override, `false` retains legacy visuals |
 | enemyReactions/tigerDrop | Reaction/counter opt-ins; need matching move/controller definitions |
 | music/sounds | Per-style playlist/cue map; omitted/false adds no profile |
 | combatVoices | CVF enabled unless false; missing recordings stay silent |
@@ -196,3 +197,7 @@ Styles can opt in with exertion={}, weapon profiles can override that table, and
 ## Optional Heat attack speed (0.61.0)
 
 Addon styles can opt in with heatAttackSpeed={max=1.25,power=1,useExtremeFuel=false}, with per-weapon overrides. The curve is sampled per committed attack, applies to the existing native speed variables and is bounded/replicated in MP snapshots. Fixed-speed timed clips are not automatically retimed. Dragon of Dojima does not enable this feature. See [Heat-based attack speed](HEAT_ATTACK_SPEED.md) for validation, timing and authoring contracts.
+
+## Weapon-specific feedback (0.62.0)
+
+See [Weapons](WEAPONS.md) for `impactFeedback`, profile cue maps, native weapon audio, heavy/ground accent deduplication and style isolation. `HitEffects.spawn(player,victim,strong,charged,guard,feedback)` accepts an optional final preset for authoritative observer playback; omitted values use the current style view. `BloodEffects.spawn(player,victim,strong,charged,feedback)` accepts the same optional family, captures size/timing on creation and preserves the existing burst budgets. Callers supplying `false` select legacy visuals. These are client presentation APIs and never apply damage.

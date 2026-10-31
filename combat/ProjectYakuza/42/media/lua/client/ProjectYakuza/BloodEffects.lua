@@ -28,7 +28,7 @@ local function selectFrame(b,frame)
     end
     b.instance=PY.WorldEffects.detached(sprite,b.scale,0);b.frame=frame
 end
-function B.spawn(player,victim,strong,charged)
+function B.spawn(player,victim,strong,charged,feedback)
     local style=PY.getPlayerStyle(player)
     if not style or style.bloodEffects~="yakuza6" or not victim or player:getModData().ProjectYakuzaHitEffectsDisabled then return end
     local count=0
@@ -39,7 +39,9 @@ function B.spawn(player,victim,strong,charged)
         end
     end
     local tile=Core.getTileScale()
-    local b={player=player,victim=victim,age=0,last=getTimestampMs(),scale=.18*tile*(charged and 1.35 or strong and 1.2 or 1),height=(victim:isOnFloor() and 5 or 26)*tile}
+    local family=feedback;if family==nil then family=style.impactFeedback end
+    local scale=family=="blade"and 1.15 or family=="blunt"and .85 or 1
+    local b={player=player,victim=victim,age=0,last=getTimestampMs(),life=family=="blade"and 360 or B.life,scale=.18*tile*(charged and 1.35 or strong and 1.2 or 1)*scale,height=(victim:isOnFloor() and 5 or 26)*tile}
     selectFrame(b,0);B.bursts[#B.bursts+1]=b
     if not B.hooked then Events.OnTick.Add(B.update);Events.OnPostRender.Add(B.render);B.hooked=true end
 end
@@ -49,10 +51,10 @@ function B.update()
         local b=B.bursts[i];local delta=math.max(0,now-b.last);b.last=now
         if not paused then b.age=b.age+delta end
         local style=PY.getPlayerStyle(b.player)
-        if b.age>=B.life or b.player:isDead() or not PY.isEquipped(b.player) or not style or style.bloodEffects~="yakuza6"
+        if b.age>=b.life or b.player:isDead() or not PY.isEquipped(b.player) or not style or style.bloodEffects~="yakuza6"
             or b.player:getModData().ProjectYakuzaHitEffectsDisabled then
             release(b);table.remove(B.bursts,i)
-        else selectFrame(b,math.min(B.frames-1,math.floor(b.age*B.frames/B.life))) end
+        else selectFrame(b,math.min(B.frames-1,math.floor(b.age*B.frames/b.life))) end
     end
     idle()
 end
@@ -60,7 +62,7 @@ function B.draw()
     B.update()
     if not B.color then B.color=ColorInfo.new(1,1,1,1) end
     for _,b in ipairs(B.bursts) do
-        local alpha=.85*math.min(1,(B.life-b.age)/100)
+        local alpha=.85*math.min(1,(b.life-b.age)/100)
         b.instance:SetAlpha(alpha);b.instance:SetTargetAlpha(alpha)
         PY.WorldEffects.renderCentered(b.victim,b.instance,128,b.scale,0,-b.height,B.color)
     end

@@ -1,6 +1,6 @@
 # Documentation index
 
-Current manual: Project Yakuza 0.61.0, Lua API 3, MP protocol 2.
+Current manual: Project Yakuza 0.62.0, Lua API 3, MP protocol 2.
 
 | Task | Guide |
 | --- | --- |
@@ -8,7 +8,7 @@ Current manual: Project Yakuza 0.61.0, Lua API 3, MP protocol 2.
 | Controls and volume settings | [Controls](CONTROLS.md) |
 | Build an independent addon | [Style authoring](STYLE_AUTHORING.md) |
 | Look up fields/functions/events | [API reference](API_REFERENCE.md) |
-| Add style-specific weapon moves | [Weapons](WEAPONS.md) |
+| Add style-specific weapon moves and impact feedback | [Weapons](WEAPONS.md) |
 | Add configurable QTE sequences | [QTE API](QTE.md) |
 | Add new move types | [Actions and lifecycle](ACTIONS.md) |
 | Native nodes, collisions and walking legs | [Animation contracts](ANIMATIONS.md) |
@@ -44,4 +44,4 @@ The JSON records identify original supplied files, conversions and hashes for re
 
 - [Manual directional attacks and taunt attention](DIRECTIONAL_AND_TAUNTS.md)
 
-- [Current validation](VALIDATION_0.61.0.md)
+- [Current validation](VALIDATION_0.62.0.md)

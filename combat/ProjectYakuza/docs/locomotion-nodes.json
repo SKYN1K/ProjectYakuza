@@ -49,5 +49,6 @@
       "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkSlow_Bat.x",
       "sha256": "cf6a953adbea195f3d7e6f3a4a3a4955204ebe7b97530c26f82809c325e2c2f9"
     }
-  ]
+  ],
+  "armedRun": "Existing B42 Bob_Run/Bob_RunBat, native blend clips, 0.80 healthy phase scale and native footstep phases; custom run clips remain available but are not selected for armed locomotion."
 }

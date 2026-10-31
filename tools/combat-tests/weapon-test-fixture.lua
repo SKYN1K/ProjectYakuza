@@ -209,4 +209,22 @@ check(extra.damage==nil,'native BareHands ground collision also retains the real
 W.sync(p);PY.resetPlayer(p,'test');p.attacking=false
 p.data.ProjectYakuzaStyle=addon.id
 check(not PY.isEquipped(p),'sharp profile remains unavailable in unrelated styles')
+
+check(PY.getStyle('dragon_of_dojima').impactFeedback=='unarmed','DoD unarmed keeps original feedback')
+for id,family in pairs({bat='blunt',knife='blade',blade='blade'})do
+ local view=W.views.dragon_of_dojima[id]
+ check(view.impactFeedback==family,'weapon family is style-owned '..id)
+ check(view.sounds.heavyImpact and view.sounds.groundImpact,'weapon heavy/ground cues are configured '..id)
+end
+local impactBase=PY.getStyle('dragon_of_dojima');local oldImpact=impactBase.impactFeedback
+for _,bad in ipairs({'metal',true,1,{}})do impactBase.impactFeedback=bad;local valid=PY.validateStyle(impactBase);check(not valid,'unknown impact presets rejected')end
+impactBase.impactFeedback=oldImpact
+local customProfile={id='test.impact',items={'Tests.ImpactWeapon'},lightAttacks=impactBase.lightAttacks,actions={},impactFeedback=false}
+local customView=W.register(impactBase.id,customProfile)
+check(customView.impactFeedback==false,'profile can disable inherited impact preset')
+customProfile={id='test.inheritedimpact',items={'Tests.InheritedImpactWeapon'},lightAttacks=impactBase.lightAttacks,actions={}}
+customView=W.register(impactBase.id,customProfile)
+check(customView.impactFeedback=='unarmed','omitted family inherits base style feedback')
+
+
 return true,'PASS '..checks..' real-weapon style, sharp/blunt combo, heavy, reach, damage and isolation checks'

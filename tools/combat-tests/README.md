@@ -149,3 +149,7 @@ Build build_exertion_tests.py and run LuaRunner exertion-tests.lua from this dir
 ## Optional Heat speed
 
 Build build_heat_speed_tests.py and run LuaRunner heat-speed-tests.lua. Checks cover 0..100 interpolation, curve validation, native swing sampling, Extreme fuel, unmodified DoD speeds, weapon overrides, cleanup and fallback/source-phase feedback. MP fixtures cover bounded frozen factors and observer relay.
+
+## Weapon feedback and pose selectors
+
+The blood fixture covers captured unarmed/blunt/blade particles, native-alpha world anchors in eight facings, blood timing/size, guard isolation, pool cleanup and authoritative family overrides. Heat-audio and weapon fixtures cover profile validation/inheritance, separate heavy/ground cues, native-light silence, per-swing multihit deduplication and owner-only playback. Weapon MP checks derive family/strength on the server, reject client family overrides, preserve native primary damage and relay matching primary/supplementary observer feedback. validate_weapon_assets.py also verifies weapon-pose-selectors.json and nine scoped existing-native hold/run references. WeaponAssetProbe and LocomotionAssetProbe parse the selectors through the native importer. No game launch is needed.

@@ -17,6 +17,13 @@ local particles={
     {kind="spark",path="media/textures/ProjectYakuza/HitGlint.png",size=64,scale=.07,dx=10,dy=5},
 }
 local shock={kind="shock",path="media/textures/ProjectYakuza/EncounterShock.png",size=256,scale=.13,dx=0,dy=0}
+local bluntParticles={{kind="bluntCore",path="media/textures/ProjectYakuza/HitGlint.png",size=64,scale=.22,dx=0,dy=0}}
+for i=1,6 do local a=i*math.pi/3;bluntParticles[#bluntParticles+1]={kind="bluntSpark",path="media/textures/ProjectYakuza/ChargeSpark.png",size=32,scale=.19,dx=math.cos(a)*21,dy=math.sin(a)*15}end
+local bladeParticles={
+    {kind="bladeCore",path="media/textures/ProjectYakuza/HitGlint.png",size=64,scale=.10,dx=0,dy=0},
+    {kind="bladeSpark",path="media/textures/ProjectYakuza/ChargeSpark.png",size=32,scale=.16,dx=-12,dy=-7},
+    {kind="bladeSpark",path="media/textures/ProjectYakuza/ChargeSpark.png",size=32,scale=.13,dx=9,dy=6},
+}
 local guardParticles={
     {kind="guardCore",path="media/textures/ProjectYakuza/HitGlint.png",size=64,scale=.09,dx=0,dy=0},
 }
@@ -61,21 +68,24 @@ function F.onHit(player,victim,weapon,damage)
         or player:getModData().ProjectYakuzaHitEffectsDisabled or type(damage)~="number" or damage<=0
         or not victim or not instanceof(victim,"IsoZombie") then return end
     local s=ProjectYakuza.stateFor(player)
-    if ProjectYakuza.getPlayerStyle(player).hitEffects~="yakuza6" then return end
+    local style=ProjectYakuza.getPlayerStyle(player)
+    if style.hitEffects~="yakuza6" then return end
     if not s.active or not weapon or (not (ProjectYakuza.isStyleToken(weapon) or (ProjectYakuza.Weapons and ProjectYakuza.Weapons.matches(player,weapon)))
         and not (s.groundMove and weapon:getFullType()=="Base.BareHands")) then return end
     s.effectVictims=s.effectVictims or setmetatable({}, {__mode="k"})
     if s.effectVictims[victim] then return end
     s.effectVictims[victim]=true
     local move=s.groundMove or s.finisherMove
-    local strong=move and (move.neutralHeavy or move.double or move.afterLight or move.chargedHeavy) and not move.runningAttack and not move.quickstepAttack
+    local strong=(style.weaponProfile and s.finisherMove~=nil) or move and (move.neutralHeavy or move.double or move.afterLight or move.chargedHeavy) and not move.runningAttack and not move.quickstepAttack
     F.spawn(player,victim,strong,move and move.chargedHeavy)
 end
-function F.spawn(player,victim,strong,charged,guard)
+function F.spawn(player,victim,strong,charged,guard,feedback)
     local style=ProjectYakuza.getPlayerStyle(player)
     if not style or style.hitEffects~="yakuza6" then return end
     if player:getModData().ProjectYakuzaHitEffectsDisabled then return end
-    if not guard and ProjectYakuza.BloodEffects then ProjectYakuza.BloodEffects.spawn(player,victim,strong,charged) end
+    local family=feedback;if family==nil then family=style.impactFeedback end
+    if family~="blunt"and family~="blade"then family="unarmed"end
+    if not guard and ProjectYakuza.BloodEffects then ProjectYakuza.BloodEffects.spawn(player,victim,strong,charged,family) end
     local count=0
     for _,b in ipairs(F.bursts) do if b.player==player then count=count+1 end end
     if count>=F.maxBursts or #F.bursts>=F.maxTotal then
@@ -84,10 +94,11 @@ function F.spawn(player,victim,strong,charged,guard)
         end
     end
     local tile=Core.getTileScale()
-    local b={player=player,victim=victim,emitters={},last=getTimestampMs(),age=0,life=charged and 340 or strong and 280 or 240,strong=strong,charged=charged,guard=guard}
-    local selected=guard and guardParticles or charged and chargedParticles or particles
+    local b={player=player,victim=victim,emitters={},last=getTimestampMs(),age=0,life=charged and 340 or strong and 280 or 240,strong=strong,charged=charged,guard=guard,family=family}
+    if not guard and not charged and family=="blade"then b.life=strong and 240 or 180 end
+    local selected=guard and guardParticles or charged and chargedParticles or family=="blunt"and bluntParticles or family=="blade"and bladeParticles or particles
     local points={};for _,point in ipairs(selected) do points[#points+1]=point end
-    if strong or charged then points[#points+1]=shock end
+    if (strong or charged)and family~="blade"then points[#points+1]=shock end
     if guard then
         b.life=180
         local dx,dy=victim:getX()-player:getX(),victim:getY()-player:getY()
@@ -126,7 +137,7 @@ function F.update()
 end
 function F.draw()
     F.update()
-    if not F.color then F.color=ColorInfo.new(1,1,1,1);F.chargeColor=ColorInfo.new(.6,.78,1,1);F.guardColor=ColorInfo.new(.8,.9,1,1) end
+    if not F.color then F.color=ColorInfo.new(1,1,1,1);F.chargeColor=ColorInfo.new(.6,.78,1,1);F.guardColor=ColorInfo.new(.8,.9,1,1);F.bluntColor=ColorInfo.new(1,.82,.60,1);F.bladeColor=ColorInfo.new(.88,.94,1,1) end
     local tile=Core.getTileScale()
     for _,b in ipairs(F.bursts) do
         local v=b.victim;local t=b.age/b.life
@@ -136,12 +147,12 @@ function F.draw()
         local bx,by=(wx-wy)*32*tile,(wx+wy)*16*tile
         for _,e in ipairs(b.emitters) do
             local ring=e.point.kind=="shock"
-            local growth=ring and (.6+1.5*t) or e.point.kind=="core" and (.65+.6*math.sin(t*math.pi)) or (1-.6*t)
+            local growth=ring and (.6+1.5*t) or (e.point.kind=="core"or e.point.kind=="bluntCore") and (.65+.6*math.sin(t*math.pi)) or (1-.6*t)
             local scale=e.scale*growth
             e.instance:setScale(scale,scale)
             e.instance:SetAlpha(alpha*(ring and .20 or b.guard and .65 or 1));e.instance:SetTargetAlpha(alpha*(ring and .20 or b.guard and .65 or 1))
             ProjectYakuza.WorldEffects.renderCentered(v,e.instance,e.point.size,scale,
-                bx+e.point.dx*t*tile,by-height+e.point.dy*t*tile,b.guard and F.guardColor or b.charged and F.chargeColor or F.color,wx,wy,height/(96*tile))
+                bx+e.point.dx*t*tile,by-height+e.point.dy*t*tile,b.guard and F.guardColor or b.charged and F.chargeColor or b.family=="blunt"and F.bluntColor or b.family=="blade"and F.bladeColor or F.color,wx,wy,height/(96*tile))
         end
     end
 end

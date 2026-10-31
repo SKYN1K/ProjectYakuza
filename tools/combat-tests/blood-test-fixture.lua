@@ -138,4 +138,43 @@ clock=clock+91;F.update();check(#F.bursts==0 and not F.ticking,'guard burst expi
 F.spawn(p,z,true,true);z.fail=true
 local renderOK=pcall(F.render);check(not renderOK and additive and #F.bursts==0,'impact render failure cleans sprites and restores global blend state');z.fail=false
 F.clear()
+
+local baselineScale=.18*Core.getTileScale()
+for _,family in ipairs({'unarmed','blunt','blade'})do
+ p.style.impactFeedback=family
+ F.spawn(p,z,false,false)
+ local burst=F.bursts[1];local blood=B.bursts[1]
+ check(burst.family==family,'impact captures family '..family)
+ check(#burst.emitters==({unarmed=5,blunt=7,blade=3})[family],'family particle budget '..family)
+ check(math.abs(blood.scale-baselineScale*({unarmed=1,blunt=.85,blade=1.15})[family])<.000001,'family blood size '..family)
+ check(blood.life==(family=='blade'and 360 or 400),'blood timing '..family)
+ p.style.impactFeedback='unarmed'
+ clock=clock+50;renders={};F.render()
+ check(burst.family==family,'active effect does not switch family after equipment change')
+ local color=renders[#renders].color
+ check(color.a==1 and not renders[#renders].additive,'family uses ordinary alpha and complete tint '..family)
+ F.clear()
+end
+p.style.impactFeedback='blade';F.spawn(p,z,true,false)
+check(#F.bursts[1].emitters==3 and F.bursts[1].life==240,'heavy blade avoids a blunt shock ring')
+clock=clock+180;F.update();B.update();check(#F.bursts==1 and B.bursts[1].frame==8,'blade blood and strong sparks animate independently')
+clock=clock+180;F.update();B.update();check(#B.bursts==0 and #F.bursts==0,'blade one-shots expire and detach')
+p.style.impactFeedback='blunt';F.spawn(p,z,true,false)
+check(#F.bursts[1].emitters==8,'heavy blunt adds one shock ring');F.clear()
+p.style.impactFeedback='unarmed';F.spawn(p,z,false,false,false,'blade')
+check(F.bursts[1].family=='blade'and B.bursts[1].life==360,'authoritative MP family overrides current equipment');F.clear()
+p.style.impactFeedback='blade';F.spawn(p,z,false,false,false,false)
+check(F.bursts[1].family=='unarmed','explicit legacy override remains unarmed');F.clear()
+p.style.impactFeedback='blunt';F.guard(p,z)
+check(#F.bursts[1].emitters==5 and #B.bursts==0,'weapon family does not change guard feedback');F.clear()
+for facing=1,8 do
+ p.x=10+math.cos(facing*math.pi/4);p.y=12+math.sin(facing*math.pi/4)
+ z.offsetX=facing*13;z.offsetY=-facing*17;F.spawn(p,z,false,false)
+ clock=clock+50;renders={};F.render()
+ for _,r in ipairs(renders)do check(r.actor==z and r.x==z.x and r.y==z.y,'weapon impacts stay on victim in every facing')end
+ F.clear()
+end
+check(not F.ticking and not B.hooked and allocated==disposed,'all family effects release their instances and idle hooks')
+
+
 return true,'PASS '..checks..' source-frame blood animation, confirmed hit, world anchor, MP budgets and cleanup checks'

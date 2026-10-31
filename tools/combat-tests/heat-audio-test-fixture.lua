@@ -91,4 +91,24 @@ local allowed={Charge=true,Flare=true,Layer=true,End=true,Swing=true}
 local onlyEffects=true;for _,name in ipairs(calls)do if not allowed[name]then onlyEffects=false end end
 check(onlyEffects,'activation routes contain only supplied SFX, never character voice cues')
 check(#calls>0,'fixture exercised supplied cue routes without voice playback')
+
+F.clear();style.weaponProfile='bat';style.impactFeedback='blunt';style.sounds={heavyImpact='BluntHeavy',groundImpact='BluntGround'}
+combo.active=true;combo.finisherMove={duration=1};combo.multiHitToken={};combo.feedbackStamp=nil
+local weaponSoundCalls=#calls
+F.hit(p,{}, {},1)
+check(calls[#calls]=='BluntHeavy'and near(volumes[#calls],.32),'blunt heavy adds restrained supplied accent')
+F.hit(p,{}, {},1);check(#calls==weaponSoundCalls+1,'multihit heavy accent plays once per swing')
+combo.multiHitToken={};combo.finisherMove=nil;F.hit(p,{}, {},1)
+check(#calls==weaponSoundCalls+1,'weapon lights keep native impact without extra punch layer')
+combo.groundMove={groundAttack=true};F.hit(p,{}, {},1)
+check(calls[#calls]=='BluntGround','grounded weapon hit has explicit profile accent')
+style.weaponProfile='blade';style.impactFeedback='blade';style.sounds={heavyImpact='BladeHeavy'}
+combo.groundMove=nil;combo.finisherMove={};combo.multiHitToken={};F.hit(p,{}, {},1)
+check(calls[#calls]=='BladeHeavy'and near(volumes[#calls],.25),'blade uses quieter separate heavy accent')
+n=#calls;combo.multiHitToken={};F.hit(p,{}, {},0);check(#calls==n,'non-damaging weapon hit has no accent')
+p.localPlayer=false;F.hit(p,{}, {},1);check(#calls==n,'remote combat events do not duplicate owner accent');p.localPlayer=true
+combo.multiHitToken={};combo.active=false;F.hit(p,{}, {},1);check(#calls==n,'inactive weapon state cannot emit accent')
+combo.active=true;combo.multiHitToken={};style.sounds=false;F.hit(p,{}, {},1);check(#calls==n,'custom profile can omit all extra accents')
+
+
 return 'PASS '..count..' activation SFX timing, fade, tails, pause, cleanup and owner-only checks'

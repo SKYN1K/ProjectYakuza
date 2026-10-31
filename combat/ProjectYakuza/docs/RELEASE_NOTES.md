@@ -1,9 +1,9 @@
-# Project Yakuza 0.61.0
+# Project Yakuza 0.62.0
 
-- Added optional Heat-based attack-speed curves for addon styles: maximum multiplier, curve power and optional remaining-fuel scaling during Extreme Heat.
-- Captured the curve once per committed attack, with weapon overrides and cleanup on swing/style/equipment changes. Native variable-speed clips and whoosh timing use the captured value; fixed-speed timed/QTE scenes keep their authored timing.
-- Added bounded multiplayer factor replication and rejection of mid-clip factor changes, invalid values and attempts to enable the feature on unconfigured styles.
-- Dragon of Dojima and its weapon profiles do not enable the feature. Its complete style definition and all existing media/native definitions are byte-identical to 0.60.0; its normal and Extreme speeds are unchanged.
-- Added developer documentation and offline curve/lifecycle, fixed-style behavior, feedback and multiplayer checks. Code remains comment-free; no graphical/audio/animation assets or separate voice-pack files were changed.
+- Added style/profile-owned unarmed, blunt and blade impact feedback using existing unchanged Y6 textures. Blunt hits have a broader warm burst; blades have fewer short pale sparks and a stronger blood emphasis. Fists retain their existing feedback.
+- Kept each real weapon's native audio. Weapon heavy/ground strikes add a quiet existing Y6 accent once per swing; light hits add no punch layer. Existing volume controls and sound-pool replication remain in use.
+- Replicated server-derived visual family and heavy strength for primary and supplementary weapon impacts, with captured family, duplicate suppression and no additional primary damage.
+- Replaced DoD armed ready/run selector references with existing B42 weapon-safe poses to address source torso/head twisting and long-blade neck clipping. Native walking legs and Yakuza attack/guard clips remain. No animation assets were created or edited; disabled source holds/runs remain available.
+- Added regression coverage and developer documentation. Heat-based speed remains disabled for DoD; grabs remain disabled. No new graphical/audio assets, generated artwork, voice-pack edits or game launch.
 
-PZ was not launched. The feature has no gameplay effect on the current style. Restart matching 0.61.0 installations before testing future addon styles. See HEAT_ATTACK_SPEED.md and VALIDATION_0.61.0.md.
+Offline tests and native importer/selector checks pass. Live appearance and multiplayer latency were not tested. Restart the game and use matching 0.62.0 on server and clients. See VALIDATION_0.62.0.md and WEAPONS.md.

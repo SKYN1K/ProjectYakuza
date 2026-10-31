@@ -297,4 +297,29 @@ check(server.players[p.id].packet.move=='dd_directional_left'and P.move(baseStyl
 z1.health=100;z2.health=100;command('impact',{swing=901,zombie=z1.id});local oldHits=z2.hits
 command('extra',{swing=901,zombie=z2.id});command('extra',{swing=901,zombie=z2.id})
 check(z1.health==100 and z2.hits==oldHits+1 and math.abs(z2.health-99.7)<.000001,'directional primary stays native and secondary damage is x0.75 once')
+local previousEffects=ProjectYakuza.HitEffects;local observed={}
+ProjectYakuza.HitEffects={spawn=function(who,victim,strong,charged,guard,family)observed[#observed+1]={player=who,victim=victim,strong=strong,charged=charged,family=family}end}
+for index,case in ipairs({{item=bat,profile='bat',clip='Bat',family='blunt'},{item=sword,profile='blade',clip='Blade',family='blade'}})do
+ clock=clock+2000;p:setPrimaryHandItem(case.item);case.item.condition=10
+ local swing=5000+index
+ snapshot(p,{weaponProfile=case.profile,clip='ProjectYakuza_DD_'..case.clip..'Heavy',move='dd_'..case.profile..'_heavy',swing=swing})
+ z1.health=100;z2.health=100;replies={};local nativeHits=z1.hits
+ command('impact',{swing=swing,zombie=z1.id,impactFeedback='forged'})
+ local wire
+ for _,reply in ipairs(replies)do if reply.command=='impact'and reply.args.zombie==z1.id then wire=reply.args end end
+ check(wire and wire.impactFeedback==case.family and wire.strong,'server derives heavy family from registered profile '..case.profile)
+ check(z1.hits==nativeHits,'feedback never reapplies primary damage '..case.profile)
+ p.localPlayer=false;N.command(P.module,'impact',wire);p.localPlayer=true
+ check(observed[#observed].family==case.family and observed[#observed].strong,'observer receives captured heavy family '..case.profile)
+ local total=#observed;p.localPlayer=false;N.command(P.module,'impact',wire);p.localPlayer=true
+ check(#observed==total,'duplicate impact cannot duplicate feedback '..case.profile)
+ replies={};command('extra',{swing=swing,zombie=z2.id})
+ local extra
+ for _,reply in ipairs(replies)do if reply.command=='damage'and reply.args.zombie==z2.id then extra=reply.args end end
+ check(extra and extra.impactFeedback==case.family and extra.strong,'server supplementary hit retains weapon feedback '..case.profile)
+ p.localPlayer=false;N.command(P.module,'damage',extra);p.localPlayer=true
+ check(observed[#observed].family==case.family and observed[#observed].strong,'observer supplementary visuals match primary '..case.profile)
+end
+ProjectYakuza.HitEffects=previousEffects
+
 return true,'PASS '..count..' weapon MP, boost authorization, duplicates, caps, walls, damage authority and depletion checks'

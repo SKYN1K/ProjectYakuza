@@ -160,6 +160,15 @@ end
 function F.hit(p,z,weapon,damage)
     if not p or not ProjectYakuza.isEquipped(p) or type(damage)~="number" or damage<=0 then return end
     local s=ProjectYakuza.stateFor(p);local move=s.groundMove or s.finisherMove
+    local style=ProjectYakuza.getPlayerStyle(p)
+    if style and style.weaponProfile then
+        if not s.active or not move then return end
+        local stamp=s.multiHitToken or s.startedAt
+        if s.feedbackStamp==stamp then return end
+        s.feedbackStamp=stamp
+        F.play(p,move.groundAttack and F.sound(p,"groundImpact")or F.sound(p,"heavyImpact")or F.sound(p,"finisher"),style.impactFeedback=="blade"and .25 or .32)
+        return
+    end
     if not s.active or not move or (not move.neutralHeavy and not move.afterLight and not move.groundAttack and not move.chargedHeavy) then return end
     local stamp=s.multiHitToken or s.startedAt
     if s.feedbackStamp==stamp then return end

@@ -384,7 +384,7 @@ function N.command(module,command,a)
         local clip=P.reaction(a.style,a.reaction) and a.reaction or nil
         local response=ProjectYakuza.Reactions and ProjectYakuza.Reactions.confirmed(p,z,a.responseKind,a.responseForce,clip)
         if p:isLocalPlayer() then return end
-        if ProjectYakuza.HitEffects then ProjectYakuza.HitEffects.spawn(p,z,a.strong,a.charged) end
+        if ProjectYakuza.HitEffects then ProjectYakuza.HitEffects.spawn(p,z,a.strong,a.charged,false,a.impactFeedback) end
         if not response and ProjectYakuza.Reactions and clip then ProjectYakuza.Reactions.remote(z,clip) end
     elseif command=="damage" then
         local key="damage:"..a.player..":"..tostring(a.event)
@@ -411,7 +411,7 @@ function N.command(module,command,a)
                 ProjectYakuza.emit("combatHit",p,z,p:getPrimaryHandItem(),a.amount,combo.step)
             end
             N.replaying=false
-        elseif ProjectYakuza.HitEffects then ProjectYakuza.HitEffects.spawn(p,z,true) end
+        elseif ProjectYakuza.HitEffects then ProjectYakuza.HitEffects.spawn(p,z,a.kill or a.knock or a.strong,a.charged,false,a.impactFeedback) end
     end
 end
 function N.update(p)

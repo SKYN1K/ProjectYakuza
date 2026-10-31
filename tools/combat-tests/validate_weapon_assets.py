@@ -51,3 +51,22 @@ allowed=re.findall(r'"Base\.([A-Za-z0-9_]+)"',style[style.index('items={'):])
 assert len(allowed)==48 and len(set(allowed))==48
 for item in allowed:assert re.search(r'\bitem\s+'+re.escape(item)+r'\s*\{',items),item
 print('PASS 26 source GMT/output hashes, 39,935 source bone samples, original BEP contacts, upper-body masks and 48 real B42 item IDs')
+
+repair=json.loads((mod/'docs/weapon-pose-selectors.json').read_text(encoding='utf-8'))
+for source in repair['nativeInputs']:assert hashlib.sha256(Path(source['path']).read_bytes()).hexdigest()==source['sha256']
+assert len(repair['selectors'])==9
+for row in repair['selectors']:
+ p=mod/row['path'];assert hashlib.sha256(p.read_bytes()).hexdigest()==row['sha256'];n=E.parse(p).getroot()
+ conditions={c.findtext('m_Name'):c.findtext('m_Value')for c in n.findall('m_Conditions')}
+ assert conditions['ProjectYakuzaActive']=='true'and conditions['ProjectYakuzaStyle']=='dragon_of_dojima'
+ family=conditions['ProjectYakuzaWeaponProfile'];assert family in ('bat','knife','blade')
+ if '/run/'in row['path']:
+  assert conditions['Aim']=='false'and n.findtext('m_AnimName')==('Bob_Run'if family=='knife'else'Bob_RunBat')
+  assert all(b.findtext('m_AnimName').startswith('Bob_')and float(b.findtext('m_SpeedScale'))==.8 for b in n.findall('m_2DBlends'))
+  assert [float(e.findtext('m_TimePc'))for e in n.findall('m_Events')]==[.2,.65]
+ else:
+  assert conditions['Aim']=='true'and n.findtext('m_AnimName')==('Bob_IdleAim1Hand'if family=='knife'else'Bob_IdleAimBat')
+  weights={e.findtext('boneName')for e in n.findall('m_SubStateBoneWeights')}
+  assert weights=={'Bip01_Spine1','Bip01_Prop1','Bip01_Prop2'}
+ if '/run/'not in row['path']:assert not n.findall('.//m_EventName')
+print('PASS 9 DoD-only native weapon-ready/run selectors, native input hashes, masks and movement phases; source attack clips untouched')

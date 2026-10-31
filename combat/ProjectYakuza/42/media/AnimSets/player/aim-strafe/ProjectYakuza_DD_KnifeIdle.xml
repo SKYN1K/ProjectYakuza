@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <animNode>
   <m_Name>ProjectYakuza_DD_KnifeIdle</m_Name>
-  <m_AnimName>ProjectYakuza_DD_KnifeIdle</m_AnimName>
+  <m_AnimName>Bob_IdleAim1Hand</m_AnimName>
   <m_Priority>4</m_Priority>
   <m_ConditionPriority>150</m_ConditionPriority>
   <m_BlendTime>0.28</m_BlendTime>
