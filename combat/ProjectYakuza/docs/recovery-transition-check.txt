@@ -1,2 +1,0 @@
-PASS: actual Build 42 ActionTransition requires finishing event + AttackAnim false; both permit normal melee exit
-

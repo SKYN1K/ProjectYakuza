@@ -26,6 +26,7 @@ function W.register(styleId,profile)
     view.tigerDrop=false;view.enemyReactions=false;view.extremeLightAttacks=nil;view.directionalAttacks=nil;view.directionalFinishers=nil;view.heatRush=nil;view.finisherBranches=nil
     view.hitResponses=profile.hitResponses;view.juggling=profile.juggling
     view.sounds=profile.sounds or false
+    if profile.exertion~=nil then view.exertion=profile.exertion end
     local valid,errors=PY.validateStyle(view);assert(valid,table.concat(errors,"; "))
     if view.weaponStandaloneHeavy then
         local slot=view.actions.finisher

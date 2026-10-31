@@ -107,7 +107,7 @@ end
 
 local ProjectYakuza = ProjectYakuza
 ProjectYakuza.FEATURES={grab=false}
-ProjectYakuza.VERSION = "0.59.0"
+ProjectYakuza.VERSION = "0.60.0"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -174,6 +174,7 @@ function ProjectYakuza.validateStyle(style)
     end
     local function move(value,path,light)
         if type(value)~="table" then problem(path.." must be a table");return end
+        if value.enduranceCost~=nil and (not number(value.enduranceCost)or value.enduranceCost<0 or value.enduranceCost>.1)then problem(path..".enduranceCost must be 0..0.1")end
         if value.qte~=nil then local ok,reason=ProjectYakuza.QTE.valid(value.qte,type(value.duration)=="number"and value.duration*1000 or nil);if not ok then problem(path..".qte: "..reason)end end
         if value.hitResponse~=nil and value.hitResponse~=false
             and (not text(value.hitResponse) or type(style.hitResponses)~="table" or not style.hitResponses[value.hitResponse]) then problem(path..".hitResponse must name a hitResponses profile or be false") end
@@ -252,6 +253,11 @@ function ProjectYakuza.validateStyle(style)
     end
     for _,key in ipairs({"heat","combatVoices","quickstepVoices","tigerDrop","enemyReactions","quickstepCancelLights"}) do
         if style[key]~=nil and type(style[key])~="boolean" then problem(key.." must be true or false") end
+    end
+    if style.exertion~=nil and style.exertion~=false then
+        local allowed={light=true,directional=true,quickstepAttack=true,ground=true,running=true,dropkick=true,heavy=true,finisher=true,double=true,charged=true,counter=true,heatAction=true}
+        if type(style.exertion)~="table"then problem("exertion must be a cost table or false")
+        else for key,cost in pairs(style.exertion)do if not allowed[key]or not number(cost)or cost<0 or cost>.1 then problem("invalid exertion cost: "..tostring(key))end end end
     end
     if style.combatVoiceVolume~=nil and (not number(style.combatVoiceVolume) or style.combatVoiceVolume<0) then problem("combatVoiceVolume must be nonnegative") end
     if style.soundVariety~=nil and type(style.soundVariety)~="boolean"then problem("soundVariety must be boolean")end

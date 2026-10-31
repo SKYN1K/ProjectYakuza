@@ -143,6 +143,7 @@ local function onSwing(player, weapon)
     player:setVariable("ProjectYakuzaDoubleReady", "")
     setReadyVariables(player, style, s)
     trace(player, "swing style=" .. style.id .. " step=" .. s.step .. " move=" .. move.nodeValue .. " queued=" .. s.queued)
+    ProjectYakuza.emit("attackCommitted",player,style,move,s.multiHitToken)
     if move.runningAttack then ProjectYakuza.emit("runningAttackStarted",player,style,move)
     elseif move.chargedHeavy then ProjectYakuza.emit("chargedHeavyStarted",player,style,move)
     elseif move.quickstepAttack then ProjectYakuza.emit("quickstepAttackStarted", player, style, move)
@@ -351,6 +352,7 @@ function ProjectYakuza.syncGroundAttack(player,style,s)
     s.active=true;s.startedAt=now();s.groundMove=move;s.multiHitToken={}
     if not hadSwing then ProjectYakuza.Heat.onSwing(player,move) else ProjectYakuza.Heat.applyMoveDamage(player,move) end
     setReadyVariables(player,style,s)
+    if not hadSwing then ProjectYakuza.emit("attackCommitted",player,style,move,s.multiHitToken)end
     ProjectYakuza.emit("groundAttackStarted",player,style,move)
     return true
 end

@@ -141,3 +141,7 @@ Build and run directional-tests.lua through build_directional_tests.py. It embed
 ## Sound variety
 
 Run build_sound_variety_tests.py, then LuaRunner sound-variety-tests.lua from this directory. SoundVarietyProbe parses the unchanged sound definitions and checks native clip parent volumes, public methods through the PZ Kahlua exposer and world-emitter method signatures without playback. MP fixtures cover selected-clip relay, style/index/gain validation, throttling and duplicate/owner suppression.
+
+## Attack endurance
+
+Build build_exertion_tests.py and run LuaRunner exertion-tests.lua from this directory. The fixture covers committed native attacks, ground deduplication, weapon profiles, misses, rejected attempts, native modifiers, owner-only stats and cost bounds. ExertionProbe verifies the installed native fitness/trait/stat API and actual endurance removal clamp without game launch.

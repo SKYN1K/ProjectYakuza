@@ -83,3 +83,7 @@ The ten original blunt animations retain the original supplied WPA frames retarg
 B42 prop bones are parented to Bip01, not directly to hands. The 26 weapon clips and four quicksteps now animate both props from their corresponding hands using native authored bat/knife grip offsets. Body/finger channels and skeleton hierarchy remain identical. The new normal-heavy clip uses the same correction. See prop-attachment-repair.json for every output/native grip hash and normal-heavy-assets.json for the supplied heavy source. Native FK tests check 2,568 hand/prop pose pairs. Blends, walking overlays and custom player proportions still require in-game visual assessment.
 
 Moving from the style item to a supported weapon keeps DoD selected and deletes unused temporary items. Unequipping the real weapon returns to the unarmed style without replaying entry. Manually unequipping the style item disables DoD and deletes it. Top selector removal keeps real weapons equipped.
+
+## Attack endurance (0.60.0)
+
+Styles can opt in with exertion={}, weapon profiles can override that table, and individual moves can provide enduranceCost. Actual attacks publish attackCommitted once; the local owner applies native fitness/trait scaling and reports attackEnduranceSpent. Hits, remote playback, charge holds and queue requests do not charge again. See [Exertion](EXERTION.md) for defaults, validation, custom actions and lifecycle.

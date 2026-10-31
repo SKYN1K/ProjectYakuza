@@ -51,6 +51,7 @@ instanceof=function(obj,kind)return kind=='IsoZombie'and obj==z or kind=='IsoPla
 do local _="ProjectYakuzaFixture:PATHS" end
 do local _="ProjectYakuzaFixture:RUSH_RULES" end
 do local _="ProjectYakuzaFixture:RUSH" end
+local committed=0;PY.on("attackCommitted",function(_,_,_,_,kind)if kind=="heatAction"then committed=committed+1 end end)
 local H=PY.HeatRush;local style=PY.getStyle('dragon_of_dojima');local R=PY.HeatRushRules
 PY.setHeat(p,100);check(PY.Heat.start(p),'Extreme Heat starts for paired action')
 local state=PY.stateFor(p);state.active=true
@@ -62,11 +63,13 @@ check(H.input(p,state,PY.getPlayerStyle(p)),'fresh extra light requests paired f
 local c=PY.activeActions[p];check(c and c.kind=='heatAction','registered heat action handler starts')
 local a=c.timedAction;a.action={setOverrideHandModelsObject=function()end};a:start()
 check(p.blocked and p.ignore and z.useless and z.ignore,'paired action owns movement/AI locks')
+check(committed==1,'paired action publishes one exertion commitment when its motion starts')
 for i,prompt in ipairs(c.action.qte.prompts)do
  phase=(prompt.atMs-100)/1000;mouse[2]=true;a:update();check(z.hits==i-1,'QTE input alone never deals early damage')
  phase=prompt.atMs/1000;mouse[2]=false;a:update();check(z.hits==i,'one hit on source contact after successful prompt')
  a:update();check(z.hits==i,'repeated update cannot duplicate contact')
 end
+check(committed==1,'QTE hit count does not publish repeated exertion commitments')
 check(math.abs(z.total-2.25)<.000001 and creates==1,'canonical base damage gets one Extreme bonus and one cached factory item')
 phase=R.duration;a:update()
 check(a.cleaned and not p.blocked and not p.ignore and not z.useless and not z.ignore and z.deferred and z.target==p and z.knock,'full source recovery restores actor/victim state')

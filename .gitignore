@@ -128,3 +128,7 @@
 !/tools/combat-tests/heat-rush-test-fixture.lua
 !/tools/combat-tests/validate_heat_rush_assets.py
 !/tools/combat-tests/HeatRushAssetProbe.java
+
+!/tools/combat-tests/build_exertion_tests.py
+!/tools/combat-tests/exertion-test-fixture.lua
+!/tools/combat-tests/ExertionProbe.java

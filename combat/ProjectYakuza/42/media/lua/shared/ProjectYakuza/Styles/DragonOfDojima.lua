@@ -4,6 +4,7 @@ ProjectYakuza.registerStyle({
     name = "Dragon of Dojima",
     description = "Kiryu's four-hit chain with Extreme Heat boost attacks.",
     heat=true,
+    exertion={},
     finisherBranches=4,
     directionalFinishers={minimumDegrees=145,prefix="reverse_"},
     heatRush={hits=8,windowMs=700},

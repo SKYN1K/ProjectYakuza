@@ -198,6 +198,7 @@ ProjectYakuza.registerActionHandler("parry",{
         end
         P.kill(c.player,c.target)
         for _,entry in ipairs(extra) do if not entry.victim:isDead() then P.kill(c.player,entry.victim) end end
+        ProjectYakuza.emit("attackCommitted",c.player,c.style,c.action,c,"parry")
         c.player:getModData().ProjectYakuzaTigerDropReadyAt=now()+P.cooldownMs
         return true
     end,

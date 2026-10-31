@@ -1,6 +1,6 @@
 # Documentation index
 
-Current manual: Project Yakuza 0.59.0, Lua API 3, MP protocol 2.
+Current manual: Project Yakuza 0.60.0, Lua API 3, MP protocol 2.
 
 | Task | Guide |
 | --- | --- |
@@ -20,6 +20,7 @@ Current manual: Project Yakuza 0.59.0, Lua API 3, MP protocol 2.
 | Cancel lights into quicksteps | [Light quickstep cancels](LIGHT_QUICKSTEP_CANCELS.md) |
 | Future launchers and aerial followup hooks | [Juggling](JUGGLING.md) |
 | Enemy flinch/stagger/knockdown profiles | [Hit responses](HIT_RESPONSES.md) |
+| Attack endurance costs and tuning | [Exertion](EXERTION.md) |
 | Heat rules and tuning | [Heat](HEAT.md) |
 | Code maintenance, lookup caches and comment checks | [Performance](PERFORMANCE.md) |
 | Validate/package/troubleshoot | [Testing](TESTING.md) |
@@ -32,10 +33,14 @@ Current manual: Project Yakuza 0.59.0, Lua API 3, MP protocol 2.
 | Custom style-owned encounter intros | [Encounter intros](ENCOUNTER_INTROS.md) |
 | Current changes | [Release notes](RELEASE_NOTES.md) |
 
-Older feature notes and JSON/TXT reports record previous development states and asset provenance. They may contain superseded controls/counts/prototype limits. The guides above define the current authoring contract. Keep extraction folders, previews, backups, game libraries, credentials and the separate voice-pack project outside distributed addons.
+Only current guides, the current release validation and retained source-asset records are distributed. Older patch notes, raw test logs and per-release validation reports are available in Git history and previous release archives.
+
+The JSON records identify original supplied files, conversions and hashes for retained assets. Keep these for debugging and source/native verification. Disabled grab assets and their source records remain available for future work. Extraction folders, previews, backups, game libraries, credentials and the separate voice-pack project stay outside distributed addons.
 
 - [Source-tracked punch effects](ATTACK_EFFECTS.md): first-light prototype, numeric attachment paths, timing, budgets and fidelity limits.
 
 - [Style-exclusive running and relaxed weapon holding](LOCOMOTION.md)
 
 - [Manual directional attacks and taunt attention](DIRECTIONAL_AND_TAUNTS.md)
+
+- [Current validation](VALIDATION_0.60.0.md)

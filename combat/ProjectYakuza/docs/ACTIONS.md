@@ -35,3 +35,7 @@ Native strikes use exactly one AttackCollisionCheck=MeleeSwing at contact. Do no
 ## Built-in charged heavy (API 3)
 
 Use `heavyCharge` for a stationary native hold and `chargedHeavy` for its one-use native strike handover when that protocol fits. These built-in kinds have dedicated input/cleanup/swing handling; use a namespaced custom kind for a different mechanic. See [Charged heavy](CHARGED_HEAVY.md).
+
+## Attack endurance (0.60.0)
+
+Styles can opt in with exertion={}, weapon profiles can override that table, and individual moves can provide enduranceCost. Actual attacks publish attackCommitted once; the local owner applies native fitness/trait scaling and reports attackEnduranceSpent. Hits, remote playback, charge holds and queue requests do not charge again. See [Exertion](EXERTION.md) for defaults, validation, custom actions and lifecycle.

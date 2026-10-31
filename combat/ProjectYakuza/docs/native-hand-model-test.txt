@@ -1,2 +1,0 @@
-PASS: native static mesh import and processing; triangle, normals, UVs, material; model script mesh/texture/static settings
-
