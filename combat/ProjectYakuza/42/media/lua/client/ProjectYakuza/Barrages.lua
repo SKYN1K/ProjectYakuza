@@ -61,7 +61,7 @@ function A:pulse(index)
     if #valid==0 then for _,entry in ipairs(PY.MultiHit.targets(p,origin,false,{},PY.MAX_HIT_COUNT))do valid[#valid+1]=entry.victim end end
     self.targets=valid
     if isClient()and PY.Network then
-        PY.Network.capture(p,true)
+        PY.Network.capture(p,true,true)
         local ids={};for _,v in ipairs(valid)do ids[#ids+1]=v:getOnlineID()end
         PY.Network.send(p,"barrage",{index=index,action=PY.Network.localState(p).action,zombies=ids});return
     end

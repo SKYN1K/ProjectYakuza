@@ -28,19 +28,19 @@ for family in ['','Bat','Knife','Blade']:
  n=E.parse(native/'run/defaultRun.xml').getroot();name='ProjectYakuza_DD_Locomotion'+family+'Run';put(n,'m_Name',name);put(n,'m_AnimName','ProjectYakuza_DD_'+family+'Run');scoped(n,family)
  for b in n.findall('m_2DBlends'):
   if b.findtext('m_AnimName')=='Bob_Run':put(b,'m_AnimName','ProjectYakuza_DD_'+family+'Run');put(b,'m_SpeedScale',1.0)
-  elif b.findtext('m_AnimName')=='Bob_Walk' and family:put(b,'m_AnimName','ProjectYakuza_DD_'+family+'CarryWalk')
+  elif b.findtext('m_AnimName')=='Bob_Walk' and family:put(b,'m_AnimName','Bob_Walk'if family=='Knife'else'Bob_WalkBat')
  put(n,'m_SyncTrackingEnabled',True)
  for i,e in enumerate(n.findall('m_Events')):put(e,'m_TimePc',.03+i*.5)
  save(n,'run',name)
  if not family:continue
- n=E.parse(native/'idle/Idle.xml').getroot();name='ProjectYakuza_DD_Locomotion'+family+'Carry';put(n,'m_Name',name);put(n,'m_AnimName','ProjectYakuza_DD_'+family+'Carry');scoped(n,family);cond(n,'isTurning90',False,'BOOL')
+ n=E.parse(native/'idle/Idle.xml').getroot();name='ProjectYakuza_DD_Locomotion'+family+'Carry';put(n,'m_Name',name);put(n,'m_AnimName','Bob_Idle'if family=='Knife'else'Bob_IdleBat');scoped(n,family);cond(n,'isTurning90',False,'BOOL')
  for tag in ['m_2DBlends','m_2DBlendTri','m_Scalar','m_Scalar2']:
   for e in list(n.findall(tag)):n.remove(e)
  put(n,'m_SpeedScale',1);save(n,'idle',name)
- n=E.parse(native/'movement/defaultWalk.xml').getroot();name='ProjectYakuza_DD_Locomotion'+family+'Walk';put(n,'m_Name',name);put(n,'m_AnimName','ProjectYakuza_DD_'+family+'CarryWalk');scoped(n,family)
+ n=E.parse(native/'movement/defaultWalk.xml').getroot();name='ProjectYakuza_DD_Locomotion'+family+'Walk';put(n,'m_Name',name);put(n,'m_AnimName','Bob_Walk'if family=='Knife'else'Bob_WalkBat');scoped(n,family)
  for b in n.findall('m_2DBlends'):
   old=b.findtext('m_AnimName')
-  if old in ['Bob_Walk','Bob_WalkSlow']:put(b,'m_AnimName','ProjectYakuza_DD_'+family+'Carry'+('Slow' if old=='Bob_WalkSlow' else 'Walk'))
+  if old in ['Bob_Walk','Bob_WalkSlow']:put(b,'m_AnimName',old if family=='Knife'else'Bob_WalkSlow_Bat'if old=='Bob_WalkSlow'else'Bob_WalkBat')
  save(n,'movement',name)
 (mod/'docs/locomotion-nodes.json').write_text(json.dumps({'nodes':records,'blendSeconds':.25,'runHealthySpeedScale':1.0,'nativeTravelScale':1.28,'nativeRunCycleSeconds':2/3,'sourceRunCycleSeconds':32/30,'operation':'DoD-only non-aimed run and unlocked weapon carry selectors. Existing injury, tree, overburdened and turn nodes remain native. Carry-walk lower body uses existing native walking. No actor displacement or speed changes.'},indent=2)+'\n',encoding='utf-8')
 print('BUILT',len(records),'isolated locomotion selectors')

@@ -11,7 +11,7 @@ Normal launcher, Lua-only protocol 2. Server and clients need matching shared st
 | Primary hits | Native PZ; impact reporting does not hit again |
 | Supplemental hits | Server checks/deduplication and shared three-target cap; observer result is not another Hit |
 | Dash travel | Bounded collision-checked samples/interpolation |
-| Counter | Local 0.2-second window plus server target/state/range/60-second cooldown; no rewind guarantee |
+| Counter | Local 0.3-second window plus server target/state/range/60-second cooldown; no rewind guarantee |
 | Guard | Valid block clip/nearby attacker and scoped cancellation |
 | Heat activation | Bounded protection lease restores previous flags; other kinds do not inherit it |
 | Grabs/throws | Implementation/leases retained but temporarily disabled client/server |
@@ -60,3 +60,17 @@ Existing impact/damage packets now optionally carry server-resolved responseKind
 ## Future-style juggling (0.41.0)
 
 Optional style.juggling and move.juggle={kind="launch"/"followup"/"ender"} enable bounded launcher/followup windows, hit/relaunch caps, landing cooldown, victim animation variables and start/hit/end events. No airborne assets or physical lift are supplied by the core. SP/server confirmed hits drive the state; optional result metadata and ordered end packets mirror it in MP. DoD remains unconfigured. See [Juggling](JUGGLING.md) for limits, presentation ownership, cancellation and examples.
+
+## Observer lifecycle and sessions (0.56.0)
+
+Server states, equipment acknowledgements and relayed combat results carry an additive session serial. A new native player object receives a new monotonic server session, even when its online ID is recycled. Clients accept fresh session counters without retaining the old high sequence number, discard older-session messages, and clear only that peer's result/deferred caches. Replaced actors also release old protection/retained leases. Session state is reset on world exit; restart matching server/client versions after updating.
+
+Melee/stomp playback restarts on a new swing serial, and timed-action playback restarts on a new action serial. Updating the other counter no longer restarts an already-playing clip. Clip/style changes still transition normally. Repeated same-clip barrages and native finishers therefore use their own serial type. Same-sequence server protection-expiry corrections remain accepted.
+
+Combat commands force an immediate state check but reuse an unchanged snapshot. Changed state is sent before the dependent command; periodic heartbeats and explicit forced snapshots are retained. This avoids sending the same full state alongside every hit/dash sample.
+
+Stale/replaced remote actors release observer action flags, weapon-profile/charge/link flags, Heat state, aura/outline and attack/charge limb effects. Unknown addon styles clear their presentation rather than invoking a missing style's aura/UI. Install all required style addons on every peer for full presentation.
+
+Server primary response planning and supplemental damage now resolve the equipped weapon's style view for hit responses and future juggling configuration, matching SP behavior. Native primary damage remains native and is never replayed. Music/UI preferences remain local; CVF retains its own network policy. Grabs remain disabled.
+
+The audit validates offline client/server command paths and native resource selection. It does not replace a real two-client test for network latency, native zombie ownership migration, corpse/death timing or GPU appearance. PZ was not started.

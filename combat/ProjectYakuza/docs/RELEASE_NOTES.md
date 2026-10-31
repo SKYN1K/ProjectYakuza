@@ -1,9 +1,11 @@
-# Project Yakuza 0.55.0
+# Project Yakuza 0.56.0
 
-- Replaced DoD's reversing Extreme Heat finishers with four supplied Yakuza 6 boost lights and two source-timed barrages. While aiming in Extreme Heat, press LMB after the fourth light for the punch barrage, or MMB for the kick barrage. Tiger Drop retains priority. Ordinary non-Extreme attacks and weapon profiles retain their own moves.
-- Punch/kick barrages retain all original source frames and 13/five BEP contact windows. They lock movement, remain interruptible by injury and use up to three nearby frontal targets. Late contacts are skipped rather than replayed together. Existing supplied hit effects, blood and sounds provide feedback.
-- Added bounded server-side barrage contact authorization, source timing, duplicate protection, target/path limits and server-calculated damage. An already-started barrage can finish after Heat depletes, without retaining its damage bonus or authorizing a new barrage.
-- Slowed Kiryu's running stride by 21.875% across unarmed/bat/knife/blade profiles. Compensated the native deferred-movement track to preserve actual running speed. Body poses, source frame times, native walking legs and carry holds are unchanged.
-- Removed the nine obsolete directional animation assets and their 45 owner/observer nodes. Added six boost/barrage assets and matching isolated nodes. No image/audio assets or voice-pack files changed. No AI assets were generated.
+- Fixed remote melee attacks restarting when their timed-action context counter arrived after the native swing. Melee/stomp and timed-action clips now use separate restart counters; repeated barrages still restart correctly.
+- Added server-assigned player sessions so reconnects/recycled IDs can restart counters safely. Old-session hits/states are discarded and only that peer's replay/deferred caches are reset. Replaced actors release temporary protection and retained leases.
+- Fixed stale remote players retaining weapon-profile, charge/link flags, Heat state and limb effects. Aura/outline and observer actions are released with the old actor. Missing addon styles clear presentation safely.
+- Reduced redundant snapshots during hits, dash samples and barrages while preserving changed-state-before-command ordering and heartbeats.
+- Corrected server hit-response/juggling lookup to use the equipped weapon profile, matching SP behavior.
+- Fixed RMB-released bat/knife/blade idle and walking poses by selecting existing native relaxed weapon holds, including run/walk blend entries. The former frozen combat-ready arm pose no longer applies there. Custom attacks, aimed stances and Kiryu's compensated running cadence are unchanged.
+- Updated multiplayer and locomotion documentation and regression coverage. No motion, image, audio or voice-pack assets were created or modified.
 
-Offline Kahlua, source/native animation and multiplayer protocol checks pass. PZ was not launched; live rendering and multiplayer latency remain untested. Fully restart matching client/server installations after updating. Grabs remain disabled. See VALIDATION_0.55.0.md.
+Offline Kahlua, source/native selector and protocol checks pass. PZ was not launched; live multiplayer latency/ownership and visual behavior still need an in-game test. Restart the server and all clients with matching 0.56.0 files. Grabs remain disabled. See VALIDATION_0.56.0.md.

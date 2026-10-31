@@ -16,5 +16,38 @@
   "nativeRunCycleSeconds": 0.6666666666666666,
   "sourceRunCycleSeconds": 1.0666666666666667,
   "operation": "DoD-only non-aimed running uses 21.875% slower stride cadence with compensated native travel. Actual running speed is unchanged. Existing injury/tree/turn fallbacks and native walking legs are retained.",
-  "nativeTravelScale": 1.28
+  "nativeTravelScale": 1.28,
+  "relaxedWeaponHolds": "Existing native Bob idle/walk/slow-walk, using Bat holds for bats/blades and ordinary native holds for knives. The former frozen source arm composites are not selected. Kiryu run clips and compensated run speed remain unchanged.",
+  "nativeCarryClips": [
+    {
+      "name": "Bob_Idle",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_Idle.x",
+      "sha256": "255303336122d5d8470366512e8ad948adf2e46bf61259cc51f201a3ed27d45e"
+    },
+    {
+      "name": "Bob_IdleBat",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleBat.x",
+      "sha256": "4f34bc95eb8eeb0882163e7b7c149cc0df4a6bf473f001f31d46dd1c4c542c03"
+    },
+    {
+      "name": "Bob_Walk",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_Walk.x",
+      "sha256": "cd6b5b79efc06e6064b8cc9b333bf832254dcefe68319fe3d5849437eae678ce"
+    },
+    {
+      "name": "Bob_WalkBat",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkBat.x",
+      "sha256": "3fb1dbf21d717844fad0cc9571a8c98e1b04c8840a69ede7f2388fd09b8bcf00"
+    },
+    {
+      "name": "Bob_WalkSlow",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkSlow.x",
+      "sha256": "833b715fff865799302a212dcced3ec38befae7f6d6b452e0190a34cb6deeaf0"
+    },
+    {
+      "name": "Bob_WalkSlow_Bat",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkSlow_Bat.x",
+      "sha256": "cf6a953adbea195f3d7e6f3a4a3a4955204ebe7b97530c26f82809c325e2c2f9"
+    }
+  ]
 }

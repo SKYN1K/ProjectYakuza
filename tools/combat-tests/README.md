@@ -14,7 +14,7 @@ native delivery; it never starts Project Zomboid or a dedicated server.
        java -cp ".;F:/SteamLibrary/steamapps/common/ProjectZomboid/projectzomboid.jar" LuaRunner mp-tests.lua
 
 5. `python validate_mp_nodes.py` additionally runs the native animation-node
-   parser/selector against both cycles of all 188 observer nodes. Its `game`
+   parser/selector against both cycles of all 304 observer nodes. Its `game`
    path defaults to the same local F: installation; adjust it if needed.
 
 The full local regression harness contains additional single-player, input,
@@ -129,3 +129,7 @@ The encounter fixture checks larger bounded text, long-title fitting, per-style 
 build_boost_assets.py retargets the six approved original bct_ath clips through Blender. validate_extreme_attacks.py verifies every source frame, source BEP contacts, native hand-prop offsets and six isolated native owners. ExtremeAttackProbe.java must be compiled first. The Kahlua boost fixture checks mode/depletion, native lights, source-time barrage contacts, pause/skip/cleanup and actual SP damage. Weapon MP regressions cover ordered/timed contacts, authoritative damage, target/path limits, duplicates and lease depletion. validate_mp_nodes.py now imports 304 event-free observers.
 
 adjust_run_cadence.py slows run playback from 1.28 to 1.0 and scales only the existing Translation_Data track by 1.28. The locomotion builder applies it after the carry repair. The source/native validator checks unchanged body poses and equal travel-per-second products. All checks run without starting PZ.
+
+## 0.56.0 multiplayer lifecycle and relaxed holds
+
+MP fixtures cover split melee/action restart counters, fresh session counters on recycled player IDs, old-session state/damage rejection, scoped replay/deferred reset, actor replacement, stale heat/limb-effect cleanup, unavailable styles and old protection release. Weapon MP fixtures verify profile-specific hit-response/juggling lookup for native and supplemental hits. Native locomotion validation imports the six existing relaxed hold clips, verifies their hashes, and rejects frozen source-arm composites in relaxed selectors. No asset files are created or edited by this update.

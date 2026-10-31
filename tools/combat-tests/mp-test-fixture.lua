@@ -210,6 +210,11 @@ p.vars.ProjectYakuzaActive='true';p.vars.ProjectYakuzaMove='dd_light_01';p.vars.
 client.localState(p).equipReady=p.token;client.localState(p).equipStyle='dragon_of_dojima'
 client.swing(p);check(#outgoing>0,'local attack sends snapshot without changing position')
 local outCount=#outgoing;client.capture(p);client.capture(p);check(#outgoing==outCount,'unchanged local snapshots throttle redundant sends')
+client.capture(p,true);local wireCount=#outgoing;client.send(p,'auditProbe',{});client.send(p,'auditProbe',{})
+check(#outgoing==wireCount+2 and outgoing[#outgoing].command=='auditProbe','combat commands reuse unchanged current state without duplicate snapshots')
+p.vars.ProjectYakuzaMove='dd_light_02';p.combo.step=2;wireCount=#outgoing;client.send(p,'auditProbe',{})
+check(#outgoing==wireCount+2 and outgoing[#outgoing-1].command=='state','changed combat state is sent before its dependent command')
+p.vars.ProjectYakuzaMove='dd_light_01';p.combo.step=1
 local z=zombie(22,1);client.requestGrab(p,z);check(client.pending[p]~=nil,'grab waits asynchronously for server')
 client.command(P.module,'grabDenied',{});check(client.pending[p]==nil,'denied grab releases pending request')
 client.clear();local remaining=0;for _ in pairs(client.remote)do remaining=remaining+1 end;for _ in pairs(client.locals)do remaining=remaining+1 end
@@ -541,4 +546,53 @@ client.command(P.module,'juggle',{player=1,zombie=222,event=endPacket.seq,juggle
 check(not J.get(networkJug) and not networkJug.vars.ProjectYakuzaJuggleActive,'standalone timeout/landing result clears the observer')
 check(not J.receive(p,networkJug,launchPacket.juggle) and not J.get(networkJug),'late launch cannot revive a state after a newer landing result')
 J.clearAll();R.clearAll();p.data.ProjectYakuzaStyle='dragon_of_dojima'
+local observer=player(50,0);observer.localPlayer=false
+local fxClears,chargeClears=0,0
+ProjectYakuza.AttackEffects={remote=function()end,clear=function(who)fxClears=fxClears+1;who.attackCleared=true end}
+ProjectYakuza.ChargeEffects={clear=function(who)chargeClears=chargeClears+1;who.chargeCleared=true end}
+local peer={player=50,session=1000,seq=900,style='dragon_of_dojima',equipped=true,heat=40,fuel=30,extreme=true,clip='ProjectYakuza_DD_Finisher01',move='dd_finisher_01',swing=10,action=10}
+client.command(P.module,'state',peer)
+local cycle=observer.vars.ProjectYakuzaRemoteCycle
+peer=copy(peer);peer.seq=901;peer.action=11;client.command(P.module,'state',peer)
+check(observer.vars.ProjectYakuzaRemoteCycle==cycle,'late action-context counter cannot restart a melee finisher')
+peer=copy(peer);peer.seq=902;peer.swing=11;client.command(P.module,'state',peer)
+check(observer.vars.ProjectYakuzaRemoteCycle~=cycle,'a new melee swing restarts the same supplied clip')
+peer=copy(peer);peer.seq=903;peer.clip='ProjectYakuza_DD_BarragePunch';peer.move='dd_barrage_punch';client.command(P.module,'state',peer);cycle=observer.vars.ProjectYakuzaRemoteCycle
+peer=copy(peer);peer.seq=904;peer.swing=12;client.command(P.module,'state',peer)
+check(observer.vars.ProjectYakuzaRemoteCycle==cycle,'unrelated swing counter cannot restart a timed barrage')
+peer=copy(peer);peer.seq=905;peer.action=12;client.command(P.module,'state',peer)
+check(observer.vars.ProjectYakuzaRemoteCycle~=cycle,'new timed-action serial restarts repeated barrage')
+client.seen['damage:50:1']=clock;client.seen['barrage:50:12:1']=clock;client.seen['damage:2:1']=clock
+client.deferred['damage:50:2']={args={player=50},expires=clock+750}
+peer=copy(peer);peer.seq=1;peer.session=1001;peer.action=1;peer.swing=1;client.command(P.module,'state',peer)
+check(client.remote[50].packet.seq==1 and client.sessions[50]==1001,'new server session accepts restarted player sequence')
+check(not client.seen['damage:50:1']and not client.seen['barrage:50:12:1']and not client.deferred['damage:50:2']and client.seen['damage:2:1'],'new session clears only that peer replay/deferred caches')
+local accepted=client.remote[50].packet
+local oldPeer=copy(peer);oldPeer.session=1000;oldPeer.seq=999;client.command(P.module,'state',oldPeer)
+check(client.remote[50].packet==accepted,'late old-session snapshot cannot overwrite respawn state')
+local oldEffects=effects
+client.command(P.module,'damage',{player=50,session=1000,zombie=z1.id,event=999,health=0,amount=1})
+check(effects==oldEffects and client.sessions[50]==1001,'late old-session damage is discarded')
+check(not client.acceptSession(50,0/0)and client.sessions[50]==1001,'invalid session cannot reset peer state')
+local replacement=player(50,0);replacement.localPlayer=false
+peer=copy(peer);peer.seq=0;client.command(P.module,'state',peer)
+check(client.remote[50].actor==replacement and client.remote[50].packet.seq==0,'streamed replacement actor cannot inherit stale sequence rejection')
+check(observer.attackCleared and observer.chargeCleared and not ProjectYakuza.Heat.states[observer],'previous actor effects and heat are released')
+replacement.vars.ProjectYakuzaWeaponProfile='blade';replacement.vars.ProjectYakuzaRemoteChargePower='1';replacement.vars.ProjectYakuzaLinkedDouble=true
+client.clearRemote(50)
+check(not client.remote[50]and replacement.vars.ProjectYakuzaWeaponProfile==''and replacement.vars.ProjectYakuzaRemoteChargePower=='0'and replacement.vars.ProjectYakuzaLinkedDouble==false,'stale cleanup releases profile/charge/link flags')
+check(replacement.attackCleared and replacement.chargeCleared and not ProjectYakuza.Heat.states[replacement],'stale cleanup releases limb effects and heat state')
+peer=copy(peer);peer.seq=10;client.command(P.module,'state',peer)
+local unavailable=copy(peer);unavailable.seq=11;unavailable.style='tests.not_installed';client.command(P.module,'state',unavailable)
+check(not client.remote[50]and not ProjectYakuza.isEquipped(replacement),'missing addon style clears its observer without invoking incompatible aura/UI')
+local originalPeer=player(60,0);snapshot(originalPeer);local firstSession=server.players[60].session
+originalPeer.ghost=true;originalPeer.invincible=true;server.players[60].protection={ghost=false,invincible=false,expires=clock+3000}
+local secondPeer=player(60,0);snapshot(secondPeer)
+check(server.players[60].session>firstSession and server.players[60].packet.session==server.players[60].session,'server assigns fresh monotonic sessions to recycled player IDs')
+check(not originalPeer.ghost and not originalPeer.invincible,'replacing a player actor releases its previous temporary protection')
+replies={};server.fanout(originalPeer,'state',{player=60})
+check(#replies==0,'old actor cannot fan out with replacement session')
+server.fanout(secondPeer,'state',{player=60})
+check(#replies>0 and replies[1].args.session==server.players[60].session,'server relays tag the authoritative current session')
+client.clear();local sessionCount=0;for _ in pairs(client.sessions)do sessionCount=sessionCount+1 end;check(sessionCount==0,'world exit clears session ownership')
 return 'PASS '..count..' MP authority, duplicate, range, lease, cooldown, observer and throttle checks'

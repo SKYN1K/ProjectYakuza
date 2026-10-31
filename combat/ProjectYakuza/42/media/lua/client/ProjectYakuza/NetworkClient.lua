@@ -2,7 +2,7 @@ require "ProjectYakuza/Juggling"
 require "ProjectYakuza/Runtime"
 require "ProjectYakuza/NetworkProtocol"
 local ProjectYakuza=ProjectYakuza;local P=ProjectYakuza.NetworkProtocol
-local N={locals=setmetatable({}, {__mode="k"}),remote={},leases=setmetatable({}, {__mode="k"}),pending=setmetatable({}, {__mode="k"}),seen={},victims={},deferred={},nextRemote=0}
+local N={locals=setmetatable({}, {__mode="k"}),remote={},leases=setmetatable({}, {__mode="k"}),pending=setmetatable({}, {__mode="k"}),seen={},victims={},deferred={},sessions={},nextRemote=0}
 ProjectYakuza.Network=N
 local function now()return getTimestampMs()end
 function N.localState(p)
@@ -85,7 +85,7 @@ function N.pickClip(p,style,s)
     end
     return ""
 end
-function N.capture(p,force)
+function N.capture(p,force,onlyChanged)
     if not isClient() or not p or not p:isLocalPlayer() then return end
     local s=N.localState(p);local t=now()
     if s.equipReply then N.finishEquipment(p,s) end
@@ -110,7 +110,7 @@ function N.capture(p,force)
         grabMoving=p:GetVariable("ProjectYakuzaGrabMoving")=="true",grabDirection=action and action.kind=="grab" and action.target:GetVariable("ProjectYakuzaGrabWalkDirection") or "forward"}
     local key=packet.style..tostring(equipped)..math.floor(packet.heat)..math.floor(packet.fuel)..tostring(ProjectYakuza.Heat.stocks(p))..tostring(packet.extreme)..packet.clip..packet.move..packet.phase..tostring(packet.linked)..tostring(packet.grabMoving)..packet.grabDirection..tostring(packet.taunt)..":"..packet.swing..":"..packet.action
     key=key..":"..packet.weaponProfile..":"..math.floor(packet.chargePower*10)
-    if force or key~=s.key or t>=(s.heartbeat or 0) then
+    if (force and not onlyChanged) or key~=s.key or t>=(s.heartbeat or 0) then
         s.seq=s.seq+1;packet.seq=s.seq;sendClientCommand(p,P.module,"state",packet)
         s.key=key;s.heartbeat=t+1000
     end
@@ -144,7 +144,7 @@ function N.updateStep(p,s)
 end
 function N.send(p,command,args)
     if not isClient() or not p:isLocalPlayer() then return false end
-    N.capture(p,true)
+    N.capture(p,true,true)
     local s=N.localState(p);s.event=s.event+1;args.event=s.event
     sendClientCommand(p,P.module,command,args);return true
 end
@@ -179,7 +179,7 @@ function N.stopObserver(p,s)
 end
 function N.clearRemote(id)
     local s=N.remote[id];if not s then return end
-    local p=getPlayerByOnlineID(id)
+    local p=s.actor or getPlayerByOnlineID(id)
     if s.grab then
         local z=s.grab;local restore=s.grabRestore or {}
         z:setVariable("ProjectYakuzaGrabbed",false);z:setVariable("ProjectYakuzaGrabPhase","");z:setVariable("ProjectYakuzaGrabMoving",false)
@@ -190,10 +190,30 @@ function N.clearRemote(id)
         p:setVariable("ProjectYakuzaRemoteClip","");p:setVariable("ProjectYakuzaActive",false);p:setVariable("ProjectYakuzaStyle","")
         p:setVariable("ProjectYakuzaRemoteObserver",false)
         p:setVariable("ProjectYakuzaRemoteCycle","")
+        p:setVariable("ProjectYakuzaMove","");p:setVariable("ProjectYakuzaWeaponProfile","")
+        p:setVariable("ProjectYakuzaLinkedDouble",false);p:setVariable("DFCGroundEnabled",false);p:setVariable("ProjectYakuzaRemoteChargePower","0")
         if ProjectYakuza.HeatAura then ProjectYakuza.HeatAura.clear(p) end
+        if ProjectYakuza.AttackEffects then ProjectYakuza.AttackEffects.clear(p)end
+        if ProjectYakuza.ChargeEffects then ProjectYakuza.ChargeEffects.clear(p)end
+        ProjectYakuza.Heat.states[p]=nil
     end
     N.remote[id]=nil
     N.protectionHook()
+end
+function N.resetPeerEvents(id)
+    for key in pairs(N.seen)do if tonumber(string.match(key,"^[^:]+:(%d+):"))==id then N.seen[key]=nil end end
+    for key,entry in pairs(N.deferred)do if entry.args.player==id then N.deferred[key]=nil end end
+end
+function N.acceptSession(id,session)
+    if session==nil then return true end
+    if not P.integer(session,1,1000000000)then return false end
+    local previous=N.sessions[id]
+    if previous and session<previous then return false end
+    if previous~=session then
+        if previous then N.clearRemote(id);N.resetPeerEvents(id)end
+        N.sessions[id]=session
+    end
+    return true
 end
 function N.applyState(p,packet,s)
     if p:isLocalPlayer() then return end
@@ -207,20 +227,21 @@ function N.applyState(p,packet,s)
     p:setVariable("ProjectYakuzaRemoteChargePower",tostring(packet.chargePower or 0))
     p:setVariable("ProjectYakuzaRemoteObserver",packet.equipped)
     ProjectYakuza.Heat.playback(p,packet.extreme)
-    if s.style~=packet.style or s.clip~=packet.clip or (packet.clip~="" and (s.swing~=packet.swing or s.action~=(packet.action or 0))) then
+    local clip=P.clip(packet.style,packet.clip)
+    local serialChanged=clip and (clip.group=="actions" and s.action~=(packet.action or 0) or clip.group~="actions" and s.swing~=packet.swing)
+    if s.style~=packet.style or s.clip~=packet.clip or serialChanged then
         N.stopObserver(p,s)
         p:setVariable("ProjectYakuzaRemoteClip",packet.clip)
         s.cycle=((s.cycle or 0)+1)%2
         p:setVariable("ProjectYakuzaRemoteCycle",tostring(s.cycle))
-        local clip=P.clip(packet.style,packet.clip)
         if clip and clip.group=="actions" then
 
             p:setVariable("PerformingAction","ProjectYakuza_MP");p:setVariable("IsPerformingAnAction",true)
             s.actionOverride=true
         end
-        s.style=packet.style;s.clip=packet.clip;s.swing=packet.swing;s.action=packet.action or 0
         if ProjectYakuza.AttackEffects then ProjectYakuza.AttackEffects.remote(p,ProjectYakuza.getPlayerStyle(p),packet) end
     end
+    s.style=packet.style;s.clip=packet.clip;s.swing=packet.swing;s.action=packet.action or 0
     if ProjectYakuza.HeatAura then
         if s.taunt~=nil and (packet.taunt or 0)>s.taunt then ProjectYakuza.HeatAura.flash(p) end
         ProjectYakuza.HeatAura.update(p)
@@ -244,6 +265,7 @@ function N.command(module,command,a)
         if not p or not p:isLocalPlayer() then return end
         local s=N.localState(p)
         if a.request~=s.equipRequest or a.style~=s.equipWanted then return end
+        if not N.acceptSession(a.player,a.session)then return end
         s.equipReply=a;N.finishEquipment(p,s);return
     end
     if command=="grabDenied" then
@@ -251,6 +273,7 @@ function N.command(module,command,a)
     end
     if not P.integer(a.player,0,32767) then return end
     local p=getPlayerByOnlineID(a.player)
+    if command~="state"and not N.acceptSession(a.player,a.session)then return end
     if command=="step" then
         if not p or p:isLocalPlayer() then return end
         local s=N.remote[a.player];if not s or not s.packet.equipped then return end
@@ -270,8 +293,11 @@ function N.command(module,command,a)
         if a.chargePower~=nil and not P.number(a.chargePower,0,1) then return end
         if not P.integer(a.seq,0,1000000000) or not P.number(a.heat,0,100) or not P.number(a.fuel,0,100) then return end
         if a.taunt~=nil and not P.integer(a.taunt,0,1000000000) then return end
+        if not N.acceptSession(a.player,a.session)then return end
         local s=N.remote[a.player]
+        if s and p and s.actor and s.actor~=p then N.clearRemote(a.player);N.resetPeerEvents(a.player);s=nil end
         if s and a.seq<s.packet.seq then return end
+        if type(a.style)~="string"or (a.style~="none"and not ProjectYakuza.getStyle(a.style))then N.clearRemote(a.player);return end
         if p and p:isLocalPlayer() then return end
         if not s then s={};N.remote[a.player]=s end
         s.packet=a;s.last=now()
@@ -398,7 +424,7 @@ end
 function N.clear()
     for id in pairs(N.remote) do N.clearRemote(id) end
     for p in pairs(N.leases) do N.releaseGrab(p) end
-    N.locals=setmetatable({}, {__mode="k"});N.seen={};N.victims={};N.deferred={};N.pending=setmetatable({}, {__mode="k"})
+    N.locals=setmetatable({}, {__mode="k"});N.seen={};N.victims={};N.deferred={};N.sessions={};N.pending=setmetatable({}, {__mode="k"})
 end
 ProjectYakuza.on("lightAttackStarted",N.swing)
 ProjectYakuza.on("finisherStarted",N.swing)

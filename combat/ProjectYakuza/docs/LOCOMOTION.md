@@ -1,8 +1,8 @@
-# Dragon of Dojima locomotion (0.55.0)
+# Dragon of Dojima locomotion (0.56.0)
 
 Ordinary non-aimed running uses Kiryu's full Yakuza 6 P_KRU_MOV_run_ftl loop. The ftl/ftr files are complete phase-offset cycles, so a single complete ftl cycle is used without concatenation or invented motion. Unarmed, bat, knife and blade variants use native finger/prop grip conventions. This does not add a sprint or new run-start/stop/turn motion.
 
-Supported weapons use a consistent existing source arm pose from P_KRU_BTL_WPA/WPB/WPN_stdB_lp while RMB is released. Native idle/walk/slow-walk clips supply torso, neck, head, legs and travel. The arms hold the same source pose across those variants instead of independently cycling through a resampled upper-body loop. Native idle hand-to-prop offsets replace the earlier attack grip, including long blades. Aiming selects the existing combat stance unchanged.
+With RMB released, bats and long blades now select the existing native Bob_IdleBat, Bob_WalkBat and Bob_WalkSlow_Bat holds; knives use native Bob_Idle, Bob_Walk and Bob_WalkSlow. This removes the frozen combat-ready arm pose from relaxed idle, walking and the walking portion of the run blend. Native legs, torso, hand grips and weapon transforms stay together. No motion files were created or edited. The previous source-arm carry composites remain supplied as unselected reference assets; aimed combat stances and custom weapon attacks remain unchanged. Native source paths/hashes are recorded in locomotion-nodes.json.
 
 ## Movement and blending
 

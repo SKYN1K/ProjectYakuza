@@ -4,12 +4,15 @@ require "ProjectYakuza/NetworkProtocol"
 require "ProjectYakuza/Juggling"
 require "ProjectYakuza/BarrageRules"
 local ProjectYakuza=ProjectYakuza;local P=ProjectYakuza.NetworkProtocol
-local S={players={},grabs={},nextTick=0,reactions={}}
+local S={players={},grabs={},nextTick=0,reactions={},nextSession=0}
 ProjectYakuza.NetworkServer=S
 local function now()return getTimestampMs()end
 local function alive(p)return p and not p:isDead() and not p:getVehicle() end
 local function reply(p,command,args)sendServerCommand(p,P.module,command,args)end
 function S.fanout(p,command,args)
+    local peer=S.players[p:getOnlineID()]
+    if peer and peer.player~=p then return end
+    if peer then args.session=peer.session end
     local all=getOnlinePlayers()
     for i=0,all:size()-1 do local other=all:get(i)
         if math.abs(other:getZ()-p:getZ())<2 and (other:getX()-p:getX())^2+(other:getY()-p:getY())^2<=P.range^2 then reply(other,command,args) end
@@ -17,7 +20,8 @@ function S.fanout(p,command,args)
 end
 local function state(p)
     local id=p:getOnlineID();local s=S.players[id]
-    if not s or s.player~=p then s={player=p,seq=-1,event=-1,swings={}};S.players[id]=s end
+    if s and s.player~=p then S.restoreProtection(s.player,s);S.release(s.player)end
+    if not s or s.player~=p then S.nextSession=S.nextSession+1;s={player=p,seq=-1,event=-1,swings={},session=S.nextSession};S.players[id]=s end
     return s
 end
 local function token(p)local item=p:getPrimaryHandItem();return item and (ProjectYakuza.isStyleToken(item) or (ProjectYakuza.Weapons and ProjectYakuza.Weapons.matches(p,item))) and item end
@@ -86,7 +90,7 @@ function S.snapshot(p,a,s)
             p:setGhostMode(true);p:setInvincible(true)
         end
     end
-    local packet={player=p:getOnlineID(),seq=a.seq,style=a.style,weaponProfile=profile or "",equipped=equipped,
+    local packet={player=p:getOnlineID(),session=s.session,seq=a.seq,style=a.style,weaponProfile=profile or "",equipped=equipped,
         heat=equipped and a.heat or 0,fuel=equipped and a.fuel or 0,extreme=equipped and a.extreme==true and style.heat==true,
         clip=clip and clip.id or "",move=equipped and type(a.move)=="string" and P.move(a.style,a.move) and a.move or "",
         chargePower=equipped and (a.chargePower or 0) or 0,
@@ -149,7 +153,7 @@ function S.equip(p,a,s)
     s.extremeFinisher=nil
     if ProjectYakuza.StyleItem then ProjectYakuza.StyleItem.removeUnused(p,not armed and item or nil) end
     sendEquip(p)
-    reply(p,"equipReady",{player=p:getOnlineID(),request=a.request,style=a.style,weaponProfile=armed and a.weaponProfile or "",item=item and item:getID() or -1})
+    reply(p,"equipReady",{player=p:getOnlineID(),session=s.session,request=a.request,style=a.style,weaponProfile=armed and a.weaponProfile or "",item=item and item:getID() or -1})
     if a.style=="none" then
         S.restoreProtection(p,s);S.release(p)
         if s.packet then s.packet.equipped=false;s.packet.clip="";S.fanout(p,"state",s.packet) end
@@ -200,8 +204,10 @@ function S.damage(p,z,amount,knock,kill,s,hitMove,hitStyle,jugglePlan,swing,barr
     s.result=(s.result or 0)+1
     local styleId=hitStyle or s.packet.style
     local move=hitMove or P.move(styleId,s.packet.move)
-    local response=not kill and not knock and ProjectYakuza.HitResponses.resolve(ProjectYakuza.getStyle(styleId),move)
-    local juggle,juggling=ProjectYakuza.Juggling.hit(p,z,not kill and not knock and (jugglePlan or ProjectYakuza.Juggling.plan(ProjectYakuza.getStyle(styleId),move)) or nil,swing)
+    local style=ProjectYakuza.getStyle(styleId)
+    if ProjectYakuza.Weapons then style=ProjectYakuza.Weapons.view(style,ProjectYakuza.Weapons.profile(styleId,item))end
+    local response=not kill and not knock and ProjectYakuza.HitResponses.resolve(style,move)
+    local juggle,juggling=ProjectYakuza.Juggling.hit(p,z,not kill and not knock and (jugglePlan or ProjectYakuza.Juggling.plan(style,move)) or nil,swing)
     if response and not juggling then ProjectYakuza.HitResponses.apply(p,z,response) end
     S.fanout(p,"damage",{player=p:getOnlineID(),event=s.result,zombie=z:getOnlineID(),health=math.max(0,z:getHealth()),amount=amount,knock=knock==true,kill=kill==true,
         dx=dx/n,dy=dy/n,force=z:getHitForce(),hitReaction=z:getHitReaction() or "ShotBelly",reaction=move and move.reaction or "",style=styleId,juggle=juggle,responseKind=response and response.kind,responseForce=response and response.force,
@@ -297,7 +303,7 @@ function S.command(module,command,p,a)
                 scaled.chargePower=s.packet.chargePower
                 move=scaled
             end
-            s.lastSwing=a.swing;job={seen={},count=0,expires=t+2500,weapon=held,extreme=s.packet.extreme,profile=profile,move=move,style=s.packet.style,juggle=ProjectYakuza.Juggling.plan(ProjectYakuza.getStyle(s.packet.style),move)};s.swings[a.swing]=job
+            s.lastSwing=a.swing;job={seen={},count=0,expires=t+2500,weapon=held,extreme=s.packet.extreme,profile=profile,move=move,style=s.packet.style,juggle=ProjectYakuza.Juggling.plan(view,move)};s.swings[a.swing]=job
         end
         if job.weapon~=held or t>job.expires or job.count>=ProjectYakuza.MAX_HIT_COUNT or job.seen[a.zombie] then return end
         local range=command=="extra" and profile~="" and ProjectYakuza.Weapons and ProjectYakuza.Weapons.hitRange(held) or 1.65
@@ -310,7 +316,7 @@ function S.command(module,command,p,a)
         if command=="extra" and ((z:isOnFloor() or z:isKnockedDown())~=(job.move.groundAttack==true)) then return end
         job.seen[a.zombie]=true;job.count=job.count+1
         if command=="impact" then
-            local response=ProjectYakuza.HitResponses.resolve(ProjectYakuza.getStyle(job.style),job.move)
+            local response=ProjectYakuza.HitResponses.resolve(view,job.move)
             local packet={player=p:getOnlineID(),event=a.event,zombie=a.zombie,style=job.style,reaction=job.move.reaction or "",strong=job.move.neutralHeavy==true or job.move.afterLight~=nil or job.move.chargedHeavy==true,charged=job.move.chargedHeavy==true,
                 responseKind=response and response.kind,responseForce=response and response.force}
             if response or job.juggle or ProjectYakuza.Juggling.get(z) then

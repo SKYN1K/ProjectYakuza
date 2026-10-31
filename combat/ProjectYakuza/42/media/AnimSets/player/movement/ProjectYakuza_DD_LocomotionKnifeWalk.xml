@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <animNode>
   <m_Name>ProjectYakuza_DD_LocomotionKnifeWalk</m_Name>
-  <m_AnimName>ProjectYakuza_DD_KnifeCarryWalk</m_AnimName>
+  <m_AnimName>Bob_Walk</m_AnimName>
   <m_BlendTime>0.25</m_BlendTime>
   <m_SpeedScale>1.04</m_SpeedScale>
   <m_Scalar>WalkInjury</m_Scalar>
@@ -31,13 +31,13 @@
     <m_SpeedScale>0.80</m_SpeedScale>
   </m_2DBlends>
   <m_2DBlends referenceID="5">
-    <m_AnimName>ProjectYakuza_DD_KnifeCarryWalk</m_AnimName>
+    <m_AnimName>Bob_Walk</m_AnimName>
     <m_XPos>0.00</m_XPos>
     <m_YPos>1.00</m_YPos>
     <m_SpeedScale>0.80</m_SpeedScale>
   </m_2DBlends>
   <m_2DBlends referenceID="6">
-    <m_AnimName>ProjectYakuza_DD_KnifeCarrySlow</m_AnimName>
+    <m_AnimName>Bob_WalkSlow</m_AnimName>
     <m_XPos>0.00</m_XPos>
     <m_YPos>0.00</m_YPos>
     <m_SpeedScale>0.80</m_SpeedScale>

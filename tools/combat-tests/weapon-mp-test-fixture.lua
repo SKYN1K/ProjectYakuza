@@ -311,4 +311,16 @@ check(bs.barrage.index==13 and z1.knock,'terminal source contact knocks down')
 clock=bs.barrage.expires+1;local endHits=z1.hits
 command('barrage',{action=800,index=13,zombies={z1.id}})
 check(z1.hits==endHits,'expired/replayed barrage cannot deal damage')
+clock=clock+1100;p:setPrimaryHandItem(bat);bat.condition=10
+snapshot(p,{weaponProfile='bat',clip='ProjectYakuza_DD_BatLight01',move='dd_bat_light_01',swing=900})
+local responses=ProjectYakuza.HitResponses;local juggle=ProjectYakuza.Juggling
+local oldResolve,oldPlan=responses.resolve,juggle.plan;local responseView,planView
+responses.resolve=function(style,move)responseView=style;return oldResolve(style,move)end
+juggle.plan=function(style,move)planView=style;return oldPlan(style,move)end
+z1.health=100;local weaponView=ProjectYakuza.Weapons.views.dragon_of_dojima.bat
+server.damage(p,z1,.1,false,false,server.players[p.id],weaponView.lightAttacks[1],baseStyle.id)
+check(responseView==weaponView and planView==weaponView,'server supplemental damage resolves weapon-profile responses/juggling')
+responseView=nil;planView=nil;command('impact',{swing=900,zombie=z1.id})
+check(responseView==weaponView and planView==weaponView,'server native primary responses use the same weapon profile as SP')
+responses.resolve=oldResolve;juggle.plan=oldPlan
 return true,'PASS '..count..' weapon MP, boost authorization, barrage source timing, duplicates, caps, walls, damage authority and depletion checks'

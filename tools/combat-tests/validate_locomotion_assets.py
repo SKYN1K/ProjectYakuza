@@ -7,6 +7,10 @@ if '--inside-blender' not in sys.argv:
  if result.returncode or 'PASS locomotion source samples' not in result.stdout:raise SystemExit(result.stderr or 'Blender source checks failed')
  for probe,args in [('PropAttachmentProbe',[str(w/'locomotion-prop-contract.tsv')]),('LocomotionAssetProbe',[str(mod/'42/media')])]:
   subprocess.run(['F:/SteamLibrary/steamapps/common/ProjectZomboid/jre64/bin/java.exe','-cp','.;F:/SteamLibrary/steamapps/common/ProjectZomboid/*',probe,*args],cwd=w,check=True)
+ native=json.loads((mod/'docs/locomotion-nodes.json').read_text())['nativeCarryClips']
+ assert len(native)==6
+ for clip in native:assert hashlib.sha256(Path(clip['source']).read_bytes()).hexdigest()==clip['sha256']
+ subprocess.run(['F:/SteamLibrary/steamapps/common/ProjectZomboid/jre64/bin/java.exe','-cp','.;F:/SteamLibrary/steamapps/common/ProjectZomboid/*','AnimationProbe',*[clip['source']for clip in native]],cwd=w,check=True)
  raise SystemExit(0)
 sys.path.insert(0,str(w));from locomotion_math import read,pose,locals_at
 from mathutils import Matrix
@@ -62,7 +66,13 @@ assert len(nodeData['nodes'])==10
 for name in nodeData['nodes']:
  n=E.parse(mod/name).getroot();assert n.findtext('m_BlendTime')=='.25' or float(n.findtext('m_BlendTime'))==.25
  assert n.findtext('m_Looped')=='true'
+ if any('Locomotion'+family in name for family in ['Bat','Knife','Blade']):
+  knife='LocomotionKnife'in name
+  if '/idle/'in name:assert n.findtext('m_AnimName')==('Bob_Idle'if knife else'Bob_IdleBat')
+  elif '/movement/'in name:assert n.findtext('m_AnimName')==('Bob_Walk'if knife else'Bob_WalkBat')
+  assert 'Carry'not in '\n'.join(e.text or ''for e in n.iter('m_AnimName')),'relaxed weapon selectors must not use frozen combat arms'
  assert not any(e.findtext('m_EventName') not in ['Footstep'] for e in n.findall('m_Events'))
  for e in n.findall('m_2DBlends'):
   clip=e.findtext('m_AnimName');assert (mod/('42/media/anims_X/Bob/'+clip+'.x')).exists() or Path('F:/SteamLibrary/steamapps/common/ProjectZomboid/media/anims_X/Bob/'+clip+'.x').exists(),clip
 print('PASS locomotion source samples',count,'unchanged source/native local samples; max matrix error',worst,'max loop seam',loop)
+print('PASS native relaxed weapon idle/walk/slow/run-blend references with aimed combat excluded')
