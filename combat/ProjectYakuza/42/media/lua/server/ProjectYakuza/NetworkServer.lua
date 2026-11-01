@@ -77,6 +77,8 @@ function S.snapshot(p,a,s)
     if not equipped or kind~="heatActivation" then S.restoreProtection(p,s);s.wasActivation=false
     elseif not s.wasActivation then
         s.wasActivation=true
+        local protection=ProjectYakuza.HeatActions;local grace=protection and protection.active[p]
+        if grace and not grace.playing then protection.restore(p,grace)end
         if a.heat>=ProjectYakuza.HeatRules.stockSize(style) and activation then
             s.protection={ghost=p:isGhostMode(),invincible=p:isInvincible(),expires=now()+math.min(3500,(activation.duration or 2)*1000+500)}
             p:setGhostMode(true);p:setInvincible(true)
@@ -85,6 +87,7 @@ function S.snapshot(p,a,s)
     local packet={player=p:getOnlineID(),session=s.session,seq=a.seq,style=a.style,weaponProfile=profile or "",equipped=equipped,
         heat=equipped and a.heat or 0,fuel=equipped and a.fuel or 0,extreme=equipped and a.extreme==true and style.heat==true,
         clip=clip and clip.id or "",move=move and a.move or "",
+        rightAim=equipped and a.rightAim==true,comboBusy=a.comboBusy~=false,
         chargePower=equipped and (a.chargePower or 0) or 0,
         attackHeatSpeed=equipped and type(style.heatAttackSpeed)=="table"and a.attackHeatSpeed or nil,
         swing=P.integer(a.swing,0,1000000000) and a.swing or 0,

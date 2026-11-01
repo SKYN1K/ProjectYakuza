@@ -7,7 +7,7 @@ local ProjectYakuza=ProjectYakuza;local P=ProjectYakuza.NetworkProtocol
 local N={locals=setmetatable({}, {__mode="k"}),remote={},leases=setmetatable({}, {__mode="k"}),pending=setmetatable({}, {__mode="k"}),seen={},victims={},deferred={},sessions={},nextRemote=0}
 ProjectYakuza.Network=N
 local function now()return getTimestampMs()end
-local stateFields={"style","weaponProfile","equipped","extreme","clip","move","phase","linked","ground","grabMoving","grabDirection","taunt","swing","action","attackHeatSpeed"}
+local stateFields={"style","weaponProfile","equipped","extreme","clip","move","phase","linked","ground","grabMoving","grabDirection","taunt","swing","action","attackHeatSpeed","rightAim","comboBusy"}
 local function changed(previous,packet)
     if not previous then return true end
     for _,key in ipairs(stateFields)do if previous[key]~=packet[key]then return true end end
@@ -113,6 +113,7 @@ function N.capture(p,force,onlyChanged)
     local move=combo.groundMove or combo.finisherMove or combo.activeLightMove or (style and style.lightAttacks[combo.step>0 and combo.step or 1])
     local packet={style=style and style.id or "none",weaponProfile=style and style.weaponProfile or "",equipped=equipped,heat=ProjectYakuza.getHeat(p),fuel=ProjectYakuza.Heat.display(p),extreme=ProjectYakuza.Heat.isExtreme(p),
         clip=equipped and N.pickClip(p,style,combo) or "",move=equipped and move and move.nodeValue or "",
+        rightAim=equipped and p:isAiming()and isMouseButtonDown(1),comboBusy=equipped and ProjectYakuza.HeatRushRules and not ProjectYakuza.HeatRushRules.noCombo(combo,style,t)or false,
         chargePower=action and action.kind=="heavyCharge" and action.timedAction and (action.timedAction.power or 0) or move and move.chargePower or 0,
         swing=s.swing,action=s.action or 0,taunt=s.taunt or 0,linked=p:GetVariable("ProjectYakuzaLinkedDouble")=="true",ground=combo.groundMove~=nil,phase=p:GetVariable("ProjectYakuzaDefensePhase") or "",
         grabMoving=p:GetVariable("ProjectYakuzaGrabMoving")=="true",grabDirection=action and action.kind=="grab" and action.target:GetVariable("ProjectYakuzaGrabWalkDirection") or "forward"}

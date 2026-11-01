@@ -30,6 +30,8 @@ for group in ['melee','stomp','actions']:
 for p in (root/'AnimSets/player').rglob('ProjectYakuza_MP_*.xml'):
  if '_Cycle1' in p.stem:continue
  node=E.parse(p).getroot()
+ for condition in list(node.findall('m_Conditions')):
+  if condition.findtext('m_Name')=='ProjectYakuzaRemoteCycle':node.remove(condition)
  c=E.SubElement(node,'m_Conditions')
  for k,v in [('m_Name','ProjectYakuzaRemoteCycle'),('m_Type','STRING'),('m_Value','0')]:E.SubElement(c,k).text=v
  E.ElementTree(node).write(p,encoding='utf-8',xml_declaration=True)

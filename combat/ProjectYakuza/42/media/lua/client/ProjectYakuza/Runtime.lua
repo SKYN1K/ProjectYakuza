@@ -361,6 +361,7 @@ local function onUpdate(player)
     if variable(player,"ProjectYakuzaHeatRushVictim")=="true"then return end
     if ProjectYakuza.TigerDrop then ProjectYakuza.TigerDrop.track(player) end
     local s = ProjectYakuza.stateFor(player)
+    local heatActionPressed=B.pressed(player,"heatAction")
     local counterPressed=B.pressed(player,"counter")
     local throwPressed=B.pressed(player,"throw")
     local finisherDown = B.down("finisher")
@@ -425,7 +426,7 @@ local function onUpdate(player)
     ProjectYakuza.syncGroundAttack(player,style,s)
     if (counterPressed or finisherPressed) and ProjectYakuza.TigerDrop and ProjectYakuza.TigerDrop.tryCounter(player) then if ProjectYakuza.ChargedHeavy then ProjectYakuza.ChargedHeavy.clearPlayer(player) end;s.lastDown=B.down("light");return end
     if s.directionalLight then finisherPressed=false;finisherDown=false end
-    if ProjectYakuza.HeatRush and ProjectYakuza.HeatRush.input(player,s,style)then s.lastDown=B.down("light");return end
+    if ProjectYakuza.HeatRush and (ProjectYakuza.HeatRush.weaponInput(player,s,style,heatActionPressed)or ProjectYakuza.HeatRush.input(player,s,style))then s.lastDown=B.down("light");return end
     local heavyInput=ProjectYakuza.ChargedHeavy and ProjectYakuza.ChargedHeavy.input(player,finisherDown,finisherPressed,s,style)
     if finisherPressed and not heavyInput then ProjectYakuza.queueFinisher(player) end
     if ProjectYakuza.activeActions[player] and ProjectYakuza.activeActions[player].kind=="heavyCharge" then s.lastDown=B.down("light");return end

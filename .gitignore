@@ -142,3 +142,9 @@
 !/tools/combat-tests/build_attack_trails.py
 
 !/tools/combat-tests/StunRushProbe.java
+
+!/tools/combat-tests/build_katana_heat_assets.py
+
+!/tools/combat-tests/validate_katana_heat_assets.py
+
+!/tools/combat-tests/KatanaHeatProbe.java

@@ -27,7 +27,7 @@ public class HeatRushAssetProbe {
   if(count!=9)throw new AssertionError("owner count "+count);
   int victims=0;
   try(var files=Files.walk(Path.of(args[0]).getParent().resolve("zombie"))){for(var path:files.filter(p->p.getFileName().toString().equals("ProjectYakuza_DD_HeatRushVictim.xml")).toList()){
-   var parsed=node.getMethod("Parse",String.class).invoke(null,path.toAbsolutePath().toString());Object state=stateType.getConstructor().newInstance(),vars=variables.getConstructor().newInstance();stateType.getMethod("addNode",node).invoke(state,parsed);set.invoke(vars,"ProjectYakuzaHeatRushVictim","true");var select=stateType.getMethod("getAnimNodes",source,List.class);
+   var parsed=node.getMethod("Parse",String.class).invoke(null,path.toAbsolutePath().toString());Object state=stateType.getConstructor().newInstance(),vars=variables.getConstructor().newInstance();stateType.getMethod("addNode",node).invoke(state,parsed);set.invoke(vars,"ProjectYakuzaHeatRushVictim","true");set.invoke(vars,"ProjectYakuzaPairedVictimClip","ProjectYakuza_DD_HeatRushVictim");var select=stateType.getMethod("getAnimNodes",source,List.class);
    if(((List)select.invoke(state,vars,new ArrayList<>())).size()!=1)throw new AssertionError("victim selection "+path);set.invoke(vars,"ProjectYakuzaHeatRushVictim","false");if(!((List)select.invoke(state,vars,new ArrayList<>())).isEmpty())throw new AssertionError("victim flag leak "+path);victims++;
   }}
   if(victims!=3)throw new AssertionError("victim owners "+victims);

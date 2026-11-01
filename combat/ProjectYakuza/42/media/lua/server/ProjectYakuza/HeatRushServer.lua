@@ -1,5 +1,6 @@
 require "ProjectYakuza/NetworkServer"
 require "ProjectYakuza/HeatRushRules"
+require "ProjectYakuza/HeatActions"
 local PY=ProjectYakuza;local R=PY.HeatRushRules;local P=PY.NetworkProtocol;local S=PY.NetworkServer
 local H={leases={},held=setmetatable({}, {__mode="k"}),serial=0};PY.HeatRushServer=H
 local function now()return getTimestampMs()end
@@ -7,8 +8,8 @@ function H.reply(p,command,a)a.player=p:getOnlineID();sendServerCommand(p,P.modu
 function H.finish(p,completed)
     local job=H.leases[p];if not job then return end
     H.leases[p]=nil;H.held[job.z]=nil;local z=job.z
-    if job.started then R.restore(z,job.old)end
-    if completed and job.hits[#job.definition.prompts]and not z:isDead()then z:setKnockedDown(true);z:setFallOnFront(false)end
+    if job.started then PY.HeatActions.finish(p,job);R.restore(z,job.old)end
+    if completed and job.hits[#job.contacts]and not z:isDead()then z:setKnockedDown(true);z:setFallOnFront(false)end
     S.fanout(p,"heatRushEnd",{player=p:getOnlineID(),action=job.action,zombie=z:getOnlineID(),targetKind=R.targetKind(z),useless=job.old.useless,ignore=job.old.ignore,deferred=job.old.deferred,completed=completed==true})
 end
 function H.input(s,packet,style,move)
@@ -37,47 +38,58 @@ function H.command(p,command,a,s)
         return
     end
     if command=="heatRushBegin"then
-        local style=PY.getStyle(s.packet.style);local cfg=style and style.heatRush;local z=cfg and R.target(p,a.zombie,a.targetKind)
-        if not P.integer(a.request,1,1000000000)or job or not cfg or not s.packet.extreme or s.packet.weaponProfile~=""or (s.rushCount or 0)<cfg.hits or s.rushVictim~=a.zombie or (a.targetKind or"zombie")~=(s.rushTargetKind or"zombie")or t-(s.rushAt or 0)>1200 or H.held[p]or H.held[z]or H.leases[z]or not R.validTarget(p,z)then H.reply(p,"heatRushDenied",{request=a.request});return end
-        local f=p:getForwardDirection();local pose={x=p:getX(),y=p:getY(),fx=f:getX(),fy=f:getY()}
+        local style=PY.getStyle(s.packet.style)
+        if a.weaponHeat==true and style then style=PY.Weapons.view(style,s.packet.weaponProfile)end
+        local cfg=style and style.heatRush;local move=style and style.actions.heatAction
+        local weaponHeat=a.weaponHeat==true;local z=style and R.target(p,a.zombie,a.targetKind)
+        local ready
+        if weaponHeat then
+            local cost=move and (move.heatStocks or 0)*PY.HeatRules.stockSize(style)or 0
+            local available=move and move.useExtremeFuel and s.packet.extreme and s.packet.fuel or s.packet.heat
+            ready=s.packet.rightAim==true and s.packet.comboBusy==false and R.weaponAllowed(p,style,move)and available>=cost
+        else ready=cfg and s.packet.extreme and s.packet.weaponProfile==""and (s.rushCount or 0)>=cfg.hits and s.rushVictim==a.zombie and (a.targetKind or"zombie")== (s.rushTargetKind or"zombie")and t-(s.rushAt or 0)<=1200 end
+        if not P.integer(a.request,1,1000000000)or job or not s.packet.equipped or not ready or H.held[p]or H.held[z]or H.leases[z]or not R.validTarget(p,z)then H.reply(p,"heatRushDenied",{request=a.request});return end
+        local f=p:getForwardDirection();local pose={x=p:getX(),y=p:getY(),fx=f:getX(),fy=f:getY(),motion=R.motion(move),duration=R.durationFor(move)}
         if not P.path(p,z:getX(),z:getY())or not R.space(p,pose)then H.reply(p,"heatRushDenied",{request=a.request});return end
-        H.serial=H.serial+1;pose.action=H.serial;pose.p=p;pose.z=z;pose.weapon=p:getPrimaryHandItem();pose.style=style.id;pose.expires=t+7000;pose.presses={};pose.hits={};pose.definition=style.actions.heatAction.qte;pose.old=R.capture(z)
+        H.serial=H.serial+1;pose.action=H.serial;pose.p=p;pose.z=z;pose.weapon=p:getPrimaryHandItem();pose.style=style.id;pose.expires=t+7000;pose.presses={};pose.hits={};pose.move=move;pose.definition=move.qte;pose.contacts=R.contacts(move);pose.old=R.capture(z)
         H.leases[p]=pose;H.held[z]=pose;s.rushCount=0
         H.reply(p,"heatRushGranted",{request=a.request,action=pose.action,zombie=z:getOnlineID(),targetKind=R.targetKind(z),x=pose.x,y=pose.y,fx=pose.fx,fy=pose.fy});return
     end
     if not job or job.action~=a.action then return end
     if job.weapon~=p:getPrimaryHandItem()or job.style~=s.packet.style or t>job.expires then H.finish(p,false);return end
     if command=="heatRushReady"then
-        if job.started then return end;job.started=t;job.expires=t+R.duration*1000+1000
-        job.old=R.lock(job.z)
-        S.fanout(p,"heatRushPose",{player=p:getOnlineID(),action=job.action,zombie=job.z:getOnlineID(),targetKind=R.targetKind(job.z),x=job.x,y=job.y,fx=job.fx,fy=job.fy,age=0});return
+        if job.started then return end;job.started=t;job.expires=t+job.duration*1000+1000
+        job.old=R.lock(job.z,job.move.targetAnimation);PY.HeatActions.begin(p,job,job.move)
+        S.fanout(p,"heatRushPose",{player=p:getOnlineID(),action=job.action,zombie=job.z:getOnlineID(),targetKind=R.targetKind(job.z),x=job.x,y=job.y,fx=job.fx,fy=job.fy,motionId=job.move.motionId,age=0});return
     end
-    if command=="heatRushEnd"then H.finish(p,a.completed==true and job.started and t-job.started>=R.duration*1000-150);return end
-    if not job.started or not P.integer(a.index,1,#job.definition.prompts)then return end
-    local age=(t-job.started)/1000;local contact=job.definition.prompts[a.index].atMs/1000
+    if command=="heatRushEnd"then H.finish(p,a.completed==true and job.started and t-job.started>=job.duration*1000-150);return end
+    if not job.started or not P.integer(a.index,1,#job.contacts)then return end
+    local age=(t-job.started)/1000;local contact=job.contacts[a.index].atMs/1000
     if command=="heatRushPress"then
-        if not job.presses[a.index]and PY.QTE.window(job.definition,a.index,age*1000,100,120) then job.presses[a.index]=true end;return
+        if job.definition and not job.presses[a.index]and PY.QTE.window(job.definition,a.index,age*1000,100,120) then job.presses[a.index]=true end;return
     end
     if command=="heatRushHit"then
-        if not job.presses[a.index]or job.hits[a.index]or age<contact-.1 or age>contact+.65 or job.z:isDead()or R.targetKind(job.z)=="player"and not R.playerAllowed(p,job.z)or not P.near(p,job.z,2)or not P.path(p,job.z:getX(),job.z:getY())then return end
+        if job.definition and not job.presses[a.index]or job.hits[a.index]or age<contact-.1 or age>contact+.65 or job.z:isDead()or R.targetKind(job.z)=="player"and not R.playerAllowed(p,job.z)or not P.near(p,job.z,2)or not P.path(p,job.z:getX(),job.z:getY())then return end
         job.hits[a.index]=true
-        local amount=R.amount(PY.getStyle(job.style).actions.heatAction,a.index);if not amount then return end
+        local amount=R.amount(job.move,a.index,job.weapon);if not amount then return end
+        if amount>0 then
         if R.targetKind(job.z)=="player"then
             S.processing=true;local ok,err=pcall(job.z.Hit,job.z,job.weapon,p,amount,false,1);S.processing=false
             if not ok then print("[ProjectYakuza] paired player hit failed: "..tostring(err));H.finish(p,false);return end
-        else S.damage(p,job.z,amount,false,false,s,PY.getStyle(job.style).actions.heatAction,job.style)end
-        S.fanout(p,"heatRushContact",{player=p:getOnlineID(),action=job.action,index=a.index,zombie=job.z:getOnlineID(),targetKind=R.targetKind(job.z)})
+        else S.damage(p,job.z,amount,false,false,s,job.move,job.style)end
+        end
+        S.fanout(p,"heatRushContact",{player=p:getOnlineID(),action=job.action,index=a.index,zombie=job.z:getOnlineID(),targetKind=R.targetKind(job.z),cue=job.contacts[a.index].cue})
     end
 end
 function H.tick(t,online)
     for p,job in pairs(H.leases)do
         local z=job.z;local peer=S.players[p:getOnlineID()]
-        if not online[p]or p:isDead()or z:isDead()or t>job.expires or not peer or not peer.packet or not peer.packet.equipped or peer.packet.style~=job.style or p:getPrimaryHandItem()~=job.weapon or R.targetKind(z)=="player"and not R.playerAllowed(p,z)or (p:getHitReaction()or"")~=""then H.finish(p,false)
+        if not online[p]or p:isDead()or z:isDead()and not job.hits[#job.contacts]or t>job.expires or not peer or not peer.packet or not peer.packet.equipped or peer.packet.style~=job.style or p:getPrimaryHandItem()~=job.weapon or R.targetKind(z)=="player"and not R.playerAllowed(p,z)or (p:getHitReaction()or"")~=""then H.finish(p,false)
         elseif job.started then
-            local age=math.min(R.duration,(t-job.started)/1000);local x,y=R.point(job,PY.HeatRushPaths.victim,age)
-            if not P.near(p,z,3)or not P.path(z,x,y)then H.finish(p,false)
-            else z:setX(x);z:setY(y);z:setNextX(x);z:setNextY(y);R.hold(z)
-                S.fanout(p,"heatRushPose",{player=p:getOnlineID(),action=job.action,zombie=z:getOnlineID(),targetKind=R.targetKind(z),x=job.x,y=job.y,fx=job.fx,fy=job.fy,age=age})end
+            local age=math.min(job.duration,(t-job.started)/1000);local x,y=R.point(job,job.motion.victim,age)
+            if not z:isDead()and (not P.near(p,z,3)or not P.path(z,x,y))then H.finish(p,false)
+            else if not z:isDead()then z:setX(x);z:setY(y);z:setNextX(x);z:setNextY(y);R.hold(z)end
+                S.fanout(p,"heatRushPose",{player=p:getOnlineID(),action=job.action,zombie=z:getOnlineID(),targetKind=R.targetKind(z),x=job.x,y=job.y,fx=job.fx,fy=job.fy,motionId=job.move.motionId,age=age})end
         end
     end
 end

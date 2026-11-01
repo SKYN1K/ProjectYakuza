@@ -39,3 +39,8 @@ Use `heavyCharge` for a stationary native hold and `chargedHeavy` for its one-us
 ## Attack endurance (0.60.0)
 
 Styles can opt in with exertion={}, weapon profiles can override that table, and individual moves can provide enduranceCost. Actual attacks publish attackCommitted once; the local owner applies native fitness/trait scaling and reports attackEnduranceSpent. Hits, remote playback, charge holds and queue requests do not charge again. See [Exertion](EXERTION.md) for defaults, validation, custom actions and lifecycle.
+
+
+## Heat Action protection (0.70.0)
+
+Shared `HeatActions.begin(player,ownerKey,definition)` and `HeatActions.finish(player,ownerKey)` manage action-only invulnerability and a default 500 ms targeting grace. Call them from actual native start and every cleanup path, including the authoritative server handler. See [Heat Actions](HEAT_ACTIONS.md) for ownership, watchdog/pause behavior, stock/fuel costs and paired contact contracts.

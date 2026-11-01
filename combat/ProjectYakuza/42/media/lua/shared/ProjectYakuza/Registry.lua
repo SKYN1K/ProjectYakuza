@@ -212,7 +212,7 @@ end
 
 local ProjectYakuza = ProjectYakuza
 ProjectYakuza.FEATURES={grab=false}
-ProjectYakuza.VERSION = "0.69.0"
+ProjectYakuza.VERSION = "0.70.0"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -280,6 +280,16 @@ function ProjectYakuza.validateStyle(style)
     local function move(value,path,light)
         if type(value)~="table" then problem(path.." must be a table");return end
         if value.enduranceCost~=nil and (not number(value.enduranceCost)or value.enduranceCost<0 or value.enduranceCost>.1)then problem(path..".enduranceCost must be 0..0.1")end
+        if value.targetGraceMs~=nil and (not number(value.targetGraceMs)or value.targetGraceMs<0 or value.targetGraceMs>2000)then problem(path..".targetGraceMs must be 0..2000")end
+        if value.contacts~=nil then
+            local contacts=value.contacts;local last=0
+            if type(contacts)~="table"or #contacts<1 or #contacts>32 then problem(path..".contacts requires 1..32 contacts")
+            else for _,contact in ipairs(contacts)do
+                if type(contact)~="table"or not number(contact.atMs)or contact.atMs<=last or not number(value.duration)or contact.atMs>value.duration*1000 then problem(path..".contacts has invalid source timing")
+                else last=contact.atMs end
+                if type(contact)=="table"and contact.damageMultiplier~=nil and (not number(contact.damageMultiplier)or contact.damageMultiplier<0 or contact.damageMultiplier>10)then problem(path..".contacts has invalid damage multiplier")end
+            end end
+        end
         if value.qte~=nil then local ok,reason=ProjectYakuza.QTE.valid(value.qte,type(value.duration)=="number"and value.duration*1000 or nil);if not ok then problem(path..".qte: "..reason)end end
         if value.hitResponse~=nil and value.hitResponse~=false
             and (not text(value.hitResponse) or type(style.hitResponses)~="table" or not style.hitResponses[value.hitResponse]) then problem(path..".hitResponse must name a hitResponses profile or be false") end
@@ -585,6 +595,11 @@ function ProjectYakuza.setHeat(player, value)
     ProjectYakuza.emit("heatChanged", player, ProjectYakuza.getHeat(player))
 end
 
+function ProjectYakuza.actionHeat(player,action)
+    local state=ProjectYakuza.Heat and ProjectYakuza.Heat.states and ProjectYakuza.Heat.states[player]
+    if action.useExtremeFuel and state and state.extreme then return state.fuel or 0,true end
+    return ProjectYakuza.getHeat(player),false
+end
 function ProjectYakuza.requestAction(player, kind, variant, target)
     if kind=="grab" and ProjectYakuza.FEATURES.grab==false then return false,"temporarily_disabled" end
     if not ProjectYakuza.actionKinds[kind] then return false, "unknown_action" end
@@ -602,7 +617,8 @@ function ProjectYakuza.requestAction(player, kind, variant, target)
     local handler = ProjectYakuza.getActionHandler(style.id,kind)
     if not handler then return false, "missing_handler" end
     local cost = action.heatStocks and action.heatStocks*(ProjectYakuza.Heat and ProjectYakuza.Heat.stockSize(player) or ProjectYakuza.HeatRules.stockSize(style)) or action.heatCost or 0
-    if ProjectYakuza.getHeat(player) < cost then return false, "insufficient_heat" end
+    local available,fuelPayment=ProjectYakuza.actionHeat(player,action)
+    if available < cost then return false, "insufficient_heat" end
     local combo = ProjectYakuza.stateFor and ProjectYakuza.stateFor(player) or nil
     local comboStep = combo and combo.step or 0
     if action.afterLight and style.finisherBranches and comboStep>style.finisherBranches then comboStep=(comboStep-1)%style.finisherBranches+1 end
@@ -627,7 +643,12 @@ function ProjectYakuza.requestAction(player, kind, variant, target)
     end
     ProjectYakuza.activeActions[player] = context
     if ProjectYakuza.blocksNativeAttacks(player) and ProjectYakuza.Bindings then ProjectYakuza.Bindings.update(player) end
-    if cost>0 then ProjectYakuza.setHeat(player, ProjectYakuza.getHeat(player) - cost) end
+    if cost>0 then
+        if fuelPayment then
+            local heat=ProjectYakuza.Heat;local state=heat.states[player];state.fuel=math.max(0,(state.fuel or 0)-cost)
+            if state.extreme and state.fuel==0 then heat.stop(player,"depleted")end
+        else ProjectYakuza.setHeat(player,ProjectYakuza.getHeat(player)-cost)end
+    end
     ProjectYakuza.emit("actionStarted", context)
     return true
 end

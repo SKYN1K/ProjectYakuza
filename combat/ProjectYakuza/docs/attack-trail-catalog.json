@@ -1,7 +1,7 @@
 {
   "operation": "Code-side numeric FK only from existing supplied PZ clips. All active registered damaging DoD moves and weapon profiles are included. Contacts use existing native collision events, QTE times or the documented parry fallback. Active limbs use existing charge mappings or contact-local endpoint/relative velocity, not decoded Y6 hitbox bone enums. No visual/audio/animation/model assets are generated or modified.",
   "catalog": "42/media/lua/client/ProjectYakuza/AttackTrailCatalog.lua",
-  "sha256": "e1133b164ecb8a9d6300a6055832014364804d377af083e2ddc6d7e9752ee8fd",
+  "sha256": "c940c785cecfbcb86bcdc729f351b839dc1f1a0eed92ca67d5a1c3804998135f",
   "clips": [
     {
       "profile": "bat",
@@ -947,6 +947,77 @@
             0.6486269979881344,
             0.3533736666530499,
             0.7631705451140862
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "blade",
+      "kind": "heatAction",
+      "animation": "ProjectYakuza_DD_KatanaHeat",
+      "impact": -1.0,
+      "kick": false,
+      "qte": [
+        0.6666666666666666,
+        0.9333333333333333,
+        1.8,
+        3.2333333333333334
+      ],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_KatanaHeat.x",
+      "clipSha256": "ed4d7896c2bd7222201e7b3bc7187714e4c0dc2db4e6e8c59a4028be28713693",
+      "samples": 141,
+      "duration": 4.666666666666667,
+      "windows": [
+        {
+          "track": "dd_trail_katanaheat_1",
+          "from": 0.5466666666666666,
+          "to": 0.8,
+          "contact": 0.6666666666666666,
+          "limb": "rightArm",
+          "scores": [
+            0.501363863608877,
+            0.5629780306988915,
+            0.08367791828960551,
+            0.06912392962585624
+          ]
+        },
+        {
+          "track": "dd_trail_katanaheat_2",
+          "from": 0.8133333333333334,
+          "to": 1.1333333333333333,
+          "contact": 0.9333333333333333,
+          "limb": "leftArm",
+          "scores": [
+            0.35244548904222756,
+            0.3083655265092659,
+            0.2148737169370212,
+            0.12805808483304348
+          ]
+        },
+        {
+          "track": "dd_trail_katanaheat_3",
+          "from": 1.6800000000000002,
+          "to": 2.0,
+          "contact": 1.8,
+          "limb": "rightArm",
+          "scores": [
+            0.27135304478868044,
+            0.3406309609363949,
+            0.05335908802419098,
+            0.08990352122239118
+          ]
+        },
+        {
+          "track": "dd_trail_katanaheat_4",
+          "from": 3.1133333333333333,
+          "to": 3.4333333333333336,
+          "contact": 3.2333333333333334,
+          "limb": "leftArm",
+          "scores": [
+            0.0903651282518162,
+            0.06465473109524411,
+            0.03460111758095864,
+            0.04804291632686988
           ]
         }
       ]

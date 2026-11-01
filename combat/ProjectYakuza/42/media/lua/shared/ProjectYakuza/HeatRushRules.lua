@@ -1,7 +1,24 @@
 require "ProjectYakuza/Registry"
 require "ProjectYakuza/HeatRushPaths"
+require "ProjectYakuza/KatanaHeatPaths"
 local R={duration=130/30,targetRange=2}
 ProjectYakuza.HeatRushRules=R
+function R.motion(action)
+    return action and action.motionId and ProjectYakuza.PairedMotions[action.motionId] or ProjectYakuza.HeatRushPaths
+end
+function R.durationFor(action)return action and action.duration or R.duration end
+function R.contacts(action)return action.qte and action.qte.prompts or action.contacts or {}end
+function R.noCombo(s,style,time)
+    if s.active or s.starting or (s.queued or 0)>0 or s.finisherMove or s.pendingFinisher or s.groundMove or s.directionalLight or s.queuedFinisher or s.queuedDouble or s.queuedWeaponHeavy then return false end
+    local ended=s.finisherFinishedAt or s.finishedAt
+    return (s.step or 0)==0 and not s.finisherBranch or ended~=nil and time-ended>style.comboResetMs
+end
+function R.weaponAllowed(p,style,action)
+    local held=p:getPrimaryHandItem()
+    if not action or not action.weaponHeat or not held or not ProjectYakuza.Weapons.profile(style.id,held)then return false end
+    for _,id in ipairs(action.weaponItems or {})do if held:getFullType()==id then return true end end
+    return false
+end
 function R.sample(path,time)
     local f=math.max(0,math.min(#path-1,time*30));local i=math.floor(f)+1;local a=path[i];local b=path[math.min(i+1,#path)];local t=f-math.floor(f)
     return a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t
@@ -52,17 +69,17 @@ function R.hold(z)
     if R.targetKind(z)=="zombie"then z:setTarget(nil);z:setUseless(true);z:setAttackOutcome("fail")
     else z:setBlockMovement(true);z:setAuthorizeMeleeAction(false)end
 end
-function R.lock(z)
+function R.lock(z,clip)
     ProjectYakuza.HitResponses.releaseStun(z)
     local old=R.capture(z)
     if R.targetKind(z)=="player"and z:isLocalPlayer()and ProjectYakuza.isEquipped(z)then ProjectYakuza.resetPlayer(z,"heat_rush_victim")end
-    R.hold(z);z:setVariable("ProjectYakuzaHeatRushVictim",true)
+    R.hold(z);z:setVariable("ProjectYakuzaPairedVictimClip",clip or "ProjectYakuza_DD_HeatRushVictim");z:setVariable("ProjectYakuzaHeatRushVictim",true)
     if R.targetKind(z)=="player"then z:setVariable("PerformingAction","ProjectYakuzaHeatRushVictim");z:setVariable("IsPerformingAnAction",true)end
     z:setHitReaction("ProjectYakuzaHeatRushVictim");z:reportEvent("wasHit")
     return old
 end
 function R.restore(z,old)
-    z:setVariable("ProjectYakuzaHeatRushVictim",false);z:setIgnoreMovement(old.ignore==true);z:setDeferredMovementEnabled(old.deferred~=false)
+    z:setVariable("ProjectYakuzaPairedVictimClip","");z:setVariable("ProjectYakuzaHeatRushVictim",false);z:setIgnoreMovement(old.ignore==true);z:setDeferredMovementEnabled(old.deferred~=false)
     if R.targetKind(z)=="zombie"then
         z:setUseless(old.useless==true)
         if not z:isDead()and z:getTarget()==nil then z:setTarget(old.target)end
@@ -74,15 +91,22 @@ function R.restore(z,old)
     if z:getHitReaction()=="ProjectYakuzaHeatRushVictim"then z:setHitReaction("");z:reportEvent("ActiveAnimFinishing")end
 end
 function R.space(p,job)
-    local P=ProjectYakuza.NetworkProtocol;local paths=ProjectYakuza.HeatRushPaths
+    local P=ProjectYakuza.NetworkProtocol;local paths=job.motion or ProjectYakuza.HeatRushPaths
     for _,path in ipairs({paths.actor,paths.victim})do
         for i=1,#path,8 do local x,y=R.point(job,path,(i-1)/30);if not P.path(p,x,y)then return false end end
-        local x,y=R.point(job,path,R.duration);if not P.path(p,x,y)then return false end
+        local x,y=R.point(job,path,job.duration or R.duration);if not P.path(p,x,y)then return false end
     end
     return true
 end
-function R.amount(action,index)
-    local prompt=action.qte and action.qte.prompts[index];if not prompt then return end
+function R.amount(action,index,held)
+    local prompt=R.contacts(action)[index];if not prompt then return end
+    if action.weaponHeat then
+        if not held then return end
+        local data=held:getModData()
+        local low=data.ProjectYakuzaHeatOriginalMin or held:getMinDamage()
+        local high=data.ProjectYakuzaHeatOriginalMax or held:getMaxDamage()
+        return math.max(0,math.min(20,(low+high)*.5))*(prompt.damageMultiplier or 1)
+    end
     if not R.base then R.base=instanceItem(ProjectYakuza.TOKEN)end
     if not R.base then return end
     return math.max(0,math.min(2,(R.base:getMinDamage()+R.base:getMaxDamage())*.5))*(prompt.damageMultiplier or 1)*1.5

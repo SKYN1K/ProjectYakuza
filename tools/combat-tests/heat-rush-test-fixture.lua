@@ -27,6 +27,8 @@ function token:getMinDamage()return self.min end;function token:getMaxDamage()re
 function token:setMinDamage(v)self.min=v end;function token:setMaxDamage(v)self.max=v end
 function token:getModData()return self.data end
 local creates=0;instanceItem=function(name)check(name==PY.TOKEN,'canonical damage item uses B42 factory');creates=creates+1;return {getMinDamage=function()return .3 end,getMaxDamage=function()return .5 end}end
+function p:isInvincible()return self.invincible==true end;function p:setInvincible(v)self.invincible=v end
+function p:isGhostMode()return self.ghost==true end;function p:setGhostMode(v)self.ghost=v end
 function p:getX()return self.x or 0 end;function p:getY()return self.y or 0 end
 function p:getIgnoreMovement()return self.ignore==true end;function p:setIgnoreMovement(v)self.ignore=v end
 function p:isBlockMovement()return self.blocked==true end
@@ -50,7 +52,9 @@ function z:setKnockedDown(v)self.knock=v end;function z:setFallOnFront()end
 function z:getOnlineID()return 25 end
 instanceof=function(obj,kind)return kind=='IsoZombie'and obj==z or kind=='IsoPlayer'and obj==p end
 do local _="ProjectYakuzaFixture:PATHS" end
+do local _="ProjectYakuzaFixture:KATANA_PATHS" end
 do local _="ProjectYakuzaFixture:RUSH_RULES" end
+do local _="ProjectYakuzaFixture:HEAT_ACTIONS" end
 do local _="ProjectYakuzaFixture:RUSH" end
 local committed=0;PY.on("attackCommitted",function(_,_,_,_,kind)if kind=="heatAction"then committed=committed+1 end end)
 local H=PY.HeatRush;local style=PY.getStyle('dragon_of_dojima');local R=PY.HeatRushRules
@@ -208,4 +212,54 @@ H.receive('ProjectYakuza','heatRushEnd',{player=2,action=101,session=3})
 H.updateRemote();check(not H.remote[2]and not victim.blocked and victim.authorize and not H.remoteHook,'remote player completion restores native input and drops the callback')
 function p:isLocalPlayer()return true end
 instanceof=originalInstanceof;isServer=serverFlag
+PY.HeatActions.clear();PY.Network=nil;mouse[0]=false;mouse[1]=false;mouse[2]=false
+PY.resetPlayer(p,'katana_test');p.x=0;p.y=0;z.x=1.1;z.y=0;z.health=10;z.knock=false;z.reaction=''
+PY.Heat.stop(p);PY.setHeat(p,100)
+local katana={data={},getFullType=function()return 'Base.Katana'end,getCondition=function()return 10 end,getMinDamage=function()return .8 end,getMaxDamage=function()return 1.2 end}
+function katana:getModData()return self.data end;function katana:setMinDamage()end;function katana:setMaxDamage()end
+p.held=katana;local blade=PY.getPlayerStyle(p);state=PY.stateFor(p)
+check(blade.weaponProfile=='blade'and blade.actions.heatAction.weaponHeat,'katana heat action belongs to the equipped DoD blade view')
+local baseBinding=PY.Bindings.byId.heatAction
+check(baseBinding and baseBinding.mode==3,'dedicated Heat Action binding defaults to MMB')
+local mode=4;local keyDown=false
+PY.Bindings.options={getOption=function(_,id)if id=='input_heatAction'then return {getValue=function()return mode end}elseif id=='key_heatAction'then return {getValue=function()return 37 end}end end}
+isKeyDown=function(key)return key==37 and keyDown end
+check(not PY.Bindings.pressed(p,'heatAction'),'remapped action starts released');keyDown=true
+check(PY.Bindings.pressed(p,'heatAction')and not PY.Bindings.pressed(p,'heatAction'),'remapped keyboard binding has one fresh edge')
+check(not H.weaponInput(p,state,blade,true)and not H.tickets[p],'keyboard aim alone cannot bypass literal RMB')
+mouse[1]=true;state.active=true;check(not H.weaponInput(p,state,blade,true),'active combo blocks weapon heat action')
+state.active=false;state.step=1;state.finishedAt=clock
+check(not H.weaponInput(p,state,blade,true),'combo follow-up window keeps normal finishers available')
+clock=clock+blade.comboResetMs+1
+check(R.noCombo(state,blade,clock),'expired neutral combo permits heat actions')
+state.step=0;state.finishedAt=nil
+local oldTargets=PY.MultiHit.targets;PY.MultiHit.targets=function()return {{victim=z}}end
+PY.setHeat(p,0);check(not H.weaponInput(p,state,blade,true),'no stock cannot start weapon heat action');PY.setHeat(p,100)
+local oldHit=z.Hit;function z:Hit(item,who,amount)check(item==katana and who==p,'katana action preserves actual weapon');self.hits=self.hits+1;self.health=self.health-amount end
+local beforeHeat=PY.getHeat(p);local beforeHits=z.hits
+check(H.weaponInput(p,state,blade,true),'remapped action starts only with physical RMB and neutral combo')
+local kc=PY.activeActions[p];check(kc and kc.action.weaponHeat and not kc.action.qte,'weapon action uses automatic source contacts')
+check(math.abs(beforeHeat-PY.getHeat(p)-PY.Heat.stockSize(p))<.000001,'weapon heat action consumes one stock once')
+local ka=kc.timedAction;ka.action={setOverrideHandModelsObject=function()end};phase=0;ka:start()
+check(p.invincible and p.ghost and z.vars.ProjectYakuzaPairedVictimClip=='ProjectYakuza_DD_KatanaHeatVictim','framework protects actor and selects the correct original victim clip')
+PY.HeatActions.zombie(z);check(z.target==nil,'protected attacker is cleared as a zombie target')
+for i,contact in ipairs(kc.action.contacts)do
+ phase=contact.atMs/1000;ka:update();ka:update()
+ check(z.hits==beforeHits+(i==4 and 1 or 0),'automatic contact timing is presentation-only until final damage '..i)
+end
+check(math.abs(z.health-8.5)<.000001,'weapon action damage uses canonical held weapon without repeated bonus')
+phase=kc.action.duration;ka:update()
+check(ka.cleaned and not p.invincible and p.ghost,'invulnerability ends with the action while targeting grace remains')
+clock=clock+499;PY.HeatActions.tick();check(p.ghost and not p.invincible,'targeting grace grants no extra invulnerability')
+clock=clock+1;PY.HeatActions.tick();check(not p.ghost and not PY.HeatActions.active[p],'targeting grace ends after exactly half a second')
+local protect=PY.HeatActions;local key={};p.ghost=true;p.invincible=true
+check(protect.begin(p,key,{duration=1}),'framework API accepts custom action owner');protect.finish(p,key);clock=clock+500;protect.tick()
+check(p.ghost and p.invincible,'framework preserves pre-existing native protection flags');p.ghost=false;p.invincible=false
+protect.begin(p,key,{duration=1});protect.finish(p,{});check(protect.active[p].playing,'stale action cleanup cannot unlock a newer owner');protect.clear()
+check(not p.ghost and not p.invincible and not protect.hooked,'world cleanup cannot leak protection')
+check(not protect.begin(p,key,{duration=0})and not protect.begin(p,key,{duration=1,targetGraceMs=2001}),'raw helper bounds protection durations')
+protect.begin(p,key,{duration=1});paused=true;clock=clock+5000;protect.tick();paused=false;protect.tick()
+check(p.invincible and p.ghost,'pausing does not consume live-action protection')
+protect.finish(p,key);clock=clock+500;protect.tick();check(not p.invincible and not p.ghost,'paused action still restores protection on finish')
+p.held=nil;z.Hit=oldHit;PY.MultiHit.targets=oldTargets;PY.Bindings.options=nil
 return true,'PASS '..checks..' generic QTE validation, custom bindings, fresh presses, replay safety, native-phase contacts, canonical damage, paired cleanup and interruption checks'

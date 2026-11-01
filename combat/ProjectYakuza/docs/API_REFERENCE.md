@@ -220,3 +220,8 @@ Version 0.66.0 expands the style-owned attack coating to all active DoD attack c
 A hit-response profile can use `kind="stun",force=0`. It freezes zombie AI/root movement for 250 ms without a stagger-back force; repeated hits refresh the same lease. Original useless/ignore/deferred-movement flags are restored at expiry or world exit. `HitResponses.releaseStun(victim)` releases a lease before another paired controller takes ownership. Nonzero stun force is rejected.
 
 A move can opt into boolean `noKnockback=true`. The Heat controller temporarily zeros the weapon's push/knockdown modifiers and disables native knockback/always-knockdown for that swing. Original values, including false booleans, restore on completion, interruption or saved-item preparation. `HitResponses.nativeHit(attacker,victim,item,amount,move)` applies the same scoped override around an authoritative supplemental native Hit and restores it even if Hit fails. It returns success,result; callers still own target/range/permission validation.
+
+
+## Heat Action protection (0.70.0)
+
+Shared `HeatActions.begin(player,ownerKey,definition)` and `HeatActions.finish(player,ownerKey)` manage action-only invulnerability and a default 500 ms targeting grace. Call them from actual native start and every cleanup path, including the authoritative server handler. See [Heat Actions](HEAT_ACTIONS.md) for ownership, watchdog/pause behavior, stock/fuel costs and paired contact contracts.

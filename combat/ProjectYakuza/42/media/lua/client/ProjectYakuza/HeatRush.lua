@@ -1,6 +1,7 @@
 require "ProjectYakuza/Runtime"
 require "ProjectYakuza/NetworkProtocol"
 require "ProjectYakuza/HeatRushRules"
+require "ProjectYakuza/HeatActions"
 require "ProjectYakuza/AttackEffects"
 require "ProjectYakuza/Defense"
 require "TimedActions/ISBaseTimedAction"
@@ -36,13 +37,18 @@ function H.discard(p,ticket)
 end
 function H.input(p,s,style)
     local ticket=H.tickets[p];if not ticket then return false end
-    if not p:isAiming()or PY.Bindings.down("finisher")then H.discard(p,ticket);return false end
-    if not style.heatRush or not PY.Heat.isExtreme(p)or now()>ticket.expires+(ticket.sent and 1000 or 0) or not R.validTarget(p,ticket.z)then H.discard(p,ticket);return false end
+    if not p:isAiming()or ticket.weapon and not isMouseButtonDown(1)or not ticket.weapon and PY.Bindings.down("finisher")then H.discard(p,ticket);return false end
+    local action=style.actions.heatAction
+    if ticket.weapon then
+        local cost=action and (action.heatStocks or 0)*PY.Heat.stockSize(p)or 0
+        if not R.weaponAllowed(p,style,action)or not R.noCombo(s,style,now())or PY.actionHeat(p,action)<cost then H.discard(p,ticket);return false end
+    elseif not style.heatRush or not PY.Heat.isExtreme(p)then H.discard(p,ticket);return false end
+    if now()>ticket.expires+(ticket.sent and 1000 or 0)or not R.validTarget(p,ticket.z)then H.discard(p,ticket);return false end
     local down=PY.Bindings.down("light")
     if down and not s.lastDown then ticket.pressed=true end
     if not ticket.pressed then return false end
     s.queued=0
-    if PY.MultiHit then
+    if not ticket.weapon and PY.MultiHit then
         local waiting=PY.MultiHit.waiting(p,ticket.stamp)
         if waiting=="timeout"then H.discard(p,ticket);return false end
         if waiting then return true end
@@ -56,7 +62,7 @@ function H.input(p,s,style)
             ticket.granted=answer
         end
         if not ticket.granted then
-            if not ticket.sent then ticket.sent=now();H.requestSerial=(H.requestSerial or 0)+1;ticket.request=H.requestSerial;PY.Network.capture(p,true);PY.Network.send(p,"heatRushBegin",{zombie=ticket.z:getOnlineID(),targetKind=R.targetKind(ticket.z),request=ticket.request})end
+            if not ticket.sent then ticket.sent=now();H.requestSerial=(H.requestSerial or 0)+1;ticket.request=H.requestSerial;PY.Network.capture(p,true);PY.Network.send(p,"heatRushBegin",{zombie=ticket.z:getOnlineID(),targetKind=R.targetKind(ticket.z),request=ticket.request,weaponHeat=ticket.weapon==true})end
             if now()-ticket.sent>1000 then H.tickets[p]=nil end
             return true
         end
@@ -68,29 +74,51 @@ function H.input(p,s,style)
     if not ok and ticket.granted then PY.Network.send(p,"heatRushEnd",{action=ticket.granted.action})end
     return true
 end
+function H.weaponInput(p,s,style,pressed)
+    if not pressed or H.tickets[p]or not isMouseButtonDown(1)or not p:isAiming()or PY.activeActions[p]or not R.noCombo(s,style,now())then return false end
+    local action=style.actions.heatAction
+    if not R.weaponAllowed(p,style,action)or PY.actionHeat(p,action)<(action.heatStocks or 0)*PY.Heat.stockSize(p)then return false end
+    local selected,distance
+    local function consider(z)
+        if R.validTarget(p,z)and PY.NetworkProtocol.path(p,z:getX(),z:getY())then
+            local dx,dy=z:getX()-p:getX(),z:getY()-p:getY();local d=dx*dx+dy*dy
+            if not distance or d<distance then selected=z;distance=d end
+        end
+    end
+    local origin=PY.MultiHit.origin(p,R.targetRange);if not origin then return false end
+    for _,entry in ipairs(PY.MultiHit.targets(p,origin,false,{},16))do consider(entry.victim)end
+    if isClient()then
+        local players=getOnlinePlayers();for i=0,players:size()-1 do consider(players:get(i))end
+    elseif getNumActivePlayers then for i=0,getNumActivePlayers()-1 do consider(getSpecificPlayer(i))end end
+    if not selected then return false end
+    H.tickets[p]={z=selected,pressed=true,weapon=true,expires=now()+600}
+    return H.input(p,s,style)
+end
 local A=ISBaseTimedAction:derive("ProjectYakuzaHeatRushAction");H.Action=A
 function A:isUsingTimeout()return false end
 function A:adjustMaxTime(v)return v end
 function A:isValid()
     local p=self.character;local z=self.context.target.z;local style=PY.getPlayerStyle(p)
-    return style and style.id==self.context.style.id and PY.isEquipped(p)and p:getPrimaryHandItem()==self.held and not p:isDead()and not p:isOnFloor()and not p:isKnockedDown()and not p:getVehicle()and not p:isClimbing()and (p:getHitReaction()or"")==""and z and not z:isDead()and (R.targetKind(z)~="player"or R.playerAllowed(p,z))
+    return style and style.id==self.context.style.id and PY.isEquipped(p)and p:getPrimaryHandItem()==self.held and not p:isDead()and not p:isOnFloor()and not p:isKnockedDown()and not p:getVehicle()and not p:isClimbing()and (p:getHitReaction()or"")==""and z and (not z:isDead()or self.finalRequested)and (R.targetKind(z)~="player"or R.playerAllowed(p,z))
 end
 function H.align(job,time)
-    local paths=PY.HeatRushPaths;local p,z=job.p,job.z
+    local paths=job.motion or PY.HeatRushPaths;local p,z=job.p,job.z
     local x,y=R.point(job,paths.actor,time);local zx,zy=R.point(job,paths.victim,time)
-    if not PY.NetworkProtocol.path(p,x,y)or not PY.NetworkProtocol.path(z,zx,zy)then return false end
-    PY.Defense.snapActor(p,x,y);PY.Defense.snapActor(z,zx,zy);p:setTargetAndCurrentDirection(job.fx,job.fy);z:setTargetAndCurrentDirection(job.fx,job.fy)
+    if not PY.NetworkProtocol.path(p,x,y)or not z:isDead()and not PY.NetworkProtocol.path(z,zx,zy)then return false end
+    PY.Defense.snapActor(p,x,y);p:setTargetAndCurrentDirection(job.fx,job.fy)
+    if not z:isDead()then PY.Defense.snapActor(z,zx,zy);z:setTargetAndCurrentDirection(job.fx,job.fy)end
     p:getMovementLastFrame():set(0,0);p:setMoving(false);p:setRunning(false);p:setSprinting(false);return true
 end
 function A:start()
-    local p,z=self.character,self.context.target.z;self.started=true;self.last=now();self.elapsed=0;self.index=1;self.success={};self.qte=PY.QTE.create(self.context.action.qte,PY.Bindings.down,self.context)
+    local p,z=self.character,self.context.target.z;self.started=true;self.last=now();self.elapsed=0;self.index=1;self.success={};self.qte=self.context.action.qte and PY.QTE.create(self.context.action.qte,PY.Bindings.down,self.context)
     self.old={block=p:isBlockMovement(),ignore=p:getIgnoreMovement(),deferred=p:isDeferredMovementEnabled()};p:setBlockMovement(true);p:setIgnoreMovement(true);p:setDeferredMovementEnabled(false)
     local granted=self.context.target.granted;local f=p:getForwardDirection()
     self.pose={p=p,z=z,x=granted and granted.x or p:getX(),y=granted and granted.y or p:getY(),fx=granted and granted.fx or f:getX(),fy=granted and granted.fy or f:getY()}
-    self.victim=R.lock(z)
-    PY.setVisual(p,true,self.context.action.nodeValue);p:setVariable("ProjectYakuzaStyle",self.context.style.id);p:setVariable("ProjectYakuzaWeaponProfile","");p:setVariable("ProjectYakuzaHeatRush","")
+    self.pose.motion=R.motion(self.context.action);self.pose.duration=R.durationFor(self.context.action)
+    self.victim=R.lock(z,self.context.action.targetAnimation)
+    PY.setVisual(p,true,self.context.action.nodeValue);p:setVariable("ProjectYakuzaStyle",self.context.style.id);p:setVariable("ProjectYakuzaWeaponProfile",self.context.style.weaponProfile or "");p:setVariable("ProjectYakuzaHeatRush","")
     self:setActionAnim(self.context.action.animation);self.action:setOverrideHandModelsObject(self.held,nil,false)
-    H.active[p]=self;PY.Heat.onSwing(p,{damageMultiplier=1})
+    H.active[p]=self;PY.HeatActions.begin(p,self,self.context.action);PY.Heat.onSwing(p,{damageMultiplier=1})
     if not H.align(self.pose,0)then self:forceStop()end
     if not self.cleaned then PY.emit("attackCommitted",p,self.context.style,self.context.action,self.context,"heatAction")end
     if granted then PY.Network.send(p,"heatRushReady",{action=granted.action})end
@@ -98,12 +126,13 @@ end
 function A:contact(index)
     if not self.success[index]then return end
     local p,z=self.character,self.context.target.z;local granted=self.context.target.granted
+    if index==#R.contacts(self.context.action)then self.finalRequested=true end
     if granted then PY.Network.send(p,"heatRushHit",{action=granted.action,index=index});return end
-    local amount=R.amount(self.context.action,index);if not amount then return end
+    local amount=R.amount(self.context.action,index,self.held);if not amount then return end
     if R.targetKind(z)=="player"and not R.playerAllowed(p,z)then return end
-    z:Hit(self.held,p,amount,false,1)
+    if amount>0 then z:Hit(self.held,p,amount,false,1)end
     if PY.HitEffects then PY.HitEffects.spawn(p,z,true)end
-    if PY.Feedback then PY.Feedback.play(p,PY.Feedback.sound(p,"heavyImpact"),.55)end
+    if PY.Feedback then PY.Feedback.play(p,PY.Feedback.sound(p,R.contacts(self.context.action)[index].cue or "heavyImpact"),.55)end
     PY.emit("heatRushHit",p,z,index)
 end
 function A:update()
@@ -117,21 +146,29 @@ function A:update()
         self.seen=true;self.elapsed=phase;self.wait=0
     else self.wait=(self.wait or 0)+dt;if self.seen or self.wait>650 then self:forceStop()end;return end
     if not H.align(self.pose,self.elapsed)then self:forceStop();return end
-    PY.QTE.update(self.qte,self.elapsed*1000,PY.Bindings.down,function(kind,index,success,prompt)
+    if self.qte then PY.QTE.update(self.qte,self.elapsed*1000,PY.Bindings.down,function(kind,index,success,prompt)
         self.index=self.qte.index
         local grant=self.context.target.granted
         if kind=="input"and grant then PY.Network.send(self.character,"heatRushPress",{action=grant.action,index=index})end
         if kind=="result"then self.success[index]=success;if success and self.elapsed*1000-prompt.atMs<=120 then self:contact(index)end end
     end)
-    if self.elapsed>=R.duration-.025 or self.character:GetVariable("ProjectYakuzaHeatRush")=="done"then self:forceComplete()end
+    else
+        local contacts=R.contacts(self.context.action)
+        while contacts[self.index]and self.elapsed*1000>=contacts[self.index].atMs do
+            local i=self.index;self.index=i+1
+            if self.elapsed*1000-contacts[i].atMs<=120 then self.success[i]=true;self:contact(i)end
+        end
+    end
+    if self.elapsed>=self.pose.duration-.025 or self.character:GetVariable("ProjectYakuzaHeatRush")=="done"then self:forceComplete()end
 end
 function A:cleanup(done)
     if self.cleaned then return end;self.cleaned=true;local p,z=self.character,self.context.target.z;H.active[p]=nil
     if self.started then
-        PY.QTE.cancel(self.qte,done and "complete"or"interrupted")
+        PY.HeatActions.finish(p,self)
+        if self.qte then PY.QTE.cancel(self.qte,done and "complete"or"interrupted")end
         p:setBlockMovement(self.old.block==true);p:setIgnoreMovement(self.old.ignore==true);p:setDeferredMovementEnabled(self.old.deferred);p:setVariable("ProjectYakuzaHeatRush","")
         R.restore(z,self.victim)
-        if not isClient()and done and self.success[#self.context.action.qte.prompts]and not z:isDead()then z:setKnockedDown(true);z:setFallOnFront(false)end
+        if not isClient()and done and self.success[#R.contacts(self.context.action)]and not z:isDead()then z:setKnockedDown(true);z:setFallOnFront(false)end
     end
     local granted=self.context.target.granted;if granted then PY.Network.send(p,"heatRushEnd",{action=granted.action,completed=done==true})end
     if PY.activeActions[p]==self.context then if done then PY.completeAction(p)else PY.cancelAction(p,"heat_rush_interrupted")end end
@@ -144,9 +181,12 @@ function A:new(c)local a=ISBaseTimedAction.new(self,c.player);a.context=c;a.held
 PY.registerStyleActionHandler("dragon_of_dojima","heatAction",{
     canStart=function(c)
         local p=c.player;local ticket=c.target;local cfg=c.style.heatRush
-        if not p:isAiming()or p:isDead()or p:isOnFloor()or p:isKnockedDown()or p:getVehicle()or p:isClimbing()or (p:getHitReaction()or"")~=""or not cfg or not c.action.heatRush or not ticket or isClient()and not ticket.granted or not PY.Heat.isExtreme(p)or not R.validTarget(p,ticket.z)then return false,"not_ready"end
+        if not p:isAiming()or p:isDead()or p:isOnFloor()or p:isKnockedDown()or p:getVehicle()or p:isClimbing()or (p:getHitReaction()or"")~=""or not ticket or isClient()and not ticket.granted or not R.validTarget(p,ticket.z)then return false,"not_ready"end
+        if c.action.weaponHeat then
+            if not isMouseButtonDown(1)or not R.weaponAllowed(p,c.style,c.action)or not R.noCombo(PY.stateFor(p),c.style,now())then return false,"neutral_aim_required"end
+        elseif not cfg or not c.action.heatRush or not PY.Heat.isExtreme(p)then return false,"not_ready"end
         if p:hasTimedActions()or p:isAttackStarted()or p:isPerformingAttackAnimation()then return false,"native_attack_busy"end
-        local f=p:getForwardDirection();return R.space(p,{x=p:getX(),y=p:getY(),fx=f:getX(),fy=f:getY()}),"blocked_space"
+        local f=p:getForwardDirection();return R.space(p,{x=p:getX(),y=p:getY(),fx=f:getX(),fy=f:getY(),motion=R.motion(c.action),duration=R.durationFor(c.action)}),"blocked_space"
     end,
     start=function(c)
         PY.resetPlayer(c.player,"heat_rush_started");local a=A:new(c);c.timedAction=a;c.requestedAt=now();local ok,q=pcall(ISTimedActionQueue.add,a)
@@ -175,7 +215,7 @@ function H.remoteEnd(id,action,packet)
     local job=H.remote[id];if not job or job.action~=action then return end;H.remote[id]=nil
     local z=job.z;local saved=R.targetKind(z)=="zombie"and packet or job.old
     if saved and saved~=job.old then saved={useless=saved.useless,ignore=saved.ignore,deferred=saved.deferred,target=job.old.target}end
-    R.restore(z,saved or job.old)
+    PY.HeatActions.finish(job.p,job);R.restore(z,saved or job.old)
 end
 function H.session(id,session)
     if PY.Network and not PY.Network.acceptSession(id,session)then return false end
@@ -203,26 +243,29 @@ function H.receive(module,command,a)
         if previous and previous.action>a.action then return end
         if not previous or previous.action~=a.action then previous={action=a.action,seen={}};H.contacts[a.player]=previous end
         if previous.seen[a.index]then return end;previous.seen[a.index]=true;previous.at=now()
-        if p:isLocalPlayer()and PY.Feedback then PY.Feedback.play(p,PY.Feedback.sound(p,"heavyImpact"),.55)end
+        if p:isLocalPlayer()and PY.Feedback then PY.Feedback.play(p,PY.Feedback.sound(p,({heavyImpact=true,punchImpact=true})[a.cue]and a.cue or "heavyImpact"),.55)end
         return
     end
-    if command~="heatRushPose"or p:isLocalPlayer()or not PY.NetworkProtocol.integer(a.action,1,1000000000)or not PY.NetworkProtocol.number(a.age,0,R.duration)or not PY.NetworkProtocol.number(a.x,-1000000,1000000)or not PY.NetworkProtocol.number(a.y,-1000000,1000000)or not PY.NetworkProtocol.number(a.fx,-1,1)or not PY.NetworkProtocol.number(a.fy,-1,1)then return end
+    if command~="heatRushPose"or p:isLocalPlayer()or not PY.NetworkProtocol.integer(a.action,1,1000000000)or not PY.NetworkProtocol.number(a.age,0,5)or not PY.NetworkProtocol.number(a.x,-1000000,1000000)or not PY.NetworkProtocol.number(a.y,-1000000,1000000)or not PY.NetworkProtocol.number(a.fx,-1,1)or not PY.NetworkProtocol.number(a.fy,-1,1)then return end
     if not H.session(a.player,a.session)then return end
     if a.action<=(H.ended[a.player]or 0)then return end
     local z=R.target(p,a.zombie,a.targetKind);if not z then return end
     local old=H.remote[a.player]
     if old and old.action>a.action then return end
     if old and old.action~=a.action then H.remoteEnd(a.player,old.action);old=nil end
+    local motion=a.motionId and PY.PairedMotions[a.motionId]
+    if a.motionId and not motion then return end
     local job=old or {p=p,z=z,action=a.action,old=R.capture(z)}
+    job.motion=motion;job.duration=motion and motion.duration or R.duration
     job.x,job.y,job.fx,job.fy,job.age,job.at=a.x,a.y,a.fx,a.fy,a.age,now();H.remote[a.player]=job
-    if not old then job.old=R.lock(z)end
+    if not old then job.old=R.lock(z,motion and motion.targetAnimation);PY.HeatActions.begin(p,job,{duration=job.duration})end
     if not H.remoteHook then Events.OnTick.Add(H.updateRemote);H.remoteHook=true end
 end
 function H.updateRemote()
     local t=now();local active=false
     for id,job in pairs(H.remote)do
-        if t-job.at>1000 or job.p:isDead()or job.z:isDead()then H.remoteEnd(id,job.action)
-        else active=true;if not isGamePaused()then H.align(job,math.min(R.duration,job.age+(t-job.at)/1000))end end
+        if t-job.at>1000 or job.p:isDead()or job.z:isDead()and not job.motion then H.remoteEnd(id,job.action)
+        else active=true;if not isGamePaused()then H.align(job,math.min(job.duration or R.duration,job.age+(t-job.at)/1000))end end
     end
     for key,job in pairs(H.contacts or {})do if t-job.at>6000 then H.contacts[key]=nil end end
     if not active and H.remoteHook then Events.OnTick.Remove(H.updateRemote);H.remoteHook=false end

@@ -107,3 +107,6 @@ Armed ready/run selectors now reference existing B42 poses: `Bob_IdleAim1Hand` f
 ## Per-style Heat rules (0.64.0)
 
 Optional `heatConfig` sets per-style gain, normal/Extreme drain and 1..32 stock capacity. Weapon profiles inherit and merge field overrides. Taunt rewards, stock-priced actions, the built-in orb row, custom UI context and server activation protection use the effective capacity. Omitted configuration leaves DoD unchanged. See [Heat configuration](HEAT_CONFIGURATION.md) for bounds, defaults, APIs, stock retention and network requirements.
+
+
+Base.Katana now supports the DoD-exclusive [katana Heat Action](HEAT_ACTIONS.md). Other blade items retain their existing combos/heavies. Its supplied motion preserves the complete paired recovery and repairs native hand-to-weapon offsets.

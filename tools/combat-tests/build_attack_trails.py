@@ -10,7 +10,7 @@ EXPORT="""local rows={}
 local function add(profile,kind,m)
  if not m or not m.animation then return end
  if not ({light=true,ground=true,directional=true,finisher=true,chargedHeavy=true,quickstepAttack=true,runningAttack=true,heatAction=true,parry=true})[kind]then return end
- local times={};for _,q in ipairs(m.qte and m.qte.prompts or {})do times[#times+1]=q.atMs/1000 end
+ local times={};for _,q in ipairs(m.qte and m.qte.prompts or m.contacts or {})do times[#times+1]=q.atMs/1000 end
  rows[#rows+1]=table.concat({profile,kind,m.animation,tostring(m.duration or 0),tostring(m.speed or 1.6),tostring(m.impact or -1),table.concat(times,","),tostring(m.kick or false)},"|")
 end
 local function scan(profile,s)

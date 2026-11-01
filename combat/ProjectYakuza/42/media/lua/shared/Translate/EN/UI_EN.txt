@@ -16,6 +16,10 @@ UI_EN = {
 
     UI_ProjectYakuza_Key_light = "Light attack keyboard key",
 
+    UI_ProjectYakuza_Bind_heatAction = "Heat Action input (hold RMB, outside combos)",
+
+    UI_ProjectYakuza_Key_heatAction = "Heat Action keyboard key",
+
     UI_ProjectYakuza_Bind_finisher = "Finisher / double finisher input",
 
     UI_ProjectYakuza_Key_finisher = "Finisher / double finisher keyboard key",

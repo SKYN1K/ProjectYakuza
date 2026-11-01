@@ -48,6 +48,8 @@ function A:start()
     self.oldBlock=p:isBlockMovement();self.oldIgnore=p:getIgnoreMovement()
     self.oldDeferred=p:isDeferredMovementEnabled()
     self.anchorX,self.anchorY=p:getX(),p:getY()
+    local protection=ProjectYakuza.HeatActions;local grace=protection and protection.active[p]
+    if grace and not grace.playing then protection.restore(p,grace)end
     d.ProjectYakuzaActivationOldGhost=p:isGhostMode();d.ProjectYakuzaActivationOldInvincible=p:isInvincible()
     p:setBlockMovement(true);p:setIgnoreMovement(true)
     p:setDeferredMovementEnabled(false)

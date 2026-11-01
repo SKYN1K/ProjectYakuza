@@ -2,13 +2,15 @@
 
 Project Yakuza is a Build 42 combat mod and a framework for independent fighting-style addons. Dragon of Dojima uses supplied Yakuza/Kiwami animations, textures and sounds. Other styles register their own moves, assets and controllers without copying the framework.
 
-**Version 0.69.0 · Lua API 3 · MP protocol 2.** API 1 style registrations remain supported. Internal namespace/mod dependency: `ProjectYakuza`. Display name: Project Yakuza.
+**Version 0.70.0 · Lua API 3 · MP protocol 2.** API 1 style registrations remain supported. Internal namespace/mod dependency: `ProjectYakuza`. Display name: Project Yakuza.
 
 ## Install and play
 
 Extract the ZIP so `Zomboid/mods/ProjectYakuza/42/mod.info` exists. Enable Project Yakuza for the save. The server and every MP client need the same framework and addons. Restart after updating files.
 
 Choose **Inventory context menu > Combat styles > Dragon of Dojima** to equip the style token. Hold Z, choose a slot, then release Z. Left defaults to DoD, right starts empty, bottom opens assignments, top unequips the style. Selecting/reselecting DoD plays its 1.67-second entry: movement and attacks are locked, but the player remains vulnerable.
+
+Katana Heat Actions use a separate rebindable control (default RMB + MMB), only outside combos, costing one stock. Invulnerability ends with the action; zombie targeting protection lasts another 0.5 seconds. See [Heat Actions](docs/HEAT_ACTIONS.md).
 
 | Default input | Action |
 | --- | --- |

@@ -14,7 +14,7 @@ public class StunRushProbe {
   var node=Class.forName("zombie.core.skinnedmodel.advancedanimation.AnimNode");var state=Class.forName("zombie.core.skinnedmodel.advancedanimation.AnimState");var variables=Class.forName("zombie.core.skinnedmodel.advancedanimation.AnimationVariableSource");var source=Class.forName("zombie.core.skinnedmodel.advancedanimation.IAnimationVariableSource");var set=variables.getMethod("setVariable",String.class,String.class);var select=state.getMethod("getAnimNodes",source,List.class);
   for(String folder:new String[]{"actions","hitreactionpvp"}){
    var path=Path.of(args[0],folder,"ProjectYakuza_PVP_HeatRushVictim.xml");var parsed=node.getMethod("Parse",String.class).invoke(null,path.toAbsolutePath().toString());Object st=state.getConstructor().newInstance(),vars=variables.getConstructor().newInstance();state.getMethod("addNode",node).invoke(st,parsed);
-   set.invoke(vars,"ProjectYakuzaHeatRushVictim","true");if(((List<?>)select.invoke(st,vars,new ArrayList<>())).size()!=1)throw new AssertionError("player victim selector "+folder);
+   set.invoke(vars,"ProjectYakuzaHeatRushVictim","true");set.invoke(vars,"ProjectYakuzaPairedVictimClip","ProjectYakuza_DD_HeatRushVictim");if(((List<?>)select.invoke(st,vars,new ArrayList<>())).size()!=1)throw new AssertionError("player victim selector "+folder);
    set.invoke(vars,"ProjectYakuzaHeatRushVictim","false");if(!((List<?>)select.invoke(st,vars,new ArrayList<>())).isEmpty())throw new AssertionError("player victim selector leak "+folder);
   }
   System.out.println("PASS native weapon knockback/knockdown controls, native player Hit and PvP permission APIs, two scoped player victim state definitions; no game launch");

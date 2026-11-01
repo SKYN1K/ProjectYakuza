@@ -27,3 +27,8 @@ Heavy input (MMB by default) checks Tiger Drop before charging/finishers during 
 In Extreme Heat, the eighth light input can flow into DoD's paired three-hit finish if that strike hits a surviving, standing zombie or eligible PvP player and there is clear space. The first seven inputs may miss or hit different targets. The last character hit by the eighth strike is selected; earlier targets are not substituted. Press the currently configured finisher binding (MMB by default) freshly for each QTE prompt. A held button does not count. Input progress appears before the QTE. Native recovery and confirmed supplemental MP contacts finish before the paired handoff; pending contacts have a 500 ms timeout. PvP settings, safety, factions, non-PvP zones and protected players remain respected. Boost lights stun zombies in place for 250 ms and suppress native push/knockdown for the swing. Turning at least 145 degrees between a light and a first finisher selects its original reverse variant; a second finisher retains the matching variant.
 
 DoD attacks now consume [graded endurance](EXERTION.md): lights cost the least, heavies/finishers and charged attacks cost more. Misses count; repeated hit effects and multihit victims do not add costs. PZ handles the exertion moodle and recovery.
+
+
+## Katana Heat Action (0.70.0)
+
+The separate Heat Action binding defaults to MMB and is fully rebindable. Physical RMB must still be held. With DoD and Base.Katana equipped, use it outside a combo near a standing target with at least one stock. Combo follow-up windows retain normal heavies. The action grants invulnerability until it ends and zombie targeting protection for another 0.5 seconds. See [Heat Actions](HEAT_ACTIONS.md).

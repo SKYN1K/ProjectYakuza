@@ -1,6 +1,9 @@
-# Project Yakuza 0.69.0
+# Project Yakuza 0.70.0
 
-- Reduced Dragon of Dojima taunt voice volume by 15% using a 0.85 cue multiplier. Other combat voices retain their current volume.
-- Added optional per-style combatVoiceGains so the reserved cue multiplier composes with the style voice mix and existing Voices slider. Zero gain mutes the cue.
+- Added the original Yakuza 6 katana Heat Action from h23720_buki_e.par to Dragon of Dojima while holding Base.Katana. The attacker and victim retain all 141 source frames at 30 fps, with native weapon grip repair.
+- Added a separate Heat Action control, default MMB, rebindable under Options > Mods > Project Yakuza. Physical RMB remains mandatory. The action starts only outside combos, near an eligible standing target, and costs one heat stock (or the equivalent Extreme Heat fuel). Combo MMB finishers retain their existing behavior.
+- Added shared HeatActions protection for current and future action handlers. Invulnerability lasts only during the action; zombie targeting protection lasts through it and for 500 ms afterward. Native flags are restored on completion, interruption, watchdog expiry and world exit. Existing paired Heat Rush uses this lifecycle too.
+- Extended paired playback and server authorization to the katana motion, automatic source-timed contacts, typed player/zombie targets, victim clip isolation and event-free MP observers. The final source contact applies weapon damage; earlier contacts provide presentation without prematurely interrupting the victim motion.
+- Added source provenance, native importer/grip/node validation and offline input/protection/MP regression coverage. No AI, generated artwork/audio or upscaling is used. The relaxed-idle preview remains outside the mod.
 
-Existing CVF/audio checks, Lua compilation, comment policy and installation-byte verification pass. No audio/visual assets or separate voice-pack files are changed. Project Zomboid was not launched. Restart after updating. See VALIDATION_0.69.0.md.
+Project Zomboid was not launched. See [validation](VALIDATION_0.70.0.md). Install the same release on the server and clients and restart after updating.
