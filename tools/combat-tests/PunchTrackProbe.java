@@ -18,7 +18,7 @@ public class PunchTrackProbe {
   var clips=(Map)field(sk,"clips");var clip=clips.values().iterator().next();var ct=clip.getClass();float duration=(Float)ct.getMethod("getDuration").invoke(clip);
   var mat=Class.forName("org.lwjgl.util.vector.Matrix4f");var vec=Class.forName("org.lwjgl.util.vector.Vector3f");var quat=Class.forName("org.lwjgl.util.vector.Quaternion");var helper=Class.forName("zombie.core.skinnedmodel.HelperFunctions");
   var make=helper.getMethod("CreateFromQuaternionPositionScale",vec,quat,vec,mat);var mul=mat.getMethod("mul",mat,mat,mat);
-  String[] bones={"Bip01_L_Forearm","Bip01_L_Hand","Bip01_L_Finger1","Bip01_R_Forearm","Bip01_R_Hand","Bip01_R_Finger1"};
+  String[] bones={"Bip01_L_Forearm","Bip01_L_Hand","Bip01_L_Finger1","Bip01_R_Forearm","Bip01_R_Hand","Bip01_R_Finger1","Bip01_L_UpperArm","Bip01_R_UpperArm"};
   var out=new StringBuilder("{\"fps\":30,\"duration\":"+duration+",\"bones\":[");
   for(int i=0;i<bones.length;i++){if(i>0)out.append(',');out.append('"').append(bones[i]).append('"');}out.append("],\"frames\":[");
   int frames=Math.round(duration*30)+1;
@@ -48,6 +48,6 @@ public class PunchTrackProbe {
   var character=Class.forName("zombie.characters.IsoGameCharacter");
   for(String method:new String[]{"dbgGetAnimTrackName","dbgGetAnimTrackTime","dbgGetAnimTrackWeight"})character.getMethod(method,int.class,int.class);
   character.getMethod("getAnimAngleRadians");character.getMethod("getShoulderTwist");
-  out.append("]}");Files.writeString(Path.of(args[1]),out);System.out.println("PASS native original punch import/FK: "+frames+" samples, six bones, "+hierarchy.size()+" skeleton bones");
+  out.append("]}");Files.writeString(Path.of(args[1]),out);System.out.println("PASS native original punch import/FK: "+frames+" samples, eight bones, "+hierarchy.size()+" skeleton bones");
  }
 }

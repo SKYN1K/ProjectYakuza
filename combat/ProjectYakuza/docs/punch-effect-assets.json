@@ -1,5 +1,5 @@
 {
-  "version": "0.37.0",
+  "version": "0.65.0",
   "operation": "Numeric attachment paths only, extracted from shipped original-source retargeted punch via B42 native Jassimp/ProcessedAiScene and HelperFunctions FK. No image, sound or animation files created or modified.",
   "clip": {
     "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Light01.x",
@@ -8,14 +8,16 @@
   },
   "track": {
     "path": "42/media/lua/client/ProjectYakuza/AttackTracks.lua",
-    "sha256": "698f573e4b309944501fe84cbe43481e459231e14d46bd87560bb74ff070f2f0",
+    "sha256": "cce934a461d775e46fc0a92115f7b7ec4378336357ca8b371a66c7258f6f3c85",
     "fps": 30,
     "samples": 31,
     "bones": [
       "Bip01_L_Forearm",
       "Bip01_L_Hand",
       "Bip01_L_Finger1"
-    ]
+    ],
+    "upperArmBone": "Bip01_L_UpperArm",
+    "upperArmSamples": 31
   },
   "reused_textures": [
     {
@@ -354,5 +356,5 @@
     "Native walking, torso twist, blend-in/out and occlusion can differ; live GPU/MP appearance has not been tested.",
     "World sprites use the existing IsoSprite world-render path, not UI drawing."
   ],
-  "positioning": "v0.41 removes the approximate shoulder-yaw addition. Source fallback uses native body angle and existing conservative arm insets. Optional limbProvider supplies six absolute final-pose forearm/hand coordinates and bypasses sampled yaw and screen inset; no live provider is bundled. All source tracks/textures/sounds unchanged."
+  "positioning": "Lua-only whole-arm coating from native imported shoulder, forearm, hand and knuckle samples, continuous rendered body angle and short world-space pose history. No blended live-bone binding or model/skeleton edits. Existing texture, animation and sound bytes unchanged."
 }

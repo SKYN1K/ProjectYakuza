@@ -1,6 +1,6 @@
 # Documentation index
 
-Current manual: Project Yakuza 0.64.0, Lua API 3, MP protocol 2.
+Current manual: Project Yakuza 0.65.0, Lua API 3, MP protocol 2.
 
 | Task | Guide |
 | --- | --- |
@@ -15,6 +15,7 @@ Current manual: Project Yakuza 0.64.0, Lua API 3, MP protocol 2.
 | MP ownership and observer builder | [Multiplayer](MULTIPLAYER.md) |
 | Shuffled combat sounds and addon pools | [Sound variety](SOUND_VARIETY.md) |
 | Music, sounds, voices, HUD and effects | [Presentation](PRESENTATION.md) |
+| Full-arm coating and source-tracked limb trails | [Attack effects](ATTACK_EFFECTS.md) |
 | Replace a style's HUD and selector art | [Style UI API](STYLE_UI.md) |
 | Charged attacks and assets | [Charged heavies](CHARGED_HEAVY.md) |
 | Cancel lights into quicksteps | [Light quickstep cancels](LIGHT_QUICKSTEP_CANCELS.md) |
@@ -45,4 +46,4 @@ The JSON records identify original supplied files, conversions and hashes for re
 
 - [Manual directional attacks and taunt attention](DIRECTIONAL_AND_TAUNTS.md)
 
-- [Current validation](VALIDATION_0.64.0.md)
+- [Current validation](VALIDATION_0.65.0.md)

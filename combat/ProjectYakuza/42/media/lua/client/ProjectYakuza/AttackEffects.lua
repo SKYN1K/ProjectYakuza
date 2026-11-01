@@ -2,7 +2,7 @@ require "ProjectYakuza/Runtime"
 require "ProjectYakuza/WorldEffects"
 require "ProjectYakuza/AttackTracks"
 local PY=ProjectYakuza
-local F={states=setmetatable({}, {__mode="k"}),maxActors=8}
+local F={states=setmetatable({}, {__mode="k"}),maxActors=8,pointCount=22,historySize=12}
 PY.AttackEffects=F
 local function valid(p,s)
     local style=PY.getPlayerStyle(p)
@@ -33,6 +33,10 @@ end
 function F.sample(track,time,bone)
     local frame=math.max(0,math.min(#track.frames-1,time*track.fps))
     local index=math.floor(frame);local fraction=frame-index
+    if bone==4 and track.upperFrames then
+        local a=track.upperFrames[index+1];local b=track.upperFrames[math.min(index+2,#track.upperFrames)]
+        return a[1]+(b[1]-a[1])*fraction,a[2]+(b[2]-a[2])*fraction,a[3]+(b[3]-a[3])*fraction
+    end
     local a=track.frames[index+1];local b=track.frames[math.min(index+2,#track.frames)]
     local offset=(bone-1)*3
     return a[offset+1]+(b[offset+1]-a[offset+1])*fraction,
@@ -60,9 +64,9 @@ end
 function F.pose(p,s,time)
     local provider=F.limbProviders[s.config.limbProvider or "live"]
     if not provider or s.providerRetry and getTimestampMs()<s.providerRetry then return nil end
-    local ok,x,y,z,hx,hy,hz=pcall(provider,p,s.track.animation,time)
-    local values={x,y,z,hx,hy,hz}
-    for i=1,6 do local v=values[i]
+    local ok,x,y,z,hx,hy,hz,ux,uy,uz=pcall(provider,p,s.track.animation,time)
+    local values={x,y,z,hx,hy,hz,ux,uy,uz}
+    for i=1,(ux~=nil or uy~=nil or uz~=nil)and 9 or 6 do local v=values[i]
         if not ok or type(v)~="number" or v~=v or math.abs(v)>10000000 then s.providerRetry=getTimestampMs()+1000;return nil end
     end
     return values
@@ -101,14 +105,17 @@ function F.start(p,style,step,move)
     if not track or track.animation~=move.animation then return end
     local count=0;for _ in pairs(F.states) do count=count+1 end
     if count>=F.maxActors then return end
-    local s={style=style.id,track=track,config=config,clock=0,last=getTimestampMs()}
+    local s={style=style.id,track=track,config=config,clock=0,last=getTimestampMs(),history={},historyHead=0,historyCount=0,joints={},scratch={}}
+    for i=1,F.historySize do s.history[i]={}end
     if not valid(p,s) then return end
     F.states[p]=s
     if not F.hooked then Events.OnTick.Add(F.tick);Events.OnPostRender.Add(F.render);F.hooked=true end
 end
 function F.remote(p,style,packet)
-    local move=style and style.lightAttacks and style.lightAttacks[1]
-    if move and packet.clip==move.animation then F.start(p,style,1,move) else F.clear(p) end
+    for i,move in ipairs(style and style.lightAttacks or {})do
+        if move.attackEffects and packet.clip==move.animation then F.start(p,style,i,move);return end
+    end
+    F.clear(p)
 end
 function F.tick()
     local now=getTimestampMs();local paused=isGamePaused()
@@ -128,10 +135,11 @@ function F.tick()
         end
     end
 end
+local corePositions={.25,.62,1}
 local function sprite(path)
     local result=IsoSprite.CreateSprite(nil);result:LoadFramesNoDirPageSimple(path);return result
 end
-local function allocate(p,s)
+local function allocate(s)
     if not F.glint then
         F.glint=sprite("media/textures/ProjectYakuza/HitGlint.png")
         F.spark=sprite("media/textures/ProjectYakuza/ChargeSpark.png")
@@ -139,78 +147,123 @@ local function allocate(p,s)
         F.flame:LoadFramesNoDirPageDirect("media/textures/ProjectYakuza/ExtremeHeat","flame",64);F.flame:setAnimate(true)
     end
     local tile=Core.getTileScale();s.points={}
-    for i=1,18 do
-        local sp=(i==7 or i==8) and F.flame or i>=13 and F.spark or F.glint
-        local height=(i==7 or i==8 or i>=13) and 32 or 64
-        local scale=(i==6 and .16 or i==7 and .30 or i==8 and .36 or i>=13 and .20 or .105)*tile*1.25
-        local instance=PY.WorldEffects.detached(sp,scale,(i==7 and 1 or i==8 and .85 or 0))
-        s.points[i]={instance=instance,height=height,scale=scale}
+    for i=1,F.pointCount do
+        local flame=i<=11 or i>=15 and i<=18
+        local sp=flame and F.flame or i>=19 and F.spark or F.glint
+        local scale=(i<=11 and .44 or i==14 and .18 or i<=14 and .13 or i<=18 and .35 or .16)*tile
+        local instance=PY.WorldEffects.detached(sp,scale,flame and .72 or 0)
+        s.points[i]={instance=instance,height=(flame or i>=19)and 32 or 64,scale=scale}
     end
 end
-local function drawPoint(p,point,x,y,alpha,color,glow,wx,wy,wz)
-    SpriteRenderer.instance:setDoAdditive(false)
-    point.instance:SetAlpha(alpha);point.instance:SetTargetAlpha(alpha)
-    PY.WorldEffects.renderCentered(p,point.instance,point.height,point.scale,x,y,color,
-        wx and wx+.06,wy and wy+.06,wz)
+function F.armPoint(joints,t)
+    local ax,ay,az=joints[1],joints[2],joints[3]
+    local ex,ey,ez=joints[4],joints[5],joints[6]
+    local hx,hy,hz=joints[7],joints[8],joints[9]
+    local first=math.sqrt((ex-ax)^2+(ey-ay)^2+(ez-az)^2)
+    local second=math.sqrt((hx-ex)^2+(hy-ey)^2+(hz-ez)^2)
+    local distance=math.max(0,math.min(1,t))*(first+second)
+    if distance<=first and first>.000001 then local k=distance/first;return ax+(ex-ax)*k,ay+(ey-ay)*k,az+(ez-az)*k end
+    if second>.000001 then local k=(distance-first)/second;return ex+(hx-ex)*k,ey+(hy-ey)*k,ez+(hz-ez)*k end
+    return hx,hy,hz
 end
-local function hand(track,time,pose)
-    local wx,wy,wz=F.sampleLimb(track,time,2,pose);local ax,ay,az=F.sampleLimb(track,time,1,pose)
-    if pose then return wx,wy,wz end
-    local kx,ky,kz=F.sample(track,time,3)
-    return wx+(kx-wx)*.35,wy+(ky-wy)*.35,wz+(kz-wz)*.35
+function F.worldJoints(p,s,time,pose)
+    local angle=F.facing(p);local x,y,z=p:getX(),p:getY(),p:getZ()
+    local ex,ey,ez=F.sample(s.track,time,1)
+    local hx,hy,hz=F.sample(s.track,time,2)
+    local kx,ky,kz=F.sample(s.track,time,3)
+    local ux,uy,uz=ex,ey,ez
+    if s.track.upperFrames then ux,uy,uz=F.sample(s.track,time,4)end
+    local _,_,uwx,uwy,uwz=F.project(ux,uy,uz,angle,1)
+    local _,_,ewx,ewy,ewz=F.project(ex,ey,ez,angle,1)
+    local _,_,hwx,hwy,hwz=F.project(hx+(kx-hx)*.35,hy+(ky-hy)*.35,hz+(kz-hz)*.35,angle,1)
+    local j=s.joints
+    if pose then
+        j[1],j[2],j[3]=pose[7]or pose[1]+uwx-ewx,pose[8]or pose[2]+uwy-ewy,pose[9]or pose[3]+uwz-ewz
+        j[4],j[5],j[6]=pose[1],pose[2],pose[3];j[7],j[8],j[9]=pose[4],pose[5],pose[6]
+    else
+        j[1],j[2],j[3]=x+uwx,y+uwy,z+uwz;j[4],j[5],j[6]=x+ewx,y+ewy,z+ewz;j[7],j[8],j[9]=x+hwx,y+hwy,z+hwz
+    end
+    if s.rootX and ((s.rootX-x)^2+(s.rootY-y)^2>1 or math.abs(s.rootZ-z)>.5)then s.historyCount=0;s.recordedAt=nil end
+    s.rootX,s.rootY,s.rootZ=x,y,z
+    return j
 end
-
+function F.record(s)
+    if s.recordedAt and s.clock-s.recordedAt<8 then return end
+    s.historyHead=s.historyHead%F.historySize+1
+    local row=s.history[s.historyHead];row.at=s.clock
+    for i=1,9 do row[i]=s.joints[i]end
+    s.recordedAt=s.clock;s.historyCount=math.min(F.historySize,s.historyCount+1)
+end
+function F.historyPose(s,target,out)
+    local newer
+    for age=0,s.historyCount-1 do
+        local row=s.history[(s.historyHead-age-1+F.historySize)%F.historySize+1]
+        if target>=row.at then
+            local k=newer and newer.at>row.at and math.max(0,math.min(1,(target-row.at)/(newer.at-row.at)))or 0
+            for i=1,9 do out[i]=newer and row[i]+(newer[i]-row[i])*k or row[i]end
+            return true
+        end
+        newer=row
+    end
+    return false
+end
+local function drawPoint(p,s,index,x,y,z,alpha,color)
+    if alpha<=.001 then return end
+    local point=s.points[index]
+    if point.alpha~=alpha then point.instance:SetAlpha(alpha);point.instance:SetTargetAlpha(alpha);point.alpha=alpha end
+    point.instance:render(p,x,y,z,IsoDirections.N,0,-point.height*point.scale/2,color)
+end
 function F.draw()
-    local tile=Core.getTileScale()
-    if not F.normal then F.normal=ColorInfo.new(.70,.86,1,1);F.extreme=ColorInfo.new(.62,.76,1,1) end
-    for p,s in pairs(F.states) do
+    if not F.normal then F.normal=ColorInfo.new(.70,.86,1,1);F.extreme=ColorInfo.new(.62,.76,1,1)end
+    local now=getTimestampMs();local paused=isGamePaused()
+    for p,s in pairs(F.states)do
+        local dt=math.max(0,now-s.last);s.last=now;if not paused then s.clock=s.clock+dt end
         local time=s.time
-        if not isGamePaused() then
+        if not paused then
             local current,weight,location=F.findTrack(p,s.track.animation,s.location)
-            if current and weight>=.05 and (not time or current>=time-.02) then time=current;s.time=current;s.weight=weight;s.location=location end
+            if current and weight>=.05 and (not time or current>=time-.02)then time=current;s.time=current;s.weight=weight;s.location=location end
         end
         if time and time>=s.config.from and time<=s.config.to+.12 then
-            if not s.points then allocate(p,s) end
-            local angle=F.facing(p);local pose=F.pose(p,s,time)
+            if not s.points then allocate(s)end
+            local pose=F.pose(p,s,time);local joints=F.worldJoints(p,s,time,pose)
+            if not paused then F.record(s)end
             local extreme=PY.Heat.isExtreme(p);local color=extreme and F.extreme or F.normal
-            local fade=math.min(1,(time-s.config.from)/.035,math.max(0,(s.config.to+.06-time)/.06))*math.min(1,s.weight)
-            local strength=extreme and .90 or .82
-            local wx,wy,wz=F.sampleLimb(s.track,time,2,pose);local ax,ay,az=F.sampleLimb(s.track,time,1,pose)
-            local fx,fy,fz=hand(s.track,time,pose)
-            local hx,hy,hwx,hwy,hwz=F.projectLimb(p,fx,fy,fz,angle,tile,pose)
-
-            for i=1,6 do
-                local x,y,dx,dy,dz
-                if i==6 then x,y,dx,dy,dz=hx,hy,hwx,hwy,hwz
-                else local t=.08+i*.12;x,y,dx,dy,dz=F.projectLimb(p,ax+(wx-ax)*t,ay+(wy-ay)*t,az+(wz-az)*t,angle,tile,pose) end
-                drawPoint(p,s.points[i],x,y,fade*strength*(i==6 and 1 or .70),color,false,dx,dy,dz)
+            local fade=math.max(0,math.min(1,(time-s.config.from)/.04,(s.config.to+.06-time)/.06))*math.min(1,s.weight)
+            local animate=not paused and s.lastFlameClock~=s.clock
+            for i=1,11 do
+                local x,y,z=F.armPoint(joints,(i-1)/10)
+                local alpha=fade*(extreme and .34 or .28)*(.90+.10*math.sin(s.clock*.012+i*.8))
+                if animate then F.flame:update(s.points[i].instance)end
+                drawPoint(p,s,i,x,y,z,alpha,color)
             end
-            for i=7,8 do
-                if not isGamePaused() then F.flame:update(s.points[i].instance) end
-                local x,y,dx,dy,dz=hx,hy,hwx,hwy,hwz
-                if i==7 then x,y,dx,dy,dz=F.projectLimb(p,ax+(wx-ax)*.65,ay+(wy-ay)*.65,az+(wz-az)*.65,angle,tile,pose) end
-                drawPoint(p,s.points[i],x,y,fade*strength*.8,color,false,dx,dy,dz)
+            for i=12,14 do
+                local x,y,z=F.armPoint(joints,corePositions[i-11])
+                drawPoint(p,s,i,x,y,z,fade*(extreme and .25 or .20),color)
             end
-            for i=9,12 do
-                local lag=(i-8)*.006;local x,y,z=hand(s.track,math.max(s.config.from,time-lag),pose)
-                local dx,dy,dwx,dwy,dwz=F.projectLimb(p,x,y,z,angle,tile,pose)
-                drawPoint(p,s.points[i],dx,dy,fade*strength*(13-i)*.10,color,false,dwx,dwy,dwz)
-            end
-            for i=13,18 do
-                local point=s.points[i];local birth=(i-10)/30;local age=time-birth
-                if age>=0 and age<.10 then
-                    local t=age/.10
-                    local x,y=hx+((i-13)%3-1)*2*t*tile,hy-(1+(i-13)*.3)*t*tile
-                    drawPoint(p,point,x,y,(1-t)*strength,color,false,hwx,hwy,hwz)
+            for i=15,18 do
+                local lag=(i-14)*18
+                if F.historyPose(s,s.clock-lag,s.scratch)then
+                    local x,y,z=F.armPoint(s.scratch,i%2==1 and 1 or .65)
+                    if animate then F.flame:update(s.points[i].instance)end
+                    drawPoint(p,s,i,x,y,z,fade*.24*(1-lag/100),color)
                 end
             end
+            for i=19,22 do
+                local age=(s.clock+(i-19)*23)%92
+                if F.historyPose(s,s.clock-age,s.scratch)then
+                    local x,y,z=F.armPoint(s.scratch,1);local k=age/92
+                    local angle=(i-19)*math.pi/2
+                    drawPoint(p,s,i,x+math.cos(angle)*.055*k,y+math.sin(angle)*.055*k,z+.035*k,fade*.55*(1-k),color)
+                end
+            end
+            if animate then s.lastFlameClock=s.clock end
         end
     end
 end
 function F.render()
     local renderer=SpriteRenderer.instance;local previous=renderer:getDoAdditive();renderer:setDoAdditive(false)
     local ok,err=pcall(F.draw);renderer:setDoAdditive(previous)
-    if not ok then F.clearAll();error(err) end
+    if not ok then F.clearAll();error(err)end
 end
 PY.on("lightAttackStarted",F.start)
 PY.on("lightAttackFinished",F.clear)

@@ -124,11 +124,11 @@ Charged moves may set `minChargedDamageMultiplier` (0..damageMultiplier). DoD he
 
 ## Charge recovery and world anchors (0.37.0)
 
-`ChargedHeavy.wantsRecovery(player,combo,style)` reports a ready held first-finisher charge intent; Runtime still requires the existing hit/chain markers before ending recovery. `heavyChargeStarted` adds an optional fourth context argument for presentation before action registry publication. Existing listener arguments are unchanged. `WorldEffects.renderCentered` accepts optional relative world anchor XYZ after color, compensating their projection to retain the requested screen centre; limb effects use them for native depth. Omitted anchors preserve existing callers. `attackEffects.verticalOffset` is an optional per-move downwards offset in sprite-pixel units.
+`ChargedHeavy.wantsRecovery(player,combo,style)` reports a ready held first-finisher charge intent; Runtime still requires the existing hit/chain markers before ending recovery. `heavyChargeStarted` adds an optional fourth context argument for presentation before action registry publication. Existing listener arguments are unchanged. `WorldEffects.renderCentered` accepts optional relative world anchor XYZ after color, compensating their projection to retain the requested screen centre; limb effects use them for native depth. Omitted anchors preserve existing callers. Punch coating uses absolute world coordinates without a fixed screen inset.
 
 ### 0.38.0 presentation refinement
 
-AttackEffects.facing(player) combines getAnimAngleRadians with math.rad(getShoulderTwist()) for the punch prototype. Its project helper remains the unchanged native body-space projection used by charge effects. No Java bridge is required. HeatAura completion echoes now last 750ms, reuse the normal aura animation and replace the ordinary body pass to avoid stacking brightness.
+AttackEffects.facing(player) reads the continuous rendered getAnimAngleRadians value without an additional shoulder-twist rotation. Its project helper remains the unchanged native body-space projection used by charge effects. No Java bridge is required. HeatAura completion echoes now last 750ms, reuse the normal aura animation and replace the ordinary body pass to avoid stacking brightness.
 
 ### 0.39.0 approved taunt colour copies
 
@@ -142,7 +142,7 @@ Optional style.hitResponses defines named flinch/stagger/knockdown profiles with
 
 Optional style.juggling and move.juggle={kind="launch"/"followup"/"ender"} enable bounded launcher/followup windows, hit/relaunch caps, landing cooldown, victim animation variables and start/hit/end events. No airborne assets or physical lift are supplied by the core. SP/server confirmed hits drive the state; optional result metadata and ordered end packets mirror it in MP. DoD remains unconfigured. See [Juggling](JUGGLING.md) for limits, presentation ownership, cancellation and examples.
 
-AttackEffects.registerLimbProvider(id,fn) optionally consumes final forearm/hand world positions from a compatible external adapter; removeLimbProvider(id,fn) unregisters it. No adapter is bundled. See [punch effects](ATTACK_EFFECTS.md). HeatAura now uses the native ColorInfo:set method rather than Lua field writes.
+AttackEffects.registerLimbProvider(id,fn) optionally consumes forearm/hand and optional shoulder world positions from a compatible external adapter; removeLimbProvider(id,fn) unregisters it. No adapter is bundled. See [punch effects](ATTACK_EFFECTS.md). HeatAura now uses the native ColorInfo:set method rather than Lua field writes.
 
 ## Light quickstep cancels (0.44.0)
 

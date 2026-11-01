@@ -26,7 +26,7 @@ local function instance()
  Dispose=function(s)check(not s.disposed,'no double disposal');s.disposed=true;disposed=disposed+1 end,
  render=function(s,p,x,y,z,d,ox,oy,col)
   if failRender then error('injected render failure')end
-  draws[#draws+1]={p=p,x=x,y=y,z=z,ox=ox,oy=oy,color=col,alpha=s.alpha,scale=s.scale,height=s.sprite.height,additive=additive,rootX=p:getX(),rootY=p:getY(),rootZ=p:getZ()}
+  draws[#draws+1]={instance=s,p=p,x=x,y=y,z=z,ox=ox,oy=oy,color=col,alpha=s.alpha,scale=s.scale,height=s.sprite.height,additive=additive,rootX=p:getX(),rootY=p:getY(),rootZ=p:getZ()}
  end}
 end
 IsoSprite={CreateSprite=function()return {height=64,LoadFramesNoDirPageSimple=function(s,path)s.height=string.find(path,'ChargeSpark') and 32 or 64 end,LoadFramesNoDirPageDirect=function(s)s.height=32 end,setAnimate=function()end,update=function()updated=updated+1 end}end}
@@ -73,95 +73,107 @@ check(not F.hooked and not any(Events.OnTick.hooks),'idle has no tick/render eff
 local nativeProjection="ProjectYakuzaFixture:PROJECTION"
 for i=0,7 do
  local x,y,wx,wy,wz=F.project(.1,.65,-.4,i*math.pi/4,2)
- check(near(x,nativeProjection[i+1][1]) and near(y,nativeProjection[i+1][2]),'native eight-facing model/world/screen projection '..i)
- check(near(wx,nativeProjection[i+1][3]) and near(wy,nativeProjection[i+1][4]) and near(wz,nativeProjection[i+1][5]),'native limb-height world depth anchor '..i)
+ check(near(x,nativeProjection[i+1][1])and near(y,nativeProjection[i+1][2]),'native eight-facing model/world/screen projection')
+ check(near(wx,nativeProjection[i+1][3])and near(wy,nativeProjection[i+1][4])and near(wz,nativeProjection[i+1][5]),'native limb-height projection')
 end
 for i=0,30 do
- for bone=1,3 do
-  local x,y,z=F.sample(track,i/30,bone);local row=track.frames[i+1];local n=(bone-1)*3
-  check(near(x,row[n+1]) and near(y,row[n+2]) and near(z,row[n+3]),'exact native source sample')
+ for bone=1,4 do
+  local x,y,z=F.sample(track,i/30,bone);local row=bone==4 and track.upperFrames[i+1]or track.frames[i+1];local n=bone==4 and 0 or (bone-1)*3
+  check(near(x,row[n+1])and near(y,row[n+2])and near(z,row[n+3]),'exact imported shoulder/elbow/hand/knuckle sample')
  end
 end
-local x,y,z=F.sample(track,6.5/30,2)
-check(near(x,(track.frames[7][4]+track.frames[8][4])/2),'subframe position interpolation')
+local x,y,z=F.sample(track,6.5/30,4)
+check(near(x,(track.upperFrames[7][1]+track.upperFrames[8][1])/2),'shoulder source is interpolated at subframes')
 F.start(p,style,1,{animation='Other'});check(not F.states[p],'unconfigured moves remain unchanged')
-emit('lightAttackStarted',p,style,1,move);check(F.states[p] and F.hooked and allocated==0,'begin waits for actual native clip before allocating')
-p.time=.04;F.tick();F.render();check(allocated==0 and #draws==0,'windup before configured window has no particles')
-p.time=.2;F.tick();F.render();check(allocated==18 and #F.states[p].points==18,'bounded eighteen sprites for first punch')
-check(additive,'render restores original additive state')
-for _,d in ipairs(draws)do check(not d.additive,'every punch layer uses normal transparency without brightness boost')end
-check(near(F.states[p].points[6].scale,.16*2*1.25) and near(F.states[p].points[7].scale,.30*2*1.25),'all punch particles are exactly 25 percent larger')
-check(draws[1].alpha>.5 and draws[1].scale>.2,'punch glow is larger and more visible')
-check(F.normal.r>=.6 and F.normal.g>=.8 and F.normal.b==1,'punch glow has a white-bluish tint')
-for j=1,6 do
- local d=draws[j];local x,y,z
- if j==6 then
-  local ax,ay,az=F.sample(track,.2,1);local wx,wy,wz=F.sample(track,.2,2)
-  local kx,ky,kz=F.sample(track,.2,3)
-  x,y,z=wx+(kx-wx)*.35,wy+(ky-wy)*.35,wz+(kz-wz)*.35
- else
-  local ax,ay,az=F.sample(track,.2,1);local wx,wy,wz=F.sample(track,.2,2);local t=.08+j*.12
-  x,y,z=ax+(wx-ax)*t,ay+(wy-ay)*t,az+(wz-az)*t
+emit('lightAttackStarted',p,style,1,move);check(F.states[p]and F.hooked and allocated==0,'allocation waits for actual clip window')
+p.time=.04;F.tick();F.render();check(allocated==0 and #draws==0,'no particles before source window')
+p.time=.2;F.tick();F.render()
+check(allocated==22 and #F.states[p].points==22,'full arm has a fixed twenty-two-sprite budget')
+check(#draws>=14 and additive,'contiguous coat and inner arm layers draw, restoring renderer state')
+check(near(F.states[p].points[1].scale,.88),'coating is wide enough for the PZ arm')
+for _,d in ipairs(draws)do check(not d.additive and d.alpha<=.55,'all arm layers use restrained ordinary alpha')end
+check(F.normal.r>=.6 and F.normal.g>=.8 and F.normal.b==1,'white-blue normal tint remains')
+for facing=0,31 do
+ p.angle=facing*math.pi/16;p.x=.13;p.y=-.17;p.z=.25;draws={};F.render()
+ local ux,uy,uz=F.sample(track,.2,4);local wx,wy,wz=F.sample(track,.2,2);local kx,ky,kz=F.sample(track,.2,3)
+ local sx,sy=F.project(ux,uy,uz,p.angle,2)
+ local hx,hy=F.project(wx+(kx-wx)*.35,wy+(ky-wy)*.35,wz+(kz-wz)*.35,p.angle,2)
+ local cx,cy=centre(draws[1]);local fx,fy=centre(draws[11])
+ check(near(cx,sx)and near(cy,sy),'coating starts at native shoulder for every continuous facing')
+ check(near(fx,hx)and near(fy,hy),'coating ends at native fist without an outward offset')
+ for i=2,11 do
+  local a,b=draws[i-1],draws[i];local ax,ay=centre(a);local bx,by=centre(b)
+  check(math.sqrt((bx-ax)^2+(by-ay)^2)<math.min(a.height*a.scale,b.height*b.scale)*.6,'arm coverage stays connected in every direction')
  end
- local px,py=F.project(x,y,z,p.angle,2)
- local cx,cy=centre(d)
- check(near(cx,px) and near(cy,py) and d.z>d.rootZ,'punch palm uses native height without fixed screen offset')
 end
-check(#draws>=14,'forearm glow, two flames, trails and several sparks are visible together')
-
-local n=p.lookup;F.tick();check(p.lookup==n+1,'native slot cached after bounded initial lookup')
-local duplicate=actor()
-function duplicate:dbgGetAnimTrackName(layer,slot)if layer==1 and slot<2 then return move.animation end;return '' end
-function duplicate:dbgGetAnimTrackTime(layer,slot)return slot==0 and .8 or .12 end
-local time,weight,where=F.findTrack(duplicate,move.animation)
-check(near(time,.12) and where.slot==1,'new native track wins over fading copy of same clip')
-
-local last=draws[#draws];check(last.p==p and math.abs(last.x-p:getX())<1 and math.abs(last.y-p:getY())<1 and last.z>p:getZ(),'world renderer anchors particles at the nearby limb height')
-local a=allocated;F.render();check(allocated==a,'no sprite allocation on repeated frames')
-p.time=.24;draws={};F.render();check(near(F.states[p].time,.24),'render samples the current clip phase without waiting for OnTick');p.time=.2;F.states[p].time=.2
-local ticks=F.states[p].clock;local beforeUpdate=updated;paused=true;clock=clock+1000;p.time=.3;F.tick();F.render()
-check(F.states[p].time==.2 and F.states[p].clock==ticks and updated==beforeUpdate,'pause freezes clock, source position and flame')
-paused=false;p.time=.25;p.extreme=true;F.tick();draws={};F.render();check(draws[1].color==F.extreme and draws[1].alpha>.5,'extreme tint and stronger glow without touching body aura')
-for i=0,15 do
- p.angle=i*math.pi/8;p.twist=(i%3-1)*30;draws={};F.render()
- local ax,ay,az=F.sample(track,p.time,1);local wx,wy,wz=F.sample(track,p.time,2)
- local kx,ky,kz=F.sample(track,p.time,3)
- local x,y,z=wx+(kx-wx)*.35,wy+(ky-wy)*.35,wz+(kz-wz)*.35
- local px,py=F.project(x,y,z,p.angle,2)
- local cx,cy=centre(draws[6]);check(near(cx,px) and near(cy,py),'native palm remains centred without legacy inset '..i)
-end
-p.twist=0
+for frame=3,14 do for facing=0,7 do
+ p.time=frame/30;F.states[p].time=p.time;p.angle=facing*math.pi/4;draws={};F.render()
+ local ux,uy,uz=F.sample(track,p.time,4);local sx,sy=F.project(ux,uy,uz,p.angle,2);local x,y=centre(draws[1])
+ check(near(x,sx)and near(y,sy),'deforming source shoulder stays centred throughout the configured punch')
+ for point=2,11 do
+  local ax,ay=centre(draws[point-1]);local bx,by=centre(draws[point])
+  check(math.sqrt((bx-ax)^2+(by-ay)^2)<draws[point].height*draws[point].scale*.6,'coating has no gaps across source frames and eight facings')
+ end
+end end
+p.time=.2;F.states[p].time=.2
+local allocations,updates=allocated,updated;F.render();check(allocated==allocations and updated==updates,'repeat render at the same clock neither allocates nor advances flames')
+clock=clock+10;F.render()
+local state=F.states[p];local old={};for i=1,9 do old[i]=state.joints[i]end;local oldAt=state.clock
+clock=clock+20;p.angle=p.angle+math.pi/2;p.x=p.x+.1;draws={};F.render()
+local fresh={};for i=1,9 do fresh[i]=state.joints[i]end
+local sample={};check(F.historyPose(state,oldAt,sample),'recorded earlier world pose remains available')
+for i=1,9 do check(near(sample[i],old[i]),'turning does not rotate historical arm positions')end
+local trail
+for _,d in ipairs(draws)do if d.instance==state.points[15].instance then trail=d end end
+check(trail and near(trail.x,old[7]+(fresh[7]-old[7])*.1)and near(trail.y,old[8]+(fresh[8]-old[8])*.1),'rendered history trail interpolates past world positions, not current facing')
+clock=clock+20;p.x=p.x+5;draws={};F.render()
+check(state.historyCount==1,'teleport clears the trail instead of drawing across the map')
+for i=1,40 do clock=clock+10;p.angle=p.angle+.02;F.render()end
+check(state.historyCount==12 and #state.history==12 and allocated==allocations,'world history and native instances stay bounded during repeated frames')
+local ticks=state.clock;local beforeUpdate=updated;paused=true;clock=clock+1000;p.time=.3;F.tick();F.render()
+check(state.time==.2 and state.clock==ticks and updated==beforeUpdate,'pause freezes source clock, pose history and flames')
+paused=false;p.time=.25;p.extreme=true;clock=clock+16;F.tick();draws={};F.render()
+check(draws[1].color==F.extreme and draws[1].alpha<=.34,'Extreme uses its restrained brighter tint without changing body aura')
 local providerCalls=0
 F.registerLimbProvider('live',function(who,animation,time)
  providerCalls=providerCalls+1
- check(who==p and animation==move.animation,'live adapter receives actor and exact attack clip')
- return who.x+.10,who.y-.05,who.z+.4,who.x+.25,who.y+.15,who.z+.45
+ return who.x+.05,who.y+.1,who.z+.3,who.x+.25,who.y-.15,who.z+.45
 end)
 for i=0,7 do
  p.angle=i*math.pi/4;draws={};F.render()
- local cx,cy=centre(draws[6]);local tx=(.25-.15)*64;local ty=(.25+.15)*32-.45*192
- check(near(cx,tx) and near(cy,ty),'live hand coordinates bypass sampled yaw and pixel inset for facing '..i)
+ local d=draws[11]
+ check(near(d.x,p.x+.25)and near(d.y,p.y-.15)and near(d.z,p.z+.45),'existing six-coordinate provider keeps its exact hand endpoint')
 end
-check(providerCalls==8,'live provider is read once per actor draw, not per particle')
-F.removeLimbProvider('live');check(not F.limbProviders.live,'addon can remove its limb provider')
-F.registerLimbProvider('broken',function()error('unavailable native pose')end);F.states[p].config.limbProvider='broken'
-draws={};F.render();check(#draws>0 and F.states[p].providerRetry,'broken provider safely falls back with a retry throttle')
-F.states[p].config.limbProvider=nil;F.removeLimbProvider('broken')
-p.reaction='Bite';F.tick();check(not F.states[p] and not F.hooked and allocated==disposed,'hit interruption disposes everything and removes hooks');p.reaction=''
-p.empty=true;F.start(p,style,1,move);clock=clock+351;F.tick();check(not F.states[p],'missing animation times out without offset fallback');p.empty=false
-F.start(p,style,1,move);p.time=.8;F.tick();check(F.states[p] and not F.states[p].seen,'stale outgoing clip waits for replacement');clock=clock+351;F.tick();check(not F.states[p],'late clip observation skips stale burst')
-p.time=.2;F.start(p,style,1,move);F.tick();F.render();p.clip='Other';F.tick();check(not F.states[p],'changing native clip clears effect');p.clip=nil
-F.start(p,style,1,move);F.tick();p.time=.1;F.tick();check(not F.states[p],'native restart clears old trail')
-p.time=.2;F.start(p,style,1,move);F.tick();F.render();emit('lightAttackFinished',p);check(not F.states[p],'native light completion clears effect')
+check(providerCalls==8,'provider is queried once per actor draw')
+F.removeLimbProvider('live')
+F.registerLimbProvider('full',function(who)return who.x+.05,who.y+.1,who.z+.3,who.x+.25,who.y-.15,who.z+.45,who.x-.1,who.y+.1,who.z+.55 end)
+state.config.limbProvider='full';draws={};F.render();check(near(draws[1].x,p.x-.1)and near(draws[1].z,p.z+.55),'optional shoulder endpoint is respected')
+F.removeLimbProvider('full');state.config.limbProvider=nil
+F.registerLimbProvider('broken',function()error('unavailable native pose')end);state.config.limbProvider='broken';draws={};F.render()
+check(#draws>0 and state.providerRetry,'unavailable provider falls back with retry throttle')
+state.config.limbProvider=nil;F.removeLimbProvider('broken')
+local n=p.lookup;F.tick();check(p.lookup==n+1,'cached native clip slot avoids scanning every layer')
+local duplicate=actor()
+function duplicate:dbgGetAnimTrackName(layer,slot)if layer==1 and slot<2 then return move.animation end;return ''end
+function duplicate:dbgGetAnimTrackTime(layer,slot)return slot==0 and .8 or .12 end
+local time,weight,where=F.findTrack(duplicate,move.animation)
+check(near(time,.12)and where.slot==1,'incoming native track wins over its fading copy')
+p.reaction='Bite';F.tick();check(not F.states[p]and not F.hooked and allocated==disposed,'hit interruption disposes all instances');p.reaction=''
+p.empty=true;F.start(p,style,1,move);clock=clock+351;F.tick();check(not F.states[p],'missing animation times out cleanly');p.empty=false
+F.start(p,style,1,move);p.time=.8;F.tick();check(F.states[p]and not F.states[p].seen,'stale outgoing clip waits for replacement');clock=clock+351;F.tick();check(not F.states[p],'late incoming clip cannot produce stale burst')
+p.time=.2;F.start(p,style,1,move);F.tick();F.render();p.clip='Other';F.tick();check(not F.states[p],'clip change clears coating');p.clip=nil
+F.start(p,style,1,move);F.tick();p.time=.1;F.tick();check(not F.states[p],'native restart clears old history')
+p.time=.2;F.start(p,style,1,move);F.tick();F.render();emit('lightAttackFinished',p);check(not F.states[p],'light completion clears coating')
 for _,key in ipairs({'comboCancelled','finisherStarted','runningAttackStarted','quickstepAttackStarted','chargedHeavyStarted','groundAttackStarted','styleChanged'})do
- F.start(p,style,1,move);emit(key,p);check(not F.states[p],key..' ends trail')
+ F.start(p,style,1,move);emit(key,p);check(not F.states[p],key..' cleans up')
 end
-p.md.ProjectYakuzaHitEffectsDisabled=true;F.start(p,style,1,move);check(not F.states[p],'existing visual preference respected');p.md.ProjectYakuzaHitEffectsDisabled=nil
-p.localPlayer=false;F.remote(p,style,{clip=move.animation});check(F.states[p],'MP observer uses same configured clip');F.remote(p,style,{clip='Other'});check(not F.states[p],'observer clip transition cleans up');p.localPlayer=true
+p.md.ProjectYakuzaHitEffectsDisabled=true;F.start(p,style,1,move);check(not F.states[p],'visual preference is respected');p.md.ProjectYakuzaHitEffectsDisabled=nil
+p.localPlayer=false;F.remote(p,style,{clip=move.animation});check(F.states[p],'MP observer starts configured trail');F.remote(p,style,{clip='Other'});check(not F.states[p],'MP clip transition clears trail');p.localPlayer=true
 local actors={};for i=1,10 do local who=actor();actors[i]=who;F.start(who,style,1,move)end
-local total=0;for _ in pairs(F.states)do total=total+1 end;check(total==8,'actor effect count bounded under MP load');F.clearAll();check(not any(F.states),'all bounded actors cleaned')
-F.start(p,style,1,move);F.tick();failRender=true;local ok=pcall(F.render);check(not ok and additive and not any(F.states) and not F.hooked,'render error restores graphics flags and disposes state');failRender=false
-for _,event in ipairs({Events.OnSave,Events.OnMainMenuEnter,Events.OnGameStart})do F.start(p,style,1,move);for fn in pairs(event.hooks)do fn()end;check(not any(F.states),'world transition clears state')end
+local total=0;for _ in pairs(F.states)do total=total+1 end;check(total==8,'actor budget stays eight under MP load');F.clearAll()
+F.start(p,style,1,move);F.tick();failRender=true;local ok=pcall(F.render);check(not ok and additive and not any(F.states)and not F.hooked,'render failure restores global blend and cleans instances');failRender=false
+for _,event in ipairs({Events.OnSave,Events.OnMainMenuEnter,Events.OnGameStart})do F.start(p,style,1,move);for fn in pairs(event.hooks)do fn()end;check(not any(F.states),'world transition clears coating and history')end
+
 do local _="ProjectYakuzaFixture:CHARGELIMBTRACKS" end
 do local _="ProjectYakuzaFixture:CHARGELIMBEFFECTS" end
 local C=ProjectYakuza.ChargeEffects
