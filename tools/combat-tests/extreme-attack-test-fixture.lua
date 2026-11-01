@@ -27,6 +27,15 @@ reset();activate();H.states[p].fuel=1;p:AttemptAttack()
 check(not H.isExtreme(p) and state().activeLightMove==style.extremeLightAttacks[1],'final cost-depleted swing retains boost clip')
 fire('OnPlayerUpdate',p);check(p.vars.ProjectYakuzaMove==style.extremeLightAttacks[1].nodeValue,'depletion cannot change playing boost pose')
 finish();p:AttemptAttack();check(state().step==1 and state().activeLightMove==style.lightAttacks[1],'normal chain restarts after mode ends');finish();reset()
+for last=5,8 do
+ reset();activate()
+ for i=1,last do PY.Combo.press(state(),8,1);p:AttemptAttack();finish()end
+ H.stop(p,'depleted')
+ fire('OnPlayerUpdate',p)
+ check(p.vars.ProjectYakuzaMove==style.lightAttacks[1].nodeValue,'depleted extended chain restores ready pose '..last)
+ p:AttemptAttack();check(state().step==1 and state().activeLightMove==style.lightAttacks[1],'depleted extended chain restarts normal attack '..last);finish()
+end
+reset()
 for _,profile in ipairs({'bat','knife','blade'})do
  local v=PY.Weapons.views[style.id][profile];check(not v.extremeLightAttacks and not v.heatRush and not v.directionalFinishers,'weapons isolate boost input '..profile)
 end

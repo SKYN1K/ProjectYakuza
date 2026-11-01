@@ -1,6 +1,7 @@
 require "ProjectYakuza/Runtime"
 require "ProjectYakuza/WorldEffects"
 require "ProjectYakuza/AttackTracks"
+require "ProjectYakuza/AttackTrailCatalog"
 local PY=ProjectYakuza
 local F={states=setmetatable({}, {__mode="k"}),maxActors=8,pointCount=22,historySize=12}
 PY.AttackEffects=F
@@ -64,7 +65,7 @@ end
 function F.pose(p,s,time)
     local provider=F.limbProviders[s.config.limbProvider or "live"]
     if not provider or s.providerRetry and getTimestampMs()<s.providerRetry then return nil end
-    local ok,x,y,z,hx,hy,hz,ux,uy,uz=pcall(provider,p,s.track.animation,time)
+    local ok,x,y,z,hx,hy,hz,ux,uy,uz=pcall(provider,p,s.track.animation,time,s.track.limb)
     local values={x,y,z,hx,hy,hz,ux,uy,uz}
     for i=1,(ux~=nil or uy~=nil or uz~=nil)and 9 or 6 do local v=values[i]
         if not ok or type(v)~="number" or v~=v or math.abs(v)>10000000 then s.providerRetry=getTimestampMs()+1000;return nil end
@@ -98,31 +99,48 @@ end
 function F.clearAll()
     for p in pairs(F.states) do F.clear(p) end
 end
-function F.start(p,style,step,move)
+function F.configuration(style,move)
+    if not move then return end
+    local catalog=style and PY.AttackEffectCatalog and PY.AttackEffectCatalog[style.id]
+    return move.attackEffects or catalog and catalog[move.animation]
+end
+function F.start(p,style,step,move,stamp)
+    local old=F.states[p]
+    if stamp and old and old.stamp==stamp and old.move==move then return end
     F.clear(p)
-    local config=move and move.attackEffects
+    local config=F.configuration(style,move)
     local track=config and PY.AttackTracks[config.track]
     if not track or track.animation~=move.animation then return end
     local count=0;for _ in pairs(F.states) do count=count+1 end
     if count>=F.maxActors then return end
-    local s={style=style.id,track=track,config=config,clock=0,last=getTimestampMs(),history={},historyHead=0,historyCount=0,joints={},scratch={}}
+    local seed=p.getOnlineID and p:getOnlineID()or 0
+    local s={style=style.id,track=track,config=config,move=move,stamp=stamp,seed=seed%97,timeout=math.max(1200,(config.duration or (#track.frames-1)/track.fps)*2000+500),chaos=type(config.chaos)=="number"and math.max(0,math.min(1,config.chaos))or .65,clock=0,last=getTimestampMs(),history={},historyHead=0,historyCount=0,joints={},scratch={}}
     for i=1,F.historySize do s.history[i]={}end
     if not valid(p,s) then return end
     F.states[p]=s
     if not F.hooked then Events.OnTick.Add(F.tick);Events.OnPostRender.Add(F.render);F.hooked=true end
 end
 function F.remote(p,style,packet)
+    local animation=packet.clip
+    if style and PY.NetworkProtocol then local clip=PY.NetworkProtocol.clip(style.id,packet.clip);animation=clip and clip.animation or animation end
     for i,move in ipairs(style and style.lightAttacks or {})do
-        if move.attackEffects and packet.clip==move.animation then F.start(p,style,i,move);return end
+        if move.attackEffects and animation==move.animation then F.start(p,style,i,move);return end
     end
-    F.clear(p)
+    local catalog=style and PY.AttackEffectCatalog and PY.AttackEffectCatalog[style.id]
+    local config=catalog and catalog[animation]
+    if config then F.start(p,style,0,config)else F.clear(p)end
 end
+function F.window(s,time)
+    if not s.config.windows then return s.config end
+    for _,window in ipairs(s.config.windows)do if time>=window.from and time<=window.to then return window end end
+end
+
 function F.tick()
     local now=getTimestampMs();local paused=isGamePaused()
     for p,s in pairs(F.states) do
         local dt=math.max(0,now-s.last);s.last=now
         if not paused then s.clock=s.clock+dt end
-        if not valid(p,s) or s.clock>1200 then F.clear(p)
+        if not valid(p,s) or s.clock>s.timeout then F.clear(p)
         elseif not paused then
             local time,weight,location=F.findTrack(p,s.track.animation,s.location)
             s.location=location
@@ -224,14 +242,24 @@ function F.draw()
             if current and weight>=.05 and (not time or current>=time-.02)then time=current;s.time=current;s.weight=weight;s.location=location end
         end
         if time and time>=s.config.from and time<=s.config.to+.12 then
+            local window=F.window(s,time)
+            if window then
+            if s.windowRef~=window then
+                s.windowRef=window;s.track=PY.AttackTracks[window.track];s.historyCount=0;s.recordedAt=nil
+            end
             if not s.points then allocate(s)end
             local pose=F.pose(p,s,time);local joints=F.worldJoints(p,s,time,pose)
             if not paused then F.record(s)end
             local extreme=PY.Heat.isExtreme(p);local color=extreme and F.extreme or F.normal
-            local fade=math.max(0,math.min(1,(time-s.config.from)/.04,(s.config.to+.06-time)/.06))*math.min(1,s.weight)
+            local fade=math.max(0,math.min(1,(time-window.from)/.04,(window.to+.06-time)/.06))*math.min(1,s.weight)
             local animate=not paused and s.lastFlameClock~=s.clock
             for i=1,11 do
-                local x,y,z=F.armPoint(joints,(i-1)/10)
+                local t=(i-1)/10;local x,y,z=F.armPoint(joints,t)
+                local envelope=math.sin(t*math.pi)*s.chaos
+                local noise=(math.sin(time*73+i*1.9+s.seed)*.012+math.sin(time*119-i*2.4+s.seed)*.008)*envelope
+                local dx,dy=joints[8]-joints[2],joints[1]-joints[7];local length=math.sqrt(dx*dx+dy*dy)
+                if length>.00001 then x=x+dx/length*noise;y=y+dy/length*noise end
+                z=z+math.sin(time*91+i*2.7+s.seed)*.009*envelope
                 local alpha=fade*(extreme and .34 or .28)*(.90+.10*math.sin(s.clock*.012+i*.8))
                 if animate then F.flame:update(s.points[i].instance)end
                 drawPoint(p,s,i,x,y,z,alpha,color)
@@ -252,11 +280,12 @@ function F.draw()
                 local age=(s.clock+(i-19)*23)%92
                 if F.historyPose(s,s.clock-age,s.scratch)then
                     local x,y,z=F.armPoint(s.scratch,1);local k=age/92
-                    local angle=(i-19)*math.pi/2
-                    drawPoint(p,s,i,x+math.cos(angle)*.055*k,y+math.sin(angle)*.055*k,z+.035*k,fade*.55*(1-k),color)
+                    local angle=(i-19)*math.pi/2+s.chaos*math.sin(time*67+i+s.seed)
+                    drawPoint(p,s,i,x+math.cos(angle)*(.055+.035*s.chaos)*k,y+math.sin(angle)*(.055+.035*s.chaos)*k,z+(.035+.015*s.chaos)*k,fade*.55*(1-k),color)
                 end
             end
             if animate then s.lastFlameClock=s.clock end
+            else s.historyCount=0;s.recordedAt=nil end
         end
     end
 end
@@ -265,15 +294,30 @@ function F.render()
     local ok,err=pcall(F.draw);renderer:setDoAdditive(previous)
     if not ok then F.clearAll();error(err)end
 end
-PY.on("lightAttackStarted",F.start)
+function F.committed(p,style,move,stamp)F.start(p,style,0,move,stamp)end
+function F.category(p,style,step,move)
+    local old=F.states[p]
+    if old and old.stamp and old.move==move then return end
+    F.start(p,style,step,move)
+end
+local function special(p,style,move)F.category(p,style,0,move)end
+PY.on("attackCommitted",F.committed)
+PY.on("lightAttackStarted",F.category)
+PY.on("finisherStarted",F.category)
+PY.on("runningAttackStarted",special)
+PY.on("quickstepAttackStarted",special)
+PY.on("chargedHeavyStarted",special)
+PY.on("groundAttackStarted",special)
 PY.on("lightAttackFinished",F.clear)
+PY.on("finisherFinished",F.clear)
+PY.on("runningAttackFinished",F.clear)
+PY.on("quickstepAttackFinished",F.clear)
+PY.on("chargedHeavyFinished",F.clear)
+PY.on("groundAttackFinished",F.clear)
 PY.on("comboCancelled",F.clear)
 PY.on("styleChanged",F.clear)
-PY.on("finisherStarted",F.clear)
-PY.on("runningAttackStarted",F.clear)
-PY.on("quickstepAttackStarted",F.clear)
-PY.on("chargedHeavyStarted",F.clear)
-PY.on("groundAttackStarted",F.clear)
+PY.on("actionCancelled",function(context)if context and F.states[context.player] and F.states[context.player].stamp==context then F.clear(context.player)end end)
+PY.on("actionCompleted",function(context)if context and F.states[context.player] and F.states[context.player].stamp==context then F.clear(context.player)end end)
 Events.OnSave.Add(F.clearAll)
 Events.OnMainMenuEnter.Add(F.clearAll)
 Events.OnGameStart.Add(F.clearAll)

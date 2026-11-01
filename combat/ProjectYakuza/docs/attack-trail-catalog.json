@@ -1,0 +1,1657 @@
+{
+  "operation": "Code-side numeric FK only from existing supplied PZ clips. All active registered damaging DoD moves and weapon profiles are included. Contacts use existing native collision events, QTE times or the documented parry fallback. Active limbs use existing charge mappings or contact-local endpoint/relative velocity, not decoded Y6 hitbox bone enums. No visual/audio/animation/model assets are generated or modified.",
+  "catalog": "42/media/lua/client/ProjectYakuza/AttackTrailCatalog.lua",
+  "sha256": "e1133b164ecb8a9d6300a6055832014364804d377af083e2ddc6d7e9752ee8fd",
+  "clips": [
+    {
+      "profile": "bat",
+      "kind": "ground",
+      "animation": "ProjectYakuza_DD_BatGround",
+      "impact": 0.18181818181818182,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BatGround.x",
+      "clipSha256": "1aed15235d43dd0c257bf856a3c648381e677704e51565a751c601d5c2b67d95",
+      "samples": 56,
+      "duration": 1.8333333333333333,
+      "windows": [
+        {
+          "track": "dd_trail_batground_1",
+          "from": 0.21333333333333332,
+          "to": 0.5333333333333333,
+          "contact": 0.3333333333333333,
+          "limb": "rightArm",
+          "scores": [
+            0.7197651026139019,
+            0.9518425894691056,
+            0.1551532035130656,
+            0.25083593731165865
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "bat",
+      "kind": "finisher",
+      "animation": "ProjectYakuza_DD_BatHeavy",
+      "impact": 0.2641509433962264,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BatHeavy.x",
+      "clipSha256": "6bdd4ba1ed2741b592e30d78e4e2805656cb55a021c6f7da19ecb021bcd4cb9d",
+      "samples": 54,
+      "duration": 1.7666666666666666,
+      "windows": [
+        {
+          "track": "dd_trail_batheavy_1",
+          "from": 0.3466666666666667,
+          "to": 0.6666666666666667,
+          "contact": 0.4666666666666667,
+          "limb": "rightArm",
+          "scores": [
+            0.4517552776846947,
+            0.9327608829730297,
+            0.26230986502604964,
+            0.31722630296936644
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "bat",
+      "kind": "light",
+      "animation": "ProjectYakuza_DD_BatLight01",
+      "impact": 0.275,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BatLight01.x",
+      "clipSha256": "51cea2d697834d88d0967d74b080061e25248a5f2ebc029a4616e893fb25fcd1",
+      "samples": 41,
+      "duration": 1.3333333333333333,
+      "windows": [
+        {
+          "track": "dd_trail_batlight01_1",
+          "from": 0.24666666666666665,
+          "to": 0.5666666666666667,
+          "contact": 0.36666666666666664,
+          "limb": "rightArm",
+          "scores": [
+            0.3426225988131708,
+            1.068680448530945,
+            0.18790728337220686,
+            0.2814016812389134
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "bat",
+      "kind": "light",
+      "animation": "ProjectYakuza_DD_BatLight02",
+      "impact": 0.37142857142857144,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BatLight02.x",
+      "clipSha256": "7b85fa8ab1d630623edf21fb86154d87b6040df352c8a379d2dee3bb4c673447",
+      "samples": 36,
+      "duration": 1.1666666666666667,
+      "windows": [
+        {
+          "track": "dd_trail_batlight02_1",
+          "from": 0.31333333333333335,
+          "to": 0.6333333333333333,
+          "contact": 0.43333333333333335,
+          "limb": "rightArm",
+          "scores": [
+            0.1685026405163576,
+            0.9074359713275195,
+            0.21932055265837797,
+            0.2317609140153582
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "bat",
+      "kind": "light",
+      "animation": "ProjectYakuza_DD_BatLight03",
+      "impact": 0.3191489361702128,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BatLight03.x",
+      "clipSha256": "59580c850fd13aabb6d0d5abf7c0d67da0276fa69ffb105455b044581daab743",
+      "samples": 48,
+      "duration": 1.5666666666666667,
+      "windows": [
+        {
+          "track": "dd_trail_batlight03_1",
+          "from": 0.38,
+          "to": 0.7,
+          "contact": 0.5,
+          "limb": "rightArm",
+          "scores": [
+            0.5124259627459178,
+            1.1876947842141965,
+            0.1575474298385827,
+            0.16211110409033633
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "blade",
+      "kind": "ground",
+      "animation": "ProjectYakuza_DD_BladeGround",
+      "impact": 0.22413793103448276,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BladeGround.x",
+      "clipSha256": "3158859cc7c823b075e0ad73d4d444951690ba378adfb32a16d8d357944f0759",
+      "samples": 59,
+      "duration": 1.9333333333333333,
+      "windows": [
+        {
+          "track": "dd_trail_bladeground_1",
+          "from": 0.31333333333333335,
+          "to": 0.6333333333333333,
+          "contact": 0.43333333333333335,
+          "limb": "leftArm",
+          "scores": [
+            0.596659224427483,
+            0.5152064078389947,
+            0.1913032012321918,
+            0.16540054907367308
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "blade",
+      "kind": "finisher",
+      "animation": "ProjectYakuza_DD_BladeHeavy",
+      "impact": 0.3142857142857143,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BladeHeavy.x",
+      "clipSha256": "2ca1f11382fd3cebc6aad1ba2fabad32dc1282d86ae23df4fd52b28ce74bdcf4",
+      "samples": 71,
+      "duration": 2.3333333333333335,
+      "windows": [
+        {
+          "track": "dd_trail_bladeheavy_1",
+          "from": 0.6133333333333333,
+          "to": 0.9333333333333333,
+          "contact": 0.7333333333333333,
+          "limb": "leftArm",
+          "scores": [
+            0.6574838354590972,
+            0.6233108611180103,
+            0.317408429531056,
+            0.22169364852419396
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "blade",
+      "kind": "light",
+      "animation": "ProjectYakuza_DD_BladeLight01",
+      "impact": 0.25862068965517243,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BladeLight01.x",
+      "clipSha256": "4d03f929a90af204fd24eec6f4f4de38351b2a04306e591e498dc32b958f6414",
+      "samples": 59,
+      "duration": 1.9333333333333333,
+      "windows": [
+        {
+          "track": "dd_trail_bladelight01_1",
+          "from": 0.38,
+          "to": 0.7,
+          "contact": 0.5,
+          "limb": "leftArm",
+          "scores": [
+            0.7077619015910843,
+            0.5461537275013841,
+            0.2477983488655232,
+            0.1856901940640264
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "blade",
+      "kind": "light",
+      "animation": "ProjectYakuza_DD_BladeLight02",
+      "impact": 0.4583333333333333,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BladeLight02.x",
+      "clipSha256": "1db36e2b54b188af9128ac37c4799b09e4e7ee815abaeb836a0dfd8472058d4b",
+      "samples": 49,
+      "duration": 1.6,
+      "windows": [
+        {
+          "track": "dd_trail_bladelight02_1",
+          "from": 0.6133333333333333,
+          "to": 0.9333333333333333,
+          "contact": 0.7333333333333333,
+          "limb": "rightArm",
+          "scores": [
+            0.4711031834382665,
+            0.5869949781071828,
+            0.11539496684139716,
+            0.14797212452299321
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "blade",
+      "kind": "light",
+      "animation": "ProjectYakuza_DD_BladeLight03",
+      "impact": 0.26229508196721313,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BladeLight03.x",
+      "clipSha256": "4c841469913e681639f604d36cf199744081e95611d22d943485ac817cd3c6c6",
+      "samples": 62,
+      "duration": 2.033333333333333,
+      "windows": [
+        {
+          "track": "dd_trail_bladelight03_1",
+          "from": 0.41333333333333333,
+          "to": 0.7333333333333334,
+          "contact": 0.5333333333333333,
+          "limb": "leftArm",
+          "scores": [
+            0.6849731058045174,
+            0.6388103704661732,
+            0.16651501521742929,
+            0.14671177841355898
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "light",
+      "animation": "ProjectYakuza_DD_BoostLight01",
+      "impact": 0.21212121212121213,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BoostLight01.x",
+      "clipSha256": "041e97849c61e5b1495ef97cce0eabe810cd6d6d7482ae380cad8f35e8609177",
+      "samples": 34,
+      "duration": 1.1,
+      "windows": [
+        {
+          "track": "dd_trail_boostlight01_1",
+          "from": 0.11333333333333334,
+          "to": 0.43333333333333335,
+          "contact": 0.23333333333333334,
+          "limb": "rightArm",
+          "scores": [
+            0.4092070064919951,
+            1.2192106940074448,
+            0.24244206986379316,
+            0.2776763233250312
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "light",
+      "animation": "ProjectYakuza_DD_BoostLight02",
+      "impact": 0.16666666666666666,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BoostLight02.x",
+      "clipSha256": "00d074276d3e29fc5a5abf8f34677a120cf2bb6d35aa52f358b17db00b15a86e",
+      "samples": 31,
+      "duration": 1.0,
+      "windows": [
+        {
+          "track": "dd_trail_boostlight02_1",
+          "from": 0.04666666666666666,
+          "to": 0.3666666666666667,
+          "contact": 0.16666666666666666,
+          "limb": "leftArm",
+          "scores": [
+            1.0768971486215135,
+            0.36089692428452846,
+            0.20084892288750752,
+            0.24811089797895813
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "light",
+      "animation": "ProjectYakuza_DD_BoostLight03",
+      "impact": 0.16129032258064516,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BoostLight03.x",
+      "clipSha256": "f18300a5659fd1c666e9aca4c6c28dbc20f9bd8f4a30c207d0587ab256883db4",
+      "samples": 32,
+      "duration": 1.0333333333333334,
+      "windows": [
+        {
+          "track": "dd_trail_boostlight03_1",
+          "from": 0.04666666666666666,
+          "to": 0.3666666666666667,
+          "contact": 0.16666666666666666,
+          "limb": "rightArm",
+          "scores": [
+            0.4667285717669858,
+            1.1482976860359266,
+            0.24760421071016409,
+            0.2835864998656026
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "light",
+      "animation": "ProjectYakuza_DD_BoostLight04",
+      "impact": 0.16666666666666666,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BoostLight04.x",
+      "clipSha256": "c4a957e23801abf904526e87b9a0fa29dc4ab4c5599f736eccf87677ca9da761",
+      "samples": 31,
+      "duration": 1.0,
+      "windows": [
+        {
+          "track": "dd_trail_boostlight04_1",
+          "from": 0.04666666666666666,
+          "to": 0.3666666666666667,
+          "contact": 0.16666666666666666,
+          "limb": "leftArm",
+          "scores": [
+            1.0638693346146766,
+            0.4015353395061954,
+            0.20098823033884078,
+            0.24652235798297356
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "chargedHeavy",
+      "animation": "ProjectYakuza_DD_ChargeEnd",
+      "impact": 0.21818181818181817,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_ChargeEnd.x",
+      "clipSha256": "3729e9d78996b47fd978bc7505b908833b56e27f32a469da5f100939c8f364cd",
+      "samples": 56,
+      "duration": 1.8333333333333333,
+      "windows": [
+        {
+          "track": "dd_trail_chargeend_1",
+          "from": 0.28,
+          "to": 0.6000000000000001,
+          "contact": 0.4,
+          "limb": "rightLeg",
+          "scores": [
+            0.5815655648352964,
+            0.5966908829882213,
+            0.35954522734690786,
+            0.6714468237167273
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "chargedHeavy",
+      "animation": "ProjectYakuza_DD_ChargedFinisher01",
+      "impact": 0.235294118,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_ChargedFinisher01.x",
+      "clipSha256": "a865549da00def73258999d47ea1b8bcf33978459765206529a21510286924ed",
+      "samples": 52,
+      "duration": 1.7,
+      "windows": [
+        {
+          "track": "dd_trail_chargedfinisher01_1",
+          "from": 0.28,
+          "to": 0.6000000000000001,
+          "contact": 0.4,
+          "limb": "rightArm",
+          "scores": [
+            0.3433179289763766,
+            0.7019821115407291,
+            0.18376719003794506,
+            0.1903052213955107
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "chargedHeavy",
+      "animation": "ProjectYakuza_DD_ChargedFinisher02",
+      "impact": 0.260869565,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_ChargedFinisher02.x",
+      "clipSha256": "6548b6fa0c86e88dcb8b3aa74d46876fc568fe750129f4b0a7bd1e5c598bc4b7",
+      "samples": 47,
+      "duration": 1.5333333333333334,
+      "windows": [
+        {
+          "track": "dd_trail_chargedfinisher02_1",
+          "from": 0.28,
+          "to": 0.6000000000000001,
+          "contact": 0.4,
+          "limb": "rightLeg",
+          "scores": [
+            0.5814622961930903,
+            0.7476940704231083,
+            0.16188322807580874,
+            1.485286440193914
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "chargedHeavy",
+      "animation": "ProjectYakuza_DD_ChargedFinisher03",
+      "impact": 0.163636364,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_ChargedFinisher03.x",
+      "clipSha256": "c5f3874539594b944c723cc7b93b51a9b2441753a4012732a7f0d41f2a7cbc50",
+      "samples": 56,
+      "duration": 1.8333333333333333,
+      "windows": [
+        {
+          "track": "dd_trail_chargedfinisher03_1",
+          "from": 0.18,
+          "to": 0.5,
+          "contact": 0.3,
+          "limb": "leftArm",
+          "scores": [
+            0.4731214158389835,
+            0.372699320428831,
+            0.18781469198865364,
+            0.23678074382667913
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "chargedHeavy",
+      "animation": "ProjectYakuza_DD_ChargedFinisher04",
+      "impact": 0.236363636,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_ChargedFinisher04.x",
+      "clipSha256": "4547e1454d730cfe8b5ccc777168130a6233b4d47976dd46b32d31c77c4f83d8",
+      "samples": 56,
+      "duration": 1.8333333333333333,
+      "windows": [
+        {
+          "track": "dd_trail_chargedfinisher04_1",
+          "from": 0.31333333333333335,
+          "to": 0.6333333333333333,
+          "contact": 0.43333333333333335,
+          "limb": "rightLeg",
+          "scores": [
+            0.4755747604277817,
+            0.5633321658156222,
+            0.3216701349843349,
+            1.5432630960043694
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "directional",
+      "animation": "ProjectYakuza_DD_DirectionalLeft",
+      "impact": 0.2222222222222222,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_DirectionalLeft.x",
+      "clipSha256": "7860b61cd21445c7fbc6d3eee76f1fe6e9089e617a908ce9081a61986f8ed09d",
+      "samples": 46,
+      "duration": 1.5,
+      "windows": [
+        {
+          "track": "dd_trail_directionalleft_1",
+          "from": 0.21333333333333332,
+          "to": 0.5333333333333333,
+          "contact": 0.3333333333333333,
+          "limb": "leftArm",
+          "scores": [
+            0.8852901684658799,
+            0.4207167397790305,
+            0.35242079313789776,
+            0.167222481334181
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "directional",
+      "animation": "ProjectYakuza_DD_DirectionalRear",
+      "impact": 0.19298245614035087,
+      "kick": true,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_DirectionalRear.x",
+      "clipSha256": "a2bdf13061feb82113f8c9a82a200ada05fde2f6fdba191c596327a1f841ffef",
+      "samples": 58,
+      "duration": 1.9,
+      "windows": [
+        {
+          "track": "dd_trail_directionalrear_1",
+          "from": 0.24666666666666665,
+          "to": 0.5666666666666667,
+          "contact": 0.36666666666666664,
+          "limb": "leftLeg",
+          "scores": [
+            0.29289672625933055,
+            0.43164690751398993,
+            0.8672959539839776,
+            0.16134972284872842
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "directional",
+      "animation": "ProjectYakuza_DD_DirectionalRight",
+      "impact": 0.2222222222222222,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_DirectionalRight.x",
+      "clipSha256": "e874d050ac2dd9e96a87c149e08ec0aeabd87ba62f955e837e1602bcda080439",
+      "samples": 46,
+      "duration": 1.5,
+      "windows": [
+        {
+          "track": "dd_trail_directionalright_1",
+          "from": 0.21333333333333332,
+          "to": 0.5333333333333333,
+          "contact": 0.3333333333333333,
+          "limb": "rightArm",
+          "scores": [
+            0.3103895080451735,
+            0.9885319294734434,
+            0.6788061254092995,
+            0.46207916029749346
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "finisher",
+      "animation": "ProjectYakuza_DD_DoubleFinisher01",
+      "impact": 0.34146341463414637,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_DoubleFinisher01.x",
+      "clipSha256": "b31bccb37638b481fcfc06212e629212fbd074b6a81ba82335eb1041deac661a",
+      "samples": 83,
+      "duration": 2.7333333333333334,
+      "windows": [
+        {
+          "track": "dd_trail_doublefinisher01_1",
+          "from": 0.8133333333333334,
+          "to": 1.1333333333333333,
+          "contact": 0.9333333333333333,
+          "limb": "rightArm",
+          "scores": [
+            0.44961841835330946,
+            0.6120067636196509,
+            0.38921839119725377,
+            0.33402007658748095
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "finisher",
+      "animation": "ProjectYakuza_DD_DoubleFinisher02",
+      "impact": 0.345679012345679,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_DoubleFinisher02.x",
+      "clipSha256": "6002e6c2836bef1ec9b33c20cfa78de2ccb4307324f4e4173c1021467f02c66f",
+      "samples": 82,
+      "duration": 2.7,
+      "windows": [
+        {
+          "track": "dd_trail_doublefinisher02_1",
+          "from": 0.8133333333333334,
+          "to": 1.1333333333333333,
+          "contact": 0.9333333333333333,
+          "limb": "rightLeg",
+          "scores": [
+            0.3606484872372209,
+            0.3346368855296013,
+            0.14534301309960387,
+            0.5160752294786997
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "finisher",
+      "animation": "ProjectYakuza_DD_DoubleFinisher03",
+      "impact": 0.39344262295081966,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_DoubleFinisher03.x",
+      "clipSha256": "3eaadd8023b354377a545d26bbc059b55c1916acf60858a58535eabb002fa179",
+      "samples": 62,
+      "duration": 2.033333333333333,
+      "windows": [
+        {
+          "track": "dd_trail_doublefinisher03_1",
+          "from": 0.68,
+          "to": 1.0,
+          "contact": 0.8,
+          "limb": "leftLeg",
+          "scores": [
+            0.4193746229698326,
+            0.483048474749211,
+            1.4437716968531038,
+            0.10554329289897488
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "finisher",
+      "animation": "ProjectYakuza_DD_DoubleFinisher04",
+      "impact": 0.36619718309859156,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_DoubleFinisher04.x",
+      "clipSha256": "6d51fa9c23a3ac005fbb0929fa1be3581feaf212d0f561477a917d34456345c0",
+      "samples": 72,
+      "duration": 2.3666666666666667,
+      "windows": [
+        {
+          "track": "dd_trail_doublefinisher04_1",
+          "from": 0.7466666666666667,
+          "to": 1.0666666666666667,
+          "contact": 0.8666666666666667,
+          "limb": "rightLeg",
+          "scores": [
+            0.21474968189369056,
+            0.1931283953330552,
+            0.1486400796563844,
+            0.32658875113563435
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "finisher",
+      "animation": "ProjectYakuza_DD_Finisher01",
+      "impact": 0.2807017543859649,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_Finisher01.x",
+      "clipSha256": "6f423c06e6fed65debc3503f024b97fb122355e2ed2d08203009e8ada87fc302",
+      "samples": 58,
+      "duration": 1.9,
+      "windows": [
+        {
+          "track": "dd_trail_finisher01_1",
+          "from": 0.41333333333333333,
+          "to": 0.7333333333333334,
+          "contact": 0.5333333333333333,
+          "limb": "rightArm",
+          "scores": [
+            0.34878466416665077,
+            0.8779932953727673,
+            0.21330511744217726,
+            0.25062748857754413
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "finisher",
+      "animation": "ProjectYakuza_DD_Finisher02",
+      "impact": 0.4528301886792453,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_Finisher02.x",
+      "clipSha256": "2fffce981ee6d0c191745ae6c4aa30285d9a1181350fbd0e3ce28d28b02592f3",
+      "samples": 54,
+      "duration": 1.7666666666666666,
+      "windows": [
+        {
+          "track": "dd_trail_finisher02_1",
+          "from": 0.68,
+          "to": 1.0,
+          "contact": 0.8,
+          "limb": "rightLeg",
+          "scores": [
+            0.39248232050634396,
+            0.6152311959179252,
+            0.15848002819770862,
+            0.48838271559987223
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "finisher",
+      "animation": "ProjectYakuza_DD_Finisher03",
+      "impact": 0.32786885245901637,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_Finisher03.x",
+      "clipSha256": "5e3c1254057b168cdfa39a5b87728a94ad7d61a9a276cfd0ff20bcbab123ab7c",
+      "samples": 62,
+      "duration": 2.033333333333333,
+      "windows": [
+        {
+          "track": "dd_trail_finisher03_1",
+          "from": 0.5466666666666666,
+          "to": 0.8666666666666667,
+          "contact": 0.6666666666666666,
+          "limb": "leftArm",
+          "scores": [
+            0.32758150684150567,
+            0.7762776056996508,
+            0.17917557310251858,
+            0.1586876435316543
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "finisher",
+      "animation": "ProjectYakuza_DD_Finisher04",
+      "impact": 0.4,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_Finisher04.x",
+      "clipSha256": "26705de56b710be92d166534ae064c076631ff2e5548f65034d18794f7db8987",
+      "samples": 61,
+      "duration": 2.0,
+      "windows": [
+        {
+          "track": "dd_trail_finisher04_1",
+          "from": 0.68,
+          "to": 1.0,
+          "contact": 0.8,
+          "limb": "rightLeg",
+          "scores": [
+            0.5519945955979859,
+            0.5380057455616369,
+            0.17658274624395626,
+            0.7188225262842582
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "ground",
+      "animation": "ProjectYakuza_DD_GroundStomp01",
+      "impact": 0.25925925925925924,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_GroundStomp01.x",
+      "clipSha256": "bf224bae0feb39486a5828e062523ff15de073272542dfe2e02417bde999e35b",
+      "samples": 55,
+      "duration": 1.8,
+      "windows": [
+        {
+          "track": "dd_trail_groundstomp01_1",
+          "from": 0.3466666666666667,
+          "to": 0.6666666666666667,
+          "contact": 0.4666666666666667,
+          "limb": "rightLeg",
+          "scores": [
+            0.46316952135688183,
+            0.67737184977676,
+            0.2579930267720817,
+            0.5655658576830407
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "ground",
+      "animation": "ProjectYakuza_DD_GroundStomp02",
+      "impact": 0.25925925925925924,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_GroundStomp02.x",
+      "clipSha256": "e7c091938eef5aa051b624176877c9a7ca2c601c8a31dad5aabfddae0bb9ccab",
+      "samples": 55,
+      "duration": 1.8,
+      "windows": [
+        {
+          "track": "dd_trail_groundstomp02_1",
+          "from": 0.3466666666666667,
+          "to": 0.6666666666666667,
+          "contact": 0.4666666666666667,
+          "limb": "rightLeg",
+          "scores": [
+            0.4350029411759318,
+            0.6402718614040229,
+            0.26248592467383697,
+            0.5566613965116518
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "heatAction",
+      "animation": "ProjectYakuza_DD_HeatRush",
+      "impact": -1.0,
+      "kick": false,
+      "qte": [
+        0.9666666666666667,
+        1.3333333333333333,
+        2.1666666666666665
+      ],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_HeatRush.x",
+      "clipSha256": "0bab2c0bdd5f86b691564a21b56991d9da8ff1293422d716c8c3cecaaf5b58f5",
+      "samples": 131,
+      "duration": 4.333333333333333,
+      "windows": [
+        {
+          "track": "dd_trail_heatrush_1",
+          "from": 0.8466666666666667,
+          "to": 1.15,
+          "contact": 0.9666666666666667,
+          "limb": "rightArm",
+          "scores": [
+            0.2770589129788493,
+            0.4552956028646346,
+            0.08218488573163554,
+            0.07804550196489812
+          ]
+        },
+        {
+          "track": "dd_trail_heatrush_2",
+          "from": 1.2133333333333334,
+          "to": 1.5333333333333332,
+          "contact": 1.3333333333333333,
+          "limb": "leftLeg",
+          "scores": [
+            0.20701293849146435,
+            0.10448073684272037,
+            0.2138675629189741,
+            0.17806483328554432
+          ]
+        },
+        {
+          "track": "dd_trail_heatrush_3",
+          "from": 2.0466666666666664,
+          "to": 2.3666666666666667,
+          "contact": 2.1666666666666665,
+          "limb": "rightLeg",
+          "scores": [
+            0.22831264180704045,
+            0.24095158625722585,
+            0.052975696416849696,
+            0.639044455312684
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "finisher",
+      "animation": "ProjectYakuza_DD_Heavy",
+      "impact": 0.18,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_Heavy.x",
+      "clipSha256": "6f005523db810da4c68e28f95bb6a2f120df1256ba84d2c5646103ebcbd2b250",
+      "samples": 51,
+      "duration": 1.6666666666666667,
+      "windows": [
+        {
+          "track": "dd_trail_heavy_1",
+          "from": 0.18,
+          "to": 0.5,
+          "contact": 0.3,
+          "limb": "rightLeg",
+          "scores": [
+            0.5222512882191623,
+            0.6486269979881344,
+            0.3533736666530499,
+            0.7631705451140862
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "knife",
+      "kind": "ground",
+      "animation": "ProjectYakuza_DD_KnifeGround",
+      "impact": 0.25,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_KnifeGround.x",
+      "clipSha256": "5c0c65ba7201cb6e777df40085524960e7fd427373d3bf4656f57d3e890e3495",
+      "samples": 53,
+      "duration": 1.7333333333333334,
+      "windows": [
+        {
+          "track": "dd_trail_knifeground_1",
+          "from": 0.31333333333333335,
+          "to": 0.6333333333333333,
+          "contact": 0.43333333333333335,
+          "limb": "rightArm",
+          "scores": [
+            0.546731013155827,
+            0.6716901214634632,
+            0.08678893698401327,
+            0.11078107487022171
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "knife",
+      "kind": "finisher",
+      "animation": "ProjectYakuza_DD_KnifeHeavy",
+      "impact": 0.24444444444444444,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_KnifeHeavy.x",
+      "clipSha256": "070f6133b2fb1a143ce26a41da706dc8ec4484af39d5884740e8e2f0b8de9e05",
+      "samples": 46,
+      "duration": 1.5,
+      "windows": [
+        {
+          "track": "dd_trail_knifeheavy_1",
+          "from": 0.24666666666666665,
+          "to": 0.5666666666666667,
+          "contact": 0.36666666666666664,
+          "limb": "rightArm",
+          "scores": [
+            0.52866943514463,
+            0.6140282232012383,
+            0.27024859048711264,
+            0.4902892446247411
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "knife",
+      "kind": "light",
+      "animation": "ProjectYakuza_DD_KnifeLight01",
+      "impact": 0.225,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_KnifeLight01.x",
+      "clipSha256": "4db14f906e5fe320af7e2b18c0aa9716f1a0e2ebd639419c99c1ed82331c5139",
+      "samples": 41,
+      "duration": 1.3333333333333333,
+      "windows": [
+        {
+          "track": "dd_trail_knifelight01_1",
+          "from": 0.18,
+          "to": 0.5,
+          "contact": 0.3,
+          "limb": "rightArm",
+          "scores": [
+            0.21949312008126706,
+            0.8432718319149579,
+            0.2523015279906702,
+            0.4608370431078481
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "knife",
+      "kind": "light",
+      "animation": "ProjectYakuza_DD_KnifeLight02",
+      "impact": 0.3,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_KnifeLight02.x",
+      "clipSha256": "041f31263d44e2663b6ef3b4d480354eb82ce7448d30c45f5073320e14ccd1fd",
+      "samples": 41,
+      "duration": 1.3333333333333333,
+      "windows": [
+        {
+          "track": "dd_trail_knifelight02_1",
+          "from": 0.28,
+          "to": 0.6000000000000001,
+          "contact": 0.4,
+          "limb": "rightArm",
+          "scores": [
+            0.2363547962867563,
+            0.9286219990912372,
+            0.20922225154896135,
+            0.23761003428154004
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "knife",
+      "kind": "light",
+      "animation": "ProjectYakuza_DD_KnifeLight03",
+      "impact": 0.28888888888888886,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_KnifeLight03.x",
+      "clipSha256": "d44b958c69e7bbfc8aacc2c48a8bffd54228b426789bbf99dc4f1ab5d182ee1c",
+      "samples": 46,
+      "duration": 1.5,
+      "windows": [
+        {
+          "track": "dd_trail_knifelight03_1",
+          "from": 0.31333333333333335,
+          "to": 0.6333333333333333,
+          "contact": 0.43333333333333335,
+          "limb": "rightArm",
+          "scores": [
+            0.44355740756033146,
+            1.0713583280415362,
+            0.1289992526278093,
+            0.13884295361323687
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "light",
+      "animation": "ProjectYakuza_DD_Light01",
+      "impact": 0.2,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_Light01.x",
+      "clipSha256": "79294a1ff6a2589950696a3a8938337b8bc60d4e56537222945f1a34d1466d30",
+      "samples": 31,
+      "duration": 1.0,
+      "windows": [
+        {
+          "track": "dd_trail_light01_1",
+          "from": 0.08000000000000002,
+          "to": 0.4,
+          "contact": 0.2,
+          "limb": "leftArm",
+          "scores": [
+            0.37467860921063795,
+            0.2498754414751612,
+            0.156342592056957,
+            0.14613899787405332
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "light",
+      "animation": "ProjectYakuza_DD_Light02",
+      "impact": 0.1702127659574468,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_Light02.x",
+      "clipSha256": "4a37db6fe32599db765bdf0c4386b65917745dac31b5a059c2df8386443e5702",
+      "samples": 48,
+      "duration": 1.5666666666666667,
+      "windows": [
+        {
+          "track": "dd_trail_light02_1",
+          "from": 0.14666666666666667,
+          "to": 0.4666666666666667,
+          "contact": 0.26666666666666666,
+          "limb": "rightArm",
+          "scores": [
+            0.30287052838490164,
+            1.0523291254104141,
+            0.11193651009366556,
+            0.17681154204034277
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "light",
+      "animation": "ProjectYakuza_DD_Light03",
+      "impact": 0.2619047619047619,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_Light03.x",
+      "clipSha256": "3d3d04bd21ffc0204e62e79ec78936f58922d3724741ce576d8be0937f46ee55",
+      "samples": 43,
+      "duration": 1.4,
+      "windows": [
+        {
+          "track": "dd_trail_light03_1",
+          "from": 0.24666666666666665,
+          "to": 0.5666666666666667,
+          "contact": 0.36666666666666664,
+          "limb": "leftArm",
+          "scores": [
+            0.2576380069201469,
+            0.13230630971981044,
+            0.05428598890702638,
+            0.06321282191107017
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "light",
+      "animation": "ProjectYakuza_DD_Light04",
+      "impact": 0.23404255319148937,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_Light04.x",
+      "clipSha256": "9ceb5a5ef5713803da69ba6dc69cc0f64380a33da4a855a9ca8b0e6135710e54",
+      "samples": 48,
+      "duration": 1.5666666666666667,
+      "windows": [
+        {
+          "track": "dd_trail_light04_1",
+          "from": 0.24666666666666665,
+          "to": 0.5666666666666667,
+          "contact": 0.36666666666666664,
+          "limb": "rightArm",
+          "scores": [
+            0.1902464372896445,
+            0.3631417305059127,
+            0.045709455504725216,
+            0.06284639809570008
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "quickstepAttack",
+      "animation": "ProjectYakuza_DD_QuickstepAttack01",
+      "impact": 0.25,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_QuickstepAttack01.x",
+      "clipSha256": "707becdd5f25e730fa7e80beaf3b7f1519fca0ec918805a33495eb3f4b1e71d1",
+      "samples": 45,
+      "duration": 1.4666666666666666,
+      "windows": [
+        {
+          "track": "dd_trail_quickstepattack01_1",
+          "from": 0.24666666666666665,
+          "to": 0.5666666666666667,
+          "contact": 0.36666666666666664,
+          "limb": "leftArm",
+          "scores": [
+            0.12911510756697925,
+            0.07648096935940213,
+            0.025843901038094058,
+            0.05499369049266226
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "quickstepAttack",
+      "animation": "ProjectYakuza_DD_QuickstepAttack02",
+      "impact": 0.2463768115942029,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_QuickstepAttack02.x",
+      "clipSha256": "9e5a593a12e1ee1dec99e4013423243c0682228a98718a6a22791ea3a62d7e79",
+      "samples": 70,
+      "duration": 2.3,
+      "windows": [
+        {
+          "track": "dd_trail_quickstepattack02_1",
+          "from": 0.44666666666666666,
+          "to": 0.7666666666666666,
+          "contact": 0.5666666666666667,
+          "limb": "rightArm",
+          "scores": [
+            0.4504890098404174,
+            0.5279242014725964,
+            0.19236941227411877,
+            0.32749813316906534
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "quickstepAttack",
+      "animation": "ProjectYakuza_DD_QuickstepAttack03",
+      "impact": 0.23404255319148937,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_QuickstepAttack03.x",
+      "clipSha256": "a0e3ac1490f6d57e8b3215f6bff88952dcc5944887ea05286449a2e37e5957bd",
+      "samples": 48,
+      "duration": 1.5666666666666667,
+      "windows": [
+        {
+          "track": "dd_trail_quickstepattack03_1",
+          "from": 0.24666666666666665,
+          "to": 0.5666666666666667,
+          "contact": 0.36666666666666664,
+          "limb": "leftLeg",
+          "scores": [
+            0.37674076235503295,
+            0.43688217125953777,
+            0.9043397266918701,
+            0.17502098165232102
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "quickstepAttack",
+      "animation": "ProjectYakuza_DD_QuickstepAttack04",
+      "impact": 0.24561403508771928,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_QuickstepAttack04.x",
+      "clipSha256": "591db61e91aab047cebc13a118ba4f2f7ce3176f0680d1b27ccd8f4ad76a24e1",
+      "samples": 58,
+      "duration": 1.9,
+      "windows": [
+        {
+          "track": "dd_trail_quickstepattack04_1",
+          "from": 0.3466666666666667,
+          "to": 0.6666666666666667,
+          "contact": 0.4666666666666667,
+          "limb": "rightLeg",
+          "scores": [
+            0.2267250117757679,
+            0.18525550924376308,
+            0.1741490807147651,
+            0.3300113783482971
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "finisher",
+      "animation": "ProjectYakuza_DD_ReverseDoubleFinisher01",
+      "impact": 0.46,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_ReverseDoubleFinisher01.x",
+      "clipSha256": "42150827040365bece2f097eb77938804d65faf8f0e4a714bf9e2e91717d37ce",
+      "samples": 51,
+      "duration": 1.6666666666666667,
+      "windows": [
+        {
+          "track": "dd_trail_reversedoublefinisher01_1",
+          "from": 0.6466666666666667,
+          "to": 0.9666666666666668,
+          "contact": 0.7666666666666667,
+          "limb": "leftArm",
+          "scores": [
+            1.097726153282577,
+            1.07814694268537,
+            0.4808706405222187,
+            0.6080719870499816
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "finisher",
+      "animation": "ProjectYakuza_DD_ReverseDoubleFinisher02",
+      "impact": 0.22972972972972974,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_ReverseDoubleFinisher02.x",
+      "clipSha256": "b35a125e00e4d3acfaf7b00f44f7b3cc9badf3b6ccb5f1fe750c069c5ee31dfe",
+      "samples": 75,
+      "duration": 2.466666666666667,
+      "windows": [
+        {
+          "track": "dd_trail_reversedoublefinisher02_1",
+          "from": 0.44666666666666666,
+          "to": 0.7666666666666666,
+          "contact": 0.5666666666666667,
+          "limb": "leftLeg",
+          "scores": [
+            0.44899436894068756,
+            0.5854401079733736,
+            1.3823246935149915,
+            0.24907797452330588
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "finisher",
+      "animation": "ProjectYakuza_DD_ReverseDoubleFinisher03",
+      "impact": 0.24,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_ReverseDoubleFinisher03.x",
+      "clipSha256": "1514babb6eabcd89567c86863c95dd4eb92ddaf85a3c9b4743476ffd52eceaa2",
+      "samples": 76,
+      "duration": 2.5,
+      "windows": [
+        {
+          "track": "dd_trail_reversedoublefinisher03_1",
+          "from": 0.48,
+          "to": 0.8,
+          "contact": 0.6,
+          "limb": "rightLeg",
+          "scores": [
+            0.7781434219331973,
+            0.9542540738623947,
+            0.48988936910304,
+            1.0583696208473765
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "finisher",
+      "animation": "ProjectYakuza_DD_ReverseDoubleFinisher04",
+      "impact": 0.36585365853658536,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_ReverseDoubleFinisher04.x",
+      "clipSha256": "5ceb00b7266c6d2ac0c4bb2ac8de3c905389c769df6ed660a9210743cf6bb156",
+      "samples": 42,
+      "duration": 1.3666666666666667,
+      "windows": [
+        {
+          "track": "dd_trail_reversedoublefinisher04_1",
+          "from": 0.38,
+          "to": 0.7,
+          "contact": 0.5,
+          "limb": "rightArm",
+          "scores": [
+            0.3821177411664282,
+            1.0491045018593053,
+            0.17705921673892394,
+            0.33101781419245774
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "finisher",
+      "animation": "ProjectYakuza_DD_ReverseFinisher01",
+      "impact": 0.22388059701492538,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_ReverseFinisher01.x",
+      "clipSha256": "f4083bda73572149a1479a48bfe6fb87c077ac3e5a305fd2cb331b922487ca76",
+      "samples": 68,
+      "duration": 2.2333333333333334,
+      "windows": [
+        {
+          "track": "dd_trail_reversefinisher01_1",
+          "from": 0.38,
+          "to": 0.7,
+          "contact": 0.5,
+          "limb": "leftLeg",
+          "scores": [
+            0.4531386242497933,
+            0.4403717663499127,
+            0.8167249337431791,
+            0.20907499953768638
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "finisher",
+      "animation": "ProjectYakuza_DD_ReverseFinisher02",
+      "impact": 0.2962962962962963,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_ReverseFinisher02.x",
+      "clipSha256": "b9384573f03c6530a5b5702b9db8d93fb0f1fa2da05fdfe8268fe9304cf2c51a",
+      "samples": 55,
+      "duration": 1.8,
+      "windows": [
+        {
+          "track": "dd_trail_reversefinisher02_1",
+          "from": 0.41333333333333333,
+          "to": 0.7333333333333334,
+          "contact": 0.5333333333333333,
+          "limb": "rightLeg",
+          "scores": [
+            0.16131428113312912,
+            0.17238684923339587,
+            0.20084233206075583,
+            0.6188541696177978
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "finisher",
+      "animation": "ProjectYakuza_DD_ReverseFinisher03",
+      "impact": 0.16923076923076924,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_ReverseFinisher03.x",
+      "clipSha256": "4b6cb30a9e15a7107ffec3abd494551f4f0ede1abb39898d88beb5ea1f04e308",
+      "samples": 66,
+      "duration": 2.1666666666666665,
+      "windows": [
+        {
+          "track": "dd_trail_reversefinisher03_1",
+          "from": 0.24666666666666665,
+          "to": 0.5666666666666667,
+          "contact": 0.36666666666666664,
+          "limb": "rightLeg",
+          "scores": [
+            0.35810578403523174,
+            0.3591324116739322,
+            0.1544974872251932,
+            0.864943180677976
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "finisher",
+      "animation": "ProjectYakuza_DD_ReverseFinisher04",
+      "impact": 0.1875,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_ReverseFinisher04.x",
+      "clipSha256": "17a66d47813094111b46aae91e9e57b9086d34fe58c180eed32e74f9bb71bf25",
+      "samples": 65,
+      "duration": 2.1333333333333333,
+      "windows": [
+        {
+          "track": "dd_trail_reversefinisher04_1",
+          "from": 0.28,
+          "to": 0.6000000000000001,
+          "contact": 0.4,
+          "limb": "leftLeg",
+          "scores": [
+            0.4226480563539528,
+            0.5976197011007012,
+            1.2040932331111227,
+            0.21927544285041525
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "runningAttack",
+      "animation": "ProjectYakuza_DD_RunningAttack01",
+      "impact": 0.18181818181818182,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_RunningAttack01.x",
+      "clipSha256": "67e6b5914b7ec4c1cb1d382018a42665610cef2794d4187d329437e45aa68ca6",
+      "samples": 56,
+      "duration": 1.8333333333333333,
+      "windows": [
+        {
+          "track": "dd_trail_runningattack01_1",
+          "from": 0.21333333333333332,
+          "to": 0.5333333333333333,
+          "contact": 0.3333333333333333,
+          "limb": "rightLeg",
+          "scores": [
+            0.550706431467247,
+            0.5045699547568683,
+            0.30095109473763937,
+            0.6765540120052047
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "runningAttack",
+      "animation": "ProjectYakuza_DD_RunningAttack02",
+      "impact": 0.225,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_RunningAttack02.x",
+      "clipSha256": "b96f56becb56d658432d426d30816cbc133e74f35462361e594c2b109de0cb75",
+      "samples": 81,
+      "duration": 2.6666666666666665,
+      "windows": [
+        {
+          "track": "dd_trail_runningattack02_1",
+          "from": 0.48,
+          "to": 0.8,
+          "contact": 0.6,
+          "limb": "rightLeg",
+          "scores": [
+            0.4317469268107418,
+            0.6625007662649397,
+            0.25235519235648046,
+            0.8220881770404418
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "runningAttack",
+      "animation": "ProjectYakuza_DD_RunningAttack03",
+      "impact": 0.24,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_RunningAttack03.x",
+      "clipSha256": "0c2a28efd36e02705c25723fb5c3db0b0d6b7a49781d12be7eed4d6d95f92ac2",
+      "samples": 51,
+      "duration": 1.6666666666666667,
+      "windows": [
+        {
+          "track": "dd_trail_runningattack03_1",
+          "from": 0.28,
+          "to": 0.6000000000000001,
+          "contact": 0.4,
+          "limb": "rightLeg",
+          "scores": [
+            0.175401102524393,
+            0.45962116974490436,
+            0.25462727875295066,
+            0.27554830139249203
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "runningAttack",
+      "animation": "ProjectYakuza_DD_RunningAttack04",
+      "impact": 0.21875,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_RunningAttack04.x",
+      "clipSha256": "ac3b9da5a149d6f66f9cfc69cdd6e0ad88b0d5e9ebc3d9d56bb79f85e3d9507e",
+      "samples": 65,
+      "duration": 2.1333333333333333,
+      "windows": [
+        {
+          "track": "dd_trail_runningattack04_1",
+          "from": 0.3466666666666667,
+          "to": 0.6666666666666667,
+          "contact": 0.4666666666666667,
+          "limb": "leftLeg",
+          "scores": [
+            0.4982966033285772,
+            0.9479583713602163,
+            0.8342378349379264,
+            0.4572048298710697
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "parry",
+      "animation": "ProjectYakuza_DD_TigerDrop",
+      "impact": -1.0,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_TigerDrop.x",
+      "clipSha256": "482c5f8802b0461459a41a108a0632ac8c33730d3395ceaf3cde1cf49fac6f0a",
+      "samples": 34,
+      "duration": 1.1,
+      "windows": [
+        {
+          "track": "dd_trail_tigerdrop_1",
+          "from": 0.14666666666666667,
+          "to": 0.4666666666666667,
+          "contact": 0.26666666666666666,
+          "limb": "rightArm",
+          "scores": [
+            0.1369841636655057,
+            0.2744535909222584,
+            0.053959914173122216,
+            0.041696772562449795
+          ]
+        }
+      ]
+    }
+  ]
+}

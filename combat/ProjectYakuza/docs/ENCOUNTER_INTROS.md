@@ -71,7 +71,7 @@ Events: encounterIntroStarted(player,style,context) fires after counting when a 
 
 layoutText(fontData,text) and drawText(panel,fontData,layout,texture,x,y,scale,alpha,r,g,b) provide bitmap glyph measurement/drawing with advances, offsets and kerning. The bundled atlas includes printable ASCII only, covering the requested titles; the simple helper reads byte codes with a question-mark fallback. Other languages can use a custom provider/font renderer without changing the encounter system. Fonts, extra images and sound assets must be supplied by the style author.
 
-No game was launched. Live appearance and multiplayer threat-counter behavior require user assessment after restarting matching installations; see VALIDATION_0.65.0.md for offline checks.
+No game was launched. Live appearance and multiplayer threat-counter behavior require user assessment after restarting matching installations; see VALIDATION_0.66.0.md for offline checks.
 
 ## Landing presentation (0.53.0)
 

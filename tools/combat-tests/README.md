@@ -165,3 +165,8 @@ Compile PassiveUIProbe.java with the local JDK and run it through B42's bundled 
 ## Full-arm trail rebuild
 
 PunchTrackProbe now exports both upper-arm positions as well as both forearm/hand/knuckle triplets from the unchanged imported PZ clip. build_punch_effects_tests.py independently verifies all shipped original rows and the new left shoulder rows, track provenance and unchanged textures/sounds. The punch fixture checks continuous whole-arm coverage across 32 facings and throughout the configured source window, world-space history under rotation/movement, teleport reset, fixed history/sprite budgets, pause/same-clock behavior, optional six/nine-coordinate providers, MP observer selection and cleanup. Existing charge and source-clock audio regressions remain in the fixture. This checks numeric geometry/lifecycle rather than live blended skeleton attachment or final GPU appearance.
+
+
+## Complete attack coating coverage
+
+Compile LimbTrailProbe.java against the local B42 classes, then run build_attack_trails.py to import all 60 active DoD attack clips and compare the shipped numeric catalogue/provenance with native FK. The --write option writes code-side numeric tracks only. No motion, texture, model or audio assets are produced. Contact windows use native collision markers, Heat Rush QTE timing and the documented counter fallback. The expanded punch fixture checks 62 contacts at eight facings, bounded irregular movement, per-contact limb selection, action-context cleanup, category deduplication, observer reconstruction and foreign-style isolation. Extreme-attack regressions exercise ending Heat after steps 5..8 before another player input.

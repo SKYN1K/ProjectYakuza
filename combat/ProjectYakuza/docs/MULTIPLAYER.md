@@ -102,3 +102,6 @@ Unchanged inactive equipment sends a three-second heartbeat; equipped combat ret
 ## Heat capacity and RMB overlays (0.64.0)
 
 The server derives activation's one-stock threshold from the registered style/weapon Heat configuration, rather than assuming six stocks. Normalized Heat/fuel bounds and existing ownership/validation remain. Clients need the same style definitions; no client supplies its own configuration in a packet. The full-screen QTE prompt and other passive overlays explicitly return false for native right-button press/release, preserving gameplay aiming and context menus on each client. The interactive style setup dialog is unchanged.
+
+
+Version 0.66.0 expands the style-owned attack coating to all active DoD attack clips, including weapon profiles and finisher contacts. Existing source motion and game textures are reused. Contact-specific arm/leg tracks, bounded irregular movement and observer reconstruction use the existing animation phase and protocol; no additional particle packets are sent. Explicit move configuration takes priority and other styles remain opt-in. See [Attack effects](ATTACK_EFFECTS.md).

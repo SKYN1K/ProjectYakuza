@@ -137,3 +137,6 @@
 !/tools/combat-tests/heat-speed-test-fixture.lua
 
 !/tools/combat-tests/PassiveUIProbe.java
+
+!/tools/combat-tests/LimbTrailProbe.java
+!/tools/combat-tests/build_attack_trails.py

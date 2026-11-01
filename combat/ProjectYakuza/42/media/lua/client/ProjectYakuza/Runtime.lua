@@ -82,7 +82,7 @@ function ProjectYakuza.prepareToken(token)
     return false
 end
 local function setReadyVariables(player, style, s)
-    local move = s.groundMove or s.finisherMove or s.pendingFinisher or s.activeLightMove or style.lightAttacks[s.step > 0 and s.step or 1]
+    local move = s.groundMove or s.finisherMove or s.pendingFinisher or s.activeLightMove or style.lightAttacks[s.step > 0 and s.step or 1] or style.lightAttacks[1]
     ProjectYakuza.setVisual(player,true,move.nodeValue)
     local visual=ProjectYakuza.visuals[player]
     local profile=style.weaponProfile or ""

@@ -64,6 +64,7 @@ function ProjectYakuza.on(name,fn)local listeners=ProjectYakuza.listeners;listen
 local function emit(name,...)for _,f in ipairs(ProjectYakuza.listeners[name] or {})do f(...)end end
 do local _="ProjectYakuzaFixture:WORLD" end
 do local _="ProjectYakuzaFixture:TRACKS" end
+do local _="ProjectYakuzaFixture:CATALOG" end
 do local _="ProjectYakuzaFixture:EFFECTS" end
 local F=ProjectYakuza.AttackEffects
 local track=ProjectYakuza.AttackTracks.dd_light_01
@@ -236,4 +237,32 @@ A.swing(p,style,0,heavy);clock=clock+400;A.tick();check(#audio==beforeHeavy and 
 p.time=.54;A.tick();check(#audio==beforeHeavy+1 and audio[#audio]=='KickWhoosh','heavy whoosh follows actual clip phase instead of elapsed wall time')
 A.tick();check(#audio==beforeHeavy+1,'heavy source-phase cue fires once');p.clip=nil
 A.clear();check(not A.ticking and not F.hooked and allocated==disposed,'complete effects/audio cleanup')
+local catalog=ProjectYakuza.AttackEffectCatalog.dragon_of_dojima
+local clips,contacts=0,0
+for animation,entry in pairs(catalog)do
+ clips=clips+1
+ local attack={animation=animation,duration=entry.duration,speed=1,impact=.5};local stamp={player=p}
+ p.clip=animation;p.time=0;emit('attackCommitted',p,style,attack,stamp)
+ local active=F.states[p];check(active and active.stamp==stamp,'committed attack starts catalogue coating '..animation)
+ emit('finisherStarted',p,style,1,attack);check(F.states[p]==active,'category event preserves committed state')
+ emit('actionCompleted',{player=p});check(F.states[p]==active,'unrelated completed context preserves active coating')
+ for _,window in ipairs(entry.windows)do
+  contacts=contacts+1;p.time=(window.from+window.to)/2
+  for facing=0,7 do
+   p.angle=facing*math.pi/4;clock=clock+10;F.tick();draws={};F.render()
+   check(F.states[p]==active and active.track==ProjectYakuza.AttackTracks[window.track],'correct source limb selected at contact')
+   check(#draws>=14 and #active.points==22,'every contact has bounded animated coating')
+   for i=1,11 do
+    local x,y,z=F.armPoint(active.joints,(i-1)/10);local d=draws[i]
+    check(math.sqrt((d.x-x)^2+(d.y-y)^2+(d.z-z)^2)<.025,'chaos remains tightly around the attacking limb')
+   end
+  end
+ end
+ emit('actionCompleted',stamp);check(not F.states[p],'matching action completion clears coating')
+ F.remote(p,style,{clip=animation});check(F.states[p],'observer catalogue covers every attack');F.clear(p)
+end
+check(clips==60 and contacts==62,'complete active moveset coverage')
+p.style={id='other_style'};F.start(p,p.style,0,{animation='ProjectYakuza_DD_Heavy'});check(not F.states[p],'builtin catalogue remains style exclusive');p.style=nil
+F.remote(p,nil,{clip='Unknown'});check(not F.states[p],'missing remote style is safe')
+p.clip=nil;F.clearAll();check(allocated==disposed and not F.hooked,'expanded effects release all sprites and hooks')
 return 'PASS '..count..' original-punch tracking, world projection, lifecycle, bounded MP and source-clock audio checks'

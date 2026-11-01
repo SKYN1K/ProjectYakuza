@@ -1,8 +1,8 @@
-# Full-arm punch coating and trails (0.65.0)
+# Attack limb coating and trails (0.66.0)
 
 The Lua-only replacement uses the already supplied Y6 flame, glint and spark textures as overlapping world sprites from the PZ shoulder to the fist. The visual target is an arm-sized blue-white coating with a short trailing wake, using the supplied game references and [SEGA's Y6 Extreme Heat presentation](https://asia.sega.com/ryu-ga-gotoku/six/battle/battle03/). No artwork, animation, audio, model or texture was generated, resized or edited.
 
-The built-in trigger remains DoD's configured first normal light. Other moves/styles are not opted in automatically. Charge particles, impact splashes on victims, the body aura, damage and attack timing retain their existing behavior. Addons can opt a light move into the renderer with their own permitted numeric source track and `attackEffects` window.
+DoD now uses this coating across all 60 active attack clips and 62 contact windows: normal/Extreme Heat lights, neutral heavy, normal/double/reverse/charged finishers, directional attacks, running/quickstep strikes, ground attacks, Tiger Drop, Heat Rush QTE and bat/knife/blade profiles. Each contact selects an arm or leg from its source motion. Charge particles, victim impacts, the body aura, damage and attack timing retain their behavior. The catalogue is owned by `dragon_of_dojima`; other styles are not automatically opted in. Explicit move `attackEffects` configuration takes priority.
 
 ## Position and coverage
 
@@ -11,6 +11,12 @@ The built-in trigger remains DoD's configured first normal light. Other moves/st
 The current native animation phase interpolates those positions. The continuous rendered body angle projects the current pose into world space using the independently checked B42 model projection. Eleven overlapping animated flame centres span shoulder to elbow to fist, with three soft inner cores. Centres use actual absolute world coordinates and native sprite half-height centring; there is no outward inset, blanket shoulder-yaw adjustment or fixed screen-height correction. Per-particle alpha uses normal blending, not an additive brightness layer.
 
 This is deliberately an approximation of the supplied PZ animation, not live attachment to the final blended bones. Walking, blending, IK, clothing/model proportions and self-occlusion can still differ. The user chose to keep the normal Lua-only launcher after inspection showed the live bone-transform classes are not exposed to ordinary Lua. No Java integration or launcher change was installed.
+
+## Catalogue and contact selection
+
+`AttackTrailCatalog.lua` adds numeric FK tracks generated offline by `build_attack_trails.py` and the native `LimbTrailProbe`. Its provenance and per-window limb choices are recorded in [attack-trail-catalog.json](attack-trail-catalog.json). Collision-event source phases define native swing contacts; Heat Rush uses its three QTE contact times. Tiger Drop has no native collision marker and uses a documented visual-phase fallback. Limb choices use existing charge mappings or contact-local endpoint/relative motion, rather than decoded Yakuza hitbox bone metadata. Normal finishers share verified source limb mappings with their charged variants. Windows begin 120 ms before contact and end 200 ms after, clamped to the clip and neighboring contacts.
+
+Small deterministic irregular offsets affect the middle of the coating and short-lived embers. Both limb endpoints remain centred; maximum coating displacement is below 0.025 world units. No gameplay RNG is consumed. Every separate contact window resets the history, preventing trails between unrelated limbs. Timings follow native source phase rather than wall-clock guesses.
 
 ## History and animation
 
@@ -29,9 +35,9 @@ attackEffects={
 },
 ```
 
-Register the matching numeric track in `ProjectYakuza.AttackTracks` before use. `animation` must match the move, `fps` defines the sample rate, and each `frames` row contains forearm XYZ, wrist XYZ and knuckle XYZ. Optional `upperFrames` supplies shoulder XYZ at every corresponding frame; omitting it keeps coating coverage at forearm-to-hand rather than inventing a shoulder position. Source windows and optional whoosh `swingFrame` retain their previous semantics. Author new paths from permitted supplied motion; registering metadata does not create animation assets.
+Register the matching numeric track in `ProjectYakuza.AttackTracks` before use. `animation` must match the move, `fps` defines the sample rate, and each `frames` row contains forearm XYZ, wrist XYZ and knuckle XYZ. Optional `upperFrames` supplies shoulder XYZ at every corresponding frame; omitting it keeps coating coverage at forearm-to-hand rather than inventing a shoulder position. For legs, the same nine-value rows represent calf, foot and toe, with thigh positions in `upperFrames`. An optional `AttackEffectCatalog[style.id][animation]` entry can provide `track`, `duration`, `from`, `to` and ordered `windows`, each with `track`, `from` and `to`. Window-specific tracks allow successive QTE contacts to use different limbs. `chaos` clamps to 0..1 and defaults to 0.65. Existing `attackEffects` values override catalogue entries. Source windows and optional whoosh `swingFrame` retain their previous semantics. Author new paths from permitted supplied motion; registering metadata does not create animation assets.
 
-`AttackEffects.registerLimbProvider(id,fn)` remains an optional adapter hook. A move chooses its `limbProvider` ID, defaulting to `live`. The callback receives player, animation name and source time, returning forearm XYZ and desired hand-centre XYZ in absolute world coordinates. It may additionally return shoulder XYZ as values seven through nine. A six-value provider keeps its exact hand/forearm endpoints and uses the sampled shoulder offset. Invalid, partial or failing results fall back with a one-second retry throttle. `removeLimbProvider(id,fn)` unregisters it. No provider is bundled in the Lua-only setup.
+`AttackEffects.registerLimbProvider(id,fn)` remains an optional adapter hook. A move chooses its `limbProvider` ID, defaulting to `live`. The callback receives player, animation name, source time and the optional source `limb` name (`leftArm`, `rightArm`, `leftLeg`, `rightLeg`), returning forearm XYZ and desired hand-centre XYZ in absolute world coordinates. It may additionally return shoulder XYZ as values seven through nine. A six-value provider keeps its exact hand/forearm endpoints and uses the sampled shoulder offset. Invalid, partial or failing results fall back with a one-second retry throttle. `removeLimbProvider(id,fn)` unregisters it. No provider is bundled in the Lua-only setup.
 
 ## Limits and multiplayer
 
