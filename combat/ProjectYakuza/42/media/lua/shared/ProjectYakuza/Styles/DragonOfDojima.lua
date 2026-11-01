@@ -10,6 +10,7 @@ ProjectYakuza.registerStyle({
     heatRush={hits=8,windowMs=700},
     tigerDrop=true,
     combatVoiceVolume=2.25,
+    combatVoiceGains={CombatTaunt=0.85},
     quickstepVoices=false,
     soundVariety=true,
     attackSpeed=1.6,

@@ -16,11 +16,13 @@ function V.play(p,id)
     if not C.byId[id] or not V.allowed(p) or not V.ready() or not C.accepted[id] then return false,"unavailable" end
 
     local level=ProjectYakuza.SoundSettings and ProjectYakuza.SoundSettings.voiceLevel() or 1
-    if level<=0 then return false,"muted" end
+    local style=ProjectYakuza.getPlayerStyle(p)
+    local gain=style.combatVoiceGains and style.combatVoiceGains[id]or 1
+    local scale=(style.combatVoiceVolume or 1)*gain*level
+    if scale<=0 then return false,"muted" end
     local ok,played,reason=pcall(CustomVoice.playLine,p,C.modId,id)
     if not ok then return false,"provider_error" end
     if played==true and type(reason)=="number" and reason~=0 then
-        local scale=(ProjectYakuza.getPlayerStyle(p).combatVoiceVolume or 1)*level
         if type(scale)=="number" and scale>0 and scale~=1 then
 
             local emitter=p:getEmitter()

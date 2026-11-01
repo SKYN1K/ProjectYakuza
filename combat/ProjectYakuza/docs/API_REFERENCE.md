@@ -23,6 +23,7 @@ Require `ProjectYakuza/Registry` for shared definitions, `ProjectYakuza/Runtime`
 | enemyReactions/tigerDrop | Reaction/counter opt-ins; need matching move/controller definitions |
 | music/sounds | Per-style playlist/cue map; omitted/false adds no profile |
 | combatVoices | CVF enabled unless false; missing recordings stay silent |
+| combatVoiceVolume/combatVoiceGains | Optional overall multiplier and line-ID-to-gain map; nonnegative, default 1 per missing cue. Both compose with the Voices slider. |
 | combatVoiceVolume/quickstepVoices | Voice mix/default 1; movement-step voice enabled unless false |
 
 ## Move and action fields

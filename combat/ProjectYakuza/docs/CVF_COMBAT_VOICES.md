@@ -28,3 +28,6 @@ Dragon of Dojima has an animation-backed taunt, available without CVF or recordi
 
 Validation uses the exact upstream Core/Lines/Playback code plus the shipped suffix catalogue, not a guessed provider API. No live game was launched. This integration itself does not enable or install CVF for the user.
 
+
+
+Per-style `combatVoiceGains` optionally maps reserved line IDs to nonnegative volume multipliers. Missing IDs use 1, and 0 mutes that cue. The multiplier composes with `combatVoiceVolume` and the mod's Voices slider. DoD sets `CombatTaunt=0.85`, making its taunt voice 15% quieter while retaining the existing mix for other combat lines. The separate CVF voice pack is not modified.

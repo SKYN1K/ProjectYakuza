@@ -212,7 +212,7 @@ end
 
 local ProjectYakuza = ProjectYakuza
 ProjectYakuza.FEATURES={grab=false}
-ProjectYakuza.VERSION = "0.68.0"
+ProjectYakuza.VERSION = "0.69.0"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -368,6 +368,10 @@ function ProjectYakuza.validateStyle(style)
         else for key,cost in pairs(style.exertion)do if not allowed[key]or not number(cost)or cost<0 or cost>.1 then problem("invalid exertion cost: "..tostring(key))end end end
     end
     if style.combatVoiceVolume~=nil and (not number(style.combatVoiceVolume) or style.combatVoiceVolume<0) then problem("combatVoiceVolume must be nonnegative") end
+    if style.combatVoiceGains~=nil then
+        if type(style.combatVoiceGains)~="table"then problem("combatVoiceGains must map line IDs to nonnegative gains")
+        else for id,gain in pairs(style.combatVoiceGains)do if not text(id)or not number(gain)or gain<0 then problem("combatVoiceGains requires line IDs and nonnegative gains")end end end
+    end
     if style.soundVariety~=nil and type(style.soundVariety)~="boolean"then problem("soundVariety must be boolean")end
     if style.impactFeedback~=nil and style.impactFeedback~=false and not ({unarmed=true,blunt=true,blade=true})[style.impactFeedback]then problem("impactFeedback must be unarmed, blunt, blade or false")end
     if type(style.lightAttacks)~="table" or #style.lightAttacks==0 then problem("lightAttacks must contain at least one move")
