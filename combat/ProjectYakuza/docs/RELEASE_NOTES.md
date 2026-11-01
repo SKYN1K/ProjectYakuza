@@ -1,9 +1,9 @@
-# Project Yakuza 0.66.0
+# Project Yakuza 0.67.0
 
-- Fixed the post-Extreme Heat ready-stance crash when an eight-step boost chain ended beyond normal combo step four. Playing moves retain their pose; an unavailable ready index falls back to the first normal move.
-- Expanded limb coating across all 60 active DoD attack clips and 62 contact windows, including all finishers, charged attacks, directional/running/quickstep/ground attacks, Tiger Drop, Heat Rush QTE and weapon profiles.
-- Added restrained irregular flame/ember movement with centred endpoints. Contact-specific arm/leg motion follows numeric FK sampled from the existing converted clips. Separate contacts reset their trail history.
-- Kept the fixed 22-sprite/eight-actor budget, native source-phase tracking, pause/cleanup behavior and MP observer reconstruction. Committed/category events share one effect state; unrelated action completions cannot remove it.
-- No image, audio, animation or model assets were generated or modified. Lua-only setup and normal launcher retained. Other styles remain opt-in; disabled grabs and separate voice pack are unchanged.
+- Fixed Heat Rush ready attempts being consumed during temporary native recovery. They now wait and retry within a bounded window, including granted multiplayer attempts; expired grants release their server reservation.
+- Allowed a standing, facing target within two tiles after normal hit knockback. The same rule applies to owner and server, retaining eight confirmed boost lights, survival, clear paths/space and MP proof checks.
+- Fixed multi-hit target mismatch between the owner and server. The first eligible surviving target is retained, and same-swing contacts cannot inflate proof counts.
+- Added connected-light progress and a ready handoff label before the existing source-timed MMB prompts, using native text only.
+- Reduced all eight Extreme Heat boost-light entries by 30% (damage multiplier 0.75 to 0.525). Normal lights, finishers and QTE contact damage retain their existing values.
 
-Offline checks pass; the game was not launched. Live appearance and network latency need in-game verification. Restart matching server/client installations. See ATTACK_EFFECTS.md and VALIDATION_0.66.0.md.
+Offline checks pass; Project Zomboid was not launched. No graphical, audio, animation or model assets were generated or modified for this update. Grabs remain disabled and the separate voice pack is unchanged. Restart matching server/client installations. See VALIDATION_0.67.0.md.

@@ -654,6 +654,15 @@ local boost=ProjectYakuza.getStyle('dragon_of_dojima').extremeLightAttacks[1]
 for i=1,8 do rush.record(hs,{extreme=true,profile='',move=ProjectYakuza.getStyle('dragon_of_dojima').extremeLightAttacks[i],style='dragon_of_dojima'},z1,1700+i);clock=clock+50 end
 check(hs.rushCount==8,'one server proof per distinct validated boost swing')
 rush.record(hs,{extreme=true,profile='',move=boost,style='dragon_of_dojima'},z1,1708);check(hs.rushCount==8,'duplicate victim evidence cannot inflate combo proof')
+z1.x=1.65;check(rules.validTarget(p,z1),'server accepts the same post-hit handoff margin as the owner')
+local previousVictim=hs.rushVictim;z2.health=10;z2.x=1.2;z2.y=0;z2.useless=false;z2.attacking=false
+rush.record(hs,{extreme=true,profile='',move=boost,style='dragon_of_dojima'},z2,1708)
+check(hs.rushVictim==previousVictim and hs.rushCount==8,'second multi-hit victim cannot replace the first eligible proof target')
+local replayProof={rushCount=7,rushAt=clock,rushSwing=2007};z1.health=0
+rush.record(replayProof,{extreme=true,profile='',move=ProjectYakuza.getStyle('dragon_of_dojima').extremeLightAttacks[8],style='dragon_of_dojima'},z1,2008)
+check(replayProof.rushCount==8 and not replayProof.rushVictim,'dead final victim does not reserve an unusable target')
+rush.record(replayProof,{extreme=true,profile='',move=boost,style='dragon_of_dojima'},z2,2008)
+check(replayProof.rushVictim==z2.id and replayProof.rushCount==8,'same-swing first surviving victim supplies proof without adding hits');z1.health=10
 wall=true;command('heatRushBegin',{zombie=z1.id,request=2});check(not rush.leases[p],'paired source motion cannot start through walls');wall=false
 command('heatRushBegin',{zombie=z1.id,request=3});local lease=rush.leases[p];check(lease and rush.held[z1]==lease,'server grants one target/action lease')
 command('heatRushReady',{action=lease.action});check(lease.started and z1.useless and z1.ignore,'server owns paired victim lock only after ready')

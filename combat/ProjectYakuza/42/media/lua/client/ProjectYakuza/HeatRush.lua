@@ -17,12 +17,20 @@ function H.hit(p,z,weapon,damage)
         local continuing=chain and now()-chain.at<=1200 and s.step==chain.step+1
         chain={count=continuing and chain.count+1 or (s.step==1 and 1 or 0),step=s.step,at=now(),stamp=s.multiHitToken};H.chains[p]=chain
     end
-    if s.step==style.heatRush.hits and chain.count>=style.heatRush.hits and R.validTarget(p,z)then H.tickets[p]={z=z,pressed=true,stamp=s.multiHitToken,expires=now()+style.heatRush.windowMs};s.queued=0 end
+    if s.step==style.heatRush.hits and chain.count>=style.heatRush.hits and R.validTarget(p,z)then
+        local ticket=H.tickets[p]
+        if not ticket or ticket.stamp~=s.multiHitToken or not R.validTarget(p,ticket.z)then H.tickets[p]={z=z,pressed=true,stamp=s.multiHitToken,expires=now()+style.heatRush.windowMs}end
+        s.queued=0
+    end
+end
+function H.discard(p,ticket)
+    if ticket and ticket.granted and PY.Network then PY.Network.send(p,"heatRushEnd",{action=ticket.granted.action})end
+    H.tickets[p]=nil
 end
 function H.input(p,s,style)
     local ticket=H.tickets[p];if not ticket then return false end
-    if not p:isAiming()or PY.Bindings.down("finisher")then H.tickets[p]=nil;return false end
-    if not style.heatRush or not PY.Heat.isExtreme(p)or now()>ticket.expires and not ticket.sent or not R.validTarget(p,ticket.z)then H.tickets[p]=nil;return false end
+    if not p:isAiming()or PY.Bindings.down("finisher")then H.discard(p,ticket);return false end
+    if not style.heatRush or not PY.Heat.isExtreme(p)or now()>ticket.expires+(ticket.sent and 1000 or 0) or not R.validTarget(p,ticket.z)then H.discard(p,ticket);return false end
     local down=PY.Bindings.down("light")
     if down and not s.lastDown then ticket.pressed=true end
     if not ticket.pressed then return false end
@@ -41,7 +49,9 @@ function H.input(p,s,style)
             return true
         end
     end
-    H.tickets[p]=nil;local ok=PY.requestAction(p,"heatAction",nil,ticket)
+    local ok,reason=PY.requestAction(p,"heatAction",nil,ticket)
+    if not ok and (reason=="native_attack_busy"or reason=="busy")then return true end
+    H.tickets[p]=nil
     if not ok and ticket.granted then PY.Network.send(p,"heatRushEnd",{action=ticket.granted.action})end
     return true
 end
@@ -124,7 +134,8 @@ PY.registerStyleActionHandler("dragon_of_dojima","heatAction",{
     canStart=function(c)
         local p=c.player;local ticket=c.target;local cfg=c.style.heatRush
         if not p:isAiming()or p:isDead()or p:isOnFloor()or p:isKnockedDown()or p:getVehicle()or p:isClimbing()or (p:getHitReaction()or"")~=""or not cfg or not c.action.heatRush or not ticket or isClient()and not ticket.granted or not PY.Heat.isExtreme(p)or not R.validTarget(p,ticket.z)then return false,"not_ready"end
-        local f=p:getForwardDirection();return not p:hasTimedActions()and not p:isAttackStarted()and not p:isPerformingAttackAnimation()and R.space(p,{x=p:getX(),y=p:getY(),fx=f:getX(),fy=f:getY()}),"blocked_space"
+        if p:hasTimedActions()or p:isAttackStarted()or p:isPerformingAttackAnimation()then return false,"native_attack_busy"end
+        local f=p:getForwardDirection();return R.space(p,{x=p:getX(),y=p:getY(),fx=f:getX(),fy=f:getY()}),"blocked_space"
     end,
     start=function(c)
         PY.resetPlayer(c.player,"heat_rush_started");local a=A:new(c);c.timedAction=a;c.requestedAt=now();local ok,q=pcall(ISTimedActionQueue.add,a)

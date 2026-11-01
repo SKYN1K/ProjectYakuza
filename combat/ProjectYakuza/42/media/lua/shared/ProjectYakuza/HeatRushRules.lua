@@ -1,6 +1,6 @@
 require "ProjectYakuza/Registry"
 require "ProjectYakuza/HeatRushPaths"
-local R={duration=130/30}
+local R={duration=130/30,targetRange=2}
 ProjectYakuza.HeatRushRules=R
 function R.sample(path,time)
     local f=math.max(0,math.min(#path-1,time*30));local i=math.floor(f)+1;local a=path[i];local b=path[math.min(i+1,#path)];local t=f-math.floor(f)
@@ -13,7 +13,7 @@ end
 function R.validTarget(p,z,range)
     if not z or not instanceof(z,"IsoZombie")or z:isDead()or z:isOnFloor()or z:isKnockedDown()or z:isUseless()or z:isAttacking()or math.abs(z:getZ()-p:getZ())>.25 then return false end
     local dx,dy=z:getX()-p:getX(),z:getY()-p:getY();local n=math.sqrt(dx*dx+dy*dy);local f=p:getForwardDirection()
-    return n>.01 and n<=(range or 1.25)and (dx*f:getX()+dy*f:getY())/n>=.5
+    return n>.01 and n<=(range or R.targetRange)and (dx*f:getX()+dy*f:getY())/n>=.5
 end
 function R.space(p,job)
     local P=ProjectYakuza.NetworkProtocol;local paths=ProjectYakuza.HeatRushPaths

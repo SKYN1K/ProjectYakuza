@@ -9,6 +9,8 @@ local function reset()p.attacking=false;p.held=nil;mouse[0]=false;mouse[2]=false
 local function activate()PY.setHeat(p,100);check(H.start(p),'mode starts');check(H.isExtreme(p),'mode is active')end
 reset()
 check(#style.extremeLightAttacks==8,'eight-input boost chain using four supplied clips')
+for _,m in ipairs(style.extremeLightAttacks)do check(math.abs(m.damageMultiplier-.75*.7)<.000001,'boost light damage is reduced thirty percent')end
+for _,m in ipairs(style.lightAttacks)do check(m.damageMultiplier==.75,'normal light damage remains unchanged')end
 check(not style.actions.finisher.variants.extreme_default,'directional heavy removed')
 for i=1,4 do
  check(not style.actions.finisher.variants['extreme_after_'..i] and not style.actions.finisher.variants['extreme_double_after_'..i],'directional pair removed '..i)
@@ -21,6 +23,7 @@ for i=1,8 do
  PY.Combo.press(state(),8,1);p:AttemptAttack()
  check(state().step==i and state().activeLightMove==style.extremeLightAttacks[i],'native boost light '..i)
  check(p.vars.ProjectYakuzaMove==style.extremeLightAttacks[i].nodeValue,'owner selector '..i)
+ check(math.abs(token:getMinDamage()-.3*1.5*.525)<.000001 and math.abs(token:getMaxDamage()-.5*1.5*.525)<.000001,'native boost weapon damage has one thirty-percent reduction '..i)
  finish()
 end
 reset();activate();H.states[p].fuel=1;p:AttemptAttack()

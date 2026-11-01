@@ -48,3 +48,10 @@ Filter callbacks by your style/action identity. Completing a QTE does not automa
 The shared engine is deterministic sequence logic, not an authority bypass. Your server must bind a style/action/target lease, use its own registered definition, validate timing and input indices, deduplicate results, calculate damage and restore target state on every exit. Observers render confirmed results without replaying native Hit. DoD's HeatRushServer provides a concrete implementation with canonical token damage, proof of connected lights, one target reservation and stale-session protection. Other move types should register their own scoped backend.
 
 No new graphical/audio assets are needed to use this API. Retargeting or extracting additional supplied assets still requires the project's explicit asset approval.
+
+
+## DoD handoff repair (0.67.0)
+
+Eight confirmed boost-light inputs still qualify the paired finish. The final standing target can be within two tiles to account for ordinary post-hit knockback; owner and server use the same shared eligibility rule. Path, facing, standing, surviving-target, sequence-proof and reservation checks remain. Native busy recovery retains the ready ticket and retries within its bounded window rather than consuming it. A granted MP ticket gets at most one additional second for network/recovery handoff; expiry releases its reservation. The HUD shows connected-light count and the ready handoff before source-phase MMB prompts. DoD boost-light damage is 70% of its prior value; heavy/QTE damage and normal lights are retained.
+
+Multi-hit handoffs retain the first eligible victim rather than switching to the final victim hit. Server proof records the same eligible choice, accepts a later surviving victim if an earlier contact was already dead, and never counts the same swing twice.

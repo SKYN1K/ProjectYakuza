@@ -9,7 +9,18 @@ function U:onRightMouseDown()return false end
 function U:onRightMouseUp()return false end
 function U:render()
     local p=getSpecificPlayer(self.playerNum);local action=p and PY.HeatRush.active[p]
-    if not action or not action.seen or not action.qte or action.qte.closed then return end
+    if not action then
+        local style=p and PY.getPlayerStyle(p);local chain=p and PY.HeatRush.chains[p]
+        if not style or not style.heatRush or not PY.Heat.isExtreme(p)or not p:isAiming()then return end
+        local ticket=PY.HeatRush.tickets[p]
+        if ticket and (ticket.sent or getTimestampMs()<=ticket.expires)then
+            self:drawTextCentre("Heat Rush",self.width/2,self.height*.7,.7,.85,1,1,UIFont.Large)
+        elseif chain and chain.count>0 and getTimestampMs()-chain.at<=1200 then
+            self:drawTextCentre(PY.Bindings.label("light").."  "..chain.count.." / "..style.heatRush.hits,self.width/2,self.height*.7,.7,.85,1,1,UIFont.Large)
+        end
+        return
+    end
+    if not action.seen or not action.qte or action.qte.closed then return end
     local state=action.qte;local prompt=state.definition.prompts[state.index]
     if not prompt or not PY.QTE.window(state.definition,state.index,action.elapsed*1000)then return end
     local alpha=state.accepted[state.index]and .5 or 1

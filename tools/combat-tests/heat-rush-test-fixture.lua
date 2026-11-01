@@ -57,9 +57,20 @@ PY.setHeat(p,100);check(PY.Heat.start(p),'Extreme Heat starts for paired action'
 local state=PY.stateFor(p);state.active=true
 for i=1,7 do state.step=i;state.activeLightMove=style.extremeLightAttacks[i];state.multiHitToken={};H.hit(p,z,token,.1);clock=clock+100 end
 check(not H.tickets[p],'paired finish never begins before eighth connected light')
+z.x=1.65;check(R.validTarget(p,z),'native-hit knockback margin permits a nearby standing victim');z.x=2.01;check(not R.validTarget(p,z),'paired handoff cannot reach beyond two tiles');z.x=1.65
 state.step=8;state.activeLightMove=style.extremeLightAttacks[8];state.multiHitToken={};H.hit(p,z,token,.1);check(H.tickets[p]and H.tickets[p].z==z,'eighth confirmed hit stores existing target without search/steering')
+local second=setmetatable({}, {__index=z});function second:getOnlineID()return 26 end
+local oldInstanceof=instanceof;instanceof=function(obj,kind)return obj==second and kind=='IsoZombie'or oldInstanceof(obj,kind)end
+H.hit(p,second,token,.1);check(H.tickets[p].z==z,'multi-hit preserves the first eligible target for the server proof');instanceof=oldInstanceof
 state.active=false;p.attacking=false;state.lastDown=false;mouse[0]=true
-check(H.input(p,state,PY.getPlayerStyle(p)),'fresh extra light requests paired finish')
+local busy=true;function p:hasTimedActions()return busy end
+local savedTicket=H.tickets[p]
+check(H.input(p,state,PY.getPlayerStyle(p))and H.tickets[p]==savedTicket and not PY.activeActions[p],'native recovery retains the ready ticket instead of consuming it')
+local oldClient=isClient;local oldNetwork=PY.Network;isClient=function()return true end;PY.Network={send=function()error('granted recovery must not cancel or request a second lease')end};savedTicket.granted={action=44}
+check(H.input(p,state,PY.getPlayerStyle(p))and H.tickets[p]==savedTicket,'MP granted handoff also survives busy recovery')
+savedTicket.granted=nil;PY.Network=oldNetwork;isClient=oldClient
+busy=false
+check(H.input(p,state,PY.getPlayerStyle(p)),'cleared recovery requests paired finish without another light')
 local c=PY.activeActions[p];check(c and c.kind=='heatAction','registered heat action handler starts')
 local a=c.timedAction;a.action={setOverrideHandModelsObject=function()end};a:start()
 check(p.blocked and p.ignore and z.useless and z.ignore,'paired action owns movement/AI locks')
@@ -109,9 +120,16 @@ Events.OnGameStart=event();Events.OnCreatePlayer=event();getSpecificPlayer=funct
 getPlayerScreenLeft=function()return 0 end;getPlayerScreenTop=function()return 0 end;getPlayerScreenWidth=function()return 1920 end;getPlayerScreenHeight=function()return 1080 end
 UIFont={Large=1}
 do local _="ProjectYakuzaFixture:RUSH_UI" end
+function p:isLocalPlayer()return true end
 local U=PY.HeatRushUI;U.create();local panel=U.instances[0]
 check(panel.added and panel.background==false and panel.mouse==false,'QTE overlay has no fullscreen panel background and cannot capture mouse')
 local qte=Q.create(style.actions.heatAction.qte,down)
 H.active[p]={seen=true,qte=qte,elapsed=.8};panel:render();check(draws==1 and panel.lastText:find('MMB'),'QTE prompt uses current configurable binding label')
 H.active[p].elapsed=0;panel:render();check(draws==1,'QTE overlay is empty outside prompt windows');H.active[p]=nil
+H.chains[p]={count=7,at=clock};panel:render();check(draws==2 and panel.lastText:find('7 / 8'),'connected-light progress explains when prompts become available')
+H.chains[p]=nil;H.tickets[p]={expires=clock+700};panel:render();check(draws==3 and panel.lastText=='Heat Rush','ready handoff is visible during recovery')
+H.tickets[p].expires=clock-1;panel:render();check(draws==3,'expired handoff has no stale UI');H.tickets[p]=nil
+local ended=0;PY.Network={send=function(_,command)if command=='heatRushEnd'then ended=ended+1 end end}
+H.tickets[p]={z=z,pressed=true,expires=clock-1001,sent=clock-1100,granted={action=22}}
+check(not H.input(p,state,PY.getPlayerStyle(p))and not H.tickets[p]and ended==1,'expired MP recovery ticket releases its server reservation')
 return true,'PASS '..checks..' generic QTE validation, custom bindings, fresh presses, replay safety, native-phase contacts, canonical damage, paired cleanup and interruption checks'

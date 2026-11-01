@@ -16,12 +16,15 @@ end
 function H.record(s,job,z,swing)
     if not job.extreme or job.profile and job.profile~=""or not job.move.extremeHeat or job.move.afterLight or job.move.nodeValue=="dd_heat_rush"then return end
     local style=PY.getStyle(job.style);if not style or not style.heatRush then return end
-    local t=now();if s.rushSwing==swing then return end
+    local t=now();if s.rushSwing==swing then
+        if s.rushCount>=style.heatRush.hits and not s.rushVictim and R.validTarget(p,z)then s.rushVictim=z:getOnlineID()end
+        return
+    end
     local count=t-(s.rushAt or 0)<1200 and (s.rushCount or 0)or 0
     local expected=style.extremeLightAttacks and style.extremeLightAttacks[count+1]
     if expected and expected.nodeValue==job.move.nodeValue then count=count+1
     else count=style.extremeLightAttacks[1].nodeValue==job.move.nodeValue and 1 or 0 end
-    s.rushCount=count;s.rushAt=t;s.rushSwing=swing;s.rushVictim=z:getOnlineID()
+    s.rushCount=count;s.rushAt=t;s.rushSwing=swing;s.rushVictim=R.validTarget(p,z)and z:getOnlineID()or nil
 end
 function H.command(p,command,a,s)
     local job=H.leases[p];local t=now()
