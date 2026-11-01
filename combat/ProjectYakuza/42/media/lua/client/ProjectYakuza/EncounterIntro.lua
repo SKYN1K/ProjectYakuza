@@ -6,6 +6,12 @@ local E={states=setmetatable({}, {__mode="k"}),countBudget=192,squareBudget=256,
 PY.EncounterIntro=E
 local Panel=ISPanel:derive("ProjectYakuzaEncounterIntro")
 E.Panel=Panel
+function Panel:onMouseDown()return false end
+function Panel:onMouseUp()return false end
+function Panel:onMouseMove()return false end
+function Panel:onRightMouseDown()return false end
+function Panel:onRightMouseUp()return false end
+
 local function now()return getTimestampMs()end
 local function eligible(p)
     if not p or not p:isLocalPlayer() or p:isDead() or p:getVehicle() or not PY.isEquipped(p) then return end

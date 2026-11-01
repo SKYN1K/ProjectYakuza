@@ -1,5 +1,36 @@
 ProjectYakuza = ProjectYakuza or {}
 do
+local C={defaults={maxStocks=6,gainPerDamage=1.25,lossPerDamage=.5,idleGraceMs=3000,idleLossPerSecond=4,knockdownLoss=8,secondsPerStock=3.75,attackFuelCost=1.5,extremeDamage=1.5,extremeSpeed=1.2,retainStocks=true}}
+ProjectYakuza.HeatRules=C
+local limits={maxStocks={1,32},gainPerDamage={0,100},lossPerDamage={0,100},idleGraceMs={0,600000},idleLossPerSecond={0,100},knockdownLoss={0,100},secondsPerStock={.1,600},attackFuelCost={0,100}}
+local cache=setmetatable({}, {__mode="k"})
+function C.valid(cfg)
+    if cfg==nil or cfg==false then return true end
+    if type(cfg)~="table"then return false end
+    for key,value in pairs(cfg)do
+        if key=="retainStocks"then if type(value)~="boolean"then return false end
+        else
+            local range=limits[key]
+            if not range or type(value)~="number"or value~=value or value<range[1]or value>range[2]or key=="maxStocks"and value~=math.floor(value)then return false end
+        end
+    end
+    return true
+end
+function C.forStyle(style)
+    local cfg=style and style.heatConfig
+    if type(cfg)~="table"then return C.defaults end
+    local result=cache[cfg]
+    if not result then
+        if not C.valid(cfg)then return C.defaults end
+        result={};for key,value in pairs(cfg)do result[key]=value end
+        setmetatable(result,{__index=C.defaults});cache[cfg]=result
+    end
+    return result
+end
+function C.stockSize(style)return 100/C.forStyle(style).maxStocks end
+function C.invalidate(style)if type(style.heatConfig)=="table"then cache[style.heatConfig]=nil end end
+end
+do
 local S={};ProjectYakuza.HeatSpeed=S
 local function finite(v)return type(v)=="number"and v==v and v<math.huge and v>-math.huge end
 function S.valid(cfg)
@@ -133,7 +164,7 @@ end
 
 local ProjectYakuza = ProjectYakuza
 ProjectYakuza.FEATURES={grab=false}
-ProjectYakuza.VERSION = "0.63.0"
+ProjectYakuza.VERSION = "0.64.0"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -280,6 +311,7 @@ function ProjectYakuza.validateStyle(style)
     for _,key in ipairs({"heat","combatVoices","quickstepVoices","tigerDrop","enemyReactions","quickstepCancelLights"}) do
         if style[key]~=nil and type(style[key])~="boolean" then problem(key.." must be true or false") end
     end
+    if not ProjectYakuza.HeatRules.valid(style.heatConfig)then problem("invalid heatConfig capacity, gain or drain setting")end
     if not ProjectYakuza.HeatSpeed.valid(style.heatAttackSpeed)then problem("heatAttackSpeed requires max 1..2, optional power 0.25..4 and useExtremeFuel boolean")end
     if style.exertion~=nil and style.exertion~=false then
         local allowed={light=true,directional=true,quickstepAttack=true,ground=true,running=true,dropkick=true,heavy=true,finisher=true,double=true,charged=true,counter=true,heatAction=true}
@@ -360,6 +392,7 @@ function ProjectYakuza.registerStyle(style)
     style.comboResetMs = style.comboResetMs or 750
     style.lightBufferLimit = style.lightBufferLimit or 1
     if not ProjectYakuza.styles[style.id] then table.insert(ProjectYakuza.styleOrder, style.id) end
+    ProjectYakuza.HeatRules.invalidate(style)
     ProjectYakuza.styles[style.id] = style
     ProjectYakuza.emit("styleRegistered", style)
     return style
@@ -514,7 +547,7 @@ function ProjectYakuza.requestAction(player, kind, variant, target)
     if action.requiresTarget and not action.targetAnimation then return false, "missing_target_animation" end
     local handler = ProjectYakuza.getActionHandler(style.id,kind)
     if not handler then return false, "missing_handler" end
-    local cost = action.heatStocks and action.heatStocks*(ProjectYakuza.Heat and ProjectYakuza.Heat.stockSize() or 100/6) or action.heatCost or 0
+    local cost = action.heatStocks and action.heatStocks*(ProjectYakuza.Heat and ProjectYakuza.Heat.stockSize(player) or ProjectYakuza.HeatRules.stockSize(style)) or action.heatCost or 0
     if ProjectYakuza.getHeat(player) < cost then return false, "insufficient_heat" end
     local combo = ProjectYakuza.stateFor and ProjectYakuza.stateFor(player) or nil
     local comboStep = combo and combo.step or 0

@@ -2,6 +2,11 @@ require "ProjectYakuza/HeatRush"
 require "ISUI/ISPanel"
 local PY=ProjectYakuza
 local U=ISPanel:derive("ProjectYakuzaHeatRushPrompt");PY.HeatRushUI=U
+function U:onMouseDown()return false end
+function U:onMouseUp()return false end
+function U:onMouseMove()return false end
+function U:onRightMouseDown()return false end
+function U:onRightMouseUp()return false end
 function U:render()
     local p=getSpecificPlayer(self.playerNum);local action=p and PY.HeatRush.active[p]
     if not action or not action.seen or not action.qte or action.qte.closed then return end

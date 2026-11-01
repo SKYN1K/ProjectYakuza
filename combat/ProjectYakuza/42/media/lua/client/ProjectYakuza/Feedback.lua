@@ -180,7 +180,7 @@ function F.heatChanged(p)
     if not p or not p:isLocalPlayer() then return end
     local current=ProjectYakuza.Heat.stocks(p);local previous=F.stocks[p];F.stocks[p]=current
     if previous==nil or current<=previous or ProjectYakuza.Heat.isExtreme(p) or not ProjectYakuza.isEquipped(p) then return end
-    F.play(p,current>=ProjectYakuza.Heat.config.maxStocks and F.sound(p,"heatFull") or F.sound(p,"heatGain"),.55)
+    F.play(p,current>=(ProjectYakuza.Heat.rules and ProjectYakuza.Heat.rules(p)or ProjectYakuza.Heat.config).maxStocks and F.sound(p,"heatFull") or F.sound(p,"heatGain"),.55)
 end
 function F.initialise()
     for i=0,3 do local p=getSpecificPlayer(i);if p then F.stocks[p]=ProjectYakuza.Heat.stocks(p) end end

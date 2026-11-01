@@ -24,3 +24,7 @@ Version 0.42.0 halves confirmed-hit heat gain relative to 0.41.0 (2.5 to 1.25 ra
 ## Optional Heat attack speed (0.61.0)
 
 Addon styles can opt in with heatAttackSpeed={max=1.25,power=1,useExtremeFuel=false}, with per-weapon overrides. The curve is sampled per committed attack, applies to the existing native speed variables and is bounded/replicated in MP snapshots. Fixed-speed timed clips are not automatically retimed. Dragon of Dojima does not enable this feature. See [Heat-based attack speed](HEAT_ATTACK_SPEED.md) for validation, timing and authoring contracts.
+
+## Per-style Heat rules (0.64.0)
+
+Optional `heatConfig` sets per-style gain, normal/Extreme drain and 1..32 stock capacity. Weapon profiles inherit and merge field overrides. Taunt rewards, stock-priced actions, the built-in orb row, custom UI context and server activation protection use the effective capacity. Omitted configuration leaves DoD unchanged. See [Heat configuration](HEAT_CONFIGURATION.md) for bounds, defaults, APIs, stock retention and network requirements.

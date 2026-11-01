@@ -334,5 +334,16 @@ check(HUD.instance.frame==phase,'Extreme Heat HUD glow animation pauses')
 extremeHud=false;clock=clock+101;hudDraws={};HUD.instance:prerender()
 check(cropped(130,38,129,121)==1 and cropped(0,38,129,121)==0,'ending mode restores the white dragon artwork')
 check(cropped(0,0,37,37)==6 and cropped(339,63,77,62)==2,'normal orb rings and connectors return after mode')
+do
+ local rules=PY.Heat.rules
+ for _,capacity in ipairs({1,3,8,32})do
+  PY.Heat.rules=function()return {maxStocks=capacity}end
+  clock=clock+101;hudDraws={};HUD.instance:prerender()
+  check(cropped(0,0,37,37)==capacity,'stock row uses per-style capacity '..capacity)
+  check(HUD.instance.label:find(' / '..capacity..' ',1,true),'stock label uses matching capacity '..capacity)
+ end
+ PY.Heat.rules=rules
+ check(HUD.instance:onRightMouseDown()==false and HUD.instance:onRightMouseUp()==false,'heat HUD passes native right-button press and release through')
+end
 print('PASS '..checks..' charged heavy, style UI and outline checks')
 return checks

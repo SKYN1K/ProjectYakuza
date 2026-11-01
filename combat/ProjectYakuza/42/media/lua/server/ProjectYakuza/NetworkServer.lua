@@ -77,7 +77,7 @@ function S.snapshot(p,a,s)
     if not equipped or kind~="heatActivation" then S.restoreProtection(p,s);s.wasActivation=false
     elseif not s.wasActivation then
         s.wasActivation=true
-        if a.heat>=100/6 and activation then
+        if a.heat>=ProjectYakuza.HeatRules.stockSize(style) and activation then
             s.protection={ghost=p:isGhostMode(),invincible=p:isInvincible(),expires=now()+math.min(3500,(activation.duration or 2)*1000+500)}
             p:setGhostMode(true);p:setInvincible(true)
         end

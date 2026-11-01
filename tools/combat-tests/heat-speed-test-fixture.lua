@@ -39,6 +39,33 @@ check(near(H.attackHeatMultiplier(p),1.5)and near(p.vars.ProjectYakuzaCombatSpee
 H.states[p].fuel=25;H.playback(p,true);check(near(p.vars.ProjectYakuzaCombatSpeed,3.6),'fuel drain cannot accelerate/decelerate the current swing')
 H.endSwing(p);H.onSwing(p,style.lightAttacks[1]);check(near(H.attackHeatMultiplier(p),1.125),'next Extreme attack samples remaining fuel')
 PY.emit('styleChanged',p);check(H.attackHeatMultiplier(p)==1,'style changes clear captured speed')
+do
+ local C=PY.HeatRules
+ check(baseStyle.heatConfig==nil and H.rules(p).maxStocks==6,'DoD keeps its exact global heat defaults')
+ for _,bad in ipairs({{maxStocks=0},{maxStocks=33},{maxStocks=1.5},{gainPerDamage=-1},{gainPerDamage=math.huge},{idleGraceMs=-1},{idleLossPerSecond=0/0},{secondsPerStock=0},{attackFuelCost=-1},{retainStocks=1},{typo=1}})do check(not C.valid(bad),'invalid capacity/gain/drain rules rejected')end
+ local own={};for k,v in pairs(baseStyle)do own[k]=v end;own.id='test_heat_rules';own.name='Heat rules test'
+ own.heatConfig={maxStocks=3,gainPerDamage=10,lossPerDamage=2,idleGraceMs=0,idleLossPerSecond=10,secondsPerStock=5,attackFuelCost=7,retainStocks=false}
+ check(PY.registerStyle(own)==own,'future styles can register their own Heat rules')
+ reset(own.id);PY.setHeat(p,20)
+ check(near(H.stockSize(p),100/3)and H.stocks(p)==0,'custom stock size uses normalized Heat')
+ H.onHit(p,{},3,{active=true});check(near(PY.getHeat(p),40)and H.stocks(p)==1,'custom confirmed-hit gain retains damage cap and stock thresholds')
+ H.lose(p,10);check(near(PY.getHeat(p),30),'optional continuous drain can consume completed stocks')
+ H.onDamage(p,'BITE',2);check(near(PY.getHeat(p),26),'style owns damage-related heat loss')
+ H.states[p].lastUpdate=clock;H.states[p].lastAction=clock-1000;clock=clock+100;H.update(p)
+ check(near(PY.getHeat(p),25),'style owns idle grace and passive drain')
+ PY.setHeat(p,100);check(H.start(p),'custom Heat mode starts with a full gauge')
+ H.onSwing(p,own.lightAttacks[1]);check(near(H.states[p].fuel,93),'style owns per-attack Extreme fuel cost')
+ H.onHit(p,{},2,{active=true});check(near(H.states[p].fuel,93)and PY.getHeat(p)==0,'custom gain remains disabled during Extreme Heat')
+ H.states[p].lastUpdate=clock;clock=clock+100;H.update(p)
+ check(near(H.states[p].fuel,93-(100/3)/5*.1),'custom seconds-per-stock sets timed fuel drain')
+ H.stop(p,'test');own.heatConfig.retainStocks=true;own.heatConfig.gainPerDamage=12;PY.registerStyle(own)
+ PY.setHeat(p,60);H.lose(p,50);check(near(PY.getHeat(p),100/3),'retained-stock mode remains configurable')
+ check(H.rules(p).gainPerDamage==12,'official same-table registration refreshes merged rules')
+ local view=PY.Weapons.register(own.id,{id='rules_bat',items={'Base.HeatRulesTestBat'},lightAttacks=PY.Weapons.views.dragon_of_dojima.bat.lightAttacks,actions={},heatConfig={maxStocks=8}})
+ check(C.forStyle(view).maxStocks==8 and C.forStyle(view).gainPerDamage==12,'weapon Heat overrides inherit the owning style gain')
+ check(H.config.maxStocks==6 and H.config.gainPerDamage==1.25 and C.forStyle(baseStyle)==H.config,'custom rules never mutate DoD/global defaults')
+ reset(style.id)
+end
 reset(style.id);style.heatAttackSpeed={max=1.5};PY.setHeat(p,50);H.onSwing(p,style.lightAttacks[1]);p.combo=nil
 local s=PY.stateFor(p);s.active=true;s.multiHitToken={};s.startedAt=clock
 Events.OnGameStart=event();p.playSound=function()return 0 end;p.getEmitter=function()return {}end

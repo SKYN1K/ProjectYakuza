@@ -98,3 +98,7 @@ Primary impact packets and supplementary damage results include server-derived `
 ## Runtime optimization (0.63.0)
 
 Unchanged inactive equipment sends a three-second heartbeat; equipped combat retains one second, and state transitions/forced events keep their existing immediate capture path. Typed comparison includes ground mode and preserves the existing Heat/fuel/charge thresholds. Definition support and action-kind metadata use per-view indexes; official style registration invalidates them. Target/range/path/replay authority checks still run for every attack. Path traversal reuses tiles only within one synchronous call and zombie lookup searches near tiles first without a persistent cache. See [Performance](PERFORMANCE.md) for operation counts, regression coverage and preserved limits. Protocol remains 2; matching versions are recommended.
+
+## Heat capacity and RMB overlays (0.64.0)
+
+The server derives activation's one-stock threshold from the registered style/weapon Heat configuration, rather than assuming six stocks. Normalized Heat/fuel bounds and existing ownership/validation remain. Clients need the same style definitions; no client supplies its own configuration in a packet. The full-screen QTE prompt and other passive overlays explicitly return false for native right-button press/release, preserving gameplay aiming and context menus on each client. The interactive style setup dialog is unchanged.

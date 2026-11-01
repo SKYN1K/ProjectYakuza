@@ -1,6 +1,6 @@
 # Documentation index
 
-Current manual: Project Yakuza 0.63.0, Lua API 3, MP protocol 2.
+Current manual: Project Yakuza 0.64.0, Lua API 3, MP protocol 2.
 
 | Task | Guide |
 | --- | --- |
@@ -23,6 +23,7 @@ Current manual: Project Yakuza 0.63.0, Lua API 3, MP protocol 2.
 | Attack endurance costs and tuning | [Exertion](EXERTION.md) |
 | Optional speed curves for addon styles | [Heat attack speed](HEAT_ATTACK_SPEED.md) |
 | Heat rules and tuning | [Heat](HEAT.md) |
+| Per-style gain, drain and stock capacity | [Heat configuration](HEAT_CONFIGURATION.md) |
 | Code maintenance, lookup caches and comment checks | [Performance](PERFORMANCE.md) |
 | Validate/package/troubleshoot | [Testing](TESTING.md) |
 | Copy a starter | [StyleSubmod](../templates/StyleSubmod/README.md) |
@@ -44,4 +45,4 @@ The JSON records identify original supplied files, conversions and hashes for re
 
 - [Manual directional attacks and taunt attention](DIRECTIONAL_AND_TAUNTS.md)
 
-- [Current validation](VALIDATION_0.63.0.md)
+- [Current validation](VALIDATION_0.64.0.md)

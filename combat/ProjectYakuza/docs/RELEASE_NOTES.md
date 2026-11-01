@@ -1,9 +1,8 @@
-# Project Yakuza 0.63.0
+# Project Yakuza 0.64.0
 
-- Optimized MP state authorization with cached style/weapon animation support and action-kind indexes, invalidated by official registration. Server snapshots reuse their validated equipment-view move.
-- Reworked path traversal to avoid repeatedly reading the same tiles while retaining the same wall/diagonal checks. Zombie-ID searches inspect nearby tiles first, with the existing full search limit and no persistent target cache.
-- Replaced concatenated client state signatures with typed comparisons, including ground changes. Unchanged inactive clients send three-second heartbeats; active combat and changed/forced updates retain their existing timing.
-- Reduced unchanged protection-hook scans, idle deferred-queue allocation and repeated sender-coordinate reads. Replay batches skip entries removed during lifecycle cleanup.
-- Removed unused internal attached-sprite search/removal helpers and stale barrage documentation. Preserved disabled grabs, retained assets, future-style hooks, gameplay tuning, weapon poses and the separate voice pack. Made the no-code-comments rule explicit in AGENTS.md.
+- Fixed RMB interception by the full-screen QTE prompt and other passive overlays. B42 treats inherited empty right-button handlers as consuming the click even when mouse consumption is disabled. Explicit false handlers now preserve aiming and context menus; no global mouse or keybinding settings were changed.
+- Added optional per-style Heat gain, loss, idle grace/drain, knockdown loss, Extreme duration/attack fuel cost and 1..32 stock capacity, plus optional continuous normal-stock drain.
+- Added merged weapon-profile overrides, effective rule APIs and validation. Taunt rewards, stock-priced actions, HUD/custom UI capacity and server activation protection use the effective settings.
+- Dragon of Dojima keeps its previous six-stock configuration and current gain/drain values. Built-in six-orb coordinates are unchanged; additional capacities reuse the supplied textures. No visual/audio/animation assets or separate voice-pack files changed. Grabs remain disabled.
 
-Offline operation-count, authority and regression checks pass. No game/FPS or live MP benchmark was run; PZ stayed closed. No graphical/audio/animation assets or native selector definitions changed. See PERFORMANCE.md and VALIDATION_0.63.0.md. Restart with matching server/client installations.
+All offline fixtures and a native B42 right-button routing probe pass. PZ was not launched; live input/MP appearance still needs an in-game check. Restart server and clients with matching 0.64.0. See HEAT_CONFIGURATION.md and VALIDATION_0.64.0.md.

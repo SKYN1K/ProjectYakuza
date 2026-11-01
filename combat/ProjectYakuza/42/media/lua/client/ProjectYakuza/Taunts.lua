@@ -75,7 +75,7 @@ function A:perform()
 
     local complete=self.started and self.seenClip and self.character:GetVariable("ProjectYakuzaTaunt")=="done" and self:isValid()
     if complete and not ProjectYakuza.Heat.isExtreme(self.character) then
-        ProjectYakuza.setHeat(self.character,ProjectYakuza.getHeat(self.character)+ProjectYakuza.Heat.stockSize())
+        ProjectYakuza.setHeat(self.character,ProjectYakuza.getHeat(self.character)+ProjectYakuza.Heat.stockSize(self.character))
     end
     if complete and not isClient()and ProjectYakuza.TauntReactions then ProjectYakuza.TauntReactions.react(self.character,self.context.style)end
     self:cleanup(complete==true);ISBaseTimedAction.perform(self)

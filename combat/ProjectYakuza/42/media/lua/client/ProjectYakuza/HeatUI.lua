@@ -5,7 +5,6 @@ local ProjectYakuza=ProjectYakuza
 local H=ISPanel:derive("ProjectYakuzaHeatGauge")
 ProjectYakuza.HeatUI=H
 H.scale=0.75
-H.visualOrbs=6
 H.originX=78
 H.originY=90
 H.glowColor={0.35,0.75,1}
@@ -61,7 +60,7 @@ function H:drawGauge(p)
     if time>=(self.nextRead or 0) then
         self.heat=math.max(0,math.min(100,ProjectYakuza.Heat.display(p)))
         self.extreme=ProjectYakuza.Heat.isExtreme(p)
-        self.label=self.extreme and "EXTREME HEAT" or ("HEAT  "..ProjectYakuza.Heat.stocks(p).." / "..ProjectYakuza.Heat.config.maxStocks.."  ["..ProjectYakuza.Bindings.label("extremeHeat").."]")
+        self.label=self.extreme and "EXTREME HEAT" or ("HEAT  "..ProjectYakuza.Heat.stocks(p).." / "..(ProjectYakuza.Heat.rules and ProjectYakuza.Heat.rules(p)or ProjectYakuza.Heat.config).maxStocks.."  ["..ProjectYakuza.Bindings.label("extremeHeat").."]")
         self.nextRead=time+100
     end
     local paused=isGamePaused()
@@ -78,6 +77,9 @@ function H:drawGauge(p)
         self.visualHeat=self.fillFrom+(self.fillTarget-self.fillFrom)*t*t*(3-2*t)
     end
     local phase=self.frame or 0;local a=H.loadAssets()
+    local capacity=(ProjectYakuza.Heat.rules and ProjectYakuza.Heat.rules(p)or ProjectYakuza.Heat.config).maxStocks
+    local pairs=math.ceil(capacity/2)
+    if self.setWidth then self:setWidth(math.max(348,H.originX+(56+38*capacity)*H.scale))end
 
     self.glowState=self.extreme and "extreme" or (self.heat>=99.999 and "ready" or "none")
     local glowAlpha
@@ -88,8 +90,8 @@ function H:drawGauge(p)
         local previous=renderer:getDoAdditive()
         renderer:setDoAdditive(false)
         self:drawOriginal(a.glow,-102,-114,234,212,glowAlpha,nil,self.extreme and H.extremeGlowColor or H.glowColor,true)
-        self:drawOriginal(a.glowLink,132,-45.5,78,137,glowAlpha,nil,self.extreme and H.extremeGlowColor or H.glowColor,true)
-        self:drawOriginal(a.glowTail,210,-46.5,120,137,glowAlpha,nil,self.extreme and H.extremeGlowColor or H.glowColor,true)
+        for link=1,math.max(0,pairs-2)do self:drawOriginal(a.glowLink,55+77*link,-45.5,78,137,glowAlpha,nil,self.extreme and H.extremeGlowColor or H.glowColor,true)end
+        self:drawOriginal(a.glowTail,56+77*(pairs-1),-46.5,120,137,glowAlpha,nil,self.extreme and H.extremeGlowColor or H.glowColor,true)
         renderer:setDoAdditive(previous)
     end
     self:drawOriginal(a.glass,-34,-34,68,68)
@@ -105,16 +107,16 @@ function H:drawGauge(p)
         else self.activationMs=nil end
     end
 
-    self:drawOriginal(self.extreme and a.extremeConnector or a.connector,54.5,-6,77,62)
-    self:drawOriginal(self.extreme and a.extremeConnector or a.connector,131.5,-6,77,62)
-    self:drawOriginal(self.extreme and a.extremeTail or a.tail,208,-6,92,62)
+    for link=1,pairs-1 do self:drawOriginal(self.extreme and a.extremeConnector or a.connector,54.5+77*(link-1),-6,77,62)end
+    self:drawOriginal(self.extreme and a.extremeTail or a.tail,208+77*(pairs-3),-6,92,62)
 
     local centers={56,93,130,169,207,246}
-    for i=1,H.visualOrbs do
+    if capacity~=6 then centers={}for i=1,capacity do centers[i]=56+(i-1)*38.5 end end
+    for i=1,capacity do
         local x=centers[i]-18.5;local y=6.5
         self:drawOriginal(self.extreme and a.extremeRing or a.stockRing,x,y,37,37)
         self:drawOriginal(self.extreme and a.extremeGlass or a.stockGlass,x,y,37,37)
-        local fraction=math.max(0,math.min(1,self.visualHeat*ProjectYakuza.Heat.config.maxStocks/100-(i-1)))
+        local fraction=math.max(0,math.min(1,self.visualHeat*(ProjectYakuza.Heat.rules and ProjectYakuza.Heat.rules(p)or ProjectYakuza.Heat.config).maxStocks/100-(i-1)))
         if not self.extreme then
             self:drawFill(a.core,centers[i]-14.5,10.5,29,fraction,.9)
             if fraction>0 then self:drawOriginal(a.stockGlass,x,y,37,37,.4) end
@@ -132,6 +134,8 @@ function H:drawGauge(p)
     end
     self:drawText(self.label or "",55,157,.8,.9,1,1,UIFont.Small)
 end
+function H:onRightMouseDown()return false end
+function H:onRightMouseUp()return false end
 function H:onMouseDown()return false end
 function H:onMouseUp()return false end
 function H:onMouseMove()return false end

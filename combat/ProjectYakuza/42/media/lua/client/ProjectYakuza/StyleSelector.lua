@@ -9,6 +9,11 @@ local S={}
 ProjectYakuza.StyleSelector=S
 local Wheel=ISPanel:derive("ProjectYakuzaStyleWheel")
 local Setup=ISPanel:derive("ProjectYakuzaStyleSetup")
+function Wheel:onMouseDown()return false end
+function Wheel:onMouseUp()return false end
+function Wheel:onMouseMove()return false end
+function Wheel:onRightMouseDown()return false end
+function Wheel:onRightMouseUp()return false end
 local positions={top={170,66},left={66,170},right={274,170},bottom={170,274}}
 function S.allowed(p)
     return p and p:isLocalPlayer() and not p:isDead() and not p:getVehicle()

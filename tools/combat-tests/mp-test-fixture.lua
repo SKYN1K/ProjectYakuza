@@ -819,6 +819,19 @@ do
  client.command=command;client.deferred=deferred;client.nextDeferred=nextRetry;client.nextRemote=nextRemote
 end
 
+
+do
+ local style=ProjectYakuza.getStyle('dragon_of_dojima');local original=style.heatConfig
+ style.heatConfig={maxStocks=2};ProjectYakuza.registerStyle(style)
+ clock=clock+2000;snapshot(p,{clip='ProjectYakuza_DD_Light01',move='dd_light_01',heat=30})
+ snapshot(p,{clip='ProjectYakuza_DD_HeatActivate01',move='dd_light_01',heat=30,action=15000})
+ check(not server.players[p.id].protection,'server uses custom stock cost before granting activation protection')
+ snapshot(p,{clip='ProjectYakuza_DD_Light01',move='dd_light_01',heat=60})
+ snapshot(p,{clip='ProjectYakuza_DD_HeatActivate01',move='dd_light_01',heat=60,action=15001})
+ check(server.players[p.id].protection~=nil,'server accepts activation at custom stock threshold')
+ server.restoreProtection(p,server.players[p.id]);style.heatConfig=original;ProjectYakuza.registerStyle(style)
+end
+
 end)()
 
 return 'PASS '..count..' MP authority, duplicate, range, lease, cooldown, observer and throttle checks'

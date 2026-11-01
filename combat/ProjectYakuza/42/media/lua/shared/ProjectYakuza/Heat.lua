@@ -2,8 +2,8 @@ require "ProjectYakuza/Registry"
 local ProjectYakuza=ProjectYakuza
 local H={states=setmetatable({}, {__mode="k"})}
 ProjectYakuza.Heat=H
-H.config={maxStocks=6,gainPerDamage=1.25,lossPerDamage=0.5,idleGraceMs=3000,idleLossPerSecond=4,
-    knockdownLoss=8,secondsPerStock=3.75,attackFuelCost=1.5,extremeDamage=1.5,extremeSpeed=1.2}
+H.config=ProjectYakuza.HeatRules.defaults
+function H.rules(p)return ProjectYakuza.HeatRules.forStyle(p and ProjectYakuza.getPlayerStyle(p))end
 local function time()return getTimestampMs()end
 function H.enabled(p)local style=ProjectYakuza.getPlayerStyle(p);return style and style.heat==true or false end
 function H.attackHeatMultiplier(p)
@@ -24,8 +24,8 @@ local function state(p)
     if not s then s={lastAction=time(),nextUpdate=0};H.states[p]=s end
     return s
 end
-function H.stockSize()return 100/H.config.maxStocks end
-function H.stocks(p)return math.min(H.config.maxStocks,math.floor((ProjectYakuza.getHeat(p)+0.000001)/H.stockSize()))end
+function H.stockSize(p)return 100/H.rules(p).maxStocks end
+function H.stocks(p)return math.min(H.rules(p).maxStocks,math.floor((ProjectYakuza.getHeat(p)+0.000001)/H.stockSize(p)))end
 function H.isExtreme(p)local s=H.states[p];return s and s.extreme==true or false end
 function H.display(p)local s=H.states[p];return s and s.extreme and s.fuel or ProjectYakuza.getHeat(p)end
 function H.restoreMoveDamage(item)
@@ -118,7 +118,7 @@ function H.lose(p,amount)
         return
     end
 
-    local heat=ProjectYakuza.getHeat(p);local floor=H.stocks(p)*H.stockSize()
+    local heat=ProjectYakuza.getHeat(p);local floor=H.rules(p).retainStocks and H.stocks(p)*H.stockSize(p)or 0
     local value=math.max(floor,heat-amount)
     if math.abs(value-heat)>0.000001 then ProjectYakuza.setHeat(p,value) end
 end
@@ -126,7 +126,7 @@ function H.onSwing(p,move)
     local s=state(p);initialize(p,s);s.lastAction=time()
     local style=ProjectYakuza.getPlayerStyle(p);local curve=style and type(style.heatAttackSpeed)=="table"
     s.attackHeatSpeed=curve and ProjectYakuza.HeatSpeed.factor(style,ProjectYakuza.getHeat(p),s.fuel,s.extreme)or nil
-    if s.extreme then H.lose(p,H.config.attackFuelCost);if curve then H.playback(p,s.extreme,s.attackHeatSpeed)end
+    if s.extreme then H.lose(p,H.rules(p).attackFuelCost);if curve then H.playback(p,s.extreme,s.attackHeatSpeed)end
     else H.prepareToken(p:getPrimaryHandItem());H.playback(p,false) end
     H.applyMoveDamage(p,move)
 end
@@ -139,12 +139,12 @@ function H.onHit(p,victim,damage,combo)
     combo.heatVictims=combo.heatVictims or setmetatable({}, {__mode="k"})
     if combo.heatVictims[victim] then return end
     combo.heatVictims[victim]=true
-    ProjectYakuza.setHeat(p,ProjectYakuza.getHeat(p)+math.min(damage,2)*H.config.gainPerDamage)
+    ProjectYakuza.setHeat(p,ProjectYakuza.getHeat(p)+math.min(damage,2)*H.rules(p).gainPerDamage)
 end
 function H.onDamage(p,kind,damage)
     if not p or not instanceof(p,"IsoPlayer") or not p:isLocalPlayer() or not ProjectYakuza.isEquipped(p) or not H.enabled(p) then return end
     if kind=="BLEEDING" or kind=="HUNGRY" or kind=="THIRST" or kind=="SICKNESS" or kind=="POISON" then return end
-    H.lose(p,(tonumber(damage) or 0)*H.config.lossPerDamage)
+    H.lose(p,(tonumber(damage) or 0)*H.rules(p).lossPerDamage)
 end
 function H.update(p)
     if not p or not instanceof(p,"IsoPlayer") or not p:isLocalPlayer() then return end
@@ -164,13 +164,13 @@ function H.update(p)
     if action and action.kind=="taunt" then s.lastAction=t end
     if s.extreme then
         if not equipped or p:getPrimaryHandItem()~=s.weapon or p:getVehicle() then H.stop(p,"unequipped");return end
-        H.lose(p,elapsed*H.stockSize()/H.config.secondsPerStock)
-    elseif equipped and ProjectYakuza.getHeat(p)>0 and t-s.lastAction>H.config.idleGraceMs then
-        H.lose(p,elapsed*H.config.idleLossPerSecond)
+        H.lose(p,elapsed*H.stockSize(p)/H.rules(p).secondsPerStock)
+    elseif equipped and ProjectYakuza.getHeat(p)>0 and t-s.lastAction>H.rules(p).idleGraceMs then
+        H.lose(p,elapsed*H.rules(p).idleLossPerSecond)
     end
     if equipped and (H.isExtreme(p) or ProjectYakuza.getHeat(p)>0) then
         local knocked=p:isOnFloor() or p:isKnockedDown()
-        if knocked and not s.knocked then H.lose(p,H.config.knockdownLoss) end
+        if knocked and not s.knocked then H.lose(p,H.rules(p).knockdownLoss) end
         s.knocked=knocked
     else s.knocked=false end
 end

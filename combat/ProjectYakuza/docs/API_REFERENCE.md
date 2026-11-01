@@ -205,3 +205,7 @@ See [Weapons](WEAPONS.md) for `impactFeedback`, profile cue maps, native weapon 
 ## Network definition lookups (0.63.0)
 
 `NetworkProtocol.supports(styleView,clipEntry)` checks whether the registered equipment view supports a native animation or enabled action contract. `NetworkProtocol.kind(styleId,clipId)` retains its kind/move metadata result, including disabled definitions. The per-definition index is invalidated by official style registration or replacement of its move/action collections. Keep registered nested tables immutable during play and re-register changes. This cache does not bypass per-hit range/path/ownership/replay validation. See [Performance](PERFORMANCE.md).
+
+## Per-style Heat rules (0.64.0)
+
+Optional `heatConfig` sets per-style gain, normal/Extreme drain and 1..32 stock capacity. Weapon profiles inherit and merge field overrides. Taunt rewards, stock-priced actions, the built-in orb row, custom UI context and server activation protection use the effective capacity. Omitted configuration leaves DoD unchanged. See [Heat configuration](HEAT_CONFIGURATION.md) for bounds, defaults, APIs, stock retention and network requirements.

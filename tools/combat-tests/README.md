@@ -157,3 +157,7 @@ The blood fixture covers captured unarmed/blunt/blade particles, native-alpha wo
 ## MP hot-path regressions
 
 The MP fixture compares indexed support with the original full catalogue scan, checks 1,000 warm support/kind queries without definition-array scans, and verifies official registration invalidation. It compares 288 path/obstacle/direction cases and ordered collision crossings with the prior algorithm, measures 40-to-2 tile reads, checks nearest/unknown zombie lookup limits, typed ground changes, inactive heartbeat timing/reactivation, protection-hook transitions and lifecycle cancellation during deferred retries. Full existing MP authority, session, equipment, QTE, sound and hit-feedback tests still run. These counts are not live performance benchmarks.
+
+## Passive RMB and per-style Heat
+
+Compile PassiveUIProbe.java with the local JDK and run it through B42's bundled Java with the client ProjectYakuza Lua directory as its argument. It reproduces native UIElement right-button consumption by nil handlers, then compiles the actual four overlay press/release bodies and verifies false return through native routing. No game/UI startup occurs. Heat-speed fixture coverage also exercises real Heat configuration gain, damage/idle loss, retention, Extreme fuel, registration invalidation, profile merging and unchanged DoD defaults. MP tests cover custom activation stock thresholds. Charged-UI tests check 1/3/8/32 stock rows, labels and RMB pass-through. Existing six-stock HUD regressions remain.

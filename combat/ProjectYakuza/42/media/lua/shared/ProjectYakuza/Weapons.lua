@@ -28,6 +28,11 @@ function W.register(styleId,profile)
     view.sounds=profile.sounds or false
     if profile.impactFeedback~=nil then view.impactFeedback=profile.impactFeedback end
     if profile.exertion~=nil then view.exertion=profile.exertion end
+    if type(profile.heatConfig)=="table"then
+        view.heatConfig={}
+        if type(base.heatConfig)=="table"then for key,value in pairs(base.heatConfig)do view.heatConfig[key]=value end end
+        for key,value in pairs(profile.heatConfig)do view.heatConfig[key]=value end
+    elseif profile.heatConfig~=nil then view.heatConfig=profile.heatConfig end
     if profile.heatAttackSpeed~=nil then view.heatAttackSpeed=profile.heatAttackSpeed end
     local valid,errors=PY.validateStyle(view);assert(valid,table.concat(errors,"; "))
     if view.weaponStandaloneHeavy then

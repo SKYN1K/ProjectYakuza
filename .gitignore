@@ -135,3 +135,5 @@
 
 !/tools/combat-tests/build_heat_speed_tests.py
 !/tools/combat-tests/heat-speed-test-fixture.lua
+
+!/tools/combat-tests/PassiveUIProbe.java
