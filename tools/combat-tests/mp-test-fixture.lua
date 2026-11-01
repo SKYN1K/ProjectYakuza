@@ -651,18 +651,19 @@ snapshot(p,{extreme=true,clip='ProjectYakuza_DD_BoostLight04',move='dd_boost_lig
 local hs=server.players[p.id];local rush=ProjectYakuza.HeatRushServer;local rules=ProjectYakuza.HeatRushRules
 hs.rushCount=0;command('heatRushBegin',{zombie=z1.id,request=1});check(not rush.leases[p],'MP QTE sequence requires eight confirmed boost contacts')
 local boost=ProjectYakuza.getStyle('dragon_of_dojima').extremeLightAttacks[1]
-for i=1,8 do rush.record(hs,{extreme=true,profile='',move=ProjectYakuza.getStyle('dragon_of_dojima').extremeLightAttacks[i],style='dragon_of_dojima'},z1,1700+i);clock=clock+50 end
-check(hs.rushCount==8,'one server proof per distinct validated boost swing')
-rush.record(hs,{extreme=true,profile='',move=boost,style='dragon_of_dojima'},z1,1708);check(hs.rushCount==8,'duplicate victim evidence cannot inflate combo proof')
+local definition=ProjectYakuza.getStyle('dragon_of_dojima')
+for i=1,8 do
+ local move=definition.extremeLightAttacks[i]
+ rush.input(hs,{equipped=true,extreme=true,weaponProfile='',swing=1700+i},definition,move);clock=clock+50
+end
+check(hs.rushCount==8 and not hs.rushVictim,'eight observed boost inputs qualify even when all earlier attacks miss')
+rush.record(p,hs,{extreme=true,profile='',move=boost,style=definition.id},z1,1708)
+check(hs.rushVictim==z1.id and hs.rushCount==8,'only the eighth input needs a native impact')
+z2.health=10;z2.x=1.2;z2.y=0;z2.useless=false;z2.attacking=false
+rush.record(p,hs,{extreme=true,profile='',move=boost,style=definition.id},z2,1708)
+check(hs.rushVictim==z2.id and hs.rushCount==8,'last eighth-strike target replaces earlier targets without inflating the input counter')
+rush.record(p,hs,{extreme=true,profile='',move=boost,style=definition.id},z1,1708)
 z1.x=1.65;check(rules.validTarget(p,z1),'server accepts the same post-hit handoff margin as the owner')
-local previousVictim=hs.rushVictim;z2.health=10;z2.x=1.2;z2.y=0;z2.useless=false;z2.attacking=false
-rush.record(hs,{extreme=true,profile='',move=boost,style='dragon_of_dojima'},z2,1708)
-check(hs.rushVictim==previousVictim and hs.rushCount==8,'second multi-hit victim cannot replace the first eligible proof target')
-local replayProof={rushCount=7,rushAt=clock,rushSwing=2007};z1.health=0
-rush.record(replayProof,{extreme=true,profile='',move=ProjectYakuza.getStyle('dragon_of_dojima').extremeLightAttacks[8],style='dragon_of_dojima'},z1,2008)
-check(replayProof.rushCount==8 and not replayProof.rushVictim,'dead final victim does not reserve an unusable target')
-rush.record(replayProof,{extreme=true,profile='',move=boost,style='dragon_of_dojima'},z2,2008)
-check(replayProof.rushVictim==z2.id and replayProof.rushCount==8,'same-swing first surviving victim supplies proof without adding hits');z1.health=10
 wall=true;command('heatRushBegin',{zombie=z1.id,request=2});check(not rush.leases[p],'paired source motion cannot start through walls');wall=false
 command('heatRushBegin',{zombie=z1.id,request=3});local lease=rush.leases[p];check(lease and rush.held[z1]==lease,'server grants one target/action lease')
 command('heatRushReady',{action=lease.action});check(lease.started and z1.useless and z1.ignore,'server owns paired victim lock only after ready')
@@ -843,4 +844,30 @@ end
 
 end)()
 
+do
+ local rush=ProjectYakuza.HeatRushServer;local definition=ProjectYakuza.getStyle('dragon_of_dojima')
+ clock=clock+3000;p.x=0;p.y=0;p.equipped=true;p.hand=p.token;p.dead=false;remote.x=1.1;remote.y=0;remote.health=10;remote.ghost=false;remote.invincible=false
+ function p:getSafety()return {isEnabled=function()return false end}end;function p:isFactionPvp()return false end;function p:getHitReaction()return ''end
+ function remote:isGodMod()return false end;function remote:getSafety()return {isEnabled=function()return false end}end;function remote:isFactionPvp()return false end
+ function remote:isOnFloor()return false end;function remote:isKnockedDown()return false end;function remote:isClimbing()return false end
+ function remote:isBlockMovement()return self.blocked==true end;function remote:setBlockMovement(v)self.blocked=v end
+ function remote:isAuthorizeMeleeAction()return self.authorize~=false end;function remote:setAuthorizeMeleeAction(v)self.authorize=v end
+ function remote:getIgnoreMovement()return self.ignore==true end;function remote:isDeferredMovementEnabled()return self.deferred~=false end;function remote:setDeferredMovementEnabled(v)self.deferred=v end
+ function remote:setHitReaction(v)self.reaction=v end;function remote:getHitReaction()return self.reaction or''end;function remote:reportEvent(v)self.event=v end
+ function remote:Hit(item,attacker,amount)check(item==p.token and attacker==p,'MP player QTE uses the held native item and correct attacker');self.playerDamage=(self.playerDamage or 0)+amount end
+ function remote:getTarget()error('MP paired player must not call zombie target APIs')end
+ local pvp=true;getServerOptions=function()return {getBoolean=function(_,key)return key=='PVP'and pvp or key=='SafetySystem' end}end
+ NonPvpZone={getNonPvpZone=function()return nil end};Faction={getPlayerFaction=function()return nil end}
+ for i=1,8 do local move=definition.extremeLightAttacks[i];snapshot(p,{extreme=true,clip=move.animation,move=move.nodeValue,swing=5000+i})end
+ local proof=server.players[p.id];check(proof.rushCount==8,'real state snapshots prove eight inputs without native impacts')
+ pvp=false;command('heatRushPlayerHit',{swing=5008,zombie=remote.id});check(not proof.rushVictim,'PvP-off player impact cannot provide a target')
+ pvp=true;command('heatRushPlayerHit',{swing=5008,zombie=remote.id});check(proof.rushVictim==remote.id and proof.rushTargetKind=='player','eighth native player contact is typed and recorded')
+ command('heatRushBegin',{zombie=remote.id,targetKind='zombie',request=900});check(not rush.leases[p],'player ID cannot alias a zombie target')
+ command('heatRushBegin',{zombie=remote.id,targetKind='player',request=901});local lease=rush.leases[p];check(lease and lease.z==remote,'server grants a permitted player-target lease')
+ command('heatRushReady',{action=lease.action});check(remote.blocked and not remote.authorize and remote.ignore and not remote.deferred,'MP paired victim locks player movement and attacks')
+ local prompt=lease.definition.prompts[1];clock=lease.started+prompt.atMs-100;command('heatRushPress',{action=lease.action,index=1});clock=lease.started+prompt.atMs+10
+ command('heatRushHit',{action=lease.action,index=1});check(math.abs(remote.playerDamage-.45)<.000001,'MP player damage uses canonical contact value')
+ command('heatRushHit',{action=lease.action,index=1});check(math.abs(remote.playerDamage-.45)<.000001,'MP player contact cannot replay')
+ pvp=false;rush.tick(clock,{[p]=true});check(not rush.leases[p]and not remote.blocked and remote.authorize and not remote.ignore and remote.deferred,'disabling PvP interrupts the lease and restores player controls')
+end
 return 'PASS '..count..' MP authority, duplicate, range, lease, cooldown, observer and throttle checks'

@@ -162,9 +162,12 @@ function N.swing(p)
 end
 function N.sound(p,cue,index,gain)return N.send(p,"sfx",{cue=cue,index=index,gain=gain})end
 function N.hit(p,z,weapon,damage)
-    if N.replaying or not isClient() or not p or not p:isLocalPlayer() or not z or not instanceof(z,"IsoZombie") or type(damage)~="number" or damage<=0 then return end
+    if N.replaying or not isClient()or not p or not p:isLocalPlayer()or not z or type(damage)~="number"or damage<=0 then return end
     local s=N.localState(p);if s.swing<1 then return end
-    N.send(p,"impact",{zombie=z:getOnlineID(),swing=s.swing})
+    if instanceof(z,"IsoZombie")then N.send(p,"impact",{zombie=z:getOnlineID(),swing=s.swing})
+    elseif instanceof(z,"IsoPlayer")and ProjectYakuza.HeatRushRules and ProjectYakuza.HeatRushRules.playerAllowed(p,z)then
+        N.send(p,"heatRushPlayerHit",{zombie=z:getOnlineID(),swing=s.swing})
+    end
 end
 function N.extra(p,z)
     return N.send(p,"extra",{zombie=z:getOnlineID(),swing=N.localState(p).swing})
@@ -413,7 +416,8 @@ function N.command(module,command,a)
             elseif a.knock then ProjectYakuza.emit("throwHit",p,z)
             elseif P.number(a.amount,0,10) then
                 local combo=ProjectYakuza.stateFor(p);ProjectYakuza.Heat.onHit(p,z,a.amount,combo)
-                ProjectYakuza.emit("combatHit",p,z,p:getPrimaryHandItem(),a.amount,combo.step)
+                if ProjectYakuza.MultiHit then ProjectYakuza.MultiHit.confirm(p,z,a.sourceSwing,a.amount)end
+                if a.sourceSwing==nil or a.sourceSwing==N.localState(p).swing then ProjectYakuza.emit("combatHit",p,z,p:getPrimaryHandItem(),a.amount,combo.step)end
             end
             N.replaying=false
         elseif ProjectYakuza.HitEffects then ProjectYakuza.HitEffects.spawn(p,z,a.kill or a.knock or a.strong,a.charged,false,a.impactFeedback) end

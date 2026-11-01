@@ -43,6 +43,7 @@ function z:isAttacking()return false end;function z:getIgnoreMovement()return se
 function z:isDeferredMovementEnabled()return self.deferred end;function z:setDeferredMovementEnabled(v)self.deferred=v end
 function z:getTarget()return self.target end;function z:setTarget(v)self.target=v end
 function z:setVariable(k,v)self.vars[k]=v end;function z:setHitReaction(v)self.reaction=v end;function z:getHitReaction()return self.reaction or ''end
+function z:setAttackOutcome(v)self.outcome=v end
 function z:reportEvent(v)self.report=v end;function z:setTargetAndCurrentDirection()end
 function z:Hit(item,who,amount)check(item==token and who==p,'paired source contact uses native item/actor');self.hits=self.hits+1;self.total=self.total+amount;self.health=self.health-amount end
 function z:setKnockedDown(v)self.knock=v end;function z:setFallOnFront()end
@@ -55,13 +56,13 @@ local committed=0;PY.on("attackCommitted",function(_,_,_,_,kind)if kind=="heatAc
 local H=PY.HeatRush;local style=PY.getStyle('dragon_of_dojima');local R=PY.HeatRushRules
 PY.setHeat(p,100);check(PY.Heat.start(p),'Extreme Heat starts for paired action')
 local state=PY.stateFor(p);state.active=true
-for i=1,7 do state.step=i;state.activeLightMove=style.extremeLightAttacks[i];state.multiHitToken={};H.hit(p,z,token,.1);clock=clock+100 end
-check(not H.tickets[p],'paired finish never begins before eighth connected light')
+for i=1,7 do state.step=i;state.activeLightMove=style.extremeLightAttacks[i];state.multiHitToken={};H.inputStarted(p,PY.getPlayerStyle(p),i,state.activeLightMove);clock=clock+100 end
+check(not H.tickets[p]and H.chains[p].count==7,'seven missed inputs progress without requiring a target')
 z.x=1.65;check(R.validTarget(p,z),'native-hit knockback margin permits a nearby standing victim');z.x=2.01;check(not R.validTarget(p,z),'paired handoff cannot reach beyond two tiles');z.x=1.65
 state.step=8;state.activeLightMove=style.extremeLightAttacks[8];state.multiHitToken={};H.hit(p,z,token,.1);check(H.tickets[p]and H.tickets[p].z==z,'eighth confirmed hit stores existing target without search/steering')
 local second=setmetatable({}, {__index=z});function second:getOnlineID()return 26 end
 local oldInstanceof=instanceof;instanceof=function(obj,kind)return obj==second and kind=='IsoZombie'or oldInstanceof(obj,kind)end
-H.hit(p,second,token,.1);check(H.tickets[p].z==z,'multi-hit preserves the first eligible target for the server proof');instanceof=oldInstanceof
+H.hit(p,second,token,.1);check(H.tickets[p].z==second,'eighth multi-hit selects the last target hit');H.hit(p,z,token,.1);check(H.tickets[p].z==z,'later eighth-strike contact replaces the prior target');instanceof=oldInstanceof
 state.active=false;p.attacking=false;state.lastDown=false;mouse[0]=true
 local busy=true;function p:hasTimedActions()return busy end
 local savedTicket=H.tickets[p]
@@ -132,4 +133,79 @@ H.tickets[p].expires=clock-1;panel:render();check(draws==3,'expired handoff has 
 local ended=0;PY.Network={send=function(_,command)if command=='heatRushEnd'then ended=ended+1 end end}
 H.tickets[p]={z=z,pressed=true,expires=clock-1001,sent=clock-1100,granted={action=22}}
 check(not H.input(p,state,PY.getPlayerStyle(p))and not H.tickets[p]and ended==1,'expired MP recovery ticket releases its server reservation')
+H.tickets[p]={granted={action=23}};H.clear(p);check(not H.tickets[p]and ended==2,'style cancellation releases an unstarted granted lease')
+H.receive('ProjectYakuza','heatRushGranted',{player=2,request=999,action=24});check(ended==3,'obsolete grant is released rather than holding an abandoned target')
+local responses=PY.HitResponses
+function z:setStaggerBack(v)self.stagger=v end;function z:setHitForce(v)self.force=v end;function z:setAttackOutcome(v)self.outcome=v end
+z.health=10;z.ignore=false;z.deferred=true;z.useless=false
+check(responses.apply(p,z,{kind='stun',force=0})and z.ignore and z.useless and not z.deferred and z.force==0 and not z.stagger,'boost stun stops AI and root movement without push')
+clock=clock+100;responses.tickStuns();check(responses.stuns[z]~=nil,'stun remains briefly active')
+responses.stun(z);clock=clock+249;responses.tickStuns();check(z.useless,'repeated hits refresh the same stun lease')
+clock=clock+2;responses.tickStuns();check(not z.useless and not z.ignore and z.deferred and not responses.stunHooked,'stun restores original AI and movement flags')
+responses.stun(z);local previous=R.lock(z);check(not responses.stuns[z]and not previous.useless,'paired finisher takes over a stunned zombie without retaining the temporary stun');R.restore(z,previous)
+local victim={x=1.1,y=0,health=10,vars={},ignore=false,deferred=true,blocked=false,authorize=true,total=0}
+function victim:getOnlineID()return 26 end;function victim:getX()return self.x end;function victim:getY()return self.y end;function victim:getZ()return 0 end
+function victim:isDead()return self.health<=0 end;function victim:isOnFloor()return false end;function victim:isKnockedDown()return false end
+function victim:isGodMod()return self.god==true end;function victim:isInvincible()return self.invincible==true end;function victim:isGhostMode()return self.ghost==true end
+function victim:isClimbing()return false end;function victim:getVehicle()return nil end;function victim:isFactionPvp()return false end
+function victim:getSafety()return {isEnabled=function()return self.safe==true end}end
+function victim:isLocalPlayer()return true end;function victim:getPrimaryHandItem()return nil end;function victim:getModData()return {}end
+function victim:getIgnoreMovement()return self.ignore end;function victim:setIgnoreMovement(v)self.ignore=v end
+function victim:isDeferredMovementEnabled()return self.deferred end;function victim:setDeferredMovementEnabled(v)self.deferred=v end
+function victim:isBlockMovement()return self.blocked end;function victim:setBlockMovement(v)self.blocked=v end
+function victim:isAuthorizeMeleeAction()return self.authorize end;function victim:setAuthorizeMeleeAction(v)self.authorize=v end
+function victim:GetVariable(k)local v=self.vars[k];return type(v)=='boolean'and tostring(v)or v or''end;function victim:setVariable(k,v)self.vars[k]=v end
+function victim:getHitReaction()return self.reaction or''end;function victim:setHitReaction(v)self.reaction=v end
+function victim:reportEvent(v)self.event=v end;function victim:setTargetAndCurrentDirection()end
+function victim:isUseless()error('player target must not call zombie AI APIs')end;function victim:getTarget()error('player target must not call zombie AI APIs')end
+function victim:Hit(_,who,amount)check(who==p,'player contact preserves native attacker');self.total=self.total+amount;self.health=self.health-amount end
+function victim:setKnockedDown(v)self.knock=v end;function victim:setFallOnFront()end
+local originalInstanceof=instanceof;instanceof=function(obj,kind)return obj==victim and kind=='IsoPlayer'or obj~=victim and originalInstanceof(obj,kind)end
+local serverFlag=isServer;isServer=function()return true end
+local pvp,safety,zone,faction=true,true,false,false
+getServerOptions=function()return {getBoolean=function(_,k)return k=='PVP'and pvp or k=='SafetySystem'and safety end}end
+NonPvpZone={getNonPvpZone=function()return zone and {}or nil end};local group={};Faction={getPlayerFaction=function()return faction and group or nil end}
+function p:getSafety()return {isEnabled=function()return true end}end;function p:isFactionPvp()return false end
+p.x=0;p.y=0
+check(R.playerAllowed(p,victim),'eligible PvP target is supported')
+pvp=false;check(not R.playerAllowed(p,victim),'PvP-off server rejects paired player control');pvp=true
+victim.safe=true;check(not R.playerAllowed(p,victim),'both safety flags reject paired player control');victim.safe=false
+zone=true;check(not R.playerAllowed(p,victim),'non-PvP zone rejects paired player control');zone=false
+faction=true;check(not R.playerAllowed(p,victim),'same-faction protection is retained');faction=false
+victim.god=true;check(not R.playerAllowed(p,victim),'god mode rejects paired player control');victim.god=false
+victim.invincible=true;check(not R.playerAllowed(p,victim),'invincibility rejects paired player control');victim.invincible=false
+victim.ghost=true;check(not R.playerAllowed(p,victim),'ghost protection rejects paired player control');victim.ghost=false
+local saved=R.lock(victim);check(victim.ignore and victim.blocked and not victim.authorize and not victim.deferred,'paired PvP victim owns movement and attack locks')
+R.restore(victim,saved);check(not victim.ignore and not victim.blocked and victim.authorize and victim.deferred and victim:GetVariable('PerformingAction')=='','player cleanup restores native flags without zombie APIs')
+state.active=false;state.step=8;state.activeLightMove=nil;state.multiHitToken={}
+local multi=PY.MultiHit;local stamp=state.multiHitToken
+H.select(p,z,PY.getPlayerStyle(p),stamp)
+multi.swings[p]={stamp=stamp,networkSwing=456,awaiting={[26]=true},awaitUntil=clock+500}
+check(multi.waiting(p,stamp)==true,'paired handoff waits for outstanding MP supplemental contacts')
+multi.confirm(p,victim,455,.1);check(H.tickets[p].z==z and multi.waiting(p,stamp),'old-swing reply cannot retarget the current finisher')
+multi.confirm(p,victim,456,.1);check(H.tickets[p].z==victim and not multi.waiting(p,stamp),'confirmed last supplemental victim wins even after source recovery')
+multi.swings[p]={stamp=stamp,networkSwing=456,awaiting={[26]=true},awaitUntil=clock-1}
+check(not H.input(p,state,PY.getPlayerStyle(p))and not H.tickets[p],'unconfirmed MP contacts time out without finishing the wrong target')
+multi.swings[p]=nil
+state.active=true;state.step=8;state.activeLightMove=style.extremeLightAttacks[8];state.multiHitToken={};H.hit(p,victim,token,.1)
+check(H.tickets[p]and H.tickets[p].z==victim,'eighth input can select the actual player hit')
+state.active=false;p.attacking=false;H.input(p,state,PY.getPlayerStyle(p))
+local playerContext=PY.activeActions[p];check(playerContext and playerContext.target.z==victim,'player target enters the same registered paired action')
+local playerAction=playerContext.timedAction;playerAction.action={setOverrideHandModelsObject=function()end};playerAction:start()
+check(victim.blocked and not victim.authorize,'player paired action locks the correct victim')
+for i,prompt in ipairs(playerContext.action.qte.prompts)do phase=(prompt.atMs-100)/1000;mouse[2]=true;playerAction:update();phase=prompt.atMs/1000;mouse[2]=false;playerAction:update()end
+check(math.abs(victim.total-2.25)<.000001,'player QTE contacts use canonical native Hit damage')
+playerAction:forceStop();check(not victim.blocked and victim.authorize and not victim.ignore,'player interruption restores movement and attack authorization')
+PY.Network={acceptSession=function()return true end};getPlayerByOnlineID=function(id)return id==2 and p or id==26 and victim or nil end
+function p:isLocalPlayer()return false end
+victim.x=1.1;victim.y=0;p.x=0;p.y=0
+local playerPose={player=2,action=101,zombie=26,targetKind='player',session=3,age=0,x=0,y=0,fx=1,fy=0}
+H.receive('ProjectYakuza','heatRushPose',playerPose)
+check(H.remote[2]and H.remote[2].z==victim and victim.blocked and not victim.authorize,'typed remote pose locks the actual local PvP victim')
+H.receive('ProjectYakuza','heatRushEnd',{player=2,action=100,session=3})
+check(H.remote[2]and victim.blocked,'stale remote end cannot unlock a newer player pairing')
+H.receive('ProjectYakuza','heatRushEnd',{player=2,action=101,session=3})
+H.updateRemote();check(not H.remote[2]and not victim.blocked and victim.authorize and not H.remoteHook,'remote player completion restores native input and drops the callback')
+function p:isLocalPlayer()return true end
+instanceof=originalInstanceof;isServer=serverFlag
 return true,'PASS '..checks..' generic QTE validation, custom bindings, fresh presses, replay safety, native-phase contacts, canonical damage, paired cleanup and interruption checks'

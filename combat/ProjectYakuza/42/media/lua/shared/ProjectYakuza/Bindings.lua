@@ -72,6 +72,7 @@ function B.restore(p)
 end
 function B.update(p)
  if not p or not p:isLocalPlayer() then return end
+ if p:GetVariable("ProjectYakuzaHeatRushVictim")=="true"then B.restore(p);p:setAuthorizeMeleeAction(false);return end
  local custom=B.mode("light")~=1 or B.mode("runningLight")~=1 or B.mode("quickstepAttack")~=1
  local wheel=ProjectYakuza.StyleSelector and (ProjectYakuza.StyleSelector.wheel or ProjectYakuza.StyleSelector.setup)
  local action=ProjectYakuza.activeActions and ProjectYakuza.activeActions[p]

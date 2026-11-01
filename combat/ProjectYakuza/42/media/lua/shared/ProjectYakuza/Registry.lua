@@ -122,10 +122,10 @@ function R.damage(move,power)
     return minimum+(maximum-minimum)*power
 end
 
-local H={kinds={flinch=true,stagger=true,knockdown=true}}
+local H={kinds={flinch=true,stagger=true,knockdown=true,stun=true},stuns=setmetatable({}, {__mode="k"})}
 ProjectYakuza.HitResponses=H
 function H.valid(kind,force)
-    return H.kinds[kind]==true and type(force)=="number" and force==force and force>=0 and force<=1.5
+    return H.kinds[kind]==true and (kind~="stun"or force==0)and type(force)=="number" and force==force and force>=0 and force<=1.5
 end
 function H.resolve(style,move)
     if not style or not move or move.groundAttack or move.hitResponse==false then return nil end
@@ -146,9 +146,57 @@ function H.resolve(style,move)
         and power>=profile.fullChargeAt and power<=1 then kind=profile.fullChargeKind;force=profile.fullChargeForce end
     if H.valid(kind,force) then return {kind=kind,force=force} end
 end
+function H.releaseStun(victim)
+    local state=H.stuns[victim];if not state then return end
+    H.stuns[victim]=nil
+    victim:setUseless(state.useless);victim:setIgnoreMovement(state.ignore);victim:setDeferredMovementEnabled(state.deferred)
+    local any=false;for _ in pairs(H.stuns)do any=true;break end
+    if not any and H.stunHooked then Events.OnTick.Remove(H.tickStuns);H.stunHooked=false end
+end
+function H.clearStuns()
+    for victim in pairs(H.stuns)do H.releaseStun(victim)end
+end
+function H.tickStuns()
+    local t=getTimestampMs()
+    for victim,state in pairs(H.stuns)do
+        if isGamePaused()then state.untilAt=t+state.remaining
+        else
+            state.remaining=math.max(0,state.untilAt-t)
+            if victim:isDead()or victim:isOnFloor()or victim:isKnockedDown()or state.remaining==0 then H.releaseStun(victim)
+            else victim:setStaggerBack(false);victim:setHitForce(0)end
+        end
+    end
+end
+function H.stun(victim)
+    local state=H.stuns[victim]
+    if not state then
+        state={useless=victim:isUseless(),ignore=victim:getIgnoreMovement(),deferred=victim:isDeferredMovementEnabled()};H.stuns[victim]=state
+    end
+    state.untilAt=getTimestampMs()+250;state.remaining=250
+    victim:setUseless(true);victim:setIgnoreMovement(true);victim:setDeferredMovementEnabled(false)
+    victim:setStaggerBack(false);victim:setHitForce(0);victim:setAttackOutcome("fail")
+    if not H.stunHooked then Events.OnTick.Add(H.tickStuns);H.stunHooked=true end
+    if not H.stunCleanup then
+        if Events.OnSave then Events.OnSave.Add(H.clearStuns)end
+        if Events.OnMainMenuEnter then Events.OnMainMenuEnter.Add(H.clearStuns)end
+        H.stunCleanup=true
+    end
+    return true
+end
+function H.nativeHit(attacker,victim,item,amount,move)
+    local saved
+    if move and move.noKnockback and item.getPushBackMod then
+        saved={item:getPushBackMod(),item:getKnockdownMod(),item:isKnockBackOnNoDeath(),item:isAlwaysKnockdown()}
+        item:setPushBackMod(0);item:setKnockdownMod(0);item:setKnockBackOnNoDeath(false);item:setAlwaysKnockdown(false)
+    end
+    local ok,result=pcall(victim.Hit,victim,item,attacker,amount,false,1)
+    if saved then item:setPushBackMod(saved[1]);item:setKnockdownMod(saved[2]);item:setKnockBackOnNoDeath(saved[3]);item:setAlwaysKnockdown(saved[4])end
+    return ok,result
+end
 function H.apply(attacker,victim,response)
     if not response or not H.valid(response.kind,response.force) or not attacker or not victim
         or victim:isDead() or victim:isOnFloor() or victim:isKnockedDown() then return false end
+    if response.kind=="stun"then return H.stun(victim)end
     local dx,dy=victim:getX()-attacker:getX(),victim:getY()-attacker:getY()
     local length=math.sqrt(dx*dx+dy*dy);if length<.001 then return false end
     victim:getHitDir():set(dx/length,dy/length)
@@ -164,7 +212,7 @@ end
 
 local ProjectYakuza = ProjectYakuza
 ProjectYakuza.FEATURES={grab=false}
-ProjectYakuza.VERSION = "0.67.0"
+ProjectYakuza.VERSION = "0.68.0"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -253,6 +301,7 @@ function ProjectYakuza.validateStyle(style)
         for _,key in ipairs({"impact","chainAt","quickstepCancelAt"}) do
             local v=value[key];if v~=nil and (not number(v) or v<0 or v>1) then problem(path.."."..key.." must be 0..1") end
         end
+        if value.noKnockback~=nil and type(value.noKnockback)~="boolean"then problem(path..".noKnockback must be a boolean")end
         if value.damageMultiplier~=nil and (not number(value.damageMultiplier) or value.damageMultiplier<0) then problem(path..".damageMultiplier must be nonnegative") end
         if value.minChargedDamageMultiplier~=nil and (not number(value.minChargedDamageMultiplier) or value.minChargedDamageMultiplier<0 or value.minChargedDamageMultiplier>(value.damageMultiplier or 1)) then problem(path..".minChargedDamageMultiplier must be between zero and maximum damageMultiplier") end
         for _,key in ipairs({"heatCost","heatStocks","distance","cooldownMs","windowMs","holdMs","minChargeMs","windupMs","maxHoldMs"}) do
@@ -474,6 +523,7 @@ function ProjectYakuza.isCustomAction(player)
     return c~=nil and ProjectYakuza.actionDefinitions[c.kind]~=nil
 end
 function ProjectYakuza.blocksNativeAttacks(player)
+    if player:GetVariable("ProjectYakuzaHeatRushVictim")=="true"then return true end
     if ProjectYakuza.StyleEntry and ProjectYakuza.StyleEntry.pending and ProjectYakuza.StyleEntry.pending[player] then return true end
     if ProjectYakuza.Quicksteps and ProjectYakuza.Quicksteps.isCancelling and ProjectYakuza.Quicksteps.isCancelling(player) then return true end
     local c=ProjectYakuza.activeActions[player]

@@ -85,7 +85,10 @@ function M.tick()
                         job.seen[v]=true;job.count=job.count+1
 
                         local ok,err
-                        if isClient() and ProjectYakuza.Network then ok=ProjectYakuza.Network.extra(p,v)
+                        if isClient() and ProjectYakuza.Network then
+                            job.networkSwing=ProjectYakuza.Network.localState(p).swing;job.awaiting=job.awaiting or{};job.awaiting[v:getOnlineID()]=true;job.awaitUntil=getTimestampMs()+500
+                            ok=ProjectYakuza.Network.extra(p,v)
+                            if not ok then job.awaiting[v:getOnlineID()]=nil end
                         else ok,err=pcall(v.Hit,v,job.weapon,p,job.damage,false,1) end
                         if not ok then print("[ProjectYakuza] multi-hit failed: "..tostring(err)) end
                     end
@@ -94,6 +97,22 @@ function M.tick()
             end
         end
     end
+end
+function M.waiting(p,stamp)
+    local job=M.pending[p]or M.swings[p]
+    if not job or job.stamp~=stamp then return false end
+    if M.pending[p]then return true end
+    for _ in pairs(job.awaiting or{})do
+        if getTimestampMs()>job.awaitUntil then job.awaitExpired=true;return "timeout"end
+        return true
+    end
+    return false
+end
+function M.confirm(p,z,swing,damage)
+    local job=M.swings[p]
+    if not job or job.stamp~=ProjectYakuza.stateFor(p).multiHitToken or job.networkSwing~=swing or not job.awaiting or not job.awaiting[z:getOnlineID()]then return end
+    job.awaiting[z:getOnlineID()]=nil
+    if not job.awaitExpired and ProjectYakuza.HeatRush then ProjectYakuza.HeatRush.confirmedSupplement(p,z,damage,job.stamp)end
 end
 function M.clear()
     M.pending=setmetatable({}, {__mode="k"});M.swings=setmetatable({}, {__mode="k"});M.processing=false;unhook()

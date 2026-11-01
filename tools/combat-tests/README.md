@@ -170,3 +170,8 @@ PunchTrackProbe now exports both upper-arm positions as well as both forearm/han
 ## Complete attack coating coverage
 
 Compile LimbTrailProbe.java against the local B42 classes, then run build_attack_trails.py to import all 60 active DoD attack clips and compare the shipped numeric catalogue/provenance with native FK. The --write option writes code-side numeric tracks only. No motion, texture, model or audio assets are produced. Contact windows use native collision markers, Heat Rush QTE timing and the documented counter fallback. The expanded punch fixture checks 62 contacts at eight facings, bounded irregular movement, per-contact limb selection, action-context cleanup, category deduplication, observer reconstruction and foreign-style isolation. Extreme-attack regressions exercise ending Heat after steps 5..8 before another player input.
+
+
+## Eighth-input finish and in-place stun
+
+StunRushProbe checks native weapon push/knockdown setters, native player Hit/control and PvP permission APIs, and both scoped player victim state definitions. Heat Rush regressions cover seven missed inputs, the eighth strike's final target, bounded source-swing supplemental acknowledgements, protected PvP targets and player control restoration. Extreme-attack regressions verify temporary no-knockback settings and restoration after injected native failures. Server regressions use actual input snapshots, typed target IDs, deduplicated native contacts and cancellation when PvP permission changes. No new motion, texture, audio or model is produced; native victim state definitions reference the existing converted clip. Live PvP rendering/latency remains untested.

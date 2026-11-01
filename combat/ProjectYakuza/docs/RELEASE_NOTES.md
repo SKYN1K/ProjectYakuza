@@ -1,9 +1,9 @@
-# Project Yakuza 0.67.0
+# Project Yakuza 0.68.0
 
-- Fixed Heat Rush ready attempts being consumed during temporary native recovery. They now wait and retry within a bounded window, including granted multiplayer attempts; expired grants release their server reservation.
-- Allowed a standing, facing target within two tiles after normal hit knockback. The same rule applies to owner and server, retaining eight confirmed boost lights, survival, clear paths/space and MP proof checks.
-- Fixed multi-hit target mismatch between the owner and server. The first eligible surviving target is retained, and same-swing contacts cannot inflate proof counts.
-- Added connected-light progress and a ready handoff label before the existing source-timed MMB prompts, using native text only.
-- Reduced all eight Extreme Heat boost-light entries by 30% (damage multiplier 0.75 to 0.525). Normal lights, finishers and QTE contact damage retain their existing values.
+- Extreme Heat boost lights now stun zombies in place for 250 ms, refreshing on repeated hits. Native push/knockdown is suppressed for the swing and original weapon/AI/movement flags restore safely.
+- Heat Rush now follows eight light inputs. The first seven may miss or hit any targets; only the eighth must connect. Its last character target wins, including supplemental hits, without falling back to earlier targets.
+- Server proof now tracks ordered input snapshots rather than earlier damage. Outstanding supplemental hits are confirmed by source swing before handoff, with a bounded timeout and stale-reply rejection.
+- Added typed player targets using the existing victim motion and two player state definitions. PvP/safety/faction/zone protections remain enforced; interruption or permission changes restore movement and attack controls.
+- Preserved the 0.525 boost-light damage multiplier, existing QTE timings, Lua-only normal launcher, disabled grabs and separate voice pack. No image, audio, model or animation-motion assets were generated or edited.
 
-Offline checks pass; Project Zomboid was not launched. No graphical, audio, animation or model assets were generated or modified for this update. Grabs remain disabled and the separate voice pack is unchanged. Restart matching server/client installations. See VALIDATION_0.67.0.md.
+Offline checks pass; Project Zomboid was not launched. Live PvP presentation and multiplayer latency still need in-game testing. Restart matching server/client installations. See VALIDATION_0.68.0.md.

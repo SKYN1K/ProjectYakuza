@@ -1,0 +1,16 @@
+{
+  "operation": "Code-only player animation-state definitions reusing the existing supplied converted victim motion. No motion, graphical, audio or model asset was created or changed.",
+  "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_HeatRushVictim.x",
+  "clipSha256": "67c94ea0863b187e7c25d695a52bc37c3ef771360b68ae1dc00e618d0ca2ef52",
+  "states": [
+    {
+      "path": "42/media/AnimSets/player/actions/ProjectYakuza_PVP_HeatRushVictim.xml",
+      "sha256": "8b3aa910a70110cde9987d71a5660d7f5df99dbcd2c690e49fec2082b238cd21"
+    },
+    {
+      "path": "42/media/AnimSets/player/hitreactionpvp/ProjectYakuza_PVP_HeatRushVictim.xml",
+      "sha256": "8b3aa910a70110cde9987d71a5660d7f5df99dbcd2c690e49fec2082b238cd21"
+    }
+  ],
+  "nativeCheck": "StunRushProbe: both definitions select only with the scoped victim flag"
+}

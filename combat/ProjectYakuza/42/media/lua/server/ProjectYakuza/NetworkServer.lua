@@ -100,6 +100,7 @@ function S.snapshot(p,a,s)
         else s.extremeFinisher=nil end
     elseif not equipped then s.extremeFinisher=nil end
     s.seq=a.seq;s.packet=packet;s.seen=now()
+    if ProjectYakuza.HeatRushServer then ProjectYakuza.HeatRushServer.input(s,packet,style,move)end
     p:getModData().ProjectYakuzaStyle=a.style;p:getModData().ProjectYakuzaHeat=packet.heat
     if not equipped then S.release(p) end
     S.fanout(p,"state",packet)
@@ -197,23 +198,24 @@ function S.validVictim(p,id,range,cone)
 end
 function S.damage(p,z,amount,knock,kill,s,hitMove,hitStyle,jugglePlan,swing)
     local item=token(p);if not item then return end
+    local move=hitMove or P.move(hitStyle or s.packet.style,s.packet.move)
     local dx,dy=z:getX()-p:getX(),z:getY()-p:getY();local n=math.sqrt(dx*dx+dy*dy)
     if n<.001 then return end
     z:setAttackedBy(p);z:getHitDir():set(dx/n,dy/n)
     if kill then z:setAttackOutcome("fail");z:setTarget(nil);z:setHitForce(12);z:setUsePhysicHitReaction(true);z:setHitReaction("ShotBelly");z:Kill(p)
-    else S.processing=true;local ok,err=pcall(z.Hit,z,item,p,amount,false,1);S.processing=false
+    else S.processing=true;local ok,err=ProjectYakuza.HitResponses.nativeHit(p,z,item,amount,move);S.processing=false
         if not ok then print("[ProjectYakuza] server hit failed: "..tostring(err));return end end
     if knock then z:setKnockedDown(true);z:setFallOnFront(false) end
     s.result=(s.result or 0)+1
     local styleId=hitStyle or s.packet.style
-    local move=hitMove or P.move(styleId,s.packet.move)
     local style=ProjectYakuza.getStyle(styleId)
     if ProjectYakuza.Weapons then style=ProjectYakuza.Weapons.view(style,ProjectYakuza.Weapons.profile(styleId,item))end
     local response=not kill and not knock and ProjectYakuza.HitResponses.resolve(style,move)
     local juggle,juggling=ProjectYakuza.Juggling.hit(p,z,not kill and not knock and (jugglePlan or ProjectYakuza.Juggling.plan(style,move)) or nil,swing)
     if response and not juggling then ProjectYakuza.HitResponses.apply(p,z,response) end
     S.fanout(p,"damage",{player=p:getOnlineID(),event=s.result,zombie=z:getOnlineID(),health=math.max(0,z:getHealth()),amount=amount,knock=knock==true,kill=kill==true,
-        dx=dx/n,dy=dy/n,force=z:getHitForce(),hitReaction=z:getHitReaction() or "ShotBelly",reaction=move and move.reaction or "",style=styleId,impactFeedback=style and style.impactFeedback,strong=move and ((style.weaponStandaloneHeavy and style.actions.finisher.variants.default.nodeValue==move.nodeValue)or move.neutralHeavy==true or move.afterLight~=nil or move.chargedHeavy==true),charged=move and move.chargedHeavy==true,juggle=juggle,responseKind=response and response.kind,responseForce=response and response.force})
+        dx=dx/n,dy=dy/n,force=z:getHitForce(),hitReaction=z:getHitReaction() or "ShotBelly",reaction=move and move.reaction or "",style=styleId,sourceSwing=swing,impactFeedback=style and style.impactFeedback,strong=move and ((style.weaponStandaloneHeavy and style.actions.finisher.variants.default.nodeValue==move.nodeValue)or move.neutralHeavy==true or move.afterLight~=nil or move.chargedHeavy==true),charged=move and move.chargedHeavy==true,juggle=juggle,responseKind=response and response.kind,responseForce=response and response.force})
+    return true
 end
 function S.command(module,command,p,a)
     if module~=P.module or type(a)~="table" or not p then return end
@@ -308,7 +310,7 @@ function S.command(module,command,p,a)
         if command=="extra" and ((z:isOnFloor() or z:isKnockedDown())~=(job.move.groundAttack==true)) then return end
         job.seen[a.zombie]=true;job.count=job.count+1
         if command=="impact" then
-            if ProjectYakuza.HeatRushServer then ProjectYakuza.HeatRushServer.record(s,job,z,a.swing)end
+            if ProjectYakuza.HeatRushServer then ProjectYakuza.HeatRushServer.record(p,s,job,z,a.swing)end
             local response=ProjectYakuza.HitResponses.resolve(view,job.move)
             local packet={player=p:getOnlineID(),event=a.event,zombie=a.zombie,style=job.style,impactFeedback=job.feedback,reaction=job.move.reaction or "",strong=job.heavy or job.move.neutralHeavy==true or job.move.afterLight~=nil or job.move.chargedHeavy==true,charged=job.move.chargedHeavy==true,
                 responseKind=response and response.kind,responseForce=response and response.force}
@@ -324,7 +326,8 @@ function S.command(module,command,p,a)
             if not item then return end
             local cap=job.profile and job.profile~="" and 20 or 2
             local base=math.max(0,math.min(cap,(item:getMinDamage()+item:getMaxDamage())*.5))
-            S.damage(p,z,base*factor*(job.extreme and 1.5 or 1),false,false,s,job.move,job.style,job.juggle,a.swing)
+            local applied=S.damage(p,z,base*factor*(job.extreme and 1.5 or 1),false,false,s,job.move,job.style,job.juggle,a.swing)
+            if applied and ProjectYakuza.HeatRushServer then ProjectYakuza.HeatRushServer.record(p,s,job,z,a.swing)end
         end
     end
 end

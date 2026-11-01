@@ -212,3 +212,10 @@ Optional `heatConfig` sets per-style gain, normal/Extreme drain and 1..32 stock 
 
 
 Version 0.66.0 expands the style-owned attack coating to all active DoD attack clips, including weapon profiles and finisher contacts. Existing source motion and game textures are reused. Contact-specific arm/leg tracks, bounded irregular movement and observer reconstruction use the existing animation phase and protocol; no additional particle packets are sent. Explicit move configuration takes priority and other styles remain opt-in. See [Attack effects](ATTACK_EFFECTS.md).
+
+
+## In-place hit stun and native knockback control (0.68.0)
+
+A hit-response profile can use `kind="stun",force=0`. It freezes zombie AI/root movement for 250 ms without a stagger-back force; repeated hits refresh the same lease. Original useless/ignore/deferred-movement flags are restored at expiry or world exit. `HitResponses.releaseStun(victim)` releases a lease before another paired controller takes ownership. Nonzero stun force is rejected.
+
+A move can opt into boolean `noKnockback=true`. The Heat controller temporarily zeros the weapon's push/knockdown modifiers and disables native knockback/always-knockdown for that swing. Original values, including false booleans, restore on completion, interruption or saved-item preparation. `HitResponses.nativeHit(attacker,victim,item,amount,move)` applies the same scoped override around an authoritative supplemental native Hit and restores it even if Hit fails. It returns success,result; callers still own target/range/permission validation.

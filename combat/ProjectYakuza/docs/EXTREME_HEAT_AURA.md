@@ -6,7 +6,7 @@ Two low emitters use the supplied e_f_0014_roop_smoke01.dds atlas, split into it
 
 The 350 ms appearance fade, pause handling, cached sprites, world anchoring for every facing and MP heat-state replication remain active. Leaving Extreme Heat releases all six instances and restores the four normal emitters. Render state is restored on success or failure. No new gameplay/protection, audio, camera or voice changes are introduced.
 
-All texture files are exact original DDS decodes/crops: no resize, alpha repainting, compositing, generated frames or upscaling. Source hashes, crop rectangles and output hashes are recorded in extreme-heat-assets.json and extreme-smoke-assets.json. B42 ImageData decodes all 130 aura images. See [validation](VALIDATION_0.67.0.md); live GPU appearance still requires in-game viewing.
+All texture files are exact original DDS decodes/crops: no resize, alpha repainting, compositing, generated frames or upscaling. Source hashes, crop rectangles and output hashes are recorded in extreme-heat-assets.json and extreme-smoke-assets.json. B42 ImageData decodes all 130 aura images. See [validation](VALIDATION_0.68.0.md); live GPU appearance still requires in-game viewing.
 
 ## 0.32.1 loader and activation correction
 

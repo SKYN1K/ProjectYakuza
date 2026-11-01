@@ -140,3 +140,5 @@
 
 !/tools/combat-tests/LimbTrailProbe.java
 !/tools/combat-tests/build_attack_trails.py
+
+!/tools/combat-tests/StunRushProbe.java

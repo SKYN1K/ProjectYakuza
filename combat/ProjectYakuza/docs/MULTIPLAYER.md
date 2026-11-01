@@ -85,7 +85,7 @@ Styles can opt in with `soundVariety=true` and register existing multi-clip soun
 
 ## Paired Heat Rush and QTEs (0.59.0)
 
-DoD uses source-order connected-light proof, a single actor/target lease, validated source-time input windows and canonical server-calculated QTE damage. Completed/expired/disconnected sequences restore victim flags. Wrong serials, replayed hits and stale/late pose messages cannot restart or repeat them. Observers are event-free. See [rush details](EXTREME_ATTACKS.md) and [QTE authoring](QTE.md).
+DoD uses source-order boost-input proof plus final-contact validation, a single actor/target lease, validated source-time input windows and canonical server-calculated QTE damage. Completed/expired/disconnected sequences restore victim flags. Wrong serials, replayed hits and stale/late pose messages cannot restart or repeat them. Observers are event-free. See [rush details](EXTREME_ATTACKS.md) and [QTE authoring](QTE.md).
 
 ## Optional Heat attack speed (0.61.0)
 
@@ -105,3 +105,8 @@ The server derives activation's one-stock threshold from the registered style/we
 
 
 Version 0.66.0 expands the style-owned attack coating to all active DoD attack clips, including weapon profiles and finisher contacts. Existing source motion and game textures are reused. Contact-specific arm/leg tracks, bounded irregular movement and observer reconstruction use the existing animation phase and protocol; no additional particle packets are sent. Explicit move configuration takes priority and other styles remain opt-in. See [Attack effects](ATTACK_EFFECTS.md).
+
+
+## Eighth-input paired finish (0.68.0)
+
+Heat Rush proof follows eight observed boost inputs rather than eight victim impacts. The eighth swing's last validated native/supplemental contact supplies the target. New optional `targetKind` metadata distinguishes player IDs from zombie IDs on paired commands and poses; missing metadata retains the zombie type for existing zombie packets. Supplemental damage carries `sourceSwing`; bounded owner acknowledgements prevent earlier or unconfirmed targets winning the handoff. Player locks restore local native input authorization and action variables, and PvP permissions are rechecked on every server contact/tick. All clients and server must use matching 0.68.0 files. No extra position packets beyond the existing paired-pose updates are introduced. Live PvP and latency testing has not been run.

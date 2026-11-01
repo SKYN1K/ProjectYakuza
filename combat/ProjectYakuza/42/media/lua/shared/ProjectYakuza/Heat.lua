@@ -31,6 +31,11 @@ function H.display(p)local s=H.states[p];return s and s.extreme and s.fuel or Pr
 function H.restoreMoveDamage(item)
     if not item then return end
     local d=item:getModData()
+    if d.ProjectYakuzaMovePush~=nil then
+        item:setPushBackMod(d.ProjectYakuzaMovePush);item:setKnockdownMod(d.ProjectYakuzaMoveKnockdown)
+        item:setKnockBackOnNoDeath(d.ProjectYakuzaMoveKnockBack);item:setAlwaysKnockdown(d.ProjectYakuzaMoveAlwaysKnockdown)
+        d.ProjectYakuzaMovePush=nil;d.ProjectYakuzaMoveKnockdown=nil;d.ProjectYakuzaMoveKnockBack=nil;d.ProjectYakuzaMoveAlwaysKnockdown=nil
+    end
     if d.ProjectYakuzaMoveOriginalMin~=nil then
         item:setMinDamage(d.ProjectYakuzaMoveOriginalMin);item:setMaxDamage(d.ProjectYakuzaMoveOriginalMax)
         d.ProjectYakuzaMoveOriginalMin=nil;d.ProjectYakuzaMoveOriginalMax=nil
@@ -41,6 +46,12 @@ function H.applyMoveDamage(p,move)
     H.restoreMoveDamage(item)
     local factor=move and move.damageMultiplier or 1
     s.damageWeapon=item;s.damageMultiplier=factor
+    if move and move.noKnockback and item and item.getPushBackMod then
+        local d=item:getModData()
+        d.ProjectYakuzaMovePush=item:getPushBackMod();d.ProjectYakuzaMoveKnockdown=item:getKnockdownMod()
+        d.ProjectYakuzaMoveKnockBack=item:isKnockBackOnNoDeath();d.ProjectYakuzaMoveAlwaysKnockdown=item:isAlwaysKnockdown()
+        item:setPushBackMod(0);item:setKnockdownMod(0);item:setKnockBackOnNoDeath(false);item:setAlwaysKnockdown(false)
+    end
     if factor~=1 and item and (ProjectYakuza.isStyleToken(item) or (ProjectYakuza.Weapons and ProjectYakuza.Weapons.matches(p,item))) then
         local d=item:getModData()
         d.ProjectYakuzaMoveOriginalMin=item:getMinDamage();d.ProjectYakuzaMoveOriginalMax=item:getMaxDamage()

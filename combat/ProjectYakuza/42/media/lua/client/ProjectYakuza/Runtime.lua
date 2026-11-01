@@ -358,6 +358,7 @@ function ProjectYakuza.syncGroundAttack(player,style,s)
 end
 local function onUpdate(player)
     if not localPlayer(player) then return end
+    if variable(player,"ProjectYakuzaHeatRushVictim")=="true"then return end
     if ProjectYakuza.TigerDrop then ProjectYakuza.TigerDrop.track(player) end
     local s = ProjectYakuza.stateFor(player)
     local counterPressed=B.pressed(player,"counter")

@@ -10,10 +10,68 @@ function R.point(job,path,time)
     local forward,right=R.sample(path,time)
     return job.x+job.fx*forward+job.fy*right,job.y+job.fy*forward-job.fx*right
 end
+function R.targetKind(z)
+    if z and instanceof(z,"IsoZombie")then return "zombie"end
+    if z and instanceof(z,"IsoPlayer")then return "player"end
+end
+function R.playerAllowed(p,z)
+    if p==z or z:isGodMod()or z:isInvincible()or z:isGhostMode()then return false end
+    if isClient()or isServer and isServer()then
+        if not getServerOptions or not NonPvpZone or not Faction then return false end
+        local options=getServerOptions()
+        if not options:getBoolean("PVP")then return false end
+        if options:getBoolean("SafetySystem")and p:getSafety():isEnabled()and z:getSafety():isEnabled()then return false end
+        if NonPvpZone.getNonPvpZone(math.floor(p:getX()),math.floor(p:getY()))or NonPvpZone.getNonPvpZone(math.floor(z:getX()),math.floor(z:getY()))then return false end
+        local faction=Faction.getPlayerFaction(p)
+        if faction and faction==Faction.getPlayerFaction(z)and not p:isFactionPvp()and not z:isFactionPvp()then return false end
+        return true
+    end
+    return IsoPlayer and IsoPlayer.getCoopPVP()or false
+end
+function R.target(p,id,kind)
+    if kind=="player"then return getPlayerByOnlineID(id)end
+    return ProjectYakuza.NetworkProtocol.zombie(p,id)
+end
 function R.validTarget(p,z,range)
-    if not z or not instanceof(z,"IsoZombie")or z:isDead()or z:isOnFloor()or z:isKnockedDown()or z:isUseless()or z:isAttacking()or math.abs(z:getZ()-p:getZ())>.25 then return false end
+    local kind=R.targetKind(z)
+    if not p or not kind or z:isDead()or z:isOnFloor()or z:isKnockedDown()or math.abs(z:getZ()-p:getZ())>.25 then return false end
+    if kind=="zombie"then
+        if z:isUseless()and not ProjectYakuza.HitResponses.stuns[z]then return false end
+    elseif not R.playerAllowed(p,z)or z:getVehicle()or z:isClimbing()then return false end
     local dx,dy=z:getX()-p:getX(),z:getY()-p:getY();local n=math.sqrt(dx*dx+dy*dy);local f=p:getForwardDirection()
     return n>.01 and n<=(range or R.targetRange)and (dx*f:getX()+dy*f:getY())/n>=.5
+end
+function R.capture(z)
+    local old={ignore=z:getIgnoreMovement(),deferred=z:isDeferredMovementEnabled()}
+    if R.targetKind(z)=="zombie"then old.useless=z:isUseless();old.target=z:getTarget()
+    else old.block=z:isBlockMovement();local gate=ProjectYakuza.Bindings and ProjectYakuza.Bindings.attackGates[z];old.authorize=gate and gate.allowed;if old.authorize==nil then old.authorize=z:isAuthorizeMeleeAction()end;old.performing=z:GetVariable("PerformingAction")or"";old.action=z:GetVariable("IsPerformingAnAction")=="true"end
+    return old
+end
+function R.hold(z)
+    z:setIgnoreMovement(true);z:setDeferredMovementEnabled(false)
+    if R.targetKind(z)=="zombie"then z:setTarget(nil);z:setUseless(true);z:setAttackOutcome("fail")
+    else z:setBlockMovement(true);z:setAuthorizeMeleeAction(false)end
+end
+function R.lock(z)
+    ProjectYakuza.HitResponses.releaseStun(z)
+    local old=R.capture(z)
+    if R.targetKind(z)=="player"and z:isLocalPlayer()and ProjectYakuza.isEquipped(z)then ProjectYakuza.resetPlayer(z,"heat_rush_victim")end
+    R.hold(z);z:setVariable("ProjectYakuzaHeatRushVictim",true)
+    if R.targetKind(z)=="player"then z:setVariable("PerformingAction","ProjectYakuzaHeatRushVictim");z:setVariable("IsPerformingAnAction",true)end
+    z:setHitReaction("ProjectYakuzaHeatRushVictim");z:reportEvent("wasHit")
+    return old
+end
+function R.restore(z,old)
+    z:setVariable("ProjectYakuzaHeatRushVictim",false);z:setIgnoreMovement(old.ignore==true);z:setDeferredMovementEnabled(old.deferred~=false)
+    if R.targetKind(z)=="zombie"then
+        z:setUseless(old.useless==true)
+        if not z:isDead()and z:getTarget()==nil then z:setTarget(old.target)end
+    else
+        if ProjectYakuza.Bindings then ProjectYakuza.Bindings.restore(z)end
+        z:setBlockMovement(old.block==true);z:setAuthorizeMeleeAction(old.authorize~=false)
+        if z:GetVariable("PerformingAction")=="ProjectYakuzaHeatRushVictim"then z:setVariable("PerformingAction",old.performing or"");z:setVariable("IsPerformingAnAction",old.action==true)end
+    end
+    if z:getHitReaction()=="ProjectYakuzaHeatRushVictim"then z:setHitReaction("");z:reportEvent("ActiveAnimFinishing")end
 end
 function R.space(p,job)
     local P=ProjectYakuza.NetworkProtocol;local paths=ProjectYakuza.HeatRushPaths
