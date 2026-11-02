@@ -1,9 +1,11 @@
-# Project Yakuza 0.72.0
+# Project Yakuza 0.73.0
 
-- Replaced the demo-era Heat Rush pair with Yakuza 6's verified retail repeated-punch/kick attacker and victim motion, preserving all 225 source frames.
-- Added six rebindable QTEs: Light → Heavy → Grab → Light → Heavy → Grab. Ordinary grabs remain disabled. Circular timing cues reuse unchanged original game texture pixels.
-- Successful cues play original-contact punch feedback. One automatic finishing kick delivers earned damage; missed cues reduce it. The maximum payoff is unchanged, and the full recovery plays.
-- Updated limb trails to six verified right-arm punches and the finishing right-leg kick. Fixed MP pose acceptance for the full 7.4667-second sequence and validated mapped inputs, deferred damage, deduplication and cleanup.
-- Documented reusable prompt/contact mappings and automatic summed-payoff contacts for framework authors.
+- Kept DoD's six QTE success windows unchanged. Prompts now use rotating/contracting original Y6 rings, animated supplied atlas regions and a short accepted-input flash. No extra ready cue or preparatory text is shown.
+- Preserved the eighth punch's full follow-through and softened the paired entry blend. The handoff blocks an accidental ninth native attack.
+- Fixed native damage interrupting the zombie's paired reaction: visible contacts keep their source timing, while the earned final health hit settles once after the victim clip finishes.
+- DoD now branches on a missed QTE into an original short Kiryu recovery, releasing the victim and forfeiting the final payoff. The framework supports custom per-prompt windows/bindings, consecutive or total miss limits, configurable failure recovery and success/miss/failure sound cues using supplied assets.
+- Added the original Yakuza 6 beer crate as a separately spawnable Short Blunt weapon: ProjectYakuza.BeerCrate. It uses original mesh/texture data, native durability and the DoD Short Blunt profile.
+- Fixed quicksteps tapped during the native RMB transition with a bounded 350 ms retry, cancelled by RMB release, interruption or expiry.
+- Added SP/MP regressions, original-pixel/source-motion checks and native model/item/animation imports. Grabs remain disabled and the separate voice pack is unchanged.
 
-No generated artwork/audio, AI or upscaling. The normal PZ camera remains; cinematic close-ups require capabilities outside this Lua-only setup. Project Zomboid was not launched. See [offline validation](VALIDATION_0.72.0.md). Install the same version on server and clients, then restart.
+Project Zomboid was not launched. See [validation](VALIDATION_0.73.0.md). Restart after updating and install matching files on server and clients. No AI, invented artwork/audio or upscaling is used.

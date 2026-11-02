@@ -199,7 +199,7 @@ function S.validVictim(p,id,range,cone)
     if distance<.001 or length<.001 or (dx*f:getX()+dy*f:getY())/(distance*length)<(cone or .5) then return nil end
     return z
 end
-function S.damage(p,z,amount,knock,kill,s,hitMove,hitStyle,jugglePlan,swing)
+function S.damage(p,z,amount,knock,kill,s,hitMove,hitStyle,jugglePlan,swing,quiet)
     local item=token(p);if not item then return end
     local move=hitMove or P.move(hitStyle or s.packet.style,s.packet.move)
     local dx,dy=z:getX()-p:getX(),z:getY()-p:getY();local n=math.sqrt(dx*dx+dy*dy)
@@ -216,7 +216,7 @@ function S.damage(p,z,amount,knock,kill,s,hitMove,hitStyle,jugglePlan,swing)
     local response=not kill and not knock and ProjectYakuza.HitResponses.resolve(style,move)
     local juggle,juggling=ProjectYakuza.Juggling.hit(p,z,not kill and not knock and (jugglePlan or ProjectYakuza.Juggling.plan(style,move)) or nil,swing)
     if response and not juggling then ProjectYakuza.HitResponses.apply(p,z,response) end
-    S.fanout(p,"damage",{player=p:getOnlineID(),event=s.result,zombie=z:getOnlineID(),health=math.max(0,z:getHealth()),amount=amount,knock=knock==true,kill=kill==true,
+    S.fanout(p,"damage",{player=p:getOnlineID(),event=s.result,zombie=z:getOnlineID(),health=math.max(0,z:getHealth()),amount=amount,quiet=quiet==true,knock=knock==true,kill=kill==true,
         dx=dx/n,dy=dy/n,force=z:getHitForce(),hitReaction=z:getHitReaction() or "ShotBelly",reaction=move and move.reaction or "",style=styleId,sourceSwing=swing,impactFeedback=style and style.impactFeedback,strong=move and ((style.weaponStandaloneHeavy and style.actions.finisher.variants.default.nodeValue==move.nodeValue)or move.neutralHeavy==true or move.afterLight~=nil or move.chargedHeavy==true or move.heatRush==true or move.weaponHeat==true),charged=move and move.chargedHeavy==true,juggle=juggle,responseKind=response and response.kind,responseForce=response and response.force})
     return true
 end

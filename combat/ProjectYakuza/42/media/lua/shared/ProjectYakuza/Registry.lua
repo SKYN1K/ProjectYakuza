@@ -61,6 +61,15 @@ local Q={};ProjectYakuza.QTE=Q
 local function finite(x)return type(x)=="number"and x==x and x<math.huge and x>-math.huge end
 function Q.valid(def,durationMs)
     if type(def)~="table"or type(def.prompts)~="table"or #def.prompts<1 or #def.prompts>32 then return false,"QTE requires 1..32 prompts"end
+    if def.failureLimit~=nil and (not finite(def.failureLimit)or def.failureLimit<1 or def.failureLimit>32 or def.failureLimit~=math.floor(def.failureLimit))then return false,"invalid QTE failure limit"end
+    if def.failureMode~=nil and def.failureMode~="consecutive"and def.failureMode~="total"then return false,"invalid QTE failure mode"end
+    if def.feedback~=nil then
+        if type(def.feedback)~="table"then return false,"invalid QTE feedback"end
+        for key,value in pairs(def.feedback)do
+            if key=="gain"then if not finite(value)or value<0 or value>1 then return false,"invalid QTE feedback gain"end
+            elseif not ({success=true,miss=true,failure=true})[key]or type(value)~="string"or #value>120 or not value:match("^[%w_.-]+$")then return false,"invalid QTE feedback cue"end
+        end
+    end
     local last=0
     for _,v in ipairs(def.prompts)do
         if type(v)~="table"or not finite(v.atMs)or v.atMs<=last or v.atMs>120000 or not finite(v.windowMs)or v.windowMs<50 or v.windowMs>2000 or v.atMs-v.windowMs<last or type(v.binding)~="string"or not v.binding:match("^[%w_.-]+$")or #v.binding>80 then return false,"invalid QTE prompt timing or binding"end
@@ -76,7 +85,7 @@ function Q.window(def,index,timeMs,earlyMs,lateMs)
 end
 function Q.create(def,down,context)
     local valid,reason=Q.valid(def);assert(valid,reason)
-    local s={definition=def,context=context,index=1,accepted={},results={},downs={},lastTime=0,successes=0}
+    local s={definition=def,context=context,index=1,accepted={},results={},downs={},lastTime=0,successes=0,failures=0,consecutiveFailures=0,inputAt={}}
     for _,v in ipairs(def.prompts)do s.downs[v.binding]=down and down(v.binding)==true or false end
     return s
 end
@@ -92,16 +101,23 @@ function Q.update(s,timeMs,down,callback)
     if v and Q.window(s.definition,s.index,timeMs)then
         if not s.prompted then s.prompted=true;emit(s,"qtePrompt",s.index,v)end
         if current[v.binding]and not s.downs[v.binding]and not s.accepted[s.index]then
-            s.accepted[s.index]=true;emit(s,"qteInput",s.index,v)
+            s.accepted[s.index]=true;s.inputAt[s.index]=timeMs;emit(s,"qteInput",s.index,v)
             if callback then callback("input",s.index,true,v)end
         end
     end
     s.downs=current
     while s.index<=#s.definition.prompts and timeMs>=s.definition.prompts[s.index].atMs do
         local i=s.index;local prompt=s.definition.prompts[i];local success=s.accepted[i]==true
-        s.results[i]=success;if success then s.successes=s.successes+1 end
-        s.index=i+1;s.prompted=nil;emit(s,"qteResult",i,success,prompt)
+        s.results[i]=success
+        if success then s.successes=s.successes+1;s.consecutiveFailures=0 else s.failures=s.failures+1;s.consecutiveFailures=s.consecutiveFailures+1 end
+        s.index=i+1;s.prompted=nil;emit(s,"qteResult",i,success,prompt,s)
         if callback then callback("result",i,success,prompt)end
+        local count=s.definition.failureMode=="total"and s.failures or s.consecutiveFailures
+        if not success and s.definition.failureLimit and count>=s.definition.failureLimit then
+            s.failed=true;s.failedIndex=i;s.closed=true;emit(s,"qteFailed",i,s.failures,s.consecutiveFailures)
+            if callback then callback("failure",i,false,prompt)end
+            return true
+        end
     end
     if s.index>#s.definition.prompts then s.closed=true;emit(s,"qteFinished",s.successes,#s.definition.prompts)end
     return true
@@ -212,7 +228,7 @@ end
 
 local ProjectYakuza = ProjectYakuza
 ProjectYakuza.FEATURES={grab=false}
-ProjectYakuza.VERSION = "0.72.0"
+ProjectYakuza.VERSION = "0.73.0"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -291,6 +307,11 @@ function ProjectYakuza.validateStyle(style)
             end end
         end
         if value.qte~=nil then local ok,reason=ProjectYakuza.QTE.valid(value.qte,type(value.duration)=="number"and value.duration*1000 or nil);if not ok then problem(path..".qte: "..reason)end end
+        if value.qteFailure~=nil then
+            local f=value.qteFailure
+            if type(f)~="table"or not text(f.animation)or not text(f.nodeValue)or not number(f.duration)or f.duration<=0 or f.duration>10 then problem(path..".qteFailure requires an authored recovery clip and duration")end
+        end
+        if value.deferFinalDamage~=nil and type(value.deferFinalDamage)~="boolean"then problem(path..".deferFinalDamage must be boolean")end
         if type(value.contacts)=="table"then
             local mapped={};local prompts=type(value.qte)=="table"and value.qte.prompts
             for _,contact in ipairs(value.contacts)do
@@ -553,6 +574,7 @@ function ProjectYakuza.isCustomAction(player)
     return c~=nil and ProjectYakuza.actionDefinitions[c.kind]~=nil
 end
 function ProjectYakuza.blocksNativeAttacks(player)
+    if ProjectYakuza.HeatRush and ProjectYakuza.HeatRush.tickets and ProjectYakuza.HeatRush.tickets[player]then return true end
     if player:GetVariable("ProjectYakuzaHeatRushVictim")=="true"then return true end
     if ProjectYakuza.StyleEntry and ProjectYakuza.StyleEntry.pending and ProjectYakuza.StyleEntry.pending[player] then return true end
     if ProjectYakuza.Quicksteps and ProjectYakuza.Quicksteps.isCancelling and ProjectYakuza.Quicksteps.isCancelling(player) then return true end

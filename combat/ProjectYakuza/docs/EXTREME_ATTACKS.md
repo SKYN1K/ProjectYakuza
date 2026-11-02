@@ -1,4 +1,4 @@
-# Extreme Heat rush combat (0.72.0)
+# Extreme Heat rush combat (0.73.0)
 
 Dragon of Dojima uses the four supplied Kiryu bct_ath_01 through bct_ath_04 clips for the first four Extreme Heat lights, then alternates the first two clips for an eight-input chain. Each fresh LMB press commits one native attack. Stopping input leaves that attack's original recovery intact. There is no automatic multi-contact attack.
 
@@ -6,7 +6,7 @@ Perform the eight-input light chain; the first seven attacks may miss or hit dif
 
 Boost lights retain their 0.525 damage multiplier and now stun zombies in place for 250 ms. Weapon push/knockdown is suppressed only for the swing, and the short AI/root-movement stun restores original flags after it expires. Repeated hits refresh the same lease.
 
-The retail paired rush asks for **Light → Heavy → Grab → Light → Heavy → Grab**. Default inputs are LMB, MMB, G, LMB, MMB, G. Each label reads the current action binding; using the Grab binding here does not enable ordinary grabs. A fresh press is required inside each window. The original circular timing texture surrounds the current input; a shrinking ring approaches it and the full six-input sequence remains visible below.
+The retail paired rush asks for **Light → Heavy → Grab → Light → Heavy → Grab**. Default inputs are LMB, MMB, G, LMB, MMB, G. Each label reads the current action binding; using the Grab binding here does not enable ordinary grabs. A fresh press of the correct binding is required inside each unchanged window. Original Y6 ring textures rotate, contract, animate through their supplied atlas regions and flash briefly on acceptance. Only the current bound input appears; there is no extra ready message or input sequence overlay. The eighth native punch finishes its follow-through before the pair starts, and both actors blend in over 180 ms.
 
 | Contact | Original frame at 30 fps | Input window | Binding |
 | --- | --- | --- | --- |
@@ -18,7 +18,9 @@ The retail paired rush asks for **Light → Heavy → Grab → Light → Heavy �
 | Punch 6 | 110 | 233 ms | grab |
 | Finishing kick | 143 | Automatic | None |
 
-Successful prompts play existing punch feedback at their original contact. Earned damage is applied once at the final kick, preventing intermediate QTE punches from killing the victim and cutting off the pair. Each success contributes one sixth of the previous maximum payoff; missed inputs reduce that payoff. Six successes retain the previous total 3.75 coefficient and canonical Extreme Heat bonus. The original motion and recovery continue after the prompts, including failed prompts. Timing is adapted to PZ from the source motion and scene sound markers; it is not an imported Dragon Engine QTE state machine.
+Successful prompts play punch feedback at their source contacts and a quiet confirmation sound. DoD aborts on the first missed prompt, plays the complete 21-frame Kiryu `bct_std_en` exit/recovery and releases the victim. This is an original recovery motion used as an abort, rather than a claim that it is Dragon Engine's original QTE-failure branch. Wrong inputs and held buttons do not count; missed prompts no longer silently play the successful ending.
+
+The six punches and finishing kick retain their visible paired motion. The final native health hit is committed once after the victim clip completes, because a native Hit during the pair can replace/restart the zombie's hit-reaction animation. The previous maximum 3.75 coefficient and canonical Extreme Heat bonus are unchanged. Failure forfeits that final payoff; the preceding eight normal attacks keep their normal damage. Other styles can tolerate misses and retain a partial payoff with the framework's configurable failure policy. Timing is adapted to PZ from source motion and scene markers, rather than importing Dragon Engine's QTE state machine.
 
 The player and victim follow bounded original source vectors while movement is locked. Paths are checked before and during playback. Equipment/style changes, invalid animation playback and interruption restore owned flags. Shared Heat Action protection grants invulnerability only during the action and targeting protection for another 500 ms. A surviving victim is knocked down at completion. The existing Extreme Heat aura and limb effects remain in use. PZ's normal camera is retained: the reference's cinematic close-ups are outside this Lua-only implementation.
 
@@ -35,3 +37,7 @@ The server requires an eight-input source-order proof and a validated final cont
 `extremeLightAttacks` now permits 1..16 moves independently of normal light-chain length. Reusing the same move table for repeated entries avoids duplicate-node definitions. `finisherBranches=4` maps longer light chains back to the four authored normal finisher/charge branches. Weapon profiles do not inherit this unarmed setup.
 
 `heatRush={hits=8,windowMs=700}` is DoD's transition configuration, and its enabled heatAction contains the supplied pair and QTE definition. The paired handler is registered for DoD only. Other styles can provide their own action handler and use the shared [QTE API](QTE.md) with their own assets, target rules, UI and server authorization. The framework no longer registers a barrage action kind or packet.
+
+## Failure policy and feedback
+
+DoD configures `failureLimit=1`, `failureMode="consecutive"` and a `qteFailure` recovery. Authors can set another limit or count total misses. Successful inputs reset consecutive misses. Individual `windowMs` and `binding` values remain configurable without altering DoD's authored timings. Feedback maps success, a tolerated miss and terminal failure to existing style sound cues at a configurable gain. See [QTE API](QTE.md), [failure motion](heat-rush-failure-assets.json) and [original animated prompt atlas](qte-effects-assets.json).

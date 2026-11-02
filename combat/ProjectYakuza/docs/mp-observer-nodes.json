@@ -377,6 +377,31 @@
     "group": "actions"
   },
   {
+    "id": "ProjectYakuza_DD_HeatRushFail",
+    "animation": "ProjectYakuza_DD_HeatRushFail",
+    "loop": false,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "dragon_of_dojima"
+      },
+      {
+        "name": "ProjectYakuzaWeaponProfile",
+        "value": ""
+      },
+      {
+        "name": "PerformingAction",
+        "value": "ProjectYakuza_DD_HeatRushFail"
+      }
+    ],
+    "priority": 180,
+    "group": "actions"
+  },
+  {
     "id": "ProjectYakuza_DD_KatanaHeat",
     "animation": "ProjectYakuza_DD_KatanaHeat",
     "loop": false,

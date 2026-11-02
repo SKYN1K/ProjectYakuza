@@ -681,11 +681,10 @@ end
 clock=lease.started+143/30*1000+10;snapshot(p,{extreme=true,clip='ProjectYakuza_DD_HeatRush',move='dd_heat_rush',action=lease.action,swing=1800})
 command('heatRushPress',{action=lease.action,index=7});check(not lease.presses[7],'automatic final kick is not a seventh QTE')
 command('heatRushHit',{action=lease.action,index=7,damage=999});command('heatRushHit',{action=lease.action,index=7})
-check(z1.hits==before+1,'one authoritative final kick aggregates six validated QTEs without replay')
-local strongRush=false;for _,v in ipairs(replies)do if v.command=='damage'and v.args.strong==true then strongRush=true end end;check(strongRush,'final rush kick uses strong confirmed MP impact feedback')
-check(math.abs(z1.health-7.75)<.000001,'server ignores arbitrary client damage and applies one Extreme bonus')
+check(z1.hits==before and math.abs(lease.pendingDamage-2.25)<.000001,'final kick defers native damage to preserve paired victim playback')
 clock=lease.started+rules.duration*1000+10;snapshot(p,{extreme=true,clip='ProjectYakuza_DD_HeatRush',move='dd_heat_rush',action=lease.action,swing=1800});command('heatRushEnd',{action=lease.action,completed=true})
 check(not rush.leases[p]and not rush.held[z1]and not z1.useless and not z1.ignore and z1.deferred and z1.knock,'server completion restores victim state and terminal knockdown')
+check(z1.hits==before+1 and math.abs(z1.health-7.75)<.000001,'server completion commits earned canonical damage exactly once')
 command('heatRushHit',{action=lease.action,index=3});check(z1.hits==before+1,'ended action cannot replay a QTE hit')
 clock=clock+2000;p.x=0;p.y=0;p.equipped=true;p.hand=p.token;p.dead=false;p.data.ProjectYakuzaStyle='dragon_of_dojima'
 snapshot(p,{clip='ProjectYakuza_DD_Light01',move='dd_light_01',swing=2100})
@@ -730,7 +729,8 @@ do
   for _,move in ipairs(view.groundAttacks or {})do if move.animation==clip.animation then return true end end
   for _,slot in pairs(view.actions)do
    if slot.enabled and slot.animation==(actionAnim or clip.animation)then return true end
-   if slot.enabled then for _,move in pairs(slot.variants or {})do if move.enabled~=false and move.animation==(actionAnim or clip.animation)then return true end end end
+   if slot.enabled and slot.qteFailure and slot.qteFailure.animation==(actionAnim or clip.animation)then return true end
+   if slot.enabled then for _,move in pairs(slot.variants or {})do if move.enabled~=false and (move.animation==(actionAnim or clip.animation)or move.qteFailure and move.qteFailure.animation==(actionAnim or clip.animation))then return true end end end
   end
   return false
  end
@@ -874,9 +874,7 @@ do
  command('heatRushReady',{action=lease.action});check(remote.blocked and not remote.authorize and remote.ignore and not remote.deferred,'MP paired victim locks player movement and attacks')
  local prompt=lease.definition.prompts[1];clock=lease.started+prompt.atMs-100;command('heatRushPress',{action=lease.action,index=1});clock=lease.started+prompt.atMs+10
  command('heatRushHit',{action=lease.action,index=1});check(not remote.playerDamage,'MP player punch is presentation-only')
- clock=lease.started+143/30*1000+10;snapshot(p,{extreme=true,clip='ProjectYakuza_DD_HeatRush',move='dd_heat_rush',action=lease.action})
- command('heatRushHit',{action=lease.action,index=7});check(math.abs(remote.playerDamage-.375)<.000001,'MP player final damage uses only confirmed QTEs')
- command('heatRushHit',{action=lease.action,index=1});check(math.abs(remote.playerDamage-.375)<.000001,'MP player contact cannot replay')
+ check(not remote.playerDamage,'no native player hit interrupts the active paired clip')
  pvp=false;rush.tick(clock,{[p]=true});check(not rush.leases[p]and not remote.blocked and remote.authorize and not remote.ignore and remote.deferred,'disabling PvP interrupts the lease and restores player controls')
 end
 do
@@ -947,5 +945,40 @@ do
  check(not rush.leases[p]and not p.invincible and p.ghost and not z1.ignore,'server ends invulnerability immediately and releases victim')
  clock=clock+500;ProjectYakuza.HeatActions.tick();check(not p.ghost,'server targeting grace expires after half a second')
  p.hand=p.token
+end
+do
+ local rush=ProjectYakuza.HeatRushServer;local style=ProjectYakuza.getStyle('dragon_of_dojima');local config=style.actions.heatAction.qte
+ local originalLimit,originalMode=config.failureLimit,config.failureMode;local serial=20000
+ local function begin(limit,mode)
+  if rush.leases[p]then rush.finish(p,false)end
+  ProjectYakuza.HeatActions.clear();clock=clock+3000;p.x=0;p.y=0;p.hand=p.token;p.equipped=true;p.dead=false;p.data.ProjectYakuzaStyle=style.id
+  z1.health=10;z1.x=1.1;z1.y=0;z1.useless=false;z1.ignore=false;z1.deferred=true;z1.knock=false;wall=false
+  config.failureLimit=limit;config.failureMode=mode
+  for i=1,8 do serial=serial+1;local move=style.extremeLightAttacks[i];snapshot(p,{extreme=true,clip=move.animation,move=move.nodeValue,swing=serial});clock=clock+50 end
+  local state=server.players[p.id];rush.record(p,state,{style=style.id,move=style.extremeLightAttacks[8],extreme=true,profile=''},z1,serial)
+  serial=serial+1;command('heatRushBegin',{zombie=z1.id,request=serial});local lease=rush.leases[p];check(lease~=nil,'failure-policy test obtains a fresh source-proven lease')
+  command('heatRushReady',{action=lease.action});return lease
+ end
+ local lease=begin(1,'consecutive');local before=z1.hits
+ clock=lease.started+lease.definition.prompts[1].atMs+190;rush.tick(clock,{[p]=true})
+ check(lease.failed and lease.failedIndex==1 and not z1.useless and not z1.ignore and not rush.held[z1],'server automatically branches a missed first cue and releases only the victim lock')
+ local failureClip=P.clip(style.id,'ProjectYakuza_DD_HeatRushFail');check(failureClip and P.supports(style,failureClip),'registered recovery clip is accepted by the real MP snapshot validator')
+ snapshot(p,{extreme=true,clip='ProjectYakuza_DD_HeatRushFail',move='dd_light_01',action=lease.action,swing=serial})
+ check(server.players[p.id].packet.clip=='ProjectYakuza_DD_HeatRushFail','failure motion is retained in the actual relayed player state')
+
+ command('heatRushHit',{action=lease.action,index=7});check(z1.hits==before and not lease.pendingDamage,'failed action cannot claim a finishing hit')
+ local newer={};rush.held[z1]=newer;clock=lease.failedAt+1000;rush.tick(clock,{[p]=true})
+ check(not rush.leases[p]and rush.held[z1]==newer and not p.invincible,'failed recovery ends and stale cleanup cannot release another victim lease');rush.held[z1]=nil
+ lease=begin(2,'consecutive')
+ for i=1,4 do
+  local prompt=lease.definition.prompts[i]
+  if i==2 then clock=lease.started+prompt.atMs-20;command('heatRushPress',{action=lease.action,index=i});clock=lease.started+prompt.atMs+10;command('heatRushHit',{action=lease.action,index=i})
+  else clock=lease.started+prompt.atMs+190 end
+  snapshot(p,{extreme=true,clip='ProjectYakuza_DD_HeatRush',move='dd_heat_rush',action=lease.action,swing=serial});rush.tick(clock,{[p]=true})
+  if i<4 then check(not lease.failed,'one isolated missed cue is tolerated under a two-consecutive policy')end
+ end
+ check(lease.failed and lease.failedIndex==4 and lease.failures==3,'server resets consecutive failures after a correct input and aborts at the configured threshold')
+ rush.finish(p,false);config.failureLimit=originalLimit;config.failureMode=originalMode
+ ProjectYakuza.HeatActions.clear()
 end
 return 'PASS '..count..' MP authority, duplicate, range, lease, cooldown, observer and throttle checks'

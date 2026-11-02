@@ -225,3 +225,7 @@ A move can opt into boolean `noKnockback=true`. The Heat controller temporarily 
 ## Heat Action protection (0.70.0)
 
 Shared `HeatActions.begin(player,ownerKey,definition)` and `HeatActions.finish(player,ownerKey)` manage action-only invulnerability and a default 500 ms targeting grace. Call them from actual native start and every cleanup path, including the authoritative server handler. See [Heat Actions](HEAT_ACTIONS.md) for ownership, watchdog/pause behavior, stock/fuel costs and paired contact contracts.
+
+## QTE failure policy (0.73.0)
+
+QTE definitions support per-prompt timing/bindings plus `failureLimit`, `failureMode` and `feedback`. Sessions expose total/consecutive misses, failure identity and accepted input times. `qteFailed` and callback `failure` select author-supplied failure endings. Client `QTEFeedback` maps existing style sounds to success/miss/failure. DoD's paired backend supports `qteFailure` and deferred final health settlement while preserving native victim playback. See [QTE API](QTE.md) for bounds, sound setup, author examples and MP responsibilities.

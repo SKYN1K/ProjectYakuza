@@ -162,3 +162,7 @@
 !/tools/combat-tests/HeatPromptAssetProbe.java
 
 !/tools/combat-tests/validate_rush_qte_assets.py
+
+!/tools/combat-tests/build_crate_failure_assets.py
+!/tools/combat-tests/validate_crate_failure_assets.py
+!/tools/combat-tests/CrateAssetProbe.java

@@ -1,4 +1,4 @@
-# QTE framework API (0.59.0)
+# QTE framework API (0.73.0)
 
 ProjectYakuza.QTE is a shared code-only sequence engine for custom style actions. It does not create artwork/audio, choose targets, start animations, grant immunity or deal damage. An action handler owns its animation, lifecycle, presentation and multiplayer authorization; QTE supplies bounded prompt validation, fresh-input tracking and result events. DoD's paired Heat Rush is one consumer rather than a global handler for every style.
 
@@ -27,9 +27,9 @@ The sequence contains 1..32 prompts, in increasing contact time, with non-overla
 
 Use native animation-track phase times 1000 for timeMs, rather than assuming wall-clock time equals animation time. Stop updating while paused, and cancel on interruption, animation restart, style/equipment change and world exit. Do not reuse sessions. The built-in paired action skips contacts more than 120 ms late to avoid a catch-up burst.
 
-callback(kind,index,success,prompt) receives input when a new valid press is accepted, and result at the contact time. Result success is false when a prompt is missed. Results are consumed once; keeping a button held or calling update repeatedly cannot repeat them. The contact time itself is outside the input window. A late update can mark a missed prompt without ever displaying it.
+callback(kind,index,success,prompt) receives input when a new valid press is accepted, and result at the contact time. Result success is false when a prompt is missed. Results are consumed once; keeping a button held or calling update repeatedly cannot repeat them. When a configured failure limit is reached, callback also receives `failure`; the session closes with `failed=true` and does not emit a normal completion. The contact time itself is outside the input window. A late update can mark a missed prompt without ever displaying it.
 
-The session exposes definition, context, index, accepted, results, successes, closed and lastTime. Read these for UI; keep state mutation in QTE. Use the registered binding's current label rather than hardcoding MMB. The built-in prompt uses native PZ font drawing and the supplied Y6 circular timer texture, has no panel background and cannot capture mouse input. Custom styles may render their own prompts with supplied assets.
+The session exposes definition, context, index, accepted, results, successes, failures, consecutiveFailures, failed, failedIndex, inputAt, closed and lastTime. Read these for UI; keep state mutation in QTE. Use the registered binding's current label rather than hardcoding MMB. The built-in prompt animates supplied Y6 ring textures using native drawing and source animation time. It displays the currently bound control, has no preparatory message/panel background and cannot capture mouse input. Custom styles may render their own prompts with supplied assets.
 
 ## Events
 
@@ -79,3 +79,26 @@ contacts={
 ```
 
 `HeatRushRules.contacts(action)` resolves the contact list, `promptContact(action,index)` resolves a prompt to its contact, and `amount(action,index,weapon,successfulContacts)` calculates canonical paired damage. These helpers serve the built-in DoD handler; registering another style's QTE still requires a scoped lifecycle and server backend. Full source motion plays beyond the last QTE. See [retail timing and bindings](EXTREME_ATTACKS.md).
+
+## Configurable misses and sounds (0.73.0)
+
+Every prompt keeps its own `binding`, `atMs` and `windowMs`. Only a fresh press of that action inside the window succeeds. An incorrect control is ignored and becomes a miss when the contact time passes. Existing non-overlapping timing bounds are unchanged. For example:
+
+```lua
+qte={
+    failureLimit=2,
+    failureMode="consecutive",
+    feedback={success="qteSuccess",miss="qteMiss",failure="qteFailure",gain=.4},
+    prompts={
+        {atMs=1000,windowMs=350,binding="light"},
+        {atMs=1600,windowMs=250,binding="finisher"},
+        {atMs=2200,windowMs=400,binding="grab"},
+    },
+},
+```
+
+`failureLimit` is optional, integer 1..32. Without it, missed prompts are reported but do not abort the sequence. `failureMode` is `consecutive` by default or `total`. A correct press resets consecutive misses; total misses remain counted. `failedIndex` identifies the prompt that crossed the limit. `qteFailed(context,index,totalMisses,consecutiveMisses)` fires once, followed by the callback's failure notification. `qteFinished` is reserved for reaching the normal sequence end. `qteResult` now also supplies the session as its fifth event argument; existing listeners can ignore that extra argument.
+
+Load `ProjectYakuza/QTEFeedback` on clients for automatic feedback. The context must contain `player` and `action`, where `action.qte.feedback` maps success, tolerated miss and terminal failure to keys in that style's `sounds` table. Register those native sound events using supplied assets. `gain` is 0..1, default .4, and playback uses the combat Sounds volume. The final miss plays only terminal-failure feedback, avoiding two stacked failure cues. The module plays locally and uses the existing supported SFX networking; it adds no voice or audio asset.
+
+The pure QTE engine still does not choose animations. A custom handler listens for failure or checks `session.failed`, then plays its own supplied ending and restores its owned flags. The built-in DoD paired handler accepts `qteFailure={animation="...",nodeValue="...",duration=...}` for an original recovery clip, limited to 10 seconds. It releases the victim, retains actor movement/protection through the recovery and skips further contacts. `deferFinalDamage=true` banks the final earned native hit until normal paired completion, preserving the victim animation. The server derives misses from its registered timing and accepted inputs, rechecks the failure policy, deduplicates the ending and rejects damage after failure. Future style backends must enforce their own registered policy in the same way.

@@ -1,6 +1,6 @@
 # Documentation index
 
-Current manual: Project Yakuza 0.72.0, Lua API 3, MP protocol 2.
+Current manual: Project Yakuza 0.73.0, Lua API 3, MP protocol 2.
 
 | Task | Guide |
 | --- | --- |
@@ -8,6 +8,7 @@ Current manual: Project Yakuza 0.72.0, Lua API 3, MP protocol 2.
 | Controls and volume settings | [Controls](CONTROLS.md) |
 | Build an independent addon | [Style authoring](STYLE_AUTHORING.md) |
 | Look up fields/functions/events | [API reference](API_REFERENCE.md) |
+| Original Y6 beer crate weapon | [Beer crate](BEER_CRATE.md) |
 | Spawnable bottle weapons and Heat Action | [Bottle weapons](BOTTLE_WEAPONS.md) |
 | Add style-specific weapon moves and impact feedback | [Weapons](WEAPONS.md) |
 | Heat Actions, protection and katana motion | [Heat Actions](HEAT_ACTIONS.md) |
@@ -48,4 +49,4 @@ The JSON records identify original supplied files, conversions and hashes for re
 
 - [Manual directional attacks and taunt attention](DIRECTIONAL_AND_TAUNTS.md)
 
-- [Current validation](VALIDATION_0.72.0.md)
+- [Current validation](VALIDATION_0.73.0.md)

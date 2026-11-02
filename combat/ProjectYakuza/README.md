@@ -2,7 +2,7 @@
 
 Project Yakuza is a Build 42 combat mod and a framework for independent fighting-style addons. Dragon of Dojima uses supplied Yakuza/Kiwami animations, textures and sounds. Other styles register their own moves, assets and controllers without copying the framework.
 
-**Version 0.72.0 · Lua API 3 · MP protocol 2.** API 1 style registrations remain supported. Internal namespace/mod dependency: `ProjectYakuza`. Display name: Project Yakuza.
+**Version 0.73.0 · Lua API 3 · MP protocol 2.** API 1 style registrations remain supported. Internal namespace/mod dependency: `ProjectYakuza`. Display name: Project Yakuza.
 
 ## Install and play
 
@@ -64,3 +64,5 @@ Confirmed DoD hits now include [original animated Yakuza 6 blood](docs/BLOOD_EFF
 [Encounter intros](docs/ENCOUNTER_INTROS.md) add a DoD-only Edo SZ title animation: 0–10 nearby zombies show “A bunch of brain eaters”, 11–39 “Zombies”, and 40+ “The Horde”, within 12 tiles. The framework supports independent per-style title rules, renderers and supplied sounds; other styles have no automatic intro.
 
 [DoD locomotion](docs/LOCOMOTION.md) adds Kiryu running and relaxed weapon holds, with native walking legs and 0.25-second crossfades. Sprinting and special movement keep native behavior.
+
+The original Yakuza 6 beer-crate conversion uses [Yakuza GMD IO](https://github.com/theturboturnip/yk_gmd_io) by Samuel Stark (TheTurboTurnip). See [crate assets and spawn ID](docs/BEER_CRATE.md).

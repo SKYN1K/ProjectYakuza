@@ -24,6 +24,11 @@ local function definition(style)
             if not move.animation then return end
             if not cached.actions[move.animation]then cached.actions[move.animation]={kind=kind,move=move}end
             if enabled then cached.enabled[move.animation]=true end
+            local failure=move.qteFailure
+            if type(failure)=="table"and failure.animation then
+                cached.actions[failure.animation]={kind=kind,move=failure}
+                if enabled then cached.enabled[failure.animation]=true end
+            end
         end
         add(slot,slot.enabled)
         for _,move in pairs(slot.variants or {})do add(move,slot.enabled and move.enabled~=false)end

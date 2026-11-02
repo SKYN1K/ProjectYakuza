@@ -2,7 +2,7 @@ require "ProjectYakuza/Runtime"
 require "TimedActions/ISBaseTimedAction"
 require "TimedActions/ISTimedActionQueue"
 local ProjectYakuza = ProjectYakuza
-local Q = { input={}, nextAllowed={}, pending=setmetatable({}, {__mode="k"}),shoveDown=setmetatable({}, {__mode="k"}),shoveAuth=setmetatable({}, {__mode="k"}),lightCancels=setmetatable({}, {__mode="k"}) }
+local Q = { input={}, nextAllowed={}, pending=setmetatable({}, {__mode="k"}),aimPending=setmetatable({}, {__mode="k"}),shoveDown=setmetatable({}, {__mode="k"}),shoveAuth=setmetatable({}, {__mode="k"}),lightCancels=setmetatable({}, {__mode="k"}) }
 ProjectYakuza.Quicksteps = Q
 local function now() return getTimestampMs() end
 Q.limit=3;Q.windowMs=15000
@@ -306,17 +306,29 @@ function Q.pollShove(player)
     local ok,reason
     if combo.active and not combo.finisherMove and not combo.groundMove then ok,reason=Q.requestLightCancel(player,direction,target)
     else ok,reason=ProjectYakuza.requestAction(player,"quickstep",direction,target) end
+    if not ok and isMouseButtonDown(1)and not player:isAiming()and (reason=="not_ready"or reason=="busy"or reason=="equipment_pending")then
+        Q.aimPending[player]={style=style.id,direction=direction,target=target,expires=now()+350}
+    end
     if not ok and reason=="quickstep_limit" and ProjectYakuza.Feedback then
         local _,wait=Q.quota(player);ProjectYakuza.Feedback.notice(player,"QUICKSTEP - "..math.ceil(wait/1000).."s")
     end
     return ok
 end
+function Q.retryAim(player)
+    local pending=Q.aimPending[player];if not pending then return false end
+    if now()>pending.expires or not isMouseButtonDown(1)or not ProjectYakuza.isEquipped(player)or ProjectYakuza.getPlayerStyle(player).id~=pending.style or player:isDead()or isGamePaused()or getCore():isDoingTextEntry()or (player:getHitReaction()or "")~=""then Q.aimPending[player]=nil;return false end
+    local ok,reason=ProjectYakuza.requestAction(player,"quickstep",pending.direction,pending.target)
+    if ok or reason~="not_ready"and reason~="busy"and reason~="equipment_pending"then Q.aimPending[player]=nil end
+    return true
+end
 function Q.restoreAllShoves()
+    Q.aimPending=setmetatable({}, {__mode="k"})
     for player in pairs(Q.lightCancels) do Q.clearLightCancel(player) end
     for player in pairs(Q.shoveAuth) do Q.restoreShove(player) end
 end
 function Q.update(player)
     if not player or not instanceof(player,"IsoPlayer") or not player:isLocalPlayer() then return end
+    if Q.retryAim(player)then return end
     if Q.pollShove(player) then return end
     if Q.processLightCancel(player) then return end
     local pending=Q.pending[player]
@@ -342,4 +354,4 @@ Events.OnSave.Add(Q.restoreAllShoves)
 Events.OnMainMenuEnter.Add(Q.restoreAllShoves)
 
 ProjectYakuza.on("comboCancelled",function(p)Q.clearLightCancel(p)end)
-ProjectYakuza.on("styleChanged",function(p)Q.clearLightCancel(p)end)
+ProjectYakuza.on("styleChanged",function(p)Q.aimPending[p]=nil;Q.clearLightCancel(p)end)

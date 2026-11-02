@@ -28,45 +28,42 @@ function U:renderEligibility(p,active)
         self:drawSubTexture(U.heatIcon,64,0,64,80,x-32,y,64,80,alpha,1,1,1)
     end
 end
-function U:drawTimingRing(x,y,size,alpha,r,g,b)
+function U:drawTimingRing(x,y,size,alpha,r,g,b,angle)
     if U.qteIcon==nil then U.qteIcon=getTexture and getTexture("media/textures/ProjectYakuza/HeatRushQTEAtlas.png")or false end
     if not U.qteIcon or not SpriteRenderer or not SpriteRenderer.instance then return end
     local cx=(self:getAbsoluteX())+x;local cy=(self:getAbsoluteY())+y
     for _,rotation in ipairs(rotations)do
-        local c,v=rotation[1],rotation[2]
+        local a,b=math.cos(angle or 0),math.sin(angle or 0)
+        local c,v=rotation[1]*a-rotation[2]*b,rotation[1]*b+rotation[2]*a
         SpriteRenderer.instance:renderPoly(U.qteIcon,cx+(-c+v)*size,cy+(-v-c)*size,cx+v*size,cy-c*size,cx,cy,cx-c*size,cy-v*size,r,g,b,alpha)
     end
 end
 function U:render()
     local p=getSpecificPlayer(self.playerNum);local action=p and PY.HeatRush.active[p]
     self:renderEligibility(p,action)
-    if not action then
-        local style=p and PY.getPlayerStyle(p);local chain=p and PY.HeatRush.chains[p]
-        if not style or not style.heatRush or not PY.Heat.isExtreme(p)or not p:isAiming()then return end
-        local ticket=PY.HeatRush.tickets[p]
-        if ticket and (ticket.sent or getTimestampMs()<=ticket.expires)then
-            self:drawTextCentre("Heat Rush",self.width/2,self.height*.7,.7,.85,1,1,UIFont.Large)
-        elseif chain and chain.count>0 and getTimestampMs()-chain.at<=1200 then
-            self:drawTextCentre(PY.Bindings.label("light").."  "..chain.count.." / "..style.heatRush.hits,self.width/2,self.height*.7,.7,.85,1,1,UIFont.Large)
-        end
-        return
-    end
+    if not action then return end
     if not action.seen or not action.qte or action.qte.closed then return end
     local state=action.qte;local prompt=state.definition.prompts[state.index]
     if not prompt then return end
     local age=action.elapsed*1000;local untilHit=prompt.atMs-age
     if untilHit<0 or untilHit>math.max(prompt.windowMs,600)then return end
     local open=PY.QTE.window(state.definition,state.index,age)
-    local alpha=state.accepted[state.index]and .55 or open and 1 or .6
+    local alpha=state.accepted[state.index]and .8 or 1
     local x,y=self.width*.5,self.height*.7
-    self:drawTimingRing(x,y,56,alpha,.35,.7,1)
-    self:drawTimingRing(x,y,56+36*math.min(1,untilHit/math.max(600,prompt.windowMs)),alpha*.6,.75,.9,1)
-    self:drawTextCentre(PY.Bindings.label(prompt.binding),x,y-12,.85,1,1,alpha,UIFont.Large)
-    local labels={}
-    for i,v in ipairs(state.definition.prompts)do
-        labels[i]=(i==state.index and "["or "")..PY.Bindings.label(v.binding)..(i==state.index and "]"or "")
+    local progress=math.max(0,math.min(1,1-untilHit/math.max(600,prompt.windowMs)))
+    local appear=math.min(1,(math.max(prompt.windowMs,600)-untilHit)/90)
+    local accepted=state.inputAt[state.index]
+    local flash=accepted and math.max(0,1-(age-accepted)/180)or 0
+    self:drawTimingRing(x,y,56*(1+.12*flash),alpha*appear,.45+.5*flash,.75+.2*flash,1,age*.0018)
+    self:drawTimingRing(x,y,56+38*(1-progress),alpha*.65*appear,.75,.9,1,-age*.0024)
+    if U.qteEffects==nil then U.qteEffects=getTexture and getTexture("media/textures/ProjectYakuza/HeatRushQTEEffects.png")or false end
+    if U.qteEffects then
+        local frame=math.floor(age/60)%3
+        local sx,sy=frame==1 and 220 or 0,frame==2 and 220 or 0
+        local size=108+24*flash
+        self:drawSubTexture(U.qteEffects,sx,sy,220,220,x-size*.5,y-size*.5,size,size,(.55+.4*flash)*appear,.5+.5*flash,.8+.2*flash,1)
     end
-    self:drawTextCentre(table.concat(labels,"  >  "),x,y+62,.85,1,1,.8,UIFont.Small or UIFont.Large)
+    self:drawTextCentre(PY.Bindings.label(prompt.binding),x,y-12,.85,1,1,alpha*appear,UIFont.Large)
 
 end
 function U.create()

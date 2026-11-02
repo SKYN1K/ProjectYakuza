@@ -75,6 +75,7 @@ function R.hold(z)
     else z:setBlockMovement(true);z:setAuthorizeMeleeAction(false)end
 end
 function R.lock(z,clip)
+    if ProjectYakuza.Reactions then ProjectYakuza.Reactions.clear(z)end
     ProjectYakuza.HitResponses.releaseStun(z)
     local old=R.capture(z)
     if R.targetKind(z)=="player"and z:isLocalPlayer()and ProjectYakuza.isEquipped(z)then ProjectYakuza.resetPlayer(z,"heat_rush_victim")end

@@ -8,4 +8,22 @@ module Base
         static = true,
         scale = 1.0,
     }
+    model ProjectYakuza_BeerCrate
+    {
+        mesh = Static/ProjectYakuza_BeerCrate,
+        texture = ProjectYakuza_BeerCrate,
+        shader = basicEffect,
+        static = true,
+        scale = 1.0,
+        attachment Bip01_Prop2
+        {
+            offset = 0.0 0.0 0.0,
+            rotate = 0.0 0.0 0.0,
+        }
+        attachment world
+        {
+            offset = 0.26259 -0.164074 -0.034583,
+            rotate = 0.0 0.0 0.0,
+        }
+    }
 }

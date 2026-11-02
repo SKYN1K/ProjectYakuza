@@ -421,7 +421,7 @@ function N.command(module,command,a)
                 if a.sourceSwing==nil or a.sourceSwing==N.localState(p).swing then ProjectYakuza.emit("combatHit",p,z,p:getPrimaryHandItem(),a.amount,combo.step)end
             end
             N.replaying=false
-        elseif ProjectYakuza.HitEffects then ProjectYakuza.HitEffects.spawn(p,z,a.kill or a.knock or a.strong,a.charged,false,a.impactFeedback) end
+        elseif not a.quiet and ProjectYakuza.HitEffects then ProjectYakuza.HitEffects.spawn(p,z,a.kill or a.knock or a.strong,a.charged,false,a.impactFeedback) end
     end
 end
 function N.update(p)

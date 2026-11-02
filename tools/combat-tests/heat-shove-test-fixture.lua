@@ -75,4 +75,15 @@ check(action:isValid(),'replacement action remains valid without RMB')
 keys[46]=false;p.aim=true;rmb=true;keys[42]=true;keys[17]=true;Q.update(p)
 check(#calls==3,'Shift plus RMB direction shortcut is removed')
 Q.restoreAllShoves()
+keys[46]=false;keys[17]=false;p.aim=false;rmb=true;Q.update(p)
+local attempts=0
+ProjectYakuza.requestAction=function()attempts=attempts+1;if not p.aim then return false,'not_ready'end;return true end
+keys[46]=true;Q.update(p);check(Q.aimPending[p]and attempts==1,'quickstep pressed during RMB transition is retained briefly')
+keys[46]=false;clock=clock+100;p.aim=true;Q.update(p);check(attempts==2 and not Q.aimPending[p],'ready aim executes the retained press without a second key press')
+Q.update(p);check(attempts==2,'retained input executes only once')
+p.aim=false;keys[46]=true;Q.update(p);check(Q.aimPending[p]~=nil,'another transient aim failure can be buffered')
+rmb=false;keys[46]=false;Q.update(p);check(not Q.aimPending[p]and attempts==3,'RMB release cancels retained aim input')
+rmb=true;keys[46]=true;Q.update(p);clock=clock+351;keys[46]=false;p.aim=true;Q.update(p)
+check(not Q.aimPending[p]and attempts==4,'expired input cannot produce a late surprise dash')
+Q.restoreAllShoves()
 return 'PASS '..total..' Extreme Heat and native shove-to-quickstep checks'
