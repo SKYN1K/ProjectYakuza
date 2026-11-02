@@ -200,6 +200,31 @@
     "group": "actions"
   },
   {
+    "id": "ProjectYakuza_DD_BottleHeat",
+    "animation": "ProjectYakuza_DD_BottleHeat",
+    "loop": false,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "dragon_of_dojima"
+      },
+      {
+        "name": "ProjectYakuzaWeaponProfile",
+        "value": "bat"
+      },
+      {
+        "name": "PerformingAction",
+        "value": "ProjectYakuza_DD_BottleHeat"
+      }
+    ],
+    "priority": 180,
+    "group": "actions"
+  },
+  {
     "id": "ProjectYakuza_DD_GrabEnter",
     "animation": "ProjectYakuza_DD_GrabEnter",
     "loop": false,

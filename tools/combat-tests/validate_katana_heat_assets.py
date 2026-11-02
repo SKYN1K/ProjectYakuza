@@ -31,13 +31,13 @@ assert all(len(path)==141 and all(math.isfinite(v)for row in path for v in row)f
 from types import ModuleType
 package=ModuleType('yk');package.__path__=['C:/Users/Nik/Documents/Codex/2026-10-19/wo/work/addons/yakuza_gmt_blender'];sys.modules['yk']=package
 from yk.gmt_lib import read_gmt
-from mathutils import Vector
+from mathutils import Vector,Quaternion
 animations=[read_gmt(c['source']).animation for c in report['clips']]
 for a in animations:
     for curve in a.bones['vector_c_n'].curves:
         if int(curve.type)==1:curve.fill_channels()
-anchor=animations[0].bones['vector_c_n'].location.keyframes[0].value
-for a,path in zip(animations,report['paths']):
+anchor=Vector(animations[0].bones['vector_c_n'].location.keyframes[0].value);rotation=Quaternion(report['sceneRotation'])
+for a,path in zip(animations,report['rawPaths']):
     keys=a.bones['vector_c_n'].location.keyframes
     def sample(f):
         if f<=keys[0].frame:return Vector(keys[0].value)
@@ -45,5 +45,11 @@ for a,path in zip(animations,report['paths']):
             if f<=right.frame:return Vector(left.value).lerp(Vector(right.value),(f-left.frame)/(right.frame-left.frame))
         return Vector(keys[-1].value)
     for i,row in enumerate(path):
-        v=sample(i);assert abs(row[0]-(v.z-anchor[2])*report['pathScale'])<1e-8 and abs(row[1]-(v.x-anchor[0])*report['pathScale'])<1e-8
-print('PASS katana source archive/GMT/scene hashes, 141 retained frames,',samples,'unchanged retarget body samples and original paired vector paths')
+        v=rotation@(sample(i)-anchor);assert abs(row[0]-v.z*report['pathScale'])<1e-8 and abs(row[1]-v.x*report['pathScale'])<1e-8
+from paired_paths import bridge_scene_cuts
+expected,cuts=bridge_scene_cuts(report['rawPaths']);assert expected==report['paths']and cuts==report['sceneCuts']
+assert max(__import__('math').dist(a,b)for path in report['paths']for a,b in zip(path,path[1:]))<.06
+_,bones,curves,_=read(mod/report['clips'][1]['output']);local=locals_at(bones,curves,0);world={}
+for bone,frame in bones.items():world[bone]=world[frame['parent']]@local[bone]if frame['parent']else local[bone]
+assert world['Bip01'].translation.y>.4,'victim must start at native standing pelvis height'
+print('PASS katana source archive/GMT/scene hashes, 141 retained frames,',samples,'unchanged retarget body samples and normalized, continuous paired paths with native standing victim height')

@@ -1,0 +1,32 @@
+{
+  "operation": "Existing pixel-exact PNG decoding of the original Yakuza 6 UI btl_heat_icon.dds atlas copied unchanged. Runtime UV regions reuse its glow and white-blue flame layers at native size. No new artwork, recolor, AI or upscaling.",
+  "archive": "F:/SteamLibrary/steamapps/common/Yakuza 6 - The Song of Life/data/ui.par",
+  "entry": "/e/texture/btl_heat_icon.dds",
+  "sourceDds": "C:\\Users\\Nik\\Documents\\Codex\\2026-10-19\\wo\\work\\y6-ui\\btl_heat_icon.dds",
+  "sourcePng": "C:\\Users\\Nik\\Documents\\Codex\\2026-10-19\\wo\\work\\y6-ui\\btl_heat_icon.png",
+  "ddsSha256": "b58013a1071c76caa0549cb110276274d5328c5c18d0814fcedf3b373a4687a3",
+  "path": "42/media/textures/ProjectYakuza/HeatActionIconAtlas.png",
+  "sha256": "fcd3dcbfb6fc015ef3fa421fbc4fab79dfc0c9a902e9f50cc3d834c938f91e8a",
+  "size": [
+    128,
+    128
+  ],
+  "regions": {
+    "glow": [
+      0,
+      0,
+      64,
+      80
+    ],
+    "flame": [
+      64,
+      0,
+      64,
+      80
+    ]
+  },
+  "label": "Current Heat Action binding, drawn above the icon with native PZ fonts.",
+  "archiveEntryVerified": true,
+  "archiveEntryBytes": 16512,
+  "archiveEntrySha256": "b58013a1071c76caa0549cb110276274d5328c5c18d0814fcedf3b373a4687a3"
+}

@@ -214,6 +214,12 @@ style.ui.heat='test.hud';U.render('heat',p,host)
 check(PY.unregisterStyleUI('test.hud') and not U.sessions[host].heat,'unregister immediately releases provider resources')
 check(not U.render('heat',p,host),'unregistered provider falls back to builtin UI')
 style.ui={unknown='test.hud'};check(not PY.validateStyle(style),'unknown UI channels produce validation errors');style.ui=nil
+PY.registerStyleUI('test.heatPrompt',{render=function(c)check(c.channel=='heatAction'and c.extra.binding=='K'and c.extra.eligible and c.extra.alpha==.5,'Heat Action provider receives eligibility, fade and binding context');return true end})
+style.ui={heatAction='test.heatPrompt'};check(PY.validateStyle(style),'Heat Action presentation is a validated style UI channel')
+check(U.render('heatAction',p,host,{eligible=true,alpha=.5,binding='K'}),'custom Heat Action prompt replaces default drawing')
+style.ui.heatAction=false;check(U.render('heatAction',p,host),'style can disable the default Heat Action prompt')
+PY.unregisterStyleUI('test.heatPrompt');style.ui=nil
+
 
 local outline=false;local color=3432605235
 function p:isOutlineHighlight()return outline end

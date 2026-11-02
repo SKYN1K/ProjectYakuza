@@ -3,7 +3,7 @@ import sys,json,hashlib,math,subprocess,xml.etree.ElementTree as E
 root=Path(__file__).resolve().parents[2];w=root/'tools/combat-tests';mod=root/'combat/ProjectYakuza'
 sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
 if '--inside-blender'not in sys.argv:
-    r=subprocess.run(['F:/SteamLibrary/steamapps/common/Blender/blender.exe','-b','--python',str(Path(__file__).resolve()),'--','--inside-blender'],cwd=root,capture_output=True,text=True,encoding='utf-8',errors='replace');print(r.stdout)
+    r=subprocess.run(['F:/SteamLibrary/steamapps/common/Blender/blender.exe','-b','--factory-startup','--python',str(Path(__file__).resolve()),'--','--inside-blender'],cwd=root,capture_output=True,text=True,encoding='utf-8',errors='replace');print(r.stdout)
     if r.returncode or 'PASS reverse and paired source'not in r.stdout:raise SystemExit(r.stderr or 'source checks failed')
     java='F:/SteamLibrary/steamapps/common/ProjectZomboid/jre64/bin/java.exe';cp='.;F:/SteamLibrary/steamapps/common/ProjectZomboid/*'
     records=json.loads((mod/'docs/reverse-finisher-assets.json').read_text(encoding='utf-8'))['clips']+json.loads((mod/'docs/heat-rush-assets.json').read_text(encoding='utf-8'))['clips']
@@ -33,9 +33,9 @@ assert sha(reverse['commandSource'])==reverse['commandSha256']
 (w/'heat-rush-prop-contract.tsv').write_text('\n'.join(contracts),encoding='utf-8')
 assert not list((mod/'42/media').rglob('*Barrage*'))
 assert all(len(path)==131 and all(math.isfinite(v)for row in path for v in row)for path in rush['paths'])
-assert len(list((mod/'42/media/AnimSets/player').rglob('ProjectYakuza_MP_*.xml')))==346
+assert len(list((mod/'42/media/AnimSets/player').rglob('ProjectYakuza_MP_*.xml')))==348
 assert abs(rush['pathScale']-.664628963721426)<1e-9
-for record,path in zip(rush['clips'],rush['paths']):
+for record,path in zip(rush['clips'],rush['rawPaths']):
     from types import ModuleType
     package=ModuleType('yk');package.__path__=['C:/Users/Nik/Documents/Codex/2026-10-19/wo/work/addons/yakuza_gmt_blender'];sys.modules['yk']=package
     from yk.gmt_lib import read_gmt
@@ -54,5 +54,10 @@ for record,path in zip(rush['clips'],rush['paths']):
     for curve in actor.bones['vector_c_n'].curves:
         if int(curve.type)==1:curve.fill_channels()
     anchor=actor.bones['vector_c_n'].location.keyframes[0].value
-    for i,row in enumerate(path):v=sample(i);assert abs(row[0]-(v.z-anchor[2])*rush['pathScale'])<1e-8 and abs(row[1]-(v.x-anchor[0])*rush['pathScale'])<1e-8
+    from mathutils import Quaternion,Vector
+    rotation=Quaternion(rush['sceneRotation'])
+    for i,row in enumerate(path):v=rotation@(sample(i)-Vector(anchor));assert abs(row[0]-v.z*rush['pathScale'])<1e-8 and abs(row[1]-v.x*rush['pathScale'])<1e-8
+from paired_paths import bridge_scene_cuts
+expected,cuts=bridge_scene_cuts(rush['rawPaths']);assert expected==rush['paths']and cuts==rush['sceneCuts']
+assert [c['frame']for c in cuts]==[35]
 print('PASS reverse and paired source archive/GMT/BEP hashes, all retained frames,',samples,'finite unchanged retarget-body samples, original vector paths, source command mappings and removed automatic clips')

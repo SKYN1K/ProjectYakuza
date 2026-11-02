@@ -74,10 +74,23 @@ function H.input(p,s,style)
     if not ok and ticket.granted then PY.Network.send(p,"heatRushEnd",{action=ticket.granted.action})end
     return true
 end
-function H.weaponInput(p,s,style,pressed)
-    if not pressed or H.tickets[p]or not isMouseButtonDown(1)or not p:isAiming()or PY.activeActions[p]or not R.noCombo(s,style,now())then return false end
+H.previews=setmetatable({}, {__mode="k"})
+function H.weaponReady(p,s,style)
+    if not p or not style or not PY.isEquipped(p)or not isMouseButtonDown(1)or not p:isAiming()or p:isDead()or p:isOnFloor()or p:isKnockedDown()or p:getVehicle()or p:isClimbing()or (p:getHitReaction()or"")~=""or PY.activeActions[p]or H.tickets[p]or not R.noCombo(s,style,now())then return end
     local action=style.actions.heatAction
-    if not R.weaponAllowed(p,style,action)or PY.actionHeat(p,action)<(action.heatStocks or 0)*PY.Heat.stockSize(p)then return false end
+    if not R.weaponAllowed(p,style,action)or PY.actionHeat(p,action)<(action.heatStocks or 0)*PY.Heat.stockSize(p)then return end
+    if p:hasTimedActions()or p:isAttackStarted()or p:isPerformingAttackAnimation()then return end
+    return action
+end
+function H.weaponCandidate(p,s,style,force)
+    local action=H.weaponReady(p,s,style)
+    if not action then H.previews[p]=nil;return end
+    local cached=H.previews[p];local t=now();local item=p:getPrimaryHandItem()
+    if not force and cached and cached.style==style and cached.item==item and t<cached.next then
+        if cached.z and R.validTarget(p,cached.z)then return cached.z,action end
+        return
+    end
+    cached={style=style,item=item,next=t+200};H.previews[p]=cached
     local selected,distance
     local function consider(z)
         if R.validTarget(p,z)and PY.NetworkProtocol.path(p,z:getX(),z:getY())then
@@ -85,11 +98,19 @@ function H.weaponInput(p,s,style,pressed)
             if not distance or d<distance then selected=z;distance=d end
         end
     end
-    local origin=PY.MultiHit.origin(p,R.targetRange);if not origin then return false end
+    local origin=PY.MultiHit.origin(p,R.targetRange);if not origin then return end
     for _,entry in ipairs(PY.MultiHit.targets(p,origin,false,{},16))do consider(entry.victim)end
     if isClient()then
         local players=getOnlinePlayers();for i=0,players:size()-1 do consider(players:get(i))end
     elseif getNumActivePlayers then for i=0,getNumActivePlayers()-1 do consider(getSpecificPlayer(i))end end
+    if selected then
+        local f=p:getForwardDirection()
+        if R.space(p,{x=p:getX(),y=p:getY(),fx=f:getX(),fy=f:getY(),motion=R.motion(action),duration=R.durationFor(action)})then cached.z=selected;return selected,action end
+    end
+end
+function H.weaponInput(p,s,style,pressed)
+    if not pressed then return false end
+    local selected=H.weaponCandidate(p,s,style,true)
     if not selected then return false end
     H.tickets[p]={z=selected,pressed=true,weapon=true,expires=now()+600}
     return H.input(p,s,style)
@@ -196,12 +217,12 @@ PY.registerStyleActionHandler("dragon_of_dojima","heatAction",{
     cancel=function(c)if c.timedAction then c.timedAction:cancel()end end,
 })
 function H.clear(p)
-    if p then H.chains[p]=nil;H.discard(p,H.tickets[p]);if H.answer and H.answer.p==p then H.answer=nil end;return end
+    if p then H.previews[p]=nil;H.chains[p]=nil;H.discard(p,H.tickets[p]);if H.answer and H.answer.p==p then H.answer=nil end;return end
     local players={};for player in pairs(H.active)do players[#players+1]=player end
     for _,player in ipairs(players)do PY.cancelAction(player,"world_exit")end
     if H.remote then for id,job in pairs(H.remote)do H.remoteEnd(id,job.action)end;H.updateRemote()end
     for player,ticket in pairs(H.tickets)do H.discard(player,ticket)end
-    H.chains=setmetatable({}, {__mode="k"});H.tickets=setmetatable({}, {__mode="k"});H.answer=nil
+    H.previews=setmetatable({}, {__mode="k"});H.chains=setmetatable({}, {__mode="k"});H.tickets=setmetatable({}, {__mode="k"});H.answer=nil
 end
 PY.on("lightAttackStarted",H.inputStarted)
 PY.on("combatHit",H.hit)

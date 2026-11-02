@@ -20,6 +20,7 @@ Each key accepts a client provider ID or `false`. Omit a channel to retain its b
 | Channel | Host and scope |
 | --- | --- |
 | heat | Heat panel; invoked even for styles without built-in heatHud, so the addon can supply its own meter/layout |
+| heatAction | Heat Action eligibility prompt; receives extra.eligible/target/move/alpha/binding and the current style |
 | status | Bottom combat status/feedback text; active style owns its drawing |
 | selector | Whole wheel's drawing, selected from the currently equipped style |
 | selectorSlot | Each assigned slot's drawing, selected from that slot's style; receives its position, alpha and selection state |
@@ -73,3 +74,6 @@ Errors are caught once per session, logged and quarantined; built-in rendering r
 ## Encounter channel (0.50.0)
 
 `ui.encounter` selects a style-specific intro provider. It uses the same create/update/render/destroy lifecycle and isolated context as other channels, with extra title/count/radius/elapsed/duration data. `encounterIntro` opt-in configuration controls detection and title tiers. Missing configs/providers do not inherit DoD visuals. See [Encounter intros](ENCOUNTER_INTROS.md) for the complete configuration, callbacks, supplied font helper and limitations.
+
+
+The `heatAction` channel can replace or hide the eligibility prompt independently of the heat gauge. Default drawing uses the original Y6 flame atlas at native size, with the selected input above the glyph and a 120 ms fade in / 80 ms fade out. Candidate searches are bounded to 5 Hz while the action is otherwise ready. Input always revalidates on press; presentation cannot authorize damage or remove the RMB requirement.

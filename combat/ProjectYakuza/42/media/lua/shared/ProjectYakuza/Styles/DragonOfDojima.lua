@@ -157,7 +157,7 @@ if ProjectYakuza.Weapons then
         id="bat",impactFeedback="blunt",attackSpeed=1.4,quickstepCancelLights=true,standaloneHeavy=true,
         items={"Base.BaseballBat","Base.BaseballBat_Crafted","Base.BaseballBat_Metal","Base.BaseballBat_Nails",
             "Base.ShortBat","Base.ShortBat_Nails","Base.Nightstick","Base.MetalBar","Base.MetalPipe",
-            "Base.BoneClub","Base.LargeBoneClub","Base.LongSpikedClub"},
+            "Base.BoneClub","Base.LargeBoneClub","Base.LongSpikedClub","ProjectYakuza.IntactBeerBottle","ProjectYakuza.IntactWineBottle","ProjectYakuza.IntactWhiskeyBottle"},
         sounds=sounds,
         lightAttacks={
             {animation="ProjectYakuza_DD_BatLight01",nodeValue="dd_bat_light_01",duration=40/30/1.4,speed=1.4,impact=11/40,chainAt=24/40,quickstepCancelAt=12/40,damageMultiplier=1,hitResponse=false},
@@ -166,6 +166,9 @@ if ProjectYakuza.Weapons then
         },
         groundAttacks={{animation="ProjectYakuza_DD_BatGround",nodeValue="dd_bat_ground",duration=55/30/1.4,speed=1.4,impact=10/55,groundAttack=true,hitResponse=false}},
         actions={
+            heatAction={enabled=true,weaponHeat=true,weaponItems={"ProjectYakuza.IntactBeerBottle","ProjectYakuza.IntactWineBottle","ProjectYakuza.IntactWhiskeyBottle"},motionId="dod_bottle",useExtremeFuel=true,heatStocks=1,noCombo=true,
+                animation="ProjectYakuza_DD_BottleHeat",targetAnimation="ProjectYakuza_DD_BottleHeatVictim",nodeValue="dd_bottle_heat",requiresTarget=true,duration=5,speed=1,hitResponse=false,
+                contacts={{atMs=22/30*1000,damageMultiplier=0,cue="heavyImpact"},{atMs=73/30*1000,damageMultiplier=0,cue="heavyImpact"},{atMs=92/30*1000,damageMultiplier=1.5,cue="heavyImpact"}}},
             finisher={enabled=true,variants={default={enabled=true,animation="ProjectYakuza_DD_BatHeavy",nodeValue="dd_bat_heavy",duration=53/30/1.4,speed=1.4,impact=14/53,damageMultiplier=1.25,hitResponse=false}}},
             block={enabled=true,animation="ProjectYakuza_DD_BatGuard",staminaPerHit=.08},
             quickstep=base.actions.quickstep,

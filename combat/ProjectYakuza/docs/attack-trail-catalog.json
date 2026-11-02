@@ -1,7 +1,7 @@
 {
   "operation": "Code-side numeric FK only from existing supplied PZ clips. All active registered damaging DoD moves and weapon profiles are included. Contacts use existing native collision events, QTE times or the documented parry fallback. Active limbs use existing charge mappings or contact-local endpoint/relative velocity, not decoded Y6 hitbox bone enums. No visual/audio/animation/model assets are generated or modified.",
   "catalog": "42/media/lua/client/ProjectYakuza/AttackTrailCatalog.lua",
-  "sha256": "c940c785cecfbcb86bcdc729f351b839dc1f1a0eed92ca67d5a1c3804998135f",
+  "sha256": "90200704230cf7d75bcad4250f924593aa547e964c7c4bf9f13c733bd8360a90",
   "clips": [
     {
       "profile": "bat",
@@ -377,6 +377,63 @@
             0.4015353395061954,
             0.20098823033884078,
             0.24652235798297356
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "bat",
+      "kind": "heatAction",
+      "animation": "ProjectYakuza_DD_BottleHeat",
+      "impact": -1.0,
+      "kick": false,
+      "qte": [
+        0.7333333333333333,
+        2.433333333333333,
+        3.066666666666667
+      ],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BottleHeat.x",
+      "clipSha256": "5cac18683d2178238463f7d1d55e4f29ffa28a150ad34fce9a8db118d88d5c6a",
+      "samples": 151,
+      "duration": 5.0,
+      "windows": [
+        {
+          "track": "dd_trail_bottleheat_1",
+          "from": 0.6133333333333333,
+          "to": 0.9333333333333333,
+          "contact": 0.7333333333333333,
+          "limb": "rightArm",
+          "scores": [
+            0.11510924303243883,
+            0.39193166965310167,
+            0.08480797686426184,
+            0.06986910526187136
+          ]
+        },
+        {
+          "track": "dd_trail_bottleheat_2",
+          "from": 2.313333333333333,
+          "to": 2.6333333333333333,
+          "contact": 2.433333333333333,
+          "limb": "rightArm",
+          "scores": [
+            0.1550054897369938,
+            0.19241086707395397,
+            0.12987291688880612,
+            0.0636852904813079
+          ]
+        },
+        {
+          "track": "dd_trail_bottleheat_3",
+          "from": 2.9466666666666668,
+          "to": 3.266666666666667,
+          "contact": 3.066666666666667,
+          "limb": "leftArm",
+          "scores": [
+            0.22943773870544115,
+            0.1825260102275934,
+            0.04811603525610948,
+            0.050120100568957826
           ]
         }
       ]
@@ -964,7 +1021,7 @@
         3.2333333333333334
       ],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_KatanaHeat.x",
-      "clipSha256": "ed4d7896c2bd7222201e7b3bc7187714e4c0dc2db4e6e8c59a4028be28713693",
+      "clipSha256": "9d817a59d232c07235295bc578bf4b9b4cf76d0a48b97d9c0eaad034b23feb6e",
       "samples": 141,
       "duration": 4.666666666666667,
       "windows": [
@@ -975,10 +1032,10 @@
           "contact": 0.6666666666666666,
           "limb": "rightArm",
           "scores": [
-            0.501363863608877,
-            0.5629780306988915,
-            0.08367791828960551,
-            0.06912392962585624
+            0.5013638126950729,
+            0.5629780287793438,
+            0.0836781967010944,
+            0.06912437594054753
           ]
         },
         {
@@ -988,10 +1045,10 @@
           "contact": 0.9333333333333333,
           "limb": "leftArm",
           "scores": [
-            0.35244548904222756,
-            0.3083655265092659,
-            0.2148737169370212,
-            0.12805808483304348
+            0.3524452971168415,
+            0.3083653739913751,
+            0.21487377635091515,
+            0.12805799340496896
           ]
         },
         {
@@ -1001,10 +1058,10 @@
           "contact": 1.8,
           "limb": "rightArm",
           "scores": [
-            0.27135304478868044,
-            0.3406309609363949,
-            0.05335908802419098,
-            0.08990352122239118
+            0.27135301959026437,
+            0.34063117454012487,
+            0.05335876419917866,
+            0.08990349554393923
           ]
         },
         {
@@ -1014,10 +1071,10 @@
           "contact": 3.2333333333333334,
           "limb": "leftArm",
           "scores": [
-            0.0903651282518162,
-            0.06465473109524411,
-            0.03460111758095864,
-            0.04804291632686988
+            0.09036528754516718,
+            0.06465483005280777,
+            0.03460105617042438,
+            0.04804304642232506
           ]
         }
       ]

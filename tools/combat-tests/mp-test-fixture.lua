@@ -906,4 +906,39 @@ do
  clock=clock+500;ProjectYakuza.HeatActions.tick();check(not p.ghost,'server targeting grace expires after half a second')
  p.hand=p.token
 end
+
+do
+ local rush=ProjectYakuza.HeatRushServer;local rules=ProjectYakuza.HeatRushRules
+ ProjectYakuza.HeatActions.clear();p.x=0;p.y=0;p.dead=false;p.equipped=true;p.data.ProjectYakuzaStyle='dragon_of_dojima'
+ z1.x=1.1;z1.y=0;z1.health=10;z1.useless=false;z1.ignore=false;z1.deferred=true;z1.knock=false;wall=false
+ local bottle={data={},getFullType=function()return 'ProjectYakuza.IntactBeerBottle'end,getCondition=function()return 10 end,getMinDamage=function()return .6 end,getMaxDamage=function()return 1.0 end}
+ function bottle:getModData()return self.data end
+ p.hand=bottle
+ local function neutral(extra)
+  local packet={weaponProfile='bat',move='dd_bat_light_01',clip='',swing=8000,heat=50,fuel=50,extreme=false,rightAim=true,comboBusy=false}
+  for k,v in pairs(extra or {})do packet[k]=v end
+  snapshot(p,packet)
+ end
+ neutral({rightAim=false});command('heatRushBegin',{weaponHeat=true,zombie=z1.id,request=1001})
+ check(not rush.leases[p],'MP bottle Heat Action rejects missing physical RMB snapshot')
+ neutral({comboBusy=true});command('heatRushBegin',{weaponHeat=true,zombie=z1.id,request=1002})
+ check(not rush.leases[p],'MP bottle Heat Action cannot interrupt an active combo')
+ neutral({heat=0});command('heatRushBegin',{weaponHeat=true,zombie=z1.id,request=1003})
+ check(not rush.leases[p],'MP bottle Heat Action needs one stock')
+ neutral();command('heatRushBegin',{weaponHeat=true,zombie=z1.id,request=1004})
+ local lease=rush.leases[p];check(lease and lease.motion==ProjectYakuza.PairedMotions.dod_bottle and not lease.definition,'MP bottle uses original paired motion without eight-hit QTE proof')
+ local hits=z1.hits;command('heatRushReady',{action=lease.action})
+ check(p.ghost and p.invincible and z1.vars.ProjectYakuzaPairedVictimClip=='ProjectYakuza_DD_BottleHeatVictim','server protects attacker and selects bottle victim clip')
+ command('heatRushHit',{action=lease.action,index=3});check(z1.hits==hits,'early final contact cannot bypass source timing')
+ for i,contact in ipairs(lease.contacts)do
+  clock=lease.started+contact.atMs+10;command('heatRushHit',{action=lease.action,index=i,damage=999})
+  command('heatRushHit',{action=lease.action,index=i,damage=999})
+  check(z1.hits==hits+(i==3 and 1 or 0),'server auto contact deduplicates and preserves presentation-only contacts '..i)
+ end
+ check(math.abs(z1.health-8.8)<.000001,'server computes final bottle damage from actual weapon')
+ clock=lease.started+lease.duration*1000-50;neutral({clip='ProjectYakuza_DD_BottleHeat',move='dd_bottle_heat'});command('heatRushEnd',{action=lease.action,completed=true})
+ check(not rush.leases[p]and not p.invincible and p.ghost and not z1.ignore,'server ends invulnerability immediately and releases victim')
+ clock=clock+500;ProjectYakuza.HeatActions.tick();check(not p.ghost,'server targeting grace expires after half a second')
+ p.hand=p.token
+end
 return 'PASS '..count..' MP authority, duplicate, range, lease, cooldown, observer and throttle checks'

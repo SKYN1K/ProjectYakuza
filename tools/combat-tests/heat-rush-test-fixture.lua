@@ -53,6 +53,7 @@ function z:getOnlineID()return 25 end
 instanceof=function(obj,kind)return kind=='IsoZombie'and obj==z or kind=='IsoPlayer'and obj==p end
 do local _="ProjectYakuzaFixture:PATHS" end
 do local _="ProjectYakuzaFixture:KATANA_PATHS" end
+do local _="ProjectYakuzaFixture:BOTTLE_PATHS" end
 do local _="ProjectYakuzaFixture:RUSH_RULES" end
 do local _="ProjectYakuzaFixture:HEAT_ACTIONS" end
 do local _="ProjectYakuzaFixture:RUSH" end
@@ -181,6 +182,7 @@ victim.invincible=true;check(not R.playerAllowed(p,victim),'invincibility reject
 victim.ghost=true;check(not R.playerAllowed(p,victim),'ghost protection rejects paired player control');victim.ghost=false
 local saved=R.lock(victim);check(victim.ignore and victim.blocked and not victim.authorize and not victim.deferred,'paired PvP victim owns movement and attack locks')
 R.restore(victim,saved);check(not victim.ignore and not victim.blocked and victim.authorize and victim.deferred and victim:GetVariable('PerformingAction')=='','player cleanup restores native flags without zombie APIs')
+p.x=0;p.y=0;z.x=1.1;z.y=0
 state.active=false;state.step=8;state.activeLightMove=nil;state.multiHitToken={}
 local multi=PY.MultiHit;local stamp=state.multiHitToken
 H.select(p,z,PY.getPlayerStyle(p),stamp)
@@ -262,4 +264,38 @@ protect.begin(p,key,{duration=1});paused=true;clock=clock+5000;protect.tick();pa
 check(p.invincible and p.ghost,'pausing does not consume live-action protection')
 protect.finish(p,key);clock=clock+500;protect.tick();check(not p.invincible and not p.ghost,'paused action still restores protection on finish')
 p.held=nil;z.Hit=oldHit;PY.MultiHit.targets=oldTargets;PY.Bindings.options=nil
+for _,id in ipairs({'ProjectYakuza.IntactBeerBottle','ProjectYakuza.IntactWineBottle','ProjectYakuza.IntactWhiskeyBottle'})do
+ PY.resetPlayer(p,'bottle_test');p.x=0;p.y=0;z.x=1.1;z.y=0;z.health=10;z.knock=false;mouse[1]=true;phase=0;PY.setHeat(p,100)
+ local bottle={data={}};function bottle:getFullType()return id end;function bottle:getCondition()return self.condition or 4 end
+ function bottle:getMinDamage()return .6 end;function bottle:getMaxDamage()return 1 end;function bottle:getModData()return self.data end
+ function bottle:setMinDamage()end;function bottle:setMaxDamage()end
+ p.held=bottle;local view=PY.getPlayerStyle(p);local state=PY.stateFor(p)
+ check(view.weaponProfile=='bat'and view.actions.heatAction.motionId=='dod_bottle','spawned bottle uses Short Blunt profile and original paired action')
+ local before=z.hits;function z:Hit(item,who,amount)check(item==bottle and who==p,'bottle native contact uses actual weapon');self.hits=self.hits+1;self.health=self.health-amount end
+ PY.MultiHit.targets=function()return {{victim=z}}end
+ check(H.weaponInput(p,state,view,true),'intact bottle starts eligible Heat Action '..id)
+ local context=PY.activeActions[p];local action=context.timedAction;action.action={setOverrideHandModelsObject=function()end};action:start()
+ check(z.vars.ProjectYakuzaPairedVictimClip=='ProjectYakuza_DD_BottleHeatVictim','bottle victim clip cannot select the katana motion')
+ for _,contact in ipairs(context.action.contacts)do phase=contact.atMs/1000;action:update();action:update()end
+ check(z.hits==before+1 and math.abs(z.health-8.8)<.000001,'bottle contacts apply exactly one canonical final hit')
+ phase=5;action:update();check(action.cleaned and not p.invincible and p.ghost,'bottle preserves full recovery and action-only invulnerability')
+ clock=clock+500;PY.HeatActions.tick();check(not p.ghost,'bottle targeting grace cleans up')
+ bottle.condition=0;check(not R.weaponAllowed(p,view,view.actions.heatAction),'broken bottle cannot start the intact-bottle action')
+end
+p.held=katana;local blade=PY.getPlayerStyle(p);check(not R.weaponAllowed(p,blade,PY.Weapons.views.dragon_of_dojima.bat.actions.heatAction),'katana cannot borrow bottle Heat Action')
+p.held=nil;z.Hit=oldHit;PY.MultiHit.targets=oldTargets;PY.HeatActions.clear()
+PY.resetPlayer(p,'prompt_test');p.held=katana;PY.setHeat(p,100);p.x=0;p.y=0;z.x=1.1;z.y=0;z.health=10;z.useless=false;mouse[1]=true
+local scans=0;PY.MultiHit.targets=function()scans=scans+1;return {{victim=z}}end
+getTexture=function()return {}end;U.heatIcon=nil
+local regions={};function panel:drawSubTexture(texture,sx,sy,sw,sh,x,y,w,h,alpha)regions[#regions+1]={sx=sx,sy=sy,sw=sw,sh=sh,w=w,h=h,alpha=alpha}end
+panel.promptAt=clock;panel.promptAlpha=0;H.previews[p]=nil
+panel:render();check(scans==1 and panel.promptAlpha==0,'eligible prompt starts a bounded preview search with zero initial alpha')
+clock=clock+60;panel:render();check(panel.promptAlpha==.5 and scans==1,'prompt fades in fast without repeating target search')
+clock=clock+60;panel:render();check(panel.promptAlpha==1 and scans==1 and panel.lastText=='MMB','fully visible prompt displays the current mouse binding')
+check(#regions==4 and regions[1].w==64 and regions[1].h==80 and regions[2].sx==64 and regions[2].sw==64,'prompt reuses the original Y6 flame and glow at native resolution')
+PY.Bindings.options={getOption=function(_,id)if id=='input_heatAction'then return {getValue=function()return 4 end}elseif id=='key_heatAction'then return {getValue=function()return 37 end}end end}
+getKeyName=function()return 'K'end
+clock=clock+1;panel:render();check(panel.lastText=='K','prompt updates when Heat Action is rebound to a keyboard key')
+mouse[1]=false;clock=clock+80;panel:render();check(panel.promptAlpha==0 and scans==1,'losing RMB eligibility fades the prompt out and stops searching')
+PY.Bindings.options=nil;p.held=nil;PY.MultiHit.targets=oldTargets;H.previews[p]=nil
 return true,'PASS '..checks..' generic QTE validation, custom bindings, fresh presses, replay safety, native-phase contacts, canonical damage, paired cleanup and interruption checks'

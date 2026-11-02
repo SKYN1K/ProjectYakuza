@@ -148,3 +148,15 @@
 !/tools/combat-tests/validate_katana_heat_assets.py
 
 !/tools/combat-tests/KatanaHeatProbe.java
+
+!/tools/combat-tests/build_bottle_heat_assets.py
+
+!/tools/combat-tests/validate_bottle_heat_assets.py
+
+!/tools/combat-tests/BottleHeatProbe.java
+
+!/tools/combat-tests/BottleItemProbe.java
+
+!/tools/combat-tests/paired_paths.py
+
+!/tools/combat-tests/HeatPromptAssetProbe.java

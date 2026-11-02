@@ -1,9 +1,10 @@
-# Project Yakuza 0.70.0
+# Project Yakuza 0.71.0
 
-- Added the original Yakuza 6 katana Heat Action from h23720_buki_e.par to Dragon of Dojima while holding Base.Katana. The attacker and victim retain all 141 source frames at 30 fps, with native weapon grip repair.
-- Added a separate Heat Action control, default MMB, rebindable under Options > Mods > Project Yakuza. Physical RMB remains mandatory. The action starts only outside combos, near an eligible standing target, and costs one heat stock (or the equivalent Extreme Heat fuel). Combo MMB finishers retain their existing behavior.
-- Added shared HeatActions protection for current and future action handlers. Invulnerability lasts only during the action; zombie targeting protection lasts through it and for 500 ms afterward. Native flags are restored on completion, interruption, watchdog expiry and world exit. Existing paired Heat Rush uses this lifecycle too.
-- Extended paired playback and server authorization to the katana motion, automatic source-timed contacts, typed player/zombie targets, victim clip isolation and event-free MP observers. The final source contact applies weapon damage; earlier contacts provide presentation without prematurely interrupting the victim motion.
-- Added source provenance, native importer/grip/node validation and offline input/protection/MP regression coverage. No AI, generated artwork/audio or upscaling is used. The relaxed-idle preview remains outside the mod.
+- Added separately spawnable Intact Beer Bottle, Intact Wine Bottle and Intact Whiskey Bottle weapons, using the existing PZ bottle models/icons. They are one-handed Short Blunt weapons with native damage, durability and normal combat outside styles. Ordinary drink bottles are unchanged.
+- Added the original Yakuza 6 small blunt-object Heat Action to those three weapons in Dragon of Dojima. The full five-second attacker/victim motion is preserved. DoD bottle attacks use its existing Short Blunt profile.
+- The bottle Heat Action uses the separate rebindable input (default MMB), still requires physical RMB and no active/recent combo, and costs one stock. Shared protection lasts only for the action; zombie targeting grace lasts another 0.5 seconds. Existing katana/unarmed Heat Actions remain available under their own eligibility rules.
+- Fixed the katana victim being embedded in the ground by applying its source vector height, normalized paired scene headings, and removed camera-stage teleports from katana/unarmed paired paths.
+- Added a fast-fading Heat Action eligibility icon with the currently rebound input above it. It reuses original Y6 flame atlas pixels, caches candidate checks at 5 Hz, and supports per-style ui.heatAction overrides.
+- Added source provenance, native importer/grip/animator/item-parser checks and client/MP regressions for the new weapons and paired motion. No AI, new artwork/audio or upscaling is used.
 
-Project Zomboid was not launched. See [validation](VALIDATION_0.70.0.md). Install the same release on the server and clients and restart after updating.
+Project Zomboid was not launched. See [validation](VALIDATION_0.71.0.md) and [spawn IDs/controls](BOTTLE_WEAPONS.md). Restart after updating and install the same release on server and clients.

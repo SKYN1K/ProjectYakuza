@@ -1,0 +1,42 @@
+{
+  "operation": "Code-only item definitions reference unchanged original PZ bottle icons and held/world models. No copied, generated or upscaled graphic/audio files.",
+  "sources": [
+    {
+      "path": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\scripts\\generated\\items\\normal.txt",
+      "sha256": "b76cf5f91dce33567ca2bda305c4e450be297aae6b1fc11b5b34dcb280d74567"
+    },
+    {
+      "path": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\scripts\\generated\\items\\weapon.txt",
+      "sha256": "742414e701d360a9076099f9842bd9cc65c2d9ba9497af8b0ce470ee147467c5"
+    },
+    {
+      "path": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\scripts\\generated\\models_food.txt",
+      "sha256": "e13e45f97a99689da3f445fa651337fd8b2e2e1eaafe031dcf29069c36dd2209"
+    }
+  ],
+  "items": [
+    {
+      "id": "ProjectYakuza.IntactBeerBottle",
+      "sourceItem": "Base.BeerBottle",
+      "icon": "BeerBottle",
+      "heldModel": "BeerBottle",
+      "worldModel": "BeerBottleGround"
+    },
+    {
+      "id": "ProjectYakuza.IntactWineBottle",
+      "sourceItem": "Base.Wine2",
+      "icon": "Wine2",
+      "heldModel": "RedWineBottle",
+      "worldModel": "WineRedGround"
+    },
+    {
+      "id": "ProjectYakuza.IntactWhiskeyBottle",
+      "sourceItem": "Base.Whiskey",
+      "icon": "Whiskey",
+      "heldModel": "WhiskeyBottle",
+      "worldModel": "WhiskeyBottleGround"
+    }
+  ],
+  "motionReference": "https://www.scribd.com/document/1048895611/RGG-Game-Universal-HAct-List",
+  "motionNote": "The reference labels h23681_buki_a_plus as Face Smash for a non-baton one-handed item. Actual supplied actor/victim bindings and retained frames are verified from local game data."
+}

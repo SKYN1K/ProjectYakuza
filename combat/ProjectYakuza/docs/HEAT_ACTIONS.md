@@ -25,3 +25,13 @@ The katana definition lives in the DoD blade weapon view. motionId selects its r
 useExtremeFuel allows stock-priced actions to use fuel while Extreme Heat is active. ProjectYakuza.actionHeat(player,action) returns available resource and whether it is fuel. The request lifecycle spends it once after a successful start. Unarmed Heat Rush keeps its eight-input eligibility and original QTE bindings.
 
 The supplied source archive, exact actor/victim role bindings, scene contact timings and clip hashes are documented in [katana provenance](katana-heat-assets.json). The generic protection helper does not supply targeting, paired motion, damage, sounds or new assets. New styles still own their action handler, native animator definitions and scoped network validation; use the existing [action lifecycle](ACTIONS.md) and [QTE engine](QTE.md) when appropriate.
+
+
+Version 0.71.0 adds three separate [intact bottle weapons](BOTTLE_WEAPONS.md) and their DoD-exclusive original Heat Action. Use the same rebindable Heat Action input while physically holding RMB, outside combos. Ordinary drink bottles are unchanged.
+
+
+## Source-scene alignment and eligibility prompt (0.71.0)
+
+Paired clips are normalized to the attacker's original initial heading. The retarget root includes the source vector elevation, which is essential for the katana victim: that clip stores standing height in vector_c_n instead of ketu_c_n. Original body motion, frame counts and native grips remain intact. World paths remove shared cinematic stage translations at katana frames 33/77 and unarmed frame 35. Relative changes are bridged across six source frames instead of teleporting at the camera cut; no replacement body poses are invented. The same repaired paths are shared by owners, observers and the server.
+
+The eligibility popup requires the same equipped item, heat stock, physical RMB, neutral combo, standing target and movement-space checks as the action. Target searches are cached for 200 ms and stop when basic requirements fail; a press forces a fresh check. The icon fades in over 120 ms and out over 80 ms. It reuses the original Y6 flame/glow atlas regions, with the current input rendered above the flame. Styles can override or hide it through ui.heatAction; see [Style UI](STYLE_UI.md).

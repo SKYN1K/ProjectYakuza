@@ -32,3 +32,6 @@ DoD attacks now consume [graded endurance](EXERTION.md): lights cost the least, 
 ## Katana Heat Action (0.70.0)
 
 The separate Heat Action binding defaults to MMB and is fully rebindable. Physical RMB must still be held. With DoD and Base.Katana equipped, use it outside a combo near a standing target with at least one stock. Combo follow-up windows retain normal heavies. The action grants invulnerability until it ends and zombie targeting protection for another 0.5 seconds. See [Heat Actions](HEAT_ACTIONS.md).
+
+
+Version 0.71.0 adds three separate [intact bottle weapons](BOTTLE_WEAPONS.md) and their DoD-exclusive original Heat Action. Use the same rebindable Heat Action input while physically holding RMB, outside combos. Ordinary drink bottles are unchanged.

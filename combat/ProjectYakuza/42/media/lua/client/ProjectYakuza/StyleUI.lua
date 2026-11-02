@@ -2,7 +2,7 @@ require "ProjectYakuza/Registry"
 local PY=ProjectYakuza
 local U={providers={},sessions=setmetatable({}, {__mode="k"}),textures={}}
 PY.StyleUI=U
-local channels={heat=true,status=true,selector=true,selectorSlot=true,setup=true,encounter=true}
+local channels={heat=true,status=true,selector=true,selectorSlot=true,setup=true,encounter=true,heatAction=true}
 
 function PY.registerStyleUI(id,provider)
     assert(type(id)=="string" and string.match(id,"^[%w_.-]+$"),"namespaced UI provider ID required")

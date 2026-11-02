@@ -1,6 +1,7 @@
 require "ProjectYakuza/Registry"
 require "ProjectYakuza/HeatRushPaths"
 require "ProjectYakuza/KatanaHeatPaths"
+require "ProjectYakuza/BottleHeatPaths"
 local R={duration=130/30,targetRange=2}
 ProjectYakuza.HeatRushRules=R
 function R.motion(action)

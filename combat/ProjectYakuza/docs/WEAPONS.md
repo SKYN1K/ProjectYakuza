@@ -110,3 +110,6 @@ Optional `heatConfig` sets per-style gain, normal/Extreme drain and 1..32 stock 
 
 
 Base.Katana now supports the DoD-exclusive [katana Heat Action](HEAT_ACTIONS.md). Other blade items retain their existing combos/heavies. Its supplied motion preserves the complete paired recovery and repairs native hand-to-weapon offsets.
+
+
+Version 0.71.0 adds three separate [intact bottle weapons](BOTTLE_WEAPONS.md) and their DoD-exclusive original Heat Action. Use the same rebindable Heat Action input while physically holding RMB, outside combos. Ordinary drink bottles are unchanged.

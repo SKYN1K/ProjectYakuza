@@ -212,7 +212,7 @@ end
 
 local ProjectYakuza = ProjectYakuza
 ProjectYakuza.FEATURES={grab=false}
-ProjectYakuza.VERSION = "0.70.0"
+ProjectYakuza.VERSION = "0.71.0"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -326,7 +326,7 @@ function ProjectYakuza.validateStyle(style)
     if style.ui~=nil then
         if type(style.ui)~="table" then problem("ui must be a channel/provider table")
         else for key,value in pairs(style.ui) do
-            if not ({heat=true,status=true,selector=true,selectorSlot=true,setup=true,encounter=true})[key] then problem("unknown UI channel: "..tostring(key)) end
+            if not ({heat=true,status=true,selector=true,selectorSlot=true,setup=true,encounter=true,heatAction=true})[key] then problem("unknown UI channel: "..tostring(key)) end
             if value~=false and not text(value) then problem("ui."..tostring(key).." must be a provider ID or false") end
         end end
     end

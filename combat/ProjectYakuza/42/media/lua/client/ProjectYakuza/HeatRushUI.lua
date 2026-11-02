@@ -1,4 +1,5 @@
 require "ProjectYakuza/HeatRush"
+require "ProjectYakuza/StyleUI"
 require "ISUI/ISPanel"
 local PY=ProjectYakuza
 local U=ISPanel:derive("ProjectYakuzaHeatRushPrompt");PY.HeatRushUI=U
@@ -7,8 +8,28 @@ function U:onMouseUp()return false end
 function U:onMouseMove()return false end
 function U:onRightMouseDown()return false end
 function U:onRightMouseUp()return false end
+function U:renderEligibility(p,active)
+    local t=getTimestampMs();local dt=math.max(0,math.min(100,t-(self.promptAt or t)));self.promptAt=t
+    local style=p and PY.getPlayerStyle(p);local target,move
+    if p and not active then target,move=PY.HeatRush.weaponCandidate(p,PY.stateFor(p),style)end
+    local desired=target and 1 or 0;local alpha=self.promptAlpha or 0
+    if not isGamePaused()then
+        if desired==1 then alpha=math.min(1,alpha+dt/120)else alpha=math.max(0,alpha-dt/80)end
+    end
+    self.promptAlpha=alpha
+    if PY.StyleUI and PY.StyleUI.render("heatAction",p,self,{eligible=target~=nil,target=target,move=move,alpha=alpha,binding=PY.Bindings.label("heatAction")})then return end
+    if alpha<=0 then return end
+    if U.heatIcon==nil then U.heatIcon=getTexture and getTexture("media/textures/ProjectYakuza/HeatActionIconAtlas.png")or false end
+    local x,y=self.width*.5,self.height*.67
+    self:drawTextCentre(PY.Bindings.label("heatAction"),x,y-24,alpha,1,1,1,UIFont.Medium or UIFont.Small or UIFont.Large)
+    if U.heatIcon then
+        self:drawSubTexture(U.heatIcon,0,0,64,80,x-32,y,64,80,alpha*.35,.12,.42,1)
+        self:drawSubTexture(U.heatIcon,64,0,64,80,x-32,y,64,80,alpha,1,1,1)
+    end
+end
 function U:render()
     local p=getSpecificPlayer(self.playerNum);local action=p and PY.HeatRush.active[p]
+    self:renderEligibility(p,action)
     if not action then
         local style=p and PY.getPlayerStyle(p);local chain=p and PY.HeatRush.chains[p]
         if not style or not style.heatRush or not PY.Heat.isExtreme(p)or not p:isAiming()then return end

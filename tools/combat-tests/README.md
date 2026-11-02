@@ -180,3 +180,6 @@ StunRushProbe checks native weapon push/knockdown setters, native player Hit/con
 ## Katana Heat Action and shared protection
 
 Run validate_katana_heat_assets.py for supplied archive/scene/GMT hashes, complete source-body retention, native clip import, native hand-to-prop offsets and scoped actor/victim/observer selection. KatanaHeatProbe checks the eight new native nodes and protection APIs. The paired fixture covers independent Heat Action rebinding, physical RMB, neutral combo eligibility, source-phase contacts, one-stock payment and action-only invulnerability with 500 ms targeting grace. Multiplayer tests validate the matching server lease, resource/input gates, contact timing, weapon damage and cleanup. Validate both cycles with validate_mp_nodes.py; observers remain event-free. These checks load native classes but never launch PZ.
+
+
+Paired path repair checks retain raw source vectors and canonical scene rotation in provenance. paired_paths.py removes shared staging cuts and bridges their small relative residual over six frames. Native root checks require both katana and bottle victims to start at standing height. Heat Action UI regressions cover cached eligibility, 120/80 ms fades, native-size original atlas pixels, keyboard rebinding and style UI overrides. HeatPromptAssetProbe decodes the copied original flame atlas with native B42 ImageData.
