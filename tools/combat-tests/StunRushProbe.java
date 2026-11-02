@@ -7,6 +7,9 @@ public class StunRushProbe {
   for(String n:new String[]{"setPushBackMod","setKnockdownMod"})weapon.getMethod(n,float.class);
   for(String n:new String[]{"setKnockBackOnNoDeath","setAlwaysKnockdown"})weapon.getMethod(n,boolean.class);
   var player=Class.forName("zombie.characters.IsoPlayer");var actor=Class.forName("zombie.characters.IsoGameCharacter");
+  actor.getMethod("setIgnoreStaggerBack",boolean.class);actor.getMethod("isIgnoreStaggerBack");actor.getMethod("changeState",Class.forName("zombie.ai.State"));
+  Class.forName("zombie.iso.IsoMovingObject").getMethod("setOnFloor",boolean.class);
+  Class.forName("zombie.ai.states.ZombieIdleState").getMethod("instance");Class.forName("zombie.ai.states.ZombieOnGroundState").getMethod("instance");
   actor.getMethod("Hit",weapon,actor,float.class,boolean.class,float.class);player.getMethod("getSafety");player.getMethod("isFactionPvp");
   for(String n:new String[]{"setAuthorizeMeleeAction","setBlockMovement","setIgnoreMovement","setDeferredMovementEnabled"})player.getMethod(n,boolean.class);
   Class.forName("zombie.iso.areas.NonPvpZone").getMethod("getNonPvpZone",int.class,int.class);

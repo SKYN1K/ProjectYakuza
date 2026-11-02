@@ -402,8 +402,8 @@ function N.command(module,command,a)
 
         z:setHealth(math.min(z:getHealth(),a.health));z:setAttackedBy(p)
         if P.number(a.dx,-1,1) and P.number(a.dy,-1,1) then z:getHitDir():set(a.dx,a.dy) end
-        if P.number(a.force,0,12) then z:setHitForce(a.force) end
-        if type(a.hitReaction)=="string" and #a.hitReaction<80 then z:setHitReaction(a.hitReaction);z:reportEvent("wasHit") end
+        if not a.quiet and a.responseKind~="stun"and P.number(a.force,0,12)then z:setHitForce(a.force)end
+        if not a.quiet and a.responseKind~="stun"and type(a.hitReaction)=="string" and #a.hitReaction<80 then z:setHitReaction(a.hitReaction);z:reportEvent("wasHit") end
         if a.kill then z:getHitDir():set(a.dx,a.dy);z:setHitForce(12);z:setUsePhysicHitReaction(true);z:setHitReaction("ShotBelly") end
         if a.knock then z:setKnockedDown(true);z:setFallOnFront(false) end
         ProjectYakuza.Juggling.receive(p,z,a.juggle)

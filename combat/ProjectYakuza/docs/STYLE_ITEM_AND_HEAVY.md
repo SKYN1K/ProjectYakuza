@@ -8,4 +8,4 @@ Native timed weapon equips settle before the lifecycle reacts. A supported weapo
 
 While aiming with the unarmed style item, tap-release MMB with no active combo performs the supplied Kiryu normal heavy. Source P_KRU_BTL_SUD_ath_hvy_md.gmt supplies all 51 frames; the original BEP contact begins at frame 9. Playback uses 1.6 speed and x1.25 base damage. Holding MMB still charges; lights retain their branch finishers and doubles. The neutral heavy opens no double branch. Tiger Drop retains initial-press priority.
 
-Only approved source-motion conversions/prop corrections are included. No image, audio, model or invented body-motion asset was generated. See the provenance JSON files and VALIDATION_0.73.0.md. No game was launched; assess live grip/blend and MP presentation after restarting matching installations.
+Only approved source-motion conversions/prop corrections are included. No image, audio, model or invented body-motion asset was generated. See the provenance JSON files and VALIDATION_0.74.0.md. No game was launched; assess live grip/blend and MP presentation after restarting matching installations.

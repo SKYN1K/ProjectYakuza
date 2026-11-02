@@ -96,6 +96,22 @@ function R.restore(z,old)
     end
     if z:getHitReaction()=="ProjectYakuzaHeatRushVictim"then z:setHitReaction("");z:reportEvent("ActiveAnimFinishing")end
 end
+function R.endFacing(job)
+    local facing=(job.motion or ProjectYakuza.HeatRushPaths).victimFacing
+    if facing then return job.fx*facing.forward+job.fy*facing.right,job.fy*facing.forward-job.fx*facing.right end
+end
+function R.ground(z,fx,fy)
+    if not z or z:isDead()then return end
+    if fx and fy then z:setTargetAndCurrentDirection(fx,fy)end
+    z:setKnockedDown(true);z:setFallOnFront(false)
+    if R.targetKind(z)=="zombie"then
+        if z.setOnFloor then z:setOnFloor(true)end
+        z:setHitReaction("")
+        if z.setStaggerBack then z:setStaggerBack(false)end
+        if z.setHitForce then z:setHitForce(0)end
+        if ZombieOnGroundState and z.changeState then z:changeState(ZombieOnGroundState.instance())end
+    end
+end
 function R.space(p,job)
     local P=ProjectYakuza.NetworkProtocol;local paths=job.motion or ProjectYakuza.HeatRushPaths
     for _,path in ipairs({paths.actor,paths.victim})do

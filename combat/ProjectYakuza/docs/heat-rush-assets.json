@@ -3775,5 +3775,10 @@
     "finisher",
     "grab"
   ],
-  "contactDerivation": "Six right-wrist contact minima against the original victim upper body; final right-foot contact minimum. Original scene sound markers identify three repeated-punch phases and kick/down phases."
+  "contactDerivation": "Six right-wrist contact minima against the original victim upper body; final right-foot contact minimum. Original scene sound markers identify three repeated-punch phases and kick/down phases.",
+  "victimFacing": {
+    "forward": -1,
+    "right": 0
+  },
+  "endFacingDerivation": "Original actor vector_c_n is quaternion (0,0,1,0); victim vector_c_n is (1,0,0,0), at both first and last frames. Normalizing to actor heading leaves the victim 180 degrees opposite. Preserve that heading when handing off to the native ground state."
 }

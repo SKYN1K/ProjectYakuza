@@ -43,16 +43,16 @@ function U:render()
     self:renderEligibility(p,action)
     if not action then return end
     if not action.seen or not action.qte or action.qte.closed then return end
-    local state=action.qte;local prompt=state.definition.prompts[state.index]
+    local state=action.qte;local index=state.definition.allowOverlap and (PY.QTE.promptIndex(state)or #state.definition.prompts)or state.index;local prompt=state.definition.prompts[index]
     if not prompt then return end
     local age=action.elapsed*1000;local untilHit=prompt.atMs-age
     if untilHit<0 or untilHit>math.max(prompt.windowMs,600)then return end
-    local open=PY.QTE.window(state.definition,state.index,age)
-    local alpha=state.accepted[state.index]and .8 or 1
+    local open=PY.QTE.window(state.definition,index,age)
+    local alpha=state.accepted[index]and .8 or 1
     local x,y=self.width*.5,self.height*.7
     local progress=math.max(0,math.min(1,1-untilHit/math.max(600,prompt.windowMs)))
     local appear=math.min(1,(math.max(prompt.windowMs,600)-untilHit)/90)
-    local accepted=state.inputAt[state.index]
+    local accepted=state.lastInputAt or state.inputAt[index]
     local flash=accepted and math.max(0,1-(age-accepted)/180)or 0
     self:drawTimingRing(x,y,56*(1+.12*flash),alpha*appear,.45+.5*flash,.75+.2*flash,1,age*.0018)
     self:drawTimingRing(x,y,56+38*(1-progress),alpha*.65*appear,.75,.9,1,-age*.0024)

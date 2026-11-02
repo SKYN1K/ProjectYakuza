@@ -108,9 +108,10 @@ ProjectYakuza.on("groundAttackStarted",function(p)V.queue(p,"CombatHeavyAttack")
 ProjectYakuza.on("runningAttackStarted",function(p)V.queue(p,"CombatSpecialMove")end)
 ProjectYakuza.on("quickstepAttackStarted",function(p)V.queue(p,"CombatSpecialMove")end)
 ProjectYakuza.on("actionStarted",function(c)
-    if c.kind=="quickstep" and ProjectYakuza.getPlayerStyle(c.player).quickstepVoices==false then return end
+    if c.kind=="quickstep" and ProjectYakuza.getPlayerStyle(c.player).quickstepVoices==false or c.kind=="heatAction"and c.action and c.action.heatRush then return end
     if c.kind=="quickstep" or c.kind=="parry" or c.kind=="grab" or c.kind=="heatAction" then V.play(c.player,"CombatSpecialMove") end
 end)
+ProjectYakuza.on("heatRushHit",function(p,z,index,contact)if contact and contact.voice then V.play(p,contact.voice)end end)
 ProjectYakuza.on("throwStarted",function(p)V.play(p,"CombatSpecialMove")end)
 function V.activation(p)
     if not V.allowed(p) then return end

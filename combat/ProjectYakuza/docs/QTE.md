@@ -1,4 +1,4 @@
-# QTE framework API (0.73.0)
+# QTE framework API (0.74.0)
 
 ProjectYakuza.QTE is a shared code-only sequence engine for custom style actions. It does not create artwork/audio, choose targets, start animations, grant immunity or deal damage. An action handler owns its animation, lifecycle, presentation and multiplayer authorization; QTE supplies bounded prompt validation, fresh-input tracking and result events. DoD's paired Heat Rush is one consumer rather than a global handler for every style.
 
@@ -102,3 +102,11 @@ qte={
 Load `ProjectYakuza/QTEFeedback` on clients for automatic feedback. The context must contain `player` and `action`, where `action.qte.feedback` maps success, tolerated miss and terminal failure to keys in that style's `sounds` table. Register those native sound events using supplied assets. `gain` is 0..1, default .4, and playback uses the combat Sounds volume. The final miss plays only terminal-failure feedback, avoiding two stacked failure cues. The module plays locally and uses the existing supported SFX networking; it adds no voice or audio asset.
 
 The pure QTE engine still does not choose animations. A custom handler listens for failure or checks `session.failed`, then plays its own supplied ending and restores its owned flags. The built-in DoD paired handler accepts `qteFailure={animation="...",nodeValue="...",duration=...}` for an original recovery clip, limited to 10 seconds. It releases the victim, retains actor movement/protection through the recovery and skips further contacts. `deferFinalDamage=true` banks the final earned native hit until normal paired completion, preserving the victim animation. The server derives misses from its registered timing and accepted inputs, rechecks the failure policy, deduplicates the ending and rejects damage after failure. Future style backends must enforce their own registered policy in the same way.
+
+## Consistent windows with source-timed impacts (0.74.0)
+
+`allowOverlap=true` allows adjacent acceptance windows to overlap; its default remains false for existing addons. Prompt times still increase, and every window must begin at or after zero. Only the first sequential unaccepted prompt can consume a fresh press, so a held control or simultaneous later buttons cannot complete multiple prompts. Acceptance can precede the prior prompt's contact, while results and damage remain tied to the original contact times. Failure limits remain checked in source order.
+
+`QTE.promptIndex(session)` returns the next unaccepted prompt or nil once all inputs are accepted. A custom UI can use it to advance immediately on the previous correct press, rather than waiting for the impact. `session.lastInputAt` provides the accepted-input animation clock for feedback. DoD opts into six 400 ms windows; no animation file is retimed.
+
+Paired contacts can additionally define `charged=true` to select the existing stronger spark preset, `layers={"cueA","cueB"}` for up to four existing style sound cues, and `voice="CombatLightAttack"` or another registered combat voice entry. The built-in paired controller presents these at confirmed contact time. Voice playback respects the active CVF pack and the existing combat Voices settings; authors still supply/register any additional assets themselves.

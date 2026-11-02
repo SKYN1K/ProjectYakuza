@@ -70,9 +70,10 @@ function Q.valid(def,durationMs)
             elseif not ({success=true,miss=true,failure=true})[key]or type(value)~="string"or #value>120 or not value:match("^[%w_.-]+$")then return false,"invalid QTE feedback cue"end
         end
     end
+    if def.allowOverlap~=nil and type(def.allowOverlap)~="boolean"then return false,"invalid QTE overlap policy"end
     local last=0
     for _,v in ipairs(def.prompts)do
-        if type(v)~="table"or not finite(v.atMs)or v.atMs<=last or v.atMs>120000 or not finite(v.windowMs)or v.windowMs<50 or v.windowMs>2000 or v.atMs-v.windowMs<last or type(v.binding)~="string"or not v.binding:match("^[%w_.-]+$")or #v.binding>80 then return false,"invalid QTE prompt timing or binding"end
+        if type(v)~="table"or not finite(v.atMs)or v.atMs<=last or v.atMs>120000 or not finite(v.windowMs)or v.windowMs<50 or v.windowMs>2000 or v.atMs-v.windowMs<(def.allowOverlap and 0 or last)or type(v.binding)~="string"or not v.binding:match("^[%w_.-]+$")or #v.binding>80 then return false,"invalid QTE prompt timing or binding"end
         if durationMs and v.atMs>durationMs then return false,"QTE prompt exceeds animation duration"end
         if v.damageMultiplier~=nil and (not finite(v.damageMultiplier)or v.damageMultiplier<0 or v.damageMultiplier>10)then return false,"invalid QTE damage multiplier"end
         last=v.atMs
@@ -92,17 +93,22 @@ end
 local function emit(s,name,...)
     if ProjectYakuza.emit then ProjectYakuza.emit(name,s.context,...)end
 end
+function Q.promptIndex(s)
+    for i=s.index,#s.definition.prompts do if not s.accepted[i]then return i end end
+end
 function Q.update(s,timeMs,down,callback)
     if s.closed then return false,"closed"end
     if not finite(timeMs)or timeMs<s.lastTime then return false,"invalid_time"end
     s.lastTime=timeMs
     local current={};for binding in pairs(s.downs)do current[binding]=down(binding)==true end
-    local v=s.definition.prompts[s.index]
-    if v and Q.window(s.definition,s.index,timeMs)then
-        if not s.prompted then s.prompted=true;emit(s,"qtePrompt",s.index,v)end
-        if current[v.binding]and not s.downs[v.binding]and not s.accepted[s.index]then
-            s.accepted[s.index]=true;s.inputAt[s.index]=timeMs;emit(s,"qteInput",s.index,v)
-            if callback then callback("input",s.index,true,v)end
+    local index
+    if s.definition.allowOverlap then index=Q.promptIndex(s)else index=s.index end
+    local v=index and s.definition.prompts[index]
+    if v and Q.window(s.definition,index,timeMs)then
+        if s.promptedIndex~=index then s.promptedIndex=index;emit(s,"qtePrompt",index,v)end
+        if current[v.binding]and not s.downs[v.binding]and not s.accepted[index]then
+            s.accepted[index]=true;s.inputAt[index]=timeMs;s.lastInputAt=timeMs;emit(s,"qteInput",index,v)
+            if callback then callback("input",index,true,v)end
         end
     end
     s.downs=current
@@ -166,6 +172,7 @@ function H.releaseStun(victim)
     local state=H.stuns[victim];if not state then return end
     H.stuns[victim]=nil
     victim:setUseless(state.useless);victim:setIgnoreMovement(state.ignore);victim:setDeferredMovementEnabled(state.deferred)
+    if state.ignoreStagger~=nil then victim:setIgnoreStaggerBack(state.ignoreStagger)end
     local any=false;for _ in pairs(H.stuns)do any=true;break end
     if not any and H.stunHooked then Events.OnTick.Remove(H.tickStuns);H.stunHooked=false end
 end
@@ -179,18 +186,28 @@ function H.tickStuns()
         else
             state.remaining=math.max(0,state.untilAt-t)
             if victim:isDead()or victim:isOnFloor()or victim:isKnockedDown()or state.remaining==0 then H.releaseStun(victim)
-            else victim:setStaggerBack(false);victim:setHitForce(0)end
+            else H.holdStun(victim)end
         end
     end
 end
+function H.holdStun(victim)
+    victim:setStaggerBack(false);victim:setHitForce(0)
+    if victim.setIgnoreStaggerBack then victim:setIgnoreStaggerBack(true)end
+    if victim.setHitReaction then victim:setHitReaction("")end
+    if ZombieIdleState and victim.changeState then
+        local name=victim.getCurrentStateName and string.lower(victim:getCurrentStateName()or "")or ""
+        if name:find("hitreaction",1,true)or name:find("stagger",1,true)then victim:changeState(ZombieIdleState.instance())end
+    end
+end
 function H.stun(victim)
+    if victim.GetVariable and victim:GetVariable("ProjectYakuzaHeatRushVictim")=="true"then return false end
     local state=H.stuns[victim]
     if not state then
-        state={useless=victim:isUseless(),ignore=victim:getIgnoreMovement(),deferred=victim:isDeferredMovementEnabled()};H.stuns[victim]=state
+        state={useless=victim:isUseless(),ignore=victim:getIgnoreMovement(),deferred=victim:isDeferredMovementEnabled(),ignoreStagger=victim.isIgnoreStaggerBack and victim:isIgnoreStaggerBack()};H.stuns[victim]=state
     end
     state.untilAt=getTimestampMs()+250;state.remaining=250
     victim:setUseless(true);victim:setIgnoreMovement(true);victim:setDeferredMovementEnabled(false)
-    victim:setStaggerBack(false);victim:setHitForce(0);victim:setAttackOutcome("fail")
+    H.holdStun(victim);victim:setAttackOutcome("fail")
     if not H.stunHooked then Events.OnTick.Add(H.tickStuns);H.stunHooked=true end
     if not H.stunCleanup then
         if Events.OnSave then Events.OnSave.Add(H.clearStuns)end
@@ -228,7 +245,7 @@ end
 
 local ProjectYakuza = ProjectYakuza
 ProjectYakuza.FEATURES={grab=false}
-ProjectYakuza.VERSION = "0.73.0"
+ProjectYakuza.VERSION = "0.74.0"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -316,6 +333,12 @@ function ProjectYakuza.validateStyle(style)
             local mapped={};local prompts=type(value.qte)=="table"and value.qte.prompts
             for _,contact in ipairs(value.contacts)do
                 if type(contact)=="table"then
+                    if contact.charged~=nil and type(contact.charged)~="boolean"then problem(path..".contacts.charged must be boolean")end
+                    if contact.voice~=nil and (not text(contact.voice)or not contact.voice:match("^Combat[%w_]+$"))then problem(path..".contacts.voice must name a combat voice entry")end
+                    if contact.layers~=nil then
+                        if type(contact.layers)~="table"or #contact.layers>4 then problem(path..".contacts.layers requires at most four sound cues")
+                        else for _,cue in ipairs(contact.layers)do if not text(cue)or #cue>120 then problem(path..".contacts.layers contains an invalid sound cue")end end end
+                    end
                     local i=contact.qteIndex
                     if i~=nil then
                         local prompt=type(prompts)=="table"and number(i)and i==math.floor(i)and prompts[i]
@@ -574,13 +597,12 @@ function ProjectYakuza.isCustomAction(player)
     return c~=nil and ProjectYakuza.actionDefinitions[c.kind]~=nil
 end
 function ProjectYakuza.blocksNativeAttacks(player)
-    if ProjectYakuza.HeatRush and ProjectYakuza.HeatRush.tickets and ProjectYakuza.HeatRush.tickets[player]then return true end
     if player:GetVariable("ProjectYakuzaHeatRushVictim")=="true"then return true end
     if ProjectYakuza.StyleEntry and ProjectYakuza.StyleEntry.pending and ProjectYakuza.StyleEntry.pending[player] then return true end
     if ProjectYakuza.Quicksteps and ProjectYakuza.Quicksteps.isCancelling and ProjectYakuza.Quicksteps.isCancelling(player) then return true end
     local c=ProjectYakuza.activeActions[player]
     local d=c and ProjectYakuza.actionDefinitions[c.kind]
-    return c~=nil and (c.kind=="styleEntry" or c.kind=="heatAction" or c.kind=="quickstepAttack" or c.kind=="heavyCharge" or c.kind=="chargedHeavy" or (d~=nil and d.blocksAttacks)) or false
+    return c~=nil and (c.kind=="styleEntry" or c.kind=="heatAction" or c.kind=="quickstep" or c.kind=="quickstepAttack" or c.kind=="heavyCharge" or c.kind=="chargedHeavy" or (d~=nil and d.blocksAttacks)) or false
 end
 
 function ProjectYakuza.updateCustomAction(player)

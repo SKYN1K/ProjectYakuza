@@ -1,4 +1,4 @@
-# Extreme Heat rush combat (0.73.0)
+# Extreme Heat rush combat (0.74.0)
 
 Dragon of Dojima uses the four supplied Kiryu bct_ath_01 through bct_ath_04 clips for the first four Extreme Heat lights, then alternates the first two clips for an eight-input chain. Each fresh LMB press commits one native attack. Stopping input leaves that attack's original recovery intact. There is no automatic multi-contact attack.
 
@@ -6,16 +6,16 @@ Perform the eight-input light chain; the first seven attacks may miss or hit dif
 
 Boost lights retain their 0.525 damage multiplier and now stun zombies in place for 250 ms. Weapon push/knockdown is suppressed only for the swing, and the short AI/root-movement stun restores original flags after it expires. Repeated hits refresh the same lease.
 
-The retail paired rush asks for **Light → Heavy → Grab → Light → Heavy → Grab**. Default inputs are LMB, MMB, G, LMB, MMB, G. Each label reads the current action binding; using the Grab binding here does not enable ordinary grabs. A fresh press of the correct binding is required inside each unchanged window. Original Y6 ring textures rotate, contract, animate through their supplied atlas regions and flash briefly on acceptance. Only the current bound input appears; there is no extra ready message or input sequence overlay. The eighth native punch finishes its follow-through before the pair starts, and both actors blend in over 180 ms.
+The retail paired rush asks for **Light → Heavy → Grab → Light → Heavy → Grab**. Default inputs are LMB, MMB, G, LMB, MMB, G. Each label reads the current action binding; using the Grab binding here does not enable ordinary grabs. A fresh press of the correct binding is required inside each consistent 400 ms window. Original Y6 ring textures rotate, contract, animate through their supplied atlas regions and flash briefly on acceptance. Only the current bound input appears; there is no extra ready message or input sequence overlay. The previous recovery-cancel handoff is restored, and both actors blend in over 80 ms. The next input appears immediately after the preceding valid press, while contacts retain their original source times.
 
 | Contact | Original frame at 30 fps | Input window | Binding |
 | --- | --- | --- | --- |
 | Punch 1 | 56 | 400 ms | light |
-| Punch 2 | 63 | 200 ms | finisher |
+| Punch 2 | 63 | 400 ms | finisher |
 | Punch 3 | 77 | 400 ms | grab |
-| Punch 4 | 85 | 233 ms | light |
+| Punch 4 | 85 | 400 ms | light |
 | Punch 5 | 102 | 400 ms | finisher |
-| Punch 6 | 110 | 233 ms | grab |
+| Punch 6 | 110 | 400 ms | grab |
 | Finishing kick | 143 | Automatic | None |
 
 Successful prompts play punch feedback at their source contacts and a quiet confirmation sound. DoD aborts on the first missed prompt, plays the complete 21-frame Kiryu `bct_std_en` exit/recovery and releases the victim. This is an original recovery motion used as an abort, rather than a claim that it is Dragon Engine's original QTE-failure branch. Wrong inputs and held buttons do not count; missed prompts no longer silently play the successful ending.
@@ -40,4 +40,12 @@ The server requires an eight-input source-order proof and a validated final cont
 
 ## Failure policy and feedback
 
-DoD configures `failureLimit=1`, `failureMode="consecutive"` and a `qteFailure` recovery. Authors can set another limit or count total misses. Successful inputs reset consecutive misses. Individual `windowMs` and `binding` values remain configurable without altering DoD's authored timings. Feedback maps success, a tolerated miss and terminal failure to existing style sound cues at a configurable gain. See [QTE API](QTE.md), [failure motion](heat-rush-failure-assets.json) and [original animated prompt atlas](qte-effects-assets.json).
+DoD configures `failureLimit=1`, `failureMode="consecutive"` and a `qteFailure` recovery. Authors can set another limit or count total misses. Successful inputs reset consecutive misses. Individual `windowMs` and `binding` values remain configurable without altering the source motion. Feedback maps success, a tolerated miss and terminal failure to existing style sound cues at a configurable gain. See [QTE API](QTE.md), [failure motion](heat-rush-failure-assets.json) and [original animated prompt atlas](qte-effects-assets.json).
+
+## Timed impact feedback and stable ending (0.74.0)
+
+All six input windows are 400 ms. The explicit overlapping-window policy accepts the next sequential control before the previous punch's contact, and the UI advances on the accepted press. Holding a button or pressing a later role out of order cannot skip prompts. Impacts remain at source frames 56, 63, 77, 85, 102, 110 and 143.
+
+Contacts alternate existing punch/heat impact sounds and stronger original spark presets; the final kick layers existing kick, heavy and heat impact sounds. Punches 1/3/5 request CombatLightAttack recordings and the finishing kick requests CombatHeavyAttack through the existing CVF adapter. The generic entry voice is skipped for this rush. The selected voice pack, Voices volume, provider cooldowns and busy-voice policy still apply; no pack or recording is modified.
+
+The end clears the owned action clip and places surviving zombies directly into their native on-ground state, preserving the original victim facing opposite Kiryu. Deferred health settlement suppresses native push and delayed replicated hit reactions, avoiding another standing-hit/fall animation. Near-end track blend-out is treated as normal completion rather than an interruption. Extreme Heat lights suppress native stagger animation as well as force during their existing short in-place stun, preserving the original ignore-stagger flag on release.

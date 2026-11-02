@@ -11,6 +11,7 @@ if '--inside-blender'not in sys.argv:
     raise SystemExit(0)
 sys.path.insert(0,str(w));from locomotion_math import read,locals_at
 reverse=json.loads((mod/'docs/reverse-finisher-assets.json').read_text(encoding='utf-8'));rush=json.loads((mod/'docs/heat-rush-assets.json').read_text(encoding='utf-8'))
+assert rush['victimFacing']=={'forward':-1,'right':0}
 assert rush['contactFrames']==[56,63,77,85,102,110,143]and rush['qteBindings']==['light','finisher','grab']*2
 assert len(reverse['clips'])==8 and len(rush['clips'])==2 and sha(rush['archive'])==rush['archiveSha256']
 contracts=[];samples=0
@@ -58,6 +59,13 @@ for record,path in zip(rush['clips'],rush['rawPaths']):
     from mathutils import Quaternion,Vector
     rotation=Quaternion(rush['sceneRotation'])
     for i,row in enumerate(path):v=rotation@(sample(i)-Vector(anchor));assert abs(row[0]-v.z*rush['pathScale'])<1e-8 and abs(row[1]-v.x*rush['pathScale'])<1e-8
+from mathutils import Quaternion
+end_rotations=[]
+for record in rush['clips']:
+    animation=read_gmt(record['source']).animation;curve=animation.bones['vector_c_n'].rotation;curve.fill_channels()
+    key=curve.keyframes[-1].value;end_rotations.append(Quaternion((key[3],*key[:3])))
+relative=end_rotations[0].inverted()@end_rotations[1]
+forward=relative.to_matrix()@Vector((0,0,1));assert abs(forward.z+1)<1e-6 and abs(forward.x)<1e-6
 from paired_paths import bridge_scene_cuts
 expected,cuts=bridge_scene_cuts(rush['rawPaths']);assert expected==rush['paths']and cuts==rush['sceneCuts']
 assert [c['frame']for c in cuts]==[]

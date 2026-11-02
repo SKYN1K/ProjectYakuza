@@ -8,6 +8,7 @@ function H.reply(p,command,a)a.player=p:getOnlineID();sendServerCommand(p,P.modu
 function H.finish(p,completed)
     local job=H.leases[p];if not job then return end
     H.leases[p]=nil;if H.held[job.z]==job then H.held[job.z]=nil end;local z=job.z
+    if completed and not job.failed and job.hits[#job.contacts]then R.ground(z,R.endFacing(job))end
     if job.started then PY.HeatActions.finish(p,job);if not job.victimRestored then R.restore(z,job.old);job.victimRestored=true end end
     if completed and not job.failed and job.pendingDamage and not z:isDead()and (R.targetKind(z)~="player"or R.playerAllowed(p,z))then
         local state=S.players[p:getOnlineID()]
@@ -16,7 +17,7 @@ function H.finish(p,completed)
             else S.damage(p,z,job.pendingDamage,false,false,state,job.move,job.style,nil,nil,true)end
         end
     end
-    if completed and not job.failed and job.hits[#job.contacts]and not z:isDead()then z:setKnockedDown(true);z:setFallOnFront(false)end
+    if completed and not job.failed and job.hits[#job.contacts]and not z:isDead()then R.ground(z,R.endFacing(job))end
     S.fanout(p,"heatRushEnd",{player=p:getOnlineID(),action=job.action,zombie=z:getOnlineID(),targetKind=R.targetKind(z),useless=job.old.useless,ignore=job.old.ignore,deferred=job.old.deferred,completed=completed==true})
 end
 function H.abort(job,index)
@@ -116,7 +117,7 @@ function H.command(p,command,a,s)
             if not ok then print("[ProjectYakuza] paired player hit failed: "..tostring(err));H.finish(p,false);return end
         else S.damage(p,job.z,amount,false,false,s,job.move,job.style)end
         end
-        S.fanout(p,"heatRushContact",{player=p:getOnlineID(),action=job.action,index=a.index,zombie=job.z:getOnlineID(),targetKind=R.targetKind(job.z),cue=entry.cue,presentation=job.move.deferFinalDamage==true or amount==0 or R.targetKind(job.z)=="player",strong=entry.strong~=false})
+        S.fanout(p,"heatRushContact",{player=p:getOnlineID(),action=job.action,index=a.index,zombie=job.z:getOnlineID(),targetKind=R.targetKind(job.z),cue=entry.cue,node=job.move.nodeValue,presentation=job.move.deferFinalDamage==true or amount==0 or R.targetKind(job.z)=="player",strong=entry.strong~=false})
     end
 end
 function H.tick(t,online)

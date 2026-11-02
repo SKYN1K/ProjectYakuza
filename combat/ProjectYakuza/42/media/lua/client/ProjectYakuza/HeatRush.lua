@@ -54,7 +54,7 @@ function H.input(p,s,style)
         if waiting=="timeout"then H.discard(p,ticket);return false end
         if waiting then return true end
     end
-    if s.active or s.starting or p:isAttackStarted()or p:isPerformingAttackAnimation()then if ticket.weapon then PY.tryRecoveryCancel(p,style,s)end;return true end
+    if s.active or s.starting or p:isAttackStarted()or p:isPerformingAttackAnimation()then PY.tryRecoveryCancel(p,style,s);return true end
     if isClient()and PY.Network then
         local answer=H.answer
         if answer and answer.p==p then
@@ -145,6 +145,15 @@ function A:start()
     if not self.cleaned then PY.emit("attackCommitted",p,self.context.style,self.context.action,self.context,"heatAction")end
     if granted then PY.Network.send(p,"heatRushReady",{action=granted.action})end
 end
+function H.present(p,z,move,index,effects)
+    local contact=R.contacts(move)[index];if not contact then return end
+    if effects~=false and PY.HitEffects then PY.HitEffects.spawn(p,z,contact.strong~=false,contact.charged==true)end
+    if p:isLocalPlayer()and PY.Feedback then
+        PY.Feedback.play(p,PY.Feedback.sound(p,contact.cue or "heavyImpact"),.55)
+        for _,cue in ipairs(contact.layers or {})do PY.Feedback.play(p,PY.Feedback.sound(p,cue),.3)end
+    end
+    PY.emit("heatRushHit",p,z,index,contact)
+end
 function A:contact(index)
     if not self.success[index]then return end
     local p,z=self.character,self.context.target.z;local granted=self.context.target.granted
@@ -153,9 +162,7 @@ function A:contact(index)
     local amount=R.amount(self.context.action,index,self.held,self.success);if not amount then return end
     if R.targetKind(z)=="player"and not R.playerAllowed(p,z)then return end
     if amount>0 then if self.context.action.deferFinalDamage then self.pendingDamage=amount else z:Hit(self.held,p,amount,false,1)end end
-    if PY.HitEffects then PY.HitEffects.spawn(p,z,R.contacts(self.context.action)[index].strong~=false)end
-    if PY.Feedback then PY.Feedback.play(p,PY.Feedback.sound(p,R.contacts(self.context.action)[index].cue or "heavyImpact"),.55)end
-    PY.emit("heatRushHit",p,z,index)
+    H.present(p,z,self.context.action,index)
 end
 function A:fail(index,remote)
     if self.failed or self.cleaned then return end
@@ -178,16 +185,17 @@ function A:update()
         local recovery=self.context.action.qteFailure
         local phase,weight,slot=PY.AttackEffects.findTrack(self.character,recovery.animation,self.slot);self.slot=slot
         if phase and weight>=.35 then self.failureSeen=true;self.failureElapsed=phase
+        elseif self.failureSeen and self.failureElapsed>=recovery.duration-.12 then self:forceComplete();return
         elseif self.failureSeen or now()-self.failureStarted>650 then self:forceStop();return end
-        if self.failureElapsed>=recovery.duration-.025 or now()-self.failureStarted>(recovery.duration+1)*1000 then self:forceComplete()end
+        if self.failureElapsed>=recovery.duration-.005 or now()-self.failureStarted>(recovery.duration+1)*1000 then self:forceComplete()end
         return
     end
     R.hold(self.context.target.z)
     local phase,weight,slot=PY.AttackEffects.findTrack(self.character,self.context.action.animation,self.slot);self.slot=slot
     if phase and weight>=.35 then
-        if self.seen and phase+.02<self.elapsed then self:forceStop();return end
+        if self.seen and phase+.02<self.elapsed then if self.elapsed>=self.pose.duration-.12 then self:forceComplete()else self:forceStop()end;return end
         self.seen=true;self.elapsed=phase;self.wait=0
-    else self.wait=(self.wait or 0)+dt;if self.seen or self.wait>650 then self:forceStop()end;return end
+    else self.wait=(self.wait or 0)+dt;if self.seen and self.elapsed>=self.pose.duration-.12 then self:forceComplete()elseif self.seen or self.wait>650 then self:forceStop()end;return end
     if not H.align(self.pose,self.elapsed)then self:forceStop();return end
     if self.qte then PY.QTE.update(self.qte,self.elapsed*1000,PY.Bindings.down,function(kind,index,success,prompt)
         self.index=self.qte.index
@@ -213,7 +221,7 @@ function A:update()
             if self.elapsed*1000-contacts[i].atMs<=120 then self.success[i]=true;self:contact(i)end
         end
     end
-    if self.elapsed>=self.pose.duration-.025 or self.character:GetVariable("ProjectYakuzaHeatRush")=="done"then self:forceComplete()end
+    if self.elapsed>=self.pose.duration-.005 or self.character:GetVariable("ProjectYakuzaHeatRush")=="done"then self:forceComplete()end
 end
 function A:cleanup(done)
     if self.cleaned then return end;self.cleaned=true;local p,z=self.character,self.context.target.z;H.active[p]=nil
@@ -221,9 +229,13 @@ function A:cleanup(done)
         PY.HeatActions.finish(p,self)
         if self.qte then PY.QTE.cancel(self.qte,done and "complete"or"interrupted")end
         p:setBlockMovement(self.old.block==true);p:setIgnoreMovement(self.old.ignore==true);p:setDeferredMovementEnabled(self.old.deferred);p:setVariable("ProjectYakuzaHeatRush","")
+        local settled=done and not self.failed and self.success[#R.contacts(self.context.action)]
+        if settled then R.ground(z,R.endFacing(self.pose))end
         if not self.victimRestored then R.restore(z,self.victim);self.victimRestored=true end
-        if not isClient()and done and not self.failed and self.pendingDamage and not z:isDead()then z:Hit(self.held,p,self.pendingDamage,false,1);self.pendingDamage=nil end
-        if not isClient()and done and not self.failed and self.success[#R.contacts(self.context.action)]and not z:isDead()then z:setKnockedDown(true);z:setFallOnFront(false)end
+        local clip=p:GetVariable("PerformingAction")
+        if clip==self.context.action.animation or self.failed and clip==self.context.action.qteFailure.animation then p:setVariable("PerformingAction","");p:setVariable("IsPerformingAnAction",false)end
+        if not isClient()and done and not self.failed and self.pendingDamage and not z:isDead()then local ok,err=PY.HitResponses.nativeHit(p,z,self.held,self.pendingDamage,self.context.action);self.pendingDamage=nil;if not ok then print("[ProjectYakuza] completed paired hit failed: "..tostring(err))end end
+        if not isClient()and done and not self.failed and self.success[#R.contacts(self.context.action)]and not z:isDead()then R.ground(z,R.endFacing(self.pose))end
     end
     local granted=self.context.target.granted;if granted then PY.Network.send(p,"heatRushEnd",{action=granted.action,completed=done==true and not self.failed})end
     if PY.activeActions[p]==self.context then if done then PY.completeAction(p)else PY.cancelAction(p,"heat_rush_interrupted")end end
@@ -270,7 +282,7 @@ function H.remoteEnd(id,action,packet)
     local job=H.remote[id];if not job or job.action~=action then return end;H.remote[id]=nil
     local z=job.z;local saved=R.targetKind(z)=="zombie"and packet or job.old
     if saved and saved~=job.old then saved={useless=saved.useless,ignore=saved.ignore,deferred=saved.deferred,target=job.old.target}end
-    PY.HeatActions.finish(job.p,job);if not job.victimRestored then R.restore(z,saved or job.old)end
+    if packet and packet.completed then R.ground(z,R.endFacing(job))end;PY.HeatActions.finish(job.p,job);if not job.victimRestored then R.restore(z,saved or job.old)end;if packet and packet.completed then R.ground(z,R.endFacing(job))end
 end
 function H.session(id,session)
     if PY.Network and not PY.Network.acceptSession(id,session)then return false end
@@ -310,11 +322,10 @@ function H.receive(module,command,a)
         if previous and previous.action>a.action then return end
         if not previous or previous.action~=a.action then previous={action=a.action,seen={}};H.contacts[a.player]=previous end
         if previous.seen[a.index]then return end;previous.seen[a.index]=true;previous.at=now()
-        if a.presentation==true then
-            local z=R.target(p,a.zombie,a.targetKind)
-            if z and PY.HitEffects then PY.HitEffects.spawn(p,z,a.strong~=false)end
-        end
-        if p:isLocalPlayer()and PY.Feedback then PY.Feedback.play(p,PY.Feedback.sound(p,({heavyImpact=true,punchImpact=true})[a.cue]and a.cue or "heavyImpact"),.55)end
+        local style=PY.getPlayerStyle(p)
+        local move=style and (a.node and PY.NetworkProtocol.move and PY.NetworkProtocol.move(style.id,a.node)or style.actions.heatAction)
+        local z=R.target(p,a.zombie,a.targetKind)
+        if move and z then H.present(p,z,move,a.index,a.presentation==true)end
         return
     end
     local motion=a.motionId and PY.PairedMotions[a.motionId]

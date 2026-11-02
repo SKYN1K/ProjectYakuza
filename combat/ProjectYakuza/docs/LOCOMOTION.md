@@ -22,6 +22,6 @@ Preserve a valid native deferred-movement track when replacing running/walking; 
 
 ## Validation and remaining limits
 
-Native import checks cover 13 clips / 13,605 finite bone samples, 100 selector/fallback contracts and nonzero movement tracks. Source/native comparison covers 13,284 local samples, including unchanged native torso/head/legs. Native FK validates 576 hand-prop pairs. See VALIDATION_0.73.0.md and carry-repair-053.json.
+Native import checks cover 13 clips / 13,605 finite bone samples, 100 selector/fallback contracts and nonzero movement tracks. Source/native comparison covers 13,284 local samples, including unchanged native torso/head/legs. Native FK validates 576 hand-prop pairs. See VALIDATION_0.74.0.md and carry-repair-053.json.
 
 Native body movement plus source arm holding is a retargeted composition; it does not import Dragon Engine IK. GPU appearance, weapon clearance and exact foot planting remain live verification items. PZ was kept closed.

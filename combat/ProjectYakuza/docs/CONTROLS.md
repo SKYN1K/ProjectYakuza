@@ -37,3 +37,9 @@ The separate Heat Action binding defaults to MMB and is fully rebindable. Physic
 Version 0.71.0 adds three separate [intact bottle weapons](BOTTLE_WEAPONS.md) and their DoD-exclusive original Heat Action. Use the same rebindable Heat Action input while physically holding RMB, outside combos. Ordinary drink bottles are unchanged.
 
 A quickstep pressed while RMB is physically held can wait up to 350 ms for the native aim transition to become ready. A brief tap is retained; releasing RMB, interruption, style change or timeout discards it. Walls, cooldown, quota and unsafe states still reject the action. Supported [beer crates](BEER_CRATE.md) use DoD's Short Blunt profile.
+
+## Quickstep startup and QTE timing (0.74.0)
+
+Space followed immediately by RMB re-arms the native quickstep during the short aim transition. The quota and cooldown begin only when a live animation produces movement. A failed startup restores the old movement flags without spending a charge or displaying a job progress bar. Root movement follows native track time and retains the original distance.
+
+Heat Rush uses the earlier recovery-cancel entry again. Its six press windows are all 400 ms and the next bound input appears immediately after a correct press, with impacts still timed to the original animation.

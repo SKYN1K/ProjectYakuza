@@ -28,6 +28,16 @@ end
 local wrong=def(1);wrong.failureLimit=1;local wrongHeld={light=true};local wrongSession=Q.create(wrong,down)
 Q.update(wrongSession,400,function(b)return wrongHeld[b]end);Q.update(wrongSession,500,function(b)return wrongHeld[b]end)
 check(wrongSession.failed and not wrongSession.results[1],'wrong control cannot count as a successful press')
+local overlap={allowOverlap=true,prompts={{atMs=1000,windowMs=400,binding='light'},{atMs=1250,windowMs=400,binding='finisher'}}}
+check(Q.valid(overlap),'explicit consistent windows may overlap')
+local buttons={};local early=Q.create(overlap,function(b)return buttons[b]end)
+buttons.light=true;Q.update(early,700,function(b)return buttons[b]end);buttons.light=false;Q.update(early,710,function(b)return buttons[b]end)
+check(Q.promptIndex(early)==2 and early.index==1,'next input is visible before the prior source contact')
+buttons.finisher=true;Q.update(early,900,function(b)return buttons[b]end)
+check(early.accepted[2]and not early.results[1]and not early.results[2],'next correct press is accepted during its full window without an early impact')
+Q.update(early,950,function(b)return buttons[b]end);check(early.promptedIndex==2,'fully accepted prompts do not re-emit an earlier cue before impact')
+Q.update(early,1000,function(b)return buttons[b]end);check(early.results[1]and not early.results[2],'first contact retains its source timing')
+Q.update(early,1250,function(b)return buttons[b]end);check(early.successes==2 and early.closed,'consistent overlapping windows complete in source order')
 local results=0;local session=Q.create(def(32),down,{style='addon'})
 for i,v in ipairs(session.definition.prompts)do
  held[v.binding]=false;Q.update(session,v.atMs-200,down)
@@ -76,9 +86,9 @@ function z:isDeferredMovementEnabled()return self.deferred end;function z:setDef
 function z:getTarget()return self.target end;function z:setTarget(v)self.target=v end
 function z:setVariable(k,v)self.vars[k]=v end;function z:setHitReaction(v)self.reaction=v end;function z:getHitReaction()return self.reaction or ''end
 function z:setAttackOutcome(v)self.outcome=v end
-function z:reportEvent(v)self.report=v end;function z:setTargetAndCurrentDirection()end
+function z:reportEvent(v)self.report=v end;function z:setTargetAndCurrentDirection(x,y)self.facingX=x;self.facingY=y end
 function z:Hit(item,who,amount)check(item==token and who==p,'paired source contact uses native item/actor');self.hits=self.hits+1;self.total=self.total+amount;self.health=self.health-amount end
-function z:setKnockedDown(v)self.knock=v end;function z:setFallOnFront()end
+function z:setOnFloor(v)self.nativeFloor=v end;function z:setKnockedDown(v)self.knock=v end;function z:setFallOnFront()end
 function z:getOnlineID()return 25 end
 instanceof=function(obj,kind)return kind=='IsoZombie'and obj==z or kind=='IsoPlayer'and obj==p end
 do local _="ProjectYakuzaFixture:PATHS" end
@@ -103,6 +113,7 @@ for i,binding in ipairs({'light','finisher','grab','light','finisher','grab'})do
 check(#style.actions.heatAction.contacts==7 and R.duration==224/30,'retail source duration and finishing contact')
 check(R.amount(style.actions.heatAction,7,token,{[1]=true,[6]=true})==.75,'missed QTEs reduce final payoff without applying early damage')
 check(style.actions.grab.enabled==false,'QTE grab binding leaves ordinary grabs disabled')
+for _,prompt in ipairs(style.actions.heatAction.qte.prompts)do check(prompt.windowMs==400,'all six DoD inputs have a consistent 400 ms window')end
 local function shallow(v)local out={};for k,x in pairs(v)do out[k]=x end;return out end
 local authored=shallow(style);authored.actions=shallow(style.actions);authored.actions.heatAction=shallow(style.actions.heatAction)
 local function invalidContact(index,key,value)
@@ -131,7 +142,7 @@ for i=1,7 do state.step=i;state.activeLightMove=style.extremeLightAttacks[i];sta
 check(not H.tickets[p]and H.chains[p].count==7,'seven missed inputs progress without requiring a target')
 z.x=1.65;check(R.validTarget(p,z),'native-hit knockback margin permits a nearby standing victim');z.x=2.01;check(not R.validTarget(p,z),'paired handoff cannot reach beyond two tiles');z.x=1.65
 state.step=8;state.activeLightMove=style.extremeLightAttacks[8];state.multiHitToken={};H.hit(p,z,token,.1);check(H.tickets[p]and H.tickets[p].z==z,'eighth confirmed hit stores existing target without search/steering')
-check(PY.blocksNativeAttacks(p),'paired handoff blocks a queued ninth native attack while preserving the current punch')
+check(not PY.blocksNativeAttacks(p),'restored handoff retains the earlier recovery-cancel transition')
 local second=setmetatable({}, {__index=z});function second:getOnlineID()return 26 end
 local oldInstanceof=instanceof;instanceof=function(obj,kind)return obj==second and kind=='IsoZombie'or oldInstanceof(obj,kind)end
 H.hit(p,second,token,.1);check(H.tickets[p].z==second,'eighth multi-hit selects the last target hit');H.hit(p,z,token,.1);check(H.tickets[p].z==z,'later eighth-strike contact replaces the prior target');instanceof=oldInstanceof
@@ -162,6 +173,7 @@ phase=R.duration;a:update()
 check(z.hits==1 and math.abs(z.total-2.25)<.000001,'completion applies canonical earned damage once after the paired animation')
 check(a.cleaned and not p.blocked and not p.ignore and not z.useless and not z.ignore and z.deferred and z.target==p and z.knock,'full source recovery restores actor/victim state')
 check(not PY.activeActions[p]and not H.active[p],'completed paired action releases context')
+check(z.nativeFloor==true and math.abs(z.facingX+1)<.000001 and math.abs(z.facingY)<.000001,'paired ending settles a surviving zombie on the ground with its original opposite facing')
 p.x=0;p.y=0;z.x=1.1;z.y=0;z.knock=false;mouse[0]=false
 local ticket={z=z};check(PY.requestAction(p,'heatAction',nil,ticket),'second paired action can start')
 c=PY.activeActions[p];a=c.timedAction;a.action={setOverrideHandModelsObject=function()end};a:start();phase=0
@@ -231,8 +243,22 @@ H.tickets[p]={z=z,pressed=true,expires=clock-1001,sent=clock-1100,granted={actio
 check(not H.input(p,state,PY.getPlayerStyle(p))and not H.tickets[p]and ended==1,'expired MP recovery ticket releases its server reservation')
 H.tickets[p]={granted={action=23}};H.clear(p);check(not H.tickets[p]and ended==2,'style cancellation releases an unstarted granted lease')
 H.receive('ProjectYakuza','heatRushGranted',{player=2,request=999,action=24});check(ended==3,'obsolete grant is released rather than holding an abandoned target')
+local oldEffects,oldFeedback=PY.HitEffects,PY.Feedback;local visualHits,sounds=0,{}
+PY.HitEffects={spawn=function(_,_,_,charged)visualHits=visualHits+1;if visualHits==7 then check(charged,'finishing kick uses supplied stronger sparks')end end}
+PY.Feedback={sound=function(_,cue)return cue end,play=function(_,cue)sounds[#sounds+1]=cue end}
+for i=1,7 do H.present(p,z,style.actions.heatAction,i)end
+check(visualHits==7 and #sounds==9 and sounds[7]=='kickImpact'and sounds[8]=='heavyImpact'and sounds[9]=='heatImpact','seven original contacts carry varied timed effects and finishing sound layers')
+PY.HitEffects=oldEffects;PY.Feedback=oldFeedback
 local responses=PY.HitResponses
+
+
 function z:setStaggerBack(v)self.stagger=v end;function z:setHitForce(v)self.force=v end;function z:setAttackOutcome(v)self.outcome=v end
+local oldIdle=ZombieIdleState;ZombieIdleState={instance=function()return 'idle'end}
+function z:isIgnoreStaggerBack()return self.ignoreStagger==true end;function z:setIgnoreStaggerBack(v)self.ignoreStagger=v end
+function z:getCurrentStateName()return self.nativeState or 'ZombieHitReactionState'end;function z:changeState(v)self.nativeState=v end
+z.nativeState='StaggerBackState';responses.stun(z)
+check(z.ignoreStagger and z.nativeState=='idle'and z:getHitReaction()=='','boost stun suppresses native stagger animation as well as force')
+responses.releaseStun(z);check(not z.ignoreStagger,'stun release restores the original native stagger policy');ZombieIdleState=oldIdle
 z.health=10;z.ignore=false;z.deferred=true;z.useless=false
 check(responses.apply(p,z,{kind='stun',force=0})and z.ignore and z.useless and not z.deferred and z.force==0 and not z.stagger,'boost stun stops AI and root movement without push')
 clock=clock+100;responses.tickStuns();check(responses.stuns[z]~=nil,'stun remains briefly active')

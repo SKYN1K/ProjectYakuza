@@ -115,6 +115,7 @@ KeybindId={};for id in pairs(nativeBindings)do local name=id;KeybindId[id]={getI
 getCore=function()return {isDoingTextEntry=function()return typing end,getKey=function(_,id)return nativeBindings[id]end}end
 isGamePaused=function()return paused end
 function p:getForwardDirection()return {getX=function()return 1 end,getY=function()return 0 end}end
+function p:moveUnmodded(dx,dy)self.dashX=(self.dashX or 0)+dx;self.dashY=(self.dashY or 0)+dy end
 function p:getX()return 0 end;function p:getY()return 0 end;function p:getZ()return 0 end
 function p:getCurrentStateName()return self.nativeState or (self.attacking and 'SwipeStatePlayer' or 'IdleState')end
 function p:getHitReaction()return self.hit or '' end
@@ -145,7 +146,9 @@ for i=1,4 do
  check(Q.processLightCancel(p) and PY.activeActions[p].kind=='quickstep','native exit transfers to real quickstep handler '..i)
  check(PY.stateFor(p).step==0 and not Q.lightCancels[p] and #p.data.ProjectYakuzaQuickstepTimes==0,'old combo clears and quota waits for actual action start '..i)
  local ctx=PY.activeActions[p];ctx.timedAction.action={setOverrideHandModelsObject=function()end};ctx.timedAction.setActionAnim=function()end
- ctx.timedAction:start();check(#p.data.ProjectYakuzaQuickstepTimes==1 and Q.quota(p)==2,'successful native dash start spends exactly one quota unit '..i)
+ ctx.timedAction:start();check(#p.data.ProjectYakuzaQuickstepTimes==0,'queued dash does not spend quota before animation movement '..i)
+ p.vars.ProjectYakuzaQuickstepStarted=ctx.action.nodeValue;p.vars.ProjectYakuzaQuickstepProgress='.25';ctx.timedAction:update()
+ check(#p.data.ProjectYakuzaQuickstepTimes==1 and Q.quota(p)==2,'first native dash movement spends exactly one quota unit '..i)
  PY.cancelAction(p,'test_end')
 end
 local optState=light(1);style.quickstepCancelLights=false
@@ -178,4 +181,25 @@ state,move=light(1);p:setVariable('ProjectYakuzaQuickstepCancelReady',move.nodeV
 keyState[57]=true;check(Q.pollShove(p) and Q.isCancelling(p),'actual quickstep binding triggers the light cancel')
 reports=p.exitReports;Q.pollShove(p);check(p.exitReports==reports,'held quickstep input cannot request another cancel')
 keyState[57]=false;Q.clearLightCancel(p);Q.restoreAllShoves();PY.resetPlayer(p,'test_done')
+local previousEffects=PY.AttackEffects;local previousAim=p.isAiming;local trackPhase
+PY.AttackEffects={findTrack=function()return trackPhase,1,{layer=0,slot=0}end};p.dbgGetAnimTrackName=function()return ''end
+function p:isAiming()return self.aimReady==true end
+function base:setActionAnim(name)self.animationRequests=(self.animationRequests or 0)+1 end
+function base:forceStop()self:stop()end;function base:forceComplete()self:perform()end
+local function dash()
+ clock=clock+2000;Q.clearLightCancel(p);PY.resetPlayer(p,'startup_test');p.attacking=false;p.performingOverride=false;p.hit='';p.blocked=false;p.aimReady=false;mouse[1]=false
+ p.data.ProjectYakuzaQuickstepTimes={};Q.nextAllowed[0]=nil;trackPhase=nil
+ local c={player=p,style=style,action=style.actions.quickstep.variants.forward,shove=true,dx=1,dy=0}
+ local a=Q.Action:new(c);c.timedAction=a;a.action={setOverrideHandModelsObject=function()end,setUseProgressBar=function(_,v)a.progressBar=v end};PY.activeActions[p]=c;a:start();return a
+end
+local dashAction=dash();check(not dashAction.started and Q.quota(p)==3 and dashAction.progressBar==false,'Space startup has no quota or progress-bar cost before a visible dash')
+mouse[1]=true;clock=clock+30;dashAction:update();check(dashAction.animationRequests==2 and p:GetVariable('PerformingAction')==dashAction.context.action.animation,'RMB pressed after Space re-arms the actual native action selector')
+clock=clock+700;dashAction:update();check(dashAction.cleaned and Q.quota(p)==3 and not Q.nextAllowed[0]and not p.blocked,'missing animation cancels without a spent charge, cooldown or movement lock')
+dashAction=dash();mouse[1]=true;trackPhase=0;clock=clock+30;dashAction:update()
+p.aimReady=true;clock=clock+30;dashAction:update();trackPhase=.1;clock=clock+30;dashAction:update()
+check(dashAction.started and dashAction.moved>0 and Q.quota(p)==2,'Space then RMB executes when the real quickstep track advances')
+trackPhase=.2;dashAction:update();check(Q.quota(p)==2,'one dash cannot spend twice after aim startup recovery')
+trackPhase=dashAction.context.action.duration*dashAction.context.action.speed;dashAction:update()
+check(dashAction.cleaned and math.abs(dashAction.moved-dashAction.context.action.distance)<.000001 and not p.blocked,'recovered dash reaches its original distance and restores movement')
+PY.AttackEffects=previousEffects;p.isAiming=previousAim;p.dbgGetAnimTrackName=nil;mouse[1]=false
 return 'PASS '..checks..' one-strike quickstep ownership, native gate, rapid taps, retries and asynchronous handoff checks'

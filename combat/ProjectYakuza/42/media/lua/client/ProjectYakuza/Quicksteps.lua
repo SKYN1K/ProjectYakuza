@@ -1,4 +1,5 @@
 require "ProjectYakuza/Runtime"
+require "ProjectYakuza/AttackEffects"
 require "TimedActions/ISBaseTimedAction"
 require "TimedActions/ISTimedActionQueue"
 local ProjectYakuza = ProjectYakuza
@@ -58,33 +59,36 @@ function A:isValid()
 end
 function A:adjustMaxTime(value) return value end
 function A:isUsingTimeout() return false end
+function A:requestAnimation()
+    local p=self.character
+    self.animationRequestedAt=now();self.progressBase=self.moved or 0;self.track=nil
+    p:setVariable("ProjectYakuzaQuickstepProgress","0");p:setVariable("ProjectYakuzaQuickstepStarted","");p:setVariable("ProjectYakuzaQuickstepDone","")
+    self:setActionAnim(self.context.action.animation)
+    p:setVariable("PerformingAction",self.context.action.animation);p:setVariable("IsPerformingAnAction",true)
+    self.action:setOverrideHandModelsObject(p:getPrimaryHandItem(),nil,false)
+end
 function A:start()
     local p=self.character
-    if not Q.spend(p) then self:forceStop();return end
-    self.started=true; self.startedAt=now(); self.moved=0; self.blocked=false
-    self.oldBlock=p:isBlockMovement(); self.oldIgnore=p:getIgnoreMovement()
+    if Q.quota(p)<=0 then self:forceStop();return end
+    self.prepared=true;self.startupAt=now();self.startedAt=now();self.moved=0;self.blocked=false;self.retries=0
+    self.oldBlock=p:isBlockMovement();self.oldIgnore=p:getIgnoreMovement();self.wasAiming=p:isAiming();self.wasRmb=isMouseButtonDown(1)
     p:setBlockMovement(true);p:setIgnoreMovement(true)
-    p:setVariable("ProjectYakuzaQuickstepProgress","0")
-    p:setVariable("ProjectYakuzaQuickstepStarted","")
-    p:setVariable("ProjectYakuzaQuickstepDone","")
-    self:setActionAnim(self.context.action.animation)
-
-    self.action:setOverrideHandModelsObject(p:getPrimaryHandItem(),nil,false)
-    if ProjectYakuza.Network then ProjectYakuza.Network.step(p,self,false) end
-    if p:getModData().ProjectYakuzaDiagnostics then print("[ProjectYakuza] quickstep "..self.context.action.direction) end
+    if self.action.setUseProgressBar then self.action:setUseProgressBar(false)end
+    self:requestAnimation()
 end
 function A:cleanup(completed, reason)
     if self.cleaned then return end
     self.cleaned=true
     local p=self.character
-    if self.started then
-        if ProjectYakuza.Network then ProjectYakuza.Network.step(p,self,true) end
+    if self.prepared then
+        if self.started and ProjectYakuza.Network then ProjectYakuza.Network.step(p,self,true)end
         p:setBlockMovement(self.oldBlock==true);p:setIgnoreMovement(self.oldIgnore==true)
         p:setVariable("ProjectYakuzaQuickstepProgress","")
         p:setVariable("ProjectYakuzaQuickstepStarted","")
         p:setVariable("ProjectYakuzaQuickstepDone","")
+        if p:GetVariable("PerformingAction")==self.context.action.animation then p:setVariable("PerformingAction","");p:setVariable("IsPerformingAnAction",false)end
     end
-    Q.nextAllowed[p:getPlayerNum()]=now()+(self.context.style.actions.quickstep.cooldownMs or 180)
+    if self.started then Q.nextAllowed[p:getPlayerNum()]=now()+(self.context.style.actions.quickstep.cooldownMs or 180)end
     if ProjectYakuza.activeActions[p]==self.context then
         if completed then ProjectYakuza.completeAction(p) else ProjectYakuza.cancelAction(p,reason or "interrupted") end
     end
@@ -98,17 +102,26 @@ function A:update()
     if self.cleaned then return end
     if not self:isValid() then self:forceStop();return end
     local p,move=self.character,self.context.action
-    local elapsed=now()-self.startedAt
+    local t=now();local elapsed=t-self.startedAt
+    local aim,rmb=p:isAiming(),isMouseButtonDown(1)
+    if (aim~=self.wasAiming or rmb~=self.wasRmb)and t-self.startupAt<=400 and self.retries<3 then self.retries=self.retries+1;self:requestAnimation()end
+    self.wasAiming=aim;self.wasRmb=rmb
     local started=var(p,"ProjectYakuzaQuickstepStarted")==move.nodeValue
-    if not started and elapsed>500 then self:forceStop();return end
-    if elapsed>move.duration*1000+1000 then self:forceStop();return end
+    local progress=math.max(0,math.min(1,tonumber(var(p,"ProjectYakuzaQuickstepProgress"))or 0))
+    local nativePhase
+    if ProjectYakuza.AttackEffects and p.dbgGetAnimTrackName then
+        local phase,weight,track=ProjectYakuza.AttackEffects.findTrack(p,move.animation,self.track);self.track=track
+        nativePhase=phase;started=phase~=nil and weight>=.15
+        if started then progress=math.max(0,math.min(1,phase/(move.duration*(move.speed or 1)*.6)))end
+    end
+    if not started then
+        if t-self.startupAt<=400 and t-self.animationRequestedAt>=120 and self.retries<3 then self.retries=self.retries+1;self:requestAnimation()
+        elseif t-self.animationRequestedAt>650 then self:forceStop()end
+        return
+    end
+    if elapsed>move.duration*1000+1200 then self:forceStop();return end
     if started then
-        local progress=math.max(0,math.min(1,tonumber(var(p,"ProjectYakuzaQuickstepProgress")) or 0))
-        if self.attackRequested and progress>=0.25 then
-            self.attackHandover=true
-            self:forceComplete();return
-        end
-        local remaining=math.max(0,move.distance*progress-self.moved)
+        local remaining=math.max(0,(self.progressBase or 0)+(move.distance-(self.progressBase or 0))*progress-self.moved)
         local moved=0;local x,y=p:getX(),p:getY()
         while remaining>.000001 and not self.blocked do
             local step=math.min(.08,remaining)
@@ -117,12 +130,18 @@ function A:update()
             else self.blocked=true end
         end
         if moved>0 then
+            if not self.started then
+                if not Q.spend(p)then self:forceStop();return end
+                self.started=true;self.startedAt=t
+            end
             p:moveUnmodded(self.context.dx*moved,self.context.dy*moved)
             self.moved=self.moved+moved
         end
-        if ProjectYakuza.Network then ProjectYakuza.Network.step(p,self,false) end
+        if self.started and ProjectYakuza.Network then ProjectYakuza.Network.step(p,self,false)end
+        if self.started and self.attackRequested and progress>=.25 then self.attackHandover=true;self:forceComplete();return end
     end
-    if var(p,"ProjectYakuzaQuickstepDone")==move.nodeValue then self:forceComplete() end
+    local endTime=move.duration*(move.speed or 1)
+    if nativePhase and nativePhase>=endTime-.005 or var(p,"ProjectYakuzaQuickstepDone")==move.nodeValue and (not nativePhase or nativePhase>=endTime-.05)then self:forceComplete()end
 end
 function A:perform()
     if self.performed or self.cleaned then return end
@@ -143,7 +162,7 @@ function A:forceCancel() self:cleanup(false,"quickstep_cancelled") end
 function A:new(context)
     local o=ISBaseTimedAction.new(self,context.player)
     o.context=context;o.maxTime=-1;o.stopOnWalk=false;o.stopOnRun=false;o.stopOnAim=false
-    o.ignoreHandsWounds=true;o.caloriesModifier=1
+    o.ignoreHandsWounds=true;o.caloriesModifier=1;o.useProgressBar=false
     return o
 end
 ProjectYakuza.registerActionHandler("quickstep",{
@@ -346,7 +365,7 @@ function Q.update(player)
     if context and context.kind=="quickstep" then
         local action=context.timedAction
         if not ProjectYakuza.isEquipped(player) or player:isDead() or (not player:isAiming() and not context.shove)
-            or (not action.started and now()-context.requestedAt>500) then ProjectYakuza.cancelAction(player,"quickstep_cancelled") end
+            or (not action.prepared and now()-context.requestedAt>650) then ProjectYakuza.cancelAction(player,"quickstep_cancelled") end
     end
 end
 Events.OnPlayerUpdate.Add(Q.update)

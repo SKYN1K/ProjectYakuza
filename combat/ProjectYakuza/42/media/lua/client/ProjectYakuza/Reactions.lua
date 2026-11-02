@@ -56,7 +56,10 @@ function R.onHit(attacker,victim,weapon,damage)
         R.states[victim]={clip=move.reaction,startedAt=getTimestampMs(),seenReaction=false};hook()
     else R.clear(victim) end
 
-    if not isClient() then R.queue(attacker,victim,response,victim:getHealth(),PY.Juggling.plan(style,move),stamp) end
+    if response and response.kind=="stun"then
+        PY.HitResponses.apply(attacker,victim,response)
+        R.queue(attacker,victim,response,nil,PY.Juggling.plan(style,move),stamp)
+    elseif not isClient()then R.queue(attacker,victim,response,victim:getHealth(),PY.Juggling.plan(style,move),stamp)end
 end
 function R.update(zombie,time)
     local state=R.states[zombie];if not state then return end

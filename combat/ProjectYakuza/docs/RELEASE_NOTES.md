@@ -1,11 +1,10 @@
-# Project Yakuza 0.73.0
+# Project Yakuza 0.74.0
 
-- Kept DoD's six QTE success windows unchanged. Prompts now use rotating/contracting original Y6 rings, animated supplied atlas regions and a short accepted-input flash. No extra ready cue or preparatory text is shown.
-- Preserved the eighth punch's full follow-through and softened the paired entry blend. The handoff blocks an accidental ninth native attack.
-- Fixed native damage interrupting the zombie's paired reaction: visible contacts keep their source timing, while the earned final health hit settles once after the victim clip finishes.
-- DoD now branches on a missed QTE into an original short Kiryu recovery, releasing the victim and forfeiting the final payoff. The framework supports custom per-prompt windows/bindings, consecutive or total miss limits, configurable failure recovery and success/miss/failure sound cues using supplied assets.
-- Added the original Yakuza 6 beer crate as a separately spawnable Short Blunt weapon: ProjectYakuza.BeerCrate. It uses original mesh/texture data, native durability and the DoD Short Blunt profile.
-- Fixed quicksteps tapped during the native RMB transition with a bounded 350 ms retry, cancelled by RMB release, interruption or expiry.
-- Added SP/MP regressions, original-pixel/source-motion checks and native model/item/animation imports. Grabs remain disabled and the separate voice pack is unchanged.
+- Restored the previous Extreme Heat Heat Rush recovery-cancel entry and 80 ms paired blend.
+- Made all six QTE windows consistently 400 ms, with the next input shown immediately after a valid press. Overlapping acceptance windows preserve sequential controls and original hit timing.
+- Stabilized Heat Action endings: surviving zombies retain their source facing and settle directly to the native ground state, owned action clips clear cleanly, and deferred health settlement avoids an extra native stagger/fall reaction.
+- Added varied existing impact SFX, stronger supplied spark presets and layered finishing-kick sounds at the original contacts. Rush punches and the final kick use the existing CVF light/heavy attack voice pools. The separate voice pack is untouched.
+- Fixed Space then RMB quickstep startup: retry interrupted aim transitions, follow the live animation track, and spend quota/cooldown only after actual movement. Failed startup has no progress bar or spent charge.
+- Extreme Heat lights now suppress native stagger animation while retaining the short in-place stun and restoring the original stagger flag afterward.
 
-Project Zomboid was not launched. See [validation](VALIDATION_0.73.0.md). Restart after updating and install matching files on server and clients. No AI, invented artwork/audio or upscaling is used.
+Only existing supplied assets are reused. Project Zomboid was not launched. See [validation](VALIDATION_0.74.0.md); restart after installing matching server/client versions.
