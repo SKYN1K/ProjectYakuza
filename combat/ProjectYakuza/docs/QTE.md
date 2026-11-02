@@ -29,7 +29,7 @@ Use native animation-track phase times 1000 for timeMs, rather than assuming wal
 
 callback(kind,index,success,prompt) receives input when a new valid press is accepted, and result at the contact time. Result success is false when a prompt is missed. Results are consumed once; keeping a button held or calling update repeatedly cannot repeat them. The contact time itself is outside the input window. A late update can mark a missed prompt without ever displaying it.
 
-The session exposes definition, context, index, accepted, results, successes, closed and lastTime. Read these for UI; keep state mutation in QTE. Use the registered binding's current label rather than hardcoding MMB. The built-in prompt uses native PZ font drawing, has no background and cannot capture mouse input. Custom styles may render their own prompts with supplied assets.
+The session exposes definition, context, index, accepted, results, successes, closed and lastTime. Read these for UI; keep state mutation in QTE. Use the registered binding's current label rather than hardcoding MMB. The built-in prompt uses native PZ font drawing and the supplied Y6 circular timer texture, has no panel background and cannot capture mouse input. Custom styles may render their own prompts with supplied assets.
 
 ## Events
 
@@ -59,3 +59,23 @@ The server observes the ordered boost-input snapshots, deduplicated by native sw
 Player victims reuse the existing converted victim clip through two scoped player state definitions. Native movement, attack authorization and action variables are saved and restored on every exit. Typed target IDs prevent player/zombie ID collisions. PvP must be enabled, both safety flags cannot protect the pair, protected players and non-PvP zones are rejected, and faction PvP settings apply. The server rechecks permissions during the sequence and aborts if they change. No animation motion or graphical/audio asset is created or changed. This path is offline-validated and still needs live multiplayer presentation/latency testing.
 
 Boost lights use the `boostStun` response and `noKnockback=true`; their prior damage multiplier remains 0.525. The shared stun lasts 250 ms, refreshes without overwriting saved flags, suppresses root movement and zombie AI, and restores native state on expiry. A paired action releases an existing stun before taking its own movement/AI lease.
+
+## Paired contact mapping (0.72.0)
+
+A paired action can supply both `qte.prompts` and `contacts`. Each prompt maps to exactly one contact using its one-based `qteIndex`; the contact must use the same `atMs`. Duplicate or missing mappings are rejected. A mapped contact runs only after that prompt succeeds. Unmapped contacts run automatically at their source time. Contacts without QTE definitions retain their existing automatic behavior; QTE definitions without a contacts array retain the previous one-contact-per-prompt behavior.
+
+`damageMultiplier=0` makes a contact presentation-only. `strong=false` selects the smaller existing hit feedback. `cue` selects the registered impact sound. An automatic contact with `sumQTE=true` must follow the final prompt; it sums `damageMultiplier` from successful mapped prompts. This lets an original final blow deliver the earned payoff while intermediate punches preserve victim animation. The server uses only its own validated contact flags, never client damage. For example, within an action with a sufficient duration:
+
+```lua
+qte={prompts={
+    {atMs=1000,windowMs=300,binding="light",damageMultiplier=1},
+    {atMs=1500,windowMs=300,binding="grab",damageMultiplier=1},
+}},
+contacts={
+    {atMs=1000,qteIndex=1,damageMultiplier=0,cue="punchImpact",strong=false},
+    {atMs=1500,qteIndex=2,damageMultiplier=0,cue="punchImpact",strong=false},
+    {atMs=2000,sumQTE=true,cue="heavyImpact",strong=true},
+},
+```
+
+`HeatRushRules.contacts(action)` resolves the contact list, `promptContact(action,index)` resolves a prompt to its contact, and `amount(action,index,weapon,successfulContacts)` calculates canonical paired damage. These helpers serve the built-in DoD handler; registering another style's QTE still requires a scoped lifecycle and server backend. Full source motion plays beyond the last QTE. See [retail timing and bindings](EXTREME_ATTACKS.md).

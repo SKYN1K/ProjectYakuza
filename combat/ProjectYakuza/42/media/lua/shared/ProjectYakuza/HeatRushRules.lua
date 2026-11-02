@@ -2,13 +2,17 @@ require "ProjectYakuza/Registry"
 require "ProjectYakuza/HeatRushPaths"
 require "ProjectYakuza/KatanaHeatPaths"
 require "ProjectYakuza/BottleHeatPaths"
-local R={duration=130/30,targetRange=2}
+local R={duration=224/30,targetRange=2}
 ProjectYakuza.HeatRushRules=R
 function R.motion(action)
     return action and action.motionId and ProjectYakuza.PairedMotions[action.motionId] or ProjectYakuza.HeatRushPaths
 end
 function R.durationFor(action)return action and action.duration or R.duration end
-function R.contacts(action)return action.qte and action.qte.prompts or action.contacts or {}end
+function R.contacts(action)return action.contacts or action.qte and action.qte.prompts or {}end
+function R.promptContact(action,index)
+    if not action.contacts then return index end
+    for i,contact in ipairs(action.contacts)do if contact.qteIndex==index then return i end end
+end
 function R.noCombo(s,style,time)
     if s.active or s.starting or (s.queued or 0)>0 or s.finisherMove or s.pendingFinisher or s.groundMove or s.directionalLight or s.queuedFinisher or s.queuedDouble or s.queuedWeaponHeavy then return false end
     local ended=s.finisherFinishedAt or s.finishedAt
@@ -99,16 +103,21 @@ function R.space(p,job)
     end
     return true
 end
-function R.amount(action,index,held)
+function R.amount(action,index,held,success)
     local prompt=R.contacts(action)[index];if not prompt then return end
+    local multiplier=prompt.damageMultiplier or 1
+    if prompt.sumQTE then
+        multiplier=0
+        for i,v in ipairs(action.qte.prompts)do if success and success[R.promptContact(action,i)]then multiplier=multiplier+(v.damageMultiplier or 1)end end
+    end
     if action.weaponHeat then
         if not held then return end
         local data=held:getModData()
         local low=data.ProjectYakuzaHeatOriginalMin or held:getMinDamage()
         local high=data.ProjectYakuzaHeatOriginalMax or held:getMaxDamage()
-        return math.max(0,math.min(20,(low+high)*.5))*(prompt.damageMultiplier or 1)
+        return math.max(0,math.min(20,(low+high)*.5))*multiplier
     end
     if not R.base then R.base=instanceItem(ProjectYakuza.TOKEN)end
     if not R.base then return end
-    return math.max(0,math.min(2,(R.base:getMinDamage()+R.base:getMaxDamage())*.5))*(prompt.damageMultiplier or 1)*1.5
+    return math.max(0,math.min(2,(R.base:getMinDamage()+R.base:getMaxDamage())*.5))*multiplier*1.5
 end

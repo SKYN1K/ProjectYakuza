@@ -3,6 +3,12 @@ local function def(n)local out={prompts={}};for i=1,n do out.prompts[i]={atMs=i*
 check(Q.valid(def(32))and not Q.valid(def(33)),'framework bounds prompt arrays')
 for _,bad in ipairs({{prompts={}}, {prompts={{atMs=0/0,windowMs=100,binding='light'}}},{prompts={{atMs=50,windowMs=100,binding='light'}}},{prompts={{atMs=500,windowMs=100,binding=''}}}})do check(not Q.valid(bad),'invalid QTE definitions rejected')end
 check(not Q.valid(def(2),500),'prompt cannot outlive its animation')
+local remapped={light=false,finisher=false,grab=false};local inputOrder={'light','finisher','grab','light','finisher','grab'}
+local sequence={prompts={}};for i,b in ipairs(inputOrder)do sequence.prompts[i]={atMs=i*500,windowMs=250,binding=b}end
+local rebound=Q.create(sequence,function(b)return remapped[b]end)
+for i,b in ipairs(inputOrder)do remapped[b]=true;Q.update(rebound,i*500-100,function(k)return remapped[k]end);remapped[b]=false;Q.update(rebound,i*500,function(k)return remapped[k]end)end
+check(rebound.successes==6,'six distinct action roles work through an arbitrary binding provider')
+
 local results=0;local session=Q.create(def(32),down,{style='addon'})
 for i,v in ipairs(session.definition.prompts)do
  held[v.binding]=false;Q.update(session,v.atMs-200,down)
@@ -15,6 +21,11 @@ Q.update(session,999999,down);check(results==32,'closed QTE cannot replay result
 held={finisher=true};session=Q.create({prompts={{atMs=1000,windowMs=300,binding='finisher'}}},down)
 Q.update(session,800,down);Q.update(session,1000,down);check(session.results[1]==false,'holding before prompt is not a fresh input')
 held={};session=Q.create(def(1),down);Q.update(session,100,down);check(not Q.update(session,99,down),'time rewind cannot replay a QTE');Q.cancel(session,'test');check(session.closed,'QTE interruption closes it')
+local keys={};isKeyDown=function(k)return keys[k]==true end
+local function press(binding,value)
+ local mode=PY.Bindings.mode(binding)
+ if mode<4 then mouse[mode-1]=value else keys[PY.Bindings.key(binding)]=value end
+end
 local phase,weight,paused=0,1,false
 isGamePaused=function()return paused end
 Events.OnServerCommand=event()
@@ -59,6 +70,32 @@ do local _="ProjectYakuzaFixture:HEAT_ACTIONS" end
 do local _="ProjectYakuzaFixture:RUSH" end
 local committed=0;PY.on("attackCommitted",function(_,_,_,_,kind)if kind=="heatAction"then committed=committed+1 end end)
 local H=PY.HeatRush;local style=PY.getStyle('dragon_of_dojima');local R=PY.HeatRushRules
+for i,binding in ipairs({'light','finisher','grab','light','finisher','grab'})do check(style.actions.heatAction.qte.prompts[i].binding==binding,'requested six-role QTE order')end
+check(#style.actions.heatAction.contacts==7 and R.duration==224/30,'retail source duration and finishing contact')
+check(R.amount(style.actions.heatAction,7,token,{[1]=true,[6]=true})==.75,'missed QTEs reduce final payoff without applying early damage')
+check(style.actions.grab.enabled==false,'QTE grab binding leaves ordinary grabs disabled')
+local function shallow(v)local out={};for k,x in pairs(v)do out[k]=x end;return out end
+local authored=shallow(style);authored.actions=shallow(style.actions);authored.actions.heatAction=shallow(style.actions.heatAction)
+local function invalidContact(index,key,value)
+ local contacts={};for i,v in ipairs(style.actions.heatAction.contacts)do contacts[i]=shallow(v)end
+ contacts[index][key]=value;authored.actions.heatAction.contacts=contacts
+ check(not PY.validateStyle(authored),'invalid mapped contact rejected: '..key)
+end
+invalidContact(1,'qteIndex',8);invalidContact(2,'qteIndex',1);invalidContact(1,'atMs',1)
+invalidContact(1,'qteIndex',nil);invalidContact(7,'sumQTE','yes');invalidContact(1,'sumQTE',true);invalidContact(1,'strong',2)
+local codes={light=20,finisher=21,grab=22}
+PY.Bindings.options={getOption=function(_,id)
+ local role=id:match('^input_(.+)$');if codes[role]then return {getValue=function()return 4 end}end
+ role=id:match('^key_(.+)$');if codes[role]then local code=codes[role];return {getValue=function()return code end}end
+end}
+local configured=Q.create(style.actions.heatAction.qte,PY.Bindings.down)
+for _,v in ipairs(configured.definition.prompts)do
+ press(v.binding,true);Q.update(configured,v.atMs-100,PY.Bindings.down)
+ press(v.binding,false);Q.update(configured,v.atMs,PY.Bindings.down)
+end
+check(configured.successes==6,'all six cues use actual remapped keyboard action bindings')
+PY.Bindings.options=nil
+
 PY.setHeat(p,100);check(PY.Heat.start(p),'Extreme Heat starts for paired action')
 local state=PY.stateFor(p);state.active=true
 for i=1,7 do state.step=i;state.activeLightMove=style.extremeLightAttacks[i];state.multiHitToken={};H.inputStarted(p,PY.getPlayerStyle(p),i,state.activeLightMove);clock=clock+100 end
@@ -81,11 +118,14 @@ local c=PY.activeActions[p];check(c and c.kind=='heatAction','registered heat ac
 local a=c.timedAction;a.action={setOverrideHandModelsObject=function()end};a:start()
 check(p.blocked and p.ignore and z.useless and z.ignore,'paired action owns movement/AI locks')
 check(committed==1,'paired action publishes one exertion commitment when its motion starts')
+for _,binding in ipairs({'light','finisher','grab'})do press(binding,false)end
+phase=0;a:update()
 for i,prompt in ipairs(c.action.qte.prompts)do
- phase=(prompt.atMs-100)/1000;mouse[2]=true;a:update();check(z.hits==i-1,'QTE input alone never deals early damage')
- phase=prompt.atMs/1000;mouse[2]=false;a:update();check(z.hits==i,'one hit on source contact after successful prompt')
- a:update();check(z.hits==i,'repeated update cannot duplicate contact')
+ phase=(prompt.atMs-100)/1000;press(prompt.binding,true);a:update();check(z.hits==0,'QTE input alone never deals early damage')
+ phase=prompt.atMs/1000;press(prompt.binding,false);a:update();check(z.hits==0 and a.success[i],'successful prompt is presentation-only until final kick')
+ a:update();check(z.hits==0,'repeated update cannot duplicate contact')
 end
+phase=143/30;a:update();a:update();check(z.hits==1,'final original kick applies earned QTE damage exactly once')
 check(committed==1,'QTE hit count does not publish repeated exertion commitments')
 check(math.abs(z.total-2.25)<.000001 and creates==1,'canonical base damage gets one Extreme bonus and one cached factory item')
 phase=R.duration;a:update()
@@ -107,6 +147,10 @@ function p:isLocalPlayer()return false end;function p:getOnlineID()return 2 end
 getPlayerByOnlineID=function(id)return id==2 and p end
 local pose={player=2,action=10,zombie=25,session=1,age=0,x=0,y=0,fx=1,fy=0}
 H.receive('ProjectYakuza','heatRushPose',pose);check(H.remote[2]and z.useless,'remote paired pose enters native victim state')
+pose.age=6.5;H.receive('ProjectYakuza','heatRushPose',pose);check(H.remote[2]and H.remote[2].age==6.5,'retail observer accepts poses after the old five-second cutoff')
+pose.age=8;H.receive('ProjectYakuza','heatRushPose',pose);check(H.remote[2].age==6.5,'observer rejects poses beyond registered source duration')
+pose.age=0
+
 H.receive('ProjectYakuza','heatRushEnd',{player=2,action=10,session=1,useless=false,ignore=false,deferred=true})
 check(not H.remote[2]and not z.useless and not z.ignore and z.deferred,'remote completion restores explicit false flags')
 H.receive('ProjectYakuza','heatRushPose',pose);check(not H.remote[2],'late pose cannot resurrect an ended sequence')
@@ -120,8 +164,9 @@ H.receive('ProjectYakuza','heatRushPose',pose);check(not H.remote[2],'end arrivi
 local draws=0
 ISPanel={derive=function(self)local cls={};cls.__index=cls;setmetatable(cls,{__index=self});return cls end}
 function ISPanel:new(x,y,w,h)return setmetatable({x=x,y=y,width=w,height=h,background=true},{__index=self})end
+function ISPanel:getAbsoluteX()return self.x end;function ISPanel:getAbsoluteY()return self.y end
 function ISPanel:initialise()end;function ISPanel:setWantMouseEvents(v)self.mouse=v end;function ISPanel:addToUIManager()self.added=true end
-function ISPanel:drawTextCentre(text)draws=draws+1;self.lastText=text end
+function ISPanel:drawTextCentre(text,x,y,r,g,b,a)draws=draws+1;self.lastText=text;self.textAlpha=a end
 Events.OnGameStart=event();Events.OnCreatePlayer=event();getSpecificPlayer=function()return p end;getNumActivePlayers=function()return 1 end
 getPlayerScreenLeft=function()return 0 end;getPlayerScreenTop=function()return 0 end;getPlayerScreenWidth=function()return 1920 end;getPlayerScreenHeight=function()return 1080 end
 UIFont={Large=1}
@@ -130,11 +175,17 @@ function p:isLocalPlayer()return true end
 local U=PY.HeatRushUI;U.create();local panel=U.instances[0]
 check(panel.added and panel.background==false and panel.mouse==false,'QTE overlay has no fullscreen panel background and cannot capture mouse')
 local qte=Q.create(style.actions.heatAction.qte,down)
-H.active[p]={seen=true,qte=qte,elapsed=.8};panel:render();check(draws==1 and panel.lastText:find('MMB'),'QTE prompt uses current configurable binding label')
-H.active[p].elapsed=0;panel:render();check(draws==1,'QTE overlay is empty outside prompt windows');H.active[p]=nil
-H.chains[p]={count=7,at=clock};panel:render();check(draws==2 and panel.lastText:find('7 / 8'),'connected-light progress explains when prompts become available')
-H.chains[p]=nil;H.tickets[p]={expires=clock+700};panel:render();check(draws==3 and panel.lastText=='Heat Rush','ready handoff is visible during recovery')
-H.tickets[p].expires=clock-1;panel:render();check(draws==3,'expired handoff has no stale UI');H.tickets[p]=nil
+getKeyName=function(k)return k==34 and 'G'or tostring(k)end
+local polygons={};getTexture=function()return {}end
+SpriteRenderer={instance={renderPoly=function(_,texture,...)polygons[#polygons+1]={...}end}}
+H.active[p]={seen=true,qte=qte,elapsed=1.5};panel:render()
+check(draws==2 and panel.lastText:find('LMB')and panel.lastText:find('MMB')and #polygons==8 and panel.textAlpha==.8,'six live binding labels and two four-quarter timing rings render')
+check(polygons[1][9]==.35 and polygons[1][12]>0,'native ring uses bounded RGBA after its eight screen coordinates')
+H.active[p].elapsed=0;panel:render();check(draws==2,'QTE overlay is empty outside cue lead-in');H.active[p]=nil
+H.chains[p]={count=7,at=clock};panel:render();check(draws==3 and panel.lastText:find('7 / 8'),'connected-light progress explains when prompts become available')
+H.chains[p]=nil;H.tickets[p]={expires=clock+700};panel:render();check(draws==4 and panel.lastText=='Heat Rush','ready handoff is visible during recovery')
+H.tickets[p].expires=clock-1;panel:render();check(draws==4,'expired handoff has no stale UI');H.tickets[p]=nil
+
 local ended=0;PY.Network={send=function(_,command)if command=='heatRushEnd'then ended=ended+1 end end}
 H.tickets[p]={z=z,pressed=true,expires=clock-1001,sent=clock-1100,granted={action=22}}
 check(not H.input(p,state,PY.getPlayerStyle(p))and not H.tickets[p]and ended==1,'expired MP recovery ticket releases its server reservation')
@@ -199,7 +250,10 @@ state.active=false;p.attacking=false;H.input(p,state,PY.getPlayerStyle(p))
 local playerContext=PY.activeActions[p];check(playerContext and playerContext.target.z==victim,'player target enters the same registered paired action')
 local playerAction=playerContext.timedAction;playerAction.action={setOverrideHandModelsObject=function()end};playerAction:start()
 check(victim.blocked and not victim.authorize,'player paired action locks the correct victim')
-for i,prompt in ipairs(playerContext.action.qte.prompts)do phase=(prompt.atMs-100)/1000;mouse[2]=true;playerAction:update();phase=prompt.atMs/1000;mouse[2]=false;playerAction:update()end
+for _,binding in ipairs({'light','finisher','grab'})do press(binding,false)end
+phase=0;playerAction:update()
+for i,prompt in ipairs(playerContext.action.qte.prompts)do phase=(prompt.atMs-100)/1000;press(prompt.binding,true);playerAction:update();phase=prompt.atMs/1000;press(prompt.binding,false);playerAction:update()end
+phase=143/30;playerAction:update()
 check(math.abs(victim.total-2.25)<.000001,'player QTE contacts use canonical native Hit damage')
 playerAction:forceStop();check(not victim.blocked and victim.authorize and not victim.ignore,'player interruption restores movement and attack authorization')
 PY.Network={acceptSession=function()return true end};getPlayerByOnlineID=function(id)return id==2 and p or id==26 and victim or nil end

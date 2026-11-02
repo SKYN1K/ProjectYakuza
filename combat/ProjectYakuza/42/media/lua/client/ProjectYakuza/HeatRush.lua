@@ -131,7 +131,7 @@ function H.align(job,time)
     p:getMovementLastFrame():set(0,0);p:setMoving(false);p:setRunning(false);p:setSprinting(false);return true
 end
 function A:start()
-    local p,z=self.character,self.context.target.z;self.started=true;self.last=now();self.elapsed=0;self.index=1;self.success={};self.qte=self.context.action.qte and PY.QTE.create(self.context.action.qte,PY.Bindings.down,self.context)
+    local p,z=self.character,self.context.target.z;self.started=true;self.last=now();self.elapsed=0;self.index=1;self.success={};self.autoSeen={};self.qte=self.context.action.qte and PY.QTE.create(self.context.action.qte,PY.Bindings.down,self.context)
     self.old={block=p:isBlockMovement(),ignore=p:getIgnoreMovement(),deferred=p:isDeferredMovementEnabled()};p:setBlockMovement(true);p:setIgnoreMovement(true);p:setDeferredMovementEnabled(false)
     local granted=self.context.target.granted;local f=p:getForwardDirection()
     self.pose={p=p,z=z,x=granted and granted.x or p:getX(),y=granted and granted.y or p:getY(),fx=granted and granted.fx or f:getX(),fy=granted and granted.fy or f:getY()}
@@ -149,10 +149,10 @@ function A:contact(index)
     local p,z=self.character,self.context.target.z;local granted=self.context.target.granted
     if index==#R.contacts(self.context.action)then self.finalRequested=true end
     if granted then PY.Network.send(p,"heatRushHit",{action=granted.action,index=index});return end
-    local amount=R.amount(self.context.action,index,self.held);if not amount then return end
+    local amount=R.amount(self.context.action,index,self.held,self.success);if not amount then return end
     if R.targetKind(z)=="player"and not R.playerAllowed(p,z)then return end
     if amount>0 then z:Hit(self.held,p,amount,false,1)end
-    if PY.HitEffects then PY.HitEffects.spawn(p,z,true)end
+    if PY.HitEffects then PY.HitEffects.spawn(p,z,R.contacts(self.context.action)[index].strong~=false)end
     if PY.Feedback then PY.Feedback.play(p,PY.Feedback.sound(p,R.contacts(self.context.action)[index].cue or "heavyImpact"),.55)end
     PY.emit("heatRushHit",p,z,index)
 end
@@ -171,8 +171,17 @@ function A:update()
         self.index=self.qte.index
         local grant=self.context.target.granted
         if kind=="input"and grant then PY.Network.send(self.character,"heatRushPress",{action=grant.action,index=index})end
-        if kind=="result"then self.success[index]=success;if success and self.elapsed*1000-prompt.atMs<=120 then self:contact(index)end end
+        if kind=="result"then
+            local contact=R.promptContact(self.context.action,index)
+            if contact then self.success[contact]=success and self.elapsed*1000-prompt.atMs<=120;if self.success[contact]then self:contact(contact)end end
+        end
     end)
+        for i,contact in ipairs(self.context.action.contacts or {})do
+            if not contact.qteIndex and not self.autoSeen[i]and self.elapsed*1000>=contact.atMs then
+                self.autoSeen[i]=true
+                if self.elapsed*1000-contact.atMs<=120 then self.success[i]=true;self:contact(i)end
+            end
+        end
     else
         local contacts=R.contacts(self.context.action)
         while contacts[self.index]and self.elapsed*1000>=contacts[self.index].atMs do
@@ -264,18 +273,22 @@ function H.receive(module,command,a)
         if previous and previous.action>a.action then return end
         if not previous or previous.action~=a.action then previous={action=a.action,seen={}};H.contacts[a.player]=previous end
         if previous.seen[a.index]then return end;previous.seen[a.index]=true;previous.at=now()
+        if a.presentation==true then
+            local z=R.target(p,a.zombie,a.targetKind)
+            if z and PY.HitEffects then PY.HitEffects.spawn(p,z,a.strong~=false)end
+        end
         if p:isLocalPlayer()and PY.Feedback then PY.Feedback.play(p,PY.Feedback.sound(p,({heavyImpact=true,punchImpact=true})[a.cue]and a.cue or "heavyImpact"),.55)end
         return
     end
-    if command~="heatRushPose"or p:isLocalPlayer()or not PY.NetworkProtocol.integer(a.action,1,1000000000)or not PY.NetworkProtocol.number(a.age,0,5)or not PY.NetworkProtocol.number(a.x,-1000000,1000000)or not PY.NetworkProtocol.number(a.y,-1000000,1000000)or not PY.NetworkProtocol.number(a.fx,-1,1)or not PY.NetworkProtocol.number(a.fy,-1,1)then return end
+    local motion=a.motionId and PY.PairedMotions[a.motionId]
+    if a.motionId and not motion then return end
+    if command~="heatRushPose"or p:isLocalPlayer()or not PY.NetworkProtocol.integer(a.action,1,1000000000)or not PY.NetworkProtocol.number(a.age,0,motion and motion.duration or R.duration)or not PY.NetworkProtocol.number(a.x,-1000000,1000000)or not PY.NetworkProtocol.number(a.y,-1000000,1000000)or not PY.NetworkProtocol.number(a.fx,-1,1)or not PY.NetworkProtocol.number(a.fy,-1,1)then return end
     if not H.session(a.player,a.session)then return end
     if a.action<=(H.ended[a.player]or 0)then return end
     local z=R.target(p,a.zombie,a.targetKind);if not z then return end
     local old=H.remote[a.player]
     if old and old.action>a.action then return end
     if old and old.action~=a.action then H.remoteEnd(a.player,old.action);old=nil end
-    local motion=a.motionId and PY.PairedMotions[a.motionId]
-    if a.motionId and not motion then return end
     local job=old or {p=p,z=z,action=a.action,old=R.capture(z)}
     job.motion=motion;job.duration=motion and motion.duration or R.duration
     job.x,job.y,job.fx,job.fy,job.age,job.at=a.x,a.y,a.fx,a.fy,a.age,now();H.remote[a.player]=job

@@ -1,4 +1,4 @@
-# Extreme Heat rush combat (0.68.0)
+# Extreme Heat rush combat (0.72.0)
 
 Dragon of Dojima uses the four supplied Kiryu bct_ath_01 through bct_ath_04 clips for the first four Extreme Heat lights, then alternates the first two clips for an eight-input chain. Each fresh LMB press commits one native attack. Stopping input leaves that attack's original recovery intact. There is no automatic multi-contact attack.
 
@@ -6,15 +6,27 @@ Perform the eight-input light chain; the first seven attacks may miss or hit dif
 
 Boost lights retain their 0.525 damage multiplier and now stun zombies in place for 250 ms. Weapon push/knockdown is suppressed only for the swing, and the short AI/root-movement stun restores original flags after it expires. Repeated hits refresh the same lease.
 
-Three short prompts ask for the configured finisher binding (MMB by default). Each needs a new press within its window; holding does not count. Successful prompts add the corresponding hit; failures add no damage. The full original motion continues, so failed inputs are not replaced with invented animations. QTE timing is adapted to PZ using source-motion contact estimates, not an imported Dragon Engine QTE state machine. The original 30 fps paired clip lasts 4.333 seconds. The contact frames used are 29, 40 and 65, with ten-frame input windows.
+The retail paired rush asks for **Light → Heavy → Grab → Light → Heavy → Grab**. Default inputs are LMB, MMB, G, LMB, MMB, G. Each label reads the current action binding; using the Grab binding here does not enable ordinary grabs. A fresh press is required inside each window. The original circular timing texture surrounds the current input; a shrinking ring approaches it and the full six-input sequence remains visible below.
 
-The player and target follow bounded original source vector tracks while movement is locked. Space and walls are checked before starting and throughout movement. Equipment/style changes, death, invalid animation playback or player hit reactions interrupt and release the locks. Other zombies can interrupt the sequence; it does not add player invincibility. The final successful prompt knocks a surviving target down after recovery. No cinematic camera override, new sound recording or generated graphical prompt is added.
+| Contact | Original frame at 30 fps | Input window | Binding |
+| --- | --- | --- | --- |
+| Punch 1 | 56 | 400 ms | light |
+| Punch 2 | 63 | 200 ms | finisher |
+| Punch 3 | 77 | 400 ms | grab |
+| Punch 4 | 85 | 233 ms | light |
+| Punch 5 | 102 | 400 ms | finisher |
+| Punch 6 | 110 | 233 ms | grab |
+| Finishing kick | 143 | Automatic | None |
 
-## Source replacement
+Successful prompts play existing punch feedback at their original contact. Earned damage is applied once at the final kick, preventing intermediate QTE punches from killing the victim and cutting off the pair. Each success contributes one sixth of the previous maximum payoff; missed inputs reduce that payoff. Six successes retain the previous total 3.75 coefficient and canonical Extreme Heat bonus. The original motion and recovery continue after the prompts, including failed prompts. Timing is adapted to PZ from the source motion and scene sound markers; it is not an imported Dragon Engine QTE state machine.
 
-The removed automatic attacks used motion.par/gmt/P_KRU_BTL_SUD_bct_ath_sp.gmt and P_KRU_BTL_SUD_bct_ath_sp2.gmt. Their two converted animation files, two owners, eight observers, Lua modules, input configuration and network damage command are removed from the current payload. Historical releases retain their original contents.
+The player and victim follow bounded original source vectors while movement is locked. Paths are checked before and during playback. Equipment/style changes, invalid animation playback and interruption restore owned flags. Shared Heat Action protection grants invulnerability only during the action and targeting protection for another 500 ms. A surviving victim is knocked down at completion. The existing Extreme Heat aura and limb effects remain in use. PZ's normal camera is retained: the reference's cinematic close-ups are outside this Lua-only implementation.
 
-The new pair comes from Yakuza 6/data/hact/h23590_3combo.par, entries 000.par/h23590_000_4.gmt (Kiryu) and 000.par/h23590_000_2.gmt (victim). Resource names identify m_kiryu/am_kiryu_1_c001 and ccm_com_suit_face_1_c001. The original 131 frames, scene-vector rotations and extracted movement paths are retained through approved non-AI retargeting, with native PZ hand/prop conventions. See heat-rush-assets.json for hashes and operations. No previous automatic attack is relabelled as this sequence.
+## Verified retail source
+
+The pair comes from `Yakuza 6/data/hact/h24010_100punchi.par`: `000.par/h24010_000_3.gmt` is Kiryu and `000.par/h24010_000_5.gmt` is the victim. Scene GUID bindings establish the roles, and the scene names three repeated-punch loops, kick and down sounds. Both original clips retain all 225 frames at 30 fps, lasting 7.4667 seconds. The former demo-era `h23590_3combo` conversion is replaced rather than retained as an alternate. Source hashes, heading normalization, vertical motion, hand conventions and bounded paired paths are documented in [motion provenance](heat-rush-assets.json).
+
+The timing ring is the unchanged `btl_qte_gauge.dds` decode from the supplied Y6 UI archive. Runtime rotation of four textured quarters creates each full ring without generated graphics or upscaling. See [texture provenance](heat-rush-qte-assets.json). No artwork, audio recording or AI assets were created.
 
 ## Multiplayer and authors
 

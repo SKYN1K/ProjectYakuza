@@ -217,7 +217,7 @@ function S.damage(p,z,amount,knock,kill,s,hitMove,hitStyle,jugglePlan,swing)
     local juggle,juggling=ProjectYakuza.Juggling.hit(p,z,not kill and not knock and (jugglePlan or ProjectYakuza.Juggling.plan(style,move)) or nil,swing)
     if response and not juggling then ProjectYakuza.HitResponses.apply(p,z,response) end
     S.fanout(p,"damage",{player=p:getOnlineID(),event=s.result,zombie=z:getOnlineID(),health=math.max(0,z:getHealth()),amount=amount,knock=knock==true,kill=kill==true,
-        dx=dx/n,dy=dy/n,force=z:getHitForce(),hitReaction=z:getHitReaction() or "ShotBelly",reaction=move and move.reaction or "",style=styleId,sourceSwing=swing,impactFeedback=style and style.impactFeedback,strong=move and ((style.weaponStandaloneHeavy and style.actions.finisher.variants.default.nodeValue==move.nodeValue)or move.neutralHeavy==true or move.afterLight~=nil or move.chargedHeavy==true),charged=move and move.chargedHeavy==true,juggle=juggle,responseKind=response and response.kind,responseForce=response and response.force})
+        dx=dx/n,dy=dy/n,force=z:getHitForce(),hitReaction=z:getHitReaction() or "ShotBelly",reaction=move and move.reaction or "",style=styleId,sourceSwing=swing,impactFeedback=style and style.impactFeedback,strong=move and ((style.weaponStandaloneHeavy and style.actions.finisher.variants.default.nodeValue==move.nodeValue)or move.neutralHeavy==true or move.afterLight~=nil or move.chargedHeavy==true or move.heatRush==true or move.weaponHeat==true),charged=move and move.chargedHeavy==true,juggle=juggle,responseKind=response and response.kind,responseForce=response and response.force})
     return true
 end
 function S.command(module,command,p,a)

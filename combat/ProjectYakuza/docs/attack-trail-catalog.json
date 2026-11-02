@@ -1,7 +1,7 @@
 {
   "operation": "Code-side numeric FK only from existing supplied PZ clips. All active registered damaging DoD moves and weapon profiles are included. Contacts use existing native collision events, QTE times or the documented parry fallback. Active limbs use existing charge mappings or contact-local endpoint/relative velocity, not decoded Y6 hitbox bone enums. No visual/audio/animation/model assets are generated or modified.",
   "catalog": "42/media/lua/client/ProjectYakuza/AttackTrailCatalog.lua",
-  "sha256": "90200704230cf7d75bcad4250f924593aa547e964c7c4bf9f13c733bd8360a90",
+  "sha256": "55de166e1d4514be4b1a8f769d253b26b4e3537468a9d63e2f61dfed2b34fcd2",
   "clips": [
     {
       "profile": "bat",
@@ -931,52 +931,108 @@
       "impact": -1.0,
       "kick": false,
       "qte": [
-        0.9666666666666667,
-        1.3333333333333333,
-        2.1666666666666665
+        1.8666666666666667,
+        2.1,
+        2.566666666666667,
+        2.8333333333333335,
+        3.4,
+        3.6666666666666665,
+        4.766666666666667
       ],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_HeatRush.x",
-      "clipSha256": "0bab2c0bdd5f86b691564a21b56991d9da8ff1293422d716c8c3cecaaf5b58f5",
-      "samples": 131,
-      "duration": 4.333333333333333,
+      "clipSha256": "a20af398e31633d00e18e2b95e6c27ade071c2fd17d375f288ea934d5e6e7088",
+      "samples": 225,
+      "duration": 7.466666666666667,
       "windows": [
         {
           "track": "dd_trail_heatrush_1",
-          "from": 0.8466666666666667,
-          "to": 1.15,
-          "contact": 0.9666666666666667,
+          "from": 1.7466666666666666,
+          "to": 1.9833333333333334,
+          "contact": 1.8666666666666667,
           "limb": "rightArm",
           "scores": [
-            0.2770589129788493,
-            0.4552956028646346,
-            0.08218488573163554,
-            0.07804550196489812
+            0.41758835543801,
+            1.1226950393241193,
+            0.10884963494837978,
+            0.11690569918322864
           ]
         },
         {
           "track": "dd_trail_heatrush_2",
-          "from": 1.2133333333333334,
-          "to": 1.5333333333333332,
-          "contact": 1.3333333333333333,
-          "limb": "leftLeg",
+          "from": 1.9833333333333334,
+          "to": 2.3000000000000003,
+          "contact": 2.1,
+          "limb": "rightArm",
           "scores": [
-            0.20701293849146435,
-            0.10448073684272037,
-            0.2138675629189741,
-            0.17806483328554432
+            0.259107982126071,
+            0.7029840092231194,
+            0.0827937175886581,
+            0.12926933722952788
           ]
         },
         {
           "track": "dd_trail_heatrush_3",
-          "from": 2.0466666666666664,
-          "to": 2.3666666666666667,
-          "contact": 2.1666666666666665,
+          "from": 2.4466666666666668,
+          "to": 2.7,
+          "contact": 2.566666666666667,
+          "limb": "rightArm",
+          "scores": [
+            0.4041191818193583,
+            0.9799355388525672,
+            0.1062669048047512,
+            0.07596340258762124
+          ]
+        },
+        {
+          "track": "dd_trail_heatrush_4",
+          "from": 2.7133333333333334,
+          "to": 3.0333333333333337,
+          "contact": 2.8333333333333335,
+          "limb": "rightArm",
+          "scores": [
+            0.26959816822151944,
+            0.4029232221611474,
+            0.06260654292602699,
+            0.059610764591665824
+          ]
+        },
+        {
+          "track": "dd_trail_heatrush_5",
+          "from": 3.28,
+          "to": 3.533333333333333,
+          "contact": 3.4,
+          "limb": "rightArm",
+          "scores": [
+            0.32771571047491277,
+            1.3421185004300111,
+            0.08892403390661516,
+            0.1231894222626948
+          ]
+        },
+        {
+          "track": "dd_trail_heatrush_6",
+          "from": 3.5466666666666664,
+          "to": 3.8666666666666667,
+          "contact": 3.6666666666666665,
+          "limb": "rightArm",
+          "scores": [
+            0.5901831186165932,
+            0.4652523078336699,
+            0.0978523930921203,
+            0.13416170486025097
+          ]
+        },
+        {
+          "track": "dd_trail_heatrush_7",
+          "from": 4.6466666666666665,
+          "to": 4.966666666666667,
+          "contact": 4.766666666666667,
           "limb": "rightLeg",
           "scores": [
-            0.22831264180704045,
-            0.24095158625722585,
-            0.052975696416849696,
-            0.639044455312684
+            0.37127920089939387,
+            0.5079294415283613,
+            0.13357387340801258,
+            0.6624374394321099
           ]
         }
       ]

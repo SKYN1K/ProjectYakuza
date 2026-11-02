@@ -63,22 +63,25 @@ function H.command(p,command,a,s)
         S.fanout(p,"heatRushPose",{player=p:getOnlineID(),action=job.action,zombie=job.z:getOnlineID(),targetKind=R.targetKind(job.z),x=job.x,y=job.y,fx=job.fx,fy=job.fy,motionId=job.move.motionId,age=0});return
     end
     if command=="heatRushEnd"then H.finish(p,a.completed==true and job.started and t-job.started>=job.duration*1000-150);return end
-    if not job.started or not P.integer(a.index,1,#job.contacts)then return end
-    local age=(t-job.started)/1000;local contact=job.contacts[a.index].atMs/1000
+    if not job.started then return end
+    local age=(t-job.started)/1000
     if command=="heatRushPress"then
-        if job.definition and not job.presses[a.index]and PY.QTE.window(job.definition,a.index,age*1000,100,120) then job.presses[a.index]=true end;return
+        if job.definition and P.integer(a.index,1,#job.definition.prompts)and not job.presses[a.index]and PY.QTE.window(job.definition,a.index,age*1000,100,120)then job.presses[a.index]=true end;return
     end
+    if not P.integer(a.index,1,#job.contacts)then return end
+    local entry=job.contacts[a.index];local contact=entry.atMs/1000
+    local prompt=entry.qteIndex or not job.move.contacts and job.definition and a.index
     if command=="heatRushHit"then
-        if job.definition and not job.presses[a.index]or job.hits[a.index]or age<contact-.1 or age>contact+.65 or job.z:isDead()or R.targetKind(job.z)=="player"and not R.playerAllowed(p,job.z)or not P.near(p,job.z,2)or not P.path(p,job.z:getX(),job.z:getY())then return end
+        if prompt and not job.presses[prompt]or job.hits[a.index]or age<contact-.1 or age>contact+.65 or job.z:isDead()or R.targetKind(job.z)=="player"and not R.playerAllowed(p,job.z)or not P.near(p,job.z,2)or not P.path(p,job.z:getX(),job.z:getY())then return end
         job.hits[a.index]=true
-        local amount=R.amount(job.move,a.index,job.weapon);if not amount then return end
+        local amount=R.amount(job.move,a.index,job.weapon,job.hits);if not amount then return end
         if amount>0 then
         if R.targetKind(job.z)=="player"then
             S.processing=true;local ok,err=pcall(job.z.Hit,job.z,job.weapon,p,amount,false,1);S.processing=false
             if not ok then print("[ProjectYakuza] paired player hit failed: "..tostring(err));H.finish(p,false);return end
         else S.damage(p,job.z,amount,false,false,s,job.move,job.style)end
         end
-        S.fanout(p,"heatRushContact",{player=p:getOnlineID(),action=job.action,index=a.index,zombie=job.z:getOnlineID(),targetKind=R.targetKind(job.z),cue=job.contacts[a.index].cue})
+        S.fanout(p,"heatRushContact",{player=p:getOnlineID(),action=job.action,index=a.index,zombie=job.z:getOnlineID(),targetKind=R.targetKind(job.z),cue=entry.cue,presentation=amount==0 or R.targetKind(job.z)=="player",strong=entry.strong~=false})
     end
 end
 function H.tick(t,online)

@@ -1,0 +1,20 @@
+{
+  "source": "C:\\Users\\Nik\\Documents\\Codex\\2026-10-19\\wo\\work\\y6-ui\\btl_qte_gauge.png",
+  "dds": "C:\\Users\\Nik\\Documents\\Codex\\2026-10-19\\wo\\work\\y6-ui\\btl_qte_gauge.dds",
+  "archive": "F:/SteamLibrary/steamapps/common/Yakuza 6 - The Song of Life/data/ui.par",
+  "entry": "/c/texture/btl_qte_gauge.dds",
+  "output": "42/media/textures/ProjectYakuza/HeatRushQTEAtlas.png",
+  "sha256": "793adad5085b3c3dc57d20d09691fe02534cee8dac1cdff619dec74fe0782416",
+  "ddsSha256": "0bb0832c7ba7461ab821c64ec746f8f93aa2b96134e44427ee33ee5204993022",
+  "operation": "Unchanged original decoded 256x256 RGBA quarter-ring texture. Four rotated textured quads form the circular cue at runtime. No generated art, upscaling or edited pixels.",
+  "archiveMeta": [
+    2147483648,
+    65664,
+    14249,
+    44517376,
+    33,
+    0,
+    0
+  ],
+  "rgbaSha256": "bae1fed97cf55c57f20a71a4f9a819d2fbd601c3fcc77c312f5bc4612c4e8ab8"
+}

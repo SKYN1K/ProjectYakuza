@@ -160,3 +160,5 @@
 !/tools/combat-tests/paired_paths.py
 
 !/tools/combat-tests/HeatPromptAssetProbe.java
+
+!/tools/combat-tests/validate_rush_qte_assets.py

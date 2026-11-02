@@ -11,13 +11,14 @@ if '--inside-blender'not in sys.argv:
     raise SystemExit(0)
 sys.path.insert(0,str(w));from locomotion_math import read,locals_at
 reverse=json.loads((mod/'docs/reverse-finisher-assets.json').read_text(encoding='utf-8'));rush=json.loads((mod/'docs/heat-rush-assets.json').read_text(encoding='utf-8'))
+assert rush['contactFrames']==[56,63,77,85,102,110,143]and rush['qteBindings']==['light','finisher','grab']*2
 assert len(reverse['clips'])==8 and len(rush['clips'])==2 and sha(rush['archive'])==rush['archiveSha256']
 contracts=[];samples=0
 for record in reverse['clips']+rush['clips']:
     output=mod/record['output'];assert sha(output)==record['sha256']and sha(record['source'])==record['sourceSha256']
     if 'bep'in record:assert sha(record['bep'])==record['bepSha256']
     if 'retargetPath'in record:raw=Path(record['retargetPath']);first,last=record['frames'];frames=last-first+1
-    else:raw=root/'tools/boost-build/ProjectYakuza/42/media/anims_X/Bob'/output.name;first=0;frames=record['frames']
+    else:raw=root/'tools/rush-retail-build/ProjectYakuza/42/media/anims_X/Bob'/output.name;first=0;frames=record['frames']
     assert sha(raw)==record['retargetSha256']
     _,bones,anim,_=read(output);_,original,curves,_=read(raw)
     for bone,channels in anim.items():
@@ -32,7 +33,7 @@ for mapping,stem in reverse['commandMappings'].items():assert (mapping+'\0'+stem
 assert sha(reverse['commandSource'])==reverse['commandSha256']
 (w/'heat-rush-prop-contract.tsv').write_text('\n'.join(contracts),encoding='utf-8')
 assert not list((mod/'42/media').rglob('*Barrage*'))
-assert all(len(path)==131 and all(math.isfinite(v)for row in path for v in row)for path in rush['paths'])
+assert all(len(path)==225 and all(math.isfinite(v)for row in path for v in row)for path in rush['paths'])
 assert len(list((mod/'42/media/AnimSets/player').rglob('ProjectYakuza_MP_*.xml')))==348
 assert abs(rush['pathScale']-.664628963721426)<1e-9
 for record,path in zip(rush['clips'],rush['rawPaths']):
@@ -59,5 +60,5 @@ for record,path in zip(rush['clips'],rush['rawPaths']):
     for i,row in enumerate(path):v=rotation@(sample(i)-Vector(anchor));assert abs(row[0]-v.z*rush['pathScale'])<1e-8 and abs(row[1]-v.x*rush['pathScale'])<1e-8
 from paired_paths import bridge_scene_cuts
 expected,cuts=bridge_scene_cuts(rush['rawPaths']);assert expected==rush['paths']and cuts==rush['sceneCuts']
-assert [c['frame']for c in cuts]==[35]
+assert [c['frame']for c in cuts]==[]
 print('PASS reverse and paired source archive/GMT/BEP hashes, all retained frames,',samples,'finite unchanged retarget-body samples, original vector paths, source command mappings and removed automatic clips')

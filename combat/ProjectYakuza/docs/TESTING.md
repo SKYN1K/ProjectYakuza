@@ -33,6 +33,6 @@ Use a real host plus client before advertising MP compatibility. Test delayed in
 
 Package only your addon code and supplied assets, with requirements/controls/license/provenance. Do not include framework copies, source-game archives, previews, backups, credentials, extracted tools or another voice pack.
 
-API 3 additionally tests charged tap/hold/counter priority, single-use native release, interruption/paused cleanup, style UI provider failures/unregistration, original-pixel particle decoding and native outline preservation. See [0.31.0 validation](VALIDATION_0.71.0.md).
+API 3 additionally tests charged tap/hold/counter priority, single-use native release, interruption/paused cleanup, style UI provider failures/unregistration, original-pixel particle decoding and native outline preservation. See [0.31.0 validation](VALIDATION_0.72.0.md).
 
 The distributed docs folder keeps only the current version's validation report. Historical validation files and raw native-import logs are preserved by previous Git commits/releases. Retained JSON asset records still support source/hash checks, including disabled features. For attack endurance, build_exertion_tests.py runs the actual Runtime/Exertion code, and ExertionProbe checks the installed native stat/fitness/trait API and the zero clamp without launching PZ.

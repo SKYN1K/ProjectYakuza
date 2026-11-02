@@ -673,15 +673,20 @@ local before=z1.hits;command('heatRushHit',{action=lease.action,index=1,damage=9
 for i,prompt in ipairs(lease.definition.prompts)do
  clock=lease.started+prompt.atMs-100;snapshot(p,{extreme=true,clip='ProjectYakuza_DD_HeatRush',move='dd_heat_rush',action=lease.action,swing=1800})
  command('heatRushPress',{action=lease.action,index=i});check(lease.presses[i],'source-time prompt accepted '..i)
- command('heatRushHit',{action=lease.action+1,index=i});check(z1.hits==before+i-1,'wrong action serial rejects QTE damage')
+ command('heatRushHit',{action=lease.action+1,index=i});check(z1.hits==before,'wrong action serial rejects QTE damage')
  clock=lease.started+prompt.atMs+10;command('heatRushHit',{action=lease.action,index=i,damage=999})
- check(z1.hits==before+i,'successful timed prompt applies exactly one canonical server hit')
- command('heatRushHit',{action=lease.action,index=i});check(z1.hits==before+i,'replayed QTE hit cannot duplicate damage')
+ check(z1.hits==before,'successful timed punch remains presentation-only')
+ command('heatRushHit',{action=lease.action,index=i});check(z1.hits==before,'replayed QTE hit cannot duplicate damage')
 end
+clock=lease.started+143/30*1000+10;snapshot(p,{extreme=true,clip='ProjectYakuza_DD_HeatRush',move='dd_heat_rush',action=lease.action,swing=1800})
+command('heatRushPress',{action=lease.action,index=7});check(not lease.presses[7],'automatic final kick is not a seventh QTE')
+command('heatRushHit',{action=lease.action,index=7,damage=999});command('heatRushHit',{action=lease.action,index=7})
+check(z1.hits==before+1,'one authoritative final kick aggregates six validated QTEs without replay')
+local strongRush=false;for _,v in ipairs(replies)do if v.command=='damage'and v.args.strong==true then strongRush=true end end;check(strongRush,'final rush kick uses strong confirmed MP impact feedback')
 check(math.abs(z1.health-7.75)<.000001,'server ignores arbitrary client damage and applies one Extreme bonus')
-clock=lease.started+rules.duration*1000+10;command('heatRushEnd',{action=lease.action,completed=true})
+clock=lease.started+rules.duration*1000+10;snapshot(p,{extreme=true,clip='ProjectYakuza_DD_HeatRush',move='dd_heat_rush',action=lease.action,swing=1800});command('heatRushEnd',{action=lease.action,completed=true})
 check(not rush.leases[p]and not rush.held[z1]and not z1.useless and not z1.ignore and z1.deferred and z1.knock,'server completion restores victim state and terminal knockdown')
-command('heatRushHit',{action=lease.action,index=3});check(z1.hits==before+3,'ended action cannot replay a QTE hit')
+command('heatRushHit',{action=lease.action,index=3});check(z1.hits==before+1,'ended action cannot replay a QTE hit')
 clock=clock+2000;p.x=0;p.y=0;p.equipped=true;p.hand=p.token;p.dead=false;p.data.ProjectYakuzaStyle='dragon_of_dojima'
 snapshot(p,{clip='ProjectYakuza_DD_Light01',move='dd_light_01',swing=2100})
 local speedPeer=server.players[p.id];check(speedPeer.packet.attackHeatSpeed==nil,'DoD server snapshots keep the heat-speed feature absent')
@@ -868,8 +873,10 @@ do
  command('heatRushBegin',{zombie=remote.id,targetKind='player',request=901});local lease=rush.leases[p];check(lease and lease.z==remote,'server grants a permitted player-target lease')
  command('heatRushReady',{action=lease.action});check(remote.blocked and not remote.authorize and remote.ignore and not remote.deferred,'MP paired victim locks player movement and attacks')
  local prompt=lease.definition.prompts[1];clock=lease.started+prompt.atMs-100;command('heatRushPress',{action=lease.action,index=1});clock=lease.started+prompt.atMs+10
- command('heatRushHit',{action=lease.action,index=1});check(math.abs(remote.playerDamage-.45)<.000001,'MP player damage uses canonical contact value')
- command('heatRushHit',{action=lease.action,index=1});check(math.abs(remote.playerDamage-.45)<.000001,'MP player contact cannot replay')
+ command('heatRushHit',{action=lease.action,index=1});check(not remote.playerDamage,'MP player punch is presentation-only')
+ clock=lease.started+143/30*1000+10;snapshot(p,{extreme=true,clip='ProjectYakuza_DD_HeatRush',move='dd_heat_rush',action=lease.action})
+ command('heatRushHit',{action=lease.action,index=7});check(math.abs(remote.playerDamage-.375)<.000001,'MP player final damage uses only confirmed QTEs')
+ command('heatRushHit',{action=lease.action,index=1});check(math.abs(remote.playerDamage-.375)<.000001,'MP player contact cannot replay')
  pvp=false;rush.tick(clock,{[p]=true});check(not rush.leases[p]and not remote.blocked and remote.authorize and not remote.ignore and remote.deferred,'disabling PvP interrupts the lease and restores player controls')
 end
 do

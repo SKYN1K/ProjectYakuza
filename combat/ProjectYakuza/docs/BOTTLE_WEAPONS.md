@@ -22,4 +22,4 @@ The shared [Heat Action framework](HEAT_ACTIONS.md) grants invulnerability only 
 
 ## Assets and validation
 
-[Motion provenance](bottle-heat-assets.json) records source archive/GMT/scene hashes, the original actor/victim GUID bindings, source timing and native grip offsets. [Item references](bottle-weapon-items.json) records unchanged PZ item/model-script sources. No visual/audio artwork, AI motion or upscaling is generated. See [current validation](VALIDATION_0.71.0.md); PZ is not launched during offline checks.
+[Motion provenance](bottle-heat-assets.json) records source archive/GMT/scene hashes, the original actor/victim GUID bindings, source timing and native grip offsets. [Item references](bottle-weapon-items.json) records unchanged PZ item/model-script sources. No visual/audio artwork, AI motion or upscaling is generated. See [current validation](VALIDATION_0.72.0.md); PZ is not launched during offline checks.

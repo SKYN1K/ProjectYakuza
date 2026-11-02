@@ -10,7 +10,7 @@ EXPORT="""local rows={}
 local function add(profile,kind,m)
  if not m or not m.animation then return end
  if not ({light=true,ground=true,directional=true,finisher=true,chargedHeavy=true,quickstepAttack=true,runningAttack=true,heatAction=true,parry=true})[kind]then return end
- local times={};for _,q in ipairs(m.qte and m.qte.prompts or m.contacts or {})do times[#times+1]=q.atMs/1000 end
+ local times={};for _,q in ipairs(m.contacts or m.qte and m.qte.prompts or {})do times[#times+1]=q.atMs/1000 end
  rows[#rows+1]=table.concat({profile,kind,m.animation,tostring(m.duration or 0),tostring(m.speed or 1.6),tostring(m.impact or -1),table.concat(times,","),tostring(m.kick or false)},"|")
 end
 local function scan(profile,s)
@@ -72,6 +72,7 @@ for animation,move in sorted(moves.items()):
    scores.append(score)
   allowed=[0,1]if move['profile']!='unarmed'else [2,3]if move['kick']or move['kind']in ('ground','runningAttack')else list(range(4))
   limb=known.get(animation,max(allowed,key=lambda i:scores[i]));limb=0 if animation=='ProjectYakuza_DD_Light01'else limb
+  if animation=='ProjectYakuza_DD_HeatRush':limb=1 if hit<6 else 3
   a,b,c,upper=triplets[limb];key='dd_trail_'+animation.removeprefix('ProjectYakuza_DD_').lower()+'_'+str(hit+1)
   output.append('T["'+key+'"]=(function()return {animation="'+animation+'",fps=30,limb="'+names[limb]+'",duration='+str(duration)+',frames={')
   output.extend('    {'+','.join(f'{v:.9f}'for bone in (a,b,c)for v in frame[bone])+'},'for frame in frames)

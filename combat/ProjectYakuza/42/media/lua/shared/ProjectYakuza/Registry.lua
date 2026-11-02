@@ -212,7 +212,7 @@ end
 
 local ProjectYakuza = ProjectYakuza
 ProjectYakuza.FEATURES={grab=false}
-ProjectYakuza.VERSION = "0.71.0"
+ProjectYakuza.VERSION = "0.72.0"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -291,6 +291,22 @@ function ProjectYakuza.validateStyle(style)
             end end
         end
         if value.qte~=nil then local ok,reason=ProjectYakuza.QTE.valid(value.qte,type(value.duration)=="number"and value.duration*1000 or nil);if not ok then problem(path..".qte: "..reason)end end
+        if type(value.contacts)=="table"then
+            local mapped={};local prompts=type(value.qte)=="table"and value.qte.prompts
+            for _,contact in ipairs(value.contacts)do
+                if type(contact)=="table"then
+                    local i=contact.qteIndex
+                    if i~=nil then
+                        local prompt=type(prompts)=="table"and number(i)and i==math.floor(i)and prompts[i]
+                        if type(prompt)~="table"or mapped[i]or contact.atMs~=prompt.atMs then problem(path..".contacts has invalid QTE mapping")else mapped[i]=true end
+                    end
+                    if contact.strong~=nil and type(contact.strong)~="boolean"then problem(path..".contacts.strong must be boolean")end
+                    if contact.sumQTE~=nil and type(contact.sumQTE)~="boolean"then problem(path..".contacts.sumQTE must be boolean")end
+                    if contact.sumQTE and (i~=nil or type(prompts)~="table"or #prompts==0 or not number(contact.atMs)or type(prompts[#prompts])~="table"or not number(prompts[#prompts].atMs)or contact.atMs<=prompts[#prompts].atMs)then problem(path..".contacts summed damage must follow all QTE prompts")end
+                end
+            end
+            if type(prompts)=="table"then for i=1,#prompts do if not mapped[i]then problem(path..".contacts is missing a QTE prompt")end end end
+        end
         if value.hitResponse~=nil and value.hitResponse~=false
             and (not text(value.hitResponse) or type(style.hitResponses)~="table" or not style.hitResponses[value.hitResponse]) then problem(path..".hitResponse must name a hitResponses profile or be false") end
         if value.juggle~=nil and value.juggle~=false then

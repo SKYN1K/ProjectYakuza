@@ -1,6 +1,6 @@
 # Documentation index
 
-Current manual: Project Yakuza 0.71.0, Lua API 3, MP protocol 2.
+Current manual: Project Yakuza 0.72.0, Lua API 3, MP protocol 2.
 
 | Task | Guide |
 | --- | --- |
@@ -48,4 +48,4 @@ The JSON records identify original supplied files, conversions and hashes for re
 
 - [Manual directional attacks and taunt attention](DIRECTIONAL_AND_TAUNTS.md)
 
-- [Current validation](VALIDATION_0.71.0.md)
+- [Current validation](VALIDATION_0.72.0.md)

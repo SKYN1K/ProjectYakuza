@@ -183,3 +183,7 @@ Run validate_katana_heat_assets.py for supplied archive/scene/GMT hashes, comple
 
 
 Paired path repair checks retain raw source vectors and canonical scene rotation in provenance. paired_paths.py removes shared staging cuts and bridges their small relative residual over six frames. Native root checks require both katana and bottle victims to start at standing height. Heat Action UI regressions cover cached eligibility, 120/80 ms fades, native-size original atlas pixels, keyboard rebinding and style UI overrides. HeatPromptAssetProbe decodes the copied original flame atlas with native B42 ImageData.
+
+## Retail rush and dynamic QTE controls
+
+The paired fixture checks Light/Heavy/Grab twice, actual keyboard rebinding, fresh presses, invalid prompt/contact mappings, skipped cues, deferred final damage, native-phase recovery and passive circular UI. Server tests check six mapped inputs, presentation-only intermediate punches, one summed finishing kick, replay rejection and permission changes. `validate_heat_rush_assets.py` checks both retail clips, all retained body samples, original motion paths and native import/prop contracts. `validate_rush_qte_assets.py` compares the supplied ui.par DDS bytes and every decoded RGBA pixel. `HeatPromptAssetProbe` accepts the optional timing atlas as its second argument and verifies its native ImageData decode plus the textured-quad/screen-coordinate APIs. These checks never launch PZ; live presentation and latency still need gameplay testing.
