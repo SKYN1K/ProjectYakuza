@@ -166,3 +166,8 @@
 !/tools/combat-tests/build_crate_failure_assets.py
 !/tools/combat-tests/validate_crate_failure_assets.py
 !/tools/combat-tests/CrateAssetProbe.java
+
+!/tools/combat-tests/build_weapon_motion_assets.py
+!/tools/combat-tests/build_style_travel_assets.py
+!/tools/combat-tests/validate_weapon_motion_assets.py
+!/tools/combat-tests/WeaponMotionProbe.java

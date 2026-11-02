@@ -200,6 +200,106 @@
     "group": "actions"
   },
   {
+    "id": "ProjectYakuza_DD_BottleGuardEnter",
+    "animation": "ProjectYakuza_DD_BottleGuardEnter",
+    "loop": false,
+    "conditions": [
+      {
+        "name": "PerformingAction",
+        "value": "ProjectYakuza_DD_BottleGuard"
+      },
+      {
+        "name": "ProjectYakuzaDefensePhase",
+        "value": "enter"
+      },
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "dragon_of_dojima"
+      },
+      {
+        "name": "ProjectYakuzaWeaponProfile",
+        "value": "bottle"
+      }
+    ],
+    "priority": 180,
+    "group": "actions"
+  },
+  {
+    "id": "ProjectYakuza_DD_BottleGuardExit",
+    "animation": "ProjectYakuza_DD_BottleGuardExit",
+    "loop": false,
+    "conditions": [
+      {
+        "name": "PerformingAction",
+        "value": "ProjectYakuza_DD_BottleGuard"
+      },
+      {
+        "name": "ProjectYakuzaDefensePhase",
+        "value": "exit"
+      },
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "dragon_of_dojima"
+      },
+      {
+        "name": "ProjectYakuzaWeaponProfile",
+        "value": "bottle"
+      }
+    ],
+    "priority": 180,
+    "group": "actions"
+  },
+  {
+    "id": "ProjectYakuza_DD_BottleGuardHit",
+    "animation": "ProjectYakuza_DD_BottleGuardHit",
+    "loop": false,
+    "conditions": [
+      {
+        "name": "PerformingAction",
+        "value": "ProjectYakuza_DD_BottleGuard"
+      },
+      {
+        "name": "ProjectYakuzaDefensePhase",
+        "value": "hit"
+      },
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "dragon_of_dojima"
+      },
+      {
+        "name": "ProjectYakuzaWeaponProfile",
+        "value": "bottle"
+      }
+    ],
+    "priority": 180,
+    "group": "actions"
+  },
+  {
+    "id": "ProjectYakuza_DD_BottleGuardLoop",
+    "animation": "ProjectYakuza_DD_BottleGuardLoop",
+    "loop": true,
+    "conditions": [
+      {
+        "name": "PerformingAction",
+        "value": "ProjectYakuza_DD_BottleGuard"
+      },
+      {
+        "name": "ProjectYakuzaDefensePhase",
+        "value": "hold"
+      },
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "dragon_of_dojima"
+      },
+      {
+        "name": "ProjectYakuzaWeaponProfile",
+        "value": "bottle"
+      }
+    ],
+    "priority": 180,
+    "group": "actions"
+  },
+  {
     "id": "ProjectYakuza_DD_BottleHeat",
     "animation": "ProjectYakuza_DD_BottleHeat",
     "loop": false,
@@ -214,11 +314,111 @@
       },
       {
         "name": "ProjectYakuzaWeaponProfile",
-        "value": "bat"
+        "value": "bottle"
       },
       {
         "name": "PerformingAction",
         "value": "ProjectYakuza_DD_BottleHeat"
+      }
+    ],
+    "priority": 180,
+    "group": "actions"
+  },
+  {
+    "id": "ProjectYakuza_DD_CrateGuardEnter",
+    "animation": "ProjectYakuza_DD_CrateGuardEnter",
+    "loop": false,
+    "conditions": [
+      {
+        "name": "PerformingAction",
+        "value": "ProjectYakuza_DD_CrateGuard"
+      },
+      {
+        "name": "ProjectYakuzaDefensePhase",
+        "value": "enter"
+      },
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "dragon_of_dojima"
+      },
+      {
+        "name": "ProjectYakuzaWeaponProfile",
+        "value": "crate"
+      }
+    ],
+    "priority": 180,
+    "group": "actions"
+  },
+  {
+    "id": "ProjectYakuza_DD_CrateGuardExit",
+    "animation": "ProjectYakuza_DD_CrateGuardExit",
+    "loop": false,
+    "conditions": [
+      {
+        "name": "PerformingAction",
+        "value": "ProjectYakuza_DD_CrateGuard"
+      },
+      {
+        "name": "ProjectYakuzaDefensePhase",
+        "value": "exit"
+      },
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "dragon_of_dojima"
+      },
+      {
+        "name": "ProjectYakuzaWeaponProfile",
+        "value": "crate"
+      }
+    ],
+    "priority": 180,
+    "group": "actions"
+  },
+  {
+    "id": "ProjectYakuza_DD_CrateGuardHit",
+    "animation": "ProjectYakuza_DD_CrateGuardHit",
+    "loop": false,
+    "conditions": [
+      {
+        "name": "PerformingAction",
+        "value": "ProjectYakuza_DD_CrateGuard"
+      },
+      {
+        "name": "ProjectYakuzaDefensePhase",
+        "value": "hit"
+      },
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "dragon_of_dojima"
+      },
+      {
+        "name": "ProjectYakuzaWeaponProfile",
+        "value": "crate"
+      }
+    ],
+    "priority": 180,
+    "group": "actions"
+  },
+  {
+    "id": "ProjectYakuza_DD_CrateGuardLoop",
+    "animation": "ProjectYakuza_DD_CrateGuardLoop",
+    "loop": true,
+    "conditions": [
+      {
+        "name": "PerformingAction",
+        "value": "ProjectYakuza_DD_CrateGuard"
+      },
+      {
+        "name": "ProjectYakuzaDefensePhase",
+        "value": "hold"
+      },
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "dragon_of_dojima"
+      },
+      {
+        "name": "ProjectYakuzaWeaponProfile",
+        "value": "crate"
       }
     ],
     "priority": 180,
@@ -713,7 +913,7 @@
         "value": "true"
       },
       {
-        "name": "DFCGroundEnabled",
+        "name": "ProjectYakuzaGroundEnabled",
         "value": "true"
       }
     ],
@@ -858,7 +1058,7 @@
         "value": "true"
       },
       {
-        "name": "DFCGroundEnabled",
+        "name": "ProjectYakuzaGroundEnabled",
         "value": "true"
       }
     ],
@@ -1098,6 +1298,296 @@
     "group": "melee"
   },
   {
+    "id": "ProjectYakuza_DD_BottleGround",
+    "animation": "ProjectYakuza_DD_BottleGround",
+    "loop": false,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "dragon_of_dojima"
+      },
+      {
+        "name": "ProjectYakuzaWeaponProfile",
+        "value": "bottle"
+      },
+      {
+        "name": "AimFloorAnim",
+        "value": "true"
+      },
+      {
+        "name": "ProjectYakuzaGroundEnabled",
+        "value": "true"
+      }
+    ],
+    "priority": 150,
+    "group": "melee"
+  },
+  {
+    "id": "ProjectYakuza_DD_BottleHeavy",
+    "animation": "ProjectYakuza_DD_BottleHeavy",
+    "loop": false,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "dragon_of_dojima"
+      },
+      {
+        "name": "ProjectYakuzaWeaponProfile",
+        "value": "bottle"
+      },
+      {
+        "name": "AimFloorAnim",
+        "value": "false"
+      },
+      {
+        "name": "ProjectYakuzaMove",
+        "value": "dd_bottle_heavy"
+      }
+    ],
+    "priority": 150,
+    "group": "melee"
+  },
+  {
+    "id": "ProjectYakuza_DD_BottleLight01",
+    "animation": "ProjectYakuza_DD_BottleLight01",
+    "loop": false,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "dragon_of_dojima"
+      },
+      {
+        "name": "ProjectYakuzaWeaponProfile",
+        "value": "bottle"
+      },
+      {
+        "name": "AimFloorAnim",
+        "value": "false"
+      },
+      {
+        "name": "ProjectYakuzaMove",
+        "value": "dd_bottle_light_01"
+      }
+    ],
+    "priority": 150,
+    "group": "melee"
+  },
+  {
+    "id": "ProjectYakuza_DD_BottleLight02",
+    "animation": "ProjectYakuza_DD_BottleLight02",
+    "loop": false,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "dragon_of_dojima"
+      },
+      {
+        "name": "ProjectYakuzaWeaponProfile",
+        "value": "bottle"
+      },
+      {
+        "name": "AimFloorAnim",
+        "value": "false"
+      },
+      {
+        "name": "ProjectYakuzaMove",
+        "value": "dd_bottle_light_02"
+      }
+    ],
+    "priority": 150,
+    "group": "melee"
+  },
+  {
+    "id": "ProjectYakuza_DD_BottleLight03",
+    "animation": "ProjectYakuza_DD_BottleLight03",
+    "loop": false,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "dragon_of_dojima"
+      },
+      {
+        "name": "ProjectYakuzaWeaponProfile",
+        "value": "bottle"
+      },
+      {
+        "name": "AimFloorAnim",
+        "value": "false"
+      },
+      {
+        "name": "ProjectYakuzaMove",
+        "value": "dd_bottle_light_03"
+      }
+    ],
+    "priority": 150,
+    "group": "melee"
+  },
+  {
+    "id": "ProjectYakuza_DD_CrateGround",
+    "animation": "ProjectYakuza_DD_CrateGround",
+    "loop": false,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "dragon_of_dojima"
+      },
+      {
+        "name": "ProjectYakuzaWeaponProfile",
+        "value": "crate"
+      },
+      {
+        "name": "AimFloorAnim",
+        "value": "true"
+      },
+      {
+        "name": "ProjectYakuzaGroundEnabled",
+        "value": "true"
+      }
+    ],
+    "priority": 150,
+    "group": "melee"
+  },
+  {
+    "id": "ProjectYakuza_DD_CrateHeavy",
+    "animation": "ProjectYakuza_DD_CrateHeavy",
+    "loop": false,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "dragon_of_dojima"
+      },
+      {
+        "name": "ProjectYakuzaWeaponProfile",
+        "value": "crate"
+      },
+      {
+        "name": "AimFloorAnim",
+        "value": "false"
+      },
+      {
+        "name": "ProjectYakuzaMove",
+        "value": "dd_crate_heavy"
+      }
+    ],
+    "priority": 150,
+    "group": "melee"
+  },
+  {
+    "id": "ProjectYakuza_DD_CrateLight01",
+    "animation": "ProjectYakuza_DD_CrateLight01",
+    "loop": false,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "dragon_of_dojima"
+      },
+      {
+        "name": "ProjectYakuzaWeaponProfile",
+        "value": "crate"
+      },
+      {
+        "name": "AimFloorAnim",
+        "value": "false"
+      },
+      {
+        "name": "ProjectYakuzaMove",
+        "value": "dd_crate_light_01"
+      }
+    ],
+    "priority": 150,
+    "group": "melee"
+  },
+  {
+    "id": "ProjectYakuza_DD_CrateLight02",
+    "animation": "ProjectYakuza_DD_CrateLight02",
+    "loop": false,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "dragon_of_dojima"
+      },
+      {
+        "name": "ProjectYakuzaWeaponProfile",
+        "value": "crate"
+      },
+      {
+        "name": "AimFloorAnim",
+        "value": "false"
+      },
+      {
+        "name": "ProjectYakuzaMove",
+        "value": "dd_crate_light_02"
+      }
+    ],
+    "priority": 150,
+    "group": "melee"
+  },
+  {
+    "id": "ProjectYakuza_DD_CrateLight03",
+    "animation": "ProjectYakuza_DD_CrateLight03",
+    "loop": false,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "dragon_of_dojima"
+      },
+      {
+        "name": "ProjectYakuzaWeaponProfile",
+        "value": "crate"
+      },
+      {
+        "name": "AimFloorAnim",
+        "value": "false"
+      },
+      {
+        "name": "ProjectYakuzaMove",
+        "value": "dd_crate_light_03"
+      }
+    ],
+    "priority": 150,
+    "group": "melee"
+  },
+  {
     "id": "ProjectYakuza_DD_DirectionalLeft",
     "animation": "ProjectYakuza_DD_DirectionalLeft",
     "loop": false,
@@ -1206,7 +1696,7 @@
         "value": "true"
       },
       {
-        "name": "DFCGroundEnabled",
+        "name": "ProjectYakuzaGroundEnabled",
         "value": "true"
       }
     ],
@@ -1351,7 +1841,7 @@
         "value": "true"
       },
       {
-        "name": "DFCGroundEnabled",
+        "name": "ProjectYakuzaGroundEnabled",
         "value": "true"
       }
     ],
@@ -1380,7 +1870,7 @@
         "value": "true"
       },
       {
-        "name": "DFCGroundEnabled",
+        "name": "ProjectYakuzaGroundEnabled",
         "value": "true"
       }
     ],
@@ -1409,7 +1899,7 @@
         "value": "true"
       },
       {
-        "name": "DFCGroundEnabled",
+        "name": "ProjectYakuzaGroundEnabled",
         "value": "true"
       }
     ],
@@ -1923,7 +2413,7 @@
         "value": "true"
       },
       {
-        "name": "DFCGroundEnabled",
+        "name": "ProjectYakuzaGroundEnabled",
         "value": "true"
       },
       {
@@ -1948,7 +2438,7 @@
         "value": "true"
       },
       {
-        "name": "DFCGroundEnabled",
+        "name": "ProjectYakuzaGroundEnabled",
         "value": "true"
       },
       {
@@ -2354,7 +2844,7 @@
         "value": "true"
       },
       {
-        "name": "DFCGroundEnabled",
+        "name": "ProjectYakuzaGroundEnabled",
         "value": "true"
       },
       {
@@ -2379,7 +2869,7 @@
         "value": "true"
       },
       {
-        "name": "DFCGroundEnabled",
+        "name": "ProjectYakuzaGroundEnabled",
         "value": "true"
       },
       {

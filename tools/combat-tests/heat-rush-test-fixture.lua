@@ -391,7 +391,7 @@ for _,id in ipairs({'ProjectYakuza.IntactBeerBottle','ProjectYakuza.IntactWineBo
  function bottle:getMinDamage()return .6 end;function bottle:getMaxDamage()return 1 end;function bottle:getModData()return self.data end
  function bottle:setMinDamage()end;function bottle:setMaxDamage()end
  p.held=bottle;local view=PY.getPlayerStyle(p);local state=PY.stateFor(p)
- check(view.weaponProfile=='bat'and view.actions.heatAction.motionId=='dod_bottle','spawned bottle uses Short Blunt profile and original paired action')
+ check(view.weaponProfile=='bottle'and view.actions.heatAction.motionId=='dod_bottle','spawned bottle uses Short Blunt profile and original paired action')
  local before=z.hits;function z:Hit(item,who,amount)check(item==bottle and who==p,'bottle native contact uses actual weapon');self.hits=self.hits+1;self.health=self.health-amount end
  PY.MultiHit.targets=function()return {{victim=z}}end
  check(H.weaponInput(p,state,view,true),'intact bottle starts eligible Heat Action '..id)
@@ -403,7 +403,7 @@ for _,id in ipairs({'ProjectYakuza.IntactBeerBottle','ProjectYakuza.IntactWineBo
  clock=clock+500;PY.HeatActions.tick();check(not p.ghost,'bottle targeting grace cleans up')
  bottle.condition=0;check(not R.weaponAllowed(p,view,view.actions.heatAction),'broken bottle cannot start the intact-bottle action')
 end
-p.held=katana;local blade=PY.getPlayerStyle(p);check(not R.weaponAllowed(p,blade,PY.Weapons.views.dragon_of_dojima.bat.actions.heatAction),'katana cannot borrow bottle Heat Action')
+p.held=katana;local blade=PY.getPlayerStyle(p);check(not R.weaponAllowed(p,blade,PY.Weapons.views.dragon_of_dojima.bottle.actions.heatAction),'katana cannot borrow bottle Heat Action')
 p.held=nil;z.Hit=oldHit;PY.MultiHit.targets=oldTargets;PY.HeatActions.clear()
 PY.resetPlayer(p,'prompt_test');p.held=katana;PY.setHeat(p,100);p.x=0;p.y=0;z.x=1.1;z.y=0;z.health=10;z.useless=false;mouse[1]=true
 local scans=0;PY.MultiHit.targets=function()scans=scans+1;return {{victim=z}}end
@@ -420,5 +420,5 @@ clock=clock+1;panel:render();check(panel.lastText=='K','prompt updates when Heat
 mouse[1]=false;clock=clock+80;panel:render();check(panel.promptAlpha==0 and scans==1,'losing RMB eligibility fades the prompt out and stops searching')
 PY.Bindings.options=nil;p.held=nil;PY.MultiHit.targets=oldTargets;H.previews[p]=nil
 p.held={getFullType=function()return 'ProjectYakuza.BeerCrate'end,getCondition=function()return 8 end}
-local crateStyle=PY.getPlayerStyle(p);check(crateStyle.weaponProfile=='bat'and not R.weaponAllowed(p,crateStyle,crateStyle.actions.heatAction),'original crate uses DoD Short Blunt combat without borrowing the bottle Heat Action');p.held=nil
+local crateStyle=PY.getPlayerStyle(p);check(crateStyle.weaponProfile=='crate'and not R.weaponAllowed(p,crateStyle,crateStyle.actions.heatAction),'original crate uses DoD Short Blunt combat without borrowing the bottle Heat Action');p.held=nil
 return true,'PASS '..checks..' generic QTE validation, custom bindings, fresh presses, replay safety, native-phase contacts, canonical damage, paired cleanup and interruption checks'

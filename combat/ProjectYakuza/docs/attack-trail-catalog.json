@@ -1,7 +1,7 @@
 {
   "operation": "Code-side numeric FK only from existing supplied PZ clips. All active registered damaging DoD moves and weapon profiles are included. Contacts use existing native collision events, QTE times or the documented parry fallback. Active limbs use existing charge mappings or contact-local endpoint/relative velocity, not decoded Y6 hitbox bone enums. No visual/audio/animation/model assets are generated or modified.",
   "catalog": "42/media/lua/client/ProjectYakuza/AttackTrailCatalog.lua",
-  "sha256": "55de166e1d4514be4b1a8f769d253b26b4e3537468a9d63e2f61dfed2b34fcd2",
+  "sha256": "6f7f8e9f537a9911d2ea329c69739701148852d4d05ef4016a2be0b6b1fa6ec3",
   "clips": [
     {
       "profile": "bat",
@@ -382,7 +382,34 @@
       ]
     },
     {
-      "profile": "bat",
+      "profile": "bottle",
+      "kind": "ground",
+      "animation": "ProjectYakuza_DD_BottleGround",
+      "impact": 0.18181818181818182,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BottleGround.x",
+      "clipSha256": "1d93113031cce27d7c13a2825c82d81e5f9bbe404f2adcd0dd5225376ee9f051",
+      "samples": 56,
+      "duration": 1.8333333333333333,
+      "windows": [
+        {
+          "track": "dd_trail_bottleground_1",
+          "from": 0.21333333333333332,
+          "to": 0.5333333333333333,
+          "contact": 0.3333333333333333,
+          "limb": "rightArm",
+          "scores": [
+            0.7197651356755439,
+            0.9518423107983164,
+            0.15515346872929325,
+            0.25083600126226696
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "bottle",
       "kind": "heatAction",
       "animation": "ProjectYakuza_DD_BottleHeat",
       "impact": -1.0,
@@ -434,6 +461,114 @@
             0.1825260102275934,
             0.04811603525610948,
             0.050120100568957826
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "bottle",
+      "kind": "finisher",
+      "animation": "ProjectYakuza_DD_BottleHeavy",
+      "impact": 0.2641509433962264,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BottleHeavy.x",
+      "clipSha256": "64457c5ebc5a6cfbe1ad3415ea4936fe8c50b1256b01c138c97f73fa3ffa2cf0",
+      "samples": 54,
+      "duration": 1.7666666666666666,
+      "windows": [
+        {
+          "track": "dd_trail_bottleheavy_1",
+          "from": 0.3466666666666667,
+          "to": 0.6666666666666667,
+          "contact": 0.4666666666666667,
+          "limb": "rightArm",
+          "scores": [
+            0.451755604167157,
+            0.9327606132838153,
+            0.2623093724403274,
+            0.31722582095807994
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "bottle",
+      "kind": "light",
+      "animation": "ProjectYakuza_DD_BottleLight01",
+      "impact": 0.275,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BottleLight01.x",
+      "clipSha256": "846aabf44ddf31b66790406da81e0e4ba624573049eaff12b069772b231c88b1",
+      "samples": 41,
+      "duration": 1.3333333333333333,
+      "windows": [
+        {
+          "track": "dd_trail_bottlelight01_1",
+          "from": 0.24666666666666665,
+          "to": 0.5666666666666667,
+          "contact": 0.36666666666666664,
+          "limb": "rightArm",
+          "scores": [
+            0.34262253218696687,
+            1.0686802133954671,
+            0.1879070338274403,
+            0.28140168842453417
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "bottle",
+      "kind": "light",
+      "animation": "ProjectYakuza_DD_BottleLight02",
+      "impact": 0.37142857142857144,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BottleLight02.x",
+      "clipSha256": "7d2a334bcc43813d6a843aecb54fd45fc9b055e802b2ad2338f76c68ac91b2da",
+      "samples": 36,
+      "duration": 1.1666666666666667,
+      "windows": [
+        {
+          "track": "dd_trail_bottlelight02_1",
+          "from": 0.31333333333333335,
+          "to": 0.6333333333333333,
+          "contact": 0.43333333333333335,
+          "limb": "rightArm",
+          "scores": [
+            0.16850255405919434,
+            0.9074359764350486,
+            0.21932041784886439,
+            0.23176094832172023
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "bottle",
+      "kind": "light",
+      "animation": "ProjectYakuza_DD_BottleLight03",
+      "impact": 0.3191489361702128,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BottleLight03.x",
+      "clipSha256": "b2fa88ffc6df23e9ae13df79df845519c0717e4522bfed7c7ba4ec032a97a1b1",
+      "samples": 48,
+      "duration": 1.5666666666666667,
+      "windows": [
+        {
+          "track": "dd_trail_bottlelight03_1",
+          "from": 0.38,
+          "to": 0.7,
+          "contact": 0.5,
+          "limb": "rightArm",
+          "scores": [
+            0.5124258389970842,
+            1.1876946861317617,
+            0.15754760888980288,
+            0.16211102643911962
           ]
         }
       ]
@@ -569,6 +704,141 @@
             0.5633321658156222,
             0.3216701349843349,
             1.5432630960043694
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "crate",
+      "kind": "ground",
+      "animation": "ProjectYakuza_DD_CrateGround",
+      "impact": 0.4461538461538462,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_CrateGround.x",
+      "clipSha256": "8ba6c9faceeec7b10b5217ff065c10735d8cdcfb5283aa7ed6134967e1514c59",
+      "samples": 66,
+      "duration": 2.1666666666666665,
+      "windows": [
+        {
+          "track": "dd_trail_crateground_1",
+          "from": 0.8466666666666667,
+          "to": 1.1666666666666667,
+          "contact": 0.9666666666666667,
+          "limb": "rightArm",
+          "scores": [
+            0.527936380239782,
+            0.7215236328025552,
+            0.1062489111943527,
+            0.19968031740361478
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "crate",
+      "kind": "finisher",
+      "animation": "ProjectYakuza_DD_CrateHeavy",
+      "impact": 0.3333333333333333,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_CrateHeavy.x",
+      "clipSha256": "c6e245cc97125c788dd6e9cf8701babcb1cfd923fe1c22ad105ce6fbc6744e50",
+      "samples": 67,
+      "duration": 2.2,
+      "windows": [
+        {
+          "track": "dd_trail_crateheavy_1",
+          "from": 0.6133333333333333,
+          "to": 0.9333333333333333,
+          "contact": 0.7333333333333333,
+          "limb": "rightArm",
+          "scores": [
+            0.35967344503020765,
+            0.38981639025240644,
+            0.30574768286376675,
+            0.460122138641514
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "crate",
+      "kind": "light",
+      "animation": "ProjectYakuza_DD_CrateLight01",
+      "impact": 0.273972602739726,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_CrateLight01.x",
+      "clipSha256": "00d4f86caebc389e6908d52362d13dc583d103b22fa893b2abe7b60ff46cffac",
+      "samples": 74,
+      "duration": 2.433333333333333,
+      "windows": [
+        {
+          "track": "dd_trail_cratelight01_1",
+          "from": 0.5466666666666666,
+          "to": 0.8666666666666667,
+          "contact": 0.6666666666666666,
+          "limb": "leftArm",
+          "scores": [
+            0.5637380206075686,
+            0.536355958802373,
+            0.16483618849450968,
+            0.18837453191210726
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "crate",
+      "kind": "light",
+      "animation": "ProjectYakuza_DD_CrateLight02",
+      "impact": 0.25,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_CrateLight02.x",
+      "clipSha256": "2ceedaa2dc4a6e49e9f45638cc50b2b4e63241a93f5852999f0dc24eaff648c6",
+      "samples": 61,
+      "duration": 2.0,
+      "windows": [
+        {
+          "track": "dd_trail_cratelight02_1",
+          "from": 0.38,
+          "to": 0.7,
+          "contact": 0.5,
+          "limb": "leftArm",
+          "scores": [
+            0.6530182214314201,
+            0.5791842483188558,
+            0.2213542303803294,
+            0.19890815023318734
+          ]
+        }
+      ]
+    },
+    {
+      "profile": "crate",
+      "kind": "light",
+      "animation": "ProjectYakuza_DD_CrateLight03",
+      "impact": 0.2702702702702703,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_CrateLight03.x",
+      "clipSha256": "889c0e8f3c047d777e75a72a65cf110d8722e0bc2ffa485c37990e72a8ef312a",
+      "samples": 75,
+      "duration": 2.466666666666667,
+      "windows": [
+        {
+          "track": "dd_trail_cratelight03_1",
+          "from": 0.5466666666666666,
+          "to": 0.8666666666666667,
+          "contact": 0.6666666666666666,
+          "limb": "leftArm",
+          "scores": [
+            0.41715776641048413,
+            0.3679097650382041,
+            0.27637270815463466,
+            0.20168848890816468
           ]
         }
       ]

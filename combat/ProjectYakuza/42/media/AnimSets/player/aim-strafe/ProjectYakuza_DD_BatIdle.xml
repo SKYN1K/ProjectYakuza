@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <animNode>
   <m_Name>ProjectYakuza_DD_BatIdle</m_Name>
-  <m_AnimName>Bob_IdleAimBat</m_AnimName>
+  <m_AnimName>ProjectYakuza_DD_BatReady</m_AnimName>
   <m_Priority>4</m_Priority>
   <m_ConditionPriority>150</m_ConditionPriority>
   <m_BlendTime>0.28</m_BlendTime>
@@ -22,7 +22,7 @@
   </m_SubStateBoneWeights>
   <m_SpeedScale>1.0</m_SpeedScale>
   <m_Looped>true</m_Looped>
-  <m_maxTorsoTwist>45</m_maxTorsoTwist>
+  <m_maxTorsoTwist>0</m_maxTorsoTwist>
   <m_Conditions>
     <m_Name>ProjectYakuzaActive</m_Name>
     <m_Type>BOOL</m_Type>

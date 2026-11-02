@@ -227,4 +227,18 @@ customView=W.register(impactBase.id,customProfile)
 check(customView.impactFeedback=='unarmed','omitted family inherits base style feedback')
 
 
+for _,case in ipairs({{id='bottle',item='ProjectYakuza.IntactBeerBottle',prefix='Bottle'},{id='crate',item='ProjectYakuza.BeerCrate',prefix='Crate'}})do
+ PY.resetPlayer(p,'profile_test');clock=clock+2000;p.attacking=false;p.held=weapon(case.item);p.data.ProjectYakuzaStyle=original.id;W.sync(p)
+ local view=PY.getPlayerStyle(p)
+ check(view.weaponProfile==case.id and W.profile(original.id,p.held)==case.id,'separate supplied object profile '..case.id)
+ check(#view.lightAttacks==3 and view.lightAttacks[1].animation=='ProjectYakuza_DD_'..case.prefix..'Light01','object-specific original light animation '..case.id)
+ p:AttemptAttack();check(PY.stateFor(p).active and PY.stateFor(p).step==1 and p.vars.ProjectYakuzaMove=='dd_'..case.id..'_light_01','object-specific native light route '..case.id)
+ finish();PY.resetPlayer(p,'heavy_test');p.attacking=false;clock=clock+1000
+ check(PY.queueFinisher(p) and PY.stateFor(p).finisherMove.nodeValue=='dd_'..case.id..'_heavy','object heavy uses its own source motion '..case.id)
+ finish();PY.resetPlayer(p,'profile_test')
+ check(view.actions.block.animation=='ProjectYakuza_DD_'..case.prefix..'Guard','object-specific walking guard '..case.id)
+ check((view.actions.heatAction~=nil)==(case.id=='bottle'),'crate cannot borrow bottle Heat Action')
+ check(view.actions.styleEntry==original.actions.styleEntry and view.actions.quickstep==original.actions.quickstep,'shared style systems retained '..case.id)
+end
+
 return true,'PASS '..checks..' real-weapon style, sharp/blunt combo, heavy, reach, damage and isolation checks'

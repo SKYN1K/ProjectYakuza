@@ -91,7 +91,7 @@ local function setReadyVariables(player, style, s)
     if visual.linkedDouble~=linked then player:setVariable("ProjectYakuzaLinkedDouble",linked);visual.linkedDouble=linked end
     if visual.style~=style.id then player:setVariable("ProjectYakuzaStyle",style.id);visual.style=style.id end
     local enabled=style.groundAttacks~=nil
-    if visual.groundEnabled~=enabled then player:setVariable("DFCGroundEnabled",enabled);visual.groundEnabled=enabled end
+    if visual.groundEnabled~=enabled then player:setVariable("ProjectYakuzaGroundEnabled",enabled);visual.groundEnabled=enabled end
     local index=ProjectYakuza.groundNext[player:getPlayerNum()] or 1
     if enabled and visual.groundIndex~=index then player:setVariable("ProjectYakuzaStompVariant",tostring(index));visual.groundIndex=index end
 end

@@ -56,7 +56,7 @@ public class LocomotionAssetProbe {
     for(String[] r:reject){String original="";for(int i=0;i<conditions.size();i++){var c=conditions.get(i);if(c.getElementsByTagName("m_Name").item(0).getTextContent().equals(r[0]))original=c.getElementsByTagName("m_Value").item(0).getTextContent();}set.invoke(vars,r[0],r[1]);if(!((List)method.invoke(state,vars,new ArrayList<>())).isEmpty())throw new AssertionError("fallback "+p+" "+r[0]);set.invoke(vars,r[0],original);tests++;}
    }
   }
-  if(nodes!=10)throw new AssertionError("node count "+nodes);
-  System.out.println("PASS 13 native locomotion clips / "+samples+" finite bone samples and "+tests+" native selector/fallback contracts across 10 nodes; no game/GPU startup");
+  if(nodes!=17)throw new AssertionError("node count "+nodes);
+  System.out.println("PASS 13 native locomotion clips / "+samples+" finite bone samples and "+tests+" native selector/fallback contracts across 17 nodes; no game/GPU startup");
  }
 }

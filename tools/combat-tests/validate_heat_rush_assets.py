@@ -35,7 +35,7 @@ assert sha(reverse['commandSource'])==reverse['commandSha256']
 (w/'heat-rush-prop-contract.tsv').write_text('\n'.join(contracts),encoding='utf-8')
 assert not list((mod/'42/media').rglob('*Barrage*'))
 assert all(len(path)==225 and all(math.isfinite(v)for row in path for v in row)for path in rush['paths'])
-assert len(list((mod/'42/media/AnimSets/player').rglob('ProjectYakuza_MP_*.xml')))==350
+assert len(list((mod/'42/media/AnimSets/player').rglob('ProjectYakuza_MP_*.xml')))==406
 assert abs(rush['pathScale']-.664628963721426)<1e-9
 for record,path in zip(rush['clips'],rush['rawPaths']):
     from types import ModuleType

@@ -204,7 +204,7 @@ function N.clearRemote(id)
         p:setVariable("ProjectYakuzaRemoteObserver",false)
         p:setVariable("ProjectYakuzaRemoteCycle","")
         p:setVariable("ProjectYakuzaMove","");p:setVariable("ProjectYakuzaWeaponProfile","")
-        p:setVariable("ProjectYakuzaLinkedDouble",false);p:setVariable("DFCGroundEnabled",false);p:setVariable("ProjectYakuzaRemoteChargePower","0")
+        p:setVariable("ProjectYakuzaLinkedDouble",false);p:setVariable("ProjectYakuzaGroundEnabled",false);p:setVariable("ProjectYakuzaRemoteChargePower","0")
         if ProjectYakuza.HeatAura then ProjectYakuza.HeatAura.clear(p) end
         if ProjectYakuza.AttackEffects then ProjectYakuza.AttackEffects.clear(p)end
         if ProjectYakuza.ChargeEffects then ProjectYakuza.ChargeEffects.clear(p)end
@@ -234,7 +234,7 @@ function N.applyState(p,packet,s)
     ProjectYakuza.Heat.states[p]=ProjectYakuza.Heat.states[p] or {}
     local heat=ProjectYakuza.Heat.states[p];heat.extreme=packet.extreme;heat.fuel=packet.fuel;heat.attackHeatSpeed=packet.attackHeatSpeed
     p:setVariable("ProjectYakuzaActive",packet.equipped);p:setVariable("ProjectYakuzaStyle",packet.equipped and packet.style or "")
-    p:setVariable("ProjectYakuzaLinkedDouble",packet.linked);p:setVariable("DFCGroundEnabled",packet.ground)
+    p:setVariable("ProjectYakuzaLinkedDouble",packet.linked);p:setVariable("ProjectYakuzaGroundEnabled",packet.ground)
     p:setVariable("ProjectYakuzaMove",packet.move)
     p:setVariable("ProjectYakuzaWeaponProfile",packet.equipped and (packet.weaponProfile or "") or "")
     p:setVariable("ProjectYakuzaRemoteChargePower",tostring(packet.chargePower or 0))

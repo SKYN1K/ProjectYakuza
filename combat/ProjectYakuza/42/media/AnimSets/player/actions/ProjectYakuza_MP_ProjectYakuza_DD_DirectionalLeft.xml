@@ -14,19 +14,4 @@
     <boneName>Bip01</boneName>
     <weight>1</weight>
   </m_SubStateBoneWeights>
-  <m_Conditions>
-    <m_Name>ProjectYakuzaRemoteObserver</m_Name>
-    <m_Value>true</m_Value>
-    <m_Type>BOOL</m_Type>
-  </m_Conditions>
-  <m_Conditions>
-    <m_Name>ProjectYakuzaRemoteClip</m_Name>
-    <m_Value>ProjectYakuza_DD_DirectionalLeft</m_Value>
-    <m_Type>STRING</m_Type>
-  </m_Conditions>
-  <m_Conditions>
-    <m_Name>ProjectYakuzaRemoteCycle</m_Name>
-    <m_Value>0</m_Value>
-    <m_Type>STRING</m_Type>
-  </m_Conditions>
-</animNode>
+<m_Conditions><m_Name>ProjectYakuzaRemoteObserver</m_Name><m_Type>BOOL</m_Type><m_Value>true</m_Value></m_Conditions><m_Conditions><m_Name>ProjectYakuzaRemoteClip</m_Name><m_Type>STRING</m_Type><m_Value>ProjectYakuza_DD_DirectionalLeft</m_Value></m_Conditions><m_Conditions><m_Name>ProjectYakuzaRemoteCycle</m_Name><m_Type>STRING</m_Type><m_Value>0</m_Value></m_Conditions></animNode>

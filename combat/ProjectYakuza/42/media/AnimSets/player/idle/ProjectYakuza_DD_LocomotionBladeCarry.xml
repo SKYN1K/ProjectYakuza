@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <animNode>
   <m_Name>ProjectYakuza_DD_LocomotionBladeCarry</m_Name>
-  <m_AnimName>Bob_IdleBat</m_AnimName>
+  <m_AnimName>ProjectYakuza_DD_BladeRelaxedIdle</m_AnimName>
   <m_BlendTime>0.25</m_BlendTime>
   <m_SpeedScale>1</m_SpeedScale>
   <m_Transitions>

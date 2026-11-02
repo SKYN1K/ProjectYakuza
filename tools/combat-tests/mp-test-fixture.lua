@@ -920,7 +920,7 @@ do
  function bottle:getModData()return self.data end
  p.hand=bottle
  local function neutral(extra)
-  local packet={weaponProfile='bat',move='dd_bat_light_01',clip='',swing=8000,heat=50,fuel=50,extreme=false,rightAim=true,comboBusy=false}
+  local packet={weaponProfile='bottle',move='dd_bottle_light_01',clip='',swing=8000,heat=50,fuel=50,extreme=false,rightAim=true,comboBusy=false}
   for k,v in pairs(extra or {})do packet[k]=v end
   snapshot(p,packet)
  end

@@ -12,7 +12,7 @@ Find these entries in the game's debug/admin item spawner, or use the full ID in
 
 ## Dragon of Dojima
 
-With DoD active, equip a bottle in the primary hand. The existing Short Blunt profile supplies the light combo, heavy, ground attack, walking guard and quickstep support. Those weapon systems remain style exclusive.
+With DoD active, equip a bottle in the primary hand. The dedicated bottle profile supplies the light combo, heavy, ground attack, walking guard and quickstep support. Those weapon systems remain style exclusive.
 
 Hold physical RMB and press the rebindable Heat Action input (default MMB) outside a combo near an eligible standing target. One heat stock is required; Extreme Heat can pay the equivalent fuel. Normal combo MMB heavies retain their existing behavior. Ordinary drink bottles, broken bottles and unrelated blunt weapons cannot trigger this action.
 

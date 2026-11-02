@@ -6,8 +6,8 @@
   <m_ConditionPriority>180</m_ConditionPriority>
   <m_Looped>false</m_Looped>
   <m_SpeedScale>1</m_SpeedScale>
-  <m_BlendTime>0.07</m_BlendTime>
-  <m_BlendOutTime>0.1</m_BlendOutTime>
+  <m_BlendTime>.14</m_BlendTime>
+  <m_BlendOutTime>.20</m_BlendOutTime>
   <m_SyncTrackingEnabled>false</m_SyncTrackingEnabled>
   <m_Conditions>
     <m_Name>PerformingAction</m_Name>

@@ -11,7 +11,7 @@
 <m_SpeedScale>ProjectYakuzaCombatSpeed</m_SpeedScale>
 <m_SyncTrackingEnabled>false</m_SyncTrackingEnabled>
 <m_Conditions><m_Name>ProjectYakuzaActive</m_Name><m_Type>BOOL</m_Type><m_Value>true</m_Value></m_Conditions>
-<m_Conditions><m_Name>DFCGroundEnabled</m_Name><m_Type>BOOL</m_Type><m_Value>true</m_Value></m_Conditions>
+<m_Conditions><m_Name>ProjectYakuzaGroundEnabled</m_Name><m_Type>BOOL</m_Type><m_Value>true</m_Value></m_Conditions>
 <m_Conditions><m_Name>ProjectYakuzaStompVariant</m_Name><m_Type>STRING</m_Type><m_Value>1</m_Value></m_Conditions>
 <m_Conditions><m_Name>AimFloorAnim</m_Name><m_Type>BOOL</m_Type><m_Value>true</m_Value></m_Conditions>
 <m_Events><m_EventName>BlockMovement</m_EventName><m_Time>Start</m_Time><m_ParameterValue>TRUE</m_ParameterValue></m_Events>

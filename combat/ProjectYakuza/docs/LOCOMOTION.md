@@ -1,27 +1,31 @@
-# Dragon of Dojima locomotion (0.56.0)
+# Dragon of Dojima locomotion (0.75.0)
 
-Ordinary non-aimed running uses Kiryu's full Yakuza 6 P_KRU_MOV_run_ftl loop. The ftl/ftr files are complete phase-offset cycles, so a single complete ftl cycle is used without concatenation or invented motion. Unarmed, bat, knife and blade variants use native finger/prop grip conventions. This does not add a sprint or new run-start/stop/turn motion.
+DoD uses Kiryu's supplied Yakuza 6 motion while preserving PZ movement rules. Only the selected DoD style and its matching equipment profile use these selectors. No movement polling/controller or new network loop is added.
 
-With RMB released, bats and long blades now select the existing native Bob_IdleBat, Bob_WalkBat and Bob_WalkSlow_Bat holds; knives use native Bob_Idle, Bob_Walk and Bob_WalkSlow. This removes the frozen combat-ready arm pose from relaxed idle, walking and the walking portion of the run blend. Native legs, torso, hand grips and weapon transforms stay together. No motion files were created or edited. The previous source-arm carry composites remain supplied as unselected reference assets; aimed combat stances and custom weapon attacks remain unchanged. Native source paths/hashes are recorded in locomotion-nodes.json.
+## Walking and sprinting
 
-## Movement and blending
+Unarmed ordinary walking and slow walking use the first complete 65-frame gait cycle from P_KRU_MOV_wlk_ftl. All 66 boundary-inclusive samples are preserved and retimed to the corresponding native Bob_Walk/Bob_WalkSlow cycle. Sprint uses P_KRU_MOV_run_ftl_ex, a supplied run variant, retimed to Bob_Sprint. Native Translation_Data, distance per second, movement scalars and ordinary safety fallbacks remain. This is a supplied sprint candidate, not a claim to import the original game's locomotion controller.
 
-All new nodes blend in/out over 0.25 seconds, with explicit blend transitions among the new nodes and existing weapon combat idles. They do not force heading, lock input, teleport the character or poll controls. The native animation state machine chooses the correct movement group. Native healthy walk blends and the existing walk-speed scalar remain in use.
+Ordinary running retains the previous complete P_KRU_MOV_run_ftl cycle, 1.0 healthy cadence and compensated native travel. Its healthy walking blend now uses the supplied walk cycle. The run body motion and travel have not been changed in this update.
 
-B42 consumes Translation_Data for deferred travel. The running clips therefore keep the existing native Bob_Run movement track, resampled to Kiryu's full 32/30-second loop, while using his supplied body motion. The healthy run blend speed is now 1.0 rather than 1.28, slowing visible stride cadence by 21.875%. Translation_Data distances are multiplied by 1.28, preserving the previous travel per second. All existing body/finger/prop keyframes and their source times remain unchanged; only the deferred travel track changes. Native running is the reference, and exact live foot planting remains a visual test. Native clothing/helper bones are retained. The original body run loop has no seam adjustment or invented frames. Runtime crossfades provide the transitions.
+## Weapons
 
-The selectors require ProjectYakuzaActive=true, ProjectYakuzaStyle=dragon_of_dojima, the matching ProjectYakuzaWeaponProfile, Aim=false, no injury, no trees, no sneaking, no overburdened state and no turn-around. Idle holds additionally exclude native 90-degree turns. Existing sprint, crouch, limp, tree and special-action nodes remain available. The unarmed walking/idle and aimed stance/leg behavior remain unchanged.
+Bat holds use WPA. Katana/long-blade holds use WPD, matching the blade attacks; the previous WPN carry reference was a mismatched source. Bottles use suitable WPA one-handed blunt motion and the crate uses WPC bulky-object motion. The profile assignment is a suitable-motion selection and does not reproduce Dragon Engine object IK.
 
-No new Lua/controller/network loop is introduced. Existing equipped-style/profile variables are already synchronized to remote players; PZ handles normal movement replication. Both ends need matching files. Live MP latency and graphics have not been tested.
+Ready/relaxed holds use the matching stdA/stdB loops. Katana walking/running uses its supplied wpd movement variants; crate walking uses wpc. Other weapons use Kiryu's supplied battle walk/general run arm motion. Walking and slow walking retain native PZ legs, torso, head, helper bones and deferred travel. Source arm world orientations are converted back to local transforms under that native torso, avoiding the earlier local-space torso mismatch and sideways head overlay. Running/sprinting combines those source arms with the existing Kiryu run or newly converted sprint body. Native hand-to-prop offsets are recomputed every frame during conversion.
 
-## Framework authors
+Bat, blade, bottle and crate profiles have relaxed idle, walk, slow walk, run and sprint clips plus an aimed hold. Knife carry/ready/run remains native; its custom attack blends receive the same smoothing. Native blade/bat/knife attack motion and item scripts remain unchanged. Earlier disabled source reference clips remain supplied for future repair; active selectors choose the new corrected clips.
 
-Locomotion is authored through ordinary PZ AnimSets XML, alongside combat actions. Place uniquely named nodes in your addon's media/AnimSets/player/run, idle or movement folders, use your own style ID/profile conditions, and supply your own converted clips. The DoD nodes do not apply to other registered styles. See locomotion-nodes.json for the exact delivered paths and locomotion-assets.json for supplied-source/native hashes and operations.
+The katana ready selectors disable extra native torso twisting. Its native mesh edges are checked against the neck/head through all hold/movement poses and sampled crossfades. These checks cover standard PZ proportions, not clothing, every live look-at layer or customized skeletons.
 
-Preserve a valid native deferred-movement track when replacing running/walking; an in-place body clip alone can lose travel. Keep native safety fallbacks for injuries, sneaking, trees and turns. When combining a hold with walking, reuse native lower-body tracks or a proper upper-body layer instead of replacing moving legs with a stationary stance. Match hand-prop offsets to the equipped weapon family. Use source-only motion and appropriate authorizations; no graphical/audio assets are generated by this framework.
+## Blending and fallbacks
 
-## Validation and remaining limits
+Locomotion entry/recovery blends are 0.25 seconds, aimed holds 0.28 seconds. Custom weapon melee/guard entry is 0.14 seconds and recovery 0.20 seconds. Aimed holds/guards keep native walking legs. Source loop phases and native movement blends remain in use. Source sample interpolation during retargeting/retiming does not invent motion or artwork.
 
-Native import checks cover 13 clips / 13,605 finite bone samples, 100 selector/fallback contracts and nonzero movement tracks. Source/native comparison covers 13,284 local samples, including unchanged native torso/head/legs. Native FK validates 576 hand-prop pairs. See VALIDATION_0.74.0.md and carry-repair-053.json.
+Selectors require the selected DoD style, matching profile and Aim=false for relaxed locomotion. They reject injury, trees, sneaking, overburdened state and turn-around; idle additionally excludes native 90-degree turns. Native special states retain control. Existing equipped-style/profile variables already replicate normal movement to MP observers; attacks additionally use event-free observer nodes. Matching files are required on server and clients.
 
-Native body movement plus source arm holding is a retargeted composition; it does not import Dragon Engine IK. GPU appearance, weapon clearance and exact foot planting remain live verification items. PZ was kept closed.
+## Authoring and validation
+
+Locomotion uses ordinary AnimSets XML. Addon authors can supply their own named clips/nodes, style/profile conditions, upper-body masks, native deferred travel and safety fallbacks. Keep source motion, model attachments and grips compatible. Do not add per-frame actor displacement to normal locomotion.
+
+See [weapon motion provenance](weapon-motion-assets.json), [walk/sprint provenance](style-travel-assets.json), [selector inventory](locomotion-nodes.json) and [validation](VALIDATION_0.75.0.md). Offline checks compare source/native samples, hand-prop FK, movement tracks, mesh clearance, native import and selector isolation. Live foot planting, clothing clearance and MP latency still need assessment after restarting PZ. The game was kept closed.

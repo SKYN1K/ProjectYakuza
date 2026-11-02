@@ -1,5 +1,5 @@
 {
-  "operation": "Selector-only repair: DoD armed aim and run use existing B42 weapon-safe clips, retaining custom Yakuza attack and guard clips, native walking legs, existing style/equipment scopes and blends. No animation, texture, model or audio assets created or modified. Retargeted hold/run clips remain disabled for future repair.",
+  "operation": "DoD native-safe knife selectors retained. Bat and blade selectors now use repaired original-source weapon motions; details and validation contracts are in weapon-motion-assets.json.",
   "nativeInputs": [
     {
       "path": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleAim1Hand.x",
@@ -77,83 +77,83 @@
   "selectors": [
     {
       "path": "42/media/AnimSets/player/aim/ProjectYakuza_DD_BatIdle.xml",
-      "beforeSha256": "8f45a021f1dbe945342be307a308603c838216ebb5b3cf5823eae9e696d5be17",
-      "sha256": "0ec6d97d365867f69f446115c1c9bc780afe8ee3fdfc716d6b347d09a5f8b83b",
-      "clip": "Bob_IdleAimBat"
+      "beforeSha256": "e18c58e7e1f2b1cb38916d6779ef9163e852b39ef59a2fa8eef2bb165e478d22",
+      "sha256": "bee5af563594e7dfcf2b67b876a3e094848984032d57ebc3274f138948549020",
+      "clip": "ProjectYakuza_DD_BatReady"
     },
     {
       "path": "42/media/AnimSets/player/aim-strafe/ProjectYakuza_DD_BatIdle.xml",
-      "beforeSha256": "8f45a021f1dbe945342be307a308603c838216ebb5b3cf5823eae9e696d5be17",
-      "sha256": "0ec6d97d365867f69f446115c1c9bc780afe8ee3fdfc716d6b347d09a5f8b83b",
-      "clip": "Bob_IdleAimBat"
+      "beforeSha256": "e18c58e7e1f2b1cb38916d6779ef9163e852b39ef59a2fa8eef2bb165e478d22",
+      "sha256": "bee5af563594e7dfcf2b67b876a3e094848984032d57ebc3274f138948549020",
+      "clip": "ProjectYakuza_DD_BatReady"
     },
     {
       "path": "42/media/AnimSets/player/run/ProjectYakuza_DD_LocomotionBatRun.xml",
-      "beforeSha256": "34d5f89dfb64475a37516b4ffa5f63497bc6ecca646a0f2dc0dd9cb678f2732e",
-      "sha256": "14c307c9309f1ba648a199d019e77353422021739ffac93790ad90e3965144aa",
+      "beforeSha256": "210e77f532ec2ae60489b54388fb4d07d717cffb6a94ad69407169c658ae3489",
+      "sha256": "d2940119f727fffb3c19bebd9d62933381c3d822cd77fa2fbde9ff0aa353a1e4",
       "clips": [
-        "Bob_RunBat",
-        "Bob_RunLightLimpL_Bat",
-        "Bob_RunLightLimpR_Bat",
-        "Bob_WalkBat",
-        "Bob_WalkHeavyLimpL_Bat",
-        "Bob_WalkHeavyLimpR_Bat",
+        "ProjectYakuza_DD_BatRelaxedWalk",
+        "Bob_WalkLightLimpR_Bat",
         "Bob_WalkLightLimpL_Bat",
-        "Bob_WalkLightLimpR_Bat"
+        "ProjectYakuza_DD_BatRelaxedRun",
+        "Bob_RunLightLimpR_Bat",
+        "Bob_RunLightLimpL_Bat",
+        "Bob_WalkHeavyLimpR_Bat",
+        "Bob_WalkHeavyLimpL_Bat"
       ]
     },
     {
       "path": "42/media/AnimSets/player/aim/ProjectYakuza_DD_KnifeIdle.xml",
-      "beforeSha256": "7ed5442a7381efb203afb7dd82e54f28f642640fdbfe68a8790801ee5a720162",
-      "sha256": "606a041320e9f2583f1cc07cb26ba7a6ab904741c078643724d2e41abd91196a",
+      "beforeSha256": "ab041d95340f2039e1778e99a5ea4284afe35b92168bdb070b44846be5a2a312",
+      "sha256": "ab041d95340f2039e1778e99a5ea4284afe35b92168bdb070b44846be5a2a312",
       "clip": "Bob_IdleAim1Hand"
     },
     {
       "path": "42/media/AnimSets/player/aim-strafe/ProjectYakuza_DD_KnifeIdle.xml",
-      "beforeSha256": "7ed5442a7381efb203afb7dd82e54f28f642640fdbfe68a8790801ee5a720162",
-      "sha256": "606a041320e9f2583f1cc07cb26ba7a6ab904741c078643724d2e41abd91196a",
+      "beforeSha256": "ab041d95340f2039e1778e99a5ea4284afe35b92168bdb070b44846be5a2a312",
+      "sha256": "ab041d95340f2039e1778e99a5ea4284afe35b92168bdb070b44846be5a2a312",
       "clip": "Bob_IdleAim1Hand"
     },
     {
       "path": "42/media/AnimSets/player/run/ProjectYakuza_DD_LocomotionKnifeRun.xml",
-      "beforeSha256": "cebd554996d49aceea107e0a46269de3facd1499e79eeeee65b286b3779fd986",
-      "sha256": "e548558edc9143601fadeacdae057f599ac045745308be6d7d676fccdea0ab21",
+      "beforeSha256": "dfcbf281e4410f6472204832644a9fe240d43f68952bed736539144d1d2f4700",
+      "sha256": "dfcbf281e4410f6472204832644a9fe240d43f68952bed736539144d1d2f4700",
       "clips": [
-        "Bob_Run",
-        "Bob_RunLightLimpL",
-        "Bob_RunLightLimpR",
         "Bob_Walk",
-        "Bob_WalkHeavyLimpL",
-        "Bob_WalkHeavyLimpR",
+        "Bob_WalkLightLimpR",
         "Bob_WalkLightLimpL",
-        "Bob_WalkLightLimpR"
+        "Bob_Run",
+        "Bob_RunLightLimpR",
+        "Bob_RunLightLimpL",
+        "Bob_WalkHeavyLimpR",
+        "Bob_WalkHeavyLimpL"
       ]
     },
     {
       "path": "42/media/AnimSets/player/aim/ProjectYakuza_DD_BladeIdle.xml",
-      "beforeSha256": "caca3bd4c0389fd83f4c93d041e7fb76e14051a4422c1b3c380118ef611c6b42",
-      "sha256": "138cea670c251de2b84d37d1cfdc9ca4b1ca26a42eb5c4ff5771dddeea623f59",
-      "clip": "Bob_IdleAimBat"
+      "beforeSha256": "661326dc7ea05fc2dd5083a004fdd9cab6200aaf945b02b3232161d2050c4fe0",
+      "sha256": "89f9007ab2dfefee4f4790c0fae1359d59827daab6e8535e9e32c190ffd61ffd",
+      "clip": "ProjectYakuza_DD_BladeReady"
     },
     {
       "path": "42/media/AnimSets/player/aim-strafe/ProjectYakuza_DD_BladeIdle.xml",
-      "beforeSha256": "caca3bd4c0389fd83f4c93d041e7fb76e14051a4422c1b3c380118ef611c6b42",
-      "sha256": "138cea670c251de2b84d37d1cfdc9ca4b1ca26a42eb5c4ff5771dddeea623f59",
-      "clip": "Bob_IdleAimBat"
+      "beforeSha256": "661326dc7ea05fc2dd5083a004fdd9cab6200aaf945b02b3232161d2050c4fe0",
+      "sha256": "89f9007ab2dfefee4f4790c0fae1359d59827daab6e8535e9e32c190ffd61ffd",
+      "clip": "ProjectYakuza_DD_BladeReady"
     },
     {
       "path": "42/media/AnimSets/player/run/ProjectYakuza_DD_LocomotionBladeRun.xml",
-      "beforeSha256": "23abbc0e2b44f4d62c9f67aa8853590b97277bd1694e787c42c895be771d9f55",
-      "sha256": "23337a1bdfe99df840898ddf436360d2435670e6fad78d01bf95a14377c22206",
+      "beforeSha256": "3e4a3a3616908cb791ae6b1d0eeab2b06e9f12405624529f3d0dc022d7ee5196",
+      "sha256": "7e3ab36fe3f3e99466feb6da9decbbfab84f6684de3bbcf85f48bb63dcd520b6",
       "clips": [
-        "Bob_RunBat",
-        "Bob_RunLightLimpL_Bat",
-        "Bob_RunLightLimpR_Bat",
-        "Bob_WalkBat",
-        "Bob_WalkHeavyLimpL_Bat",
-        "Bob_WalkHeavyLimpR_Bat",
+        "ProjectYakuza_DD_BladeRelaxedWalk",
+        "Bob_WalkLightLimpR_Bat",
         "Bob_WalkLightLimpL_Bat",
-        "Bob_WalkLightLimpR_Bat"
+        "ProjectYakuza_DD_BladeRelaxedRun",
+        "Bob_RunLightLimpR_Bat",
+        "Bob_RunLightLimpL_Bat",
+        "Bob_WalkHeavyLimpR_Bat",
+        "Bob_WalkHeavyLimpL_Bat"
       ]
     }
   ]

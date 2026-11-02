@@ -1,23 +1,35 @@
 {
   "nodes": [
-    "42/media/AnimSets/player/run/ProjectYakuza_DD_LocomotionRun.xml",
-    "42/media/AnimSets/player/run/ProjectYakuza_DD_LocomotionBatRun.xml",
     "42/media/AnimSets/player/idle/ProjectYakuza_DD_LocomotionBatCarry.xml",
-    "42/media/AnimSets/player/movement/ProjectYakuza_DD_LocomotionBatWalk.xml",
-    "42/media/AnimSets/player/run/ProjectYakuza_DD_LocomotionKnifeRun.xml",
-    "42/media/AnimSets/player/idle/ProjectYakuza_DD_LocomotionKnifeCarry.xml",
-    "42/media/AnimSets/player/movement/ProjectYakuza_DD_LocomotionKnifeWalk.xml",
-    "42/media/AnimSets/player/run/ProjectYakuza_DD_LocomotionBladeRun.xml",
     "42/media/AnimSets/player/idle/ProjectYakuza_DD_LocomotionBladeCarry.xml",
-    "42/media/AnimSets/player/movement/ProjectYakuza_DD_LocomotionBladeWalk.xml"
+    "42/media/AnimSets/player/idle/ProjectYakuza_DD_LocomotionBottleCarry.xml",
+    "42/media/AnimSets/player/idle/ProjectYakuza_DD_LocomotionCrateCarry.xml",
+    "42/media/AnimSets/player/idle/ProjectYakuza_DD_LocomotionKnifeCarry.xml",
+    "42/media/AnimSets/player/movement/ProjectYakuza_DD_LocomotionBatWalk.xml",
+    "42/media/AnimSets/player/movement/ProjectYakuza_DD_LocomotionBladeWalk.xml",
+    "42/media/AnimSets/player/movement/ProjectYakuza_DD_LocomotionBottleWalk.xml",
+    "42/media/AnimSets/player/movement/ProjectYakuza_DD_LocomotionCrateWalk.xml",
+    "42/media/AnimSets/player/movement/ProjectYakuza_DD_LocomotionKnifeWalk.xml",
+    "42/media/AnimSets/player/movement/ProjectYakuza_DD_LocomotionWalk.xml",
+    "42/media/AnimSets/player/run/ProjectYakuza_DD_LocomotionBatRun.xml",
+    "42/media/AnimSets/player/run/ProjectYakuza_DD_LocomotionBladeRun.xml",
+    "42/media/AnimSets/player/run/ProjectYakuza_DD_LocomotionBottleRun.xml",
+    "42/media/AnimSets/player/run/ProjectYakuza_DD_LocomotionCrateRun.xml",
+    "42/media/AnimSets/player/run/ProjectYakuza_DD_LocomotionKnifeRun.xml",
+    "42/media/AnimSets/player/run/ProjectYakuza_DD_LocomotionRun.xml",
+    "42/media/AnimSets/player/sprint/ProjectYakuza_DD_LocomotionBatSprint.xml",
+    "42/media/AnimSets/player/sprint/ProjectYakuza_DD_LocomotionBladeSprint.xml",
+    "42/media/AnimSets/player/sprint/ProjectYakuza_DD_LocomotionBottleSprint.xml",
+    "42/media/AnimSets/player/sprint/ProjectYakuza_DD_LocomotionCrateSprint.xml",
+    "42/media/AnimSets/player/sprint/ProjectYakuza_DD_LocomotionSprint.xml"
   ],
   "blendSeconds": 0.25,
   "runHealthySpeedScale": 1,
   "nativeRunCycleSeconds": 0.6666666666666666,
   "sourceRunCycleSeconds": 1.0666666666666667,
-  "operation": "DoD-only non-aimed running uses 21.875% slower stride cadence with compensated native travel. Actual running speed is unchanged. Existing injury/tree/turn fallbacks and native walking legs are retained.",
+  "operation": "DoD-only native-legged weapon walk composites, source weapon holds/runs, cadence-matched unarmed source walking and sprinting. See weapon-motion-assets.json and style-travel-assets.json.",
   "nativeTravelScale": 1.28,
-  "relaxedWeaponHolds": "Existing native Bob idle/walk/slow-walk, using Bat holds for bats/blades and ordinary native holds for knives. The former frozen source arm composites are not selected. Kiryu run clips and compensated run speed remain unchanged.",
+  "relaxedWeaponHolds": "Source world-arm motion with native walking torso/head/legs for bat, blade, bottle and crate; native knife holds. See weapon-motion-assets.json.",
   "nativeCarryClips": [
     {
       "name": "Bob_Idle",
@@ -50,5 +62,5 @@
       "sha256": "cf6a953adbea195f3d7e6f3a4a3a4955204ebe7b97530c26f82809c325e2c2f9"
     }
   ],
-  "armedRun": "Existing B42 Bob_Run/Bob_RunBat, native blend clips, 0.80 healthy phase scale and native footstep phases; custom run clips remain available but are not selected for armed locomotion."
+  "armedRun": "Cadence-corrected Kiryu run body with source weapon arm motion and native hand grips; native knife run. Weapon sprint uses the cadence-matched source sprint body."
 }

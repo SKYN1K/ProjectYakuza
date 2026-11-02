@@ -39,7 +39,7 @@ ProjectYakuza.registerStyle({
         {sound="ProjectYakuza_SonOfAGun",title="Son of a Gun"},
         {sound="ProjectYakuza_PushMeUnderWater",title="Push Me Under Water"},
         {sound="ProjectYakuza_OutlawsLullaby",title="Outlaw's Lullaby"},
-        {sound="ProjectYakuza_FunkGoesOnKiwami",title="Funk Goes On ÃƒÆ’Ã‚Â¦Ãƒâ€šÃ‚Â¥Ãƒâ€šÃ‚Âµ"},
+        {sound="ProjectYakuza_FunkGoesOnKiwami",title="Funk Goes On ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¦ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¥ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Âµ"},
         {sound="ProjectYakuza_PushMeDeepUnderwater",title="Push Me Deep Underwater"},
         {sound="ProjectYakuza_LullabyOfOutlaws",title="Lullaby of Outlaws"},
         {sound="ProjectYakuza_ReceiveAndBelieveYou",title="Receive and Believe You"},
@@ -157,7 +157,7 @@ if ProjectYakuza.Weapons then
         id="bat",impactFeedback="blunt",attackSpeed=1.4,quickstepCancelLights=true,standaloneHeavy=true,
         items={"Base.BaseballBat","Base.BaseballBat_Crafted","Base.BaseballBat_Metal","Base.BaseballBat_Nails",
             "Base.ShortBat","Base.ShortBat_Nails","Base.Nightstick","Base.MetalBar","Base.MetalPipe",
-            "Base.BoneClub","Base.LargeBoneClub","Base.LongSpikedClub","ProjectYakuza.IntactBeerBottle","ProjectYakuza.IntactWineBottle","ProjectYakuza.IntactWhiskeyBottle","ProjectYakuza.BeerCrate"},
+            "Base.BoneClub","Base.LargeBoneClub","Base.LongSpikedClub"},
         sounds=sounds,
         lightAttacks={
             {animation="ProjectYakuza_DD_BatLight01",nodeValue="dd_bat_light_01",duration=40/30/1.4,speed=1.4,impact=11/40,chainAt=24/40,quickstepCancelAt=12/40,damageMultiplier=1,hitResponse=false},
@@ -166,9 +166,6 @@ if ProjectYakuza.Weapons then
         },
         groundAttacks={{animation="ProjectYakuza_DD_BatGround",nodeValue="dd_bat_ground",duration=55/30/1.4,speed=1.4,impact=10/55,groundAttack=true,hitResponse=false}},
         actions={
-            heatAction={enabled=true,weaponHeat=true,weaponItems={"ProjectYakuza.IntactBeerBottle","ProjectYakuza.IntactWineBottle","ProjectYakuza.IntactWhiskeyBottle"},motionId="dod_bottle",useExtremeFuel=true,heatStocks=1,noCombo=true,
-                animation="ProjectYakuza_DD_BottleHeat",targetAnimation="ProjectYakuza_DD_BottleHeatVictim",nodeValue="dd_bottle_heat",requiresTarget=true,duration=5,speed=1,hitResponse=false,
-                contacts={{atMs=22/30*1000,damageMultiplier=0,cue="heavyImpact"},{atMs=73/30*1000,damageMultiplier=0,cue="heavyImpact"},{atMs=92/30*1000,damageMultiplier=1.5,cue="heavyImpact"}}},
             finisher={enabled=true,variants={default={enabled=true,animation="ProjectYakuza_DD_BatHeavy",nodeValue="dd_bat_heavy",duration=53/30/1.4,speed=1.4,impact=14/53,damageMultiplier=1.25,hitResponse=false}}},
             block={enabled=true,animation="ProjectYakuza_DD_BatGuard",staminaPerHit=.08},
             quickstep=base.actions.quickstep,
@@ -205,6 +202,36 @@ if ProjectYakuza.Weapons then
             finisher={enabled=true,variants={default={animation="ProjectYakuza_DD_BladeHeavy",nodeValue="dd_blade_heavy",duration=70/30/1.4,speed=1.4,impact=22/70,hitResponse=false,enabled=true,damageMultiplier=1.25}}},
             quickstep=base.actions.quickstep,
             block={enabled=true,animation="ProjectYakuza_DD_BladeGuard",staminaPerHit=.08},
+        },
+    })
+end
+
+if ProjectYakuza.Weapons then
+    local base=ProjectYakuza.getStyle("dragon_of_dojima")
+    local sounds=ProjectYakuza.Weapons.profiles[base.id].bat.sounds
+    ProjectYakuza.Weapons.register(base.id,{
+        id="bottle",impactFeedback="blunt",attackSpeed=1.4,standaloneHeavy=true,quickstepCancelLights=true,
+        items={"ProjectYakuza.IntactBeerBottle","ProjectYakuza.IntactWineBottle","ProjectYakuza.IntactWhiskeyBottle"},sounds=sounds,
+        lightAttacks={{animation="ProjectYakuza_DD_BottleLight01",nodeValue="dd_bottle_light_01",duration=40/30/1.4,speed=1.4,impact=11/40,hitResponse=false,damageMultiplier=1,chainAt=26/40,quickstepCancelAt=12/40},{animation="ProjectYakuza_DD_BottleLight02",nodeValue="dd_bottle_light_02",duration=35/30/1.4,speed=1.4,impact=13/35,hitResponse=false,damageMultiplier=1,chainAt=23/35,quickstepCancelAt=14/35},{animation="ProjectYakuza_DD_BottleLight03",nodeValue="dd_bottle_light_03",duration=47/30/1.4,speed=1.4,impact=15/47,hitResponse=false,damageMultiplier=1,chainAt=31/47,quickstepCancelAt=16/47}},
+        groundAttacks={{animation="ProjectYakuza_DD_BottleGround",nodeValue="dd_bottle_ground",duration=55/30/1.4,speed=1.4,impact=10/55,hitResponse=false,damageMultiplier=1,groundAttack=true}},
+        actions={
+            heatAction={enabled=true,weaponHeat=true,weaponItems={"ProjectYakuza.IntactBeerBottle","ProjectYakuza.IntactWineBottle","ProjectYakuza.IntactWhiskeyBottle"},motionId="dod_bottle",useExtremeFuel=true,heatStocks=1,noCombo=true,
+                animation="ProjectYakuza_DD_BottleHeat",targetAnimation="ProjectYakuza_DD_BottleHeatVictim",nodeValue="dd_bottle_heat",requiresTarget=true,duration=5,speed=1,hitResponse=false,
+                contacts={{atMs=22/30*1000,damageMultiplier=0,cue="heavyImpact"},{atMs=73/30*1000,damageMultiplier=0,cue="heavyImpact"},{atMs=92/30*1000,damageMultiplier=1.5,cue="heavyImpact"}}},
+            finisher={enabled=true,variants={default={animation="ProjectYakuza_DD_BottleHeavy",nodeValue="dd_bottle_heavy",duration=53/30/1.4,speed=1.4,impact=14/53,hitResponse=false,damageMultiplier=1.25}}},
+            quickstep=base.actions.quickstep,
+            block={enabled=true,animation="ProjectYakuza_DD_BottleGuard",staminaPerHit=.08},
+        },
+    })
+    ProjectYakuza.Weapons.register(base.id,{
+        id="crate",impactFeedback="blunt",attackSpeed=1.4,standaloneHeavy=true,quickstepCancelLights=true,
+        items={"ProjectYakuza.BeerCrate"},sounds=sounds,
+        lightAttacks={{animation="ProjectYakuza_DD_CrateLight01",nodeValue="dd_crate_light_01",duration=73/30/1.4,speed=1.4,impact=20/73,hitResponse=false,damageMultiplier=1,chainAt=47/73,quickstepCancelAt=21/73},{animation="ProjectYakuza_DD_CrateLight02",nodeValue="dd_crate_light_02",duration=60/30/1.4,speed=1.4,impact=15/60,hitResponse=false,damageMultiplier=1,chainAt=39/60,quickstepCancelAt=16/60},{animation="ProjectYakuza_DD_CrateLight03",nodeValue="dd_crate_light_03",duration=74/30/1.4,speed=1.4,impact=20/74,hitResponse=false,damageMultiplier=1,chainAt=48/74,quickstepCancelAt=21/74}},
+        groundAttacks={{animation="ProjectYakuza_DD_CrateGround",nodeValue="dd_crate_ground",duration=65/30/1.4,speed=1.4,impact=29/65,hitResponse=false,damageMultiplier=1,groundAttack=true}},
+        actions={
+            finisher={enabled=true,variants={default={animation="ProjectYakuza_DD_CrateHeavy",nodeValue="dd_crate_heavy",duration=66/30/1.4,speed=1.4,impact=22/66,hitResponse=false,damageMultiplier=1.25}}},
+            quickstep=base.actions.quickstep,
+            block={enabled=true,animation="ProjectYakuza_DD_CrateGuard",staminaPerHit=.08},
         },
     })
 end

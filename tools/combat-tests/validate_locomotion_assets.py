@@ -62,14 +62,14 @@ for r in d['clips']:
    values=[pose(frames,anim,f)[foot].translation.y for f in range(r['frames'])];print('RUN foot minimum',foot,values.index(min(values)),min(values),'range',max(values)-min(values))
 (w/'locomotion-prop-contract.tsv').write_text('\n'.join(contracts)+'\n',encoding='utf-8')
 nodeData=json.loads((mod/'docs/locomotion-nodes.json').read_text());import xml.etree.ElementTree as E
-assert len(nodeData['nodes'])==10
+assert len(nodeData['nodes'])==22
 for name in nodeData['nodes']:
  n=E.parse(mod/name).getroot();assert n.findtext('m_BlendTime')=='.25' or float(n.findtext('m_BlendTime'))==.25
  assert n.findtext('m_Looped')=='true'
  if any('Locomotion'+family in name for family in ['Bat','Knife','Blade']):
   knife='LocomotionKnife'in name
-  if '/idle/'in name:assert n.findtext('m_AnimName')==('Bob_Idle'if knife else'Bob_IdleBat')
-  elif '/movement/'in name:assert n.findtext('m_AnimName')==('Bob_Walk'if knife else'Bob_WalkBat')
+  if '/idle/'in name:assert n.findtext('m_AnimName')==('Bob_Idle'if knife else'ProjectYakuza_DD_'+('Bat'if'LocomotionBat'in name else'Blade')+'RelaxedIdle')
+  elif '/movement/'in name:assert n.findtext('m_AnimName')==('Bob_Walk'if knife else'ProjectYakuza_DD_'+('Bat'if'LocomotionBat'in name else'Blade')+'RelaxedWalk')
   assert 'Carry'not in '\n'.join(e.text or ''for e in n.iter('m_AnimName')),'relaxed weapon selectors must not use frozen combat arms'
  assert not any(e.findtext('m_EventName') not in ['Footstep'] for e in n.findall('m_Events'))
  for e in n.findall('m_2DBlends'):

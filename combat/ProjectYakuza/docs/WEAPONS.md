@@ -2,6 +2,12 @@
 
 Available in Project Yakuza 0.44.0, Lua API 3. A weapon profile is an equipment view of an existing style. It is not another selector slot, inventory item or global weapon replacement.
 
+## Object profiles and restored movement (0.75.0)
+
+Bottles and the beer crate now have separate equipment views, bottle and crate, within DoD. The three ProjectYakuza.IntactBeerBottle/IntactWineBottle/IntactWhiskeyBottle IDs use original WPA one-handed blunt gestures with bottle grips; ProjectYakuza.BeerCrate uses original WPC bulky-object gestures. Both supply three lights, a standalone/queued heavy, ground strike and moving guard. Damage/condition/range remain native. The crate's third light has two original source contact markers; the existing native swing pipeline uses its first contact as the canonical hit and preserves the full gesture without adding duplicate damage. Bottle Heat Actions remain bottle-exclusive.
+
+Bat, blade, bottle and crate have corrected source ready/relaxed holds, native-legged weapon walking and Kiryu running/sprinting. The katana uses WPD rather than the mismatched WPN hold source. See [locomotion](LOCOMOTION.md), [motion provenance](weapon-motion-assets.json) and [validation](VALIDATION_0.75.0.md). Other styles and unmapped native items are unaffected.
+
 ## Sharp weapons (0.45.0)
 
 Dragon of Dojima now also owns two distinct supplied-source blade profiles. Select DoD and equip the actual item; existing bindings apply. Each profile has three lights, a standalone/queued x1.25 heavy, a native-targeted ground strike, an upper-body source stance with native walking legs, and post-contact light quickstep cancels. Lights use x1 of the held weapon's damage. The sweeping-blade profile adds source guard entry/hold/hit/exit with native walking legs. The knife source set supplies no guard clips, so knife blocking is unavailable.
@@ -102,7 +108,7 @@ Profile `sounds.heavyImpact` and `sounds.groundImpact` configure optional confir
 
 The server derives primary/supplementary impact family and heavy strength from the registered equipment view. Clients cannot nominate a visual family in an attack request. Observer bursts use the server's captured family even if the displayed equipment has since changed; normal duplicate suppression still applies. There are no new polling loops or attack/damage changes.
 
-Armed ready/run selectors now reference existing B42 poses: `Bob_IdleAim1Hand` for knives, `Bob_IdleAimBat` for bats/long blades, and the native run/weapon-run blend sets. This removes the source torso/head overlay from the weapon-ready stance and the custom armed run. Native walking legs, style-specific conditions and .25/.28-second blends remain. Custom Yakuza attack/guard clips and unarmed Kiryu locomotion are retained. The previously converted aimed/run assets remain disabled for possible later repair. No animation assets were created or edited. [Selector provenance](weapon-pose-selectors.json) records every changed selector and referenced native clip hash. Offline importer checks cannot establish final live mesh clearance.
+The previous native-only ready/run workaround is superseded by the repaired supplied-motion selectors described above. Knife carry and ready clips remain native. Disabled older source reference assets remain available, while active bat/blade selectors use the corrected source motions. [Selector provenance](weapon-pose-selectors.json) records the updated paths and hashes.
 
 ## Per-style Heat rules (0.64.0)
 
