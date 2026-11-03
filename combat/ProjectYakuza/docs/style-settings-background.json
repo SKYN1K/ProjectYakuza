@@ -1,0 +1,22 @@
+{
+  "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza Kiwami\\media\\data\\pausepar\\pause_c.par",
+  "entry": "/picture/pause_back/2d_yk_pback01.dds",
+  "meta": [
+    2147483648,
+    524416,
+    329289,
+    99604480,
+    32,
+    0,
+    1479353162
+  ],
+  "authorization": "User approved original Kiwami background decoding and selected the dark textured background for the settings menu on 2026-11-03.",
+  "output": "42/media/textures/ProjectYakuza/StyleSelector/KiwamiSettingsBackground.png",
+  "size": [
+    1024,
+    512
+  ],
+  "sha256": "0f71e30318b576d96fe3e1ebe30ac652102e08998dc57f520a7c87eeeb547982",
+  "rgbaSha256": "473ee1e7b84caa8d95668d6758c40d353415bd39f5f90f803e5fb7649363c000",
+  "operation": "Original DDS decoded to PNG at 1024x512. No AI, upscaling, repainting, recoloring or altered source pixels. The UI crops its center at runtime and fades the existing image."
+}

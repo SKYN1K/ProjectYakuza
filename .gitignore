@@ -182,3 +182,5 @@
 !/tools/combat-tests/build_input_prompts_tests.py
 !/tools/combat-tests/input-prompts-test-fixture.lua
 !/tools/combat-tests/InputPromptAssetProbe.java
+
+!/tools/combat-tests/SettingsUIProbe.java

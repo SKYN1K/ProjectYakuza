@@ -2,13 +2,13 @@
 
 Project Yakuza is a Build 42 combat mod and a framework for independent fighting-style addons. Dragon of Dojima uses supplied Yakuza/Kiwami animations, textures and sounds. Other styles register their own moves, assets and controllers without copying the framework.
 
-**Version 0.76.0 · Lua API 3 · MP protocol 2.** API 1 style registrations remain supported. Internal namespace/mod dependency: `ProjectYakuza`. Display name: Project Yakuza.
+**Version 0.77.0 · Lua API 3 · MP protocol 2.** API 1 style registrations remain supported. Internal namespace/mod dependency: `ProjectYakuza`. Display name: Project Yakuza.
 
 ## Install and play
 
 Extract the ZIP so `Zomboid/mods/ProjectYakuza/42/mod.info` exists. Enable Project Yakuza for the save. The server and every MP client need the same framework and addons. Restart after updating files.
 
-Choose **Inventory context menu > Combat styles > Dragon of Dojima** to equip the style token. Hold Z, choose a slot, then release Z. Left defaults to DoD, right starts empty, bottom opens assignments, top unequips the style. Selecting/reselecting DoD plays its 1.67-second entry: movement and attacks are locked, but the player remains vulnerable.
+Hold Z, choose Dragon of Dojima in the left slot, then release Z to equip the style token. Left defaults to DoD, right starts empty, bottom opens settings and style assignments, top unequips the style. Selecting/reselecting DoD plays its 1.67-second entry: movement and attacks are locked, but the player remains vulnerable.
 
 Katana Heat Actions use a separate rebindable control (default RMB + MMB), only outside combos, costing one stock. Invulnerability ends with the action; zombie targeting protection lasts another 0.5 seconds. See [Heat Actions](docs/HEAT_ACTIONS.md).
 
@@ -57,7 +57,7 @@ DoD also supports [23 knives and 13 cleavers/machetes/swords](docs/WEAPONS.md#sh
 
 The style item remains required for unarmed combat. It is temporary, kept clean and protected from normal dropping/transfers. Manually unequipping it disables the style and deletes it. The selector top slot also unequips the style. Supported real weapons stay equipped on style removal; unequipping a real weapon while retaining the style restores its unarmed item without replaying entry. See [Style item and neutral heavy](docs/STYLE_ITEM_AND_HEAVY.md).
 
-Confirmed DoD hits now include [original animated Yakuza 6 blood](docs/BLOOD_EFFECTS.md), rendered at the zombie in world space. Heavy/charged hits use a slightly larger burst. Inventory context menu > Combat styles > Toggle hit effects controls sparks and blood together.
+Confirmed DoD hits now include [original animated Yakuza 6 blood](docs/BLOOD_EFFECTS.md), rendered at the zombie in world space. Heavy/charged hits use a slightly larger burst. Style wheel > bottom settings > Hit effects controls sparks and blood together.
 
 [Extreme Heat variations](docs/EXTREME_ATTACKS.md) now replace the unarmed neutral heavy and four first/double finisher pairs automatically during the mode, using supplied Kiryu motions. Controls and damage bonuses stay the same; the normal LMB chain and charged attacks retain their current clips.
 
@@ -66,3 +66,5 @@ Confirmed DoD hits now include [original animated Yakuza 6 blood](docs/BLOOD_EFF
 [DoD locomotion](docs/LOCOMOTION.md) adds Kiryu running and relaxed weapon holds, with native walking legs and 0.25-second crossfades. Kiryu walking and sprinting now use native PZ cadence/travel; weapon walking retains native legs. Special movement keeps native behavior.
 
 The original Yakuza 6 beer-crate conversion uses [Yakuza GMD IO](https://github.com/theturboturnip/yk_gmd_io) by Samuel Stark (TheTurboTurnip). See [crate assets and spawn ID](docs/BEER_CRATE.md).
+
+The bottom style-wheel slot opens settings: First Style, Second Style, hit effects, heat aura and diagnostics. Each style row previews its optional developer-supplied selectorIcon. Save applies changes; Cancel/Escape discards them. The inventory context submenu has been removed.

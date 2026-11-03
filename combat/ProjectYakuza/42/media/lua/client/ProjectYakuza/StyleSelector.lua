@@ -5,7 +5,7 @@ require "ISUI/ISPanel"
 require "ISUI/ISComboBox"
 require "ISUI/ISButton"
 local ProjectYakuza=ProjectYakuza
-local S={}
+local S={icons={}}
 ProjectYakuza.StyleSelector=S
 local Wheel=ISPanel:derive("ProjectYakuzaStyleWheel")
 local Setup=ISPanel:derive("ProjectYakuzaStyleSetup")
@@ -22,40 +22,81 @@ end
 function S.loadAssets()
     if S.assets then return end
     local base="media/textures/ProjectYakuza/StyleSelector/"
-    S.assets={life=getTexture(base.."KiwamiLife.png"),dragon=getTexture(base.."KiwamiDragon.png")}
+    S.assets={life=getTexture(base.."KiwamiLife.png"),dragon=getTexture(base.."KiwamiDragon.png"),background=getTexture(base.."KiwamiSettingsBackground.png")}
+end
+local sides={"top","left","right","bottom"}
+local connectors={{-7,-7},{7,-7},{-7,7},{7,7}}
+local function ease(value)
+    value=math.max(0,math.min(1,value))
+    return 1-(1-value)^3
+end
+local function backdrop(panel,alpha)
+    local x,y=-panel:getX()+getPlayerScreenLeft(0),-panel:getY()+getPlayerScreenTop(0)
+    local width,height=getPlayerScreenWidth(0),getPlayerScreenHeight(0)
+    panel:drawRect(x,y,width,height,.48*alpha,.015,.019,.027)
+    for i=0,11 do
+        local shade=1-math.abs((i+.5)/6-1)
+        panel:drawRect(x,y+height*i/12,width,height/12+1,.14*alpha*shade,0,0,0)
+    end
+end
+local function plate(panel,x,y,width,height,alpha)
+    panel:drawRect(x-5,y+5,width+10,height,.18*alpha,0,0,0)
+    panel:drawRect(x,y,width,height,.94*alpha,.035,.041,.054)
+    panel:drawRect(x,y,width,2,.8*alpha,.65,.72,.82)
+    panel:drawRect(x,y+height-1,width,1,.3*alpha,.65,.72,.82)
 end
 function Wheel:prerender()
-    if ProjectYakuza.StyleUI.render("selector",self.player,self,{side=self.side}) then return end
-    local elapsed=math.min(1,(getTimestampMs()-self.opened)/120)
+    local time=getTimestampMs()
+    local elapsed=ease((time-self.opened)/260)
+    local dt=math.max(0,math.min(.05,(time-(self.lastDraw or time))/1000))
+    self.lastDraw=time
+    if ProjectYakuza.StyleUI.render("selector",self.player,self,{side=self.side,alpha=elapsed}) then return end
+    self:drawTextCentre("COMBAT STYLES",170,-27+8*(1-elapsed),.9,.93,1,elapsed,UIFont.Medium)
+    self:drawRect(80,3,180*elapsed,1,.4*elapsed,.6,.7,.85)
     local a=S.assets
-    for _,side in ipairs({"top","left","right","bottom"}) do
-        local xy=positions[side];local chosen=self.side==side
-        local id=ProjectYakuza.StyleSlots.id(self.player,side);local style=id and ProjectYakuza.getStyle(id)
-        local alpha=elapsed*(chosen and 1 or .65)
-        local custom=ProjectYakuza.StyleUI.render("selectorSlot",self.player,self,{style=style,side=side,x=xy[1],y=xy[2],alpha=alpha,selected=chosen})
-        if not custom then
-
-        if a.life then
-            self:drawSubTexture(a.life,122,74,51,51,xy[1]-42,xy[2]-42,84,84,alpha,1,1,1)
-            if chosen then self:drawSubTexture(a.life,0,0,43,44,xy[1]-44,xy[2]-44,88,88,elapsed,1,1,1) end
+    if a.life then
+        for _,offset in ipairs(connectors) do
+            self:drawSubTexture(a.life,0,0,43,44,164+offset[1],164+offset[2],12,12,.65*elapsed,.8,.85,.9)
         end
-        local icon=style and style.selectorIcon and getTexture(style.selectorIcon)
-        if not icon and id=="dragon_of_dojima" then icon=a.dragon end
-        if icon==a.dragon then
-
-            self:drawSubTexture(icon,8,23,112,82,xy[1]-56,xy[2]-41,112,82,alpha,1,1,1)
-        elseif icon then self:drawTextureScaled(icon,xy[1]-46,xy[2]-46,92,92,alpha,1,1,1)
-        elseif side=="top" then self:drawTextCentre("UNEQUIP",xy[1],xy[2]-8,1,1,1,alpha,UIFont.Small)
-        elseif side=="bottom" then self:drawTextCentre("SETUP",xy[1],xy[2]-8,1,1,1,alpha,UIFont.Small)
-        elseif style then self:drawTextCentre(side=="left" and "1" or "2",xy[1],xy[2]-10,1,1,1,alpha,UIFont.Medium) end
-        if side=="left" or side=="right" then self:drawTextCentre(side=="left" and "STYLE 1" or "STYLE 2",xy[1],xy[2]+49,1,1,1,alpha,UIFont.Small) end
+    end
+    for index,side in ipairs(sides) do
+        local origin=positions[side];local chosen=self.side==side
+        local enter=ease((time-self.opened-(index-1)*28)/240)
+        local focus=self.focus[side] or 0
+        focus=focus+((chosen and 1 or 0)-focus)*math.min(1,dt*16)
+        self.focus[side]=focus
+        local x=170+(origin[1]-170)*(.72+.28*enter)
+        local y=170+(origin[2]-170)*(.72+.28*enter)+12*(1-enter)
+        local id=ProjectYakuza.StyleSlots.id(self.player,side);local style=id and ProjectYakuza.getStyle(id)
+        local alpha=enter*(.58+.42*focus)
+        local custom=ProjectYakuza.StyleUI.render("selectorSlot",self.player,self,{style=style,side=side,x=x,y=y,alpha=alpha,selected=chosen,focus=focus,progress=enter})
+        if not custom then
+            local radius=40+4*focus
+            self:drawRect(x-43,y+47,86,1,.15*alpha,.65,.75,.9)
+            if a.life then
+                self:drawSubTexture(a.life,122,74,51,51,x-radius,y-radius,radius*2,radius*2,alpha,1,1,1)
+                if focus>.001 then
+                    local glow=radius+5+2*math.sin(time/600)
+                    self:drawSubTexture(a.life,0,0,43,44,x-glow,y-glow,glow*2,glow*2,enter*focus*.28,.55,.75,1)
+                    self:drawSubTexture(a.life,0,0,43,44,x-radius-2,y-radius-2,radius*2+4,radius*2+4,enter*focus,1,1,1)
+                end
+            end
+            local icon=S.styleIcon(style)
+            if icon and icon==a.dragon then
+                self:drawSubTexture(icon,8,23,112,82,x-56,y-41,112,82,alpha,1,1,1)
+            elseif icon then self:drawTextureScaled(icon,x-46,y-46,92,92,alpha,1,1,1)
+            elseif side=="top" then self:drawTextCentre("UNEQUIP",x,y-8,.85,.9,1,alpha,UIFont.Small)
+            elseif side=="bottom" then self:drawTextCentre("SETTINGS",x,y-8,.85,.9,1,alpha,UIFont.Small)
+            else self:drawTextCentre(style and (side=="left" and "1" or "2") or "EMPTY",x,y-8,.75,.8,.9,alpha,UIFont.Small) end
+            if side=="left" or side=="right" then self:drawTextCentre(side=="left" and "STYLE 1" or "STYLE 2",x,y+53,.8,.86,.95,alpha,UIFont.Small) end
         end
     end
     local side=self.side
     local id=ProjectYakuza.StyleSlots.id(self.player,side);local style=id and ProjectYakuza.getStyle(id)
-    local label=side=="top" and "Unequip style" or side=="bottom" and "Assign styles" or style and style.name or "Empty"
-    self:drawTextCentre(label,170,350,1,1,1,elapsed,UIFont.Medium)
-    self:drawTextCentre("Hold "..ProjectYakuza.Bindings.label("styles").." - mouse / arrow keys - release to select",170,380,.85,.85,.85,elapsed,UIFont.Small)
+    local label=side=="top" and "Unequip style" or side=="bottom" and "Mod settings" or style and style.name or "Empty slot"
+    plate(self,-75,342+10*(1-elapsed),490,75,elapsed)
+    self:drawTextCentre(label,170,352+10*(1-elapsed),1,1,1,elapsed,UIFont.Medium)
+    self:drawTextCentre("Hold "..ProjectYakuza.Bindings.label("styles").."  /  mouse or arrow keys  /  release to select",170,385+10*(1-elapsed),.65,.72,.83,elapsed,UIFont.Small)
 end
 function S.cancel()
     local wheel=S.wheel;S.wheel=nil
@@ -97,21 +138,55 @@ function S.open(p)
     local x=getPlayerScreenLeft(0)+(getPlayerScreenWidth(0)-340)/2
     local y=getPlayerScreenTop(0)+(getPlayerScreenHeight(0)-400)/2
     local panel=Wheel:new(x,y,340,400)
-    panel.player=p;panel.opened=getTimestampMs();panel.mouseX,panel.mouseY=getMouseX(),getMouseY()
+    panel.player=p;panel.opened=getTimestampMs();panel.focus={};panel.mouseX,panel.mouseY=getMouseX(),getMouseY()
     local active=ProjectYakuza.getPlayerStyle(p)
     panel.side=active and active.id==ProjectYakuza.StyleSlots.id(p,"right") and "right" or "left"
     panel:initialise();panel.background=false;panel:setWantMouseEvents(false);panel:addToUIManager()
     S.wheel=panel;Events.OnTick.Add(S.tick)
     return true
 end
+local preferences={
+    {label="Hit effects",key="ProjectYakuzaHitEffectsDisabled",inverse=true,module="HitEffects"},
+    {label="Heat aura",key="ProjectYakuzaHeatAuraDisabled",inverse=true,module="HeatAura"},
+    {label="Combat diagnostics",key="ProjectYakuzaDiagnostics"},
+}
+function S.styleIcon(style)
+    if not style then return end
+    local path=style.selectorIcon
+    if path then
+        if S.icons[path]==nil then S.icons[path]=getTexture(path) or false end
+        if S.icons[path] then return S.icons[path] end
+    end
+    if style.id=="dragon_of_dojima" then return S.assets.dragon end
+end
 function Setup:prerender()
-    if ProjectYakuza.StyleUI.render("setup",self.player,self,{left=self.left,right=self.right,message=self.message}) then return end
-    ISPanel.prerender(self)
-    self:drawText("STYLE ASSIGNMENTS",20,16,1,1,1,1,UIFont.Medium)
-    self:drawText("Style 1 - left",20,62,1,1,1,1,UIFont.Small)
-    self:drawText("Style 2 - right",20,116,1,1,1,1,UIFont.Small)
-    self:drawText("Top: empty    Bottom: this menu",20,184,.8,.8,.8,1,UIFont.Small)
-    self:drawText(self.message or "Assignments are saved for this character.",20,211,.85,.85,.85,1,UIFont.Small)
+    local alpha=ease((getTimestampMs()-self.opened)/300)
+    if ProjectYakuza.StyleUI.render("setup",self.player,self,{left=self.left,right=self.right,message=self.message,alpha=alpha,settings=self.settings}) then return end
+    backdrop(self,alpha)
+    plate(self,0,0,self.width,self.height,alpha)
+    if S.assets.background then
+        self:drawSubTexture(S.assets.background,188-12*(1-alpha),0,648,512,0,0,self.width,self.height,.58*alpha,1,1,1)
+    end
+    self:drawRect(0,0,self.width,68,.7*alpha,.025,.028,.035)
+    self:drawRect(0,366,self.width,self.height-366,.65*alpha,.025,.028,.035)
+    self:drawText("PROJECT YAKUZA",24,18,.93,.96,1,alpha,UIFont.Medium)
+    self:drawText("STYLES & SETTINGS",24,48,.6,.68,.78,alpha,UIFont.Small)
+    for index,side in ipairs({"left","right"}) do
+        local y=80+(index-1)*66
+        self:drawRect(20,y-6,self.width-40,60,.65*alpha,.055,.062,.075)
+        local combo=self[side];local id=combo:getOptionData(combo.selected)
+        local icon=S.styleIcon(ProjectYakuza.getStyle(id))
+        if icon==S.assets.dragon and icon then self:drawSubTexture(icon,8,23,112,82,27,y+5,56,41,alpha,1,1,1)
+        elseif icon then self:drawTextureScaled(icon,31,y+2,48,48,alpha,1,1,1) end
+        self:drawText(index==1 and "First Style:" or "Second Style:",96,y+15,.88,.91,.97,alpha,UIFont.Small)
+    end
+    for index,setting in ipairs(preferences) do
+        local y=224+(index-1)*48
+        self:drawRect(24,y-9,self.width-48,1,.18*alpha,.6,.68,.8)
+        self:drawText(setting.label,32,y+5,.82,.87,.94,alpha,UIFont.Small)
+    end
+    self:drawText(self.message or "Audio volumes and keybindings: Options > Mods > Project Yakuza",24,378,.65,.72,.83,alpha,UIFont.Small)
+    self:drawText("Save applies changes. Cancel leaves your settings unchanged.",24,400,.65,.72,.83,alpha,UIFont.Small)
 end
 function Setup:close()
     ProjectYakuza.StyleUI.releaseAll(self)
@@ -120,7 +195,7 @@ function Setup:close()
 end
 function Setup:update()
     ISPanel.update(self)
-    if self.player:isDead() or self.player:getVehicle() then self:close() end
+    if self.player:isDead() or self.player:getVehicle() or isKeyDown(Keyboard.KEY_ESCAPE) then self:close() end
 end
 function Setup:save()
     if not S.allowed(self.player) then self.message="Finish your current action first.";return end
@@ -133,15 +208,27 @@ function Setup:save()
         local ok=ProjectYakuza.StyleSlots.assign(self.player,side,id~="none" and id or nil)
         if not ok then self.message="A selected style is no longer available.";return end
     end
+    local data=self.player:getModData()
+    for index,setting in ipairs(preferences) do
+        local enabled=self.settings[index]:getOptionData(self.settings[index].selected)==true
+        local stored=enabled
+        if setting.inverse then stored=not enabled end
+        if (data[setting.key]==true)~=stored then
+            if setting.module and ProjectYakuza[setting.module] then ProjectYakuza[setting.module].toggle(self.player)
+            else data[setting.key]=stored end
+            if setting.key=="ProjectYakuzaDiagnostics" then print("[ProjectYakuza] "..ProjectYakuza.diagnosticLine(self.player)) end
+        end
+    end
     self:close()
 end
 function S.openSetup(p)
     if S.setup or not S.allowed(p) then return false end
-    local panel=Setup:new(getPlayerScreenLeft(0)+(getPlayerScreenWidth(0)-460)/2,
-        getPlayerScreenTop(0)+(getPlayerScreenHeight(0)-294)/2,460,294)
-    panel.player=p;panel:initialise();panel.backgroundColor={r=.04,g=.04,b=.04,a=.97}
+    S.loadAssets()
+    local panel=Setup:new(getPlayerScreenLeft(0)+(getPlayerScreenWidth(0)-620)/2,
+        getPlayerScreenTop(0)+(getPlayerScreenHeight(0)-490)/2,620,490)
+    panel.player=p;panel.opened=getTimestampMs();panel:initialise();panel.background=false;panel.settings={}
     for index,side in ipairs({"left","right"}) do
-        local combo=ISComboBox:new(164,53+(index-1)*54,274,28)
+        local combo=ISComboBox:new(230,88+(index-1)*66,366,28)
         combo:initialise();combo:addOptionWithData("Empty","none")
         local id=ProjectYakuza.StyleSlots.get(p)[side]
         for _,entry in ipairs(ProjectYakuza.listStyles()) do
@@ -150,8 +237,17 @@ function S.openSetup(p)
         end
         panel[side]=combo;panel:addChild(combo)
     end
-    local save=ISButton:new(236,248,100,28,"Save",panel,Setup.save);save:initialise();panel:addChild(save)
-    local cancel=ISButton:new(346,248,92,28,"Cancel",panel,Setup.close);cancel:initialise();panel:addChild(cancel)
+    local data=p:getModData()
+    for index,setting in ipairs(preferences) do
+        local combo=ISComboBox:new(430,224+(index-1)*48,166,28)
+        combo:initialise();combo:addOptionWithData("On",true);combo:addOptionWithData("Off",false)
+        local enabled=data[setting.key]==true
+        if setting.inverse then enabled=not enabled end
+        combo.selected=enabled and 1 or 2
+        panel.settings[index]=combo;panel:addChild(combo)
+    end
+    local save=ISButton:new(380,440,100,28,"Save",panel,Setup.save);save:initialise();panel:addChild(save)
+    local cancel=ISButton:new(490,440,106,28,"Cancel",panel,Setup.close);cancel:initialise();panel:addChild(cancel)
     panel:addToUIManager();S.setup=panel;return true
 end
 function S.keyStart(key)

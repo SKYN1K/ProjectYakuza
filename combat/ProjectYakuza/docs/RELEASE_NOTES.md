@@ -1,11 +1,8 @@
-# Project Yakuza 0.76.0
+# Project Yakuza 0.77.0
 
-- Repaired the supplied Yakuza 6 bat, katana, bottle and crate ready/idle/walking motion for PZ's skeleton. Source shoulder/elbow/wrist directions now fit PZ bone lengths relative to the chest, and wrist articulation follows the source forearm. The Yakuza hold clips remain selected; walking legs retain native movement.
-- Corrected the katana grip attachment for the repaired poses and their run/sprint transitions. Original attack/guard motion, gait cadence and movement speed remain unchanged.
-- Added the missing katana/bottle Heat Action contact voice assignments and punch sound lookup. Heat Actions explicitly load the existing feedback/voice adapters and resolve a heavy-impact fallback for missing optional cue keys.
-- Heat Action feedback plays on the owner's source-animation contact in MP, with session/action/contact deduplication for server confirmations. Damage remains server authoritative. Existing world-effect routing is preserved.
-- Late contact processing tolerates up to the existing server's 650 ms grace, fixing dropped presentation on delayed frames. QTE input windows remain unchanged.
-- Replaced text-only QTE/Heat Action input prompts with original Yakuza 6 PC mouse icons and keyboard keycap art. Keyboard names track the actual binding and fit the frame; the shared renderer supports addon bindings and custom style UI. Original 84-pixel artwork is cropped without resizing or altered pixels.
-- Busy CVF contact voices retry for at most 600 ms within the owning action, respecting provider exclusivity, volume and recording availability. Completion, cancellation, replacement and expiry discard pending speech.
+- The style wheel's bottom slot opens Project Yakuza settings. First Style and Second Style appear first, each with its assigned name and the style developer's optional selectorIcon. Dragon of Dojima retains its original Kiwami icon.
+- Hit effects, heat aura and combat diagnostics move from the inventory context menu into settings. Existing per-character values are preserved. Save applies assignments and preferences; Cancel or Escape discards edits. Audio volumes and keybindings remain in Options > Mods > Project Yakuza.
+- Added the selected original Kiwami dark textured background with a 300 ms eased fade and subtle motion. Its source pixels remain unchanged. The compact wheel animates its four slots and selection rings over visible gameplay, with a small center connector made from its existing original ring artwork.
+- Removed the inventory Combat styles submenu. Style switching and unequipping remain available on the wheel; taunting retains its configured input.
 
-Only supplied motion is repaired and existing sounds/voices are used. No generated artwork/audio, AI, upscaling or voice-pack edits. Project Zomboid was not launched. See [validation](VALIDATION_0.76.0.md). Restart PZ and install matching server/client versions.
+No generated artwork/audio, AI, upscaling or voice-pack changes. Project Zomboid was not launched. See [validation](VALIDATION_0.77.0.md). Restart PZ to replace the old inventory-menu event registration.

@@ -84,3 +84,12 @@ The `heatAction` channel can replace or hide the eligibility prompt independentl
 Client renderers can use ProjectYakuza.InputPrompts.describe(bindingId) to read the current mode/key/name, and ProjectYakuza.InputPrompts.draw(panel,bindingId,x,y,size,alpha) to draw the shared game-art prompt. Coordinates are panel-relative and centered. Mouse bindings use the original highlighted PC mouse icon; keyboard names are drawn over a nine-slice original game key frame. Descriptors are cached and should be treated as read-only.
 
 Style UI contexts also expose inputPrompt and drawInputPrompt for those functions. Heat Action extra.inputPrompt contains its resolved descriptor while extra.binding retains the text label. QTE and Heat Action default rendering use the same module, so rebinding remains consistent. No input is captured and addon binding IDs registered through Bindings.register are supported. See input-prompt-assets.json for source regions/pixel hashes.
+
+
+## Built-in style settings (0.77.0)
+
+The bottom wheel slot opens the neutral settings panel. Its first rows assign First Style and Second Style; their combo boxes list all registered styles. Each row previews the selected style's selectorIcon, if supplied. Empty slots have no invented image. The original Dragon of Dojima icon uses its existing atlas crop. Assignments and hit-effect, heat-aura and diagnostics preferences apply only on Save; Cancel and Escape discard pending edits. Existing per-character flags and effect cleanup functions are reused.
+
+The setup presentation hook retains extra.left/right/message and adds extra.settings (the three preference combo boxes) and extra.alpha (the opening fade). Native controls remain children of the host; replacing its background does not replace or save those controls. Selector slots now receive animated extra.x/y/alpha plus extra.focus and extra.progress. Whole-selector providers receive extra.alpha. Existing providers may ignore these added fields.
+
+The compact wheel remains mouse-passive and does not dim the entire screen. The settings panel uses the original Kiwami pause texture documented in style-settings-background.json, cropped only at draw time. Its 300 ms opening fade and short horizontal settling motion do not alter its asset pixels. Audio sliders and keybindings remain in the standard Mods options page. Inventory context menus no longer register Project Yakuza controls.

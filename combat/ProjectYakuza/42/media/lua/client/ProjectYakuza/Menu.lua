@@ -55,30 +55,3 @@ function ProjectYakuza.unequipStyle(player)
     if ProjectYakuza.StyleItem then ProjectYakuza.StyleItem.remember(player) end
     return true
 end
-local function disable(player)
-    local ok,reason=ProjectYakuza.unequipStyle(player)
-    if not ok then player:Say("Cannot disable style: "..tostring(reason)) end
-end
-
-local function diagnostics(player)
-    player:getModData().ProjectYakuzaDiagnostics = not player:getModData().ProjectYakuzaDiagnostics
-    print("[ProjectYakuza] " .. ProjectYakuza.diagnosticLine(player))
-end
-local function menu(playerIndex, context)
-    local player = getSpecificPlayer(playerIndex)
-    if not player then return end
-    local root = context:addOption("Combat styles")
-    local sub = ISContextMenu:getNew(context)
-    context:addSubMenu(root, sub)
-    for _, id in ipairs(ProjectYakuza.styleOrder) do
-        local style = ProjectYakuza.getStyle(id)
-        sub:addOption(style.name, player, ProjectYakuza.equipStyle, id)
-    end
-    sub:addOption("Disable fighting style", player, disable)
-    sub:addOption("Assign style slots", player, ProjectYakuza.StyleSelector.openSetup)
-    if ProjectYakuza.Taunts.available(player) then sub:addOption("Taunt (aim + "..ProjectYakuza.Bindings.label("taunt")..")",player,ProjectYakuza.Taunts.request) end
-    sub:addOption("Toggle combat diagnostics", player, diagnostics)
-    sub:addOption("Toggle hit effects", player, ProjectYakuza.HitEffects.toggle)
-    sub:addOption("Toggle heat aura", player, ProjectYakuza.HeatAura.toggle)
-end
-Events.OnFillInventoryObjectContextMenu.Add(menu)
