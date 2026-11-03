@@ -1,0 +1,86 @@
+{
+  "authorization": "User approved original Yakuza 6 PC input atlas extraction/decoding on 2026-11-03.",
+  "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 6 - The Song of Life\\data\\ui.par",
+  "entry": "/e/texture/qloc/keyboard/pc_all_84.dds",
+  "archiveMeta": [
+    2147483648,
+    4194432,
+    897422,
+    823152640,
+    33,
+    0,
+    0
+  ],
+  "ddsSha256": "5967bd0e9985778ca0a91df308f4067f833455041d86be9c10cb603f24f21d14",
+  "sourceSize": [
+    2048,
+    2048
+  ],
+  "operation": "Four original 84x84 regions copied pixel-for-pixel from the supplied PC input atlas. No repainting, recoloring, AI, resizing or upscaling. The keyboard renderer samples the original key border and blank interior patch, omits its baked legend and draws the current binding name at runtime. Mouse icons retain the original left/right/wheel highlights.",
+  "textures": [
+    {
+      "name": "InputKeycap",
+      "region": [
+        0,
+        0,
+        84,
+        84
+      ],
+      "output": "42/media/textures/ProjectYakuza/InputKeycap.png",
+      "sha256": "96dd92e75b2ef513cf8a515a40b93ffc2dbc85699231d156437c5f08c1f13fcf",
+      "rgbaSha256": "6833d5144594e405af37fd3c92c014ff78307cee1073820616b38c2d1673884f",
+      "size": [
+        84,
+        84
+      ]
+    },
+    {
+      "name": "InputMouseLeft",
+      "region": [
+        340,
+        1020,
+        84,
+        84
+      ],
+      "output": "42/media/textures/ProjectYakuza/InputMouseLeft.png",
+      "sha256": "45c1f56b19426aa0694d36aa4b77f9a24f4bee478d8334fe1813d9d9f3c72e9d",
+      "rgbaSha256": "fcd4ac7a5b33b3f03a8559e9326d1d15de36955bade71fcfac519ad6635c65db",
+      "size": [
+        84,
+        84
+      ]
+    },
+    {
+      "name": "InputMouseMiddle",
+      "region": [
+        425,
+        1020,
+        84,
+        84
+      ],
+      "output": "42/media/textures/ProjectYakuza/InputMouseMiddle.png",
+      "sha256": "b52f8c7b58ae5ada1beb325ab4d083d5ef0278ca5fe5d96d603fc1d24918cc13",
+      "rgbaSha256": "f826fcfc29b74dca09925eae35a4eab987f922f1a13ee78abbe8d68725bdd5a5",
+      "size": [
+        84,
+        84
+      ]
+    },
+    {
+      "name": "InputMouseRight",
+      "region": [
+        510,
+        1020,
+        84,
+        84
+      ],
+      "output": "42/media/textures/ProjectYakuza/InputMouseRight.png",
+      "sha256": "53b75ca2aa6c57219ee1a131fd2015e9fd8c81516823227d19769b0f2aa034b9",
+      "rgbaSha256": "2327d02c136deae4ad07e8668e5fbf300a7bbad565ab5f4a6238a7e1c9450acb",
+      "size": [
+        84,
+        84
+      ]
+    }
+  ]
+}

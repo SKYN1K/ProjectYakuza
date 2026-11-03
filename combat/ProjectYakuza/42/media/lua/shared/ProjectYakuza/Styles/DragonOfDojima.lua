@@ -152,6 +152,7 @@ if ProjectYakuza.Weapons then
     local base=ProjectYakuza.getStyle("dragon_of_dojima")
     local sounds={};for k,v in pairs(base.sounds) do if k:match("^heat") then sounds[k]=v end end
     sounds.guardHit=base.sounds.guardHit;sounds.guardBreak=base.sounds.guardBreak
+    sounds.punchImpact=base.sounds.punchImpact;sounds.kickImpact=base.sounds.kickImpact
     sounds.heavyImpact=base.sounds.heavyImpact;sounds.groundImpact=base.sounds.heavyImpact
     ProjectYakuza.Weapons.register(base.id,{
         id="bat",impactFeedback="blunt",attackSpeed=1.4,quickstepCancelLights=true,standaloneHeavy=true,
@@ -177,6 +178,7 @@ if ProjectYakuza.Weapons then
     local base=ProjectYakuza.getStyle("dragon_of_dojima")
     local sounds={};for k,v in pairs(base.sounds) do if k:match("^heat") then sounds[k]=v end end
     sounds.guardHit=base.sounds.guardHit;sounds.guardBreak=base.sounds.guardBreak
+    sounds.punchImpact=base.sounds.punchImpact;sounds.kickImpact=base.sounds.kickImpact
     sounds.heavyImpact=base.sounds.finisher;sounds.groundImpact=base.sounds.finisher
     ProjectYakuza.Weapons.register(base.id,{
         id="knife",impactFeedback="blade",attackSpeed=1.5,standaloneHeavy=true,quickstepCancelLights=true,
@@ -198,7 +200,7 @@ if ProjectYakuza.Weapons then
         actions={
             heatAction={enabled=true,weaponHeat=true,weaponItems={"Base.Katana"},motionId="dod_katana",useExtremeFuel=true,heatStocks=1,noCombo=true,
                 animation="ProjectYakuza_DD_KatanaHeat",targetAnimation="ProjectYakuza_DD_KatanaHeatVictim",nodeValue="dd_katana_heat",requiresTarget=true,duration=140/30,speed=1,hitResponse=false,
-                contacts={{atMs=20/30*1000,damageMultiplier=0,cue="heavyImpact"},{atMs=28/30*1000,damageMultiplier=0,cue="punchImpact"},{atMs=54/30*1000,damageMultiplier=0,cue="heavyImpact"},{atMs=97/30*1000,damageMultiplier=1.5,cue="heavyImpact"}}},
+                contacts={{atMs=20/30*1000,damageMultiplier=0,cue="heavyImpact",voice="CombatHeavyAttack"},{atMs=28/30*1000,damageMultiplier=0,cue="punchImpact",voice="CombatLightAttack"},{atMs=54/30*1000,damageMultiplier=0,cue="heavyImpact",voice="CombatHeavyAttack"},{atMs=97/30*1000,damageMultiplier=1.5,cue="heavyImpact",voice="CombatHeavyAttack"}}},
             finisher={enabled=true,variants={default={animation="ProjectYakuza_DD_BladeHeavy",nodeValue="dd_blade_heavy",duration=70/30/1.4,speed=1.4,impact=22/70,hitResponse=false,enabled=true,damageMultiplier=1.25}}},
             quickstep=base.actions.quickstep,
             block={enabled=true,animation="ProjectYakuza_DD_BladeGuard",staminaPerHit=.08},
@@ -217,7 +219,7 @@ if ProjectYakuza.Weapons then
         actions={
             heatAction={enabled=true,weaponHeat=true,weaponItems={"ProjectYakuza.IntactBeerBottle","ProjectYakuza.IntactWineBottle","ProjectYakuza.IntactWhiskeyBottle"},motionId="dod_bottle",useExtremeFuel=true,heatStocks=1,noCombo=true,
                 animation="ProjectYakuza_DD_BottleHeat",targetAnimation="ProjectYakuza_DD_BottleHeatVictim",nodeValue="dd_bottle_heat",requiresTarget=true,duration=5,speed=1,hitResponse=false,
-                contacts={{atMs=22/30*1000,damageMultiplier=0,cue="heavyImpact"},{atMs=73/30*1000,damageMultiplier=0,cue="heavyImpact"},{atMs=92/30*1000,damageMultiplier=1.5,cue="heavyImpact"}}},
+                contacts={{atMs=22/30*1000,damageMultiplier=0,cue="heavyImpact",voice="CombatHeavyAttack"},{atMs=73/30*1000,damageMultiplier=0,cue="heavyImpact",voice="CombatHeavyAttack"},{atMs=92/30*1000,damageMultiplier=1.5,cue="heavyImpact",voice="CombatHeavyAttack"}}},
             finisher={enabled=true,variants={default={animation="ProjectYakuza_DD_BottleHeavy",nodeValue="dd_bottle_heavy",duration=53/30/1.4,speed=1.4,impact=14/53,hitResponse=false,damageMultiplier=1.25}}},
             quickstep=base.actions.quickstep,
             block={enabled=true,animation="ProjectYakuza_DD_BottleGuard",staminaPerHit=.08},

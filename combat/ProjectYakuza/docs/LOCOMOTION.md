@@ -1,4 +1,4 @@
-# Dragon of Dojima locomotion (0.75.0)
+# Dragon of Dojima locomotion (0.76.0)
 
 DoD uses Kiryu's supplied Yakuza 6 motion while preserving PZ movement rules. Only the selected DoD style and its matching equipment profile use these selectors. No movement polling/controller or new network loop is added.
 
@@ -12,9 +12,11 @@ Ordinary running retains the previous complete P_KRU_MOV_run_ftl cycle, 1.0 heal
 
 Bat holds use WPA. Katana/long-blade holds use WPD, matching the blade attacks; the previous WPN carry reference was a mismatched source. Bottles use suitable WPA one-handed blunt motion and the crate uses WPC bulky-object motion. The profile assignment is a suitable-motion selection and does not reproduce Dragon Engine object IK.
 
-Ready/relaxed holds use the matching stdA/stdB loops. Katana walking/running uses its supplied wpd movement variants; crate walking uses wpc. Other weapons use Kiryu's supplied battle walk/general run arm motion. Walking and slow walking retain native PZ legs, torso, head, helper bones and deferred travel. Source arm world orientations are converted back to local transforms under that native torso, avoiding the earlier local-space torso mismatch and sideways head overlay. Running/sprinting combines those source arms with the existing Kiryu run or newly converted sprint body. Native hand-to-prop offsets are recomputed every frame during conversion.
+Ready/relaxed holds use the matching stdA/stdB loops. Katana walking/running uses its supplied wpd movement variants; crate walking uses wpc. Other weapons use Kiryu's supplied battle walk/general run arm motion. Walking and slow walking retain native PZ legs, torso, head, helper bones and deferred travel. Source shoulder/elbow/wrist directions are fitted relative to the chest using PZ's anatomical segment lengths. Wrist articulation follows the original forearm-relative rotation. This corrects the old rest-axis and torso-basis mismatch while retaining the Yakuza poses. Native grip offsets fit the held model to PZ's hand; they do not select a native hold animation. Running/sprinting combines those source arms with the existing Kiryu run or newly converted sprint body. Native hand-to-prop offsets are recomputed every frame during conversion.
 
-Bat, blade, bottle and crate profiles have relaxed idle, walk, slow walk, run and sprint clips plus an aimed hold. Knife carry/ready/run remains native; its custom attack blends receive the same smoothing. Native blade/bat/knife attack motion and item scripts remain unchanged. Earlier disabled source reference clips remain supplied for future repair; active selectors choose the new corrected clips.
+Ready and relaxed idle loops retain the original two-second Yakuza timing instead of compressing the whole loop into a short native idle cycle. Native idle-body samples repeat at their existing cadence beneath those source arms.
+
+Bat, blade, bottle and crate profiles have relaxed idle, walk, slow walk, run and sprint clips plus an aimed hold. Knife carry/ready/run remains native; its custom attack blends receive the same smoothing. Existing blade/bat/knife attack motion and item scripts remain unchanged. Earlier disabled source reference clips remain supplied for future repair; active selectors choose the new corrected clips.
 
 The katana ready selectors disable extra native torso twisting. Its native mesh edges are checked against the neck/head through all hold/movement poses and sampled crossfades. These checks cover standard PZ proportions, not clothing, every live look-at layer or customized skeletons.
 
@@ -28,4 +30,4 @@ Selectors require the selected DoD style, matching profile and Aim=false for rel
 
 Locomotion uses ordinary AnimSets XML. Addon authors can supply their own named clips/nodes, style/profile conditions, upper-body masks, native deferred travel and safety fallbacks. Keep source motion, model attachments and grips compatible. Do not add per-frame actor displacement to normal locomotion.
 
-See [weapon motion provenance](weapon-motion-assets.json), [walk/sprint provenance](style-travel-assets.json), [selector inventory](locomotion-nodes.json) and [validation](VALIDATION_0.75.0.md). Offline checks compare source/native samples, hand-prop FK, movement tracks, mesh clearance, native import and selector isolation. Live foot planting, clothing clearance and MP latency still need assessment after restarting PZ. The game was kept closed.
+See [weapon motion provenance](weapon-motion-assets.json), [walk/sprint provenance](style-travel-assets.json), [selector inventory](locomotion-nodes.json) and [validation](VALIDATION_0.76.0.md). Offline checks compare source/native samples, hand-prop FK, movement tracks, mesh clearance, native import and selector isolation. Live foot planting, clothing clearance and MP latency still need assessment after restarting PZ. The game was kept closed.

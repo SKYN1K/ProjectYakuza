@@ -163,7 +163,7 @@ for _,binding in ipairs({'light','finisher','grab'})do press(binding,false)end
 phase=0;a:update()
 for i,prompt in ipairs(c.action.qte.prompts)do
  phase=(prompt.atMs-100)/1000;press(prompt.binding,true);a:update();check(z.hits==0,'QTE input alone never deals early damage')
- phase=prompt.atMs/1000;press(prompt.binding,false);a:update();check(z.hits==0 and a.success[i],'successful prompt is presentation-only until final kick')
+ phase=prompt.atMs/1000+(i==6 and .25 or 0);press(prompt.binding,false);a:update();check(z.hits==0 and a.success[i],'successful prompt is presentation-only until final kick')
  a:update();check(z.hits==0,'repeated update cannot duplicate contact')
 end
 phase=143/30;a:update();a:update();check(z.hits==0 and math.abs(a.pendingDamage-2.25)<.000001,'final kick queues earned damage without resetting the paired victim track')
@@ -215,28 +215,29 @@ ISPanel={derive=function(self)local cls={};cls.__index=cls;setmetatable(cls,{__i
 function ISPanel:new(x,y,w,h)return setmetatable({x=x,y=y,width=w,height=h,background=true},{__index=self})end
 function ISPanel:getAbsoluteX()return self.x end;function ISPanel:getAbsoluteY()return self.y end
 function ISPanel:initialise()end;function ISPanel:setWantMouseEvents(v)self.mouse=v end;function ISPanel:addToUIManager()self.added=true end
-function ISPanel:drawSubTexture()end
+function ISPanel:drawSubTexture(texture)if texture.path and texture.path:find('/Input',1,true)then self.inputDraws=(self.inputDraws or 0)+1;self.lastInputIcon=texture.path end end
 function ISPanel:drawTextCentre(text,x,y,r,g,b,a)draws=draws+1;self.lastText=text;self.textAlpha=a end
 Events.OnGameStart=event();Events.OnCreatePlayer=event();getSpecificPlayer=function()return p end;getNumActivePlayers=function()return 1 end
 getPlayerScreenLeft=function()return 0 end;getPlayerScreenTop=function()return 0 end;getPlayerScreenWidth=function()return 1920 end;getPlayerScreenHeight=function()return 1080 end
 UIFont={Large=1}
+do local _="ProjectYakuzaFixture:INPUT_PROMPTS" end
 do local _="ProjectYakuzaFixture:RUSH_UI" end
 function p:isLocalPlayer()return true end
 local U=PY.HeatRushUI;U.create();local panel=U.instances[0]
 check(panel.added and panel.background==false and panel.mouse==false,'QTE overlay has no fullscreen panel background and cannot capture mouse')
 local qte=Q.create(style.actions.heatAction.qte,down)
 getKeyName=function(k)return k==34 and 'G'or tostring(k)end
-local polygons={};getTexture=function()return {}end
+local polygons={};getTexture=function(path)return {path=path}end
 SpriteRenderer={instance={renderPoly=function(_,texture,...)polygons[#polygons+1]={...}end}}
 H.active[p]={seen=true,qte=qte,elapsed=1.5};panel:render()
-check(draws==1 and panel.lastText=='LMB'and #polygons==8 and panel.textAlpha>0,'current binding and two animated timing rings render without an extra get-ready cue')
+check(draws==0 and panel.inputDraws==1 and panel.lastInputIcon:find('InputMouseLeft',1,true)and #polygons==8,'QTE draws the Y6 left-mouse icon and animated timing rings without text-only or extra cues')
 check(polygons[1][9]>=.45 and polygons[1][12]>0,'native ring uses bounded RGBA after its eight screen coordinates')
 local firstX=polygons[1][1];H.active[p].elapsed=1.55;panel:render();check(polygons[9][1]~=firstX,'QTE ring visibly rotates on the source animation clock')
 
-H.active[p].elapsed=0;panel:render();check(draws==2,'QTE overlay is empty outside cue lead-in');H.active[p]=nil
-H.chains[p]={count=7,at=clock};panel:render();check(draws==2,'punch transition adds no preparatory input cue')
-H.chains[p]=nil;H.tickets[p]={expires=clock+700};panel:render();check(draws==2,'paired handoff has no extra ready text')
-H.tickets[p].expires=clock-1;panel:render();check(draws==2,'expired handoff has no stale UI');H.tickets[p]=nil
+H.active[p].elapsed=0;panel:render();check(panel.inputDraws==2 and draws==0,'QTE overlay is empty outside cue lead-in');H.active[p]=nil
+H.chains[p]={count=7,at=clock};panel:render();check(panel.inputDraws==2 and draws==0,'punch transition adds no preparatory input cue')
+H.chains[p]=nil;H.tickets[p]={expires=clock+700};panel:render();check(panel.inputDraws==2 and draws==0,'paired handoff has no extra ready text')
+H.tickets[p].expires=clock-1;panel:render();check(panel.inputDraws==2 and draws==0,'expired handoff has no stale UI');H.tickets[p]=nil
 
 local ended=0;PY.Network={send=function(_,command)if command=='heatRushEnd'then ended=ended+1 end end}
 H.tickets[p]={z=z,pressed=true,expires=clock-1001,sent=clock-1100,granted={action=22}}
@@ -366,8 +367,10 @@ check(math.abs(beforeHeat-PY.getHeat(p)-PY.Heat.stockSize(p))<.000001,'weapon he
 local ka=kc.timedAction;ka.action={setOverrideHandModelsObject=function()end};phase=0;ka:start()
 check(p.invincible and p.ghost and z.vars.ProjectYakuzaPairedVictimClip=='ProjectYakuza_DD_KatanaHeatVictim','framework protects actor and selects the correct original victim clip')
 PY.HeatActions.zombie(z);check(z.target==nil,'protected attacker is cleared as a zombie target')
+local pairedCues={};PY.on('heatRushHit',function(_,_,index)pairedCues[#pairedCues+1]=index end)
 for i,contact in ipairs(kc.action.contacts)do
- phase=contact.atMs/1000;ka:update();ka:update()
+ phase=contact.atMs/1000+(i==2 and .25 or 0);ka:update();ka:update()
+ check(#pairedCues==i and pairedCues[i]==i,'late frame still emits each automatic contact exactly once '..i)
  check(z.hits==beforeHits+(i==4 and 1 or 0),'automatic contact timing is presentation-only until final damage '..i)
 end
 check(math.abs(z.health-8.5)<.000001,'weapon action damage uses canonical held weapon without repeated bonus')
@@ -407,18 +410,37 @@ p.held=katana;local blade=PY.getPlayerStyle(p);check(not R.weaponAllowed(p,blade
 p.held=nil;z.Hit=oldHit;PY.MultiHit.targets=oldTargets;PY.HeatActions.clear()
 PY.resetPlayer(p,'prompt_test');p.held=katana;PY.setHeat(p,100);p.x=0;p.y=0;z.x=1.1;z.y=0;z.health=10;z.useless=false;mouse[1]=true
 local scans=0;PY.MultiHit.targets=function()scans=scans+1;return {{victim=z}}end
-getTexture=function()return {}end;U.heatIcon=nil
-local regions={};function panel:drawSubTexture(texture,sx,sy,sw,sh,x,y,w,h,alpha)regions[#regions+1]={sx=sx,sy=sy,sw=sw,sh=sh,w=w,h=h,alpha=alpha}end
+getTexture=function(path)return {path=path}end;U.heatIcon=nil
+local regions={};function panel:drawSubTexture(texture,sx,sy,sw,sh,x,y,w,h,alpha)if texture.path and texture.path:find('HeatActionIconAtlas',1,true)then regions[#regions+1]={sx=sx,sy=sy,sw=sw,sh=sh,w=w,h=h,alpha=alpha}elseif texture.path and texture.path:find('/Input',1,true)then self.inputDraws=(self.inputDraws or 0)+1;self.lastInputIcon=texture.path end end
 panel.promptAt=clock;panel.promptAlpha=0;H.previews[p]=nil
 panel:render();check(scans==1 and panel.promptAlpha==0,'eligible prompt starts a bounded preview search with zero initial alpha')
 clock=clock+60;panel:render();check(panel.promptAlpha==.5 and scans==1,'prompt fades in fast without repeating target search')
-clock=clock+60;panel:render();check(panel.promptAlpha==1 and scans==1 and panel.lastText=='MMB','fully visible prompt displays the current mouse binding')
+clock=clock+60;panel:render();check(panel.promptAlpha==1 and scans==1 and panel.lastInputIcon:find('InputMouseMiddle',1,true),'fully visible prompt displays the current mouse binding')
 check(#regions==4 and regions[1].w==64 and regions[1].h==80 and regions[2].sx==64 and regions[2].sw==64,'prompt reuses the original Y6 flame and glow at native resolution')
 PY.Bindings.options={getOption=function(_,id)if id=='input_heatAction'then return {getValue=function()return 4 end}elseif id=='key_heatAction'then return {getValue=function()return 37 end}end end}
 getKeyName=function()return 'K'end
-clock=clock+1;panel:render();check(panel.lastText=='K','prompt updates when Heat Action is rebound to a keyboard key')
+clock=clock+1;panel:render();check(panel.lastText=='K'and panel.lastInputIcon:find('InputKeycap',1,true),'prompt draws the rebound keyboard name over the original game keycap')
 mouse[1]=false;clock=clock+80;panel:render();check(panel.promptAlpha==0 and scans==1,'losing RMB eligibility fades the prompt out and stops searching')
 PY.Bindings.options=nil;p.held=nil;PY.MultiHit.targets=oldTargets;H.previews[p]=nil
 p.held={getFullType=function()return 'ProjectYakuza.BeerCrate'end,getCondition=function()return 8 end}
 local crateStyle=PY.getPlayerStyle(p);check(crateStyle.weaponProfile=='crate'and not R.weaponAllowed(p,crateStyle,crateStyle.actions.heatAction),'original crate uses DoD Short Blunt combat without borrowing the bottle Heat Action');p.held=nil
+PY.resetPlayer(p,'network_feedback');p.held=katana;p.attacking=false;p.x=0;p.y=0;z.x=1.1;z.y=0;z.health=10;mouse[1]=true;clock=clock+2000;PY.setHeat(p,100)
+PY.MultiHit.targets=function()return {{victim=z}}end
+check(H.weaponInput(p,PY.stateFor(p),PY.getPlayerStyle(p),true),'network feedback fixture starts the actual paired action')
+local context=PY.activeActions[p];local action=context.timedAction;action.action={setOverrideHandModelsObject=function()end};phase=0;action:start()
+local client,network,feedback,effects=isClient,PY.Network,PY.Feedback,PY.HitEffects;local heard,shown,packets=0,0,0
+isClient=function()return true end
+PY.Network={send=function(_,command)if command=='heatRushHit'then packets=packets+1 end end,capture=function()end,acceptSession=function(_,session)return session==44 end}
+PY.Feedback={sound=function(_,cue)return cue end,play=function()heard=heard+1 end};PY.HitEffects={spawn=function()shown=shown+1 end}
+context.target.granted={action=901,session=44};local health=z.hits
+phase=context.action.contacts[1].atMs/1000+.25;action:update();action:update()
+check(heard==1 and shown==1 and packets==1 and z.hits==health,'owner source contact presents audio/FX without predicting authoritative damage or repeating')
+check(H.localContacts[p].action==901 and H.localContacts[p].seen[1],'owner records its presented action/contact identity')
+local echo={player=2,session=44,action=901,index=1,zombie=25,targetKind='zombie',node=context.action.nodeValue,presentation=true}
+H.remoteSessions[2]=nil;H.receive('ProjectYakuza','heatRushContact',echo);H.receive('ProjectYakuza','heatRushContact',echo)
+check(heard==1 and shown==1,'first-session server confirmation and duplicate echo cannot replay owner feedback')
+action:cleanup(false);H.receive('ProjectYakuza','heatRushContact',echo)
+check(heard==1 and shown==1,'late confirmation after cleanup cannot replay a locally presented contact')
+echo.session=43;H.receive('ProjectYakuza','heatRushContact',echo);check(heard==1,'stale session remains rejected before feedback')
+isClient=client;PY.Network=network;PY.Feedback=feedback;PY.HitEffects=effects;p.held=nil;PY.MultiHit.targets=oldTargets;PY.HeatActions.clear()
 return true,'PASS '..checks..' generic QTE validation, custom bindings, fresh presses, replay safety, native-phase contacts, canonical damage, paired cleanup and interruption checks'

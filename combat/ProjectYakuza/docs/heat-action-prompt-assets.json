@@ -25,7 +25,7 @@
       80
     ]
   },
-  "label": "Current Heat Action binding, drawn above the icon with native PZ fonts.",
+  "label": "Current Heat Action binding above the flame, using the shared original Y6 mouse/keycap renderer; keyboard names use existing PZ fonts. See input-prompt-assets.json.",
   "archiveEntryVerified": true,
   "archiveEntryBytes": 16512,
   "archiveEntrySha256": "b58013a1071c76caa0549cb110276274d5328c5c18d0814fcedf3b373a4687a3"

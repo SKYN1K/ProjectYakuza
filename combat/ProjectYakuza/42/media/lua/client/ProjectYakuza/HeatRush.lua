@@ -5,10 +5,12 @@ require "ProjectYakuza/HeatActions"
 require "ProjectYakuza/AttackEffects"
 require "ProjectYakuza/Defense"
 require "ProjectYakuza/QTEFeedback"
+require "ProjectYakuza/Feedback"
+require "ProjectYakuza/CombatVoices"
 require "TimedActions/ISBaseTimedAction"
 require "TimedActions/ISTimedActionQueue"
 local PY=ProjectYakuza;local R=PY.HeatRushRules
-local H={chains=setmetatable({}, {__mode="k"}),tickets=setmetatable({}, {__mode="k"}),active=setmetatable({}, {__mode="k"})};PY.HeatRush=H
+local H={chains=setmetatable({}, {__mode="k"}),tickets=setmetatable({}, {__mode="k"}),active=setmetatable({}, {__mode="k"}),localContacts=setmetatable({}, {__mode="k"})};PY.HeatRush=H
 local function now()return getTimestampMs()end
 function H.inputStarted(p,style,step,move)
     if style and style.extremeView and style.heatRush and move.extremeHeat then
@@ -149,7 +151,7 @@ function H.present(p,z,move,index,effects)
     local contact=R.contacts(move)[index];if not contact then return end
     if effects~=false and PY.HitEffects then PY.HitEffects.spawn(p,z,contact.strong~=false,contact.charged==true)end
     if p:isLocalPlayer()and PY.Feedback then
-        PY.Feedback.play(p,PY.Feedback.sound(p,contact.cue or "heavyImpact"),.55)
+        PY.Feedback.play(p,PY.Feedback.sound(p,contact.cue or "heavyImpact")or PY.Feedback.sound(p,"heavyImpact")or PY.Feedback.sound(p,"finisher"),.55)
         for _,cue in ipairs(contact.layers or {})do PY.Feedback.play(p,PY.Feedback.sound(p,cue),.3)end
     end
     PY.emit("heatRushHit",p,z,index,contact)
@@ -158,7 +160,16 @@ function A:contact(index)
     if not self.success[index]then return end
     local p,z=self.character,self.context.target.z;local granted=self.context.target.granted
     if index==#R.contacts(self.context.action)then self.finalRequested=true end
-    if granted then PY.Network.send(p,"heatRushHit",{action=granted.action,index=index});return end
+    if granted then
+        local previous=H.localContacts[p]
+        if not previous or previous.action~=granted.action or previous.session~=granted.session then previous={action=granted.action,session=granted.session,seen={}};H.localContacts[p]=previous end
+        if not previous.seen[index]then
+            previous.seen[index]=true
+            local amount=R.amount(self.context.action,index,self.held,self.success)
+            H.present(p,z,self.context.action,index,self.context.action.deferFinalDamage==true or amount==0 or R.targetKind(z)=="player")
+        end
+        PY.Network.send(p,"heatRushHit",{action=granted.action,index=index});return
+    end
     local amount=R.amount(self.context.action,index,self.held,self.success);if not amount then return end
     if R.targetKind(z)=="player"and not R.playerAllowed(p,z)then return end
     if amount>0 then if self.context.action.deferFinalDamage then self.pendingDamage=amount else z:Hit(self.held,p,amount,false,1)end end
@@ -203,7 +214,7 @@ function A:update()
         if kind=="input"and grant then PY.Network.send(self.character,"heatRushPress",{action=grant.action,index=index})end
         if kind=="result"then
             local contact=R.promptContact(self.context.action,index)
-            if contact then self.success[contact]=success and self.elapsed*1000-prompt.atMs<=120;if self.success[contact]then self:contact(contact)end end
+            if contact then self.success[contact]=success and self.elapsed*1000-prompt.atMs<=R.contactGraceMs;if self.success[contact]then self:contact(contact)end end
         elseif kind=="failure"then self:fail(index)
         end
     end)
@@ -211,14 +222,14 @@ function A:update()
         for i,contact in ipairs(self.context.action.contacts or {})do
             if not contact.qteIndex and not self.autoSeen[i]and self.elapsed*1000>=contact.atMs then
                 self.autoSeen[i]=true
-                if self.elapsed*1000-contact.atMs<=120 then self.success[i]=true;self:contact(i)end
+                if self.elapsed*1000-contact.atMs<=R.contactGraceMs then self.success[i]=true;self:contact(i)end
             end
         end
     else
         local contacts=R.contacts(self.context.action)
         while contacts[self.index]and self.elapsed*1000>=contacts[self.index].atMs do
             local i=self.index;self.index=i+1
-            if self.elapsed*1000-contacts[i].atMs<=120 then self.success[i]=true;self:contact(i)end
+            if self.elapsed*1000-contacts[i].atMs<=R.contactGraceMs then self.success[i]=true;self:contact(i)end
         end
     end
     if self.elapsed>=self.pose.duration-.005 or self.character:GetVariable("ProjectYakuzaHeatRush")=="done"then self:forceComplete()end
@@ -318,6 +329,8 @@ function H.receive(module,command,a)
     end
     if command=="heatRushContact"then
         if not H.session(a.player,a.session)or not PY.NetworkProtocol.integer(a.action,1,1000000000)or not PY.NetworkProtocol.integer(a.index,1,32)then return end
+        local predicted=H.localContacts[p]
+        if p:isLocalPlayer()and predicted and(predicted.session==nil or predicted.session==a.session)and(predicted.action>a.action or predicted.action==a.action and predicted.seen[a.index])then return end
         H.contacts=H.contacts or {};local previous=H.contacts[a.player]
         if previous and previous.action>a.action then return end
         if not previous or previous.action~=a.action then previous={action=a.action,seen={}};H.contacts[a.player]=previous end
@@ -353,4 +366,4 @@ function H.updateRemote()
     if not active and H.remoteHook then Events.OnTick.Remove(H.updateRemote);H.remoteHook=false end
 end
 Events.OnServerCommand.Add(H.receive)
-Events.OnMainMenuEnter.Add(function()for id,job in pairs(H.remote)do H.remoteEnd(id,job.action)end;H.updateRemote();H.contacts={};H.ended={};H.remoteSessions={};H.failedPackets={}end)
+Events.OnMainMenuEnter.Add(function()for id,job in pairs(H.remote)do H.remoteEnd(id,job.action)end;H.updateRemote();H.contacts={};H.ended={};H.remoteSessions={};H.failedPackets={};H.localContacts=setmetatable({}, {__mode="k"})end)

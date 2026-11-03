@@ -1,4 +1,5 @@
 require "ProjectYakuza/Registry"
+require "ProjectYakuza/InputPrompts"
 local PY=ProjectYakuza
 local U={providers={},sessions=setmetatable({}, {__mode="k"}),textures={}}
 PY.StyleUI=U
@@ -69,7 +70,7 @@ function U.render(channel,p,host,extra)
         heat=H and H.display(p) or 0,stocks=H and H.stocks(p) or 0,
         maxStocks=H and (H.rules and H.rules(p)or H.config).maxStocks or 0,extreme=H and H.isExtreme(p) or false,
         action=PY.activeActions[p],combo=PY.stateFor and PY.stateFor(p),
-        texture=U.texture,binding=PY.Bindings and PY.Bindings.label,
+        texture=U.texture,binding=PY.Bindings and PY.Bindings.label,inputPrompt=PY.InputPrompts and PY.InputPrompts.describe,drawInputPrompt=PY.InputPrompts and PY.InputPrompts.draw,
         viewport={x=getPlayerScreenLeft(p:getPlayerNum()),y=getPlayerScreenTop(p:getPlayerNum()),
             width=getPlayerScreenWidth(p:getPlayerNum()),height=getPlayerScreenHeight(p:getPlayerNum())},extra=extra or {}}
     session.context=c

@@ -171,3 +171,14 @@
 !/tools/combat-tests/build_style_travel_assets.py
 !/tools/combat-tests/validate_weapon_motion_assets.py
 !/tools/combat-tests/WeaponMotionProbe.java
+
+!/tools/combat-tests/weapon_hold_geometry.py
+
+!/tools/combat-tests/build_cvf_tests.py
+
+!/tools/combat-tests/cvf-combat-test-fixture.lua
+
+!/tools/combat-tests/build_input_prompt_assets.py
+!/tools/combat-tests/build_input_prompts_tests.py
+!/tools/combat-tests/input-prompts-test-fixture.lua
+!/tools/combat-tests/InputPromptAssetProbe.java

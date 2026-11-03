@@ -77,3 +77,10 @@ Errors are caught once per session, logged and quarantined; built-in rendering r
 
 
 The `heatAction` channel can replace or hide the eligibility prompt independently of the heat gauge. Default drawing uses the original Y6 flame atlas at native size, with the selected input above the glyph and a 120 ms fade in / 80 ms fade out. Candidate searches are bounded to 5 Hz while the action is otherwise ready. Input always revalidates on press; presentation cannot authorize damage or remove the RMB requirement.
+
+
+## Shared Yakuza input prompts
+
+Client renderers can use ProjectYakuza.InputPrompts.describe(bindingId) to read the current mode/key/name, and ProjectYakuza.InputPrompts.draw(panel,bindingId,x,y,size,alpha) to draw the shared game-art prompt. Coordinates are panel-relative and centered. Mouse bindings use the original highlighted PC mouse icon; keyboard names are drawn over a nine-slice original game key frame. Descriptors are cached and should be treated as read-only.
+
+Style UI contexts also expose inputPrompt and drawInputPrompt for those functions. Heat Action extra.inputPrompt contains its resolved descriptor while extra.binding retains the text label. QTE and Heat Action default rendering use the same module, so rebinding remains consistent. No input is captured and addon binding IDs registered through Bindings.register are supported. See input-prompt-assets.json for source regions/pixel hashes.

@@ -35,3 +35,10 @@ Version 0.71.0 adds three separate [intact bottle weapons](BOTTLE_WEAPONS.md) an
 Paired clips are normalized to the attacker's original initial heading. The retarget root includes the source vector elevation, which is essential for the katana victim: that clip stores standing height in vector_c_n instead of ketu_c_n. Original body motion, frame counts and native grips remain intact. World paths remove shared cinematic stage translations at katana frames 33/77 and unarmed frame 35. Relative changes are bridged across six source frames instead of teleporting at the camera cut; no replacement body poses are invented. The same repaired paths are shared by owners, observers and the server.
 
 The eligibility popup requires the same equipped item, heat stock, physical RMB, neutral combo, standing target and movement-space checks as the action. Target searches are cached for 200 ms and stop when basic requirements fail; a press forces a fresh check. The icon fades in over 120 ms and out over 80 ms. It reuses the original Y6 flame/glow atlas regions, with the current input rendered above the flame. Styles can override or hide it through ui.heatAction; see [Style UI](STYLE_UI.md).
+
+
+## Source-time audio (0.76.0)
+
+Contact cue keys resolve through the active style/equipment sound table, with heavyImpact/finisher as the optional-cue fallback. Katana and bottle contacts configure existing CombatLightAttack/CombatHeavyAttack entries, using the selected compatible CVF voice. Provider-busy/cooldown results can retry for 600 ms while that exact action remains active; stale requests are dropped. No voice recording or pack is created or modified.
+
+MP owners present feedback from their source-animation contacts and suppress matching server echoes by session/action/index. Health remains authoritative on the server. Contact catch-up uses the existing 650 ms server grace; it does not widen the QTE input windows or auto-complete missed inputs. See [validation](VALIDATION_0.76.0.md).

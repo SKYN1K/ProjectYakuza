@@ -48,6 +48,15 @@ function V.queue(p,id)
     local combo=ProjectYakuza.stateFor(p)
     state(p).pending={id=id,stamp=combo.multiHitToken or combo.startedAt,at=getTimestampMs()+20}
 end
+function V.contact(p,id)
+    local played,reason=V.play(p,id)
+    local s=V.states[p]
+    if played then if s then s.contact=nil end;return end
+    local context=ProjectYakuza.activeActions and ProjectYakuza.activeActions[p]
+    if context and context.kind=="heatAction"and(reason=="cooldown"or reason=="voice busy")then
+        local time=getTimestampMs();state(p).contact={id=id,context=context,deadline=time+600,nextTry=time+75}
+    end
+end
 function V.stunned(p)
     if p:isKnockedDown() then return true end
     local reaction=string.lower((p:getHitReaction() or "").." "..(p:getCurrentStateName() or ""))
@@ -64,6 +73,14 @@ function V.update(p)
     if not V.allowed(p) then V.states[p]=nil;return end
     s=state(p);s.nextPoll=time+75
     local stunned=V.stunned(p);local aiming=p:isAiming()
+    if s.contact then
+        local job=s.contact
+        if stunned or time>job.deadline or not ProjectYakuza.activeActions or ProjectYakuza.activeActions[p]~=job.context then s.contact=nil
+        elseif time>=job.nextTry then
+            local played,reason=V.play(p,job.id);job.nextTry=time+75
+            if played or(reason~="cooldown"and reason~="voice busy")then s.contact=nil end
+        end
+    end
     if s.activation then
         local a=s.activation;local active=ProjectYakuza.HeatActivation and ProjectYakuza.HeatActivation.active[p]
         if time>a.deadline or (a.action and active~=a.action) or stunned then s.activation=nil
@@ -108,10 +125,13 @@ ProjectYakuza.on("groundAttackStarted",function(p)V.queue(p,"CombatHeavyAttack")
 ProjectYakuza.on("runningAttackStarted",function(p)V.queue(p,"CombatSpecialMove")end)
 ProjectYakuza.on("quickstepAttackStarted",function(p)V.queue(p,"CombatSpecialMove")end)
 ProjectYakuza.on("actionStarted",function(c)
-    if c.kind=="quickstep" and ProjectYakuza.getPlayerStyle(c.player).quickstepVoices==false or c.kind=="heatAction"and c.action and c.action.heatRush then return end
+    if c.kind=="quickstep" and ProjectYakuza.getPlayerStyle(c.player).quickstepVoices==false or c.kind=="heatAction"and c.action and(c.action.heatRush or c.action.weaponHeat)then return end
     if c.kind=="quickstep" or c.kind=="parry" or c.kind=="grab" or c.kind=="heatAction" then V.play(c.player,"CombatSpecialMove") end
 end)
-ProjectYakuza.on("heatRushHit",function(p,z,index,contact)if contact and contact.voice then V.play(p,contact.voice)end end)
+ProjectYakuza.on("heatRushHit",function(p,z,index,contact)if contact and contact.voice then V.contact(p,contact.voice)end end)
+local function endContact(context)local s=V.states[context.player];if s and s.contact and s.contact.context==context then s.contact=nil end end
+ProjectYakuza.on("actionCompleted",endContact)
+ProjectYakuza.on("actionCancelled",endContact)
 ProjectYakuza.on("throwStarted",function(p)V.play(p,"CombatSpecialMove")end)
 function V.activation(p)
     if not V.allowed(p) then return end

@@ -2,7 +2,7 @@ require "ProjectYakuza/Registry"
 require "ProjectYakuza/HeatRushPaths"
 require "ProjectYakuza/KatanaHeatPaths"
 require "ProjectYakuza/BottleHeatPaths"
-local R={duration=224/30,targetRange=2}
+local R={duration=224/30,targetRange=2,contactGraceMs=650}
 ProjectYakuza.HeatRushRules=R
 function R.motion(action)
     return action and action.motionId and ProjectYakuza.PairedMotions[action.motionId] or ProjectYakuza.HeatRushPaths

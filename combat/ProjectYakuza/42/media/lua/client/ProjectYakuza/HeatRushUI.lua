@@ -1,5 +1,6 @@
 require "ProjectYakuza/HeatRush"
 require "ProjectYakuza/StyleUI"
+require "ProjectYakuza/InputPrompts"
 require "ISUI/ISPanel"
 local PY=ProjectYakuza
 local rotations={{1,0},{0,1},{-1,0},{0,-1}}
@@ -18,11 +19,11 @@ function U:renderEligibility(p,active)
         if desired==1 then alpha=math.min(1,alpha+dt/120)else alpha=math.max(0,alpha-dt/80)end
     end
     self.promptAlpha=alpha
-    if PY.StyleUI and PY.StyleUI.render("heatAction",p,self,{eligible=target~=nil,target=target,move=move,alpha=alpha,binding=PY.Bindings.label("heatAction")})then return end
+    if PY.StyleUI and PY.StyleUI.render("heatAction",p,self,{eligible=target~=nil,target=target,move=move,alpha=alpha,binding=PY.Bindings.label("heatAction"),inputPrompt=PY.InputPrompts.describe("heatAction")})then return end
     if alpha<=0 then return end
     if U.heatIcon==nil then U.heatIcon=getTexture and getTexture("media/textures/ProjectYakuza/HeatActionIconAtlas.png")or false end
     local x,y=self.width*.5,self.height*.67
-    self:drawTextCentre(PY.Bindings.label("heatAction"),x,y-24,1,1,1,alpha,UIFont.Medium or UIFont.Small or UIFont.Large)
+    PY.InputPrompts.draw(self,"heatAction",x,y-32,44,alpha)
     if U.heatIcon then
         self:drawSubTexture(U.heatIcon,0,0,64,80,x-32,y,64,80,alpha*.35,.12,.42,1)
         self:drawSubTexture(U.heatIcon,64,0,64,80,x-32,y,64,80,alpha,1,1,1)
@@ -47,7 +48,6 @@ function U:render()
     if not prompt then return end
     local age=action.elapsed*1000;local untilHit=prompt.atMs-age
     if untilHit<0 or untilHit>math.max(prompt.windowMs,600)then return end
-    local open=PY.QTE.window(state.definition,index,age)
     local alpha=state.accepted[index]and .8 or 1
     local x,y=self.width*.5,self.height*.7
     local progress=math.max(0,math.min(1,1-untilHit/math.max(600,prompt.windowMs)))
@@ -63,7 +63,7 @@ function U:render()
         local size=108+24*flash
         self:drawSubTexture(U.qteEffects,sx,sy,220,220,x-size*.5,y-size*.5,size,size,(.55+.4*flash)*appear,.5+.5*flash,.8+.2*flash,1)
     end
-    self:drawTextCentre(PY.Bindings.label(prompt.binding),x,y-12,.85,1,1,alpha*appear,UIFont.Large)
+    PY.InputPrompts.draw(self,prompt.binding,x,y,64,alpha*appear)
 
 end
 function U.create()

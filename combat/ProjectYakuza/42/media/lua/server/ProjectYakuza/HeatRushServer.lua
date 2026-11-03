@@ -107,7 +107,7 @@ function H.command(p,command,a,s)
     local entry=job.contacts[a.index];local contact=entry.atMs/1000
     local prompt=entry.qteIndex or not job.move.contacts and job.definition and a.index
     if command=="heatRushHit"then
-        if prompt and not job.presses[prompt]or job.hits[a.index]or age<contact-.1 or age>contact+.65 or job.z:isDead()or R.targetKind(job.z)=="player"and not R.playerAllowed(p,job.z)or not P.near(p,job.z,2)or not P.path(p,job.z:getX(),job.z:getY())then return end
+        if prompt and not job.presses[prompt]or job.hits[a.index]or age<contact-.1 or age>contact+R.contactGraceMs/1000 or job.z:isDead()or R.targetKind(job.z)=="player"and not R.playerAllowed(p,job.z)or not P.near(p,job.z,2)or not P.path(p,job.z:getX(),job.z:getY())then return end
         job.hits[a.index]=true
         local amount=R.amount(job.move,a.index,job.weapon,job.hits);if not amount then return end
         if amount>0 then

@@ -198,3 +198,9 @@ The QTE fixture verifies consistent overlapping windows without early impacts, s
 
 
 Weapon motion repair validation compares original arm world rotations and untouched native walking/head/torso channels, source attack contacts, retimed source walk/sprint samples and native deferred travel. WeaponMotionProbe exercises style/profile selector isolation and walking crossfades. Native FK validates both props at every sample; the native katana mesh edges are checked against neck/head positions through source poses and sampled transitions. Build style-travel assets before weapon-motion assets using Blender, then rebuild MP observers and the numeric attack-trail catalogue. See weapon-motion-assets.json and style-travel-assets.json for original paths/hashes and conversion operations. No PZ launch is required.
+
+
+The 0.76 hold regression samples original GMT joint positions, compares chest-relative segment directions on PZ anatomy, checks forearm-relative wrist articulation, and rejects the old v0.75 katana result. Native torso/head/legs and attack/guard output hashes remain unchanged. CVF integration now runs the actual Heat Action presentation function and feedback resolver against the provider API; paired-action tests cover late source frames and local-MP echo deduplication.
+
+
+Input prompt tests exercise the shared mouse/keycap renderer, rebinding, layout, alpha and cache behavior. build_input_prompt_assets.py --validate compares the four PNG crops against the original ui.par DDS pixels; InputPromptAssetProbe uses native B42 ImageData and checks the text-measurement APIs without starting the game.
