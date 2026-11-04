@@ -1,0 +1,53 @@
+{
+  "authorization": "User explicitly authorized suitable new game-file effects and requested swapping effects to avoid repetition.",
+  "assets": [
+    {
+      "dds": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\kiwami2-particles\\e_j_0073_aura_cA8L8.dds",
+      "ddsSha256": "f16a4becefb46cbc2a9bbd282a85364552823580214e3a9e44d984ca636514d2",
+      "decodedOriginal": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\kiwami2-particles\\e_j_0073_aura_cA8L8.dds.png",
+      "output": "42/media/textures/ProjectYakuza/StyleFX/EntryWispA.png",
+      "sha256": "4ec24192cc37bd5e1223561eab26d1325a012a9ee8380109909066da7d4c5c8b",
+      "size": [
+        64,
+        128
+      ],
+      "operation": "Byte-identical copy of previously decoded original Kiwami 2 pixels; no recolouring, resizing or artwork generation. Runtime geometry/tint/fade provide motion."
+    },
+    {
+      "dds": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\kiwami2-particles\\e_j_0073_aura_dA8L8.dds",
+      "ddsSha256": "b1125dd9d242f2503ccee82212da3179921289141dfb7930db303c55b54bdd30",
+      "decodedOriginal": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\kiwami2-particles\\e_j_0073_aura_dA8L8.dds.png",
+      "output": "42/media/textures/ProjectYakuza/StyleFX/EntryWispB.png",
+      "sha256": "18e86ad3f7f614ebbd36f09635d24ffdafeb0e58b5684109f766eebd169b8e71",
+      "size": [
+        64,
+        128
+      ],
+      "operation": "Byte-identical copy of previously decoded original Kiwami 2 pixels; no recolouring, resizing or artwork generation. Runtime geometry/tint/fade provide motion."
+    },
+    {
+      "dds": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\kiwami2-particles\\e_j_0073_spdAura02.dds",
+      "ddsSha256": "8a326886557366f7e76b02016c7704b11c389ad967c229b216ae2f027054fb47",
+      "decodedOriginal": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\kiwami2-particles\\e_j_0073_spdAura02.dds.png",
+      "output": "42/media/textures/ProjectYakuza/StyleFX/TauntSpiral.png",
+      "sha256": "eed0145fb829a2dfe1ee12d4bd527c49b81dbad533c0b6c58f787d610f45d18d",
+      "size": [
+        128,
+        128
+      ],
+      "operation": "Byte-identical copy of previously decoded original Kiwami 2 pixels; no recolouring, resizing or artwork generation. Runtime geometry/tint/fade provide motion."
+    },
+    {
+      "dds": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\kiwami2-particles\\e_j_0361_spark_b.dds",
+      "ddsSha256": "f42624d9f35b8a8969f0e5efa5995fce0d0b4e67684fc1019e0f28898f37f86a",
+      "decodedOriginal": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\kiwami2-particles\\e_j_0361_spark_b.dds.png",
+      "output": "42/media/textures/ProjectYakuza/StyleFX/TauntStreak.png",
+      "sha256": "08bac823dea4be75f4761b61061e4dce96215719742b66a35638986df85c84a9",
+      "size": [
+        32,
+        64
+      ],
+      "operation": "Byte-identical copy of previously decoded original Kiwami 2 pixels; no recolouring, resizing or artwork generation. Runtime geometry/tint/fade provide motion."
+    }
+  ]
+}

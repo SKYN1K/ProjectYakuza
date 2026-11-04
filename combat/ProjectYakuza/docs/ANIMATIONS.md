@@ -52,3 +52,5 @@ Remote nodes preserve clip/speed/blends/masks but contain zero events. Both Proj
 ## Optional Heat attack speed (0.61.0)
 
 Addon styles can opt in with heatAttackSpeed={max=1.25,power=1,useExtremeFuel=false}, with per-weapon overrides. The curve is sampled per committed attack, applies to the existing native speed variables and is bounded/replicated in MP snapshots. Fixed-speed timed clips are not automatically retimed. Dragon of Dojima does not enable this feature. See [Heat-based attack speed](HEAT_ATTACK_SPEED.md) for validation, timing and authoring contracts.
+
+Style entry prepares its active style/weapon variables before playback so idle can remain eligible beneath the full-body action. Its owner and observer nodes use m_EarlyTransitionOut=true and m_BlendOutTime=0.24. The original source duration still controls the movement/attack lock; native completion or an observed clip reaching that duration releases it. Missing clips and interruptions retain their existing cleanup policy. Source motion is unchanged.

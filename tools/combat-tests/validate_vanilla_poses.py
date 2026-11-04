@@ -20,7 +20,15 @@ with zipfile.ZipFile(root/'dist/ProjectYakuza-B42-v0.77.0.zip')as archive:
         relative=name.split('/',1)[1]if '/'in name else ''
         if relative.endswith('/')or not relative:continue
         if relative.startswith('42/media/anims_X/')or any(relative.startswith('42/media/AnimSets/player/'+g+'/')for g in ['melee','stomp','actions']):
-            assert (mod/relative).read_bytes()==archive.read(name),relative;checked+=1
+            actual=(mod/relative).read_bytes();original=archive.read(name)
+            if relative.endswith('.xml')and 'StyleEntry'in relative:
+                node=E.fromstring(actual);old=E.fromstring(original);node.find('m_BlendOutTime').text=old.findtext('m_BlendOutTime')
+                early=node.find('m_EarlyTransitionOut')
+                if early is not None:node.remove(early)
+                for tree in [node,old]:
+                    for item in tree.iter():item.text=item.text.strip()if item.text else None;item.tail=None
+                assert E.tostring(node)==E.tostring(old),relative
+            else:assert actual==original,relative;checked+=1
 (here/'vanilla-pose-contract.tsv').write_text('\n'.join(rows),encoding='utf-8')
 r=subprocess.run([str(game/'jre64/bin/java.exe'),'-cp','.;'+str(game/'*'),'VanillaPoseProbe','vanilla-pose-contract.tsv'],cwd=here,capture_output=True,text=True);print(r.stdout);assert r.returncode==0,r.stderr
 print('PASS all 30 disabled pose selectors, absent Lua producers, native walking run-blend and',checked,'unchanged motion/combat XML files')

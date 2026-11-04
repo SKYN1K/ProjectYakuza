@@ -78,8 +78,8 @@ function H:drawGauge(p)
         self.visualHeat=self.fillFrom+(self.fillTarget-self.fillFrom)*t*t*(3-2*t)
     end
     local phase=self.frame or 0;local a=H.loadAssets()
-    local healthWidth=math.max(80,math.min(630,getPlayerScreenWidth(0)-H.originX-80))
-    local healthX,healthY=H.originX+40*H.scale,H.originY-48*H.scale
+    local healthWidth=math.max(80,math.min(360*H.scale,getPlayerScreenWidth(0)-H.originX-80))
+    local healthX,healthY=H.originX+40*H.scale,H.originY-32*H.scale
     if a.healthEmpty then self:drawTextureScaled(a.healthEmpty,healthX,healthY,healthWidth,18*H.scale,1,1,1,1)end
     local fill=(healthWidth-4)*self.health/100
     if fill>0 then

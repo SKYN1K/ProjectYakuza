@@ -176,4 +176,12 @@ do
  check(count==25 and scans==count,'empty ground searches retain their cache when no weapon action is available')
  getCell=oldCell;wall=true
 end
+do
+ local rules=PY.HeatRushRules;local motion=PY.PairedMotions.dod_ground;local offset=motion.contactOffset;check(offset~=nil,'ground sequence includes native head/sole calibration')
+ local forward,right=rules.sample(motion.victim,1)
+ for _,v in ipairs({{1,0},{0,1},{-1,0},{0,-1},{.70710678,.70710678},{-.70710678,.70710678},{.70710678,-.70710678},{-.70710678,-.70710678}})do
+  local job={x=5,y=7,fx=v[1],fy=v[2],motion=motion};local x,y=rules.point(job,motion.victim,1)
+  check(math.abs(x-(5+v[1]*(forward+offset.forward)+v[2]*(right+offset.right)))<.000001 and math.abs(y-(7+v[2]*(forward+offset.forward)-v[1]*(right+offset.right)))<.000001,'victim calibration rotates with the pair in all eight headings')
+ end
+end
 return 'PASS '..checks..' reliable grab lifecycle, four source-timed strikes, following, cleanup, wall geometry, handoff and action protection checks'

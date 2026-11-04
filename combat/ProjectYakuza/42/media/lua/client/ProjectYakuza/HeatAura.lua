@@ -2,7 +2,7 @@ require "ProjectYakuza/Runtime"
 require "ProjectYakuza/HeatOutline"
 require "ProjectYakuza/WorldEffects"
 local ProjectYakuza=ProjectYakuza
-local A={states=setmetatable({}, {__mode="k"}),fadeInMs=350,flashMs=750,flashes=setmetatable({}, {__mode="k"})}
+local A={states=setmetatable({}, {__mode="k"}),fadeInMs=350,flashMs=450,flashes=setmetatable({}, {__mode="k"})}
 ProjectYakuza.HeatAura=A
 
 A.layout={
@@ -21,42 +21,19 @@ A.extremeLayout={
     {x=7,height=7,kind="smoke",frames=64,frameHeight=64,speed=64/(1.85*60),scale=.40,alpha=.18,drift=4,lift=10,smoke=true,cycleMs=1850},
 }
 
+A.tauntLayout={
+    {kind="spiral",source="media/textures/ProjectYakuza/StyleFX/TauntSpiral.png",frames=1,x=0,height=42,scale=.52,frameHeight=128,drift=0,lift=8,alpha=.30},
+    {kind="streak",source="media/textures/ProjectYakuza/StyleFX/TauntStreak.png",frames=1,x=-8,height=30,scale=.48,frameHeight=64,drift=-5,lift=24,alpha=.36},
+    {kind="streak",source="media/textures/ProjectYakuza/StyleFX/TauntStreak.png",frames=1,x=8,height=34,scale=.44,frameHeight=64,drift=5,lift=20,alpha=.32},
+    {kind="streak",source="media/textures/ProjectYakuza/StyleFX/TauntStreak.png",frames=1,x=-3,height=48,scale=.34,frameHeight=64,drift=-7,lift=14,alpha=.28},
+    {kind="streak",source="media/textures/ProjectYakuza/StyleFX/TauntStreak.png",frames=1,x=3,height=50,scale=.34,frameHeight=64,drift=7,lift=16,alpha=.28},
+}
 function A.makeTaunt()
-    local f={remaining=A.flashMs,duration=A.flashMs,last=getTimestampMs(),emitters={}}
-    A.tauntSprites=A.tauntSprites or {};local tile=Core.getTileScale()
-    for _,point in ipairs(A.layout) do
-        local sprite=A.tauntSprites[point.kind]
-        if not sprite then
-            sprite=IsoSprite.CreateSprite(nil)
-            sprite:LoadFramesNoDirPageDirect("media/textures/ProjectYakuza/TauntAura",point.kind,32)
-            sprite:setAnimate(true);A.tauntSprites[point.kind]=sprite
-        end
-        local instance=ProjectYakuza.WorldEffects.detached(sprite,tile*point.scale,point.speed*32/(1.2*60))
-        instance:SetAlpha(0);instance:SetTargetAlpha(0)
-        f.emitters[#f.emitters+1]={instance=instance,point=point,sprite=sprite}
-    end
-    return f
+    local f=A.makeBurst(A.tauntLayout,A.flashMs)
+    if not A.tauntColor then A.tauntColor=ColorInfo.new(.4,.72,1,1)end
+    f.color=A.tauntColor;return f
 end
-local function smooth(x) x=math.max(0,math.min(1,x));return x*x*(3-2*x) end
-function A.drawTaunt(p,f,s)
-    local fade=smooth((f.duration-f.remaining)/100)*smooth(f.remaining/150)
-    local tile=Core.getTileScale()
-
-    local baseline=not s.extreme and ProjectYakuza.Heat.stocks(p)>=1 and s.opacity or 0
-    local alpha=baseline+(1-baseline)*fade
-    local size=1+.20*fade
-
-    if not A.tauntColor then A.tauntColor=ColorInfo.new(1,1,1,1) end
-    A.tauntColor:set((80+44*fade)/124,(195+15*fade)/210,1,1)
-    for _,e in ipairs(f.emitters) do
-        local point=e.point;local scale=tile*point.scale*size
-        e.instance:setScale(scale,scale)
-        e.instance:SetAlpha(alpha);e.instance:SetTargetAlpha(alpha)
-        if not isGamePaused() then e.sprite:update(e.instance) end
-        ProjectYakuza.WorldEffects.renderCentered(p,e.instance,256,scale,point.x*tile*size,
-            -(40+(point.height-40)*size)*tile,A.tauntColor)
-    end
-end
+function A.drawTaunt(p,f,s)A.drawFlash(p,f)end
 A.activationLayout={
     {kind="smoke",x=-11,height=3,scale=.62,frameHeight=64,drift=-9,lift=11,alpha=.38},
     {kind="smoke",x=-4,height=7,scale=.66,frameHeight=64,drift=-4,lift=15,alpha=.34},
@@ -73,14 +50,14 @@ function A.makeBurst(layout,duration)
     local f={remaining=duration,duration=duration,last=getTimestampMs(),emitters={}}
     A.burstSprites=A.burstSprites or {};local tile=Core.getTileScale()
     for _,point in ipairs(layout) do
-        local sprite=A.burstSprites[point.kind]
+        local key=point.source or point.kind;local sprite=A.burstSprites[key]
         if not sprite then
             sprite=IsoSprite.CreateSprite(nil)
-            sprite:LoadFramesNoDirPageDirect("media/textures/ProjectYakuza/ExtremeHeat",point.kind,64)
-            sprite:setAnimate(true);A.burstSprites[point.kind]=sprite
+            if point.source then sprite:LoadFramesNoDirPageSimple(point.source)else sprite:LoadFramesNoDirPageDirect("media/textures/ProjectYakuza/ExtremeHeat",point.kind,point.frames or 64)end
+            sprite:setAnimate(not point.source);A.burstSprites[key]=sprite
         end
         local scale=tile*point.scale
-        local instance=ProjectYakuza.WorldEffects.detached(sprite,scale,64/((duration/1000)*60))
+        local instance=ProjectYakuza.WorldEffects.detached(sprite,scale,(point.frames or 64)/((duration/1000)*60))
         instance:SetAlpha(0);instance:SetTargetAlpha(0)
         f.emitters[#f.emitters+1]={instance=instance,point=point,sprite=sprite}
     end
@@ -99,6 +76,20 @@ function A.flash(player)
     if A.flashes[player]~=f then return end
     A.flashes[player]=A.makeTaunt()
 end
+A.entryLayout={
+    {kind="wispA",source="media/textures/ProjectYakuza/StyleFX/EntryWispA.png",frames=1,x=-9,height=38,scale=.53,frameHeight=128,drift=-6,lift=16,alpha=.42},
+    {kind="wispB",source="media/textures/ProjectYakuza/StyleFX/EntryWispB.png",frames=1,x=9,height=40,scale=.51,frameHeight=128,drift=6,lift=14,alpha=.40},
+    {kind="smoke",x=-7,height=3,scale=.44,frameHeight=64,drift=-10,lift=13,alpha=.24},
+    {kind="smoke",x=7,height=3,scale=.44,frameHeight=64,drift=10,lift=13,alpha=.24},
+}
+function A.entry(player)
+    A.releaseFlash(player)
+    A.flashes[player]={remaining=380,duration=380,last=getTimestampMs(),emitters={}}
+    A.update(player)
+    local state=A.states[player];if not state or not state.fadeElapsed then return end
+    if not A.entryColor then A.entryColor=ColorInfo.new(.28,.62,1,1)end
+    A.releaseBurst(state.entryBurst);state.entryBurst=A.makeBurst(A.entryLayout,380);state.entryBurst.color=A.entryColor
+end
 function A.drawFlash(p,f)
     local t=math.max(0,math.min(1,1-f.remaining/f.duration));local tile=Core.getTileScale()
     local fade=math.sin(math.pi*t)
@@ -110,7 +101,7 @@ function A.drawFlash(p,f)
         if not isGamePaused() then e.sprite:update(e.instance) end
         ProjectYakuza.WorldEffects.renderCentered(p,e.instance,point.frameHeight,scale,
             (point.x+point.drift*t)*tile,(-point.height-point.lift*t)*tile,
-            A.extremeColor)
+            f.color or A.extremeColor)
     end
 end
 
@@ -166,15 +157,17 @@ function A.renderBody()
             if s.activationBurst and not A.advanceBurst(s.activationBurst,time) then
                 A.releaseBurst(s.activationBurst);s.activationBurst=nil
             end
+            if s.entryBurst and not A.advanceBurst(s.entryBurst,time)then A.releaseBurst(s.entryBurst);s.entryBurst=nil end
             if not isGamePaused() then
                 s.clock=s.clock+elapsed;s.fadeElapsed=math.min(A.fadeInMs,s.fadeElapsed+elapsed)
             end
             local fraction=s.fadeElapsed/A.fadeInMs;s.opacity=fraction*fraction*(3-2*fraction)
-            if not s.flashing and not s.extreme and ProjectYakuza.Heat.stocks(p)<1 then A.clear(p)
+            if not s.flashing and not s.entryBurst and not s.extreme and ProjectYakuza.Heat.stocks(p)<1 then A.clear(p)
             else
                 if ProjectYakuza.HeatOutline then ProjectYakuza.HeatOutline.draw(p) end
-                if not flash or s.extreme then A.draw(p,s) end
+                if s.extreme or ProjectYakuza.Heat.stocks(p)>=1 then A.draw(p,s) end
                 if s.activationBurst then A.drawFlash(p,s.activationBurst) end
+                if s.entryBurst then A.drawFlash(p,s.entryBurst)end
                 if flash then
                     A.drawTaunt(p,flash,s)
 
@@ -196,6 +189,7 @@ function A.clear(player)
     local s=A.states[player]
     if not s or (s.fadeElapsed==nil and not s.activationBurst and not s.activating) then return end
     A.releaseBurst(s.activationBurst);s.activationBurst=nil;s.activating=false
+    A.releaseBurst(s.entryBurst);s.entryBurst=nil
     for _,e in ipairs(s.emitters) do
         if e.instance then e.instance:Dispose();IsoSpriteInstance.add(e.instance);e.instance=nil end
     end
@@ -281,6 +275,7 @@ ProjectYakuza.on("extremeHeatEnded",A.update)
 ProjectYakuza.on("heatActivationStarted",A.update)
 ProjectYakuza.on("heatActivationStopped",A.update)
 ProjectYakuza.on("styleChanged",A.update)
+ProjectYakuza.on("styleEntryStarted",A.entry)
 ProjectYakuza.on("tauntStopped",function(p,completed)if completed then A.flash(p) end end)
 Events.OnSave.Add(A.clearAll)
 Events.OnMainMenuEnter.Add(A.clearAll)

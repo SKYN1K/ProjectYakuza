@@ -1,0 +1,65 @@
+{
+  "operation": "Code-only paired-origin calibration at source impact frame 30. Original actor/victim clips and root paths remain unchanged. Native male/female PZ head mesh centroids and right-foot sole vertices determine a constant victim translation, applied from frame zero in all headings.",
+  "frame": 30,
+  "modelToTileScale": 1.5,
+  "forwardAxis": "-model Z",
+  "rightAxis": "+model X",
+  "sources": [
+    {
+      "path": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\models_X\\Skinned\\MaleBody.x",
+      "sha256": "a0a7cbb3f8fb55827f4039edd04f9af28299d76ae9160484069084faca2aff01",
+      "head": [
+        0.3334633409976959,
+        0.01502894051373005,
+        -0.19061477482318878
+      ],
+      "sole": [
+        -0.09190955013036728,
+        0.07505757361650467,
+        -0.23371995985507965
+      ],
+      "headVertices": 132,
+      "soleVertices": 17
+    },
+    {
+      "path": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\models_X\\Skinned\\FemaleBody.x",
+      "sha256": "aa78e223c06d99c7ba20ca500c304fc8540f92276430eee5074bc8a817d58039",
+      "head": [
+        0.330393522977829,
+        0.023668324574828148,
+        -0.18210306763648987
+      ],
+      "sole": [
+        -0.09644424170255661,
+        0.07631711661815643,
+        -0.22614994645118713
+      ],
+      "headVertices": 137,
+      "soleVertices": 17
+    }
+  ],
+  "offset": [
+    -0.11966723207480767,
+    -0.16787908604706736
+  ],
+  "actorSole": [
+    -0.09417689591646194,
+    0.07568734884262085,
+    -0.229934960603714
+  ],
+  "victimHead": [
+    0.33192843198776245,
+    0.0193486325442791,
+    -0.18635892868041992
+  ],
+  "clips": [
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_GroundHeat.x",
+      "sha256": "4003f1cc04ddf2b75933de265dc169c470aec819debe235ee00e4476d0cd9ef6"
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_GroundHeatVictim.x",
+      "sha256": "55495c8f5447feb5920d5d090c08342001a51c09f0e713cbd9680ea940f80cb1"
+    }
+  ]
+}

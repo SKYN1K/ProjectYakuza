@@ -33,6 +33,8 @@ function R.sample(path,time)
 end
 function R.point(job,path,time)
     local forward,right=R.sample(path,time)
+    local motion=job.motion or ProjectYakuza.HeatRushPaths;local offset=motion.contactOffset
+    if offset and path==motion.victim then forward=forward+offset.forward;right=right+offset.right end
     return job.x+job.fx*forward+job.fy*right,job.y+job.fy*forward-job.fx*right
 end
 function R.targetKind(z)

@@ -63,6 +63,7 @@ local equipped,extreme=true,false
 ProjectYakuza.isEquipped=function()return equipped end
 ProjectYakuza.isBusy=function(p)return ProjectYakuza.activeActions[p]~=nil end
 ProjectYakuza.resetPlayer=function()end
+ProjectYakuza.setVisual=function(player,active)player:setVariable("ProjectYakuzaActive",active)end
 ProjectYakuza.Defense={ready=function(p)return p.aim and equipped and not paused and not ProjectYakuza.isBusy(p) and not p.vehicle and not p.dead end,
  snapActor=function(p,x,y)p.x=x;p.y=y end}
 ProjectYakuza.Heat={stockSize=function()return 100/6 end,isExtreme=function()return extreme end,enabled=function()return true end,
@@ -100,6 +101,7 @@ local function begin()
  p.nativeAction=a.action;a:start();return a,c
 end
 local a,c=begin();local heat=ProjectYakuza.getHeat(p)
+check(p:GetVariable('ProjectYakuzaActive')==true and p:GetVariable('ProjectYakuzaStyle')=='dragon_of_dojima','idle style variables are ready beneath entry for a native blended handoff')
 check(p.block and p.ignore and not p.deferred and a.handOverride,'entry locks movement, root travel and native weapon attacks')
 ProjectYakuza.Bindings.update(p);check(not p.authorize,'native attack authorization is gated while entry is active')
 check(not a.stopOnWalk and not a.stopOnRun and not a.stopOnAim,'movement and aim input cannot cancel entry')
@@ -132,4 +134,6 @@ check(not E.pending[p],'getting hit cancels pending entry')
 p.hit='';E.request(p,'dragon_of_dojima');clock=clock+2001;E.retry()
 check(not E.pending[p] and not E.pendingHook,'failed equipment readiness cannot leave an input lock')
 p.ready=true
+local ending,endingContext=begin();p:setVariable('ProjectYakuzaStyleEntry','started');ending:update();clock=clock+math.ceil(endingContext.action.duration*1000)+1;ending:update()
+check(ending.completed and not p.block and not p.ignore,'native early blending cannot leave the source-duration action locked when its final marker is absent')
 return 'PASS '..checks..' locked style entry, vulnerability, completion and cleanup checks'

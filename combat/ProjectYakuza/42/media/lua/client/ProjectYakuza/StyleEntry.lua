@@ -25,6 +25,8 @@ function A:start()
     self.anchorX,self.anchorY=p:getX(),p:getY()
     p:setBlockMovement(true);p:setIgnoreMovement(true);p:setDeferredMovementEnabled(false)
     self:holdPosition()
+    PY.setVisual(p,true,"");p:setVariable("ProjectYakuzaStyle",self.context.style.id)
+    p:setVariable("ProjectYakuzaWeaponProfile",self.context.style.weaponProfile or "")
     self.character:setVariable("ProjectYakuzaStyleEntry","")
     self:setActionAnim(self.context.action.animation)
     self.action:setOverrideHandModelsObject(p:getPrimaryHandItem(),nil,false)
@@ -83,7 +85,7 @@ function A:update()
     self:holdPosition()
     local marker=self.character:GetVariable("ProjectYakuzaStyleEntry") or ""
     if marker=="started" then self.seenClip=true end
-    if marker=="done" and self.seenClip then self:forceComplete()
+    if self.seenClip and (marker=="done"or t-self.startedAt>=self.context.action.duration*1000)then self:forceComplete()
     elseif t-self.startedAt>self.context.action.duration*1000+800 or (t-self.startedAt>600 and not self.seenClip) then self:forceStop() end
 end
 function A:new(c)

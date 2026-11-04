@@ -42,3 +42,6 @@ code='require "ProjectYakuza/Registry"\nProjectYakuza.PairedMotions=ProjectYakuz
 (mod/'42/media/lua/shared/ProjectYakuza/GroundHeatPaths.lua').write_bytes(code.encode())
 (mod/'docs/ground-heat-assets.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
 print('GROUND_ASSETS',len(records),'original paired clips,',count,'source frames; maximum separation',max(((a[0]-b[0])**2+(a[1]-b[1])**2)**.5 for a,b in zip(paths[0],paths[1])))
+
+from calibrate_ground_contact import run as calibrate
+calibrate()

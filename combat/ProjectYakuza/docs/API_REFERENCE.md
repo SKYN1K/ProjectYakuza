@@ -129,7 +129,7 @@ Charged moves may set `minChargedDamageMultiplier` (0..damageMultiplier). DoD he
 
 ### 0.38.0 presentation refinement
 
-AttackEffects.facing(player) reads the continuous rendered getAnimAngleRadians value without an additional shoulder-twist rotation. Its project helper remains the unchanged native body-space projection used by charge effects. No Java bridge is required. HeatAura completion echoes now last 750ms, reuse the normal aura animation and replace the ordinary body pass to avoid stacking brightness.
+AttackEffects.facing(player) reads the continuous rendered getAnimAngleRadians value without an additional shoulder-twist rotation. Its project helper remains the unchanged native body-space projection used by charge effects. No Java bridge is required. HeatAura completion bursts now last 450 ms and use original Kiwami 2 spiral/streak pixels with a restrained world-space fade. Style entry uses a separate 380 ms wisp/smoke burst. Regular heat-aura assets are preserved.
 
 ### 0.39.0 approved taunt colour copies
 

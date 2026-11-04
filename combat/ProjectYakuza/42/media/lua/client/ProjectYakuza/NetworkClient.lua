@@ -254,6 +254,7 @@ function N.applyState(p,packet,s)
             p:setVariable("PerformingAction","ProjectYakuza_MP");p:setVariable("IsPerformingAnAction",true)
             s.actionOverride=true
         end
+        if packet.equipped and packet.clip=="ProjectYakuza_DD_StyleEntry"and ProjectYakuza.HeatAura and ProjectYakuza.HeatAura.entry then ProjectYakuza.HeatAura.entry(p)end
         if ProjectYakuza.AttackEffects then ProjectYakuza.AttackEffects.remote(p,ProjectYakuza.getPlayerStyle(p),packet) end
     end
     s.style=packet.style;s.clip=packet.clip;s.swing=packet.swing;s.action=packet.action or 0

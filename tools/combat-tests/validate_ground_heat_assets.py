@@ -31,3 +31,13 @@ paths,cuts=bridge_scene_cuts(report['rawPaths']);assert paths==report['paths']an
 assert all(len(path)==111 and all(math.isfinite(v)for point in path for v in point)for path in paths)
 (here/'ground-prop-contract.tsv').write_text('\n'.join(contracts),encoding='utf-8')
 print('PASS original ground pair GUID roles, archive/clip hashes, 111 source frames, motion-derived stomp contact and',samples,'preserved body samples; no invented motion')
+
+alignment=json.loads((mod/'docs/ground-contact-alignment.json').read_text())
+for source in alignment['sources']:assert sha(source['path'])==source['sha256']
+actor,victim=report['paths'][0][30],report['paths'][1][30];foot=alignment['actorSole'];head=alignment['victimHead'];delta=alignment['offset']
+for angle in range(0,360,45):
+ c,s=math.cos(math.radians(angle)),math.sin(math.radians(angle))
+ af,ar=actor[0]-foot[2]*1.5,actor[1]+foot[0]*1.5;vf,vr=victim[0]-head[2]*1.5+delta[0],victim[1]+head[0]*1.5+delta[1]
+ assert math.hypot(c*(af-vf)+s*(ar-vr),s*(af-vf)-c*(ar-vr))<.000001
+code=(mod/'42/media/lua/shared/ProjectYakuza/GroundHeatPaths.lua').read_text();assert 'contactOffset='in code
+print('PASS native male/female head and foot-sole calibration meets at impact in all eight headings; original motion unchanged')

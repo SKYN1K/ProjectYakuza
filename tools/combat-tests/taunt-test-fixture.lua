@@ -134,6 +134,7 @@ end}
 instanceof=function()return true end
 IsoSprite={CreateSprite=function()
  local s={};function s:LoadFramesNoDirPageDirect(path,kind,count)self.kind=kind;self.path=path;self.frameCount=count;check(((path=='media/textures/ProjectYakuza/HeatWisp' or path=='media/textures/ProjectYakuza/TauntAura') and count==32) or (path=='media/textures/ProjectYakuza/ExtremeHeat' and ((kind=='flame' or kind=='smoke') and count==64)),'only supplied current normal, taunt and Extreme Heat frames');loads=loads+1 end
+ function s:LoadFramesNoDirPageSimple(path)self.path=path;self.kind=path:match("([^/]+)%.png$");self.frameCount=1;loads=loads+1 end
  function s:setAnimate(v)self.animate=v end
  function s:update(i)i.frames=i.frames+1 end
  return s
@@ -174,14 +175,14 @@ local s=A.states[p];check(s and #s.emitters==4 and s.flashing,'completion flash 
 clock=clock+130;A.render()
 check(s.opacity>0 and s.profile=='normal' and not s.extreme,'brief flash keeps the normal aura profile')
 check(not additive,'taunt has no additive brightness pulse')
-check(s.emitters[1].instance.frames==0,'taunt replaces normal pass without double drawing')
-check(#A.flashes[p].emitters==4,'completion uses only four ordinary heat aura emitters')
+check(s.emitters[1].instance.frames>0,'taunt leaves the existing earned heat aura moving beneath its distinct burst')
+check(#A.flashes[p].emitters==5,'completion uses a distinct spiral and four original streak particles')
 for i,e in ipairs(A.flashes[p].emitters)do
- check(e.sprite.path=='media/textures/ProjectYakuza/TauntAura' and e.sprite.kind==A.layout[i].kind,'taunt shares the standard aura animation')
- check(near(e.instance.scale,A.layout[i].scale*2*1.2) and e.instance.frames==1,'twenty percent larger normal-speed aura at full envelope')
+ check(e.sprite.path:find('/StyleFX/',1,true)and e.instance.alpha<.5,'taunt uses distinct original Kiwami textures with restrained opacity')
+ check(e.instance.scale>0 and e.instance.scale<2,'world particle sizes remain bounded')
 end
-check(near(A.tauntColor.r,1) and near(A.tauntColor.g,1),'peak taunt uses the full approved 25-percent-whiter pixels')
-check(A.flashes[p].duration==750,'taunt echo lasts exactly 0.75 unpaused seconds')
+check(near(A.tauntColor.r,.4)and near(A.tauntColor.g,.72),'taunt stays soft blue instead of pulsing white')
+check(A.flashes[p].duration==450,'taunt burst finishes in 0.45 unpaused seconds')
 local count,alloc=loads,attached
 for i=1,1000 do A.update(p);A.render()end
 check(loads==count and attached==alloc,'stable aura never reallocates per frame')
@@ -238,11 +239,14 @@ A.flash(p);check(s.flashing and s.emitters[1].instance,'replicated completion tr
 clock=clock+751;A.render();check(not s.emitters[1].instance,'remote completion glow expires at zero heat')
 p.localPlayer=true
 A.flash(p);local echo=A.flashes[p]
-clock=clock+50;A.render();check(near(echo.emitters[1].instance.alpha,.5),'zero-heat echo fades in over 100ms')
-check(near(A.tauntColor.r,102/124) and near(A.tauntColor.g,202.5/210),'colour blends halfway from original blue during fade-in')
-clock=clock+625;A.render();check(near(echo.emitters[1].instance.alpha,.5),'zero-heat echo fades out over 150ms')
-check(near(A.tauntColor.r,102/124) and near(A.tauntColor.g,202.5/210),'colour returns smoothly toward original blue during fade-out')
-clock=clock+76;A.render();check(not A.flashes[p],'taunt echo cleans up after fade')
+clock=clock+50;A.render();check(echo.emitters[1].instance.alpha>0 and echo.emitters[1].instance.alpha<.30,'taunt spiral fades in softly')
+clock=clock+175;A.render();check(near(echo.emitters[1].instance.alpha,.30),'taunt spiral peaks gently halfway through its brief lifetime')
+clock=clock+226;A.render();check(not A.flashes[p],'taunt burst fades out and cleans up')
+A.entry(p);local entry=A.states[p].entryBurst
+check(entry and #entry.emitters==4 and entry.duration==380,'style switching uses two original curling wisps and two fast smoke puffs')
+check(entry.emitters[1].sprite.path:find('EntryWisp',1,true)and entry.emitters[3].sprite.kind=='smoke','entry effects are distinct from taunt spiral and streaks')
+clock=clock+190;A.render();check(entry.emitters[1].instance.alpha>0 and entry.emitters[3].instance.alpha<.3,'style effects have a restrained animated envelope')
+clock=clock+191;A.render();check(not A.states[p].entryBurst and entry.emitters[1].instance.disposed,'entry particles expire once and return their instances')
 
 ProjectYakuza.HeatActivation={active={}}
 ProjectYakuza.setHeat(p,0);extreme=false

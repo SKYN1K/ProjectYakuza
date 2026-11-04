@@ -1061,4 +1061,11 @@ do
  command('heatRushBegin',{zombie=z1.id,request=5501,groundHeat=true});check(not rush.leases[p],'server rejects ground action against a standing victim')
  z1.isOnFloor=oldFloor;z1.isKnockedDown=oldKnock
 end
+do
+ local entries=0;local previous=ProjectYakuza.HeatAura.entry;ProjectYakuza.HeatAura.entry=function()entries=entries+1 end
+ local state={};local packet={player=remote.id,style='dragon_of_dojima',equipped=true,heat=0,fuel=0,extreme=false,clip='ProjectYakuza_DD_StyleEntry',move='',swing=0,action=9999,seq=1,taunt=0}
+ client.applyState(remote,packet,state);client.applyState(remote,packet,state);check(entries==1,'remote entry effects start once rather than restarting on every network snapshot')
+ packet.action=10000;client.applyState(remote,packet,state);check(entries==2,'a distinct style-entry action can replay its brief effects')
+ ProjectYakuza.HeatAura.entry=previous
+end
 return 'PASS '..count..' MP authority, duplicate, range, lease, cooldown, observer and throttle checks'
