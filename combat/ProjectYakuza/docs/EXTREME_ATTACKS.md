@@ -6,16 +6,16 @@ Perform the eight-input light chain; the first seven attacks may miss or hit dif
 
 Boost lights retain their 0.525 damage multiplier and now stun zombies in place for 250 ms. Weapon push/knockdown is suppressed only for the swing, and the short AI/root-movement stun restores original flags after it expires. Repeated hits refresh the same lease.
 
-The retail paired rush asks for **Light → Heavy → Grab → Light → Heavy → Grab**. Default inputs are LMB, MMB, G, LMB, MMB, G. Each label reads the current action binding; using the Grab binding here does not enable ordinary grabs. A fresh press of the correct binding is required inside each consistent 400 ms window. Original Y6 ring textures rotate, contract, animate through their supplied atlas regions and flash briefly on acceptance. Only the current bound input appears; there is no extra ready message or input sequence overlay. The previous recovery-cancel handoff is restored, and both actors blend in over 80 ms. The next input appears immediately after the preceding valid press, while contacts retain their original source times.
+The retail paired rush asks for **Light → Heavy → Grab → Light → Heavy → Grab**. Default inputs are LMB, MMB, G, LMB, MMB, G. Each label reads the current action binding; using the Grab binding here does not enable ordinary grabs. A fresh press of the correct binding is required inside each consistent 600 ms window. The original Y6 quarter-ring texture forms a blue radial arc that decreases over exactly the accepted window. A fresh correct press anywhere while the arc remains passes; a press at or after expiry fails. Only the current bound input appears; there is no extra ready message or input sequence overlay. The previous recovery-cancel handoff is restored, and both actors blend in over 80 ms. The next input appears immediately after the preceding valid press, while contacts retain their original source times.
 
 | Contact | Original frame at 30 fps | Input window | Binding |
 | --- | --- | --- | --- |
-| Punch 1 | 56 | 400 ms | light |
-| Punch 2 | 63 | 400 ms | finisher |
-| Punch 3 | 77 | 400 ms | grab |
-| Punch 4 | 85 | 400 ms | light |
-| Punch 5 | 102 | 400 ms | finisher |
-| Punch 6 | 110 | 400 ms | grab |
+| Punch 1 | 56 | 600 ms | light |
+| Punch 2 | 63 | 600 ms | finisher |
+| Punch 3 | 77 | 600 ms | grab |
+| Punch 4 | 85 | 600 ms | light |
+| Punch 5 | 102 | 600 ms | finisher |
+| Punch 6 | 110 | 600 ms | grab |
 | Finishing kick | 143 | Automatic | None |
 
 Successful prompts play punch feedback at their source contacts and a quiet confirmation sound. DoD aborts on the first missed prompt, plays the complete 21-frame Kiryu `bct_std_en` exit/recovery and releases the victim. This is an original recovery motion used as an abort, rather than a claim that it is Dragon Engine's original QTE-failure branch. Wrong inputs and held buttons do not count; missed prompts no longer silently play the successful ending.
@@ -44,7 +44,7 @@ DoD configures `failureLimit=1`, `failureMode="consecutive"` and a `qteFailure` 
 
 ## Timed impact feedback and stable ending (0.74.0)
 
-All six input windows are 400 ms. The explicit overlapping-window policy accepts the next sequential control before the previous punch's contact, and the UI advances on the accepted press. Holding a button or pressing a later role out of order cannot skip prompts. Impacts remain at source frames 56, 63, 77, 85, 102, 110 and 143.
+All six input windows are 600 ms. The explicit overlapping-window policy accepts the next sequential control before the previous punch's contact, and the UI advances on the accepted press. Holding a button or pressing a later role out of order cannot skip prompts. Impacts remain at source frames 56, 63, 77, 85, 102, 110 and 143.
 
 Contacts alternate existing punch/heat impact sounds and stronger original spark presets; the final kick layers existing kick, heavy and heat impact sounds. Punches 1/3/5 request CombatLightAttack recordings and the finishing kick requests CombatHeavyAttack through the existing CVF adapter. The generic entry voice is skipped for this rush. The selected voice pack, Voices volume, provider cooldowns and busy-voice policy still apply; no pack or recording is modified.
 

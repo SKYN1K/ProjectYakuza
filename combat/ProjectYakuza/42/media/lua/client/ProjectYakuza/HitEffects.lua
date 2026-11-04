@@ -142,7 +142,8 @@ function F.draw()
     for _,b in ipairs(F.bursts) do
         local v=b.victim;local t=b.age/b.life
         local alpha=math.min(1,(1-t)*1.1)
-        local height=(v:isOnFloor() and 6 or 35)*tile
+        local grounded=v:isOnFloor()or v.GetVariable and v:GetVariable("ProjectYakuzaPairedVictimClip")=="ProjectYakuza_DD_GroundHeatVictim"
+        local height=(grounded and 6 or 35)*tile
         local wx,wy=b.gx or 0,b.gy or 0
         local bx,by=(wx-wy)*32*tile,(wx+wy)*16*tile
         for _,e in ipairs(b.emitters) do

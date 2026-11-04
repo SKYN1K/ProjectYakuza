@@ -9,7 +9,7 @@ root = here.parents[1]
 media = root / 'combat/ProjectYakuza/42/media'
 game = Path('F:/SteamLibrary/steamapps/common/ProjectZomboid')
 nodes = list((media / 'AnimSets/player').rglob('ProjectYakuza_MP_*.xml'))
-assert len(nodes) == 416, len(nodes)
+assert len(nodes) == 418, len(nodes)
 for cycle in ('0', '1'):
     directory = here / ('native-observers-cycle' + cycle)
     directory.mkdir(exist_ok=True)
@@ -33,9 +33,9 @@ for cycle in ('0', '1'):
 
             shutil.copyfile(path, directory / ('ProjectYakuza_MP_' + path.parent.name + '_' + path.name))
             count += 1
-    assert count == 208
+    assert count == 209
     result = subprocess.run([str(game / 'jre64/bin/java.exe'), '-cp', str(here) + ';' + str(game / 'projectzomboid.jar'),
-                             'MPObserverProbe', str(directory), 'ProjectYakuza_MP_', '208'], cwd=here, capture_output=True, text=True)
+                             'MPObserverProbe', str(directory), 'ProjectYakuza_MP_', '209'], cwd=here, capture_output=True, text=True)
     print(result.stdout, end='')
     if result.returncode:
         print(result.stderr)
@@ -43,7 +43,7 @@ for cycle in ('0', '1'):
 for path in (media / 'AnimSets/zombie/hitreaction').glob('ProjectYakuza_EnemyHit*.xml'):
     repeat = media / 'AnimSets/zombie/hitreaction-hit' / path.name
     assert E.tostring(E.parse(path).getroot()) == E.tostring(E.parse(repeat).getroot())
-print('PASS 416 event-free observer selectors retain their supplied clips/settings; 4 native repeat-hit nodes match originals')
+print('PASS 418 event-free observer selectors retain their supplied clips/settings; 4 native repeat-hit nodes match originals')
 
 
 for i,(hit,frames) in enumerate([(6,30),(8,47),(11,42),(11,47)],1):

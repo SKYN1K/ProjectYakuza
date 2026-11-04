@@ -44,4 +44,4 @@ code='require "ProjectYakuza/Registry"\nProjectYakuza.PairedMotions=ProjectYakuz
 print('WALL_ASSETS',len(records),'original paired clips,',count,'source frames; maximum separation',max(((a[0]-b[0])**2+(a[1]-b[1])**2)**.5 for a,b in zip(paths[0],paths[1])))
 
 path=mod/"42/media/lua/shared/ProjectYakuza/WallHeatPaths.lua"
-path.write_text(path.read_text()+"\nProjectYakuza.PairedMotions.dod_wall.wallDepth="+str(max(-v[1]for path in paths for v in path)+.15)+"\n",encoding="utf-8")
+path.write_text(path.read_text()+"\nProjectYakuza.PairedMotions.dod_wall.wallDepth="+str(max(v[0]for path in paths for v in path)+.15)+"\n",encoding="utf-8")

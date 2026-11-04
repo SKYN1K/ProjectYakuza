@@ -41,6 +41,19 @@ function U:drawTimingRing(x,y,size,alpha,r,g,b,angle)
         SpriteRenderer.instance:renderPoly(U.qteIcon,cx+(-c+v)*size,cy+(-v-c)*size,cx+v*size,cy-c*size,cx,cy,cx-c*size,cy-v*size,r,g,b,alpha)
     end
 end
+function U:drawRadialTimer(x,y,size,fraction,alpha,r,g,b)
+    if U.qteIcon==nil then U.qteIcon=getTexture and getTexture("media/textures/ProjectYakuza/HeatRushQTEAtlas.png")or false end
+    if not U.qteIcon or not SpriteRenderer or not SpriteRenderer.instance then return end
+    local cx,cy=self:getAbsoluteX()+x,self:getAbsoluteY()+y
+    local segments=48;local count=math.max(0,math.min(1,fraction))*segments
+    for i=0,math.ceil(count)-1 do
+        local q=math.floor(i/12);local start=-math.pi+(i%12)/12*math.pi*.5;local finish=start+math.min(1,count-i)/12*math.pi*.5
+        local u1,v1=1+math.cos(start),1+math.sin(start);local u2,v2=1+math.cos(finish),1+math.sin(finish)
+        local angle=(q+1)*math.pi*.5;local c,s=math.cos(angle),math.sin(angle)
+        local x1,y1=(u1-1)*size,(v1-1)*size;local x2,y2=(u2-1)*size,(v2-1)*size
+        SpriteRenderer.instance:renderPoly(U.qteIcon,cx,cy,cx+x1*c-y1*s,cy+x1*s+y1*c,cx+x2*c-y2*s,cy+x2*s+y2*c,cx,cy,r,g,b,alpha,1,1,u1,v1,u2,v2,1,1)
+    end
+end
 function U:render()
     local p=getSpecificPlayer(self.playerNum);local action=p and PY.HeatRush.active[p]
     self:renderEligibility(p,action)
@@ -49,22 +62,15 @@ function U:render()
     local state=action.qte;local index=state.definition.allowOverlap and (PY.QTE.promptIndex(state)or #state.definition.prompts)or state.index;local prompt=state.definition.prompts[index]
     if not prompt then return end
     local age=action.elapsed*1000;local untilHit=prompt.atMs-age
-    if untilHit<0 or untilHit>math.max(prompt.windowMs,600)then return end
+    if untilHit<0 or untilHit>prompt.windowMs then return end
     local alpha=state.accepted[index]and .8 or 1
     local x,y=self.width*.5,self.height*.7
-    local progress=math.max(0,math.min(1,1-untilHit/math.max(600,prompt.windowMs)))
-    local appear=math.min(1,(math.max(prompt.windowMs,600)-untilHit)/90)
+    local remaining=math.max(0,math.min(1,untilHit/prompt.windowMs))
+    local appear=math.min(1,(prompt.windowMs-untilHit)/60)
     local accepted=state.lastInputAt or state.inputAt[index]
     local flash=accepted and math.max(0,1-(age-accepted)/180)or 0
-    self:drawTimingRing(x,y,56*(1+.12*flash),alpha*appear,.45+.5*flash,.75+.2*flash,1,age*.0018)
-    self:drawTimingRing(x,y,56+38*(1-progress),alpha*.65*appear,.75,.9,1,-age*.0024)
-    if U.qteEffects==nil then U.qteEffects=getTexture and getTexture("media/textures/ProjectYakuza/HeatRushQTEEffects.png")or false end
-    if U.qteEffects then
-        local frame=math.floor(age/60)%3
-        local sx,sy=frame==1 and 220 or 0,frame==2 and 220 or 0
-        local size=108+24*flash
-        self:drawSubTexture(U.qteEffects,sx,sy,220,220,x-size*.5,y-size*.5,size,size,(.55+.4*flash)*appear,.5+.5*flash,.8+.2*flash,1)
-    end
+    self:drawTimingRing(x,y,60,.18*appear,.15,.35,1,0)
+    self:drawRadialTimer(x,y,60,remaining,appear,.15+.4*flash,.65+.3*flash,1)
     PY.InputPrompts.draw(self,prompt.binding,x,y,64,alpha*appear)
 
 end

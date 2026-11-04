@@ -42,4 +42,4 @@ A quickstep pressed while RMB is physically held can wait up to 350 ms for the n
 
 Space followed immediately by RMB re-arms the native quickstep during the short aim transition. The quota and cooldown begin only when a live animation produces movement. A failed startup restores the old movement flags without spending a charge or displaying a job progress bar. Root movement follows native track time and retains the original distance.
 
-Heat Rush uses the earlier recovery-cancel entry again. Its six press windows are all 400 ms and the next bound input appears immediately after a correct press, with impacts still timed to the original animation.
+Heat Rush uses the earlier recovery-cancel entry again. Its six press windows are all 600 ms and the next bound input appears immediately after a correct press, with impacts still timed to the original animation.

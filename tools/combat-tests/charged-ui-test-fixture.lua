@@ -1,3 +1,4 @@
+function p:getBodyDamage()return {getOverallBodyHealth=function()return p.fixtureHealth or 100 end}end
 Events.OnTick=event();Events.OnPostRender=event();Events.OnGameStart=event()
 local paused=false
 isGamePaused=function()return paused end
@@ -297,6 +298,9 @@ function ISPanel:drawSubTexture(texture,sx,sy,sw,sh,x,y,w,h,alpha,r,g,b)
  if self.failDraw then error('intentional native HUD draw failure') end
  hudDraws[#hudDraws+1]={source={sx,sy,sw,sh},alpha=alpha,r=r,g=g,b=b,path=texture.path,additive=additive}
 end
+local healthRects={}
+function ISPanel:drawTextureScaled()end
+function ISPanel:drawRect(x,y,w,h,alpha,r,g,b)healthRects[#healthRects+1]={width=w,r=r}end
 function ISPanel:drawText()end
 getSpecificPlayer=function()return p end;UIFont={Small=1}
 getKeyName=function(key)return tostring(key)end
@@ -352,4 +356,7 @@ do
  check(HUD.instance:onRightMouseDown()==false and HUD.instance:onRightMouseUp()==false,'heat HUD passes native right-button press and release through')
 end
 print('PASS '..checks..' charged heavy, style UI and outline checks')
+p.fixtureHealth=25;clock=clock+101;healthRects={};HUD.instance:prerender()
+check(HUD.instance.health==25 and #healthRects==8 and math.abs(healthRects[1].width-(630-4)*.25)<.001,'health HUD maps overall body health to the full-length life bar')
+p.fixtureHealth=0;clock=clock+101;healthRects={};HUD.instance:prerender();check(HUD.instance.health==0 and #healthRects==0,'empty overall health draws no life fill')
 return checks

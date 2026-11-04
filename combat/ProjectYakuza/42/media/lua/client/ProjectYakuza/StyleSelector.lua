@@ -66,7 +66,6 @@ function Wheel:prerender()
         local custom=ProjectYakuza.StyleUI.render("selectorSlot",self.player,self,{style=style,side=side,x=x,y=y,alpha=alpha,selected=chosen,focus=focus,progress=enter})
         if not custom then
             local radius=40+4*focus
-            self:drawRect(x-43,y+47,86,1,.15*alpha,.65,.75,.9)
             if a.life then
                 self:drawSubTexture(a.life,122,74,51,51,x-radius,y-radius,radius*2,radius*2,alpha,1,1,1)
                 if focus>.001 then

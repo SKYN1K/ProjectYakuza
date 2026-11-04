@@ -4,6 +4,7 @@ require "ProjectYakuza/KatanaHeatPaths"
 require "ProjectYakuza/BottleHeatPaths"
 require "ProjectYakuza/GrabRules"
 require "ProjectYakuza/WallHeatPaths"
+require "ProjectYakuza/GroundHeatPaths"
 local R={duration=224/30,targetRange=2,contactGraceMs=650}
 ProjectYakuza.HeatRushRules=R
 function R.motion(action)
@@ -65,6 +66,12 @@ function R.validTarget(p,z,range)
     local dx,dy=z:getX()-p:getX(),z:getY()-p:getY();local n=math.sqrt(dx*dx+dy*dy);local f=p:getForwardDirection()
     return n>.01 and n<=(range or R.targetRange)and (dx*f:getX()+dy*f:getY())/n>=.5
 end
+function R.validFor(p,z,action)
+    if not action or not action.groundHeat then return R.validTarget(p,z)end
+    if not p or R.targetKind(z)~="zombie"or z:isDead()or not(z:isOnFloor()or z:isKnockedDown())or z:isUseless()or math.abs(z:getZ()-p:getZ())>.25 then return false end
+    local dx,dy=z:getX()-p:getX(),z:getY()-p:getY();local length=math.sqrt(dx*dx+dy*dy);local facing=p:getForwardDirection()
+    return length<1.8 and (length<.01 or (dx*facing:getX()+dy*facing:getY())/length>=.2)
+end
 function R.capture(z)
     local old={ignore=z:getIgnoreMovement(),deferred=z:isDeferredMovementEnabled()}
     if R.targetKind(z)=="zombie"then old.useless=z:isUseless();old.target=z:getTarget();old.locked=ProjectYakuza.GrabRules.captureLock(z)
@@ -81,6 +88,7 @@ function R.lock(z,clip)
     ProjectYakuza.HitResponses.releaseStun(z)
     local old=R.capture(z)
     if R.targetKind(z)=="player"and z:isLocalPlayer()and ProjectYakuza.isEquipped(z)then ProjectYakuza.resetPlayer(z,"heat_rush_victim")end
+    if clip=="ProjectYakuza_DD_GroundHeatVictim"then old.groundAction=true;old.floor=z:isOnFloor();old.knocked=z:isKnockedDown();z:setOnFloor(false);z:setKnockedDown(false)end
     R.hold(z);z:setVariable("ProjectYakuzaPairedVictimClip",clip or "ProjectYakuza_DD_HeatRushVictim");z:setVariable("ProjectYakuzaHeatRushVictim",true)
     if R.targetKind(z)=="player"then z:setVariable("PerformingAction","ProjectYakuzaHeatRushVictim");z:setVariable("IsPerformingAnAction",true)end
     z:setHitReaction("ProjectYakuzaHeatRushVictim");z:reportEvent("wasHit")
@@ -98,6 +106,7 @@ function R.restore(z,old)
         if z:GetVariable("PerformingAction")=="ProjectYakuzaHeatRushVictim"then z:setVariable("PerformingAction",old.performing or"");z:setVariable("IsPerformingAnAction",old.action==true)end
     end
     if z:getHitReaction()=="ProjectYakuzaHeatRushVictim"then z:setHitReaction("");z:reportEvent("ActiveAnimFinishing")end
+    if old.groundAction and not z:isDead()then R.ground(z)end
 end
 function R.endFacing(job)
     local facing=(job.motion or ProjectYakuza.HeatRushPaths).victimFacing
@@ -122,6 +131,42 @@ function R.space(p,job)
         local x,y=R.point(job,path,job.duration or R.duration);if not P.path(p,x,y)then return false end
     end
     return true
+end
+function R.clearance(p,job)
+    local paths=job.motion or ProjectYakuza.HeatRushPaths;local radius=.42;local checked={};local cell=getCell();local level=math.floor(p:getZ())
+    if not cell then return false end
+    local function clear(x,y)
+        local gx,gy=math.floor(x),math.floor(y);local key=gx..":"..gy;local sq=checked[key]
+        if sq==false then return false end
+        if sq==nil then sq=cell:getGridSquare(gx,gy,level);checked[key]=sq or false end
+        if not sq then return false end
+        if not sq.isWallTo then
+            for _,d in ipairs({{radius,0},{-radius,0},{0,radius},{0,-radius}})do if not ProjectYakuza.NetworkProtocol.path(p,x+d[1],y+d[2])then return false end end
+            return true
+        end
+        for _,d in ipairs({{-1,0,x-gx},{1,0,gx+1-x},{0,-1,y-gy},{0,1,gy+1-y}})do
+            if d[3]<radius then
+                local other=cell:getGridSquare(gx+d[1],gy+d[2],level)
+                if not other or sq:isWallTo(other)or sq:isWindowTo(other)or sq:isDoorTo(other)then return false end
+            end
+        end
+        return true
+    end
+    for _,path in ipairs({paths.actor,paths.victim})do
+        for i=1,#path,4 do local x,y=R.point(job,path,(i-1)/30);if not clear(x,y)then return false end end
+        local x,y=R.point(job,path,job.duration or R.duration);if not clear(x,y)then return false end
+    end
+    return true
+end
+function R.placement(p,z,action)
+    local facing=p:getForwardDirection();local fx,fy=facing:getX(),facing:getY();local length=math.sqrt(fx*fx+fy*fy)
+    if length<.001 then return end;fx,fy=fx/length,fy/length
+    local motion=R.motion(action);local duration=R.durationFor(action)
+    for _,offset in ipairs({{0,0},{-.7,0},{0,.7},{0,-.7},{.7,0},{-.7,.7},{-.7,-.7},{.7,.7},{.7,-.7}})do
+        local job={x=p:getX()+fx*offset[1]+fy*offset[2],y=p:getY()+fy*offset[1]-fx*offset[2],fx=fx,fy=fy,motion=motion,duration=duration}
+        local x,y=R.point(job,motion.victim,0)
+        if (x-z:getX())^2+(y-z:getY())^2<=2.25 and R.clearance(p,job)and R.space(p,job)and ProjectYakuza.NetworkProtocol.path(z,x,y)then return job end
+    end
 end
 function R.amount(action,index,held,success)
     local prompt=R.contacts(action)[index];if not prompt then return end

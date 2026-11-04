@@ -204,3 +204,7 @@
 !/tools/combat-tests/GrabAssetProbe.java
 
 !/tools/combat-tests/AnimationProbe.java
+
+!/tools/combat-tests/build_ground_heat_assets.py
+!/tools/combat-tests/extract_ground_heat_assets.py
+!/tools/combat-tests/validate_ground_heat_assets.py

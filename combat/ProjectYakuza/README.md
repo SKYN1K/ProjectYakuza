@@ -2,13 +2,15 @@
 
 Project Yakuza is a Build 42 combat mod and a framework for independent fighting-style addons. Dragon of Dojima uses supplied Yakuza/Kiwami animations, textures and sounds. Other styles register their own moves, assets and controllers without copying the framework.
 
-**Version 0.80.0 · Lua API 3 · MP protocol 2.** API 1 style registrations remain supported. Internal namespace/mod dependency: `ProjectYakuza`. Display name: Project Yakuza.
+**Version 0.81.0 · Lua API 3 · MP protocol 2.** API 1 style registrations remain supported. Internal namespace/mod dependency: `ProjectYakuza`. Display name: Project Yakuza.
 
 ## Install and play
 
 Extract the ZIP so `Zomboid/mods/ProjectYakuza/42/mod.info` exists. Enable Project Yakuza for the save. The server and every MP client need the same framework and addons. Restart after updating files.
 
 Hold Z, choose Dragon of Dojima in the left slot, then release Z to equip the style token. Left defaults to DoD, right starts empty, bottom opens settings and style assignments, top unequips the style. Selecting/reselecting DoD plays its 1.67-second entry: movement and attacks are locked, but the player remains vulnerable.
+
+Ground-trample Heat Actions use RMB plus the rebindable Heat Action input near a downed zombie outside a combo, costing one heat stock. Ordinary paired actions move both actors to nearby clear space; wall actions face their selected wall. The full-length red HUD bar shows native overall health.
 
 Katana Heat Actions use a separate rebindable control (default RMB + MMB), only outside combos, costing one stock. Invulnerability ends with the action; zombie targeting protection lasts another 0.5 seconds. See [Heat Actions](docs/HEAT_ACTIONS.md).
 
@@ -69,4 +71,4 @@ The original Yakuza 6 beer-crate conversion uses [Yakuza GMD IO](https://github.
 
 The bottom style-wheel slot opens settings: First Style, Second Style, hit effects, heat aura and diagnostics. Each style row previews its optional developer-supplied selectorIcon. Save applies changes; Cancel/Escape discards them. The inventory context submenu has been removed.
 
-As of 0.80.0, weapon holds and ordinary armed movement use vanilla Zomboid poses. Ordinary unarmed walking also uses vanilla animation timing. Custom weapon attack/guard/Heat Action clips remain active; the converted hold and walking clips are retained but disabled.
+As of 0.81.0, weapon holds and ordinary armed movement use vanilla Zomboid poses. Ordinary unarmed walking also uses vanilla animation timing. Custom weapon attack/guard/Heat Action clips remain active; the converted hold and walking clips are retained but disabled.

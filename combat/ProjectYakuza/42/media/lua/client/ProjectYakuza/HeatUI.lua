@@ -12,7 +12,7 @@ H.extremeGlowColor={.52,.22,1}
 function H.loadAssets()
     if H.assets then return H.assets end
     local base="media/textures/ProjectYakuza/HeatHUD/"
-    local a={atlas=getTexture(base.."OriginalDragonAtlas.png"),combat=getTexture(base.."OriginalCombatAtlas.png")}
+    local a={atlas=getTexture(base.."OriginalDragonAtlas.png"),combat=getTexture(base.."OriginalCombatAtlas.png"),healthFrame=getTexture(base.."BarFrame.png"),healthEmpty=getTexture(base.."BarEmpty.png")}
 
     a.body={121,160,118,138};a.head={130,38,129,121}
     a.glass={266,1,68,68};a.core={266,72,68,68}
@@ -58,6 +58,7 @@ end
 function H:drawGauge(p)
     local time=getTimestampMs()
     if time>=(self.nextRead or 0) then
+        local body=p:getBodyDamage();self.health=math.max(0,math.min(100,body:getOverallBodyHealth()))
         self.heat=math.max(0,math.min(100,ProjectYakuza.Heat.display(p)))
         self.extreme=ProjectYakuza.Heat.isExtreme(p)
         self.label=self.extreme and "EXTREME HEAT" or ("HEAT  "..ProjectYakuza.Heat.stocks(p).." / "..(ProjectYakuza.Heat.rules and ProjectYakuza.Heat.rules(p)or ProjectYakuza.Heat.config).maxStocks.."  ["..ProjectYakuza.Bindings.label("extremeHeat").."]")
@@ -77,9 +78,17 @@ function H:drawGauge(p)
         self.visualHeat=self.fillFrom+(self.fillTarget-self.fillFrom)*t*t*(3-2*t)
     end
     local phase=self.frame or 0;local a=H.loadAssets()
+    local healthWidth=math.max(80,math.min(630,getPlayerScreenWidth(0)-H.originX-80))
+    local healthX,healthY=H.originX+40*H.scale,H.originY-48*H.scale
+    if a.healthEmpty then self:drawTextureScaled(a.healthEmpty,healthX,healthY,healthWidth,18*H.scale,1,1,1,1)end
+    local fill=(healthWidth-4)*self.health/100
+    if fill>0 then
+        for row=0,7 do local shine=1-math.abs(row-3.5)/4;self:drawRect(healthX+2,healthY+2+row*(14*H.scale/8),fill,14*H.scale/8+1,1,.48+.4*shine,.025+.045*shine,.035+.045*shine)end
+    end
+    if a.healthFrame then self:drawTextureScaled(a.healthFrame,healthX,healthY,healthWidth,18*H.scale,1,1,1,1)end
     local capacity=(ProjectYakuza.Heat.rules and ProjectYakuza.Heat.rules(p)or ProjectYakuza.Heat.config).maxStocks
     local pairs=math.ceil(capacity/2)
-    if self.setWidth then self:setWidth(math.max(348,H.originX+(56+38*capacity)*H.scale))end
+    if self.setWidth then self:setWidth(math.max(348,healthX+healthWidth+12,H.originX+(56+38*capacity)*H.scale))end
 
     self.glowState=self.extreme and "extreme" or (self.heat>=99.999 and "ready" or "none")
     local glowAlpha

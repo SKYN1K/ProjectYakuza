@@ -51,7 +51,7 @@ function G.wall(p,z,move)
     local function candidate(sq,other,x,y,nx,ny)
         if not sq or not other or not sq:isWallTo(other)or sq:isWindowTo(other)or sq:isDoorTo(other)then return end
         local dx,dy=z:getX()-x,z:getY()-y;local distance=dx*dx+dy*dy;if distance>.85*.85 then return end
-        local pose={x=x-nx*depth,y=y-ny*depth,fx=ny,fy=-nx,motion=paths,duration=move.duration}
+        local pose={x=x-nx*depth,y=y-ny*depth,fx=nx,fy=ny,motion=paths,duration=move.duration,wallX=x,wallY=y,wallNX=nx,wallNY=ny}
         local shift=(pose.x-p:getX())^2+(pose.y-p:getY())^2
         if shift>1.2*1.2 or bestDistance and shift>=bestDistance or not ProjectYakuza.HeatRushRules.space(p,pose)then return end
         best,bestDistance=pose,shift
@@ -64,4 +64,12 @@ function G.wall(p,z,move)
         candidate(sq,cell:getGridSquare(gx-1,gy,level),gx,ty,p:getX()<gx and 1 or -1,0)
     end end
     return best
+end
+
+function G.wallPresent(p,pose)
+    if not pose.wallX or not pose.wallY or not pose.wallNX or not pose.wallNY then return false end
+    local cell=getCell();if not cell then return false end
+    local x,y=math.floor(pose.wallX),math.floor(pose.wallY);local level=math.floor(p:getZ())
+    local sq=cell:getGridSquare(x,y,level);local other=cell:getGridSquare(x-(pose.wallNX~=0 and 1 or 0),y-(pose.wallNY~=0 and 1 or 0),level)
+    return sq~=nil and other~=nil and sq:isWallTo(other)and not sq:isWindowTo(other)and not sq:isDoorTo(other)
 end

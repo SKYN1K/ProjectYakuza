@@ -41,7 +41,7 @@ function B.spawn(player,victim,strong,charged,feedback)
     local tile=Core.getTileScale()
     local family=feedback;if family==nil then family=style.impactFeedback end
     local scale=family=="blade"and 1.15 or family=="blunt"and .85 or 1
-    local b={player=player,victim=victim,age=0,last=getTimestampMs(),life=family=="blade"and 360 or B.life,scale=.18*tile*(charged and 1.35 or strong and 1.2 or 1)*scale,height=(victim:isOnFloor() and 5 or 26)*tile}
+    local b={player=player,victim=victim,age=0,last=getTimestampMs(),life=family=="blade"and 360 or B.life,scale=.18*tile*(charged and 1.35 or strong and 1.2 or 1)*scale,height=((victim:isOnFloor()or victim.GetVariable and victim:GetVariable("ProjectYakuzaPairedVictimClip")=="ProjectYakuza_DD_GroundHeatVictim")and 5 or 26)*tile}
     selectFrame(b,0);B.bursts[#B.bursts+1]=b
     if not B.hooked then Events.OnTick.Add(B.update);Events.OnPostRender.Add(B.render);B.hooked=true end
 end

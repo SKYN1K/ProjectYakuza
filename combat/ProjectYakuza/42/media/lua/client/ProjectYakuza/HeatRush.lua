@@ -40,18 +40,20 @@ function H.discard(p,ticket)
 end
 function H.input(p,s,style)
     local ticket=H.tickets[p];if not ticket then return false end
-    if not p:isAiming()or ticket.weapon and not isMouseButtonDown(1)or not ticket.weapon and PY.Bindings.down("finisher")then H.discard(p,ticket);return false end
-    local action=style.actions.heatAction
-    if ticket.weapon then
+    if not p:isAiming()or (ticket.weapon or ticket.ground)and not isMouseButtonDown(1)or not ticket.weapon and not ticket.ground and PY.Bindings.down("finisher")then H.discard(p,ticket);return false end
+    local action=ticket.ground and style.actions.groundHeat or style.actions.heatAction
+    if ticket.ground then
+        if not action or not action.enabled or not R.noCombo(s,style,now())or PY.actionHeat(p,action)<(action.heatStocks or 0)*PY.Heat.stockSize(p)then H.discard(p,ticket);return false end
+    elseif ticket.weapon then
         local cost=action and (action.heatStocks or 0)*PY.Heat.stockSize(p)or 0
         if not R.weaponAllowed(p,style,action)or not R.noCombo(s,style,now())or PY.actionHeat(p,action)<cost then H.discard(p,ticket);return false end
     elseif not style.heatRush or not PY.Heat.isExtreme(p)then H.discard(p,ticket);return false end
-    if now()>ticket.expires+(ticket.sent and 1000 or 0)or not R.validTarget(p,ticket.z)then H.discard(p,ticket);return false end
+    if now()>ticket.expires+(ticket.sent and 1000 or 0)or not R.validFor(p,ticket.z,action)then H.discard(p,ticket);return false end
     local down=PY.Bindings.down("light")
     if down and not s.lastDown then ticket.pressed=true end
     if not ticket.pressed then return false end
     s.queued=0
-    if not ticket.weapon and PY.MultiHit then
+    if not ticket.weapon and not ticket.ground and PY.MultiHit then
         local waiting=PY.MultiHit.waiting(p,ticket.stamp)
         if waiting=="timeout"then H.discard(p,ticket);return false end
         if waiting then return true end
@@ -65,19 +67,19 @@ function H.input(p,s,style)
             ticket.granted=answer
         end
         if not ticket.granted then
-            if not ticket.sent then ticket.sent=now();H.requestSerial=(H.requestSerial or 0)+1;ticket.request=H.requestSerial;PY.Network.capture(p,true);PY.Network.send(p,"heatRushBegin",{zombie=ticket.z:getOnlineID(),targetKind=R.targetKind(ticket.z),request=ticket.request,weaponHeat=ticket.weapon==true})end
+            if not ticket.sent then ticket.sent=now();H.requestSerial=(H.requestSerial or 0)+1;ticket.request=H.requestSerial;PY.Network.capture(p,true);PY.Network.send(p,"heatRushBegin",{zombie=ticket.z:getOnlineID(),targetKind=R.targetKind(ticket.z),request=ticket.request,weaponHeat=ticket.weapon==true,groundHeat=ticket.ground==true})end
             if now()-ticket.sent>1000 then H.tickets[p]=nil end
             return true
         end
     end
     H.tickets[p]=nil
-    local ok,reason=PY.requestAction(p,"heatAction",nil,ticket)
+    local ok,reason=PY.requestAction(p,ticket.ground and "groundHeat"or "heatAction",nil,ticket)
     if not ok and (reason=="native_attack_busy"or reason=="busy")then H.tickets[p]=ticket;return true end
     H.tickets[p]=nil
     if not ok and ticket.granted then PY.Network.send(p,"heatRushEnd",{action=ticket.granted.action})end
     return true
 end
-H.previews=setmetatable({}, {__mode="k"})
+H.previews=setmetatable({}, {__mode="k"});H.groundPreviews=setmetatable({}, {__mode="k"})
 function H.weaponReady(p,s,style)
     if not p or not style or not PY.isEquipped(p)or not isMouseButtonDown(1)or not p:isAiming()or p:isDead()or p:isOnFloor()or p:isKnockedDown()or p:getVehicle()or p:isClimbing()or (p:getHitReaction()or"")~=""or PY.activeActions[p]or H.tickets[p]or not R.noCombo(s,style,now())then return end
     local action=style.actions.heatAction
@@ -85,7 +87,23 @@ function H.weaponReady(p,s,style)
     if p:hasTimedActions()or p:isAttackStarted()or p:isPerformingAttackAnimation()then return end
     return action
 end
+function H.groundCandidate(p,s,style,force)
+    local move=style and style.actions.groundHeat
+    if not move or not move.enabled or not isMouseButtonDown(1)or not PY.Defense.safe(p)or PY.activeActions[p]or H.tickets[p]or not R.noCombo(s,style,now())or PY.actionHeat(p,move)<(move.heatStocks or 0)*PY.Heat.stockSize(p)then return end
+    local cached=H.groundPreviews[p];if not force and cached and cached.ground and now()<cached.next then if cached.z and R.validFor(p,cached.z,move)then return cached.z,move end;return end
+    local selected,distance;local examined=0;local cell=getCell();if not cell then return end
+    local gx,gy,level=math.floor(p:getX()),math.floor(p:getY()),math.floor(p:getZ())
+    for ox=-2,2 do for oy=-2,2 do local sq=cell:getGridSquare(gx+ox,gy+oy,level);local objects=sq and sq:getMovingObjects()
+        if objects and examined<96 then for i=0,objects:size()-1 do
+            if examined>=96 then break end;examined=examined+1;local z=objects:get(i)
+            if R.validFor(p,z,move)then local d=(z:getX()-p:getX())^2+(z:getY()-p:getY())^2;if not distance or d<distance then selected=z;distance=d end end
+        end end
+    end end
+    if selected and R.placement(p,selected,move)then H.groundPreviews[p]={z=selected,ground=true,next=now()+200};return selected,move end
+    H.groundPreviews[p]={ground=true,next=now()+200}
+end
 function H.weaponCandidate(p,s,style,force)
+    local ground,groundMove=H.groundCandidate(p,s,style,force);if ground then return ground,groundMove end
     local action=H.weaponReady(p,s,style)
     if not action then H.previews[p]=nil;return end
     local cached=H.previews[p];local t=now();local item=p:getPrimaryHandItem()
@@ -108,14 +126,14 @@ function H.weaponCandidate(p,s,style,force)
     elseif getNumActivePlayers then for i=0,getNumActivePlayers()-1 do consider(getSpecificPlayer(i))end end
     if selected then
         local f=p:getForwardDirection()
-        if R.space(p,{x=p:getX(),y=p:getY(),fx=f:getX(),fy=f:getY(),motion=R.motion(action),duration=R.durationFor(action)})then cached.z=selected;return selected,action end
+        if R.placement(p,selected,action)then cached.z=selected;return selected,action end
     end
 end
 function H.weaponInput(p,s,style,pressed)
     if not pressed then return false end
-    local selected=H.weaponCandidate(p,s,style,true)
+    local selected,action=H.weaponCandidate(p,s,style,true)
     if not selected then return false end
-    H.tickets[p]={z=selected,pressed=true,weapon=true,expires=now()+600}
+    H.tickets[p]={z=selected,pressed=true,weapon=not action.groundHeat,ground=action.groundHeat==true,expires=now()+600}
     return H.input(p,s,style)
 end
 local A=ISBaseTimedAction:derive("ProjectYakuzaHeatRushAction");H.Action=A
@@ -260,15 +278,19 @@ function A:new(c)local a=ISBaseTimedAction.new(self,c.player);a.context=c;a.held
 PY.registerStyleActionHandler("dragon_of_dojima","heatAction",{
     canStart=function(c)
         local p=c.player;local ticket=c.target;local cfg=c.style.heatRush
-        if not p:isAiming()or p:isDead()or p:isOnFloor()or p:isKnockedDown()or p:getVehicle()or p:isClimbing()or (p:getHitReaction()or"")~=""or not ticket or isClient()and not ticket.granted or not R.validTarget(p,ticket.z)then return false,"not_ready"end
-        if c.action.weaponHeat then
+        if not p:isAiming()or p:isDead()or p:isOnFloor()or p:isKnockedDown()or p:getVehicle()or p:isClimbing()or (p:getHitReaction()or"")~=""or not ticket or isClient()and not ticket.granted or not R.validFor(p,ticket.z,c.action)then return false,"not_ready"end
+        if c.action.groundHeat then
+            if not isMouseButtonDown(1)or not R.noCombo(PY.stateFor(p),c.style,now())then return false,"neutral_aim_required"end
+        elseif c.action.weaponHeat then
             if not isMouseButtonDown(1)or not R.weaponAllowed(p,c.style,c.action)or not R.noCombo(PY.stateFor(p),c.style,now())then return false,"neutral_aim_required"end
         elseif c.action.grabHeat then
             if not ticket.fromGrab or not isMouseButtonDown(1)then return false,"grab_required"end
         elseif not cfg or not c.action.heatRush or not PY.Heat.isExtreme(p)then return false,"not_ready"end
         if p:hasTimedActions()or p:isAttackStarted()or p:isPerformingAttackAnimation()then return false,"native_attack_busy"end
-        local f=p:getForwardDirection();local pose=ticket.pose or {x=p:getX(),y=p:getY(),fx=f:getX(),fy=f:getY(),motion=R.motion(c.action),duration=R.durationFor(c.action)}
-        return R.space(p,pose),"blocked_space"
+        local pose=ticket.granted or ticket.pose
+        if not pose and not c.action.grabHeat then pose=R.placement(p,ticket.z,c.action);ticket.pose=pose end
+        if pose then pose.motion=R.motion(c.action);pose.duration=R.durationFor(c.action)end
+        return pose~=nil and R.space(p,pose)and (c.action.grabHeat or R.clearance(p,{x=pose.x,y=pose.y,fx=pose.fx,fy=pose.fy,motion=R.motion(c.action),duration=R.durationFor(c.action)})),"blocked_space"
     end,
     start=function(c)
         PY.resetPlayer(c.player,"heat_rush_started");local a=A:new(c);c.timedAction=a;c.requestedAt=now();local ok,q=pcall(ISTimedActionQueue.add,a)
@@ -277,14 +299,15 @@ PY.registerStyleActionHandler("dragon_of_dojima","heatAction",{
     end,
     cancel=function(c)if c.timedAction then c.timedAction:cancel()end end,
 })
+PY.registerActionHandler("groundHeat",PY.getActionHandler("dragon_of_dojima","heatAction"))
 PY.registerActionHandler("grabHeat",PY.getActionHandler("dragon_of_dojima","heatAction"))
 function H.clear(p)
-    if p then H.previews[p]=nil;H.chains[p]=nil;H.discard(p,H.tickets[p]);if H.answer and H.answer.p==p then H.answer=nil end;return end
+    if p then H.previews[p]=nil;H.groundPreviews[p]=nil;H.chains[p]=nil;H.discard(p,H.tickets[p]);if H.answer and H.answer.p==p then H.answer=nil end;return end
     local players={};for player in pairs(H.active)do players[#players+1]=player end
     for _,player in ipairs(players)do PY.cancelAction(player,"world_exit")end
     if H.remote then for id,job in pairs(H.remote)do H.remoteEnd(id,job.action)end;H.updateRemote()end
     for player,ticket in pairs(H.tickets)do H.discard(player,ticket)end
-    H.previews=setmetatable({}, {__mode="k"});H.chains=setmetatable({}, {__mode="k"});H.tickets=setmetatable({}, {__mode="k"});H.answer=nil
+    H.previews=setmetatable({}, {__mode="k"});H.chains=setmetatable({}, {__mode="k"});H.tickets=setmetatable({}, {__mode="k"});H.answer=nil;H.groundPreviews=setmetatable({}, {__mode="k"})
 end
 PY.on("lightAttackStarted",H.inputStarted)
 PY.on("combatHit",H.hit)
@@ -297,7 +320,7 @@ function H.remoteEnd(id,action,packet)
     if type(action)~="number"then return end;H.ended[id]=math.max(H.ended[id]or 0,action)
     local job=H.remote[id];if not job or job.action~=action then return end;H.remote[id]=nil
     local z=job.z;local saved=R.targetKind(z)=="zombie"and packet or job.old
-    if saved and saved~=job.old then saved={useless=saved.useless,ignore=saved.ignore,deferred=saved.deferred,locked=saved.locked,target=job.old.target}end
+    if saved and saved~=job.old then saved={useless=saved.useless,ignore=saved.ignore,deferred=saved.deferred,locked=saved.locked,target=job.old.target,groundAction=job.old.groundAction,floor=job.old.floor,knocked=job.old.knocked}end
     if packet and packet.completed then R.ground(z,R.endFacing(job))end;PY.HeatActions.finish(job.p,job);if not job.victimRestored then R.restore(z,saved or job.old)end;if packet and packet.completed then R.ground(z,R.endFacing(job))end
 end
 function H.session(id,session)

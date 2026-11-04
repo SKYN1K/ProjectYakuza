@@ -43,6 +43,7 @@ function z:setVariable(k,v)self.vars[k]=v end;function z:GetVariable(k)local v=s
 function z:reportEvent(v)self.report=v;if not self.locked then self.state=v=="wasHit"and "ZombieHitReactionState"or "idle"end end;function z:setAttackOutcome(v)self.outcome=v end
 function z:isAttacking()return false end;function z:setTargetAndCurrentDirection()end;function z:setForwardDirection()end
 function z:moveUnmodded(x,y)self.x=self.x+x;self.y=self.y+y end
+function z:setFallOnFront(v)self.front=v end
 function z:setKnockedDown(v)self.knock=v end;function z:setOnFloor(v)self.floor=v end;function z:setStaggerBack(v)self.stagger=v end
 function z:setHitForce(v)self.force=v end;function z:getOnlineID()return 9 end
 function z:Hit(_,_,damage)self.hits=self.hits+1;self.health=self.health-damage;self.floor=true;self.knock=true;self.stagger=true end
@@ -103,7 +104,24 @@ for i=1,4 do
 end
 PY.cancelAction(p,'released');check(not z.locked and not z.useless and not z.ignore and z.deferred and not p.blocked and p.deferred,'release restores every owned native flag')
 local saved=R.capture(z);z.locked=true;R.keep(z);R.restore(z,saved);check(z.locked,'cleanup preserves a pre-existing state-machine lock');z.locked=false
-local pose=R.wall(p,z,style.actions.grabHeat);check(pose and pose.fx==1 and pose.fy==0,'wall action aligns its original left-wall motion')
+local pose=R.wall(p,z,style.actions.grabHeat);check(pose and pose.fx==0 and pose.fy==1,'wall action faces its solid wall along the original forward motion')
+do
+ local originalCell=getCell;local oldX,oldY,oldZX,oldZY=p.x,p.y,z.x,z.y
+ for _,v in ipairs({{0,1,.5,.2,.5,.9},{0,-1,.5,1.8,.5,1.1},{1,0,.2,.5,.9,.5},{-1,0,1.8,.5,1.1,.5}})do
+  local nx,ny=v[1],v[2];p.x,p.y,z.x,z.y=v[3],v[4],v[5],v[6]
+  getCell=function()return {getGridSquare=function(_,x,y)return {x=x,y=y,isWallTo=function(a,b)return nx==0 and a.y==1 and b.y==0 or ny==0 and a.x==1 and b.x==0 end,isWindowTo=function()return false end,isDoorTo=function()return false end}end}end
+  local aligned=R.wall(p,z,style.actions.grabHeat)
+  check(aligned and aligned.fx==nx and aligned.fy==ny,'wall facing follows the selected wall normal in every direction')
+  local motion=PY.PairedMotions.dod_wall
+  for _,path in ipairs({motion.actor,motion.victim})do
+   for _,point in ipairs(path)do
+    local x=aligned.x+aligned.fx*point[1]+aligned.fy*point[2];local y=aligned.y+aligned.fy*point[1]-aligned.fx*point[2]
+    check((nx==0 and (1-y)*ny or (1-x)*nx)>=.149999,'paired path remains on the interior side of its wall')
+   end
+  end
+ end
+ getCell=originalCell;p.x,p.y,z.x,z.y=oldX,oldY,oldZX,oldZY
+end
 window=true;check(not R.wall(p,z,style.actions.grabHeat),'windows never count as solid heat-action walls');window=false
 door=true;check(not R.wall(p,z,style.actions.grabHeat),'doors never count as solid heat-action walls');door=false
 blocked=true;check(not R.wall(p,z,style.actions.grabHeat),'blocked source pair paths reject the heat action');blocked=false
@@ -126,4 +144,36 @@ check(not PY.validateStyle(style),'contact beyond the source strike duration rej
 style.actions.grab.strikes={{animation='provided.actor',duration=1,contactMs=200}}
 check(not PY.validateStyle(style),'missing paired victim clip rejected')
 style.actions.grab.strikes=originalMoves
+do
+ wall=false;window=false;door=false;p.x=.5;p.y=.2;z.x=.5;z.y=.9;z.floor=true;z.knock=true;z.health=10;z.useless=false;z.reaction='';p.data.ProjectYakuzaHeat=100
+ local state=PY.stateFor(p);state.active=false;state.starting=false;state.step=0;state.finisherBranch=nil;state.queued=0
+ local move=style.actions.groundHeat
+ check(PY.HeatRushRules.validFor(p,z,move)and not PY.HeatRushRules.validFor(p,z,style.actions.heatAction),'ground heat requires a live downed zombie and normal rush still rejects it')
+ local pose=PY.HeatRushRules.placement(p,z,move);check(pose~=nil,'ground pair has a bounded safe placement')
+ local ticket={z=z,pose=pose,ground=true,pressed=true,expires=clock+600}
+ check(PY.requestAction(p,'groundHeat',nil,ticket),'ground heat is registered in the shared paired framework')
+ local action=PY.activeActions[p].timedAction;action:start();check(p.invincible and not z.floor and not z.knock,'ground action protects actor and suspends native downed overrides')
+ local before=z.hits;track=1;clock=clock+1000;action:update();check(z.hits==before,'ground damage is deferred to preserve the original victim clip')
+ action:cleanup(false);check(not p.invincible and z.floor and z.knock,'ground interruption restores downed victim and protection')
+ wall=true;z.floor=false;z.knock=false
+end
+do
+ local oldX,oldY,oldZX,oldZY=p.x,p.y,z.x,z.y;local oldCell=getCell
+ p.x=.5;p.y=.8;z.x=.5;z.y=.9;z.floor=false;z.knock=false;wall=true
+ local move={motionId='clearance_test',duration=1/30};PY.PairedMotions.clearance_test={actor={{0,0},{.1,0}},victim={{.3,0},{.3,0}}}
+ local pose=PY.HeatRushRules.placement(p,z,move)
+ check(pose and pose.y<p.y and PY.HeatRushRules.clearance(p,pose),'ordinary pair shifts together away from the nearby wall')
+ getCell=function()return {getGridSquare=function()return {isWallTo=function()return true end,isWindowTo=function()return false end,isDoorTo=function()return false end}end}end
+ check(not PY.HeatRushRules.placement(p,z,move),'no fitting clear space refuses the action rather than clipping')
+ getCell=oldCell;p.x,p.y,z.x,z.y=oldX,oldY,oldZX,oldZY;PY.PairedMotions.clearance_test=nil
+end
+do
+ wall=false;z.floor=false;z.knock=false;z.useless=false;z.reaction='';p.data.ProjectYakuzaHeat=100
+ local oldCell=getCell;local scans=0
+ getCell=function()return {getGridSquare=function()scans=scans+1;return {getMovingObjects=function()return {size=function()return 0 end}end}end}end
+ PY.HeatRush.groundPreviews[p]=nil;local state=PY.stateFor(p);state.active=false;state.step=0;state.finisherBranch=nil
+ PY.HeatRush.weaponCandidate(p,state,style,false);local count=scans;PY.HeatRush.weaponCandidate(p,state,style,false)
+ check(count==25 and scans==count,'empty ground searches retain their cache when no weapon action is available')
+ getCell=oldCell;wall=true
+end
 return 'PASS '..checks..' reliable grab lifecycle, four source-timed strikes, following, cleanup, wall geometry, handoff and action protection checks'

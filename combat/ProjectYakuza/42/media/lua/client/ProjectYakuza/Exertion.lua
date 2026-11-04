@@ -5,7 +5,7 @@ PY.Exertion=E
 local function finite(v)return type(v)=="number"and v==v and v<math.huge and v>-math.huge end
 function E.category(p,move,kind)
     if kind=="parry"then return "counter"end
-    if kind=="heatAction"then return "heatAction"end
+    if kind=="heatAction"or kind=="groundHeat"or kind=="grabHeat"then return "heatAction"end
     if move.chargedHeavy then return "charged"end
     if move.double then return "double"end
     if move.runningAttack then return move.variant=="dropkick"and "dropkick"or "running"end

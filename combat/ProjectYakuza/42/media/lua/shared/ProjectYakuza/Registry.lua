@@ -245,7 +245,7 @@ end
 
 local ProjectYakuza = ProjectYakuza
 ProjectYakuza.FEATURES={grab=true}
-ProjectYakuza.VERSION = "0.80.0"
+ProjectYakuza.VERSION = "0.81.0"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -253,7 +253,7 @@ ProjectYakuza.actionHandlers = ProjectYakuza.actionHandlers or {}
 ProjectYakuza.styleActionHandlers = ProjectYakuza.styleActionHandlers or {}
 ProjectYakuza.styleInputHandlers = ProjectYakuza.styleInputHandlers or {}
 ProjectYakuza.listeners = ProjectYakuza.listeners or {}
-ProjectYakuza.actionKinds = { finisher=true, grab=true, grabHeat=true, parry=true, block=true, quickstep=true, quickstepAttack=true, runningAttack=true, heatAction=true, heatActivation=true, taunt=true, styleEntry=true, heavyCharge=true, chargedHeavy=true }
+ProjectYakuza.actionKinds = { finisher=true, grab=true, grabHeat=true, groundHeat=true, parry=true, block=true, quickstep=true, quickstepAttack=true, runningAttack=true, heatAction=true, heatActivation=true, taunt=true, styleEntry=true, heavyCharge=true, chargedHeavy=true }
 ProjectYakuza.actionDefinitions = ProjectYakuza.actionDefinitions or {}
 ProjectYakuza.activeActions = ProjectYakuza.activeActions or setmetatable({}, {__mode="k"})
 ProjectYakuza.MAX_HIT_COUNT = 3
@@ -610,7 +610,7 @@ function ProjectYakuza.blocksNativeAttacks(player)
     if ProjectYakuza.Quicksteps and ProjectYakuza.Quicksteps.isCancelling and ProjectYakuza.Quicksteps.isCancelling(player) then return true end
     local c=ProjectYakuza.activeActions[player]
     local d=c and ProjectYakuza.actionDefinitions[c.kind]
-    return c~=nil and (c.kind=="styleEntry" or c.kind=="heatAction" or c.kind=="grabHeat" or c.kind=="grab" or c.kind=="quickstep" or c.kind=="quickstepAttack" or c.kind=="heavyCharge" or c.kind=="chargedHeavy" or (d~=nil and d.blocksAttacks)) or false
+    return c~=nil and (c.kind=="styleEntry" or c.kind=="heatAction" or c.kind=="grabHeat" or c.kind=="groundHeat" or c.kind=="grab" or c.kind=="quickstep" or c.kind=="quickstepAttack" or c.kind=="heavyCharge" or c.kind=="chargedHeavy" or (d~=nil and d.blocksAttacks)) or false
 end
 
 function ProjectYakuza.updateCustomAction(player)

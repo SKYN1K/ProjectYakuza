@@ -1,3 +1,4 @@
+getCell=function()return {getGridSquare=function()return {getMovingObjects=function()return {size=function()return 0 end}end}end}end
 local Q=PY.QTE;local held={};local function down(k)return held[k]==true end
 local function def(n)local out={prompts={}};for i=1,n do out.prompts[i]={atMs=i*500,windowMs=250,binding=i%2==0 and 'light'or'finisher'}end;return out end
 check(Q.valid(def(32))and not Q.valid(def(33)),'framework bounds prompt arrays')
@@ -116,7 +117,12 @@ for i,binding in ipairs({'light','finisher','grab','light','finisher','grab'})do
 check(#style.actions.heatAction.contacts==7 and R.duration==224/30,'retail source duration and finishing contact')
 check(R.amount(style.actions.heatAction,7,token,{[1]=true,[6]=true})==.75,'missed QTEs reduce final payoff without applying early damage')
 check(style.actions.grab.enabled==true,'ordinary grabs are enabled independently of the QTE grab binding')
-for _,prompt in ipairs(style.actions.heatAction.qte.prompts)do check(prompt.windowMs==400,'all six DoD inputs have a consistent 400 ms window')end
+for _,prompt in ipairs(style.actions.heatAction.qte.prompts)do check(prompt.windowMs==600,'all six DoD inputs have a consistent 600 ms visible/accepted window')end
+for _,age in ipairs({1267,1500,1866})do
+ local sample=Q.create(style.actions.heatAction.qte,function()return false end);Q.update(sample,age,function(binding)return binding=='light'end)
+ check(sample.accepted[1]==true,'any fresh press from visible ring start until its last moment passes')
+end
+local expired=Q.create(style.actions.heatAction.qte,function()return false end);Q.update(expired,56/30*1000,function(binding)return binding=='light'end);check(expired.failed and not expired.accepted[1],'input at or after radial expiry cannot pass')
 local function shallow(v)local out={};for k,x in pairs(v)do out[k]=x end;return out end
 local authored=shallow(style);authored.actions=shallow(style.actions);authored.actions.heatAction=shallow(style.actions.heatAction)
 local function invalidContact(index,key,value)
@@ -233,9 +239,9 @@ getKeyName=function(k)return k==34 and 'G'or tostring(k)end
 local polygons={};getTexture=function(path)return {path=path}end
 SpriteRenderer={instance={renderPoly=function(_,texture,...)polygons[#polygons+1]={...}end}}
 H.active[p]={seen=true,qte=qte,elapsed=1.5};panel:render()
-check(draws==0 and panel.inputDraws==1 and panel.lastInputIcon:find('InputMouseLeft',1,true)and #polygons==8,'QTE draws the Y6 left-mouse icon and animated timing rings without text-only or extra cues')
-check(polygons[1][9]>=.45 and polygons[1][12]>0,'native ring uses bounded RGBA after its eight screen coordinates')
-local firstX=polygons[1][1];H.active[p].elapsed=1.55;panel:render();check(polygons[9][1]~=firstX,'QTE ring visibly rotates on the source animation clock')
+check(draws==0 and panel.inputDraws==1 and panel.lastInputIcon:find('InputMouseLeft',1,true)and #polygons>4 and #polygons<=52,'QTE draws the Y6 left-mouse icon and a bounded radial countdown without extra cues')
+check(polygons[5][9]>=.15 and polygons[5][12]>0 and #polygons[5]==20,'radial sectors use native textured UV geometry and bounded blue RGBA')
+local firstCount=#polygons;polygons={};H.active[p].elapsed=1.55;panel:render();check(#polygons<firstCount,'blue radial timer loses arc coverage as the source time advances')
 
 H.active[p].elapsed=0;panel:render();check(panel.inputDraws==2 and draws==0,'QTE overlay is empty outside cue lead-in');H.active[p]=nil
 H.chains[p]={count=7,at=clock};panel:render();check(panel.inputDraws==2 and draws==0,'punch transition adds no preparatory input cue')

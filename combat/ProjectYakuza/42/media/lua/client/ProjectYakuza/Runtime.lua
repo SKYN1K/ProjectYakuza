@@ -406,7 +406,7 @@ local function onUpdate(player)
     if ProjectYakuza.GrabCombat and ProjectYakuza.GrabCombat.updatePending(player)then s.lastDown=B.down("light");return end
     if ProjectYakuza.Defense and ProjectYakuza.Defense.update(player,throwPressed) then s.lastDown=B.down("light");return end
     local context=ProjectYakuza.activeActions[player]
-    if context and (context.kind=="heatAction"or context.kind=="grabHeat")and context.timedAction then if not context.timedAction.started and now()-context.requestedAt>650 then ProjectYakuza.cancelAction(player,"heat_rush_start_timeout")end;s.lastDown=B.down("light");return end
+    if context and (context.kind=="heatAction"or context.kind=="grabHeat"or context.kind=="groundHeat")and context.timedAction then if not context.timedAction.started and now()-context.requestedAt>650 then ProjectYakuza.cancelAction(player,"heat_rush_start_timeout")end;s.lastDown=B.down("light");return end
     if context and (context.kind=="parry" or context.kind=="heatActivation" or context.kind=="taunt") then
         if context.kind=="heatActivation" and ProjectYakuza.HeatActivation then ProjectYakuza.HeatActivation.watch(player,context) end
         if context.kind=="taunt" and ProjectYakuza.Taunts then ProjectYakuza.Taunts.watch(player,context) end

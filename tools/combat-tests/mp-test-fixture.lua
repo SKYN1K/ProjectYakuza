@@ -1021,6 +1021,8 @@ do
  command('heatRushBegin',{zombie=z1.id,request=5002,grabHeat=true});local job=rush.leases[p]
  check(job and job.move.grabHeat and job.motion==ProjectYakuza.PairedMotions.dod_wall and not server.players[p.id].grab,'server atomically transfers the held target to the wall action')
  check(not z1.stateLocked and not z1.useless,'old grab flags are restored before the new action captures them')
+ p.x,p.y=job.x,job.y;z1.x,z1.y=ProjectYakuza.HeatRushRules.point(job,job.motion.victim,0)
+ check(rules.wallPresent(p,job),'selected wall remains valid after the original pair staging moves the victim')
  command('heatRushReady',{action=job.action});check(job.started and p.invincible and p.ghost,'wall action gets native framework protection')
  for i,contact in ipairs(job.contacts)do clock=job.started+contact.atMs;command('heatRushHit',{action=job.action,index=i})end
  check(job.pendingDamage and z1.health==10,'wall action defers damage to preserve paired victim motion')
@@ -1042,5 +1044,21 @@ do
  client.command(P.module,'grabEnd',packet(1000,'hold'));check(z1.vars.ProjectYakuzaGrabbed==true,'older end cannot release a newer grab')
  client.command(P.module,'grabEnd',packet(1001,'hold'));check(not z1.stateLocked and not z1.ignore,'current remote release restores its saved state')
  z1.vars.ProjectYakuzaHeatRushVictim=true;client.command(P.module,'grabStart',packet(1002,'enter'));check(z1.vars.ProjectYakuzaGrabbed==false,'delayed grab cannot overwrite an active paired heat action');z1.vars.ProjectYakuzaHeatRushVictim=false
+end
+do
+ local oldFloor,oldKnock=z1.isOnFloor,z1.isKnockedDown
+ z1.isOnFloor=function(z)return z.nativeFloor==true end;z1.isKnockedDown=function(z)return z.knock==true end
+ z1.nativeFloor=true;z1.knock=true;z1.useless=false;z1.health=10;z1.reaction='';z1.x=.8;z1.y=0;p.x=0;p.y=0;p.hand=p.token
+ clock=clock+2000;snapshot(p,{clip='',rightAim=true,comboBusy=false,heat=100,extreme=false})
+ command('heatRushBegin',{zombie=z1.id,request=5500,groundHeat=true});local job=rush.leases[p]
+ check(job and job.move.groundHeat and job.motion==ProjectYakuza.PairedMotions.dod_ground,'server grants original ground pair only for a downed target')
+ command('heatRushReady',{action=job.action});check(job.started and p.invincible and not z1.nativeFloor,'ground action suspends native floor override and protects player')
+ clock=job.started+1000;command('heatRushHit',{action=job.action,index=1});command('heatRushHit',{action=job.action,index=1})
+ check(job.pendingDamage and z1.health==10,'ground source contact is replay safe and defers damage')
+ clock=job.started+job.duration*1000;snapshot(p,{clip='ProjectYakuza_DD_GroundHeat',move='dd_ground_heat',action=job.action,rightAim=true,heat=80});command('heatRushEnd',{action=job.action,completed=true})
+ check(not rush.leases[p]and z1.health<10 and z1.nativeFloor and not p.invincible,'ground completion applies damage once and returns victim to floor')
+ z1.nativeFloor=false;z1.knock=false;z1.useless=false;clock=clock+2000;snapshot(p,{clip='',rightAim=true,comboBusy=false,heat=100})
+ command('heatRushBegin',{zombie=z1.id,request=5501,groundHeat=true});check(not rush.leases[p],'server rejects ground action against a standing victim')
+ z1.isOnFloor=oldFloor;z1.isKnockedDown=oldKnock
 end
 return 'PASS '..count..' MP authority, duplicate, range, lease, cooldown, observer and throttle checks'

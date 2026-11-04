@@ -48,7 +48,7 @@ Require `ProjectYakuza/Registry` for shared definitions, `ProjectYakuza/Runtime`
 
 Parent quickstep.cooldownMs, runningAttack.runupMs, block.staminaPerHit and parry timing fields belong to their specific controller. Put costs on each spending variant; parent costs are not inherited. Custom fields are available to your handler. Validation cannot prove native asset existence or gameplay correctness.
 
-Built-in kinds: finisher, grab, grabHeat, parry, block, quickstep, quickstepAttack, runningAttack, heatAction, heatActivation, taunt, styleEntry. DoD supplies paired Heat Actions; grabHeat uses the shared held-target wall handler. See [Grabs](GRABS.md).
+Built-in kinds: finisher, grab, grabHeat, groundHeat, parry, block, quickstep, quickstepAttack, runningAttack, heatAction, heatActivation, taunt, styleEntry. DoD supplies paired Heat Actions; grabHeat uses the shared held-target wall handler. See [Grabs](GRABS.md).
 
 ## Selection and lookup
 

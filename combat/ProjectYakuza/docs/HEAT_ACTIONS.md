@@ -42,3 +42,13 @@ The eligibility popup requires the same equipped item, heat stock, physical RMB,
 Contact cue keys resolve through the active style/equipment sound table, with heavyImpact/finisher as the optional-cue fallback. Katana and bottle contacts configure existing CombatLightAttack/CombatHeavyAttack entries, using the selected compatible CVF voice. Provider-busy/cooldown results can retry for 600 ms while that exact action remains active; stale requests are dropped. No voice recording or pack is created or modified.
 
 MP owners present feedback from their source-animation contacts and suppress matching server echoes by session/action/index. Health remains authoritative on the server. Contact catch-up uses the existing 650 ms server grace; it does not widen the QTE input windows or auto-complete missed inputs. See [validation](VALIDATION_0.76.0.md).
+
+## Ground actions and placement
+
+DoD's unarmed actions.groundHeat uses the shared groundHeat handler, original h1500 ground-trample pair and one heat stock. Hold RMB and press the configured Heat Action binding (MMB by default) near a living downed zombie, outside a combo. The usual game-art eligibility/input prompt is reused. Armed profiles do not inherit it. Invulnerability ends with the sequence; targeting grace lasts 0.5 seconds afterward. Interruption restores the downed victim.
+
+A groundHeat definition supplies enabled=true, groundHeat=true, requiresTarget=true, animation, targetAnimation, nodeValue, motionId, duration, heatStocks, contacts and optional useExtremeFuel/deferFinalDamage. Register original paired paths in PairedMotions. The standard Heat Action UI provider channel can replace its prompt. Ground actions remain zombie-only, with shared server validation rather than client-directed health changes. Existing CombatHeavyAttack voice entries and hit cues provide timed feedback.
+
+HeatRushRules.placement(player,victim,action) returns a nearby paired pose or nil. Ordinary paired actions use up to nine bounded offsets, require a clear route for both participants, and check a 0.42-tile wall margin along both source paths. They do not cross walls to stage the pair. A blocked search refuses activation. Wall actions retain their own wall geometry; GrabRules.wallPresent checks the selected solid boundary after canonical staging. Source clips are not edited for these placement changes.
+
+Ground eligibility scans at most 25 squares and 96 objects, cached for 200 ms including empty results. It is local presentation/eligibility work; the server independently selects the allowed action and computes its canonical pose. See ground-heat-assets.json for original source provenance and the motion-derived contact frame.
