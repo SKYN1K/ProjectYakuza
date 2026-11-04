@@ -2,7 +2,7 @@
 
 Project Yakuza is a Build 42 combat mod and a framework for independent fighting-style addons. Dragon of Dojima uses supplied Yakuza/Kiwami animations, textures and sounds. Other styles register their own moves, assets and controllers without copying the framework.
 
-**Version 0.78.0 · Lua API 3 · MP protocol 2.** API 1 style registrations remain supported. Internal namespace/mod dependency: `ProjectYakuza`. Display name: Project Yakuza.
+**Version 0.79.0 · Lua API 3 · MP protocol 2.** API 1 style registrations remain supported. Internal namespace/mod dependency: `ProjectYakuza`. Display name: Project Yakuza.
 
 ## Install and play
 
@@ -69,4 +69,4 @@ The original Yakuza 6 beer-crate conversion uses [Yakuza GMD IO](https://github.
 
 The bottom style-wheel slot opens settings: First Style, Second Style, hit effects, heat aura and diagnostics. Each style row previews its optional developer-supplied selectorIcon. Save applies changes; Cancel/Escape discards them. The inventory context submenu has been removed.
 
-As of 0.78.0, weapon holds and ordinary armed movement use vanilla Zomboid poses. Ordinary unarmed walking also uses vanilla animation timing. Custom weapon attack/guard/Heat Action clips remain active; the converted hold and walking clips are retained but disabled.
+As of 0.79.0, weapon holds and ordinary armed movement use vanilla Zomboid poses. Ordinary unarmed walking also uses vanilla animation timing. Custom weapon attack/guard/Heat Action clips remain active; the converted hold and walking clips are retained but disabled.

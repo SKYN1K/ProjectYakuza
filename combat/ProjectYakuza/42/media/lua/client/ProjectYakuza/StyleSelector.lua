@@ -25,7 +25,6 @@ function S.loadAssets()
     S.assets={life=getTexture(base.."KiwamiLife.png"),dragon=getTexture(base.."KiwamiDragon.png"),background=getTexture(base.."KiwamiSettingsBackground.png")}
 end
 local sides={"top","left","right","bottom"}
-local connectors={{-7,-7},{7,-7},{-7,7},{7,7}}
 local function ease(value)
     value=math.max(0,math.min(1,value))
     return 1-(1-value)^3
@@ -54,11 +53,6 @@ function Wheel:prerender()
     self:drawTextCentre("COMBAT STYLES",170,-27+8*(1-elapsed),.9,.93,1,elapsed,UIFont.Medium)
     self:drawRect(80,3,180*elapsed,1,.4*elapsed,.6,.7,.85)
     local a=S.assets
-    if a.life then
-        for _,offset in ipairs(connectors) do
-            self:drawSubTexture(a.life,0,0,43,44,164+offset[1],164+offset[2],12,12,.65*elapsed,.8,.85,.9)
-        end
-    end
     for index,side in ipairs(sides) do
         local origin=positions[side];local chosen=self.side==side
         local enter=ease((time-self.opened-(index-1)*28)/240)

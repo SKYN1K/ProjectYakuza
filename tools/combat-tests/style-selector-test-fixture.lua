@@ -36,9 +36,10 @@ function ISPanel:addToUIManager()self.added=true end
 function ISPanel:removeFromUIManager()self.added=false end
 function ISPanel:getX()return self.x end
 function ISPanel:getY()return self.y end
-function ISPanel:drawSubTexture(t,x,y,w,h,...)
+function ISPanel:drawSubTexture(t,x,y,w,h,dx,dy,dw,dh,...)
  check(x>=0 and y>=0 and x+w<=t.width and y+h<=t.height,'atlas crop inside original pixels')
- draws[#draws+1]={texture=t.path,x=x,y=y,w=w,h=h}
+ if t.path:find('KiwamiLife') and x==0 and y==0 and w==43 and h==44 then check(dw>=80 and dh>=80,'style-ring artwork is used only at slot size, never as duplicated centre circles') end
+ draws[#draws+1]={texture=t.path,x=x,y=y,w=w,h=h,dx=dx,dy=dy,dw=dw,dh=dh}
 end
 function ISPanel:drawTextureScaled(t,...)draws[#draws+1]={texture=t.path}end
 function ISPanel:drawRect(x,y,w,h,a,r,g,b)

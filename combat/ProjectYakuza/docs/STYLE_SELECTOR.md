@@ -20,3 +20,5 @@ Frame atlas: Yakuza Kiwami/media/data/2dpar/ui_c.par → surfboard/pjcm_life.par
 Selecting or reselecting a style with actions.styleEntry requests its native entry animation. The DoD entry blocks movement/attacks but leaves the player vulnerable. Empty/setup slots do not play entry. Explicit MP selection waits for equipment delivery/acknowledgement; reconnect repairs stay silent. Other styles can opt in with their own clip/markers.
 
 The settings panel uses the selected original Kiwami dark texture with a 300 ms eased opening fade. The compact wheel uses the existing Kiwami circle art, staggered entry and smooth selection focus over visible gameplay. Custom style UI providers retain their rendering hooks. See style-settings-background.json for unchanged source pixels and archive provenance.
+
+In 0.79.0 the decorative centre copies of the slot ring are removed. The original ring artwork is reserved for the four selectable slots and their highlights; no replacement centre graphic is generated.

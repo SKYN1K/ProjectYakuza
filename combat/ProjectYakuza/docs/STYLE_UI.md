@@ -93,3 +93,5 @@ The bottom wheel slot opens the neutral settings panel. Its first rows assign Fi
 The setup presentation hook retains extra.left/right/message and adds extra.settings (the three preference combo boxes) and extra.alpha (the opening fade). Native controls remain children of the host; replacing its background does not replace or save those controls. Selector slots now receive animated extra.x/y/alpha plus extra.focus and extra.progress. Whole-selector providers receive extra.alpha. Existing providers may ignore these added fields.
 
 The compact wheel remains mouse-passive and does not dim the entire screen. The settings panel uses the original Kiwami pause texture documented in style-settings-background.json, cropped only at draw time. Its 300 ms opening fade and short horizontal settling motion do not alter its asset pixels. Audio sliders and keybindings remain in the standard Mods options page. Inventory context menus no longer register Project Yakuza controls.
+
+In 0.79.0 the decorative centre copies of the slot ring are removed. The original ring artwork is reserved for the four selectable slots and their highlights; no replacement centre graphic is generated.
