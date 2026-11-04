@@ -11,4 +11,4 @@ Source is combat/ProjectYakuza. Update 42/mod.info and shared/ProjectYakuza/Regi
 
 Publish using tools/Publish-CombatRelease.ps1 with a configured/authenticated gh CLI. Never reuse/overwrite a published version tag. Do not upload unrelated local files or credentials. Later explicit user instructions override this workflow.
 
-Naming: use ProjectYakuza for internal identifiers and Project Yakuza for display text. Do not retain old aliases or compatibility loaders. Do not modify the separate voice pack; it is maintained in another chat. Grabs are temporarily disabled.
+Naming: use ProjectYakuza for internal identifiers and Project Yakuza for display text. Do not retain old aliases or compatibility loaders. Do not modify the separate voice pack; it is maintained in another chat. Grabs follow the current per-style action definitions.

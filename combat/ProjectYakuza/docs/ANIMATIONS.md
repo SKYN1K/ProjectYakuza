@@ -39,7 +39,7 @@ Use actions-group nodes conditioned on PerformingAction=the handler's animation 
 | quickstep | ProjectYakuzaQuickstepStarted/Done=nodeValue; directional descriptor and collision-checked travel |
 | custom | Unique Start/End markers and handler/watchdog; no implicit damage/heat/protection |
 
-Guard uses ProjectYakuzaDefensePhase enter/hold/hit/exit and the built-in Guard node conventions; inspect Defense.lua and its XML before reusing the handler. A single arbitrary animation is insufficient. Grab paired protocols remain dormant while disabled.
+Guard uses ProjectYakuzaDefensePhase enter/hold/hit/exit and the built-in Guard node conventions; inspect Defense.lua and its XML before reusing the handler. A single arbitrary animation is insufficient. Grab paired protocols include enter, moving hold, strike1..strike4 and throw; see [Grabs](GRABS.md).
 
 ## Legs, reactions and observers
 

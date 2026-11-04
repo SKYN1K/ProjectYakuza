@@ -463,6 +463,74 @@
     "group": "actions"
   },
   {
+    "id": "ProjectYakuza_DD_GrabStrike01",
+    "animation": "ProjectYakuza_DD_GrabStrike01",
+    "loop": false,
+    "conditions": [
+      {
+        "name": "PerformingAction",
+        "value": "ProjectYakuza_DD_Grab"
+      },
+      {
+        "name": "ProjectYakuzaDefensePhase",
+        "value": "strike1"
+      }
+    ],
+    "priority": 180,
+    "group": "actions"
+  },
+  {
+    "id": "ProjectYakuza_DD_GrabStrike02",
+    "animation": "ProjectYakuza_DD_GrabStrike02",
+    "loop": false,
+    "conditions": [
+      {
+        "name": "PerformingAction",
+        "value": "ProjectYakuza_DD_Grab"
+      },
+      {
+        "name": "ProjectYakuzaDefensePhase",
+        "value": "strike2"
+      }
+    ],
+    "priority": 180,
+    "group": "actions"
+  },
+  {
+    "id": "ProjectYakuza_DD_GrabStrike03",
+    "animation": "ProjectYakuza_DD_GrabStrike03",
+    "loop": false,
+    "conditions": [
+      {
+        "name": "PerformingAction",
+        "value": "ProjectYakuza_DD_Grab"
+      },
+      {
+        "name": "ProjectYakuzaDefensePhase",
+        "value": "strike3"
+      }
+    ],
+    "priority": 180,
+    "group": "actions"
+  },
+  {
+    "id": "ProjectYakuza_DD_GrabStrike04",
+    "animation": "ProjectYakuza_DD_GrabStrike04",
+    "loop": false,
+    "conditions": [
+      {
+        "name": "PerformingAction",
+        "value": "ProjectYakuza_DD_Grab"
+      },
+      {
+        "name": "ProjectYakuzaDefensePhase",
+        "value": "strike4"
+      }
+    ],
+    "priority": 180,
+    "group": "actions"
+  },
+  {
     "id": "ProjectYakuza_DD_GrabWalk",
     "animation": "ProjectYakuza_DD_GrabWalk",
     "loop": true,
@@ -638,6 +706,31 @@
       {
         "name": "ProjectYakuzaDefensePhase",
         "value": "throw"
+      }
+    ],
+    "priority": 180,
+    "group": "actions"
+  },
+  {
+    "id": "ProjectYakuza_DD_WallHeat",
+    "animation": "ProjectYakuza_DD_WallHeat",
+    "loop": false,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "dragon_of_dojima"
+      },
+      {
+        "name": "ProjectYakuzaWeaponProfile",
+        "value": ""
+      },
+      {
+        "name": "PerformingAction",
+        "value": "ProjectYakuza_DD_WallHeat"
       }
     ],
     "priority": 180,

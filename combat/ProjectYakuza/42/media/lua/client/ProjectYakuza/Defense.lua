@@ -1,6 +1,8 @@
 require "ProjectYakuza/Runtime"
 require "ProjectYakuza/MultiHit"
 require "ProjectYakuza/TigerDrop"
+require "ProjectYakuza/GrabRules"
+require "ProjectYakuza/AttackEffects"
 require "TimedActions/ISBaseTimedAction"
 require "TimedActions/ISTimedActionQueue"
 local ProjectYakuza=ProjectYakuza
@@ -19,7 +21,7 @@ function D.snapActor(actor,x,y)
 end
 function D.followZombie(z)
     local a=D.held[z]
-    if not a or a.cleaned or a.phaseName~="hold" or isGamePaused() then return end
+    if not a or a.cleaned or not (a.phaseName=="hold"or a.strikeMove~=nil) or isGamePaused() then return end
     if not a:isValid() or not a:alignPair(true) then a:cancel() end
 end
 function D.followHook()
@@ -47,7 +49,7 @@ function D.target(p)
     if not origin then return nil end
     for _,entry in ipairs(ProjectYakuza.MultiHit.targets(p,origin,false,{},8)) do
         local z=entry.victim
-        if not D.held[z] and not z:isAttacking() and not z:isUseless() and (z:getHitReaction() or "")=="" then return z end
+        if not D.held[z] and not ProjectYakuza.GrabRules.unavailable(z) and not z:isAttacking() and not z:isUseless() and (z:getHitReaction() or "")=="" then return z end
     end
 end
 function D.restoreTargets()
@@ -76,6 +78,8 @@ function A:phase(name)
         local walking=name=="hold"
         self.character:setBlockMovement(not walking)
         self.character:setIgnoreMovement(not walking)
+        self.character:setDeferredMovementEnabled(walking and self.oldDeferred~=false)
+        if not walking then self.character:getMovementLastFrame():set(0,0);self.character:setMoving(false);self.character:setRunning(false);self.character:setSprinting(false)end
         self.lastX=self.character:getX();self.lastY=self.character:getY()
     end
 end
@@ -109,14 +113,16 @@ function A:alignPair(snap)
 end
 function A:start()
     self.started=true;self.startedAt=now();self.lastAt=self.startedAt
-    local p=self.character
-    self.oldBlock=p:isBlockMovement();self.oldIgnore=p:getIgnoreMovement()
+    local p=self.character;self.held=p:getPrimaryHandItem()
+    self.oldBlock=p:isBlockMovement();self.oldIgnore=p:getIgnoreMovement();self.oldDeferred=p:isDeferredMovementEnabled()
     p:setBlockMovement(self.context.kind~="block");p:setIgnoreMovement(self.context.kind~="block")
     self:setActionAnim(self.context.action.animation)
     self.action:setOverrideHandModelsObject(p:getPrimaryHandItem(),nil,false)
     if self.context.kind=="grab" then
         local z=self.context.target
-        self.victimState={useless=z:isUseless(),ignore=z:getIgnoreMovement(),target=z:getTarget(),deferred=z:isDeferredMovementEnabled()}
+        self.victimState=ProjectYakuza.GrabRules.capture(z)
+        local saved=isClient()and ProjectYakuza.Network and ProjectYakuza.Network.grabStates and ProjectYakuza.Network.grabStates[p]
+        if saved then self.grabId=saved.grabId;self.victimState.useless=saved.useless;self.victimState.ignore=saved.ignore;self.victimState.deferred=saved.deferred;self.victimState.locked=saved.locked end
         D.held[z]=self
         D.followHook()
         z:setAttackOutcome("fail");z:setTarget(nil);z:setUseless(true);z:setIgnoreMovement(true)
@@ -132,7 +138,8 @@ end
 function A:isValid()
     if not D.safe(self.character) then return false end
     if self.context.kind=="grab" then
-        local z=self.context.target
+        local z=self.context.target;local style=ProjectYakuza.getPlayerStyle(self.character)
+        if not style or style.id~=self.context.style.id or self.started and self.character:getPrimaryHandItem()~=self.held then return false end
         return z and not z:isDead() and not z:isKnockedDown() and not z:isOnFloor()
             and math.abs(z:getZ()-self.character:getZ())<.5
             and (z:getX()-self.character:getX())^2+(z:getY()-self.character:getY())^2<2.25
@@ -146,7 +153,7 @@ function A:cleanup(completed)
     local p=self.character
     if self.context.kind=="grab" and isClient() and ProjectYakuza.Network then ProjectYakuza.Network.releaseGrab(p) end
     if self.started then
-        p:setBlockMovement(self.oldBlock==true);p:setIgnoreMovement(self.oldIgnore==true)
+        p:setBlockMovement(self.oldBlock==true);p:setIgnoreMovement(self.oldIgnore==true);p:setDeferredMovementEnabled(self.oldDeferred~=false)
         p:setVariable("ProjectYakuzaDefensePhase","");p:setVariable("ProjectYakuzaDefenseMarker","")
         p:setVariable("ProjectYakuzaGrabMoving",false)
         local z=self.context.target
@@ -155,8 +162,7 @@ function A:cleanup(completed)
             D.followHook()
             z:setVariable("ProjectYakuzaGrabbed",false);z:setVariable("ProjectYakuzaGrabPhase","");z:setVariable("ProjectYakuzaGrabMarker","")
             z:setVariable("ProjectYakuzaGrabMoving",false);z:setVariable("ProjectYakuzaGrabWalkDirection","")
-            z:setUseless(self.victimState.useless);z:setIgnoreMovement(self.victimState.ignore)
-            z:setDeferredMovementEnabled(self.victimState.deferred)
+            ProjectYakuza.GrabRules.restore(z,self.victimState)
             if z:getHitReaction()=="ProjectYakuzaGrabbed" then z:setHitReaction("");z:reportEvent("ActiveAnimFinishing") end
             if not z:isDead() and z:getTarget()==nil and self.victimState.target then z:setTarget(self.victimState.target) end
         end
@@ -210,6 +216,7 @@ function A:grab(dt)
     local p,z=self.character,self.context.target
     spend(p,dt*.012)
     if endurance(p)<.05 then self:forceStop();return end
+    ProjectYakuza.GrabRules.keep(z)
     local age=now()-self.startedAt
     if self.phaseName=="enter" then
 
@@ -236,14 +243,23 @@ function A:grab(dt)
         local forward,right=dx*fx+dy*fy,dx*(-fy)+dy*fx
         local direction=math.abs(forward)>=math.abs(right) and (forward>=0 and "forward" or "backward") or (right>=0 and "right" or "left")
         self:setGrabMoving(moving,direction)
-        if age>3500 then self:forceStop() end
+
+    elseif self.strikeMove then
+        if not self:alignPair(true)then self:forceStop();return end
+        local phase,weight=ProjectYakuza.AttackEffects.findTrack(p,self.strikeMove.animation)
+        if phase and weight>=.35 then
+            self.strikeSeen=true
+            if not self.strikeImpacted and phase*1000>=self.strikeMove.contactMs then self.strikeImpacted=true;if ProjectYakuza.GrabCombat then ProjectYakuza.GrabCombat.hit(self)end end
+            if phase>=self.strikeMove.duration-.03 then self.strikeMove=nil;self:phase("hold")end
+        elseif self.strikeSeen and var(p,"ProjectYakuzaDefenseMarker")=="strike_done"then self.strikeMove=nil;self:phase("hold")end
+        if self.strikeMove and now()-self.phaseAt>(self.strikeMove.duration+1)*1000 then self:forceStop()end
     elseif self.phaseName=="throw" then
         p:setTargetAndCurrentDirection(self.context.fx,self.context.fy)
         z:setTargetAndCurrentDirection(-self.context.fx,-self.context.fy)
         if not self.impacted and var(p,"ProjectYakuzaDefenseMarker")=="throw_impact" and var(z,"ProjectYakuzaGrabMarker")=="throw_impact" then
             self.impacted=true
 
-            z:setIgnoreMovement(self.victimState.ignore);z:setUseless(self.victimState.useless)
+            ProjectYakuza.GrabRules.releaseLock(z,self.victimState);z:setIgnoreMovement(self.victimState.ignore);z:setUseless(self.victimState.useless)
             if isClient() and ProjectYakuza.Network then ProjectYakuza.Network.send(p,"throw",{zombie=z:getOnlineID()})
             else
                 z:Hit(p:getPrimaryHandItem(),p,.7,false,1)
@@ -301,14 +317,18 @@ function D.update(p,throwPressed)
     if not input then input={};D.input[p]=input end
     local x,g=ProjectYakuza.Bindings.down("block"),ProjectYakuza.Bindings.down("grab")
     local grabPressed=g and not input.g
-    input.g=g
+    local light=ProjectYakuza.Bindings.down("light");local lightPressed=light and not input.light
+    local heat=ProjectYakuza.Bindings.down("heatAction");local heatPressed=heat and not input.heat
+    input.g=g;input.light=light;input.heat=heat
     if not x then input.mustRelease=false end
     local c=ProjectYakuza.activeActions[p]
     if c and (c.kind=="grab" or c.kind=="block") then
         local a=c.timedAction
         if not D.safe(p) or (not a.started and now()-c.requestedAt>600) then ProjectYakuza.cancelAction(p,"invalid_defense")
         elseif c.kind=="grab" then
-            if grabPressed then ProjectYakuza.cancelAction(p,"released") elseif throwPressed then a:throw() end
+            if grabPressed then ProjectYakuza.cancelAction(p,"released")
+            elseif ProjectYakuza.GrabCombat and ProjectYakuza.GrabCombat.input(p,a,lightPressed,heatPressed)then
+            elseif throwPressed then a:throw() end
             if not a.cleaned and a.started and a.phaseName=="hold" and not isGamePaused() then D.followZombie(c.target) end
         end
         return true

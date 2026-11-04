@@ -1,4 +1,5 @@
 require "ProjectYakuza/HeatRush"
+require "ProjectYakuza/GrabCombat"
 require "ProjectYakuza/StyleUI"
 require "ProjectYakuza/InputPrompts"
 require "ISUI/ISPanel"
@@ -13,7 +14,8 @@ function U:onRightMouseUp()return false end
 function U:renderEligibility(p,active)
     local t=getTimestampMs();local dt=math.max(0,math.min(100,t-(self.promptAt or t)));self.promptAt=t
     local style=p and PY.getPlayerStyle(p);local target,move
-    if p and not active then target,move=PY.HeatRush.weaponCandidate(p,PY.stateFor(p),style)end
+    if p and not active then target,move=PY.GrabCombat.candidate(p)
+        if not target then target,move=PY.HeatRush.weaponCandidate(p,PY.stateFor(p),style)end end
     local desired=target and 1 or 0;local alpha=self.promptAlpha or 0
     if not isGamePaused()then
         if desired==1 then alpha=math.min(1,alpha+dt/120)else alpha=math.max(0,alpha-dt/80)end

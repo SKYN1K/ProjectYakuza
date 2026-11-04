@@ -1,7 +1,8 @@
+from fixture_markers import module_source
 from fixture_markers import fixture_marker
 from pathlib import Path
 w=Path(__file__).parent;m=w.parents[1]/"combat/ProjectYakuza/42/media/lua"
-def embed(paths):return '\n'.join('do\n'+(m/p).read_text(encoding='utf-8')+'\nend' for p in paths)
+def embed(paths):return '\n'.join('do\n'+module_source(m/p)+'\nend' for p in paths)
 s=(w/'weapon-mp-test-fixture.lua').read_text(encoding='utf-8')
 s=s.replace(fixture_marker('SHARED_AND_SERVER').rstrip("\n"),embed(['shared/ProjectYakuza/Registry.lua','shared/ProjectYakuza/Weapons.lua','shared/ProjectYakuza/Juggling.lua','shared/ProjectYakuza/Styles/DragonOfDojima.lua','shared/ProjectYakuza/NetworkCatalog.lua','shared/ProjectYakuza/NetworkExtensions.lua','shared/ProjectYakuza/NetworkProtocol.lua','shared/ProjectYakuza/TauntReactions.lua','shared/ProjectYakuza/SoundVariety.lua','shared/ProjectYakuza/HeatRushPaths.lua','shared/ProjectYakuza/HeatRushRules.lua','server/ProjectYakuza/NetworkServer.lua','server/ProjectYakuza/HeatRushServer.lua']))
 s=s.replace(fixture_marker('CLIENT_MODULE').rstrip("\n"),embed(['client/ProjectYakuza/NetworkClient.lua']))

@@ -2,6 +2,8 @@ require "ProjectYakuza/Registry"
 require "ProjectYakuza/HeatRushPaths"
 require "ProjectYakuza/KatanaHeatPaths"
 require "ProjectYakuza/BottleHeatPaths"
+require "ProjectYakuza/GrabRules"
+require "ProjectYakuza/WallHeatPaths"
 local R={duration=224/30,targetRange=2,contactGraceMs=650}
 ProjectYakuza.HeatRushRules=R
 function R.motion(action)
@@ -65,13 +67,13 @@ function R.validTarget(p,z,range)
 end
 function R.capture(z)
     local old={ignore=z:getIgnoreMovement(),deferred=z:isDeferredMovementEnabled()}
-    if R.targetKind(z)=="zombie"then old.useless=z:isUseless();old.target=z:getTarget()
+    if R.targetKind(z)=="zombie"then old.useless=z:isUseless();old.target=z:getTarget();old.locked=ProjectYakuza.GrabRules.captureLock(z)
     else old.block=z:isBlockMovement();local gate=ProjectYakuza.Bindings and ProjectYakuza.Bindings.attackGates[z];old.authorize=gate and gate.allowed;if old.authorize==nil then old.authorize=z:isAuthorizeMeleeAction()end;old.performing=z:GetVariable("PerformingAction")or"";old.action=z:GetVariable("IsPerformingAnAction")=="true"end
     return old
 end
 function R.hold(z)
     z:setIgnoreMovement(true);z:setDeferredMovementEnabled(false)
-    if R.targetKind(z)=="zombie"then z:setTarget(nil);z:setUseless(true);z:setAttackOutcome("fail")
+    if R.targetKind(z)=="zombie"then z:setTarget(nil);z:setUseless(true);z:setAttackOutcome("fail");if z:GetVariable("ProjectYakuzaPairedVictimClip")=="ProjectYakuza_DD_WallHeatVictim"then ProjectYakuza.GrabRules.latch(z)end
     else z:setBlockMovement(true);z:setAuthorizeMeleeAction(false)end
 end
 function R.lock(z,clip)
@@ -87,6 +89,7 @@ end
 function R.restore(z,old)
     z:setVariable("ProjectYakuzaPairedVictimClip","");z:setVariable("ProjectYakuzaHeatRushVictim",false);z:setIgnoreMovement(old.ignore==true);z:setDeferredMovementEnabled(old.deferred~=false)
     if R.targetKind(z)=="zombie"then
+        ProjectYakuza.GrabRules.releaseLock(z,old)
         z:setUseless(old.useless==true)
         if not z:isDead()and z:getTarget()==nil then z:setTarget(old.target)end
     else

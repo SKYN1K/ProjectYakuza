@@ -137,7 +137,8 @@ function A:start()
     local p,z=self.character,self.context.target.z;self.started=true;self.last=now();self.elapsed=0;self.index=1;self.success={};self.autoSeen={};self.qte=self.context.action.qte and PY.QTE.create(self.context.action.qte,PY.Bindings.down,self.context)
     self.old={block=p:isBlockMovement(),ignore=p:getIgnoreMovement(),deferred=p:isDeferredMovementEnabled()};p:setBlockMovement(true);p:setIgnoreMovement(true);p:setDeferredMovementEnabled(false)
     local granted=self.context.target.granted;local f=p:getForwardDirection()
-    self.pose={p=p,z=z,x=granted and granted.x or p:getX(),y=granted and granted.y or p:getY(),fx=granted and granted.fx or f:getX(),fy=granted and granted.fy or f:getY()}
+    local origin=granted or self.context.target.pose or {x=p:getX(),y=p:getY(),fx=f:getX(),fy=f:getY()}
+    self.pose={p=p,z=z,x=origin.x,y=origin.y,fx=origin.fx,fy=origin.fy}
     self.pose.motion=R.motion(self.context.action);self.pose.duration=R.durationFor(self.context.action)
     self.victim=R.lock(z,self.context.action.targetAnimation)
     PY.setVisual(p,true,self.context.action.nodeValue);p:setVariable("ProjectYakuzaStyle",self.context.style.id);p:setVariable("ProjectYakuzaWeaponProfile",self.context.style.weaponProfile or "");p:setVariable("ProjectYakuzaHeatRush","")
@@ -262,9 +263,12 @@ PY.registerStyleActionHandler("dragon_of_dojima","heatAction",{
         if not p:isAiming()or p:isDead()or p:isOnFloor()or p:isKnockedDown()or p:getVehicle()or p:isClimbing()or (p:getHitReaction()or"")~=""or not ticket or isClient()and not ticket.granted or not R.validTarget(p,ticket.z)then return false,"not_ready"end
         if c.action.weaponHeat then
             if not isMouseButtonDown(1)or not R.weaponAllowed(p,c.style,c.action)or not R.noCombo(PY.stateFor(p),c.style,now())then return false,"neutral_aim_required"end
+        elseif c.action.grabHeat then
+            if not ticket.fromGrab or not isMouseButtonDown(1)then return false,"grab_required"end
         elseif not cfg or not c.action.heatRush or not PY.Heat.isExtreme(p)then return false,"not_ready"end
         if p:hasTimedActions()or p:isAttackStarted()or p:isPerformingAttackAnimation()then return false,"native_attack_busy"end
-        local f=p:getForwardDirection();return R.space(p,{x=p:getX(),y=p:getY(),fx=f:getX(),fy=f:getY(),motion=R.motion(c.action),duration=R.durationFor(c.action)}),"blocked_space"
+        local f=p:getForwardDirection();local pose=ticket.pose or {x=p:getX(),y=p:getY(),fx=f:getX(),fy=f:getY(),motion=R.motion(c.action),duration=R.durationFor(c.action)}
+        return R.space(p,pose),"blocked_space"
     end,
     start=function(c)
         PY.resetPlayer(c.player,"heat_rush_started");local a=A:new(c);c.timedAction=a;c.requestedAt=now();local ok,q=pcall(ISTimedActionQueue.add,a)
@@ -273,6 +277,7 @@ PY.registerStyleActionHandler("dragon_of_dojima","heatAction",{
     end,
     cancel=function(c)if c.timedAction then c.timedAction:cancel()end end,
 })
+PY.registerActionHandler("grabHeat",PY.getActionHandler("dragon_of_dojima","heatAction"))
 function H.clear(p)
     if p then H.previews[p]=nil;H.chains[p]=nil;H.discard(p,H.tickets[p]);if H.answer and H.answer.p==p then H.answer=nil end;return end
     local players={};for player in pairs(H.active)do players[#players+1]=player end
@@ -292,7 +297,7 @@ function H.remoteEnd(id,action,packet)
     if type(action)~="number"then return end;H.ended[id]=math.max(H.ended[id]or 0,action)
     local job=H.remote[id];if not job or job.action~=action then return end;H.remote[id]=nil
     local z=job.z;local saved=R.targetKind(z)=="zombie"and packet or job.old
-    if saved and saved~=job.old then saved={useless=saved.useless,ignore=saved.ignore,deferred=saved.deferred,target=job.old.target}end
+    if saved and saved~=job.old then saved={useless=saved.useless,ignore=saved.ignore,deferred=saved.deferred,locked=saved.locked,target=job.old.target}end
     if packet and packet.completed then R.ground(z,R.endFacing(job))end;PY.HeatActions.finish(job.p,job);if not job.victimRestored then R.restore(z,saved or job.old)end;if packet and packet.completed then R.ground(z,R.endFacing(job))end
 end
 function H.session(id,session)
@@ -306,6 +311,7 @@ end
 function H.receive(module,command,a)
     if module~=PY.NetworkProtocol.module or type(a)~="table"or not PY.NetworkProtocol.integer(a.player,0,32767)then return end
     local p=getPlayerByOnlineID(a.player);if not p then return end
+    if PY.GrabCombat and PY.GrabCombat.receive(command,p,a)then return end
     if command=="heatRushGranted"and p:isLocalPlayer()then
         local ticket=H.tickets[p];if not ticket or ticket.request~=a.request then
             if PY.NetworkProtocol.integer(a.action,1,1000000000)and PY.Network then PY.Network.send(p,"heatRushEnd",{action=a.action})end
@@ -314,7 +320,12 @@ function H.receive(module,command,a)
         if PY.NetworkProtocol.integer(a.action,1,1000000000)and PY.NetworkProtocol.integer(a.zombie,-32768,32767)and PY.NetworkProtocol.number(a.x,-1000000,1000000)and PY.NetworkProtocol.number(a.y,-1000000,1000000)and PY.NetworkProtocol.number(a.fx,-1,1)and PY.NetworkProtocol.number(a.fy,-1,1)then a.p=p;a.z=a.zombie;H.answer=a end;return
     end
     if command=="heatRushDenied"and p:isLocalPlayer()then local ticket=H.tickets[p];if ticket and ticket.request==a.request then H.tickets[p]=nil end;return end
-    if command=="heatRushEnd"then if not H.session(a.player,a.session)then return end;H.remoteEnd(a.player,a.action,a);return end
+    if command=="heatRushEnd"then
+        if not H.session(a.player,a.session)then return end
+        local active=p:isLocalPlayer()and H.active[p];local grant=active and active.context.target.granted
+        if grant and grant.action==a.action and a.completed~=true then active:cancel()end
+        H.remoteEnd(a.player,a.action,a);return
+    end
     if command=="heatRushFailed"then
         if not H.session(a.player,a.session)or not PY.NetworkProtocol.integer(a.action,1,1000000000)then return end
         H.failedPackets[a.player]=math.max(H.failedPackets[a.player]or 0,a.action)
@@ -350,7 +361,14 @@ function H.receive(module,command,a)
     local old=H.remote[a.player]
     if old and (old.action>a.action or old.failed and old.action==a.action)then return end
     if old and old.action~=a.action then H.remoteEnd(a.player,old.action);old=nil end
-    local job=old or {p=p,z=z,action=a.action,old=R.capture(z)}
+    if not old then
+        local observer=PY.Network and PY.Network.remote and PY.Network.remote[a.player]
+        if observer and observer.grab==z and observer.grabRestore then
+            PY.GrabRules.restore(z,observer.grabRestore);observer.grab=nil;observer.grabRestore=nil
+            z:setVariable("ProjectYakuzaGrabbed",false);z:setVariable("ProjectYakuzaGrabPhase","");z:setVariable("ProjectYakuzaGrabMoving",false)
+        end
+    end
+    local job=old or {p=p,z=z,action=a.action}
     job.motion=motion;job.duration=motion and motion.duration or R.duration
     job.x,job.y,job.fx,job.fy,job.age,job.at=a.x,a.y,a.fx,a.fy,a.age,now();H.remote[a.player]=job
     if not old then job.old=R.lock(z,motion and motion.targetAnimation);PY.HeatActions.begin(p,job,{duration=job.duration})end

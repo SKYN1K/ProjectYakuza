@@ -1,0 +1,136 @@
+{
+  "authorization": "User approved non-AI conversion of original paired grab animations on 2026-11-04.",
+  "operation": "Complete matching sy0 attacker and sy1 victim gsp_01..04 clips retargeted with existing PZ skeleton conversion. No source motion is invented. Original BEP collision frames define damage timing.",
+  "clips": [
+    {
+      "name": "ProjectYakuza_DD_GrabStrike01",
+      "source": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\gmt\\P_KRU_BTL_SUD_sy0_gsp_01.gmt",
+      "sourceSha256": "2a2191214240d4073fa5821113a6d9caff4782782aab9e2f618c1abc6fabd6a1",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_GrabStrike01.x",
+      "sha256": "7d9768ee6346024992803f61bef4372d7660dc63df08d39c4172c60d5500d5ad",
+      "retarget": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\grab-strike-build\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_GrabStrike01.x",
+      "retargetSha256": "262f035c746089447bb53ba065382671401720aee9d558b91b08353e987d0775",
+      "frames": 31,
+      "fps": 30
+    },
+    {
+      "name": "ProjectYakuza_DD_GrabStrikeVictim01",
+      "source": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\gmt\\P_KRU_BTL_SUD_sy1_gsp_01.gmt",
+      "sourceSha256": "5ba7086d574d640b6c69e6f953049cfaa522e4874e784450179a6bce656a86da",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_GrabStrikeVictim01.x",
+      "sha256": "18bec73baa1495cd7f6039d851fd03ab03d5f42199d020ce7c9740e22c0a1528",
+      "retarget": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\grab-strike-build\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_GrabStrikeVictim01.x",
+      "retargetSha256": "e8c554cbdc9372734ff86aa9990a9c51131fb58e7e47c1aa42ed41b496fcfcae",
+      "frames": 31,
+      "fps": 30
+    },
+    {
+      "name": "ProjectYakuza_DD_GrabStrike02",
+      "source": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\gmt\\P_KRU_BTL_SUD_sy0_gsp_02.gmt",
+      "sourceSha256": "fca47e7f2e6f948053a86650d5db0af4b83d6dddcd2eaec39655395b60089cff",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_GrabStrike02.x",
+      "sha256": "77217bc15f4413139966be2e6b25c6afb7b917e47d1a881940e7e0b1b4c6501b",
+      "retarget": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\grab-strike-build\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_GrabStrike02.x",
+      "retargetSha256": "b107e875794ec60aac05ed2741f2f43a80fbb2300d94fb84b8b32b99380ba71c",
+      "frames": 40,
+      "fps": 30
+    },
+    {
+      "name": "ProjectYakuza_DD_GrabStrikeVictim02",
+      "source": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\gmt\\P_KRU_BTL_SUD_sy1_gsp_02.gmt",
+      "sourceSha256": "7bebafed9b013dacf9a0e06c8f708f9301adc2f0c7f50e073850b8fb71ded776",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_GrabStrikeVictim02.x",
+      "sha256": "7a3bdce539943fc9ad4f3a633f73b38519fd97f31de317ea5c9c4ba9ed796e83",
+      "retarget": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\grab-strike-build\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_GrabStrikeVictim02.x",
+      "retargetSha256": "e8f731a0734c0691a7192157a120c3e45af03ccc317cfcad230c37486687b5ba",
+      "frames": 40,
+      "fps": 30
+    },
+    {
+      "name": "ProjectYakuza_DD_GrabStrike03",
+      "source": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\gmt\\P_KRU_BTL_SUD_sy0_gsp_03.gmt",
+      "sourceSha256": "b90b9418489a02f3a698bf683c456456d3badf70afc0f08a033bf2dcfaf2ed97",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_GrabStrike03.x",
+      "sha256": "e305a2932572473f98d076bd1086e63e6059c5a65bf0c0e71ee5e99d23915077",
+      "retarget": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\grab-strike-build\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_GrabStrike03.x",
+      "retargetSha256": "7b7aad3e071f5aba5718b6db149ff80135574a0e8b46c95c93ad973df1c9c622",
+      "frames": 40,
+      "fps": 30
+    },
+    {
+      "name": "ProjectYakuza_DD_GrabStrikeVictim03",
+      "source": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\gmt\\P_KRU_BTL_SUD_sy1_gsp_03.gmt",
+      "sourceSha256": "7f36fa7706e86ca4036cdbe77c6749be93126cb0250c77b831d57736eeef119a",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_GrabStrikeVictim03.x",
+      "sha256": "c781a8a1bd5891e1d8340034eafbdf093fa04e4481473d7c33c03ad6cc996e6b",
+      "retarget": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\grab-strike-build\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_GrabStrikeVictim03.x",
+      "retargetSha256": "41fe18b0d9336edefad02e8a74b21c0ee923d2e389ddac5bbeb8f6c3821ae015",
+      "frames": 40,
+      "fps": 30
+    },
+    {
+      "name": "ProjectYakuza_DD_GrabStrike04",
+      "source": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\gmt\\P_KRU_BTL_SUD_sy0_gsp_04.gmt",
+      "sourceSha256": "fc50fa1c63779a3b8a427b7f9ce9133ce2b2e9b36a6df183e6feef4a55acbac0",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_GrabStrike04.x",
+      "sha256": "caefe4754019f34b15430f362429dfbddf2877ed874a785ca4f4c16519ae5bb9",
+      "retarget": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\grab-strike-build\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_GrabStrike04.x",
+      "retargetSha256": "5ea869ae83085dda427be171d036cf93c8fdf6ae2fe852c6a8da6efef56e222c",
+      "frames": 40,
+      "fps": 30
+    },
+    {
+      "name": "ProjectYakuza_DD_GrabStrikeVictim04",
+      "source": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\gmt\\P_KRU_BTL_SUD_sy1_gsp_04.gmt",
+      "sourceSha256": "94dfef090bcbd480b97fb026cb842df9d24731613d30d1ced29ce9602e669165",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_GrabStrikeVictim04.x",
+      "sha256": "d282a1172f08544dfa2488f4605d56607a23e8ecd55f301860e96b7449f5dc5e",
+      "retarget": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\grab-strike-build\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_GrabStrikeVictim04.x",
+      "retargetSha256": "d920373cdf1c12b38a338f174ff53a6ecb323d20293324eb91f8827e0ab6d7b0",
+      "frames": 40,
+      "fps": 30
+    }
+  ],
+  "moves": [
+    {
+      "animation": "ProjectYakuza_DD_GrabStrike01",
+      "targetAnimation": "ProjectYakuza_DD_GrabStrikeVictim01",
+      "duration": 1.0,
+      "contactMs": 233.33333333333334,
+      "contactFrame": 7,
+      "bep": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\bep\\P_KRU_BTL_SUD_sy0_gsp_01.bep",
+      "bepSha256": "9185d0db1441cb8b9db0d2baa8ddebfab3b2f1fcdec62818abb7d4dcc7f377d9",
+      "damageMultiplier": 0.65
+    },
+    {
+      "animation": "ProjectYakuza_DD_GrabStrike02",
+      "targetAnimation": "ProjectYakuza_DD_GrabStrikeVictim02",
+      "duration": 1.3,
+      "contactMs": 566.6666666666666,
+      "contactFrame": 17,
+      "bep": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\bep\\P_KRU_BTL_SUD_sy0_gsp_02.bep",
+      "bepSha256": "b3aa75c2e55397f31be1259b08e71adc09dcce18d94d6e6eeb278b0c13a3301a",
+      "damageMultiplier": 0.65
+    },
+    {
+      "animation": "ProjectYakuza_DD_GrabStrike03",
+      "targetAnimation": "ProjectYakuza_DD_GrabStrikeVictim03",
+      "duration": 1.3,
+      "contactMs": 566.6666666666666,
+      "contactFrame": 17,
+      "bep": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\bep\\P_KRU_BTL_SUD_sy0_gsp_03.bep",
+      "bepSha256": "40e9d4c7f4b5249bd665792a36e34e8df9dc887d15ec0732b56525ddad9d056e",
+      "damageMultiplier": 0.65
+    },
+    {
+      "animation": "ProjectYakuza_DD_GrabStrike04",
+      "targetAnimation": "ProjectYakuza_DD_GrabStrikeVictim04",
+      "duration": 1.3,
+      "contactMs": 566.6666666666666,
+      "contactFrame": 17,
+      "bep": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\bep\\P_KRU_BTL_SUD_sy0_gsp_04.bep",
+      "bepSha256": "138012be8a7f4c41e1a62576a32154f7e74f3f9b00321a88852187bdd738714a",
+      "damageMultiplier": 0.65
+    }
+  ]
+}

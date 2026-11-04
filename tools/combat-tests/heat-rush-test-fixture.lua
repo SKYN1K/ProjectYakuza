@@ -78,12 +78,15 @@ function p:setMoving()end;function p:setRunning()end;function p:setSprinting()en
 function base:setActionAnim(v)self.animation=v end
 function base:forceComplete()self:perform()end;function base:forceStop()self:stop()end
 local z={x=1.1,y=0,health=10,hits=0,total=0,vars={},useless=false,ignore=false,deferred=true,target=p}
+function z:getStateMachine()local z=self;return {isLocked=function()return z.stateLocked==true end}end
+function z:setStateMachineLocked(v)self.stateLocked=v end;function z:getCurrentStateName()return self.state or "idle"end
 function z:getX()return self.x end;function z:getY()return self.y end;function z:getZ()return 0 end
 function z:isDead()return self.health<=0 end;function z:isOnFloor()return false end;function z:isKnockedDown()return false end
 function z:isUseless()return self.useless end;function z:setUseless(v)self.useless=v end
 function z:isAttacking()return false end;function z:getIgnoreMovement()return self.ignore end;function z:setIgnoreMovement(v)self.ignore=v end
 function z:isDeferredMovementEnabled()return self.deferred end;function z:setDeferredMovementEnabled(v)self.deferred=v end
 function z:getTarget()return self.target end;function z:setTarget(v)self.target=v end
+function z:GetVariable(k)local v=self.vars[k];return type(v)=="boolean"and tostring(v)or v or ""end
 function z:setVariable(k,v)self.vars[k]=v end;function z:setHitReaction(v)self.reaction=v end;function z:getHitReaction()return self.reaction or ''end
 function z:setAttackOutcome(v)self.outcome=v end
 function z:reportEvent(v)self.report=v end;function z:setTargetAndCurrentDirection(x,y)self.facingX=x;self.facingY=y end
@@ -112,7 +115,7 @@ PY.Feedback=savedFeedback
 for i,binding in ipairs({'light','finisher','grab','light','finisher','grab'})do check(style.actions.heatAction.qte.prompts[i].binding==binding,'requested six-role QTE order')end
 check(#style.actions.heatAction.contacts==7 and R.duration==224/30,'retail source duration and finishing contact')
 check(R.amount(style.actions.heatAction,7,token,{[1]=true,[6]=true})==.75,'missed QTEs reduce final payoff without applying early damage')
-check(style.actions.grab.enabled==false,'QTE grab binding leaves ordinary grabs disabled')
+check(style.actions.grab.enabled==true,'ordinary grabs are enabled independently of the QTE grab binding')
 for _,prompt in ipairs(style.actions.heatAction.qte.prompts)do check(prompt.windowMs==400,'all six DoD inputs have a consistent 400 ms window')end
 local function shallow(v)local out={};for k,x in pairs(v)do out[k]=x end;return out end
 local authored=shallow(style);authored.actions=shallow(style.actions);authored.actions.heatAction=shallow(style.actions.heatAction)
@@ -443,4 +446,26 @@ action:cleanup(false);H.receive('ProjectYakuza','heatRushContact',echo)
 check(heard==1 and shown==1,'late confirmation after cleanup cannot replay a locally presented contact')
 echo.session=43;H.receive('ProjectYakuza','heatRushContact',echo);check(heard==1,'stale session remains rejected before feedback')
 isClient=client;PY.Network=network;PY.Feedback=feedback;PY.HitEffects=effects;p.held=nil;PY.MultiHit.targets=oldTargets;PY.HeatActions.clear()
+do
+ local old=R.capture(z);old.locked=false;z.stateLocked=true;PY.GrabRules.locks[z]=true;z:setVariable('ProjectYakuzaPairedVictimClip','ProjectYakuza_DD_WallHeatVictim');z:setVariable('ProjectYakuzaHeatRushVictim',true)
+ H.remote[99]={p=p,z=z,old=old,action=998}
+ H.remoteEnd(99,998,{locked=false,useless=false,ignore=false,deferred=true,completed=false})
+ check(not z.stateLocked,'observer wall cleanup restores the authoritative AI-lock state')
+ local oldNetwork,oldLookup,oldTarget=PY.Network,getPlayerByOnlineID,R.target
+ function p:isLocalPlayer()return false end
+ z.health=10;z.stateLocked=true;PY.GrabRules.locks[z]=true;z.useless=true;z.ignore=true;z.deferred=false
+ PY.Network={acceptSession=function()return true end,remote={[2]={grab=z,grabRestore={locked=false,useless=false,ignore=false,deferred=true}}}}
+ getPlayerByOnlineID=function()return p end;R.target=function()return z end
+ H.receive('ProjectYakuza','heatRushPose',{player=2,session=44,action=998,motionId='dod_wall',age=0,x=0,y=0,fx=1,fy=0,zombie=3})
+ check(H.remote[2]and not H.remote[2].old.locked and not H.remote[2].old.useless and not PY.Network.remote[2].grab,'wall observer captures originals after releasing its grab ownership')
+ H.remoteEnd(2,998);check(not z.stateLocked and not z.useless and not z.ignore and z.deferred,'observer timeout cannot leave old grab flags or lock behind')
+ function p:isLocalPlayer()return true end
+ PY.Network=oldNetwork;getPlayerByOnlineID=oldLookup;R.target=oldTarget
+ local savedNetwork,savedLookup=PY.Network,getPlayerByOnlineID;PY.Network=nil;getPlayerByOnlineID=function()return p end
+ local cancelled=0;H.active[p]={context={target={granted={action=999}}},cancel=function()cancelled=cancelled+1;H.active[p]=nil end}
+ H.receive('ProjectYakuza','heatRushEnd',{player=2,session=45,action=999,completed=false})
+ H.receive('ProjectYakuza','heatRushEnd',{player=2,session=45,action=999,completed=false})
+ check(cancelled==1,'server abort cancels the matching owner action once')
+ PY.Network=savedNetwork;getPlayerByOnlineID=savedLookup
+end
 return true,'PASS '..checks..' generic QTE validation, custom bindings, fresh presses, replay safety, native-phase contacts, canonical damage, paired cleanup and interruption checks'

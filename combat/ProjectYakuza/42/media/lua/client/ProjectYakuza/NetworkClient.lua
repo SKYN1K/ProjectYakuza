@@ -1,10 +1,11 @@
 require "ProjectYakuza/Juggling"
 require "ProjectYakuza/Runtime"
+require "ProjectYakuza/GrabRules"
 require "ProjectYakuza/NetworkProtocol"
 require "ProjectYakuza/TauntReactions"
 require "ProjectYakuza/SoundVariety"
 local ProjectYakuza=ProjectYakuza;local P=ProjectYakuza.NetworkProtocol
-local N={locals=setmetatable({}, {__mode="k"}),remote={},leases=setmetatable({}, {__mode="k"}),pending=setmetatable({}, {__mode="k"}),seen={},victims={},deferred={},sessions={},nextRemote=0}
+local N={grabStates=setmetatable({}, {__mode="k"}),strikeSeen={},grabEpochs={},locals=setmetatable({}, {__mode="k"}),remote={},leases=setmetatable({}, {__mode="k"}),pending=setmetatable({}, {__mode="k"}),seen={},victims={},deferred={},sessions={},nextRemote=0}
 ProjectYakuza.Network=N
 local function now()return getTimestampMs()end
 local stateFields={"style","weaponProfile","equipped","extreme","clip","move","phase","linked","ground","grabMoving","grabDirection","taunt","swing","action","attackHeatSpeed","rightAim","comboBusy"}
@@ -182,7 +183,7 @@ end
 function N.releaseGrab(p)
     if not isClient() or not p:isLocalPlayer() then return end
     if N.leases[p] then N.send(p,"grabRelease",{}) end
-    N.leases[p]=nil;N.pending[p]=nil
+    N.leases[p]=nil;N.grabStates[p]=nil;N.pending[p]=nil
 end
 function N.stopObserver(p,s)
     if s.actionOverride and p:GetVariable("PerformingAction")=="ProjectYakuza_MP" then
@@ -196,7 +197,8 @@ function N.clearRemote(id)
     if s.grab then
         local z=s.grab;local restore=s.grabRestore or {}
         z:setVariable("ProjectYakuzaGrabbed",false);z:setVariable("ProjectYakuzaGrabPhase","");z:setVariable("ProjectYakuzaGrabMoving",false)
-        z:setUseless(restore.useless==true);z:setIgnoreMovement(restore.ignore==true);z:setDeferredMovementEnabled(restore.deferred~=false)
+        if z:GetVariable("ProjectYakuzaHeatRushVictim")~="true"then ProjectYakuza.GrabRules.restore(z,restore)end
+        if z:getHitReaction()=="ProjectYakuzaGrabbed"then z:setHitReaction("");z:reportEvent("ActiveAnimFinishing")end
     end
     if p and not p:isLocalPlayer() then
         N.stopObserver(p,s)
@@ -352,22 +354,41 @@ function N.command(module,command,a)
     if not z and recent and now()-recent.time<1500 and P.near(p,recent.z,3) then z=recent.z end
     if not z then N.defer(command,a);return end
     if command=="impact" or command=="damage" or command=="juggle" then N.deferred[command..":"..a.player..":"..tostring(a.event)]=nil end
+    if command=="grabStart"or command=="grabPose"or command=="grabEnd"then
+        if not P.integer(a.grabId,1,1000000000)then return end
+        local epoch=N.grabEpochs[a.player]
+        if not epoch or epoch.session~=a.session then epoch={session=a.session,highest=0,ended=0};N.grabEpochs[a.player]=epoch end
+        if a.grabId<epoch.highest or command~="grabEnd"and a.grabId<=epoch.ended then return end
+        epoch.highest=math.max(epoch.highest,a.grabId)
+        if command=="grabEnd"then epoch.ended=math.max(epoch.ended,a.grabId)end
+    end
+    if command=="grabStrikeContact"then
+        if not P.integer(a.serial,1,1000000)or not P.number(a.amount,0,10)then return end
+        local key=tostring(a.player)..":"..tostring(a.session)..":"..tostring(a.grabId)..":"..tostring(a.serial)..":"..tostring(a.zombie)
+        if N.strikeSeen[key]then return end;N.strikeSeen[key]=now()
+        if p:isLocalPlayer()then ProjectYakuza.Heat.onHit(p,z,a.amount,{active=true})elseif ProjectYakuza.GrabCombat then ProjectYakuza.GrabCombat.present(p,z)end
+        return
+    end
+    if (command=="grabStart"or command=="grabPose")and z:GetVariable("ProjectYakuzaHeatRushVictim")=="true"then return end
     if command=="grabStart" then
+        if p:isLocalPlayer()and N.grabStates[p]and N.grabStates[p].grabId==a.grabId and N.leases[p]==a.zombie then return end
         if p:isLocalPlayer() then
-            N.leases[p]=a.zombie;N.pending[p]=nil
+            N.leases[p]=a.zombie;N.grabStates[p]=a;N.pending[p]=nil
             local ok=ProjectYakuza.requestAction(p,"grab",nil,z)
             if not ok then N.releaseGrab(p) end
         else
-            local s=N.remote[a.player];if s then s.grab=z;s.grabRestore=a end
+            local s=N.remote[a.player];if s and s.grab==z and s.grabRestore and s.grabRestore.grabId==a.grabId then return end
+            if s then s.grab=z;s.grabRestore=a end
+            ProjectYakuza.GrabRules.captureLock(z)
             z:setVariable("ProjectYakuzaGrabbed",true);z:setVariable("ProjectYakuzaGrabPhase","enter");z:setHitReaction("ProjectYakuzaGrabbed")
-            z:reportEvent("wasHit")
+            z:reportEvent("wasHit");ProjectYakuza.GrabRules.keep(z)
         end
     elseif command=="grabEnd" then
-        N.leases[p]=nil
+        N.leases[p]=nil;N.grabStates[p]=nil
         if p:isLocalPlayer() then local c=ProjectYakuza.activeActions[p];if c and c.kind=="grab" then ProjectYakuza.cancelAction(p,"server_released") end end
         if not p:isLocalPlayer() then
             z:setVariable("ProjectYakuzaGrabbed",false);z:setVariable("ProjectYakuzaGrabPhase","");z:setVariable("ProjectYakuzaGrabMoving",false)
-            z:setUseless(a.useless==true);z:setIgnoreMovement(a.ignore==true);z:setDeferredMovementEnabled(a.deferred==true)
+            if z:GetVariable("ProjectYakuzaHeatRushVictim")~="true"then ProjectYakuza.GrabRules.restore(z,a)end
             if z:getHitReaction()=="ProjectYakuzaGrabbed" then z:setHitReaction("");z:reportEvent("ActiveAnimFinishing") end
             local s=N.remote[a.player];if s then s.grab=nil end
         end
@@ -376,7 +397,7 @@ function N.command(module,command,a)
         if not p:isLocalPlayer() then
             local s=N.remote[a.player];if s then s.grab=z;s.grabRestore=a end
             ProjectYakuza.Defense.snapActor(z,a.x,a.y);z:setTargetAndCurrentDirection(-a.fx,-a.fy)
-            z:setUseless(true);z:setIgnoreMovement(true);z:setDeferredMovementEnabled(false)
+            ProjectYakuza.GrabRules.keep(z)
             z:setVariable("ProjectYakuzaGrabbed",true);z:setVariable("ProjectYakuzaGrabPhase",a.phase)
             z:setVariable("ProjectYakuzaGrabMoving",a.moving==true);z:setVariable("ProjectYakuzaGrabWalkDirection",a.direction or "forward")
         end
@@ -450,6 +471,7 @@ function N.tick()
     end
     if t<N.nextRemote then return end;N.nextRemote=t+500
     for id,s in pairs(N.remote)do if t-s.last>4000 then N.clearRemote(id)end end
+    for key,at in pairs(N.strikeSeen)do if t-at>10000 then N.strikeSeen[key]=nil end end
     for key,time in pairs(N.seen)do if t-time>5000 then N.seen[key]=nil end end
     for key,entry in pairs(N.victims)do if t-entry.time>1500 then N.victims[key]=nil end end
 end
@@ -464,7 +486,7 @@ end
 function N.clear()
     for id in pairs(N.remote) do N.clearRemote(id) end
     for p in pairs(N.leases) do N.releaseGrab(p) end
-    N.locals=setmetatable({}, {__mode="k"});N.seen={};N.victims={};N.deferred={};N.sessions={};N.pending=setmetatable({}, {__mode="k"})
+    N.locals=setmetatable({}, {__mode="k"});N.seen={};N.victims={};N.deferred={};N.sessions={};N.grabEpochs={};N.strikeSeen={};N.grabStates=setmetatable({}, {__mode="k"});N.pending=setmetatable({}, {__mode="k"})
 end
 ProjectYakuza.on("lightAttackStarted",N.swing)
 ProjectYakuza.on("finisherStarted",N.swing)

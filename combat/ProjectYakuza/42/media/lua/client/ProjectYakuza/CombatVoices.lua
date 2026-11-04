@@ -53,7 +53,7 @@ function V.contact(p,id)
     local s=V.states[p]
     if played then if s then s.contact=nil end;return end
     local context=ProjectYakuza.activeActions and ProjectYakuza.activeActions[p]
-    if context and context.kind=="heatAction"and(reason=="cooldown"or reason=="voice busy")then
+    if context and (context.kind=="heatAction"or context.kind=="grabHeat"or context.kind=="grab")and(reason=="cooldown"or reason=="voice busy")then
         local time=getTimestampMs();state(p).contact={id=id,context=context,deadline=time+600,nextTry=time+75}
     end
 end

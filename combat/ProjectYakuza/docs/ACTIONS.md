@@ -30,7 +30,7 @@ Use a namespaced Bindings.register control and poll it once in the style input h
 
 ## Damage and MP
 
-Native strikes use exactly one AttackCollisionCheck=MeleeSwing at contact. Do not add another health-subtraction timer. Observer registration replicates presentation, not damage, force or paired target ownership. New grabs/throws/heat actions need server checks for eligibility, range, facing, obstructions, costs/cooldowns, serial deduplication, ownership leases and disconnect cleanup. Grabs are temporarily disabled. Cinematic cameras/direct ragdoll force are outside this Lua API.
+Native strikes use exactly one AttackCollisionCheck=MeleeSwing at contact. Do not add another health-subtraction timer. Observer registration replicates presentation, not damage, force or paired target ownership. New grabs/throws/heat actions need server checks for eligibility, range, facing, obstructions, costs/cooldowns, serial deduplication, ownership leases and disconnect cleanup. Unarmed grabs and wall Heat Actions use the validated ownership protocol in [Grabs](GRABS.md). Cinematic cameras/direct ragdoll force are outside this Lua API.
 
 ## Built-in charged heavy (API 3)
 

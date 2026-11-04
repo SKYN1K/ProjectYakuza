@@ -41,7 +41,7 @@ Current manual: Project Yakuza 0.74.0, Lua API 3, MP protocol 2.
 
 Only current guides, the current release validation and retained source-asset records are distributed. Older patch notes, raw test logs and per-release validation reports are available in Git history and previous release archives.
 
-The JSON records identify original supplied files, conversions and hashes for retained assets. Keep these for debugging and source/native verification. Disabled grab assets and their source records remain available for future work. Extraction folders, previews, backups, game libraries, credentials and the separate voice-pack project stay outside distributed addons.
+The JSON records identify original supplied files, conversions and hashes for retained assets. Keep these for debugging and source/native verification. Grab assets, including strike and wall-action pairs, retain their original-source records. Extraction folders, previews, backups, game libraries, credentials and the separate voice-pack project stay outside distributed addons.
 
 - [Source-tracked punch effects](ATTACK_EFFECTS.md): first-light prototype, numeric attachment paths, timing, budgets and fidelity limits.
 
@@ -50,3 +50,5 @@ The JSON records identify original supplied files, conversions and hashes for re
 - [Manual directional attacks and taunt attention](DIRECTIONAL_AND_TAUNTS.md)
 
 - [Current validation](VALIDATION_0.74.0.md)
+
+[Grabs, grab strikes and wall Heat Actions](GRABS.md) documents per-style paired definitions, controls and multiplayer ownership.

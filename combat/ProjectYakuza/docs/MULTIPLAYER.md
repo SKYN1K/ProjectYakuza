@@ -14,7 +14,7 @@ Normal launcher, Lua-only protocol 2. Server and clients need matching shared st
 | Counter | Local 0.3-second window plus server target/state/range/60-second cooldown; no rewind guarantee |
 | Guard | Valid block clip/nearby attacker and scoped cancellation |
 | Heat activation | Bounded protection lease restores previous flags; other kinds do not inherit it |
-| Grabs/throws | Implementation/leases retained but temporarily disabled client/server |
+| Grabs/throws/strikes | Unique renewable server leases; canonical source contact timing and damage; stale packet rejection; original flag restoration |
 | Music, volumes, assignments | Local preferences, not synchronized soundtrack |
 | CVF | Provider owns transmission/policy; do not send voices twice |
 
@@ -71,7 +71,7 @@ Combat commands force an immediate state check but reuse an unchanged snapshot. 
 
 Stale/replaced remote actors release observer action flags, weapon-profile/charge/link flags, Heat state, aura/outline and attack/charge limb effects. Unknown addon styles clear their presentation rather than invoking a missing style's aura/UI. Install all required style addons on every peer for full presentation.
 
-Server primary response planning and supplemental damage now resolve the equipped weapon's style view for hit responses and future juggling configuration, matching SP behavior. Native primary damage remains native and is never replayed. Music/UI preferences remain local; CVF retains its own network policy. Grabs remain disabled.
+Server primary response planning and supplemental damage now resolve the equipped weapon's style view for hit responses and future juggling configuration, matching SP behavior. Native primary damage remains native and is never replayed. Music/UI preferences remain local; CVF retains its own network policy. See [Grabs](GRABS.md) for the enabled unarmed hold/strike/wall protocol.
 
 The audit validates offline client/server command paths and native resource selection. It does not replace a real two-client test for network latency, native zombie ownership migration, corpse/death timing or GPU appearance. PZ was not started.
 

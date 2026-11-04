@@ -31,6 +31,7 @@ local function player(id,x)
  function p:setIgnoreMovement(v)self.ignore=v;if v then self.nativeUpdates=(self.nativeUpdates or 0)+1 end end
  function p:getOnlineID()return self.id end
  function p:getX()return self.x end;function p:getY()return self.y end;function p:getZ()return self.z end
+ function p:isOnFloor()return false end;function p:isKnockedDown()return false end;function p:isClimbing()return false end;function p:getHitReaction()return self.reaction or ""end
  function p:isDead()return self.dead==true end;function p:getVehicle()return self.vehicle end
  function p:isLocalPlayer()return self.localPlayer end;function p:getModData()return self.data end
  function p:getPrimaryHandItem()return self.equipped~=false and self.hand or nil end
@@ -53,6 +54,8 @@ local p=player(1,0);local remote=player(2,1)
 local zombies={}
 local function zombie(id,x)
  local z={id=id,x=x,y=0,z=0,health=1,hits=0,vars={},target=p,deferred=true}
+ function z:getStateMachine()local z=self;return {isLocked=function()return z.stateLocked==true end}end
+ function z:setStateMachineLocked(v)self.stateLocked=v end
  function z:getOnlineID()return self.id end
  function z:getX()return self.x end;function z:getY()return self.y end;function z:getZ()return self.z end
  function z:setX(v)self.x=v end;function z:setY(v)self.y=v end
@@ -75,8 +78,10 @@ local function zombie(id,x)
  function z:Kill(v)self.kills=(self.kills or 0)+1;self.health=0 end
  function z:Hit(item,attacker,damage)self.hits=self.hits+1;self.health=math.max(0,self.health-damage)end
  function z:getHealth()return self.health end;function z:setHealth(v)self.health=v end
+ function z:setOnFloor(v)self.nativeFloor=v end
  function z:setKnockedDown(v)self.knock=v end;function z:setFallOnFront(v)self.front=v end
- function z:setVariable(k,v)self.vars[k]=v end;function z:reportEvent(name)self.lastEvent=name;self.events=(self.events or 0)+1 end
+ function z:GetVariable(k)local v=self.vars[k];return type(v)=="boolean"and tostring(v)or v or ""end
+function z:setVariable(k,v)self.vars[k]=v end;function z:reportEvent(name)self.lastEvent=name;self.events=(self.events or 0)+1;if not self.stateLocked and (name=="ActiveAnimFinishing"or self.vars.ProjectYakuzaGrabbed==true)then self.state=name=="wasHit"and "ZombieHitReactionState"or "idle"end end
  function z:setTargetAndCurrentDirection(x,y)self.fx=x;self.fy=y end
  function z:isRemoteZombie()return self.remote==true end
  zombies[#zombies+1]=z;return z
@@ -980,5 +985,62 @@ do
  check(lease.failed and lease.failedIndex==4 and lease.failures==3,'server resets consecutive failures after a correct input and aborts at the configured threshold')
  rush.finish(p,false);config.failureLimit=originalLimit;config.failureMode=originalMode
  ProjectYakuza.HeatActions.clear()
+end
+do
+ local rules=ProjectYakuza.GrabRules;local style=ProjectYakuza.getStyle('dragon_of_dojima')
+ ProjectYakuza.FEATURES.grab=true;style.actions.grab.enabled=true;ProjectYakuza.emit('styleRegistered',style)
+ p.hand=p.token;p.dead=false;p.vehicle=nil;p.x=0;p.y=0;z1.x=.7;z1.y=0;z1.health=10;z1.reaction='';z1.useless=false;z1.ignore=false;z1.deferred=true;z1.stateLocked=false;z1.state='idle'
+ clock=clock+2000;snapshot(p,{clip='ProjectYakuza_DD_GrabHold',phase='hold',rightAim=true,heat=100})
+ command('grabRequest',{zombie=z1.id});local held=server.players[p.id].grab
+ check(held and held.id and z1.stateLocked,'server grab owns a unique lease and native state latch')
+ local before=z1.hits
+ command('grabStrike',{zombie=z1.id,grabId=held.id,serial=1,index=3});check(not held.strike,'server rejects an invented strike index')
+ command('grabStrike',{zombie=z1.id,grabId=held.id,serial=1,index=1});check(held.strike and held.strike.index==1,'server validates first source strike')
+ command('grabStrikeHit',{zombie=z1.id,grabId=held.id,serial=1});check(z1.hits==before,'early grab damage rejected')
+ clock=clock+250;command('grabStrikeHit',{zombie=z1.id,grabId=held.id,serial=1});command('grabStrikeHit',{zombie=z1.id,grabId=held.id,serial=1})
+ check(z1.hits==before+1 and z1.stateLocked and z1:getHitReaction()=='ProjectYakuzaGrabbed','source strike hits once and retains victim pairing')
+ command('grabStrike',{zombie=z1.id,grabId=held.id,serial=2,index=2});check(held.strike.serial==1,'strike spam cannot overlap source clips')
+ for i=1,12 do clock=clock+500;snapshot(p,{clip='ProjectYakuza_DD_GrabHold',phase='hold'});server.tick()end
+ check(server.players[p.id].grab==held,'fresh active grab snapshots renew the hold beyond the old timeout')
+ command('grabRelease',{});check(not z1.stateLocked and not z1.useless and not z1.ignore and z1.deferred,'server release restores saved native state')
+ clock=clock+1500;snapshot(p,{clip='ProjectYakuza_DD_GrabHold',phase='hold'});z1.reaction='';z1.state='idle';command('grabRequest',{zombie=z1.id});local nextLease=server.players[p.id].grab
+ check(nextLease and nextLease.id>held.id,'new grab has a fresh lease ID')
+ before=z1.hits;command('grabStrikeHit',{zombie=z1.id,grabId=held.id,serial=1});check(z1.hits==before,'late hit from a released grab cannot damage the next grab')
+ command('grabRelease',{})
+ local oldCell,oldPath,oldForward=getCell,P.path,p.getForwardDirection
+ P.path=function()return true end
+ p.getForwardDirection=function()return {getX=function()return 0 end,getY=function()return 1 end}end
+ getCell=function()return {getGridSquare=function(_,x,y,level)return {y=y,getMovingObjects=function()return list({z1})end,isWallTo=function(_,other)return y==1 and other.y==0 end,isWindowTo=function()return false end,isDoorTo=function()return false end}end}end
+ p.x=.5;p.y=.2;z1.x=.5;z1.y=.9;z1.health=10;z1.reaction='';z1.stateLocked=false;z1.state="idle";z1.useless=false
+ clock=clock+2000;snapshot(p,{clip='ProjectYakuza_DD_GrabHold',phase='hold',rightAim=true,heat=100,fuel=100,extreme=false})
+ command('heatRushBegin',{zombie=z1.id,request=5000,grabHeat=true});check(not rush.leases[p],'wall action cannot start without owning a grab')
+ command('grabRequest',{zombie=z1.id});check(server.players[p.id].grab~=nil,'wall test obtains a real server grab')
+ snapshot(p,{clip='ProjectYakuza_DD_GrabHold',phase='hold',rightAim=true,heat=0,fuel=0,extreme=false})
+ command('heatRushBegin',{zombie=z1.id,request=5001,grabHeat=true});check(not rush.leases[p]and server.players[p.id].grab,'insufficient heat preserves the grab without starting an action')
+ snapshot(p,{clip='ProjectYakuza_DD_GrabHold',phase='hold',rightAim=true,heat=100,fuel=100,extreme=false})
+ command('heatRushBegin',{zombie=z1.id,request=5002,grabHeat=true});local job=rush.leases[p]
+ check(job and job.move.grabHeat and job.motion==ProjectYakuza.PairedMotions.dod_wall and not server.players[p.id].grab,'server atomically transfers the held target to the wall action')
+ check(not z1.stateLocked and not z1.useless,'old grab flags are restored before the new action captures them')
+ command('heatRushReady',{action=job.action});check(job.started and p.invincible and p.ghost,'wall action gets native framework protection')
+ for i,contact in ipairs(job.contacts)do clock=job.started+contact.atMs;command('heatRushHit',{action=job.action,index=i})end
+ check(job.pendingDamage and z1.health==10,'wall action defers damage to preserve paired victim motion')
+ clock=job.started+job.duration*1000;snapshot(p,{clip='ProjectYakuza_DD_WallHeat',move='dd_wall_heat',action=job.action,rightAim=true,heat=80});command('heatRushEnd',{action=job.action,completed=true})
+ check(not rush.leases[p]and z1.health<10 and not z1.stateLocked and not p.invincible,'wall completion applies damage once and restores victim/player state')
+ clock=clock+600;ProjectYakuza.HeatActions.tick();check(not p.ghost,'wall action target grace expires normally')
+ getCell=oldCell;P.path=oldPath;p.getForwardDirection=oldForward
+end
+do
+ local session=100000;client.acceptSession(remote.id,session);remote.x=.5;remote.y=.2
+ client.remote[remote.id]={packet={equipped=true},actor=remote,last=clock}
+ local function packet(id,phase)return {player=remote.id,session=session,zombie=z1.id,grabId=id,phase=phase,x=.5,y=.9,fx=0,fy=1,useless=false,ignore=false,deferred=true,locked=false}end
+ client.command(P.module,'grabStart',packet(1000,'enter'));client.command(P.module,'grabPose',packet(1000,'hold'))
+ check(z1.vars.ProjectYakuzaGrabbed==true and z1.stateLocked,'remote grab pose retains its native reaction latch')
+ client.command(P.module,'grabEnd',packet(1000,'hold'));client.command(P.module,'grabPose',packet(1000,'hold'))
+ check(z1.vars.ProjectYakuzaGrabbed==false and not z1.stateLocked and not z1.ignore,'late pose cannot resurrect an ended remote grab')
+ client.command(P.module,'grabStart',packet(1001,'enter'));client.command(P.module,'grabPose',packet(1001,'hold'));client.command(P.module,'grabStart',packet(1001,'enter'))
+ check(z1.vars.ProjectYakuzaGrabPhase=='hold','duplicate start cannot rewind a held remote animation')
+ client.command(P.module,'grabEnd',packet(1000,'hold'));check(z1.vars.ProjectYakuzaGrabbed==true,'older end cannot release a newer grab')
+ client.command(P.module,'grabEnd',packet(1001,'hold'));check(not z1.stateLocked and not z1.ignore,'current remote release restores its saved state')
+ z1.vars.ProjectYakuzaHeatRushVictim=true;client.command(P.module,'grabStart',packet(1002,'enter'));check(z1.vars.ProjectYakuzaGrabbed==false,'delayed grab cannot overwrite an active paired heat action');z1.vars.ProjectYakuzaHeatRushVictim=false
 end
 return 'PASS '..count..' MP authority, duplicate, range, lease, cooldown, observer and throttle checks'

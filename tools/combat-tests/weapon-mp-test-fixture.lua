@@ -51,6 +51,8 @@ local p=player(1,0);local remote=player(2,1)
 local zombies={}
 local function zombie(id,x)
  local z={id=id,x=x,y=0,z=0,health=1,hits=0,vars={},target=p,deferred=true}
+ function z:getStateMachine()local z=self;return {isLocked=function()return z.stateLocked==true end}end
+ function z:setStateMachineLocked(v)self.stateLocked=v end
  function z:getOnlineID()return self.id end
  function z:getX()return self.x end;function z:getY()return self.y end;function z:getZ()return self.z end
  function z:setX(v)self.x=v end;function z:setY(v)self.y=v end
@@ -73,8 +75,10 @@ local function zombie(id,x)
  function z:Kill(v)self.kills=(self.kills or 0)+1;self.health=0 end
  function z:Hit(item,attacker,damage)self.hits=self.hits+1;self.health=math.max(0,self.health-damage)end
  function z:getHealth()return self.health end;function z:setHealth(v)self.health=v end
+ function z:setOnFloor(v)self.nativeFloor=v end
  function z:setKnockedDown(v)self.knock=v end;function z:setFallOnFront(v)self.front=v end
- function z:setVariable(k,v)self.vars[k]=v end;function z:reportEvent(name)self.lastEvent=name;self.events=(self.events or 0)+1 end
+ function z:GetVariable(k)local v=self.vars[k];return type(v)=="boolean"and tostring(v)or v or ""end
+function z:setVariable(k,v)self.vars[k]=v end;function z:reportEvent(name)self.lastEvent=name;self.events=(self.events or 0)+1 end
  function z:setTargetAndCurrentDirection(x,y)self.fx=x;self.fy=y end
  function z:isRemoteZombie()return self.remote==true end
  zombies[#zombies+1]=z;return z

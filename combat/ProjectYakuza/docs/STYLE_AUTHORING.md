@@ -50,7 +50,7 @@ Registered styles appear automatically in the inventory menu and assignment list
 | Tracked first-light particles | move.attackEffects | Matching source-sampled forearm/wrist/knuckle path; see [Attack effects](ATTACK_EFFECTS.md) |
 | MP playback | Registered catalog + observers | Same addon on server and clients |
 
-Built-in controllers retain their established conventions; arbitrary clips may need a different handler. Grabs are globally disabled even if an addon enables its slot. heatAction has no bundled cinematic implementation. See [API](API_REFERENCE.md), [Actions](ACTIONS.md) and [Animations](ANIMATIONS.md).
+Built-in controllers retain their established conventions; arbitrary clips may need a different handler. Grabs are enabled per style. Optional paired strikes and wall Heat Actions use the shared held-target handler; see [Grabs](GRABS.md). DoD also supplies weapon and Extreme Heat paired actions. See [API](API_REFERENCE.md), [Actions](ACTIONS.md) and [Animations](ANIMATIONS.md).
 
 ## 4. Add a new move type
 

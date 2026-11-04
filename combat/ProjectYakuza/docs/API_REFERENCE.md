@@ -48,7 +48,7 @@ Require `ProjectYakuza/Registry` for shared definitions, `ProjectYakuza/Runtime`
 
 Parent quickstep.cooldownMs, runningAttack.runupMs, block.staminaPerHit and parry timing fields belong to their specific controller. Put costs on each spending variant; parent costs are not inherited. Custom fields are available to your handler. Validation cannot prove native asset existence or gameplay correctness.
 
-Built-in kinds: finisher, grab, parry, block, quickstep, quickstepAttack, runningAttack, heatAction, heatActivation, taunt, styleEntry. Grab is temporarily disabled; heatAction has no cinematic handler.
+Built-in kinds: finisher, grab, grabHeat, parry, block, quickstep, quickstepAttack, runningAttack, heatAction, heatActivation, taunt, styleEntry. DoD supplies paired Heat Actions; grabHeat uses the shared held-target wall handler. See [Grabs](GRABS.md).
 
 ## Selection and lookup
 
@@ -73,7 +73,7 @@ Token: ProjectYakuza.StyleToken. Do not mint client-only tokens in MP. Use names
 
 `completeAction(player,expectedContext)` clears matching ownership/emits completion, but does not call cancel cleanup. `cancelAction(player,reason,expectedContext)` clears it, calls the captured cancel handler and emits cancellation. Optional expectedContext prevents a stale timer ending a newer move. Full rules: [Actions](ACTIONS.md).
 
-Failures include unknown_action, style_not_equipped, busy, not_implemented, unknown_variant, missing_animation, target_required, missing_target_animation, missing_handler, insufficient_heat, wrong_combo_step, combo_window_closed, handler_error and handler-specific reasons. Grab returns temporarily_disabled. A nonexistent nonempty animation string requires native playback checks to detect.
+Failures include unknown_action, style_not_equipped, busy, not_implemented, unknown_variant, missing_animation, target_required, missing_target_animation, missing_handler, insufficient_heat, wrong_combo_step, combo_window_closed, handler_error and handler-specific reasons. Disabled per-style grab definitions are rejected. A nonexistent nonempty animation string requires native playback checks to detect.
 
 ## Controls
 
@@ -101,7 +101,7 @@ Failures include unknown_action, style_not_equipped, busy, not_implemented, unkn
 | tauntStarted / tauntStopped | (player)/(player,completed) |
 | heatActivationStarted / heatActivationFlare / heatActivationStopped | (player)/(player)/(player,completed) |
 | guardHit / guardBroken / tigerDrop | (player,zombie)/(player)/(player,zombie) |
-| grabHeld / throwStarted / throwHit | (player,zombie); dormant while grab disabled |
+| grabHeld / throwStarted / throwHit | (player,zombie); emitted by the paired grab/throw controller |
 
 ## Network catalog
 
