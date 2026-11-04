@@ -204,3 +204,10 @@ The 0.76 hold regression samples original GMT joint positions, compares chest-re
 
 
 Input prompt tests exercise the shared mouse/keycap renderer, rebinding, layout, alpha and cache behavior. build_input_prompt_assets.py --validate compares the four PNG crops against the original ui.par DDS pixels; InputPromptAssetProbe uses native B42 ImageData and checks the text-measurement APIs without starting the game.
+
+
+## Vanilla pose fallback (0.78.0)
+
+vanilla_pose_fallback.py disables the DoD weapon-pose and ordinary custom-walk selectors without editing their motion clips. Current weapon/travel builders reapply this policy. Its two animation-gate variables have no production Lua producer and no runtime option; they exist only to keep the retained conversions dormant.
+
+Compile VanillaPoseProbe.java with javac, then run validate_vanilla_poses.py with the bundled Python runtime. The validator checks all 30 selectors through B42's actual native selector, including unset/false rejection on owners/observers and an explicit true-gate negative control. It verifies the native walking clip in the run blend and compares 727 motion/combat XML files byte for byte with the v0.77.0 ZIP. It does not launch PZ or establish a live visual fix.

@@ -52,3 +52,8 @@ for family in ['','Bat','Knife','Blade']:
  save(n,'movement',name)
 (mod/'docs/locomotion-nodes.json').write_text(json.dumps({'nodes':records,'blendSeconds':.25,'runHealthySpeedScale':1.0,'nativeTravelScale':1.28,'armedRun':'Existing B42 Bob_Run/Bob_RunBat, native blend clips, 0.80 healthy phase scale and native footstep phases; custom run clips remain available but are not selected for armed locomotion.','nativeRunCycleSeconds':2/3,'sourceRunCycleSeconds':32/30,'operation':'DoD-only non-aimed run and unlocked weapon carry selectors. Existing injury, tree, overburdened and turn nodes remain native. Carry-walk lower body uses existing native walking. No actor displacement or speed changes.'},indent=2)+'\n',encoding='utf-8')
 print('BUILT',len(records),'isolated locomotion selectors')
+
+import sys
+sys.path.insert(0,str(root/"tools/combat-tests"))
+from vanilla_pose_fallback import apply
+apply()

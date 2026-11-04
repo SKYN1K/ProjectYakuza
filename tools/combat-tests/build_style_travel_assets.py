@@ -45,3 +45,6 @@ for group,label,template in [('movement','Walk','defaultWalk'),('sprint','Sprint
 report={'authorization':'User approved original Kiryu walk/sprint conversion and movement-speed matching on 2026-11-03.','operation':'Kiryu normal walk uses the first complete 65-frame gait cycle of the supplied eight-cycle loop; supplied run_ftl_ex is retimed for PZ sprint. Source samples are retimed to native B42 gait-cycle durations, retaining native travel distances and per-second speed. Existing native injury/tree/turn/sneak fallbacks remain. No AI or invented motion, artwork or sound.','clips':records,'selectors':selectors}
 (mod/'docs/style-travel-assets.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8');print('BUILT source walk/sprint with native cadence and travel')
 
+
+from vanilla_pose_fallback import apply
+apply()

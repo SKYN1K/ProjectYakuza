@@ -1797,99 +1797,99 @@
     },
     {
       "path": "42/media/AnimSets/player/aim/ProjectYakuza_DD_BatIdle.xml",
-      "sha256": "bee5af563594e7dfcf2b67b876a3e094848984032d57ebc3274f138948549020"
+      "sha256": "b1fb03f2739489ad0385d9a819ec48b1abed9857b20a5010da7861aa99932bee"
     },
     {
       "path": "42/media/AnimSets/player/aim-strafe/ProjectYakuza_DD_BatIdle.xml",
-      "sha256": "bee5af563594e7dfcf2b67b876a3e094848984032d57ebc3274f138948549020"
+      "sha256": "b1fb03f2739489ad0385d9a819ec48b1abed9857b20a5010da7861aa99932bee"
     },
     {
       "path": "42/media/AnimSets/player/idle/ProjectYakuza_DD_LocomotionBatCarry.xml",
-      "sha256": "02c92e437f9c3aae59a55d5118dd23f70e19e371ebe9b20e0ae815ae8a871591"
+      "sha256": "cff13e19bba8f1f1c5f3a74bd3a0516e44754fef41e014a3c5015055d2c4c549"
     },
     {
       "path": "42/media/AnimSets/player/movement/ProjectYakuza_DD_LocomotionBatWalk.xml",
-      "sha256": "afd6438640b8fc111bece889ae9ac0e5677af86da5714312fc6bf10decae47b1"
+      "sha256": "6ca9c650c25390f7823ee7905801f1601ab7d13e79c4692f952d80d07edbaea3"
     },
     {
       "path": "42/media/AnimSets/player/run/ProjectYakuza_DD_LocomotionBatRun.xml",
-      "sha256": "d2940119f727fffb3c19bebd9d62933381c3d822cd77fa2fbde9ff0aa353a1e4"
+      "sha256": "f973305266d14ff324247b0b92c8b2530fd7d299e93d6c402500c13509fee769"
     },
     {
       "path": "42/media/AnimSets/player/sprint/ProjectYakuza_DD_LocomotionBatSprint.xml",
-      "sha256": "9399d74fbca5bc98f345ca52eded93686893933fd59e8638a6924e2044930708"
+      "sha256": "06607e816fb35dd8b9bdf7373332dd5da9a33aecbe283f3fc9f88c18741e43a2"
     },
     {
       "path": "42/media/AnimSets/player/aim/ProjectYakuza_DD_BladeIdle.xml",
-      "sha256": "89f9007ab2dfefee4f4790c0fae1359d59827daab6e8535e9e32c190ffd61ffd"
+      "sha256": "fc3dfb6a42771357f4864d19f62ff95ced0db7858952f9952c42cdd8299bdac9"
     },
     {
       "path": "42/media/AnimSets/player/aim-strafe/ProjectYakuza_DD_BladeIdle.xml",
-      "sha256": "89f9007ab2dfefee4f4790c0fae1359d59827daab6e8535e9e32c190ffd61ffd"
+      "sha256": "fc3dfb6a42771357f4864d19f62ff95ced0db7858952f9952c42cdd8299bdac9"
     },
     {
       "path": "42/media/AnimSets/player/idle/ProjectYakuza_DD_LocomotionBladeCarry.xml",
-      "sha256": "c99bb68984eda074c11c1d1a9e8466df96e19e884c4c0a20d4bf9c2ce6a710e4"
+      "sha256": "f0ef57c3586a23b1fb58d00f8a954156ec59e1fe0a5d26b3af8e9e7c66a3a6df"
     },
     {
       "path": "42/media/AnimSets/player/movement/ProjectYakuza_DD_LocomotionBladeWalk.xml",
-      "sha256": "32d3ed7fb6a5182ff28086b54b9605f343497d18cb34b76ffe19ea18e7d135e1"
+      "sha256": "b5385e88fca4cc9d5be7ccc0bf93abd23af4940fc1d5d9c591c6a4738912c617"
     },
     {
       "path": "42/media/AnimSets/player/run/ProjectYakuza_DD_LocomotionBladeRun.xml",
-      "sha256": "7e3ab36fe3f3e99466feb6da9decbbfab84f6684de3bbcf85f48bb63dcd520b6"
+      "sha256": "b2c4ddbb1339097089a96f75fee7a76d362ce8c33254f5e22e7a922545f257f9"
     },
     {
       "path": "42/media/AnimSets/player/sprint/ProjectYakuza_DD_LocomotionBladeSprint.xml",
-      "sha256": "83a10f30b0cf71689146b23565cbde00d0865475d71917d0071faadf22a35248"
+      "sha256": "0c745658f16dd360e1072524e0b1189486cd310c33b2338eb6b49731c58ca173"
     },
     {
       "path": "42/media/AnimSets/player/aim/ProjectYakuza_DD_BottleIdle.xml",
-      "sha256": "c53d5e027bfaf92ccfe08a7276022c9642cdfa9c2199bedfe763e1326a8b5ef9"
+      "sha256": "0d3f28d07a75d954608f09b913a7f2242c63b9c14b8d3d0fccee9a54c581f63b"
     },
     {
       "path": "42/media/AnimSets/player/aim-strafe/ProjectYakuza_DD_BottleIdle.xml",
-      "sha256": "c53d5e027bfaf92ccfe08a7276022c9642cdfa9c2199bedfe763e1326a8b5ef9"
+      "sha256": "0d3f28d07a75d954608f09b913a7f2242c63b9c14b8d3d0fccee9a54c581f63b"
     },
     {
       "path": "42/media/AnimSets/player/idle/ProjectYakuza_DD_LocomotionBottleCarry.xml",
-      "sha256": "2b84ddec8fb48c487a3bc464a84ae56c41485ac4028739987e6675e3b25671da"
+      "sha256": "9f90bbd77217422aa43bb0cbe38c47f16f08b43df87153453199fae2246ae9cf"
     },
     {
       "path": "42/media/AnimSets/player/movement/ProjectYakuza_DD_LocomotionBottleWalk.xml",
-      "sha256": "3980662a473a6271db819c0a9e8c5a8885b4ac0a3b4f6efb7b6890db7c2dfa1b"
+      "sha256": "984df4b7c7339bd129eb289ae48dd30ffdaae4cb608211bcbfd81abe83e5acfd"
     },
     {
       "path": "42/media/AnimSets/player/run/ProjectYakuza_DD_LocomotionBottleRun.xml",
-      "sha256": "ed01e57a5e0f5a5b436ba8ed199dda4a2b40f0168de6f93aaa06e72ac9d8924c"
+      "sha256": "8efade369059a141e9af00fd558cc1bca4ced500a8aeb37537440f8a581445ce"
     },
     {
       "path": "42/media/AnimSets/player/sprint/ProjectYakuza_DD_LocomotionBottleSprint.xml",
-      "sha256": "b601e55b57e7cd087fcadcc42bf1ee65c9ef4dfe9ddd3aa41a94e2096e73b359"
+      "sha256": "f2298785b87c9f84566fe55620050a92dc6b6da7e7afbccd79f36f25d69339cd"
     },
     {
       "path": "42/media/AnimSets/player/aim/ProjectYakuza_DD_CrateIdle.xml",
-      "sha256": "2eb82ac7cdc0fd2f2627cbc2658ad58ad8c7abc88b803f1e62f78992fd5d44f7"
+      "sha256": "d51565c962fa4a3d48684fabbf1ab9af017efad6c7c808b0e62c366a2378e2cb"
     },
     {
       "path": "42/media/AnimSets/player/aim-strafe/ProjectYakuza_DD_CrateIdle.xml",
-      "sha256": "2eb82ac7cdc0fd2f2627cbc2658ad58ad8c7abc88b803f1e62f78992fd5d44f7"
+      "sha256": "d51565c962fa4a3d48684fabbf1ab9af017efad6c7c808b0e62c366a2378e2cb"
     },
     {
       "path": "42/media/AnimSets/player/idle/ProjectYakuza_DD_LocomotionCrateCarry.xml",
-      "sha256": "2bf65ec9aa53ea8b9f07345647f2ab8c3289652885aa64c6e614e6d5a2236045"
+      "sha256": "d7c99c23905fb5b6dd3943879c67cc37263c0dd72286da4c7a5c7d2c96722a6c"
     },
     {
       "path": "42/media/AnimSets/player/movement/ProjectYakuza_DD_LocomotionCrateWalk.xml",
-      "sha256": "902d62ce8ccad67dbf2a455ad437fdca8362f5ec7cb85a8962f9828dccabee95"
+      "sha256": "546c630284a64edd0cad5c0b4e7811aceb71b7d23042aebea530f0dedd0a8fff"
     },
     {
       "path": "42/media/AnimSets/player/run/ProjectYakuza_DD_LocomotionCrateRun.xml",
-      "sha256": "ea12ba6b4def40f06ea25fdc90874d83d2675fe8f749378b505877dfde10013c"
+      "sha256": "8ab846c09dbf4c294c3db1b0e0c9eecc1ac7f6b0519a08116a9060c6dd179f34"
     },
     {
       "path": "42/media/AnimSets/player/sprint/ProjectYakuza_DD_LocomotionCrateSprint.xml",
-      "sha256": "809692e49a7674549576498e05b28bf4a47a9c543bc824e139e9b6b68c184885"
+      "sha256": "a4a2112372ca4f410aea77b52fa4e624fa58ca7b3abb33c7614c1a4673826145"
     }
   ],
   "moves": {
@@ -1977,5 +1977,6 @@
         "label": "Ground"
       }
     ]
-  }
+  },
+  "runtimeStatus": "Custom weapon poses and ordinary custom walking are disabled by unproduced animation gates as of 0.78.0, at user request. Motion clips are retained as dormant source conversions. See vanilla-pose-fallback.json."
 }

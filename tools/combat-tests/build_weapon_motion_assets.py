@@ -119,3 +119,6 @@ report={'authorization':'User approved original bottle/crate, bat/katana convers
 (mod/'docs/weapon-motion-assets.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8');print('BUILT',len(records),'source weapon motions;',len(selectors),'selectors')
 
 
+
+from vanilla_pose_fallback import apply
+apply()

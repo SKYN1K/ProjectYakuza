@@ -1,0 +1,216 @@
+{
+  "version": "0.78.0",
+  "operation": "Vanilla weapon idle, aim, walk, run and sprint selection is restored by disabling the DoD overrides. Ordinary unarmed walking uses vanilla selection too; the unarmed running blend now references Bob_Walk. Custom motion files remain dormant and unchanged. These opt-in animation gate names have no Lua producer or user option, so they default false on owners and observers. No graphics/audio asset conversion or creation.",
+  "selectors": [
+    {
+      "path": "42/media/AnimSets/player/idle/ProjectYakuza_DD_LocomotionBatCarry.xml",
+      "gate": "ProjectYakuzaCustomWeaponPoses",
+      "profile": "bat",
+      "animation": "ProjectYakuza_DD_BatRelaxedIdle",
+      "sha256": "cff13e19bba8f1f1c5f3a74bd3a0516e44754fef41e014a3c5015055d2c4c549"
+    },
+    {
+      "path": "42/media/AnimSets/player/idle/ProjectYakuza_DD_LocomotionBladeCarry.xml",
+      "gate": "ProjectYakuzaCustomWeaponPoses",
+      "profile": "blade",
+      "animation": "ProjectYakuza_DD_BladeRelaxedIdle",
+      "sha256": "f0ef57c3586a23b1fb58d00f8a954156ec59e1fe0a5d26b3af8e9e7c66a3a6df"
+    },
+    {
+      "path": "42/media/AnimSets/player/idle/ProjectYakuza_DD_LocomotionBottleCarry.xml",
+      "gate": "ProjectYakuzaCustomWeaponPoses",
+      "profile": "bottle",
+      "animation": "ProjectYakuza_DD_BottleRelaxedIdle",
+      "sha256": "9f90bbd77217422aa43bb0cbe38c47f16f08b43df87153453199fae2246ae9cf"
+    },
+    {
+      "path": "42/media/AnimSets/player/idle/ProjectYakuza_DD_LocomotionCrateCarry.xml",
+      "gate": "ProjectYakuzaCustomWeaponPoses",
+      "profile": "crate",
+      "animation": "ProjectYakuza_DD_CrateRelaxedIdle",
+      "sha256": "d7c99c23905fb5b6dd3943879c67cc37263c0dd72286da4c7a5c7d2c96722a6c"
+    },
+    {
+      "path": "42/media/AnimSets/player/idle/ProjectYakuza_DD_LocomotionKnifeCarry.xml",
+      "gate": "ProjectYakuzaCustomWeaponPoses",
+      "profile": "knife",
+      "animation": "Bob_Idle",
+      "sha256": "768e0073b54ad922d0dad2df8689e2760b44d984f395f8a3c899c0db7ed42a68"
+    },
+    {
+      "path": "42/media/AnimSets/player/movement/ProjectYakuza_DD_LocomotionBatWalk.xml",
+      "gate": "ProjectYakuzaCustomWeaponPoses",
+      "profile": "bat",
+      "animation": "ProjectYakuza_DD_BatRelaxedWalk",
+      "sha256": "6ca9c650c25390f7823ee7905801f1601ab7d13e79c4692f952d80d07edbaea3"
+    },
+    {
+      "path": "42/media/AnimSets/player/movement/ProjectYakuza_DD_LocomotionBladeWalk.xml",
+      "gate": "ProjectYakuzaCustomWeaponPoses",
+      "profile": "blade",
+      "animation": "ProjectYakuza_DD_BladeRelaxedWalk",
+      "sha256": "b5385e88fca4cc9d5be7ccc0bf93abd23af4940fc1d5d9c591c6a4738912c617"
+    },
+    {
+      "path": "42/media/AnimSets/player/movement/ProjectYakuza_DD_LocomotionBottleWalk.xml",
+      "gate": "ProjectYakuzaCustomWeaponPoses",
+      "profile": "bottle",
+      "animation": "ProjectYakuza_DD_BottleRelaxedWalk",
+      "sha256": "984df4b7c7339bd129eb289ae48dd30ffdaae4cb608211bcbfd81abe83e5acfd"
+    },
+    {
+      "path": "42/media/AnimSets/player/movement/ProjectYakuza_DD_LocomotionCrateWalk.xml",
+      "gate": "ProjectYakuzaCustomWeaponPoses",
+      "profile": "crate",
+      "animation": "ProjectYakuza_DD_CrateRelaxedWalk",
+      "sha256": "546c630284a64edd0cad5c0b4e7811aceb71b7d23042aebea530f0dedd0a8fff"
+    },
+    {
+      "path": "42/media/AnimSets/player/movement/ProjectYakuza_DD_LocomotionKnifeWalk.xml",
+      "gate": "ProjectYakuzaCustomWeaponPoses",
+      "profile": "knife",
+      "animation": "Bob_Walk",
+      "sha256": "a1202511023937a046f4ba46786c3ea4affff19c13af38a9c865a031e5f60a28"
+    },
+    {
+      "path": "42/media/AnimSets/player/movement/ProjectYakuza_DD_LocomotionWalk.xml",
+      "gate": "ProjectYakuzaCustomWalk",
+      "profile": "",
+      "animation": "ProjectYakuza_DD_Walk",
+      "sha256": "cccc780c3a0db331cd156f806a13256fcc94bd2a8590bd4033603f84bc6a9e53"
+    },
+    {
+      "path": "42/media/AnimSets/player/run/ProjectYakuza_DD_LocomotionBatRun.xml",
+      "gate": "ProjectYakuzaCustomWeaponPoses",
+      "profile": "bat",
+      "animation": "ProjectYakuza_DD_BatRelaxedRun",
+      "sha256": "f973305266d14ff324247b0b92c8b2530fd7d299e93d6c402500c13509fee769"
+    },
+    {
+      "path": "42/media/AnimSets/player/run/ProjectYakuza_DD_LocomotionBladeRun.xml",
+      "gate": "ProjectYakuzaCustomWeaponPoses",
+      "profile": "blade",
+      "animation": "ProjectYakuza_DD_BladeRelaxedRun",
+      "sha256": "b2c4ddbb1339097089a96f75fee7a76d362ce8c33254f5e22e7a922545f257f9"
+    },
+    {
+      "path": "42/media/AnimSets/player/run/ProjectYakuza_DD_LocomotionBottleRun.xml",
+      "gate": "ProjectYakuzaCustomWeaponPoses",
+      "profile": "bottle",
+      "animation": "ProjectYakuza_DD_BottleRelaxedRun",
+      "sha256": "8efade369059a141e9af00fd558cc1bca4ced500a8aeb37537440f8a581445ce"
+    },
+    {
+      "path": "42/media/AnimSets/player/run/ProjectYakuza_DD_LocomotionCrateRun.xml",
+      "gate": "ProjectYakuzaCustomWeaponPoses",
+      "profile": "crate",
+      "animation": "ProjectYakuza_DD_CrateRelaxedRun",
+      "sha256": "8ab846c09dbf4c294c3db1b0e0c9eecc1ac7f6b0519a08116a9060c6dd179f34"
+    },
+    {
+      "path": "42/media/AnimSets/player/run/ProjectYakuza_DD_LocomotionKnifeRun.xml",
+      "gate": "ProjectYakuzaCustomWeaponPoses",
+      "profile": "knife",
+      "animation": "Bob_Run",
+      "sha256": "7462f8128e561467fd8341a5f6d8a4a99842f173773dbf1d2f3b1cb420eb21d2"
+    },
+    {
+      "path": "42/media/AnimSets/player/sprint/ProjectYakuza_DD_LocomotionBatSprint.xml",
+      "gate": "ProjectYakuzaCustomWeaponPoses",
+      "profile": "bat",
+      "animation": "ProjectYakuza_DD_BatRelaxedSprint",
+      "sha256": "06607e816fb35dd8b9bdf7373332dd5da9a33aecbe283f3fc9f88c18741e43a2"
+    },
+    {
+      "path": "42/media/AnimSets/player/sprint/ProjectYakuza_DD_LocomotionBladeSprint.xml",
+      "gate": "ProjectYakuzaCustomWeaponPoses",
+      "profile": "blade",
+      "animation": "ProjectYakuza_DD_BladeRelaxedSprint",
+      "sha256": "0c745658f16dd360e1072524e0b1189486cd310c33b2338eb6b49731c58ca173"
+    },
+    {
+      "path": "42/media/AnimSets/player/sprint/ProjectYakuza_DD_LocomotionBottleSprint.xml",
+      "gate": "ProjectYakuzaCustomWeaponPoses",
+      "profile": "bottle",
+      "animation": "ProjectYakuza_DD_BottleRelaxedSprint",
+      "sha256": "f2298785b87c9f84566fe55620050a92dc6b6da7e7afbccd79f36f25d69339cd"
+    },
+    {
+      "path": "42/media/AnimSets/player/sprint/ProjectYakuza_DD_LocomotionCrateSprint.xml",
+      "gate": "ProjectYakuzaCustomWeaponPoses",
+      "profile": "crate",
+      "animation": "ProjectYakuza_DD_CrateRelaxedSprint",
+      "sha256": "a4a2112372ca4f410aea77b52fa4e624fa58ca7b3abb33c7614c1a4673826145"
+    },
+    {
+      "path": "42/media/AnimSets/player/aim/ProjectYakuza_DD_BatIdle.xml",
+      "gate": "ProjectYakuzaCustomWeaponPoses",
+      "profile": "bat",
+      "animation": "ProjectYakuza_DD_BatReady",
+      "sha256": "b1fb03f2739489ad0385d9a819ec48b1abed9857b20a5010da7861aa99932bee"
+    },
+    {
+      "path": "42/media/AnimSets/player/aim/ProjectYakuza_DD_BladeIdle.xml",
+      "gate": "ProjectYakuzaCustomWeaponPoses",
+      "profile": "blade",
+      "animation": "ProjectYakuza_DD_BladeReady",
+      "sha256": "fc3dfb6a42771357f4864d19f62ff95ced0db7858952f9952c42cdd8299bdac9"
+    },
+    {
+      "path": "42/media/AnimSets/player/aim/ProjectYakuza_DD_BottleIdle.xml",
+      "gate": "ProjectYakuzaCustomWeaponPoses",
+      "profile": "bottle",
+      "animation": "ProjectYakuza_DD_BottleReady",
+      "sha256": "0d3f28d07a75d954608f09b913a7f2242c63b9c14b8d3d0fccee9a54c581f63b"
+    },
+    {
+      "path": "42/media/AnimSets/player/aim/ProjectYakuza_DD_CrateIdle.xml",
+      "gate": "ProjectYakuzaCustomWeaponPoses",
+      "profile": "crate",
+      "animation": "ProjectYakuza_DD_CrateReady",
+      "sha256": "d51565c962fa4a3d48684fabbf1ab9af017efad6c7c808b0e62c366a2378e2cb"
+    },
+    {
+      "path": "42/media/AnimSets/player/aim/ProjectYakuza_DD_KnifeIdle.xml",
+      "gate": "ProjectYakuzaCustomWeaponPoses",
+      "profile": "knife",
+      "animation": "Bob_IdleAim1Hand",
+      "sha256": "1a35c6e6906de684cf1261421c38ee3afc4cc26d045ee1a2438de670410cdbaa"
+    },
+    {
+      "path": "42/media/AnimSets/player/aim-strafe/ProjectYakuza_DD_BatIdle.xml",
+      "gate": "ProjectYakuzaCustomWeaponPoses",
+      "profile": "bat",
+      "animation": "ProjectYakuza_DD_BatReady",
+      "sha256": "b1fb03f2739489ad0385d9a819ec48b1abed9857b20a5010da7861aa99932bee"
+    },
+    {
+      "path": "42/media/AnimSets/player/aim-strafe/ProjectYakuza_DD_BladeIdle.xml",
+      "gate": "ProjectYakuzaCustomWeaponPoses",
+      "profile": "blade",
+      "animation": "ProjectYakuza_DD_BladeReady",
+      "sha256": "fc3dfb6a42771357f4864d19f62ff95ced0db7858952f9952c42cdd8299bdac9"
+    },
+    {
+      "path": "42/media/AnimSets/player/aim-strafe/ProjectYakuza_DD_BottleIdle.xml",
+      "gate": "ProjectYakuzaCustomWeaponPoses",
+      "profile": "bottle",
+      "animation": "ProjectYakuza_DD_BottleReady",
+      "sha256": "0d3f28d07a75d954608f09b913a7f2242c63b9c14b8d3d0fccee9a54c581f63b"
+    },
+    {
+      "path": "42/media/AnimSets/player/aim-strafe/ProjectYakuza_DD_CrateIdle.xml",
+      "gate": "ProjectYakuzaCustomWeaponPoses",
+      "profile": "crate",
+      "animation": "ProjectYakuza_DD_CrateReady",
+      "sha256": "d51565c962fa4a3d48684fabbf1ab9af017efad6c7c808b0e62c366a2378e2cb"
+    },
+    {
+      "path": "42/media/AnimSets/player/aim-strafe/ProjectYakuza_DD_KnifeIdle.xml",
+      "gate": "ProjectYakuzaCustomWeaponPoses",
+      "profile": "knife",
+      "animation": "Bob_IdleAim1Hand",
+      "sha256": "1a35c6e6906de684cf1261421c38ee3afc4cc26d045ee1a2438de670410cdbaa"
+    }
+  ]
+}

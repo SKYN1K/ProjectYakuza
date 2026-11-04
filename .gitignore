@@ -184,3 +184,7 @@
 !/tools/combat-tests/InputPromptAssetProbe.java
 
 !/tools/combat-tests/SettingsUIProbe.java
+
+!/tools/combat-tests/vanilla_pose_fallback.py
+!/tools/combat-tests/validate_vanilla_poses.py
+!/tools/combat-tests/VanillaPoseProbe.java

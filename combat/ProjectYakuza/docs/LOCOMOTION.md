@@ -1,6 +1,8 @@
-# Dragon of Dojima locomotion (0.76.0)
+# Dragon of Dojima locomotion (0.78.0)
 
-DoD uses Kiryu's supplied Yakuza 6 motion while preserving PZ movement rules. Only the selected DoD style and its matching equipment profile use these selectors. No movement polling/controller or new network loop is added.
+Weapon idle, aimed hold and ordinary movement now use vanilla Zomboid animation selection. Ordinary unarmed walking also uses vanilla selection, and the unarmed run blend references Bob_Walk. Unarmed running/sprinting and combat actions retain their existing motion. This fallback follows the user's report that the katana still clipped through the neck and walking looked too fast. No movement-speed multiplier or network loop is added.
+
+The custom weapon-pose and ordinary-walk selectors remain dormant behind animation gates with no Lua producer. They cannot override native poses on owners or observers. Source clips are retained for future repair. The weapon and walk sections below describe those retained conversions, not active weapon/walk behavior. See vanilla-pose-fallback.json and VALIDATION_0.78.0.md.
 
 ## Walking and sprinting
 
@@ -16,9 +18,9 @@ Ready/relaxed holds use the matching stdA/stdB loops. Katana walking/running use
 
 Ready and relaxed idle loops retain the original two-second Yakuza timing instead of compressing the whole loop into a short native idle cycle. Native idle-body samples repeat at their existing cadence beneath those source arms.
 
-Bat, blade, bottle and crate profiles have relaxed idle, walk, slow walk, run and sprint clips plus an aimed hold. Knife carry/ready/run remains native; its custom attack blends receive the same smoothing. Existing blade/bat/knife attack motion and item scripts remain unchanged. Earlier disabled source reference clips remain supplied for future repair; active selectors choose the new corrected clips.
+Bat, blade, bottle and crate profiles have relaxed idle, walk, slow walk, run and sprint clips plus an aimed hold. Knife carry/ready/run remains native; its custom attack blends receive the same smoothing. Existing blade/bat/knife attack motion and item scripts remain unchanged. Earlier disabled source reference clips remain supplied for future repair; these converted pose clips are currently disabled at runtime.
 
-The katana ready selectors disable extra native torso twisting. Its native mesh edges are checked against the neck/head through all hold/movement poses and sampled crossfades. These checks cover standard PZ proportions, not clothing, every live look-at layer or customized skeletons.
+The katana ready selectors disable extra native torso twisting. Earlier offline mesh-edge checks did not reproduce the reported live neck clipping. The custom weapon poses are now disabled; restoring them requires further live testing.
 
 ## Blending and fallbacks
 

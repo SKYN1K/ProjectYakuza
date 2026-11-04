@@ -222,11 +222,12 @@
   "selectors": [
     {
       "path": "42/media/AnimSets/player/movement/ProjectYakuza_DD_LocomotionWalk.xml",
-      "sha256": "4c17be044f8794b9314a0375616b0a4416ec6700a060569f7c1ea726bb551a05"
+      "sha256": "cccc780c3a0db331cd156f806a13256fcc94bd2a8590bd4033603f84bc6a9e53"
     },
     {
       "path": "42/media/AnimSets/player/sprint/ProjectYakuza_DD_LocomotionSprint.xml",
       "sha256": "575953a7aeb728d983758ae9cdb87f3ff0127583802fa466001085fe327a289d"
     }
-  ]
+  ],
+  "runtimeStatus": "Custom weapon poses and ordinary custom walking are disabled by unproduced animation gates as of 0.78.0, at user request. Motion clips are retained as dormant source conversions. See vanilla-pose-fallback.json."
 }
