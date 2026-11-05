@@ -23,3 +23,10 @@ The grabHeat built-in action kind uses the shared paired Heat Action handler. A 
 Use the standard heatAction style-UI provider channel to replace the eligibility prompt. Existing bindings, contact feedback, optional Combat voice entries and heat configuration are reused. Armed DoD profiles retain their existing moves and do not enable grabs.
 
 See grab-strike-assets.json and wall-heat-assets.json for original sources, hashes, paired-role verification and contact frames. No invented motion, AI, new artwork or audio is used. Live game appearance and actual multiplayer sessions still require testing after restart; validation is offline.
+
+
+## Native skeleton positioning (0.83.0)
+
+DoD uses a 0.291238-tile hold distance and a 0.019355-tile lateral correction, measured from the converted PZ left-hand and victim neck transforms. Each original strike supplies its own `pairOffset={forward=...,right=...}`; the grab slot supplies `throwOffset` for the throw and `lateral` for the hold. Offsets move the victim root relative to the actor root; positive right follows `(fy,-fx)`. A 120 ms smooth transition preserves the previous root position at phase changes. Strikes and throws retain the established pair heading while player movement is locked; hold still uses native walking and animated facing. The victim follows through the throw until impact instead of only receiving one initial snap. Server-owned grabs use the same offsets, blends and facing rules.
+
+The framework retains a 0.7-tile default hold distance for styles without authored spacing. Forward pair offsets must be 0.05–1.5 tiles and lateral values within ±0.75 tiles; grab distance remains 0.25–1.0. These are code-only staging corrections. Existing attacker/victim animation files are unchanged. Contact positioning is verified against converted skeleton transforms offline; live appearance still needs an in-game check.

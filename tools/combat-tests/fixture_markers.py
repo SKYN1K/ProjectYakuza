@@ -13,6 +13,6 @@ def module_source(path):
     base=shared/'shared/ProjectYakuza'
     dependencies=[]
     if path.name=='DragonOfDojima.lua':dependencies=[base/'WallHeatPaths.lua',base/'GroundHeatPaths.lua',base/'GrabMoves.lua']
-    elif path.name in ['HeatRushRules.lua','NetworkServer.lua','NetworkClient.lua']:dependencies=[base/'GroundHeatPaths.lua',base/'GrabRules.lua']
+    elif path.name in ['HeatRushRules.lua','NetworkServer.lua','NetworkClient.lua']:dependencies=[base/'GroundHeatPaths.lua',base/'QTEPlayback.lua',base/'GrabRules.lua']
     elif path.name=='HeatRushUI.lua':dependencies=[shared/'client/ProjectYakuza/GrabCombat.lua']
     return ''.join('do\n'+p.read_text(encoding='utf-8')+'\nend\n'for p in dependencies)+text

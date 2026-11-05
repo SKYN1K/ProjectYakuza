@@ -254,6 +254,7 @@ function ProjectYakuza.tryRecoveryCancel(player, style, s)
     if not finisher and ProjectYakuza.ChargedHeavy and ProjectYakuza.ChargedHeavy.wantsRecovery and ProjectYakuza.ChargedHeavy.wantsRecovery(player,s,style) then queued=true end
     if not finisher and ProjectYakuza.HeatRush and ProjectYakuza.HeatRush.tickets[player]and ProjectYakuza.HeatRush.tickets[player].pressed then queued=true end
     local marker=finisher and "ProjectYakuzaDoubleReady" or "ProjectYakuzaChainReady"
+    if not finisher and style.heatRush and style.heatRush.handoffWaitMs~=nil and ProjectYakuza.HeatRush and ProjectYakuza.HeatRush.tickets[player]then marker="ProjectYakuzaHitMarker"end
     if not queued or variable(player, marker) ~= move.nodeValue
         or variable(player, "ProjectYakuzaHitMarker") ~= move.nodeValue then return false end
     if finisher then

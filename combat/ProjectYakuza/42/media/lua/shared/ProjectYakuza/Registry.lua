@@ -71,13 +71,19 @@ function Q.valid(def,durationMs)
         end
     end
     if def.allowOverlap~=nil and type(def.allowOverlap)~="boolean"then return false,"invalid QTE overlap policy"end
-    local last=0
+    local last=0;local extra=0
     for _,v in ipairs(def.prompts)do
-        if type(v)~="table"or not finite(v.atMs)or v.atMs<=last or v.atMs>120000 or not finite(v.windowMs)or v.windowMs<50 or v.windowMs>2000 or v.atMs-v.windowMs<(def.allowOverlap and 0 or last)or type(v.binding)~="string"or not v.binding:match("^[%w_.-]+$")or #v.binding>80 then return false,"invalid QTE prompt timing or binding"end
+        if type(v)~="table"or not finite(v.atMs)or v.atMs<=last or v.atMs>120000 or not finite(v.windowMs)or v.windowMs<50 or v.windowMs>2000 or not v.countdownMs and v.atMs-v.windowMs<(def.allowOverlap and 0 or last)or type(v.binding)~="string"or not v.binding:match("^[%w_.-]+$")or #v.binding>80 then return false,"invalid QTE prompt timing or binding"end
+        if v.countdownMs~=nil then
+            local first=v.sourceStartMs or math.max(last,v.atMs-v.windowMs)
+            if not finite(v.countdownMs)or v.countdownMs<100 or v.countdownMs>2000 or not finite(first)or first<last or first>=v.atMs or (v.atMs-first)/v.countdownMs<.05 or (v.atMs-first)/v.countdownMs>4 then return false,"invalid paced QTE countdown"end
+            extra=extra+v.countdownMs-(v.atMs-first)
+        elseif v.sourceStartMs~=nil then return false,"sourceStartMs requires countdownMs"end
         if durationMs and v.atMs>durationMs then return false,"QTE prompt exceeds animation duration"end
         if v.damageMultiplier~=nil and (not finite(v.damageMultiplier)or v.damageMultiplier<0 or v.damageMultiplier>10)then return false,"invalid QTE damage multiplier"end
         last=v.atMs
     end
+    if (durationMs or last)+extra>120000 then return false,"paced QTE exceeds maximum runtime"end
     return true
 end
 function Q.window(def,index,timeMs,earlyMs,lateMs)
@@ -86,6 +92,7 @@ function Q.window(def,index,timeMs,earlyMs,lateMs)
 end
 function Q.create(def,down,context)
     local valid,reason=Q.valid(def);assert(valid,reason)
+    if ProjectYakuza.QTEPlayback then def=ProjectYakuza.QTEPlayback.definition(def) end
     local s={definition=def,context=context,index=1,accepted={},results={},downs={},lastTime=0,successes=0,failures=0,consecutiveFailures=0,inputAt={}}
     for _,v in ipairs(def.prompts)do s.downs[v.binding]=down and down(v.binding)==true or false end
     return s
@@ -245,7 +252,7 @@ end
 
 local ProjectYakuza = ProjectYakuza
 ProjectYakuza.FEATURES={grab=true}
-ProjectYakuza.VERSION = "0.82.0"
+ProjectYakuza.VERSION = "0.83.0"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -371,6 +378,8 @@ function ProjectYakuza.validateStyle(style)
         for _,key in ipairs({"impact","chainAt","quickstepCancelAt"}) do
             local v=value[key];if v~=nil and (not number(v) or v<0 or v>1) then problem(path.."."..key.." must be 0..1") end
         end
+        if value.groundFacing~=nil and value.groundFacing~="up"and value.groundFacing~="down"then problem(path..".groundFacing must be up or down")end
+        if value.requiresFloor~=nil and type(value.requiresFloor)~="boolean"then problem(path..".requiresFloor must be a boolean")end
         if value.noKnockback~=nil and type(value.noKnockback)~="boolean"then problem(path..".noKnockback must be a boolean")end
         if value.damageMultiplier~=nil and (not number(value.damageMultiplier) or value.damageMultiplier<0) then problem(path..".damageMultiplier must be nonnegative") end
         if value.minChargedDamageMultiplier~=nil and (not number(value.minChargedDamageMultiplier) or value.minChargedDamageMultiplier<0 or value.minChargedDamageMultiplier>(value.damageMultiplier or 1)) then problem(path..".minChargedDamageMultiplier must be between zero and maximum damageMultiplier") end
@@ -458,6 +467,7 @@ function ProjectYakuza.validateStyle(style)
     if style.heatRush~=nil then
         local cfg=style.heatRush
         if type(cfg)~="table"or not number(cfg.hits)or cfg.hits<4 or cfg.hits>16 or cfg.hits~=math.floor(cfg.hits)or not number(cfg.windowMs)or cfg.windowMs<100 or cfg.windowMs>1500 then problem("heatRush requires hits 4..16 and windowMs 100..1500")end
+        if cfg.handoffWaitMs~=nil and (not number(cfg.handoffWaitMs)or cfg.handoffWaitMs<0 or cfg.handoffWaitMs>500)then problem("heatRush handoffWaitMs must be 0..500")end
     end
     if style.directionalAttacks~=nil then
         local cfg=style.directionalAttacks
@@ -485,6 +495,15 @@ function ProjectYakuza.validateStyle(style)
         if not ProjectYakuza.actionKinds[kind] then problem("unknown action kind: "..tostring(kind).."; register it with registerActionKind first") end
         if type(slot)~="table" then problem("actions."..tostring(kind).." must be a table")
         elseif slot.enabled==true then
+            if kind=="grab"then
+                local function offset(value)
+                    return type(value)=="table"and number(value.forward)and value.forward>=.05 and value.forward<=1.5 and number(value.right)and math.abs(value.right)<=.75
+                end
+                if slot.distance~=nil and(not number(slot.distance)or slot.distance<.25 or slot.distance>1)then problem("grab.distance must be between .25 and 1")end
+                if slot.lateral~=nil and(not number(slot.lateral)or math.abs(slot.lateral)>.75)then problem("invalid grab lateral offset")end
+                if slot.throwOffset~=nil and not offset(slot.throwOffset)then problem("invalid grab throw offset")end
+                for _,strike in ipairs(type(slot.strikes)=="table"and slot.strikes or {})do if type(strike)=="table"and strike.pairOffset~=nil and not offset(strike.pairOffset)then problem("invalid grab strike pair offset")end end
+            end
             if kind=="grab"and slot.strikes~=nil then
                 if type(slot.strikes)~="table"or #slot.strikes<1 or #slot.strikes>4 then problem("grab.strikes must contain 1..4 paired moves")
                 else

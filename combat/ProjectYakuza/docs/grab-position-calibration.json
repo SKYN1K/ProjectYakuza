@@ -1,0 +1,155 @@
+{
+  "operation": "Code-only root staging from existing converted PZ skeleton left-hand and victim neck transforms; source clips unchanged. Forward=-modelZ*1.5; right=modelX*1.5; victim faces actor, so horizontal coordinates sum. No motion, visual or audio files created.",
+  "pairs": [
+    {
+      "actor": "GrabHold",
+      "victim": "GrabVictimHoldNative",
+      "frame": 0,
+      "actorSha256": "841e369a2e70e091201ae269b697d5bf53a52060d5293490bd70634d9aa211e6",
+      "victimSha256": "5bc5c66e319c72c9ab8958d8251ad265bafa11d787b319c41500bf6e7f68540d",
+      "hand": [
+        -0.016511404886841774,
+        0.7364983558654785,
+        -0.26244011521339417
+      ],
+      "neck": [
+        0.029414212331175804,
+        0.7659125328063965,
+        0.0682811513543129
+      ],
+      "expected": [
+        0.2912384457886219,
+        0.019354211166501045
+      ],
+      "configured": [
+        0.291238,
+        0.019355
+      ]
+    },
+    {
+      "actor": "Throw",
+      "victim": "ThrowVictim",
+      "frame": 0,
+      "actorSha256": "7ca8860aa44fe74561917736b92fd6e8f092aad3b9c24321810e96dae53393ca",
+      "victimSha256": "96cfd83aa58358682041c3a6a68623312332939cf382a3a3170dd1d710787b4c",
+      "hand": [
+        -0.0336650088429451,
+        0.7366129159927368,
+        -0.2607218623161316
+      ],
+      "neck": [
+        0.04668248072266579,
+        0.7515919208526611,
+        0.0915009081363678
+      ],
+      "expected": [
+        0.2538314312696457,
+        0.019526207819581032
+      ],
+      "configured": [
+        0.253831,
+        0.019526
+      ]
+    },
+    {
+      "actor": "GrabStrike01",
+      "victim": "GrabStrikeVictim01",
+      "frame": 7,
+      "actorSha256": "7d9768ee6346024992803f61bef4372d7660dc63df08d39c4172c60d5500d5ad",
+      "victimSha256": "18bec73baa1495cd7f6039d851fd03ab03d5f42199d020ce7c9740e22c0a1528",
+      "hand": [
+        -0.0776829645037651,
+        0.694532573223114,
+        -0.26893290877342224
+      ],
+      "neck": [
+        0.004840525332838297,
+        0.739319920539856,
+        0.12405489385128021
+      ],
+      "expected": [
+        0.21731702238321304,
+        -0.10926365875639021
+      ],
+      "configured": [
+        0.217317,
+        -0.109264
+      ]
+    },
+    {
+      "actor": "GrabStrike02",
+      "victim": "GrabStrikeVictim02",
+      "frame": 17,
+      "actorSha256": "77217bc15f4413139966be2e6b25c6afb7b917e47d1a881940e7e0b1b4c6501b",
+      "victimSha256": "7a3bdce539943fc9ad4f3a633f73b38519fd97f31de317ea5c9c4ba9ed796e83",
+      "hand": [
+        0.04301382228732109,
+        0.6208119988441467,
+        -0.331097811460495
+      ],
+      "neck": [
+        0.0030854633077979088,
+        0.6504620909690857,
+        0.1913551390171051
+      ],
+      "expected": [
+        0.20961400866508484,
+        0.0691489283926785
+      ],
+      "configured": [
+        0.209614,
+        0.069149
+      ]
+    },
+    {
+      "actor": "GrabStrike03",
+      "victim": "GrabStrikeVictim03",
+      "frame": 17,
+      "actorSha256": "e305a2932572473f98d076bd1086e63e6059c5a65bf0c0e71ee5e99d23915077",
+      "victimSha256": "c781a8a1bd5891e1d8340034eafbdf093fa04e4481473d7c33c03ad6cc996e6b",
+      "hand": [
+        0.01659482717514038,
+        0.6607794165611267,
+        -0.24205909669399261
+      ],
+      "neck": [
+        -0.06272649765014648,
+        0.6992851495742798,
+        0.16953137516975403
+      ],
+      "expected": [
+        0.10879158228635788,
+        -0.06919750571250916
+      ],
+      "configured": [
+        0.108792,
+        -0.069198
+      ]
+    },
+    {
+      "actor": "GrabStrike04",
+      "victim": "GrabStrikeVictim04",
+      "frame": 17,
+      "actorSha256": "caefe4754019f34b15430f362429dfbddf2877ed874a785ca4f4c16519ae5bb9",
+      "victimSha256": "d282a1172f08544dfa2488f4605d56607a23e8ecd55f301860e96b7449f5dc5e",
+      "hand": [
+        0.05041128024458885,
+        0.6133150458335876,
+        -0.32199564576148987
+      ],
+      "neck": [
+        0.011775701306760311,
+        0.5866548418998718,
+        0.24277502298355103
+      ],
+      "expected": [
+        0.11883093416690826,
+        0.09328047232702374
+      ],
+      "configured": [
+        0.118831,
+        0.09328
+      ]
+    }
+  ]
+}

@@ -33,6 +33,7 @@ function z:setLastX(v)self.lx=v end;function z:setLastY(v)self.ly=v end
 function z:setCurrentSquareFromPosition()end;function z:setMovingSquareNow()end
 function z:getStateMachine()local z=self;return {isLocked=function()return z.locked==true end}end
 function z:setStateMachineLocked(v)self.locked=v end;function z:getCurrentStateName()return self.state end
+function z:isFallOnFront()return self.front==true end
 function z:isDead()return self.health<=0 end;function z:isOnFloor()return self.floor==true end;function z:isKnockedDown()return false end
 function z:isUseless()return self.useless==true end;function z:setUseless(v)self.useless=v end
 function z:getIgnoreMovement()return self.ignore==true end;function z:setIgnoreMovement(v)self.ignore=v end
@@ -92,7 +93,7 @@ local a=startGrab()
 check(z.locked and z.useless and z.ignore and not z.deferred,'native reaction is latched while held')
 check(not p.blocked and not p.ignore and p.deferred,'walking remains available with native movement during hold')
 clock=clock+12000;a:update();check(not a.cleaned and a.phaseName=='hold','hold survives the obsolete 3.5-second timeout')
-p.x=.6;p.y=.3;clock=clock+50;a:update();check(math.abs(z.x-.6)<.001 and math.abs(z.y-1)<.001,'held victim follows actor translation')
+p.x=.6;p.y=.3;clock=clock+50;a:update();check(math.abs(z.x-(.6+style.actions.grab.lateral))<.001 and math.abs(z.y-(.3+style.actions.grab.distance))<.001,'held victim follows actor translation')
 p.x=.5;p.y=.2;z.y=.9
 for i=1,4 do
  check(G.input(p,a,true,false),'LMB starts grab strike '..i)
@@ -149,6 +150,9 @@ do
  local state=PY.stateFor(p);state.active=false;state.starting=false;state.step=0;state.finisherBranch=nil;state.queued=0
  local move=style.actions.groundHeat
  check(PY.HeatRushRules.validFor(p,z,move)and not PY.HeatRushRules.validFor(p,z,style.actions.heatAction),'ground heat requires a live downed zombie and normal rush still rejects it')
+ z.front=true;check(not PY.HeatRushRules.validFor(p,z,move),'face stomp rejects a face-down zombie');z.front=false
+ z.floor=false;check(not PY.HeatRushRules.validFor(p,z,move),'knockdown flag alone cannot qualify before landing');z.floor=true
+ z.state='ZombieGetUpState';check(not PY.HeatRushRules.validFor(p,z,move),'face stomp rejects a zombie already getting up');z.state='idle'
  local pose=PY.HeatRushRules.placement(p,z,move);check(pose~=nil,'ground pair has a bounded safe placement')
  local ticket={z=z,pose=pose,ground=true,pressed=true,expires=clock+600}
  check(PY.requestAction(p,'groundHeat',nil,ticket),'ground heat is registered in the shared paired framework')
@@ -183,5 +187,25 @@ do
   local job={x=5,y=7,fx=v[1],fy=v[2],motion=motion};local x,y=rules.point(job,motion.victim,1)
   check(math.abs(x-(5+v[1]*(forward+offset.forward)+v[2]*(right+offset.right)))<.000001 and math.abs(y-(7+v[2]*(forward+offset.forward)-v[1]*(right+offset.right)))<.000001,'victim calibration rotates with the pair in all eight headings')
  end
+end
+
+do
+ local slot=style.actions.grab
+ check(R.spacing(nil)==.7,'other styles retain legacy default grab distance')
+ for _,phase in ipairs({'hold','throw','strike1','strike2','strike3','strike4'})do
+  local offset=R.offset(slot,phase)
+  for i=0,7 do
+   local angle=i*math.pi/4;local fx,fy=math.cos(angle),math.sin(angle)
+   local x,y=fx*offset.forward+fy*offset.right,fy*offset.forward-fx*offset.right
+   check(math.abs(x*fx+y*fy-offset.forward)<.000001 and math.abs(x*fy-y*fx-offset.right)<.000001,'paired offsets preserve contact in every facing')
+  end
+ end
+ local state={};local hold=R.alignment(slot,'hold',state,0)
+ local first=R.alignment(slot,'strike1',state,100);check(first.forward==hold.forward and first.right==hold.right,'strike handoff preserves previous root position')
+ local final=R.alignment(slot,'strike1',state,220);local target=R.offset(slot,'strike1')
+ check(math.abs(final.forward-target.forward)<.000001 and math.abs(final.right-target.right)<.000001,'strike reaches calibrated contact offset after its short blend')
+ local returning=R.alignment(slot,'hold',state,230);check(returning.forward==final.forward and returning.right==final.right,'return to hold begins at previous paired offset')
+ local restore=R.alignment(slot,'hold',state,350);check(math.abs(restore.forward-slot.distance)<.000001,'returning hold restores walking grab spacing')
+ local original=slot.throwOffset;slot.throwOffset={forward=0/0,right=0};check(not PY.validateStyle(style),'invalid paired offsets cannot enter registered styles');slot.throwOffset=original
 end
 return 'PASS '..checks..' reliable grab lifecycle, four source-timed strikes, following, cleanup, wall geometry, handoff and action protection checks'

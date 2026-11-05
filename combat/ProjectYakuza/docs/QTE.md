@@ -1,4 +1,4 @@
-# QTE framework API (0.74.0)
+# QTE framework API (0.83.0)
 
 ProjectYakuza.QTE is a shared code-only sequence engine for custom style actions. It does not create artwork/audio, choose targets, start animations, grant immunity or deal damage. An action handler owns its animation, lifecycle, presentation and multiplayer authorization; QTE supplies bounded prompt validation, fresh-input tracking and result events. DoD's paired Heat Rush is one consumer rather than a global handler for every style.
 
@@ -107,8 +107,24 @@ The pure QTE engine still does not choose animations. A custom handler listens f
 
 `allowOverlap=true` allows adjacent acceptance windows to overlap; its default remains false for existing addons. Prompt times still increase, and every window must begin at or after zero. Only the first sequential unaccepted prompt can consume a fresh press, so a held control or simultaneous later buttons cannot complete multiple prompts. Acceptance can precede the prior prompt's contact, while results and damage remain tied to the original contact times. Failure limits remain checked in source order.
 
-`QTE.promptIndex(session)` returns the next unaccepted prompt or nil once all inputs are accepted. A custom UI can use it to advance immediately on the previous correct press, rather than waiting for the impact. `session.lastInputAt` provides the accepted-input animation clock for feedback. DoD opts into six 400 ms windows; no animation file is retimed.
+`QTE.promptIndex(session)` returns the next unaccepted prompt or nil once all inputs are accepted. A custom UI can use it to advance immediately on the previous correct press, rather than waiting for the impact. `session.lastInputAt` provides the accepted-input animation clock for feedback. DoD uses the paced windows described below.
 
 Paired contacts can additionally define `charged=true` to select the existing stronger spark preset, `layers={"cueA","cueB"}` for up to four existing style sound cues, and `voice="CombatLightAttack"` or another registered combat voice entry. The built-in paired controller presents these at confirmed contact time. Voice playback respects the active CVF pack and the existing combat Voices settings; authors still supply/register any additional assets themselves.
 
-DoD uses 600 ms press windows. Its UI displays a blue textured radial countdown for exactly prompt.windowMs, with no extra preview period that rejects early presses. Rendering uses the original quarter-ring pixels on native UV-mapped geometry. Held buttons still require release and a fresh press; expiry remains exclusive. Other styles keep their authored windows.
+Unpaced moves use their authored press windows. Its UI displays a blue textured radial countdown for exactly prompt.windowMs, with no extra preview period that rejects early presses. Rendering uses the original quarter-ring pixels on native UV-mapped geometry. Held buttons still require release and a fresh press; expiry remains exclusive. Other styles keep their authored windows.
+
+
+## Full countdowns with paced paired animation
+
+For the built-in paired Heat Action handler, a prompt can set `countdownMs` (100–2000) independently of `atMs` and `windowMs`. `atMs` remains the original source animation impact time. `windowMs` defines the source interval to stretch; optional `sourceStartMs` chooses its exact start. The default is the later of the previous source impact and `atMs-windowMs`. Intervals must be ordered, nonempty and produce a speed ratio between 0.05 and 4. The action and victim XML nodes must use `ProjectYakuzaHeatRushSpeed` as their speed scale, including observer nodes.
+
+```lua
+qte={prompts={
+    {atMs=1000,windowMs=400,countdownMs=900,binding="light"},
+    {atMs=1400,windowMs=400,countdownMs=1100,binding="finisher"},
+}}
+```
+
+`ProjectYakuza.QTEPlayback` compiles the runtime windows and maps source milliseconds with `time(def,sourceMs)`, `source(def,realMs)` and `speed(def,sourceMs)`. `definition(def)` returns the paced runtime definition. The paired handler loads this module, advances both native actor tracks at the same rate, renders the radial timer on the mapped clock, and keeps contacts/paths on their original source poses. Server reservations, failure handling, completion, protection and remote extrapolation use the same mapping. Custom handlers must load this helper and apply the same mapping themselves; QTE alone does not change animation speed.
+
+DoD alone authors six full 1000 ms countdowns for its Extreme Heat Rush. Each starts after the previous deadline, so accepting an earlier prompt late cannot shorten the next window. Early acceptance does not skip the current source impact. The existing light/heavy/grab input order and failure ending remain. Definitions without `countdownMs` retain their original clocks, window lengths and playback speed.

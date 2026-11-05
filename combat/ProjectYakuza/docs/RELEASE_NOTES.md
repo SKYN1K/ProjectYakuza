@@ -1,9 +1,10 @@
-# Project Yakuza 0.82.0
+# Project Yakuza 0.83.0
 
-- Lowered the health bar by 12 pixels at the default HUD scale and shortened it from 630 to 270 pixels, matching the reference more closely.
-- Calibrated the ground-trample victim position from Zomboid's native male/female head meshes and the attacker's foot sole at impact. The fixed correction applies from the beginning and rotates with the pair, preserving original motion and wall-clearance checks.
-- Prepared idle variables beneath style entry and enabled a 0.24-second native early blend into idle. Movement/attacks stay locked for the original source duration; entry remains vulnerable to hits.
-- Replaced repetitive entry/taunt presentation with distinct original Kiwami 2 effects: curling wisps plus brief smoke while switching, and a soft blue spiral with fine rising streaks after a completed taunt. Entry effects last 0.38 seconds; the taunt burst lasts 0.45 seconds.
-- Replicated entry effects trigger once per distinct MP action, without restarting on repeated snapshots. Existing regular/Extreme Heat effects and voice-pack files are preserved.
+- Gave all six Dragon of Dojima Extreme Heat Rush QTEs a full one-second countdown. Original source contact poses remain intact; actor/victim playback, timers and MP authority share a paced clock. Other styles keep their authored timing.
+- Added per-cue `countdownMs` and optional `sourceStartMs` for developers, with bounded validation and unchanged legacy timing.
+- Starts the DoD Rush handoff after the eighth confirmed contact without waiting for the late chain marker. MP reservations overlap recovery; unrelated supplemental hit settlement is bounded to 80 ms.
+- Face stomp now requires a living zombie lying face-up on the floor, excluding falling/getting-up targets; rechecked when the action starts and by the server.
+- Recalibrated grab holds, all four grab strikes and throws against the converted Zomboid skeleton. Added per-move forward/lateral offsets, short position blends, stable strike/throw facing and continued victim following through throws. MP uses the same staging rules.
+- Removed DoD's voice loudness multiplier and taunt gain override. The combat Voices slider remains; the separate CVF voice pack is untouched.
 
-Four existing decoded game textures were copied with unchanged native pixels. No AI, invented artwork/audio, upscaling, source-motion edits or PZ launch. See [validation](VALIDATION_0.82.0.md), [Heat Actions](HEAT_ACTIONS.md) and the asset/calibration reports. Restart after updating with matching MP versions.
+Code/XML changes only. No animation, artwork or audio files were created or changed. Validated offline without launching PZ; see [validation](VALIDATION_0.83.0.md). Restart with matching client/server versions.

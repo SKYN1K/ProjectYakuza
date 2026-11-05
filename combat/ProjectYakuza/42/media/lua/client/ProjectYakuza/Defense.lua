@@ -21,7 +21,7 @@ function D.snapActor(actor,x,y)
 end
 function D.followZombie(z)
     local a=D.held[z]
-    if not a or a.cleaned or not (a.phaseName=="hold"or a.strikeMove~=nil) or isGamePaused() then return end
+    if not a or a.cleaned or not (a.phaseName=="hold"or a.strikeMove~=nil or a.phaseName=="throw") or isGamePaused() then return end
     if not a:isValid() or not a:alignPair(true) then a:cancel() end
 end
 function D.followHook()
@@ -98,16 +98,19 @@ function A:alignPair(snap)
     D.followVector=D.followVector or Vector2.new()
     local f=snap=="throw" and p:getForwardDirection() or p:getAnimForwardDirection(D.followVector)
     local fx,fy=f:getX(),f:getY()
+    if self.phaseName~="hold"and self.phaseName~="enter"then fx,fy=self.context.fx,self.context.fy end
     local n=math.sqrt(fx*fx+fy*fy)
     if n<.001 then return false end
     fx,fy=fx/n,fy/n
-    local dx,dy=p:getX()+fx*.7-z:getX(),p:getY()+fy*.7-z:getY()
+    local offset=ProjectYakuza.GrabRules.alignment(self.context.action,self.phaseName,self,now())
+    local x,y=p:getX()+fx*offset.forward+fy*offset.right,p:getY()+fy*offset.forward-fx*offset.right
+    local dx,dy=x-z:getX(),y-z:getY()
     local origin={x=z:getX(),y=z:getY(),z=z:getZ()}
     if not ProjectYakuza.MultiHit.clearPath(z,origin,dx,dy) then return false end
 
-    D.snapActor(z,p:getX()+fx*.7,p:getY()+fy*.7)
+    D.snapActor(z,x,y)
     self.context.fx,self.context.fy=fx,fy
-    if snap=="throw" then p:setTargetAndCurrentDirection(fx,fy) end
+    if self.phaseName~="hold"and self.phaseName~="enter"then p:setTargetAndCurrentDirection(fx,fy)end
     z:setTargetAndCurrentDirection(-fx,-fy)
     return true
 end
@@ -220,8 +223,9 @@ function A:grab(dt)
     local age=now()-self.startedAt
     if self.phaseName=="enter" then
 
-        local x=p:getX()+self.context.fx*.7-z:getX()
-        local y=p:getY()+self.context.fy*.7-z:getY()
+        local spacing=ProjectYakuza.GrabRules.spacing(self.context.action)
+        local x=p:getX()+self.context.fx*spacing-z:getX()
+        local y=p:getY()+self.context.fy*spacing-z:getY()
         local distance=math.sqrt(x*x+y*y)
         if distance>.02 then
             local amount=math.min(distance,.06)
@@ -254,6 +258,7 @@ function A:grab(dt)
         elseif self.strikeSeen and var(p,"ProjectYakuzaDefenseMarker")=="strike_done"then self.strikeMove=nil;self:phase("hold")end
         if self.strikeMove and now()-self.phaseAt>(self.strikeMove.duration+1)*1000 then self:forceStop()end
     elseif self.phaseName=="throw" then
+        if not self:alignPair(true)then self:forceStop();return end
         p:setTargetAndCurrentDirection(self.context.fx,self.context.fy)
         z:setTargetAndCurrentDirection(-self.context.fx,-self.context.fy)
         if not self.impacted and var(p,"ProjectYakuzaDefenseMarker")=="throw_impact" and var(z,"ProjectYakuzaGrabMarker")=="throw_impact" then

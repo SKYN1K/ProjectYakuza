@@ -8,10 +8,8 @@ ProjectYakuza.registerStyle({
     exertion={},
     finisherBranches=4,
     directionalFinishers={minimumDegrees=145,prefix="reverse_"},
-    heatRush={hits=8,windowMs=700},
+    heatRush={hits=8,windowMs=700,handoffWaitMs=80},
     tigerDrop=true,
-    combatVoiceVolume=2.25,
-    combatVoiceGains={CombatTaunt=0.85},
     quickstepVoices=false,
     soundVariety=true,
     attackSpeed=1.6,
@@ -117,7 +115,7 @@ ProjectYakuza.registerStyle({
         } },
         grabHeat=ProjectYakuza.WallHeatMove,
         groundHeat=ProjectYakuza.GroundHeatMove,
-        grab = {enabled=true,strikes=ProjectYakuza.GrabMoves,requiresTarget=true,animation="ProjectYakuza_DD_Grab",targetAnimation="ProjectYakuza_DD_GrabVictimEnter"},
+        grab = {enabled=true,distance=.291238,lateral=.019355,throwOffset={forward=.253831,right=.019526},strikes=ProjectYakuza.GrabMoves,requiresTarget=true,animation="ProjectYakuza_DD_Grab",targetAnimation="ProjectYakuza_DD_GrabVictimEnter"},
         parry = {enabled=true,animation="ProjectYakuza_DD_TigerDrop",nodeValue="dd_tiger_drop",duration=1.1,speed=1,requiresTarget=true,targetAnimation="Zombie_ShotBelly",cooldownMs=60000,windowMs=300},
         block = {enabled=true,animation="ProjectYakuza_DD_Guard",staminaPerHit=.08},
         heatActivation = {enabled=true,variants={
@@ -144,7 +142,7 @@ ProjectYakuza.registerStyle({
             knee={enabled=true,variant="knee",animation="ProjectYakuza_DD_RunningAttack03",nodeValue="dd_run_03",duration=1.6666666666666667/1.2,speed=1.2,impact=0.24,distance=1,reaction="enemy_03",fullBody=true,runningAttack=true},
             dropkick={enabled=true,variant="dropkick",animation="ProjectYakuza_DD_RunningAttack04",nodeValue="dd_run_04",duration=2.1333333333333333/1.6,speed=1.6,impact=0.21875,distance=1.2,reaction="enemy_04",fullBody=true,runningAttack=true},
         }},
-        heatAction={enabled=true,animation="ProjectYakuza_DD_HeatRush",targetAnimation="ProjectYakuza_DD_HeatRushVictim",nodeValue="dd_heat_rush",requiresTarget=true,extremeHeat=true,heatRush=true,duration=224/30,hitResponse=false,noKnockback=true,deferFinalDamage=true,qteFailure={animation="ProjectYakuza_DD_HeatRushFail",nodeValue="dd_heat_rush_fail",duration=20/30},qte={allowOverlap=true,failureLimit=1,failureMode="consecutive",feedback={success="heatGain",miss="guardHit",failure="heatOff",gain=.35},prompts={{atMs=56/30*1000,windowMs=600,binding="light",damageMultiplier=.625},{atMs=63/30*1000,windowMs=600,binding="finisher",damageMultiplier=.625},{atMs=77/30*1000,windowMs=600,binding="grab",damageMultiplier=.625},{atMs=85/30*1000,windowMs=600,binding="light",damageMultiplier=.625},{atMs=102/30*1000,windowMs=600,binding="finisher",damageMultiplier=.625},{atMs=110/30*1000,windowMs=600,binding="grab",damageMultiplier=.625}}},contacts={{atMs=56/30*1000,qteIndex=1,damageMultiplier=0,cue="punchImpact",strong=false,voice="CombatLightAttack"},{atMs=63/30*1000,qteIndex=2,damageMultiplier=0,cue="heatImpact",strong=false,charged=true},{atMs=77/30*1000,qteIndex=3,damageMultiplier=0,cue="punchImpact",strong=false,voice="CombatLightAttack"},{atMs=85/30*1000,qteIndex=4,damageMultiplier=0,cue="heatImpact",strong=false,charged=true},{atMs=102/30*1000,qteIndex=5,damageMultiplier=0,cue="punchImpact",strong=false,charged=true,voice="CombatLightAttack"},{atMs=110/30*1000,qteIndex=6,damageMultiplier=0,cue="heatImpact",strong=false,charged=true},{atMs=143/30*1000,sumQTE=true,cue="kickImpact",strong=true,charged=true,layers={"heavyImpact","heatImpact"},voice="CombatHeavyAttack"}}},
+        heatAction={enabled=true,animation="ProjectYakuza_DD_HeatRush",targetAnimation="ProjectYakuza_DD_HeatRushVictim",nodeValue="dd_heat_rush",requiresTarget=true,extremeHeat=true,heatRush=true,duration=224/30,hitResponse=false,noKnockback=true,deferFinalDamage=true,qteFailure={animation="ProjectYakuza_DD_HeatRushFail",nodeValue="dd_heat_rush_fail",duration=20/30},qte={allowOverlap=true,failureLimit=1,failureMode="consecutive",feedback={success="heatGain",miss="guardHit",failure="heatOff",gain=.35},prompts={{atMs=56/30*1000,windowMs=600,countdownMs=1000,binding="light",damageMultiplier=.625},{atMs=63/30*1000,windowMs=600,countdownMs=1000,binding="finisher",damageMultiplier=.625},{atMs=77/30*1000,windowMs=600,countdownMs=1000,binding="grab",damageMultiplier=.625},{atMs=85/30*1000,windowMs=600,countdownMs=1000,binding="light",damageMultiplier=.625},{atMs=102/30*1000,windowMs=600,countdownMs=1000,binding="finisher",damageMultiplier=.625},{atMs=110/30*1000,windowMs=600,countdownMs=1000,binding="grab",damageMultiplier=.625}}},contacts={{atMs=56/30*1000,qteIndex=1,damageMultiplier=0,cue="punchImpact",strong=false,voice="CombatLightAttack"},{atMs=63/30*1000,qteIndex=2,damageMultiplier=0,cue="heatImpact",strong=false,charged=true},{atMs=77/30*1000,qteIndex=3,damageMultiplier=0,cue="punchImpact",strong=false,voice="CombatLightAttack"},{atMs=85/30*1000,qteIndex=4,damageMultiplier=0,cue="heatImpact",strong=false,charged=true},{atMs=102/30*1000,qteIndex=5,damageMultiplier=0,cue="punchImpact",strong=false,charged=true,voice="CombatLightAttack"},{atMs=110/30*1000,qteIndex=6,damageMultiplier=0,cue="heatImpact",strong=false,charged=true},{atMs=143/30*1000,sumQTE=true,cue="kickImpact",strong=true,charged=true,layers={"heavyImpact","heatImpact"},voice="CombatHeavyAttack"}}},
     },
 })
 

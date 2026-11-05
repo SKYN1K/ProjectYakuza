@@ -73,3 +73,19 @@ function G.wallPresent(p,pose)
     local sq=cell:getGridSquare(x,y,level);local other=cell:getGridSquare(x-(pose.wallNX~=0 and 1 or 0),y-(pose.wallNY~=0 and 1 or 0),level)
     return sq~=nil and other~=nil and sq:isWallTo(other)and not sq:isWindowTo(other)and not sq:isDoorTo(other)
 end
+
+function G.spacing(slot)return math.max(.25,math.min(1,slot and slot.distance or .7))end
+
+function G.offset(slot,phase)
+    local strike=slot and slot.strikes and slot.strikes[tonumber(string.match(phase or "","^strike(%d)$"))]
+    local offset=phase=="throw"and slot and slot.throwOffset or strike and strike.pairOffset
+    return {forward=offset and offset.forward or G.spacing(slot),right=offset and offset.right or slot and slot.lateral or 0}
+end
+function G.alignment(slot,phase,state,t)
+    local target=G.offset(slot,phase)
+    if state.pairPhase~=phase then state.pairFrom=state.pairOffset or G.offset(slot,"hold");state.pairAt=t;state.pairPhase=phase end
+    local f=math.max(0,math.min(1,(t-state.pairAt)/120));f=f*f*(3-2*f)
+    local source=state.pairFrom
+    state.pairOffset={forward=source.forward+(target.forward-source.forward)*f,right=source.right+(target.right-source.right)*f}
+    return state.pairOffset
+end

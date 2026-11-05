@@ -247,6 +247,7 @@ function N.applyState(p,packet,s)
     if s.style~=packet.style or s.clip~=packet.clip or serialChanged then
         N.stopObserver(p,s)
         p:setVariable("ProjectYakuzaRemoteClip",packet.clip)
+        if packet.clip=="ProjectYakuza_DD_HeatRush"then p:setVariable("ProjectYakuzaHeatRushSpeed",1)end
         s.cycle=((s.cycle or 0)+1)%2
         p:setVariable("ProjectYakuzaRemoteCycle",tostring(s.cycle))
         if clip and clip.group=="actions" then

@@ -61,7 +61,7 @@ function U:render()
     if not action.seen or not action.qte or action.qte.closed then return end
     local state=action.qte;local index=state.definition.allowOverlap and (PY.QTE.promptIndex(state)or #state.definition.prompts)or state.index;local prompt=state.definition.prompts[index]
     if not prompt then return end
-    local age=action.elapsed*1000;local untilHit=prompt.atMs-age
+    local age=PY.HeatRushRules.time(action.context and action.context.action,action.elapsed)*1000;local untilHit=prompt.atMs-age
     if untilHit<0 or untilHit>prompt.windowMs then return end
     local alpha=state.accepted[index]and .8 or 1
     local x,y=self.width*.5,self.height*.7

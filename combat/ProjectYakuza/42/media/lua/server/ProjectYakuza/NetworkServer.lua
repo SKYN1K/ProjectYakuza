@@ -255,7 +255,7 @@ function S.command(module,command,p,a)
         local slot=ProjectYakuza.getStyle(s.packet.style).actions.grab
         local z=s.packet.weaponProfile==""and slot and slot.enabled and S.validVictim(p,a.zombie,1.3)
         if not z or S.grabs[z] or s.grab or ProjectYakuza.HeatRushServer and ProjectYakuza.HeatRushServer.held[z]or z and ProjectYakuza.GrabRules.unavailable(z)or z:isAttacking()or (z:getHitReaction()or "")~="" or z:isOnFloor() or z:isKnockedDown() then reply(p,"grabDenied",{});return end
-        local lease=ProjectYakuza.GrabRules.capture(z);lease.z=z;lease.player=p;lease.expires=t+2500;lease.weapon=p:getPrimaryHandItem();lease.style=s.packet.style;lease.strikeCount=0;S.grabSerial=S.grabSerial+1;lease.id=S.grabSerial
+        local lease=ProjectYakuza.GrabRules.capture(z);lease.z=z;lease.player=p;lease.expires=t+2500;lease.weapon=p:getPrimaryHandItem();lease.style=s.packet.style;lease.strikeCount=0;lease.slot=slot;lease.spacing=ProjectYakuza.GrabRules.spacing(slot);S.grabSerial=S.grabSerial+1;lease.id=S.grabSerial
         S.grabs[z]=lease;s.grab=lease;ProjectYakuza.GrabRules.keep(z)
         z:setVariable("ProjectYakuzaGrabbed",true);z:setVariable("ProjectYakuzaGrabPhase","enter");z:setHitReaction("ProjectYakuzaGrabbed");z:reportEvent("wasHit");ProjectYakuza.GrabRules.keep(z)
         S.fanout(p,"grabStart",{player=p:getOnlineID(),zombie=z:getOnlineID(),useless=lease.useless,ignore=lease.ignore,deferred=lease.deferred,locked=lease.locked,grabId=lease.id});return
@@ -388,11 +388,14 @@ function S.tick()
                 if ProjectYakuza.GrabRules.phase(s.packet.phase)then lease.expires=t+1500 end
                 z:setVariable("ProjectYakuzaGrabPhase",s.packet.phase)
                 ProjectYakuza.GrabRules.keep(z)
-                local f=p:getForwardDirection();local x,y=p:getX()+f:getX()*.7,p:getY()+f:getY()*.7
+                local f=p:getForwardDirection();local fx,fy=f:getX(),f:getY()
+                if s.packet.phase=="hold"or not lease.fx then lease.fx,lease.fy=fx,fy else fx,fy=lease.fx,lease.fy end
+                local offset=ProjectYakuza.GrabRules.alignment(lease.slot,s.packet.phase,lease,t)
+                local x,y=p:getX()+fx*offset.forward+fy*offset.right,p:getY()+fy*offset.forward-fx*offset.right
                 local sq=getCell():getGridSquare(math.floor(x),math.floor(y),math.floor(p:getZ()))
                 if not sq or not P.path(z,x,y) then S.release(p)
                 else z:setX(x);z:setY(y);z:setNextX(x);z:setNextY(y);z:setTarget(nil)
-                    S.fanout(p,"grabPose",{player=id,zombie=z:getOnlineID(),x=x,y=y,fx=f:getX(),fy=f:getY(),phase=s.packet.phase,
+                    S.fanout(p,"grabPose",{player=id,zombie=z:getOnlineID(),x=x,y=y,fx=fx,fy=fy,phase=s.packet.phase,
                         moving=s.packet.grabMoving,direction=s.packet.grabDirection,useless=lease.useless,ignore=lease.ignore,deferred=lease.deferred,locked=lease.locked,grabId=lease.id}) end
             end
         end

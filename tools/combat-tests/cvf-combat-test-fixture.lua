@@ -52,7 +52,7 @@ local function attack(event)
  clock=clock+6000;serial=serial+1;p.combo={active=true,step=1,multiHitToken=serial};ProjectYakuza.emit(event,p)
  clock=clock+25;V.update(p)
 end
-attack('lightAttackStarted');check(last('CombatLightAttack'),'actual light swing uses light entry');check(p.voiceMix==2.25,'Dragon voice mix is another 50 percent louder than 1.5')
+attack('lightAttackStarted');check(last('CombatLightAttack'),'actual light swing uses light entry');check(p.voiceMix==nil or p.voiceMix==1,'Dragon voice has no style loudness override')
 attack('finisherStarted');check(last('CombatHeavyAttack'),'finisher uses heavy entry')
 clock=clock+6000;serial=serial+1;p.combo={active=true,step=1,multiHitToken=serial};local before=#p.calls
 ProjectYakuza.emit('lightAttackStarted',p);p.combo.groundMove={groundAttack=true};ProjectYakuza.emit('groundAttackStarted',p);clock=clock+25;V.update(p)
@@ -117,7 +117,7 @@ CustomVoice=native;C.register();check(C.accepted.CombatTaunt,'compatible provide
 p.data.ProjectYakuzaStyle='dragon_of_dojima';p.combo.active=false;p.voiceBusy=false;p.nativeState='IdleState';p.knocked=false
 local level=0;ProjectYakuza.SoundSettings={voiceLevel=function()return level end}
 clock=clock+6000;before=#p.calls;check(not V.play(p,'CombatLightAttack') and #p.calls==before,'Voices zero prevents combat-only playback')
-level=.5;check(V.play(p,'CombatLightAttack') and p.voiceMix==1.125,'Voices slider multiplies the style mix without altering general voice')
+level=.5;check(V.play(p,'CombatLightAttack') and p.voiceMix==.5,'Voices slider controls unboosted combat lines without altering general voice')
 level=1;clock=clock+6000;p.voiceBusy=true
 local activation={};ProjectYakuza.HeatActivation={active={[p]=activation}}
 ProjectYakuza.emit('heatActivationStarted',p);check(V.states[p].activation~=nil,'busy provider defers activation voice briefly')

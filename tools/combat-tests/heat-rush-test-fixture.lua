@@ -82,6 +82,7 @@ local z={x=1.1,y=0,health=10,hits=0,total=0,vars={},useless=false,ignore=false,d
 function z:getStateMachine()local z=self;return {isLocked=function()return z.stateLocked==true end}end
 function z:setStateMachineLocked(v)self.stateLocked=v end;function z:getCurrentStateName()return self.state or "idle"end
 function z:getX()return self.x end;function z:getY()return self.y end;function z:getZ()return 0 end
+function z:isFallOnFront()return self.front==true end
 function z:isDead()return self.health<=0 end;function z:isOnFloor()return false end;function z:isKnockedDown()return false end
 function z:isUseless()return self.useless end;function z:setUseless(v)self.useless=v end
 function z:isAttacking()return false end;function z:getIgnoreMovement()return self.ignore end;function z:setIgnoreMovement(v)self.ignore=v end
@@ -117,12 +118,28 @@ for i,binding in ipairs({'light','finisher','grab','light','finisher','grab'})do
 check(#style.actions.heatAction.contacts==7 and R.duration==224/30,'retail source duration and finishing contact')
 check(R.amount(style.actions.heatAction,7,token,{[1]=true,[6]=true})==.75,'missed QTEs reduce final payoff without applying early damage')
 check(style.actions.grab.enabled==true,'ordinary grabs are enabled independently of the QTE grab binding')
-for _,prompt in ipairs(style.actions.heatAction.qte.prompts)do check(prompt.windowMs==600,'all six DoD inputs have a consistent 600 ms visible/accepted window')end
+local playback=PY.QTEPlayback;local paced=R.qte(style.actions.heatAction)
+for i,prompt in ipairs(paced.prompts)do
+ check(prompt.windowMs==1000 and style.actions.heatAction.qte.prompts[i].countdownMs==1000,'each DoD QTE has a full one-second countdown')
+ if i>1 then check(math.abs(prompt.atMs-prompt.windowMs-paced.prompts[i-1].atMs)<.000001,'later QTEs start after the previous full countdown')end
+end
+for source=0,7466,13 do check(math.abs(playback.source(style.actions.heatAction.qte,playback.time(style.actions.heatAction.qte,source))-source)<.000001,'paced source and wall clocks round trip throughout the original clip')end
+local authored={prompts={{atMs=500,windowMs=400,countdownMs=700,binding='light'},{atMs=900,windowMs=400,countdownMs=1200,binding='grab'}}}
+check(Q.valid(authored,1000),'developers author different full countdowns per cue')
+local authoredRuntime=playback.definition(authored);check(authoredRuntime.prompts[1].windowMs==700 and authoredRuntime.prompts[2].windowMs==1200,'per-cue countdown values survive runtime compilation')
+local late=Q.create(style.actions.heatAction.qte,function()return false end)
+for _,prompt in ipairs(late.definition.prompts)do
+ Q.update(late,prompt.atMs-1,function(binding)return binding==prompt.binding end)
+ Q.update(late,prompt.atMs,function()return false end)
+end
+check(late.successes==6,'late valid presses still leave a complete countdown for every following prompt')
+local legacy=def(2);check(playback.definition(legacy)==legacy and playback.time(legacy,900)==900 and playback.source(legacy,900)==900 and playback.speed(legacy,300)==1,'other unpaced moves keep their existing clocks and speed')
+for _,bad in ipairs({{atMs=500,windowMs=400,countdownMs=50,binding='light'},{atMs=500,windowMs=400,countdownMs=1000,sourceStartMs=500,binding='light'},{atMs=500,windowMs=400,sourceStartMs=100,binding='light'}})do check(not Q.valid({prompts={bad}}),'invalid paced timing is rejected')end
 for _,age in ipairs({1267,1500,1866})do
  local sample=Q.create(style.actions.heatAction.qte,function()return false end);Q.update(sample,age,function(binding)return binding=='light'end)
  check(sample.accepted[1]==true,'any fresh press from visible ring start until its last moment passes')
 end
-local expired=Q.create(style.actions.heatAction.qte,function()return false end);Q.update(expired,56/30*1000,function(binding)return binding=='light'end);check(expired.failed and not expired.accepted[1],'input at or after radial expiry cannot pass')
+local expired=Q.create(style.actions.heatAction.qte,function()return false end);Q.update(expired,R.qte(style.actions.heatAction).prompts[1].atMs,function(binding)return binding=='light'end);check(expired.failed and not expired.accepted[1],'input at or after radial expiry cannot pass')
 local function shallow(v)local out={};for k,x in pairs(v)do out[k]=x end;return out end
 local authored=shallow(style);authored.actions=shallow(style.actions);authored.actions.heatAction=shallow(style.actions.heatAction)
 local function invalidContact(index,key,value)
@@ -152,6 +169,13 @@ check(not H.tickets[p]and H.chains[p].count==7,'seven missed inputs progress wit
 z.x=1.65;check(R.validTarget(p,z),'native-hit knockback margin permits a nearby standing victim');z.x=2.01;check(not R.validTarget(p,z),'paired handoff cannot reach beyond two tiles');z.x=1.65
 state.step=8;state.activeLightMove=style.extremeLightAttacks[8];state.multiHitToken={};H.hit(p,z,token,.1);check(H.tickets[p]and H.tickets[p].z==z,'eighth confirmed hit stores existing target without search/steering')
 check(not PY.blocksNativeAttacks(p),'restored handoff retains the earlier recovery-cancel transition')
+local currentStyle=PY.getPlayerStyle(p);local hitBefore=p.vars.ProjectYakuzaHitMarker;local chainBefore=p.vars.ProjectYakuzaChainReady
+p.vars.ProjectYakuzaHitMarker='';p.vars.ProjectYakuzaChainReady='';state.queued=0;state.recoveryReleased=false
+check(not PY.tryRecoveryCancel(p,currentStyle,state),'Rush cannot cancel before the eighth source hit')
+p.vars.ProjectYakuzaHitMarker=state.activeLightMove.nodeValue
+check(PY.tryRecoveryCancel(p,currentStyle,state)and state.recoveryReleased,'confirmed eighth source hit can hand off before the late chain marker')
+state.recoveryReleased=false;p.vars.ProjectYakuzaHitMarker=hitBefore;p.vars.ProjectYakuzaChainReady=chainBefore
+
 local second=setmetatable({}, {__index=z});function second:getOnlineID()return 26 end
 local oldInstanceof=instanceof;instanceof=function(obj,kind)return obj==second and kind=='IsoZombie'or oldInstanceof(obj,kind)end
 H.hit(p,second,token,.1);check(H.tickets[p].z==second,'eighth multi-hit selects the last target hit');H.hit(p,z,token,.1);check(H.tickets[p].z==z,'later eighth-strike contact replaces the prior target');instanceof=oldInstanceof
@@ -318,7 +342,10 @@ check(multi.waiting(p,stamp)==true,'paired handoff waits for outstanding MP supp
 multi.confirm(p,victim,455,.1);check(H.tickets[p].z==z and multi.waiting(p,stamp),'old-swing reply cannot retarget the current finisher')
 multi.confirm(p,victim,456,.1);check(H.tickets[p].z==victim and not multi.waiting(p,stamp),'confirmed last supplemental victim wins even after source recovery')
 multi.swings[p]={stamp=stamp,networkSwing=456,awaiting={[26]=true},awaitUntil=clock-1}
-check(not H.input(p,state,PY.getPlayerStyle(p))and not H.tickets[p],'unconfirmed MP contacts time out without finishing the wrong target')
+check(H.input(p,state,PY.getPlayerStyle(p))and H.tickets[p]and H.tickets[p].z==victim,'bounded settlement retains the last confirmed victim while waiting briefly')
+clock=clock+81;H.input(p,state,PY.getPlayerStyle(p))
+local settled=PY.activeActions[p];check(settled and settled.target.z==victim,'bounded settlement starts with the last confirmed target without waiting for an unrelated timeout')
+PY.cancelAction(p,'test_settlement');H.tickets[p]=nil
 multi.swings[p]=nil
 state.active=true;state.step=8;state.activeLightMove=style.extremeLightAttacks[8];state.multiHitToken={};H.hit(p,victim,token,.1)
 check(H.tickets[p]and H.tickets[p].z==victim,'eighth input can select the actual player hit')

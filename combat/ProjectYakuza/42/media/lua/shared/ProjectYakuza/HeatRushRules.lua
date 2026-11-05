@@ -5,12 +5,19 @@ require "ProjectYakuza/BottleHeatPaths"
 require "ProjectYakuza/GrabRules"
 require "ProjectYakuza/WallHeatPaths"
 require "ProjectYakuza/GroundHeatPaths"
+require "ProjectYakuza/QTEPlayback"
 local R={duration=224/30,targetRange=2,contactGraceMs=650}
 ProjectYakuza.HeatRushRules=R
 function R.motion(action)
     return action and action.motionId and ProjectYakuza.PairedMotions[action.motionId] or ProjectYakuza.HeatRushPaths
 end
 function R.durationFor(action)return action and action.duration or R.duration end
+function R.qte(action)return ProjectYakuza.QTEPlayback.definition(action and action.qte)end
+function R.time(action,source)return ProjectYakuza.QTEPlayback.time(action and action.qte,source*1000)/1000 end
+function R.sourceTime(action,time)return ProjectYakuza.QTEPlayback.source(action and action.qte,time*1000)/1000 end
+function R.speed(action,source)return ProjectYakuza.QTEPlayback.speed(action and action.qte,source*1000)end
+function R.wallDuration(action)return R.time(action,R.durationFor(action))end
+function R.protection(action)return {duration=R.wallDuration(action),targetGraceMs=action.targetGraceMs}end
 function R.contacts(action)return action.contacts or action.qte and action.qte.prompts or {}end
 function R.promptContact(action,index)
     if not action.contacts then return index end
@@ -71,6 +78,9 @@ end
 function R.validFor(p,z,action)
     if not action or not action.groundHeat then return R.validTarget(p,z)end
     if not p or R.targetKind(z)~="zombie"or z:isDead()or not(z:isOnFloor()or z:isKnockedDown())or z:isUseless()or math.abs(z:getZ()-p:getZ())>.25 then return false end
+    if action.requiresFloor and not z:isOnFloor()then return false end
+    if action.groundFacing=="up"and z:isFallOnFront()or action.groundFacing=="down"and not z:isFallOnFront()then return false end
+    local state=z:getCurrentStateName()or "";if string.find(string.lower(state),"getup",1,true)or string.find(string.lower(state),"falldown",1,true)or string.find(string.lower(state),"falling",1,true)then return false end
     local dx,dy=z:getX()-p:getX(),z:getY()-p:getY();local length=math.sqrt(dx*dx+dy*dy);local facing=p:getForwardDirection()
     return length<1.8 and (length<.01 or (dx*facing:getX()+dy*facing:getY())/length>=.2)
 end
@@ -97,6 +107,7 @@ function R.lock(z,clip)
     return old
 end
 function R.restore(z,old)
+    z:setVariable("ProjectYakuzaHeatRushSpeed",1)
     z:setVariable("ProjectYakuzaPairedVictimClip","");z:setVariable("ProjectYakuzaHeatRushVictim",false);z:setIgnoreMovement(old.ignore==true);z:setDeferredMovementEnabled(old.deferred~=false)
     if R.targetKind(z)=="zombie"then
         ProjectYakuza.GrabRules.releaseLock(z,old)

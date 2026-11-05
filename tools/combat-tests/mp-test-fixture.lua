@@ -60,7 +60,8 @@ local function zombie(id,x)
  function z:getX()return self.x end;function z:getY()return self.y end;function z:getZ()return self.z end
  function z:setX(v)self.x=v end;function z:setY(v)self.y=v end
  function z:setNextX(v)self.nextX=v end;function z:setNextY(v)self.nextY=v end
- function z:isDead()return self.health<=0 end;function z:isOnFloor()return false end;function z:isKnockedDown()return false end
+ function z:isFallOnFront()return self.front==true end
+function z:isDead()return self.health<=0 end;function z:isOnFloor()return false end;function z:isKnockedDown()return false end
  function z:isAttacking()return self.attacking==true end;function z:getAttackDidDamage()return self.didDamage==true end
  function z:getTarget()return self.target end;function z:setTarget(v)self.target=v end
  function z:isUseless()return self.useless==true end;function z:setUseless(v)self.useless=v end
@@ -141,7 +142,7 @@ command('grabRequest',{zombie=z1.id});check(s.grab and z1.useless and z1.ignore,
 snapshot(remote);command('grabRequest',{zombie=z1.id},remote)
 check(server.players[2].grab==nil,'second player cannot grab leased zombie')
 snapshot(p,{phase='hold',clip='ProjectYakuza_DD_GrabHold'});server.tick()
-check(z1.x==.7 and z1.nextX==.7,'server aligns paired current and next position')
+check(math.abs(z1.x-.291238)<.000001 and z1.nextX==z1.x and math.abs(z1.y+.019355)<.000001,'server aligns paired roots with native collar spacing')
 snapshot(p,{phase='throw',clip='ProjectYakuza_DD_Throw'});command('throw',{zombie=z1.id})
 check(z1.hits==1 and z1.knock and s.grab==nil and not z1.useless and not z1.ignore,'throw hits once and releases AI lease')
 command('throw',{zombie=z1.id});check(z1.hits==1,'repeated throw does not damage twice')
@@ -683,11 +684,11 @@ for i,prompt in ipairs(lease.definition.prompts)do
  check(z1.hits==before,'successful timed punch remains presentation-only')
  command('heatRushHit',{action=lease.action,index=i});check(z1.hits==before,'replayed QTE hit cannot duplicate damage')
 end
-clock=lease.started+143/30*1000+10;snapshot(p,{extreme=true,clip='ProjectYakuza_DD_HeatRush',move='dd_heat_rush',action=lease.action,swing=1800})
+clock=lease.started+rules.time(lease.move,143/30)*1000+10;snapshot(p,{extreme=true,clip='ProjectYakuza_DD_HeatRush',move='dd_heat_rush',action=lease.action,swing=1800})
 command('heatRushPress',{action=lease.action,index=7});check(not lease.presses[7],'automatic final kick is not a seventh QTE')
 command('heatRushHit',{action=lease.action,index=7,damage=999});command('heatRushHit',{action=lease.action,index=7})
 check(z1.hits==before and math.abs(lease.pendingDamage-2.25)<.000001,'final kick defers native damage to preserve paired victim playback')
-clock=lease.started+rules.duration*1000+10;snapshot(p,{extreme=true,clip='ProjectYakuza_DD_HeatRush',move='dd_heat_rush',action=lease.action,swing=1800});command('heatRushEnd',{action=lease.action,completed=true})
+clock=lease.started+rules.wallDuration(lease.move)*1000+10;snapshot(p,{extreme=true,clip='ProjectYakuza_DD_HeatRush',move='dd_heat_rush',action=lease.action,swing=1800});command('heatRushEnd',{action=lease.action,completed=true})
 check(not rush.leases[p]and not rush.held[z1]and not z1.useless and not z1.ignore and z1.deferred and z1.knock,'server completion restores victim state and terminal knockdown')
 check(z1.hits==before+1 and math.abs(z1.health-7.75)<.000001,'server completion commits earned canonical damage exactly once')
 command('heatRushHit',{action=lease.action,index=3});check(z1.hits==before+1,'ended action cannot replay a QTE hit')
@@ -1050,6 +1051,7 @@ do
  z1.isOnFloor=function(z)return z.nativeFloor==true end;z1.isKnockedDown=function(z)return z.knock==true end
  z1.nativeFloor=true;z1.knock=true;z1.useless=false;z1.health=10;z1.reaction='';z1.x=.8;z1.y=0;p.x=0;p.y=0;p.hand=p.token
  clock=clock+2000;snapshot(p,{clip='',rightAim=true,comboBusy=false,heat=100,extreme=false})
+ z1.front=true;command('heatRushBegin',{zombie=z1.id,request=5499,groundHeat=true});check(not rush.leases[p]and not p.invincible,'server rejects face-down ground targets before protection or a lease');z1.front=false
  command('heatRushBegin',{zombie=z1.id,request=5500,groundHeat=true});local job=rush.leases[p]
  check(job and job.move.groundHeat and job.motion==ProjectYakuza.PairedMotions.dod_ground,'server grants original ground pair only for a downed target')
  command('heatRushReady',{action=job.action});check(job.started and p.invincible and not z1.nativeFloor,'ground action suspends native floor override and protects player')
