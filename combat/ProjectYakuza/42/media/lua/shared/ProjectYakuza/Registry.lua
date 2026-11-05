@@ -81,6 +81,8 @@ function Q.valid(def,durationMs)
         elseif v.sourceStartMs~=nil then return false,"sourceStartMs requires countdownMs"end
         if durationMs and v.atMs>durationMs then return false,"QTE prompt exceeds animation duration"end
         if v.damageMultiplier~=nil and (not finite(v.damageMultiplier)or v.damageMultiplier<0 or v.damageMultiplier>10)then return false,"invalid QTE damage multiplier"end
+        if v.presses~=nil and(not finite(v.presses)or v.presses<2 or v.presses>20 or v.presses~=math.floor(v.presses)or not finite(v.minPressIntervalMs or 120)or (v.minPressIntervalMs or 120)<50 or (v.minPressIntervalMs or 120)>1000 or (v.presses-1)*(v.minPressIntervalMs or 120)>=(v.countdownMs or v.windowMs))then return false,"invalid mash QTE"end
+        if v.minPressIntervalMs~=nil and not v.presses then return false,"mash interval requires presses"end
         last=v.atMs
     end
     if (durationMs or last)+extra>120000 then return false,"paced QTE exceeds maximum runtime"end
@@ -93,7 +95,7 @@ end
 function Q.create(def,down,context)
     local valid,reason=Q.valid(def);assert(valid,reason)
     if ProjectYakuza.QTEPlayback then def=ProjectYakuza.QTEPlayback.definition(def) end
-    local s={definition=def,context=context,index=1,accepted={},results={},downs={},lastTime=0,successes=0,failures=0,consecutiveFailures=0,inputAt={}}
+    local s={definition=def,context=context,index=1,accepted={},results={},downs={},lastTime=0,successes=0,failures=0,consecutiveFailures=0,inputAt={},pressCounts={},lastPressAt={}}
     for _,v in ipairs(def.prompts)do s.downs[v.binding]=down and down(v.binding)==true or false end
     return s
 end
@@ -114,8 +116,15 @@ function Q.update(s,timeMs,down,callback)
     if v and Q.window(s.definition,index,timeMs)then
         if s.promptedIndex~=index then s.promptedIndex=index;emit(s,"qtePrompt",index,v)end
         if current[v.binding]and not s.downs[v.binding]and not s.accepted[index]then
-            s.accepted[index]=true;s.inputAt[index]=timeMs;s.lastInputAt=timeMs;emit(s,"qteInput",index,v)
-            if callback then callback("input",index,true,v)end
+            local last=s.lastPressAt[index]
+            if not last or timeMs-last>=(v.minPressIntervalMs or 120)then
+                s.pressCounts[index]=(s.pressCounts[index]or 0)+1;s.lastPressAt[index]=timeMs;s.lastInputAt=timeMs
+                if v.presses then emit(s,"qteTap",index,v,s.pressCounts[index],v.presses);if callback then callback("tap",index,true,v)end end
+                if s.pressCounts[index]>=(v.presses or 1)then
+                    s.accepted[index]=true;s.inputAt[index]=timeMs;emit(s,"qteInput",index,v)
+                    if callback then callback("input",index,true,v)end
+                end
+            end
         end
     end
     s.downs=current
@@ -252,7 +261,7 @@ end
 
 local ProjectYakuza = ProjectYakuza
 ProjectYakuza.FEATURES={grab=true}
-ProjectYakuza.VERSION = "0.85.0"
+ProjectYakuza.VERSION = "0.86.0"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -358,6 +367,7 @@ function ProjectYakuza.validateStyle(style)
                         if type(prompt)~="table"or mapped[i]or contact.atMs~=prompt.atMs then problem(path..".contacts has invalid QTE mapping")else mapped[i]=true end
                     end
                     if contact.strong~=nil and type(contact.strong)~="boolean"then problem(path..".contacts.strong must be boolean")end
+                    if contact.baseDamageMultiplier~=nil and(not contact.sumQTE or not number(contact.baseDamageMultiplier)or contact.baseDamageMultiplier<0 or contact.baseDamageMultiplier>10)then problem(path..".contacts invalid base damage")end
                     if contact.sumQTE~=nil and type(contact.sumQTE)~="boolean"then problem(path..".contacts.sumQTE must be boolean")end
                     if contact.sumQTE and (i~=nil or type(prompts)~="table"or #prompts==0 or not number(contact.atMs)or type(prompts[#prompts])~="table"or not number(prompts[#prompts].atMs)or contact.atMs<=prompts[#prompts].atMs)then problem(path..".contacts summed damage must follow all QTE prompts")end
                 end
@@ -505,6 +515,11 @@ function ProjectYakuza.validateStyle(style)
                 local function offset(value)
                     return type(value)=="table"and number(value.forward)and value.forward>=.05 and value.forward<=1.5 and number(value.right)and math.abs(value.right)<=.75
                 end
+                if slot.breakout~=nil and slot.breakout~=false then
+                    local b=slot.breakout
+                    if type(b)~="table"or not number(b.chance)or b.chance<0 or b.chance>1 or not number(b.intervalMs)or b.intervalMs<250 or b.intervalMs>10000 or b.firstCheckMs~=nil and(not number(b.firstCheckMs)or b.firstCheckMs<0 or b.firstCheckMs>10000)or not text(b.animation)or not text(b.targetAnimation)or not number(b.duration)or b.duration<=0 or b.duration>10 then problem("invalid grab breakout settings")end
+                end
+                if slot.releaseOnAimLoss~=nil and type(slot.releaseOnAimLoss)~="boolean"then problem("grab.releaseOnAimLoss must be boolean")end
                 if slot.throwContactMs~=nil and(not number(slot.throwContactMs)or slot.throwContactMs<0 or not number(slot.throwDuration)or slot.throwDuration<=0 or slot.throwDuration>10 or slot.throwContactMs>=slot.throwDuration*1000)then problem("invalid grab throw contact timing")end
                 if slot.throwCrowd~=nil and slot.throwCrowd~=false then
                     local cfg=slot.throwCrowd

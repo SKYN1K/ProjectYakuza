@@ -462,7 +462,7 @@ clock=clock+1;panel:render();check(panel.lastText=='K'and panel.lastInputIcon:fi
 mouse[1]=false;clock=clock+80;panel:render();check(panel.promptAlpha==0 and scans==1,'losing RMB eligibility fades the prompt out and stops searching')
 PY.Bindings.options=nil;p.held=nil;PY.MultiHit.targets=oldTargets;H.previews[p]=nil
 p.held={getFullType=function()return 'ProjectYakuza.BeerCrate'end,getCondition=function()return 8 end}
-local crateStyle=PY.getPlayerStyle(p);check(crateStyle.weaponProfile=='crate'and not R.weaponAllowed(p,crateStyle,crateStyle.actions.heatAction),'original crate uses DoD Short Blunt combat without borrowing the bottle Heat Action');p.held=nil
+local crateStyle=PY.getPlayerStyle(p);check(crateStyle.weaponProfile=='crate'and R.weaponAllowed(p,crateStyle,crateStyle.actions.heatAction),'crate exposes only its original weapon-specific Heat Action');p.held=nil
 PY.resetPlayer(p,'network_feedback');p.held=katana;p.attacking=false;p.x=0;p.y=0;z.x=1.1;z.y=0;z.health=10;mouse[1]=true;clock=clock+2000;PY.setHeat(p,100)
 PY.MultiHit.targets=function()return {{victim=z}}end
 check(H.weaponInput(p,PY.stateFor(p),PY.getPlayerStyle(p),true),'network feedback fixture starts the actual paired action')
@@ -504,4 +504,32 @@ do
  check(cancelled==1,'server abort cancels the matching owner action once')
  PY.Network=savedNetwork;getPlayerByOnlineID=savedLookup
 end
+
+do
+ local move=PY.CrateHeatMove
+ check(move and move.weaponHeat and move.qteStages and #move.qte.prompts==3 and move.qteFailure.paired,'crate uses a finite three-stage paired mash action')
+ check(Q.valid(move.qte,move.duration*1000),'crate mash definition fits original-speed animation')
+ local button=false;local taps=0;local q=Q.create(move.qte,function()return button end)
+ for i,prompt in ipairs(move.qte.prompts)do
+  local start=prompt.atMs-prompt.windowMs
+  button=false;Q.update(q,start,function()return button end)
+  button=true;Q.update(q,start+100,function()return button end,function(kind)if kind=='tap'then taps=taps+1 end end)
+  Q.update(q,start+300,function()return button end)
+  check(q.pressCounts[i]==1 and not q.accepted[i],'holding does not spam mash or auto-pass')
+  button=false;Q.update(q,start+350,function()return button end)
+  button=true;Q.update(q,start+600,function()return button end,function(kind)if kind=='tap'then taps=taps+1 end end)
+  check(q.accepted[i]and q.pressCounts[i]==2,'two fresh presses finish an easy mash window')
+  button=false;Q.update(q,prompt.atMs,function()return button end)
+ end
+ check(q.successes==3 and q.closed and taps==6,'mash completes once after six total fresh presses')
+ local missed=Q.create(move.qte,function()return false end);Q.update(missed,move.qte.prompts[1].atMs,function()return false end)
+ check(missed.failed and missed.failedIndex==1,'no mash immediately selects the authored finite ending')
+ local bad={prompts={{atMs=1000,windowMs=1000,binding='heatAction',presses=10,minPressIntervalMs=120}}}
+ check(not Q.valid(bad),'impossible mash counts rejected')
+ local quick={prompts={{atMs=1000,windowMs=1000,binding='heatAction',presses=2,minPressIntervalMs=200}}};button=false;q=Q.create(quick,function()return button end)
+ button=true;Q.update(q,100,function()return button end);button=false;Q.update(q,120,function()return button end);button=true;Q.update(q,150,function()return button end)
+ check(q.pressCounts[1]==1 and not q.accepted[1],'too-fast taps cannot bypass minimum mash interval')
+ check(move.contacts[#move.contacts].baseDamageMultiplier==1.5,'crate retains base impact damage on an early ending')
+end
+
 return true,'PASS '..checks..' generic QTE validation, custom bindings, fresh presses, replay safety, native-phase contacts, canonical damage, paired cleanup and interruption checks'

@@ -263,7 +263,7 @@ function S.command(module,command,p,a)
         S.fanout(p,"grabStart",{player=p:getOnlineID(),zombie=z:getOnlineID(),useless=lease.useless,ignore=lease.ignore,deferred=lease.deferred,locked=lease.locked,grabId=lease.id});return
     end
     if command=="grabStrike"or command=="grabStrikeHit"then
-        local lease=s.grab;local style=ProjectYakuza.getStyle(s.packet.style);local moves=style and style.actions.grab and style.actions.grab.strikes
+        local lease=s.grab;if lease and lease.breaking then return end;local style=ProjectYakuza.getStyle(s.packet.style);local moves=style and style.actions.grab and style.actions.grab.strikes
         if not lease or not moves or a.grabId~=lease.id or lease.z:getOnlineID()~=a.zombie or lease.weapon~=p:getPrimaryHandItem()or not P.near(p,lease.z,1.5)or not P.integer(a.serial,1,1000000)then return end
         if command=="grabStrike"then
             local index=(lease.strikeCount or 0)%#moves+1
@@ -283,7 +283,7 @@ function S.command(module,command,p,a)
     if command=="throw" then
         if ProjectYakuza.FEATURES.grab==false then S.release(p);return end
         local lease=s.grab
-        if not lease or a.grabId~=lease.id or lease.z:getOnlineID()~=a.zombie or lease.thrown or not S.validVictim(p,a.zombie,1.5) or s.packet.phase~="throw" then return end
+        if not lease or lease.breaking or a.grabId~=lease.id or lease.z:getOnlineID()~=a.zombie or lease.thrown or not S.validVictim(p,a.zombie,1.5) or s.packet.phase~="throw" then return end
         if lease.slot.throwContactMs and(not lease.throwStarted or t-lease.throwStarted<lease.slot.throwContactMs-250 or t-lease.throwStarted>lease.slot.throwDuration*1000+1000)then return end
         lease.thrown=true;S.damage(p,lease.z,.7,true,false,s,{noKnockback=true,hitResponse=false,grabThrow=true},nil,nil,nil,true)
         for _,victim in ipairs(ProjectYakuza.GrabRules.crowd(p,lease.z,lease.slot,lease.fx,lease.fy))do
@@ -392,20 +392,25 @@ function S.tick()
             if not online[p] then S.players[id]=nil end
         elseif s.grab then
             local lease=s.grab;local z=lease.z
-            if t>lease.expires or z:isDead()or p:isDead()or z:isOnFloor()or z:isKnockedDown()or lease.weapon~=p:getPrimaryHandItem()or lease.style~=s.packet.style or not P.near(p,z,2) then S.release(p)
+            if lease.breaking and t-lease.escapeAt>lease.slot.breakout.duration*1000+500 or t>lease.expires or z:isDead()or p:isDead()or z:isOnFloor()or z:isKnockedDown()or lease.weapon~=p:getPrimaryHandItem()or lease.style~=s.packet.style or not P.near(p,z,2) then S.release(p)
             else
-                if ProjectYakuza.GrabRules.phase(s.packet.phase)then lease.expires=t+1500 end
-                z:setVariable("ProjectYakuzaGrabPhase",s.packet.phase)
+                if not lease.breaking and s.packet.phase=="hold"and ProjectYakuza.GrabRules.escapeDue(lease,lease.slot,t)then
+                    lease.breaking=true;lease.escapeAt=t
+                    S.fanout(p,"grabEscape",{player=id,zombie=z:getOnlineID(),grabId=lease.id,useless=lease.useless,ignore=lease.ignore,deferred=lease.deferred,locked=lease.locked})
+                end
+                local phase=lease.breaking and "escape"or s.packet.phase
+                if ProjectYakuza.GrabRules.phase(phase)then lease.expires=t+1500 end
+                z:setVariable("ProjectYakuzaGrabPhase",phase)
                 ProjectYakuza.GrabRules.keep(z)
                 local f=p:getForwardDirection();local fx,fy=f:getX(),f:getY()
-                if s.packet.phase=="hold"or not lease.fx then lease.fx,lease.fy=fx,fy else fx,fy=lease.fx,lease.fy end
-                local offset=ProjectYakuza.GrabRules.alignment(lease.slot,s.packet.phase,lease,t)
+                if phase=="hold"or not lease.fx then lease.fx,lease.fy=fx,fy else fx,fy=lease.fx,lease.fy end
+                local offset=ProjectYakuza.GrabRules.alignment(lease.slot,phase,lease,t)
                 local x,y=p:getX()+fx*offset.forward+fy*offset.right,p:getY()+fy*offset.forward-fx*offset.right
                 local sq=getCell():getGridSquare(math.floor(x),math.floor(y),math.floor(p:getZ()))
                 if not sq or not P.path(z,x,y) then S.release(p)
                 else z:setX(x);z:setY(y);z:setNextX(x);z:setNextY(y);z:setTarget(nil)
-                    S.fanout(p,"grabPose",{player=id,zombie=z:getOnlineID(),x=x,y=y,fx=fx,fy=fy,phase=s.packet.phase,
-                        moving=s.packet.grabMoving,direction=s.packet.grabDirection,useless=lease.useless,ignore=lease.ignore,deferred=lease.deferred,locked=lease.locked,grabId=lease.id}) end
+                    S.fanout(p,"grabPose",{player=id,zombie=z:getOnlineID(),x=x,y=y,fx=fx,fy=fy,phase=phase,
+                        moving=not lease.breaking and s.packet.grabMoving,direction=s.packet.grabDirection,useless=lease.useless,ignore=lease.ignore,deferred=lease.deferred,locked=lease.locked,grabId=lease.id}) end
             end
         end
     end

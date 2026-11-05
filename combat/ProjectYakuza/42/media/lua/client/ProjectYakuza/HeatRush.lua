@@ -242,7 +242,8 @@ function A:update()
     if self.qte then PY.QTE.update(self.qte,R.time(self.context.action,self.elapsed)*1000,PY.Bindings.down,function(kind,index,success,prompt)
         self.index=self.qte.index
         local grant=self.context.target.granted
-        if kind=="input"and grant then PY.Network.send(self.character,"heatRushPress",{action=grant.action,index=index})end
+        if kind=="tap"and grant then PY.Network.send(self.character,"heatRushPress",{action=grant.action,index=index,tap=self.qte.pressCounts[index],tapAt=self.qte.lastPressAt[index]})end
+        if kind=="input"and grant and not prompt.presses then PY.Network.send(self.character,"heatRushPress",{action=grant.action,index=index})end
         if kind=="result"then
             local contact=R.promptContact(self.context.action,index)
             if contact then self.success[contact]=success and self.elapsed*1000-R.contacts(self.context.action)[contact].atMs<=R.contactGraceMs;if self.success[contact]then self:contact(contact)end end

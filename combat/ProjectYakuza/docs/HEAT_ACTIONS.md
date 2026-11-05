@@ -54,3 +54,11 @@ HeatRushRules.placement(player,victim,action) returns a nearby paired pose or ni
 Ground eligibility scans at most 25 squares and 96 objects, cached for 200 ms including empty results. It is local presentation/eligibility work; the server independently selects the allowed action and computes its canonical pose. See ground-heat-assets.json for original source provenance and the motion-derived contact frame.
 
 Ground-trample head contact is calibrated for native Zomboid male/female geometry. PairedMotions.dod_ground.contactOffset supplies a constant victim-only forward/right translation. HeatRushRules.point rotates it with the action heading from frame zero, so placement, clearance, SP, server and observer positions agree without a mid-sequence snap. Other motions can optionally provide contactOffset for their own verified paired alignment. See ground-contact-alignment.json and calibrate_ground_contact.py; no animation body channels are modified.
+
+## Beer crate: Essence of Crushing (0.86.0)
+
+Only DoD's `crate` weapon profile receives this action, requiring the supplied `ProjectYakuza.BeerCrate` item. Hold physical RMB and press the rebound Heat Action binding outside a combo near a standing target. It costs one stock or equivalent Extreme Heat fuel. Ordinary crates, bottles and other styles do not inherit it.
+
+The approved Yakuza 5 `H3270_kaburikasa` source supplies Kiryu, victim and object motion. Frames 34–63 repeat at most three times, at original 30 fps. Each section requires two fresh presses within one second. A missed section immediately plays original closing frames 63–129; success continues into frames 64–129 after the final repeat. The action always ends. Both normal and early endings include original closing contact feedback, bank damage until completion and share the standard paired protection/cleanup lifecycle.
+
+The crate uses its supplied source object track after placement on the victim's head; it does not follow the punching hand. Retargeting retains source root height and uses PZ skeleton lengths. `crate-heat-assets.json` records archive and clip hashes, role verification, source frame maps, prop calibration and code-side paths. No artwork, audio, AI or invented body animation was added. Appearance still needs a live check after restart.

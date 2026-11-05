@@ -1,3 +1,4 @@
+ZombRand=function(max)return max-1 end
 ZombieOnGroundState={instance=function()return 'ZombieOnGroundState'end}
 local count=0
 local function check(ok,msg)count=count+1;if not ok then error(msg) end end
@@ -144,7 +145,7 @@ command('grabRequest',{zombie=z1.id});check(s.grab and z1.useless and z1.ignore,
 snapshot(remote);command('grabRequest',{zombie=z1.id},remote)
 check(server.players[2].grab==nil,'second player cannot grab leased zombie')
 for _,v in ipairs({z2,z3,z4})do v.health=1;v.hits=0;v.state='idle';v.reaction='';v.useless=false;v.knock=false;v.nativeFloor=false end
-snapshot(p,{phase='hold',clip='ProjectYakuza_DD_GrabHold'});server.tick()
+snapshot(p,{phase='hold',clip='ProjectYakuza_DD_GrabHold',rightAim=false});server.tick();check(s.grab~=nil,'server keeps the held grab when RMB is released')
 check(math.abs(z1.x-.5)<.000001 and z1.nextX==z1.x and math.abs(z1.y+.019355)<.000001,'server aligns paired roots with native collar spacing')
 snapshot(p,{phase='throw',clip='ProjectYakuza_DD_Throw'});local throwId=s.grab.id
 command('throw',{zombie=z1.id,grabId=throwId});check(s.grab and z1.hits==0,'server rejects throw damage before the original impact frame')
@@ -1060,6 +1061,10 @@ do
  check(z1.vars.ProjectYakuzaGrabPhase=='hold','duplicate start cannot rewind a held remote animation')
  client.command(P.module,'grabEnd',packet(1000,'hold'));check(z1.vars.ProjectYakuzaGrabbed==true,'older end cannot release a newer grab')
  client.command(P.module,'grabEnd',packet(1001,'hold'));check(not z1.stateLocked and not z1.ignore,'current remote release restores its saved state')
+ client.command(P.module,'grabEscape',packet(1002,'escape'));local escapeReaction=z1.reaction
+ client.command(P.module,'grabEscape',packet(1002,'escape'));check(z1.vars.ProjectYakuzaGrabPhase=='escape'and z1.stateLocked and z1.reaction==escapeReaction,'missed-start observer escape can be repeated safely')
+ client.command(P.module,'grabEnd',packet(1002,'escape'));client.command(P.module,'grabEscape',packet(1002,'escape'));check(not z1.stateLocked and z1.vars.ProjectYakuzaGrabbed==false,'late escape cannot resurrect an ended lease')
+
  z1.vars.ProjectYakuzaHeatRushVictim=true;client.command(P.module,'grabStart',packet(1002,'enter'));check(z1.vars.ProjectYakuzaGrabbed==false,'delayed grab cannot overwrite an active paired heat action');z1.vars.ProjectYakuzaHeatRushVictim=false
 end
 do
@@ -1095,4 +1100,36 @@ do
  packet.event=packet.event+1;packet.force=2;client.command(P.module,'throwCollision',packet)
  check(reports==1,'invalid crowd force cannot enter native reaction playback')
 end
+
+do
+ local rush=ProjectYakuza.HeatRushServer
+ ProjectYakuza.HeatActions.clear();p.x=0;p.y=0;p.dead=false;p.equipped=true;p.data.ProjectYakuzaStyle='dragon_of_dojima';wall=false
+ z1.x=1;z1.y=0;z1.health=10;z1.useless=false;z1.ignore=false;z1.deferred=true;z1.knock=false;z1.reaction='';z1.state='idle'
+ local crate={data={},getFullType=function()return 'ProjectYakuza.BeerCrate'end,getCondition=function()return 10 end,getMinDamage=function()return .6 end,getMaxDamage=function()return 1 end}
+ function crate:getModData()return self.data end;p.hand=crate
+ clock=clock+3000;snapshot(p,{weaponProfile='crate',clip='',move='dd_crate_light_01',heat=100,extreme=false,rightAim=true,comboBusy=false})
+ command('heatRushBegin',{weaponHeat=true,zombie=z1.id,request=6500});local job=rush.leases[p]
+ check(job and job.definition.prompts[1].presses==2,'MP crate starts the original action with server-authored mash requirements')
+ command('heatRushReady',{action=job.action});local prompt=job.definition.prompts[1];local first=prompt.atMs-800
+ clock=job.started+first;command('heatRushPress',{action=job.action,index=1});check(not job.presses[1],'one generic packet cannot complete a mash')
+ command('heatRushPress',{action=job.action,index=1,tap=2,tapAt=first});check(not job.presses[1]and not job.tapCounts[1],'out-of-order mash packet is rejected')
+ command('heatRushPress',{action=job.action,index=1,tap=1,tapAt=first});check(job.tapCounts[1]==1 and not job.presses[1],'first legitimate tap advances only one step')
+ command('heatRushPress',{action=job.action,index=1,tap=1,tapAt=first});check(job.tapCounts[1]==1,'duplicate mash packet cannot add a press')
+ clock=clock+50;command('heatRushPress',{action=job.action,index=1,tap=2,tapAt=first+50});check(not job.presses[1],'server rejects impossible fast taps')
+ clock=job.started+first+500;command('heatRushPress',{action=job.action,index=1,tap=2,tapAt=first+500});check(job.presses[1],'second valid tap completes authoritative mash')
+ clock=job.started+prompt.atMs+1;rush.tick(clock,{[p]=true});check(not job.failed,'completed mash continues to the next original source repeat')
+ clock=job.started+job.definition.prompts[2].atMs+200;rush.tick(clock,{[p]=true});check(job.failed and job.failedIndex==2 and job.failurePose,'missing next mash branches to original paired ending')
+ clock=job.failedAt+job.move.qteFailure.contactMs+10;command('heatRushHit',{action=job.action,index=#job.contacts});check(job.pendingDamage and job.pendingDamage>0,'failed mash retains base damage plus completed sections')
+ clock=job.failedAt+job.move.qteFailure.duration*1000+10;snapshot(p,{weaponProfile='crate',clip='ProjectYakuza_DD_CrateHeatFail',move='dd_crate_heat',rightAim=true});command('heatRushEnd',{action=job.action,completed=true});check(not rush.leases[p]and not p.invincible,'finite original ending releases protection and lease')
+ p.hand=p.token;z1.health=10;z1.x=.5;z1.y=0;z1.useless=false;z1.ignore=false;z1.deferred=true;z1.knock=false;z1.reaction='';z1.state='idle';clock=clock+3000
+ snapshot(p,{weaponProfile='',clip='ProjectYakuza_DD_GrabHold',phase='hold',rightAim=true,heat=100,extreme=false,comboBusy=false});command('grabRequest',{zombie=z1.id});local lease=server.players[p.id].grab
+ check(lease~=nil,'escape test acquires an authoritative grab')
+ local random=ZombRand;ZombRand=function()return 0 end;server.tick();local due=lease.escapeNext
+ clock=due-61;snapshot(p,{clip='ProjectYakuza_DD_GrabHold',phase='hold'});server.tick();check(not lease.breaking,'server checks escape only at its one-second deadline')
+ clock=due+40;snapshot(p,{clip='ProjectYakuza_DD_GrabHold',phase='hold'});server.tick();check(lease.breaking and z1.vars.ProjectYakuzaGrabPhase=='escape','server alone starts an approved paired break-out')
+ command('grabStrike',{zombie=z1.id,grabId=lease.id,serial=1,index=1});check(not lease.strike,'escape cannot be overridden by a late strike packet')
+ clock=clock+3000;snapshot(p,{clip='ProjectYakuza_DD_GrabEscape',phase='escape'});server.tick();check(not server.players[p.id].grab and not z1.stateLocked,'break-out timeout restores AI even if owner end packet is lost')
+ ZombRand=random
+end
+
 return 'PASS '..count..' MP authority, duplicate, range, lease, cooldown, observer and throttle checks'

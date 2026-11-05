@@ -1,3 +1,4 @@
+ZombRand=function(max)return max-1 end
 Events.OnZombieUpdate=event();Events.OnGameStart=event();Events.OnServerCommand=event()
 CharacterStat={ENDURANCE=1}
 mouse[1]=true
@@ -262,10 +263,42 @@ do
  PY.Bindings.options={getOption=function(_,id)if id=='input_grab'then return {getValue=function()return 4 end}elseif id=='key_grab'then return {getValue=function()return 37 end}end end}
  isKeyDown=function(key)return key==37 and grabDown end
  local held=startGrab();D.input[p]={};mouse[2]=true;D.update(p);check(held.phaseName=='hold','heavy input no longer throws when no wall Heat Action is available')
- mouse[2]=false;D.update(p);grabDown=true;D.update(p)
+ mouse[2]=false;D.update(p)
+ local originalAim,originalReaction=p.isAiming,p.getHitReaction;p.isAiming=function()return false end;p.getHitReaction=function()return p.reaction or ''end;mouse[1]=false
+ D.update(p);held:update();D.followZombie(z)
+ check(held:isValid()and not held.cleaned and held.phaseName=='hold','releasing RMB cannot manually end a committed DoD grab')
+ check(not D.safe(p)and not D.ready(p),'starting a new grab or guard still requires aiming')
+ local keep=style.actions.grab.releaseOnAimLoss;style.actions.grab.releaseOnAimLoss=nil;check(not held:isValid(),'other style grabs retain their authored default aim-loss behavior');style.actions.grab.releaseOnAimLoss=keep
+ p.x=p:getX()+.1;p.y=p:getY()+.1;clock=clock+50;held:update();check(not held.cleaned and not p.blocked,'walking held grab survives aim release')
+ grabDown=true;D.update(p)
  check(held.phaseName=='throw'and not held.cleaned,'fresh remapped grab press throws instead of releasing')
  local started=held.phaseAt;clock=clock+20;D.update(p);check(held.phaseAt==started,'holding the grab button cannot restart the throw')
- PY.cancelAction(p,'test_finished');isKeyDown=oldKey;PY.Bindings.options=oldOptions;D.input[p]=nil;wall=true
+ p.reaction='HitReaction';held:update();check(held.cleaned and not z.locked and not z.useless,'external hit still interrupts the committed grab/throw safely');p.reaction='';p.isAiming=originalAim;p.getHitReaction=originalReaction;mouse[1]=true
+ isKeyDown=oldKey;PY.Bindings.options=oldOptions;D.input[p]=nil;wall=true
  check(PY.Bindings.byId.throw==nil,'obsolete separate throw binding is removed')
 end
+
+do
+ local R=PY.GrabRules;local rolls=0;local timer={};local cfg=style.actions.grab
+ local function low(max)rolls=rolls+1;check(max==10000,'escape roll has bounded precision');return 0 end
+ check(not R.escapeDue(timer,cfg,1000,low)and rolls==0,'first escape check waits a full second')
+ check(not R.escapeDue(timer,cfg,1999,low)and rolls==0,'no per-frame escape rolls')
+ check(R.escapeDue(timer,cfg,2000,low)and rolls==1,'all held zombies can escape after a successful small roll')
+ check(not R.escapeDue(timer,cfg,2001,low)and rolls==1,'one roll per second maximum')
+ check(R.escapeDue(timer,cfg,99999,low)and rolls==2,'long stalls do not perform a burst of catch-up rolls')
+ timer={};R.escapeDue(timer,cfg,0,low)
+ check(not R.escapeDue(timer,cfg,1000,function()return 500 end),'five-percent boundary is excluded')
+ timer={};R.escapeDue(timer,cfg,0,low)
+ check(R.escapeDue(timer,cfg,1000,function()return 499 end),'last valid five-percent roll is included')
+ check(not R.escapeDue({}, {},1000,low),'other styles must explicitly configure break-outs')
+ wall=false;local action=startGrab();local oldRandom=ZombRand;ZombRand=function()return 0 end
+ clock=clock+1;action:update();local due=action.escapeNext
+ clock=due-1;action:update();check(action.phaseName=='hold','held actor stays paired before escape deadline')
+ clock=due;action:update();check(action.phaseName=='escape'and z.locked,'successful escape starts original paired separation without releasing victim early')
+ check(not action:escape()and not action:throw(),'escape cannot restart or turn into a throw')
+ local oldTrack=PY.AttackEffects.findTrack;PY.AttackEffects.findTrack=function()return cfg.breakout.duration,1,0 end
+ action:update();check(action.cleaned and not z.locked and not z.useless and not p.blocked,'source separation completion restores both actors')
+ PY.AttackEffects.findTrack=oldTrack;ZombRand=oldRandom;wall=true
+end
+
 return 'PASS '..checks..' reliable grab lifecycle, four source-timed strikes, following, cleanup, wall geometry, handoff and action protection checks'

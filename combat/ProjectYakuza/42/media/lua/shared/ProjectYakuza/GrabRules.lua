@@ -35,7 +35,7 @@ function G.restore(z,old)
     if not z:isDead()and z:getTarget()==nil then z:setTarget(old.target)end
 end
 function G.phase(value)
-    return value=="enter"or value=="hold"or value=="throw"or value=="strike1"or value=="strike2"or value=="strike3"or value=="strike4"
+    return value=="enter"or value=="hold"or value=="escape"or value=="throw"or value=="strike1"or value=="strike2"or value=="strike3"or value=="strike4"
 end
 function G.damage(p,move)
     local held=p:getPrimaryHandItem();if not held then return end
@@ -127,4 +127,12 @@ function G.collide(p,v,cfg)
     if not cfg or not ProjectYakuza.HitResponses.apply(p,v,{kind="knockdown",force=cfg.force})then return false end
     v:setAttackedBy(p);v:setAttackOutcome("fail");v:setTarget(nil);v:reportEvent("wasHit")
     return true
+end
+
+function G.escapeDue(state,slot,t,roll)
+    local cfg=slot and slot.breakout;if not cfg or cfg==false or cfg.chance==0 then return false end
+    if not state.escapeNext then state.escapeNext=t+(cfg.firstCheckMs or cfg.intervalMs)end
+    if t<state.escapeNext then return false end
+    state.escapeNext=t+cfg.intervalMs
+    return (roll or ZombRand)(10000)<cfg.chance*10000
 end

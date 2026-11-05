@@ -237,7 +237,7 @@ for _,case in ipairs({{id='bottle',item='ProjectYakuza.IntactBeerBottle',prefix=
  check(PY.queueFinisher(p) and PY.stateFor(p).finisherMove.nodeValue=='dd_'..case.id..'_heavy','object heavy uses its own source motion '..case.id)
  finish();PY.resetPlayer(p,'profile_test')
  check(view.actions.block.animation=='ProjectYakuza_DD_'..case.prefix..'Guard','object-specific walking guard '..case.id)
- check((view.actions.heatAction~=nil)==(case.id=='bottle'),'crate cannot borrow bottle Heat Action')
+ check((view.actions.heatAction~=nil)==(case.id=='bottle'or case.id=='crate'),'bottle and crate use separate original weapon Heat Actions')
  check(view.actions.styleEntry==original.actions.styleEntry and view.actions.quickstep==original.actions.quickstep,'shared style systems retained '..case.id)
 end
 

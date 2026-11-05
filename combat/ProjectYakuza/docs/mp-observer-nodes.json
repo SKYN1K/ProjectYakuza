@@ -425,6 +425,56 @@
     "group": "actions"
   },
   {
+    "id": "ProjectYakuza_DD_CrateHeat",
+    "animation": "ProjectYakuza_DD_CrateHeat",
+    "loop": false,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "dragon_of_dojima"
+      },
+      {
+        "name": "ProjectYakuzaWeaponProfile",
+        "value": "crate"
+      },
+      {
+        "name": "PerformingAction",
+        "value": "ProjectYakuza_DD_CrateHeat"
+      }
+    ],
+    "priority": 180,
+    "group": "actions"
+  },
+  {
+    "id": "ProjectYakuza_DD_CrateHeatFail",
+    "animation": "ProjectYakuza_DD_CrateHeatFail",
+    "loop": false,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "dragon_of_dojima"
+      },
+      {
+        "name": "ProjectYakuzaWeaponProfile",
+        "value": "crate"
+      },
+      {
+        "name": "PerformingAction",
+        "value": "ProjectYakuza_DD_CrateHeatFail"
+      }
+    ],
+    "priority": 180,
+    "group": "actions"
+  },
+  {
     "id": "ProjectYakuza_DD_GrabEnter",
     "animation": "ProjectYakuza_DD_GrabEnter",
     "loop": false,
@@ -436,6 +486,23 @@
       {
         "name": "ProjectYakuzaDefensePhase",
         "value": "enter"
+      }
+    ],
+    "priority": 180,
+    "group": "actions"
+  },
+  {
+    "id": "ProjectYakuza_DD_GrabEscape",
+    "animation": "ProjectYakuza_DD_GrabEscape",
+    "loop": false,
+    "conditions": [
+      {
+        "name": "PerformingAction",
+        "value": "ProjectYakuza_DD_Grab"
+      },
+      {
+        "name": "ProjectYakuzaDefensePhase",
+        "value": "escape"
       }
     ],
     "priority": 180,

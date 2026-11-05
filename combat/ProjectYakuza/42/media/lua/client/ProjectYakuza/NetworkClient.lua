@@ -355,13 +355,26 @@ function N.command(module,command,a)
     if not z and recent and now()-recent.time<1500 and P.near(p,recent.z,3) then z=recent.z end
     if not z then N.defer(command,a);return end
     if command=="impact" or command=="damage" or command=="juggle"or command=="throwCollision" then N.deferred[command..":"..a.player..":"..tostring(a.event)]=nil end
-    if command=="grabStart"or command=="grabPose"or command=="grabEnd"then
+    if command=="grabStart"or command=="grabPose"or command=="grabEscape"or command=="grabEnd"then
         if not P.integer(a.grabId,1,1000000000)then return end
         local epoch=N.grabEpochs[a.player]
         if not epoch or epoch.session~=a.session then epoch={session=a.session,highest=0,ended=0};N.grabEpochs[a.player]=epoch end
         if a.grabId<epoch.highest or command~="grabEnd"and a.grabId<=epoch.ended then return end
         epoch.highest=math.max(epoch.highest,a.grabId)
         if command=="grabEnd"then epoch.ended=math.max(epoch.ended,a.grabId)end
+    end
+    if command=="grabEscape"and z:GetVariable("ProjectYakuzaHeatRushVictim")=="true"then return end
+    if command=="grabEscape"then
+        if p:isLocalPlayer()then
+            local c=ProjectYakuza.activeActions[p];local action=c and c.kind=="grab"and c.timedAction
+            if action and action.grabId==a.grabId and c.target==z then action:escape()end
+        else
+            local state=N.remote[a.player]
+            if state and state.grab==z and state.grabRestore and state.grabRestore.grabId==a.grabId and z:GetVariable("ProjectYakuzaGrabPhase")=="escape"then return end
+            if state then state.grab=z;if not state.grabRestore or state.grabRestore.grabId~=a.grabId then state.grabRestore=a end end
+            ProjectYakuza.GrabRules.captureLock(z);z:setVariable("ProjectYakuzaGrabbed",true);z:setVariable("ProjectYakuzaGrabPhase","escape");z:setHitReaction("ProjectYakuzaGrabbed");z:reportEvent("wasHit");ProjectYakuza.GrabRules.keep(z)
+        end
+        return
     end
     if command=="throwCollision"then
         if not P.integer(a.event,0,1000000000)or not P.integer(a.grabId,1,1000000000)or not P.number(a.force,0,1.5)then return end
@@ -400,6 +413,10 @@ function N.command(module,command,a)
             local s=N.remote[a.player];if s then s.grab=nil end
         end
     elseif command=="grabPose" then
+        if p:isLocalPlayer()and a.phase=="escape"then
+            local c=ProjectYakuza.activeActions[p];local action=c and c.kind=="grab"and c.timedAction
+            if action and action.grabId==a.grabId and c.target==z then action:escape()end
+        end
         if not P.number(a.x,p:getX()-2,p:getX()+2) or not P.number(a.y,p:getY()-2,p:getY()+2) then return end
         if not p:isLocalPlayer() then
             local s=N.remote[a.player];if s then s.grab=z;s.grabRestore=a end

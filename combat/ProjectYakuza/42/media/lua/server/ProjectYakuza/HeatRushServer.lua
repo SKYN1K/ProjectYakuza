@@ -80,7 +80,7 @@ function H.command(p,command,a,s)
             local lease=s.grab
             local cost=move and (move.heatStocks or 0)*PY.HeatRules.stockSize(style)or 0
             local available=move and move.useExtremeFuel and s.packet.extreme and s.packet.fuel or s.packet.heat
-            ready=lease and lease.z==z and lease.weapon==p:getPrimaryHandItem()and move and move.enabled==true and move.grabHeat==true and s.packet.weaponProfile==""and s.packet.rightAim==true and available>=cost
+            ready=lease and not lease.breaking and lease.z==z and lease.weapon==p:getPrimaryHandItem()and move and move.enabled==true and move.grabHeat==true and s.packet.weaponProfile==""and s.packet.rightAim==true and available>=cost
             wallPose=ready and PY.GrabRules.wall(p,z,move)
             ready=ready and wallPose
         elseif groundHeat then
@@ -134,7 +134,17 @@ function H.command(p,command,a,s)
     H.results(job,realAge)
     if job.failed then return end
     if command=="heatRushPress"then
-        if job.definition and P.integer(a.index,1,#job.definition.prompts)and not job.presses[a.index]and PY.QTE.window(job.definition,a.index,realAge*1000,100,120)then job.presses[a.index]=true end;return
+        if job.definition and P.integer(a.index,1,#job.definition.prompts)and not job.presses[a.index]and PY.QTE.window(job.definition,a.index,realAge*1000,100,120)then
+            local prompt=job.definition.prompts[a.index]
+            if prompt.presses then
+                job.tapCounts=job.tapCounts or {};job.tapTimes=job.tapTimes or {}
+                local count=job.tapCounts[a.index]or 0;local previous=job.tapTimes[a.index]
+                if P.integer(a.tap,1,prompt.presses)and a.tap==count+1 and P.number(a.tapAt,0,120000)and math.abs(a.tapAt-realAge*1000)<=300 and PY.QTE.window(job.definition,a.index,a.tapAt)and(not previous or a.tapAt-previous>=(prompt.minPressIntervalMs or 120))then
+                    job.tapCounts[a.index]=a.tap;job.tapTimes[a.index]=a.tapAt
+                    if a.tap==prompt.presses then job.presses[a.index]=true end
+                end
+            else job.presses[a.index]=true end
+        end;return
     end
     if not P.integer(a.index,1,#job.contacts)then return end
     local entry=job.contacts[a.index];local contact=entry.atMs/1000

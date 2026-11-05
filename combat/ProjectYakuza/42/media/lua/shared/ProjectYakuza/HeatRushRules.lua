@@ -186,7 +186,7 @@ function R.amount(action,index,held,success)
     local prompt=R.contacts(action)[index];if not prompt then return end
     local multiplier=prompt.damageMultiplier or 1
     if prompt.sumQTE then
-        multiplier=0
+        multiplier=prompt.baseDamageMultiplier or 0
         for i,v in ipairs(action.qte.prompts)do if success and (action.qteStages and success.qte and success.qte[i]or not action.qteStages and success[R.promptContact(action,i)])then multiplier=multiplier+(v.damageMultiplier or 1)end end
     end
     if action.weaponHeat then

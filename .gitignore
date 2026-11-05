@@ -220,3 +220,11 @@
 
 !/tools/combat-tests/build_rush_twohit_assets.py
 !/tools/combat-tests/validate_rush_twohit_assets.py
+
+!/tools/combat-tests/build_grab_escape_assets.py
+!/tools/combat-tests/extract_crate_heat_assets.py
+!/tools/combat-tests/retarget_crate_heat.py
+!/tools/combat-tests/build_crate_heat_assets.py
+!/tools/combat-tests/validate_grab_crate_assets.py
+
+!/tools/combat-tests/validate_event_bursts.py

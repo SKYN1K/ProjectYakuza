@@ -22,23 +22,26 @@ A.extremeLayout={
 }
 
 A.tauntLayout={
-    {kind="spiral",source="media/textures/ProjectYakuza/StyleFX/TauntSpiral.png",frames=1,x=0,height=42,scale=.52,frameHeight=128,drift=0,lift=8,alpha=.30},
-    {kind="streak",source="media/textures/ProjectYakuza/StyleFX/TauntStreak.png",frames=1,x=-8,height=30,scale=.48,frameHeight=64,drift=-5,lift=24,alpha=.36},
-    {kind="streak",source="media/textures/ProjectYakuza/StyleFX/TauntStreak.png",frames=1,x=8,height=34,scale=.44,frameHeight=64,drift=5,lift=20,alpha=.32},
-    {kind="streak",source="media/textures/ProjectYakuza/StyleFX/TauntStreak.png",frames=1,x=-3,height=48,scale=.34,frameHeight=64,drift=-7,lift=14,alpha=.28},
-    {kind="streak",source="media/textures/ProjectYakuza/StyleFX/TauntStreak.png",frames=1,x=3,height=50,scale=.34,frameHeight=64,drift=7,lift=16,alpha=.28},
+    {kind="flame",x=-6,height=31,scale=1.25,frameHeight=32,drift=-12,lift=18,alpha=.46,speed=.95},
+    {kind="flame",x=6,height=38,scale=1.30,frameHeight=32,drift=12,lift=20,alpha=.42,speed=.85},
+    {kind="flame",x=0,height=48,scale=1.05,frameHeight=32,drift=2,lift=16,alpha=.36,speed=1.05},
+    {kind="smoke",x=-9,height=16,scale=.64,frameHeight=64,drift=-16,lift=18,alpha=.25,speed=.70},
+    {kind="smoke",x=9,height=20,scale=.62,frameHeight=64,drift=16,lift=20,alpha=.23,speed=.65},
+    {kind="smoke",x=0,height=37,scale=.58,frameHeight=64,drift=-3,lift=23,alpha=.20,speed=.75},
 }
 function A.makeTaunt()
     local f=A.makeBurst(A.tauntLayout,A.flashMs)
-    if not A.tauntColor then A.tauntColor=ColorInfo.new(.4,.72,1,1)end
+    if not A.tauntColor then A.tauntColor=ColorInfo.new(.28,.62,1,1)end
     f.color=A.tauntColor;return f
 end
 function A.drawTaunt(p,f,s)A.drawFlash(p,f)end
 A.activationLayout={
-    {kind="smoke",x=-11,height=3,scale=.62,frameHeight=64,drift=-9,lift=11,alpha=.38},
-    {kind="smoke",x=-4,height=7,scale=.66,frameHeight=64,drift=-4,lift=15,alpha=.34},
-    {kind="smoke",x=5,height=6,scale=.66,frameHeight=64,drift=5,lift=14,alpha=.34},
-    {kind="smoke",x=12,height=2,scale=.60,frameHeight=64,drift=9,lift=10,alpha=.38},
+    {kind="flame",x=-8,height=26,scale=1.40,frameHeight=32,drift=-14,lift=25,alpha=.48,speed=.95},
+    {kind="flame",x=8,height=36,scale=1.35,frameHeight=32,drift=14,lift=24,alpha=.44,speed=.85},
+    {kind="flame",x=0,height=49,scale=1.10,frameHeight=32,drift=2,lift=19,alpha=.38,speed=1.05},
+    {kind="smoke",x=-10,height=5,scale=.78,frameHeight=64,drift=-19,lift=15,alpha=.32,speed=.70},
+    {kind="smoke",x=10,height=5,scale=.78,frameHeight=64,drift=19,lift=17,alpha=.30,speed=.65},
+    {kind="smoke",x=0,height=17,scale=.72,frameHeight=64,drift=-2,lift=25,alpha=.24,speed=.75},
 }
 function A.releaseBurst(f)
     if f then for _,e in ipairs(f.emitters or {}) do e.instance:Dispose();IsoSpriteInstance.add(e.instance) end end
@@ -57,7 +60,7 @@ function A.makeBurst(layout,duration)
             sprite:setAnimate(not point.source);A.burstSprites[key]=sprite
         end
         local scale=tile*point.scale
-        local instance=ProjectYakuza.WorldEffects.detached(sprite,scale,(point.frames or 64)/((duration/1000)*60))
+        local instance=ProjectYakuza.WorldEffects.detached(sprite,scale,point.speed or (point.frames or 64)/((duration/1000)*60))
         instance:SetAlpha(0);instance:SetTargetAlpha(0)
         f.emitters[#f.emitters+1]={instance=instance,point=point,sprite=sprite}
     end
@@ -75,12 +78,15 @@ function A.flash(player)
     A.flashes[player]=f;A.update(player)
     if A.flashes[player]~=f then return end
     A.flashes[player]=A.makeTaunt()
+    if A.states[player].extreme then A.flashes[player].color=A.extremeColor end
 end
 A.entryLayout={
-    {kind="wispA",source="media/textures/ProjectYakuza/StyleFX/EntryWispA.png",frames=1,x=-9,height=38,scale=.53,frameHeight=128,drift=-6,lift=16,alpha=.42},
-    {kind="wispB",source="media/textures/ProjectYakuza/StyleFX/EntryWispB.png",frames=1,x=9,height=40,scale=.51,frameHeight=128,drift=6,lift=14,alpha=.40},
-    {kind="smoke",x=-7,height=3,scale=.44,frameHeight=64,drift=-10,lift=13,alpha=.24},
-    {kind="smoke",x=7,height=3,scale=.44,frameHeight=64,drift=10,lift=13,alpha=.24},
+    {kind="flame",x=-7,height=30,scale=1.20,frameHeight=32,drift=-13,lift=20,alpha=.44,speed=.95},
+    {kind="flame",x=7,height=39,scale=1.25,frameHeight=32,drift=13,lift=21,alpha=.40,speed=.85},
+    {kind="flame",x=0,height=49,scale=1.00,frameHeight=32,drift=1,lift=15,alpha=.34,speed=1.05},
+    {kind="smoke",x=-9,height=5,scale=.68,frameHeight=64,drift=-17,lift=15,alpha=.28,speed=.70},
+    {kind="smoke",x=9,height=6,scale=.68,frameHeight=64,drift=17,lift=17,alpha=.26,speed=.65},
+    {kind="smoke",x=0,height=26,scale=.58,frameHeight=64,drift=-2,lift=22,alpha=.20,speed=.75},
 }
 function A.entry(player)
     A.releaseFlash(player)
@@ -88,7 +94,7 @@ function A.entry(player)
     A.update(player)
     local state=A.states[player];if not state or not state.fadeElapsed then return end
     if not A.entryColor then A.entryColor=ColorInfo.new(.28,.62,1,1)end
-    A.releaseBurst(state.entryBurst);state.entryBurst=A.makeBurst(A.entryLayout,380);state.entryBurst.color=A.entryColor
+    A.releaseBurst(state.entryBurst);state.entryBurst=A.makeBurst(A.entryLayout,380);state.entryBurst.color=state.extreme and A.extremeColor or A.entryColor
 end
 function A.drawFlash(p,f)
     local t=math.max(0,math.min(1,1-f.remaining/f.duration));local tile=Core.getTileScale()

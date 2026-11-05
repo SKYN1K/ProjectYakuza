@@ -72,6 +72,7 @@ function U:render()
     self:drawTimingRing(x,y,60,.18*appear,.15,.35,1,0)
     self:drawRadialTimer(x,y,60,remaining,appear,.15+.4*flash,.65+.3*flash,1)
     PY.InputPrompts.draw(self,prompt.binding,x,y,64,alpha*appear)
+    if prompt.presses then self:drawTextCentre(tostring(state.pressCounts[index]or 0).." / "..tostring(prompt.presses),x,y+48,1,1,1,alpha*appear,UIFont.Medium)end
 
 end
 function U.create()

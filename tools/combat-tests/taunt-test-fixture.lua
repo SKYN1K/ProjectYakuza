@@ -176,13 +176,18 @@ clock=clock+130;A.render()
 check(s.opacity>0 and s.profile=='normal' and not s.extreme,'brief flash keeps the normal aura profile')
 check(not additive,'taunt has no additive brightness pulse')
 check(s.emitters[1].instance.frames>0,'taunt leaves the existing earned heat aura moving beneath its distinct burst')
-check(#A.flashes[p].emitters==5,'completion uses a distinct spiral and four original streak particles')
+check(#A.flashes[p].emitters==6,'completion uses three original animated fire clouds and three smoke clouds')
 for i,e in ipairs(A.flashes[p].emitters)do
- check(e.sprite.path:find('/StyleFX/',1,true)and e.instance.alpha<.5,'taunt uses distinct original Kiwami textures with restrained opacity')
- check(e.instance.scale>0 and e.instance.scale<2,'world particle sizes remain bounded')
+ check(e.sprite.path=='media/textures/ProjectYakuza/ExtremeHeat'and e.sprite.frameCount==64 and e.instance.alpha<.5,'taunt uses original alpha-textured animation instead of opaque black-backed streaks')
+ check(e.instance.scale>0 and e.instance.scale<4,'world particle sizes remain bounded')
 end
-check(near(A.tauntColor.r,.4)and near(A.tauntColor.g,.72),'taunt stays soft blue instead of pulsing white')
+check(near(A.tauntColor.r,.28)and near(A.tauntColor.g,.62),'taunt stays soft blue instead of pulsing white')
 check(A.flashes[p].duration==450,'taunt burst finishes in 0.45 unpaused seconds')
+for _,layout in ipairs({A.tauntLayout,A.entryLayout,A.activationLayout})do
+ check(#layout==6,'each event burst has a fixed six-particle budget')
+ for _,point in ipairs(layout)do check(not point.source and (point.kind=='flame'or point.kind=='smoke')and point.scale*point.frameHeight>=32 and point.alpha<=.48,'event bursts use broad transparent source clouds at restrained alpha')end
+end
+
 local count,alloc=loads,attached
 for i=1,1000 do A.update(p);A.render()end
 check(loads==count and attached==alloc,'stable aura never reallocates per frame')
@@ -240,12 +245,12 @@ clock=clock+751;A.render();check(not s.emitters[1].instance,'remote completion g
 p.localPlayer=true
 A.flash(p);local echo=A.flashes[p]
 clock=clock+50;A.render();check(echo.emitters[1].instance.alpha>0 and echo.emitters[1].instance.alpha<.30,'taunt spiral fades in softly')
-clock=clock+175;A.render();check(near(echo.emitters[1].instance.alpha,.30),'taunt spiral peaks gently halfway through its brief lifetime')
+clock=clock+175;A.render();check(near(echo.emitters[1].instance.alpha,.46),'taunt fire cloud peaks below half opacity halfway through its brief lifetime')
 clock=clock+226;A.render();check(not A.flashes[p],'taunt burst fades out and cleans up')
 A.entry(p);local entry=A.states[p].entryBurst
-check(entry and #entry.emitters==4 and entry.duration==380,'style switching uses two original curling wisps and two fast smoke puffs')
-check(entry.emitters[1].sprite.path:find('EntryWisp',1,true)and entry.emitters[3].sprite.kind=='smoke','entry effects are distinct from taunt spiral and streaks')
-clock=clock+190;A.render();check(entry.emitters[1].instance.alpha>0 and entry.emitters[3].instance.alpha<.3,'style effects have a restrained animated envelope')
+check(entry and #entry.emitters==6 and entry.duration==380,'style switching uses three fire clouds and three fast smoke puffs')
+check(entry.emitters[1].sprite.kind=='flame'and entry.emitters[4].sprite.kind=='smoke','entry uses wider animated fire and smoke instead of thin single-frame wisps')
+clock=clock+190;A.render();check(entry.emitters[1].instance.alpha>0 and entry.emitters[4].instance.alpha<.3,'style effects have a restrained animated envelope')
 clock=clock+191;A.render();check(not A.states[p].entryBurst and entry.emitters[1].instance.disposed,'entry particles expire once and return their instances')
 
 ProjectYakuza.HeatActivation={active={}}
@@ -255,18 +260,18 @@ ProjectYakuza.emit('heatActivationStarted',p)
 check(p.outline==true,'outline starts immediately with native activation before mode fuel starts')
 check(A.states[p].activating and A.states[p].extreme and #A.states[p].emitters==6,'native activation immediately selects fire/smoke even before Extreme Heat fuel starts')
 clock=clock+350;drawLog={};A.render()
-check(#drawLog==10 and A.states[p].opacity==1,'activation draws body aura plus four expanding foot-cloud particles')
+check(#drawLog==12 and A.states[p].opacity==1,'activation draws body aura plus three fire and three smoke clouds')
 local cloud=A.states[p].activationBurst
 local cloudCentres=0
 for _,draw in ipairs(drawLog)do
  for _,e in ipairs(cloud.emitters)do if draw.instance==e.instance then
-  local centreY=-draw.oy-64*e.instance.scale/2
-  check(centreY<0 and centreY>-55,'activation cloud centres stay within lower legs above ground')
-  check(draw.alpha<=.38 and not draw.additive,'activation smoke stays translucent without additive glare')
+  local centreY=-draw.oy-e.point.frameHeight*e.instance.scale/2
+  check(centreY<0 and centreY>-135,'activation fire and smoke centres cover legs through upper torso without ground clipping')
+  check(draw.alpha<=.48 and not draw.additive,'activation smoke stays translucent without additive glare')
   cloudCentres=cloudCentres+1
  end end
 end
-check(cloudCentres==4,'four independent smoke centres render from the feet')
+check(cloudCentres==6,'three fire clouds and three smoke clouds render independently')
 local savedGetters={};local bridgeReads=0;local savedLog=drawLog;drawLog={}
 for _,name in ipairs({'getX','getY','getZ','getOffsetX','getOffsetY'})do
  local original=p[name];savedGetters[name]=original
@@ -281,7 +286,7 @@ check(matchingSmoke and A.smokeColor==A.extremeColor,'actual activation and sust
 local oldCloudLog=drawLog;additive=true;drawLog={};A.render()
 local onlyAlpha=true;for _,draw in ipairs(drawLog)do if draw.additive then onlyAlpha=false end end
 check(additive and onlyAlpha,'aura and transient particles force alpha and restore foreign additive mode');additive=false;drawLog=oldCloudLog
-check(cloud and #cloud.emitters==4 and cloud.remaining==650,'activation smoke is a four-particle one-second cloud')
+check(cloud and #cloud.emitters==6 and cloud.remaining==650,'activation uses six bounded particles for one second')
 local beforeCloudFrames=cloud.emitters[1].instance.frames;paused=true;clock=clock+3000;A.render();paused=false
 check(cloud.remaining==650 and cloud.emitters[1].instance.frames==beforeCloudFrames,'pause freezes activation smoke age and animation')
 local savedHook=A.syncRenderHook;local scans=0

@@ -1,7 +1,9 @@
 require "ProjectYakuza/Registry"
 require "ProjectYakuza/GrabMoves"
 require "ProjectYakuza/RushMove"
+require "ProjectYakuza/CrateHeatMove"
 require "ProjectYakuza/RushMove"
+require "ProjectYakuza/CrateHeatMove"
 ProjectYakuza.registerStyle({
     id = "dragon_of_dojima",
     name = "Dragon of Dojima",
@@ -117,7 +119,7 @@ ProjectYakuza.registerStyle({
         } },
         grabHeat=ProjectYakuza.WallHeatMove,
         groundHeat=ProjectYakuza.GroundHeatMove,
-        grab = {enabled=true,throwContactMs=70/30*1000,throwDuration=77/30,throwCrowd={radius=1.1,forward=.45,maxTargets=4,force=.65},distance=.5,lateral=.019355,throwOffset={forward=.253831,right=.019526},strikes=ProjectYakuza.GrabMoves,requiresTarget=true,animation="ProjectYakuza_DD_Grab",targetAnimation="ProjectYakuza_DD_GrabVictimEnter"},
+        grab = {enabled=true,releaseOnAimLoss=false,breakout={chance=.05,intervalMs=1000,firstCheckMs=1000,animation="ProjectYakuza_DD_GrabEscape",targetAnimation="ProjectYakuza_DD_GrabEscapeVictim",duration=70/30},throwContactMs=70/30*1000,throwDuration=77/30,throwCrowd={radius=1.1,forward=.45,maxTargets=4,force=.65},distance=.5,lateral=.019355,throwOffset={forward=.253831,right=.019526},strikes=ProjectYakuza.GrabMoves,requiresTarget=true,animation="ProjectYakuza_DD_Grab",targetAnimation="ProjectYakuza_DD_GrabVictimEnter"},
         parry = {enabled=true,animation="ProjectYakuza_DD_TigerDrop",nodeValue="dd_tiger_drop",duration=1.1,speed=1,requiresTarget=true,targetAnimation="Zombie_ShotBelly",cooldownMs=60000,windowMs=300},
         block = {enabled=true,animation="ProjectYakuza_DD_Guard",staminaPerHit=.08},
         heatActivation = {enabled=true,variants={
@@ -234,6 +236,7 @@ if ProjectYakuza.Weapons then
         lightAttacks={{animation="ProjectYakuza_DD_CrateLight01",nodeValue="dd_crate_light_01",duration=73/30/1.4,speed=1.4,impact=20/73,hitResponse=false,damageMultiplier=1,chainAt=47/73,quickstepCancelAt=21/73},{animation="ProjectYakuza_DD_CrateLight02",nodeValue="dd_crate_light_02",duration=60/30/1.4,speed=1.4,impact=15/60,hitResponse=false,damageMultiplier=1,chainAt=39/60,quickstepCancelAt=16/60},{animation="ProjectYakuza_DD_CrateLight03",nodeValue="dd_crate_light_03",duration=74/30/1.4,speed=1.4,impact=20/74,hitResponse=false,damageMultiplier=1,chainAt=48/74,quickstepCancelAt=21/74}},
         groundAttacks={{animation="ProjectYakuza_DD_CrateGround",nodeValue="dd_crate_ground",duration=65/30/1.4,speed=1.4,impact=29/65,hitResponse=false,damageMultiplier=1,groundAttack=true}},
         actions={
+            heatAction=ProjectYakuza.CrateHeatMove,
             finisher={enabled=true,variants={default={animation="ProjectYakuza_DD_CrateHeavy",nodeValue="dd_crate_heavy",duration=66/30/1.4,speed=1.4,impact=22/66,hitResponse=false,damageMultiplier=1.25}}},
             quickstep=base.actions.quickstep,
             block={enabled=true,animation="ProjectYakuza_DD_CrateGuard",staminaPerHit=.08},

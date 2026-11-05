@@ -1,5 +1,5 @@
 name=Project Yakuza
 id=ProjectYakuza
 author=Local mod project
-description=Project Yakuza combat framework for Build 42. Includes Dragon of Dojima, configurable combat controls, heat, effects and multiplayer support. Grabs are temporarily disabled.
-version=0.85.0
+description=Project Yakuza combat framework for Build 42. Includes Dragon of Dojima, configurable combat controls, heat, grabs, paired Heat Actions, effects and multiplayer support.
+version=0.86.0

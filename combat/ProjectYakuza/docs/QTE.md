@@ -127,3 +127,13 @@ A paired failure ending adds `paired=true`, a supplied `targetAnimation`, a regi
 `countdownMs` and optional `sourceStartMs` remain available for author-supplied pre-paced clips. They do not change a live native track's speed: B42 reads an XML speed variable when the track starts. The built-in paired handler requires `pacedAnimation=true` when using these fields and maps the supplied clip's phase back to its source clock. Authors must provide a compatible clip whose keyframe times already follow that mapping, or implement their own handler. DoD does not use this mode and retains original motion speed.
 
 `ProjectYakuza.QTEPlayback` supplies `definition(def)`, `time(def,sourceMs)`, `source(def,realMs)` and `speed(def,sourceMs)` for custom backends. Countdown bounds remain 100–2000 ms and the complete mapped action must fit within 120 seconds. Definitions without these options use their original clocks.
+
+## Finite mash prompts (0.86.0)
+
+A prompt may set `presses` to an integer 2–20 and `minPressIntervalMs` to 50–1000 (default 120). The requested presses must fit inside its effective window. Omit both for existing single-press behavior. Each press must be a fresh rising input edge; holding, wrong inputs, duplicate packets and presses after expiry do not advance the count. Failure limits, source-timed contacts and paired endings work as before. Cap the authored prompt/repeat sections to make an action finite.
+
+The session exposes `pressCounts[index]` and `lastPressAt[index]`. Each accepted mash tap emits `qteTap(context,index,prompt,count,required)` and callback kind `tap`; reaching the required count emits the existing `qteInput`/`input` once. Only the completed stage counts as passed. The built-in UI retains the original Yakuza key/mouse icon and radial timer, adding a native-text count underneath. Existing feedback cues play quietly for intermediate taps and normally on completion; no sound files are created.
+
+The server checks the registered prompt window, ordered bounded tap counts, minimum interval and a bounded client source-clock timestamp. A bare single-press message cannot pass a mash stage. The owner sends taps, not a claimed success result.
+
+A final `sumQTE` contact may supply `baseDamageMultiplier` (0–10, default 0). Its multiplier is this base plus the earned prompt multipliers. This supports a source ending that still deals base damage after an early missed mash. The original Rush keeps its zero base. The built-in beer-crate action uses three one-second stages with two Heat Action presses each, base multiplier 1.5 and .75 per completed stage. All original body poses and section speeds are preserved.

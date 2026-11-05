@@ -29,8 +29,8 @@ function D.followHook()
     if active and not D.following then Events.OnZombieUpdate.Add(D.followZombie);D.following=true
     elseif not active and D.following then Events.OnZombieUpdate.Remove(D.followZombie);D.following=false end
 end
-function D.safe(p)
-    return ProjectYakuza.isEquipped(p) and p:isAiming() and not p:isDead() and not p:isOnFloor()
+function D.safe(p,keepGrab)
+    return ProjectYakuza.isEquipped(p) and (keepGrab or p:isAiming()) and not p:isDead() and not p:isOnFloor()
         and not p:isKnockedDown() and not p:isClimbing() and not p:getVehicle()
         and not p:isDraggingCorpse() and not p:isAsleep() and (p:getHitReaction() or "")==""
 end
@@ -139,7 +139,7 @@ function A:start()
     self:phase("enter")
 end
 function A:isValid()
-    if not D.safe(self.character) then return false end
+    if not D.safe(self.character,self.context.kind=="grab"and self.context.action.releaseOnAimLoss==false) then return false end
     if self.context.kind=="grab" then
         local z=self.context.target;local style=ProjectYakuza.getPlayerStyle(self.character)
         if not style or style.id~=self.context.style.id or self.started and self.character:getPrimaryHandItem()~=self.held then return false end
@@ -210,6 +210,12 @@ function A:guard(dt)
         end
     end
 end
+function A:escape()
+    if self.cleaned or not self.started or self.phaseName=="escape"or not self.context.action.breakout then return false end
+    self.strikeMove=nil;self.escapeSeen=false;self.escapeSlot=nil;self:phase("escape")
+    ProjectYakuza.emit("grabBroken",self.character,self.context.target)
+    return true
+end
 function A:throw()
     if self.phaseName~="hold" or not self.paired then return false end
     if endurance(self.character)<.08 then self:forceStop();return false end
@@ -239,6 +245,7 @@ function A:grab(dt)
         if playerReady and victimReady then self.paired=true;self:phase("hold");ProjectYakuza.emit("grabHeld",p,z)
         elseif age>1000 then self:forceStop() end
     elseif self.phaseName=="hold" then
+        if not isClient()and ProjectYakuza.GrabRules.escapeDue(self,self.context.action,now())then self:escape();return end
         if not self:alignPair(true) then self:forceStop();return end
         local dx,dy=p:getX()-self.lastX,p:getY()-self.lastY
         self.lastX,self.lastY=p:getX(),p:getY()
@@ -249,6 +256,13 @@ function A:grab(dt)
         local direction=math.abs(forward)>=math.abs(right) and (forward>=0 and "forward" or "backward") or (right>=0 and "right" or "left")
         self:setGrabMoving(moving,direction)
 
+    elseif self.phaseName=="escape"then
+        if not self:alignPair(true)then self:forceStop();return end
+        local move=self.context.action.breakout
+        local time,weight,slot=ProjectYakuza.AttackEffects.findTrack(p,move.animation,self.escapeSlot);self.escapeSlot=slot
+        if time and weight>=.35 then self.escapeSeen=true;if time>=move.duration-.03 then self:forceComplete();return end end
+        if self.escapeSeen and var(p,"ProjectYakuzaDefenseMarker")=="escape_done"and var(z,"ProjectYakuzaGrabMarker")=="escape_done"then self:forceComplete();return end
+        if now()-self.phaseAt>(move.duration+1)*1000 then self:forceStop()end
     elseif self.strikeMove then
         if not self:alignPair(true)then self:forceStop();return end
         local phase,weight=ProjectYakuza.AttackEffects.findTrack(p,self.strikeMove.animation)
@@ -283,7 +297,7 @@ function A:update()
     local t=now();local elapsed=math.max(0,t-self.lastAt)
     local dt=math.min(.1,elapsed/1000);self.lastAt=t
     if isGamePaused() then
-        self.startedAt=self.startedAt+elapsed;self.phaseAt=self.phaseAt+elapsed;return
+        self.startedAt=self.startedAt+elapsed;self.phaseAt=self.phaseAt+elapsed;if self.escapeNext then self.escapeNext=self.escapeNext+elapsed end;return
     end
     if not self:isValid() then self:forceStop();return end
     if self.context.kind=="block" then self:guard(dt) else self:grab(dt) end
@@ -331,7 +345,7 @@ function D.update(p)
     local c=ProjectYakuza.activeActions[p]
     if c and (c.kind=="grab" or c.kind=="block") then
         local a=c.timedAction
-        if not D.safe(p) or (not a.started and now()-c.requestedAt>600) then ProjectYakuza.cancelAction(p,"invalid_defense")
+        if not D.safe(p,c.kind=="grab"and c.action.releaseOnAimLoss==false) or (not a.started and now()-c.requestedAt>600) then ProjectYakuza.cancelAction(p,"invalid_defense")
         elseif c.kind=="grab" then
             if grabPressed then a:throw()
             elseif ProjectYakuza.GrabCombat then ProjectYakuza.GrabCombat.input(p,a,lightPressed,heatPressed)end
@@ -368,8 +382,8 @@ function D.bindSafetyInput()
     D.safetyWrapped=true
     Events.OnKeyPressed.Remove(original)
     Events.OnKeyPressed.Add(function(key)
-        local p=getPlayer()
-        if ProjectYakuza.Bindings.matches("grab",key) and p and ProjectYakuza.isEquipped(p) and p:isAiming() and not p:getVehicle() then return end
+        local p=getPlayer();local c=p and ProjectYakuza.activeActions[p]
+        if ProjectYakuza.Bindings.matches("grab",key) and p and ProjectYakuza.isEquipped(p) and (p:isAiming()or c and c.kind=="grab") and not p:getVehicle() then return end
         original(key)
     end)
 end

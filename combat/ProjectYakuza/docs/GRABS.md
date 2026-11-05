@@ -1,6 +1,6 @@
 # Grabs, grab strikes and wall Heat Actions
 
-Dragon of Dojima now enables unarmed grabs. Hold RMB and press the configured Grab binding (G by default) to grab a standing zombie in front of you. Press it again to throw. Release RMB to let go without throwing. During the hold you can walk using native Zomboid leg movement; the victim follows the paired pose. Release aiming, lose the style, become injured/knocked down or run out of endurance to end the hold safely. Other zombies can still hurt you during ordinary grabs.
+Dragon of Dojima now enables unarmed grabs. Hold RMB and press the configured Grab binding (G by default) to grab a standing zombie in front of you. Press it again to throw. There is no manual let-go input; releasing RMB keeps the grab active. During the hold you can walk using native Zomboid leg movement; the victim follows the paired pose. Losing the style, taking a hit/knockdown or running out of endurance still interrupts the hold safely. Other zombies can still hurt you during ordinary grabs.
 
 LMB, or the configured Light binding, cycles four original Kiryu grab strikes. Each fresh press starts the next strike when the previous motion has returned to hold. Movement locks during the source strike, and damage occurs once at its original BEP collision frame. Own grab strikes suppress knockdown/stagger so a surviving victim stays held. Strikes and the continuous hold use endurance.
 
@@ -44,3 +44,18 @@ DoD enables `actions.grab.throwCrowd={radius=1.1,forward=.45,maxTargets=4,force=
 The scan visits at most 25 squares with the allowed radius and deduplicates moving objects. No idle or continuous collision poll is added. MP selects targets on the server, using only the registered style settings; the client sends no target list. Replicated reactions are deduplicated and use bounded deferred delivery if the target is temporarily unloaded. The throw request must match the current grab ID and its original source impact time before any primary damage or secondary reaction is accepted.
 
 Other styles opt in with their own `throwCrowd` table, or omit/set it false. Radius is 0.25–2 tiles, forward offset 0–1 tile, target cap an integer 1–8, and force 0–1.5. Optional `throwContactMs` and `throwDuration` author the server timing gate; DoD uses source frame 70 of 77 at 30 fps. All values are validated when registering the style. Existing animations, sound and effect assets are reused.
+
+
+## Committed holds (0.86.0)
+
+DoD sets `actions.grab.releaseOnAimLoss=false`. Aiming is required to initiate the grab, but releasing RMB afterward cannot release the held zombie. Walking, grab strikes and the configured Grab button remain available; a fresh Grab press throws without requiring RMB to be held again. The vanilla safety-key handler is suppressed for the active Grab binding during a grab even after aim release.
+
+The flag changes only aim-loss cancellation. Death, physical hit reactions, exhaustion, invalid victim state, equipment/style changes and world/disconnect cleanup still restore the owned locks safely. Guard and new-grab initiation still require aiming. Custom styles may omit the flag for the existing aim-loss behavior; supplied values must be boolean. Wall Heat Actions retain their RMB requirement.
+
+## Animated break-outs (0.86.0)
+
+DoD enables a 5% escape roll every 1000 ms while in the held phase, starting after the first full second. All zombies qualify; no hidden Strength field or health proxy is used. Strike, enter and throw phases do not roll. Delayed frames perform one roll, without catch-up bursts. Single-player pause shifts the timer. Multiplayer rolls only on the server.
+
+The complete original `sy0/sy1_gsp_sprt` separation pair plays for 70/30 seconds, with both actors held in position until completion. Other enemies can still interrupt the player. Grab strikes, throws and wall Heat Actions cannot override the break-out. Completion, interruption and server timeout restore native flags and acquired AI locks. Replay-safe grab IDs prevent late packets from reviving an ended hold.
+
+Configure `actions.grab.breakout` with `chance` (0–1), `intervalMs` (250–10000), optional `firstCheckMs` (0–10000), supplied `animation`, `targetAnimation`, and `duration` (positive, at most 10 seconds). Omit it or set false to disable escape. Supply matching owner/victim nodes for the `escape` phase, using the existing PerformingAction parent and DefensePhase/GrabPhase variables. Optional `escape_started` and `escape_done` markers use the existing DefenseMarker/GrabMarker channels. Do not add native collision events. `grabBroken(player,victim)` reports the transition. See `grab-escape-assets.json` for source hashes and complete frame counts.

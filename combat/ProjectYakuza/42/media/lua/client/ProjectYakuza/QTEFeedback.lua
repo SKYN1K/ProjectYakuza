@@ -1,11 +1,12 @@
 require "ProjectYakuza/Registry"
 local PY=ProjectYakuza
 local F={};PY.QTEFeedback=F
-function F.play(context,kind)
+function F.play(context,kind,scale)
     local p=type(context)=="table"and context.player
     local config=type(context)=="table"and context.action and context.action.qte and context.action.qte.feedback
-    if p and p:isLocalPlayer()and config and config[kind]and PY.Feedback then PY.Feedback.play(p,PY.Feedback.sound(p,config[kind]),config.gain or .4)end
+    if p and p:isLocalPlayer()and config and config[kind]and PY.Feedback then PY.Feedback.play(p,PY.Feedback.sound(p,config[kind]),(config.gain or .4)*(scale or 1))end
 end
+PY.on("qteTap",function(context,index,prompt,count,required)if count<required then F.play(context,"success",.35)end end)
 PY.on("qteInput",function(context)F.play(context,"success")end)
 PY.on("qteResult",function(context,index,success,prompt,state)
     if success then return end
