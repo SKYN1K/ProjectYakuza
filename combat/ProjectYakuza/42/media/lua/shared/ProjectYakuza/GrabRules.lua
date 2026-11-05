@@ -95,3 +95,36 @@ function G.land(z)
     z:setHitReaction("");z:setStaggerBack(false);z:setHitForce(0);z:setKnockedDown(true);z:setFallOnFront(false);z:setOnFloor(true)
     if ZombieOnGroundState and z.changeState then z:changeState(ZombieOnGroundState.instance())end
 end
+
+function G.crowd(p,thrown,slot,fx,fy)
+    local cfg=slot and slot.throwCrowd
+    if not cfg or cfg==false then return {}end
+    if not fx or not fy then local f=p:getForwardDirection();fx,fy=f:getX(),f:getY()end
+    local length=math.sqrt(fx*fx+fy*fy);if length<.001 then return {}end;fx,fy=fx/length,fy/length
+    local cx,cy=thrown:getX()+fx*cfg.forward,thrown:getY()+fy*cfg.forward
+    local cell=getCell();if not cell then return {}end
+    local range=math.ceil(cfg.radius);local level=math.floor(thrown:getZ());local seen={};local result={}
+    for ox=-range,range do for oy=-range,range do
+        local square=cell:getGridSquare(math.floor(cx)+ox,math.floor(cy)+oy,level);local objects=square and square:getMovingObjects()
+        if objects then for i=0,objects:size()-1 do
+            local v=objects:get(i)
+            if not seen[v]then
+                seen[v]=true
+                if v~=thrown and instanceof(v,"IsoZombie")and not v:isDead()and not v:isOnFloor()and not v:isKnockedDown()and not v:isUseless()and math.abs(v:getZ()-thrown:getZ())<.25
+                    and not G.unavailable(v)and v:GetVariable("ProjectYakuzaGrabbed")~="true"and v:GetVariable("ProjectYakuzaHeatRushVictim")~="true"then
+                    local dx,dy=v:getX()-cx,v:getY()-cy;local distance=dx*dx+dy*dy
+                    if distance<=cfg.radius*cfg.radius and (v:getX()-thrown:getX())*fx+(v:getY()-thrown:getY())*fy>=-.2
+                        and ProjectYakuza.NetworkProtocol.path(thrown,v:getX(),v:getY())then result[#result+1]={victim=v,distance=distance}end
+                end
+            end
+        end end
+    end end
+    table.sort(result,function(a,b)return a.distance<b.distance end)
+    local victims={};for i=1,math.min(#result,cfg.maxTargets)do victims[i]=result[i].victim end
+    return victims
+end
+function G.collide(p,v,cfg)
+    if not cfg or not ProjectYakuza.HitResponses.apply(p,v,{kind="knockdown",force=cfg.force})then return false end
+    v:setAttackedBy(p);v:setAttackOutcome("fail");v:setTarget(nil);v:reportEvent("wasHit")
+    return true
+end

@@ -143,11 +143,17 @@ clock=clock+1100;snapshot(p,{phase='enter',clip='ProjectYakuza_DD_GrabEnter'})
 command('grabRequest',{zombie=z1.id});check(s.grab and z1.useless and z1.ignore,'server grants and freezes one grab lease')
 snapshot(remote);command('grabRequest',{zombie=z1.id},remote)
 check(server.players[2].grab==nil,'second player cannot grab leased zombie')
+for _,v in ipairs({z2,z3,z4})do v.health=1;v.hits=0;v.state='idle';v.reaction='';v.useless=false;v.knock=false;v.nativeFloor=false end
 snapshot(p,{phase='hold',clip='ProjectYakuza_DD_GrabHold'});server.tick()
 check(math.abs(z1.x-.5)<.000001 and z1.nextX==z1.x and math.abs(z1.y+.019355)<.000001,'server aligns paired roots with native collar spacing')
-snapshot(p,{phase='throw',clip='ProjectYakuza_DD_Throw'});command('throw',{zombie=z1.id})
+snapshot(p,{phase='throw',clip='ProjectYakuza_DD_Throw'});local throwId=s.grab.id
+command('throw',{zombie=z1.id,grabId=throwId});check(s.grab and z1.hits==0,'server rejects throw damage before the original impact frame')
+clock=clock+2334;snapshot(p,{phase='throw',clip='ProjectYakuza_DD_Throw'})
+command('throw',{zombie=z1.id,grabId=throwId+1});check(s.grab and z1.hits==0,'stale or foreign grab lease cannot throw the held victim')
+command('throw',{zombie=z1.id,grabId=throwId})
 check(z1.hits==1 and z1.nativeFloor and not z1.stagger and z1.force==0 and s.grab==nil and not z1.useless and not z1.ignore,'throw lands prone without a fresh stumble and releases AI lease')
-command('throw',{zombie=z1.id});check(z1.hits==1,'repeated throw does not damage twice')
+command('throw',{zombie=z1.id,grabId=throwId});check(z1.hits==1,'repeated throw does not damage twice')
+check(z2.knock and z3.knock and z4.knock and z2.hits==0 and z3.hits==0 and z4.hits==0,'server chooses nearby collateral knockdowns without applying extra damage')
 z1.health=1;clock=clock+1100;snapshot(p);command('grabRequest',{zombie=z1.id})
 check(s.grab~=nil,'can acquire another grab after release')
 clock=clock+9000;server.tick();check(s.grab==nil and not z1.useless,'lease timeout restores zombie AI')
@@ -1079,5 +1085,14 @@ do
  client.applyState(remote,packet,state);client.applyState(remote,packet,state);check(entries==1,'remote entry effects start once rather than restarting on every network snapshot')
  packet.action=10000;client.applyState(remote,packet,state);check(entries==2,'a distinct style-entry action can replay its brief effects')
  ProjectYakuza.HeatAura.entry=previous
+end
+do
+ local bump=zombie(30001,1);bump.y=0;local reports=0
+ function bump:reportEvent(value)reports=reports+1;self.event=value end
+ local packet={player=p.id,session=client.sessions[p.id]or 1,event=950001,grabId=9000,zombie=bump.id,force=.65}
+ client.command(P.module,'throwCollision',packet);client.command(P.module,'throwCollision',packet)
+ check(bump.knock and bump.force==.65 and reports==1 and bump.hits==0,'replicated crowd knockdown has no damage and is deduplicated')
+ packet.event=packet.event+1;packet.force=2;client.command(P.module,'throwCollision',packet)
+ check(reports==1,'invalid crowd force cannot enter native reaction playback')
 end
 return 'PASS '..count..' MP authority, duplicate, range, lease, cooldown, observer and throttle checks'

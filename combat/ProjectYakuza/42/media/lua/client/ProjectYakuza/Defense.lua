@@ -266,10 +266,11 @@ function A:grab(dt)
             self.impacted=true
 
             ProjectYakuza.GrabRules.releaseLock(z,self.victimState);z:setIgnoreMovement(self.victimState.ignore);z:setUseless(self.victimState.useless)
-            if isClient() and ProjectYakuza.Network then ProjectYakuza.Network.send(p,"throw",{zombie=z:getOnlineID()})
+            if isClient() and ProjectYakuza.Network then ProjectYakuza.Network.send(p,"throw",{zombie=z:getOnlineID(),grabId=self.grabId})
             else
                 z:Hit(p:getPrimaryHandItem(),p,.7,false,1)
                 ProjectYakuza.GrabRules.land(z)
+                for _,victim in ipairs(ProjectYakuza.GrabRules.crowd(p,z,self.context.action,self.context.fx,self.context.fy))do ProjectYakuza.GrabRules.collide(p,victim,self.context.action.throwCrowd)end
                 ProjectYakuza.emit("throwHit",p,z)
             end
             self:forceComplete();return
@@ -318,7 +319,7 @@ local handler={
 }
 ProjectYakuza.registerActionHandler("block",handler)
 ProjectYakuza.registerActionHandler("grab",handler)
-function D.update(p,throwPressed)
+function D.update(p)
     local input=D.input[p]
     if not input then input={};D.input[p]=input end
     local x,g=ProjectYakuza.Bindings.down("block"),ProjectYakuza.Bindings.down("grab")
@@ -332,9 +333,8 @@ function D.update(p,throwPressed)
         local a=c.timedAction
         if not D.safe(p) or (not a.started and now()-c.requestedAt>600) then ProjectYakuza.cancelAction(p,"invalid_defense")
         elseif c.kind=="grab" then
-            if grabPressed then ProjectYakuza.cancelAction(p,"released")
-            elseif ProjectYakuza.GrabCombat and ProjectYakuza.GrabCombat.input(p,a,lightPressed,heatPressed)then
-            elseif throwPressed then a:throw() end
+            if grabPressed then a:throw()
+            elseif ProjectYakuza.GrabCombat then ProjectYakuza.GrabCombat.input(p,a,lightPressed,heatPressed)end
             if not a.cleaned and a.started and a.phaseName=="hold" and not isGamePaused() then D.followZombie(c.target) end
         end
         return true

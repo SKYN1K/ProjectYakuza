@@ -364,7 +364,6 @@ local function onUpdate(player)
     local s = ProjectYakuza.stateFor(player)
     local heatActionPressed=B.pressed(player,"heatAction")
     local counterPressed=B.pressed(player,"counter")
-    local throwPressed=B.pressed(player,"throw")
     local finisherDown = B.down("finisher")
     local finisherPressed = finisherDown and not ProjectYakuza.finisherDown[player:getPlayerNum()]
     ProjectYakuza.finisherDown[player:getPlayerNum()] = finisherDown
@@ -405,7 +404,7 @@ local function onUpdate(player)
         ProjectYakuza.ChargedHeavy.watch(player,charging);s.lastDown=B.down("light");return
     end
     if ProjectYakuza.GrabCombat and ProjectYakuza.GrabCombat.updatePending(player)then s.lastDown=B.down("light");return end
-    if ProjectYakuza.Defense and ProjectYakuza.Defense.update(player,throwPressed) then s.lastDown=B.down("light");return end
+    if ProjectYakuza.Defense and ProjectYakuza.Defense.update(player) then s.lastDown=B.down("light");return end
     local context=ProjectYakuza.activeActions[player]
     if context and (context.kind=="heatAction"or context.kind=="grabHeat"or context.kind=="groundHeat")and context.timedAction then if not context.timedAction.started and now()-context.requestedAt>650 then ProjectYakuza.cancelAction(player,"heat_rush_start_timeout")end;s.lastDown=B.down("light");return end
     if context and (context.kind=="parry" or context.kind=="heatActivation" or context.kind=="taunt") then

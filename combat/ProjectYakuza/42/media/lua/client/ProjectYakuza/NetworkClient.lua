@@ -266,7 +266,7 @@ function N.applyState(p,packet,s)
     s.applied=packet.seq;s.actor=p
 end
 function N.defer(command,a)
-    if command~="impact" and command~="damage" and command~="juggle"and command~="taunt"then return end
+    if command~="impact" and command~="damage" and command~="juggle"and command~="taunt"and command~="throwCollision"then return end
     if not P.integer(a.event,0,1000000000)then return end
     if command=="taunt"then if type(a.zombies)~="table"or #a.zombies<1 or #a.zombies>8 then return end
     elseif not P.integer(a.zombie,-32768,32767)then return end
@@ -354,7 +354,7 @@ function N.command(module,command,a)
     local recent=N.victims[a.zombie]
     if not z and recent and now()-recent.time<1500 and P.near(p,recent.z,3) then z=recent.z end
     if not z then N.defer(command,a);return end
-    if command=="impact" or command=="damage" or command=="juggle" then N.deferred[command..":"..a.player..":"..tostring(a.event)]=nil end
+    if command=="impact" or command=="damage" or command=="juggle"or command=="throwCollision" then N.deferred[command..":"..a.player..":"..tostring(a.event)]=nil end
     if command=="grabStart"or command=="grabPose"or command=="grabEnd"then
         if not P.integer(a.grabId,1,1000000000)then return end
         local epoch=N.grabEpochs[a.player]
@@ -362,6 +362,11 @@ function N.command(module,command,a)
         if a.grabId<epoch.highest or command~="grabEnd"and a.grabId<=epoch.ended then return end
         epoch.highest=math.max(epoch.highest,a.grabId)
         if command=="grabEnd"then epoch.ended=math.max(epoch.ended,a.grabId)end
+    end
+    if command=="throwCollision"then
+        if not P.integer(a.event,0,1000000000)or not P.integer(a.grabId,1,1000000000)or not P.number(a.force,0,1.5)then return end
+        local key="throwCollision:"..a.player..":"..a.event;if N.seen[key]then return end;N.seen[key]=now()
+        ProjectYakuza.GrabRules.collide(p,z,{force=a.force});return
     end
     if command=="grabStrikeContact"then
         if not P.integer(a.serial,1,1000000)or not P.number(a.amount,0,10)then return end

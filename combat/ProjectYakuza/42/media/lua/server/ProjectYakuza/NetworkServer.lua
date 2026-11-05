@@ -106,6 +106,7 @@ function S.snapshot(p,a,s)
             s.extremeFinisher={style=style.id,branch=move.afterLight,expires=now()+(move.duration or 2)*1000+style.comboResetMs+500}
         else s.extremeFinisher=nil end
     elseif not equipped then s.extremeFinisher=nil end
+    if s.grab and packet.phase=="throw"and not s.grab.throwStarted then s.grab.throwStarted=now()end
     s.seq=a.seq;s.packet=packet;s.seen=now()
     if ProjectYakuza.HeatRushServer then ProjectYakuza.HeatRushServer.input(s,packet,style,move)end
     p:getModData().ProjectYakuzaStyle=a.style;p:getModData().ProjectYakuzaHeat=packet.heat
@@ -282,8 +283,15 @@ function S.command(module,command,p,a)
     if command=="throw" then
         if ProjectYakuza.FEATURES.grab==false then S.release(p);return end
         local lease=s.grab
-        if not lease or lease.z:getOnlineID()~=a.zombie or lease.thrown or not S.validVictim(p,a.zombie,1.5) or s.packet.phase~="throw" then return end
-        lease.thrown=true;S.damage(p,lease.z,.7,true,false,s,{noKnockback=true,hitResponse=false,grabThrow=true},nil,nil,nil,true);S.release(p);return
+        if not lease or a.grabId~=lease.id or lease.z:getOnlineID()~=a.zombie or lease.thrown or not S.validVictim(p,a.zombie,1.5) or s.packet.phase~="throw" then return end
+        if lease.slot.throwContactMs and(not lease.throwStarted or t-lease.throwStarted<lease.slot.throwContactMs-250 or t-lease.throwStarted>lease.slot.throwDuration*1000+1000)then return end
+        lease.thrown=true;S.damage(p,lease.z,.7,true,false,s,{noKnockback=true,hitResponse=false,grabThrow=true},nil,nil,nil,true)
+        for _,victim in ipairs(ProjectYakuza.GrabRules.crowd(p,lease.z,lease.slot,lease.fx,lease.fy))do
+            if ProjectYakuza.GrabRules.collide(p,victim,lease.slot.throwCrowd)then
+                s.result=(s.result or 0)+1;S.fanout(p,"throwCollision",{player=p:getOnlineID(),event=s.result,zombie=victim:getOnlineID(),grabId=lease.id,force=lease.slot.throwCrowd.force})
+            end
+        end
+        S.release(p);return
     end
     if command=="guard" then
         local clip=P.clip(s.packet.style,s.packet.clip);local z=S.validVictim(p,a.zombie,1.6,.35)

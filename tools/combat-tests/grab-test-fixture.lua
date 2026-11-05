@@ -63,7 +63,7 @@ local squares={}
 getCell=function()return {getGridSquare=function(_,x,y,level)
  if level~=0 then return end
  local key=x..':'..y
- if not squares[key]then squares[key]={isWallTo=function(_,other)return wall and other and y==1 and other.y==0 end,isWindowTo=function()return window end,isDoorTo=function()return door end,y=y}end
+ if not squares[key]then squares[key]={isWallTo=function(_,other)return wall and other and y==1 and other.y==0 end,isWindowTo=function()return window end,isDoorTo=function()return door end,getMovingObjects=function()return {size=function()return 0 end}end,y=y}end
  return squares[key]
 end}end
 PY.NetworkProtocol.path=function()return not blocked end
@@ -219,5 +219,53 @@ do
  check(z.floor and not z.front and not z.stagger and z.force==0 and z:getHitReaction()=='','throw cleanup leaves victim face-up on the floor without a stumble reaction')
  check(not z.ignore and not z.useless and z.deferred and not z.locked,'prone landing restores normal AI and owned movement locks')
  z.floor=false;z.knock=false
+end
+do
+ local originalCell,originalPath,originalInstance=getCell,PY.NetworkProtocol.path,instanceof
+ local candidates={};local function victim(x,y)
+  local v=setmetatable({x=x,y=y,health=10,vars={},hits=0,deferred=true,floor=false,knock=false,locked=false,useless=false,state='idle',crowdZombie=true},{__index=z})
+  function v:isKnockedDown()return self.knock==true end
+  function v:getHitDir()return {set=function(_,dx,dy)v.dx=dx;v.dy=dy end}end
+  function v:setAttackedBy(actor)self.attacker=actor end
+  return v
+ end
+ p.x=0;p.y=0;z.x=0;z.y=.5;z.floor=true
+ for i=1,6 do candidates[i]=victim(i*.04,1+i*.04)end
+ local blockedVictim=victim(.12,1);local dead=victim(0,1);dead.health=0
+ local prone=victim(0,1);prone.floor=true
+ local protected=victim(0,1);protected.vars.ProjectYakuzaHeatRushVictim=true
+ local held=victim(0,1);held.vars.ProjectYakuzaGrabbed=true
+ local upper=victim(0,1);function upper:getZ()return 1 end
+ local behind=victim(0,.25);local distant=victim(0,4)
+ local list={z,p,blockedVictim,dead,prone,protected,held,upper,behind,distant}
+ for _,v in ipairs(candidates)do list[#list+1]=v end
+ instanceof=function(v,kind)return kind=='IsoZombie'and v.crowdZombie==true or originalInstance(v,kind)end
+ local scans=0;getCell=function()return {getGridSquare=function()scans=scans+1;return {getMovingObjects=function()return {size=function()return #list end,get=function(_,i)return list[i+1]end}end}end}end
+ PY.NetworkProtocol.path=function(_,x,y)return x~=blockedVictim.x or y~=blockedVictim.y end
+ local found=R.crowd(p,z,style.actions.grab,0,1)
+ check(#found==4 and scans==25,'crowd throw scans bounded nearby cells once and caps secondary victims')
+ for i,v in ipairs(found)do
+  check(v==candidates[i],'nearest unprotected standing targets are selected once despite repeated square objects')
+  check(R.collide(p,v,style.actions.grab.throwCrowd)and v.knock and v.force==.65 and v.attacker==p and v.dy>0,'secondary target receives native outward knockdown')
+  check(v.health==10 and v.hits==0,'crowd collision causes no additional native damage')
+ end
+ check(not dead.knock and not prone.knock and not protected.knock and not held.knock and not upper.knock and not behind.knock and not distant.knock and not blockedVictim.knock,'dead/downed/held/paired/upper-floor/behind/distant/walled targets remain unaffected')
+ check(#R.crowd(p,z,{})==0 and #R.crowd(p,z,{throwCrowd=false})==0,'other styles opt into crowd throws explicitly')
+ local cfg=style.actions.grab.throwCrowd
+ for _,bad in ipairs({{radius=0/0,forward=.4,maxTargets=4,force=.6},{radius=1,forward=.4,maxTargets=9,force=.6},{radius=1,forward=2,maxTargets=4,force=.6},{radius=1,forward=.4,maxTargets=4,force=2}})do
+  style.actions.grab.throwCrowd=bad;check(not PY.validateStyle(style),'invalid crowd throw configuration rejected')
+ end
+ style.actions.grab.throwCrowd=cfg;getCell=originalCell;PY.NetworkProtocol.path=originalPath;instanceof=originalInstance;z.floor=false
+end
+do
+ wall=false;local oldKey,oldOptions=isKeyDown,PY.Bindings.options;local grabDown=false
+ PY.Bindings.options={getOption=function(_,id)if id=='input_grab'then return {getValue=function()return 4 end}elseif id=='key_grab'then return {getValue=function()return 37 end}end end}
+ isKeyDown=function(key)return key==37 and grabDown end
+ local held=startGrab();D.input[p]={};mouse[2]=true;D.update(p);check(held.phaseName=='hold','heavy input no longer throws when no wall Heat Action is available')
+ mouse[2]=false;D.update(p);grabDown=true;D.update(p)
+ check(held.phaseName=='throw'and not held.cleaned,'fresh remapped grab press throws instead of releasing')
+ local started=held.phaseAt;clock=clock+20;D.update(p);check(held.phaseAt==started,'holding the grab button cannot restart the throw')
+ PY.cancelAction(p,'test_finished');isKeyDown=oldKey;PY.Bindings.options=oldOptions;D.input[p]=nil;wall=true
+ check(PY.Bindings.byId.throw==nil,'obsolete separate throw binding is removed')
 end
 return 'PASS '..checks..' reliable grab lifecycle, four source-timed strikes, following, cleanup, wall geometry, handoff and action protection checks'

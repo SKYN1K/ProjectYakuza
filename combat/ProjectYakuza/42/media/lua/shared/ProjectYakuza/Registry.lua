@@ -252,7 +252,7 @@ end
 
 local ProjectYakuza = ProjectYakuza
 ProjectYakuza.FEATURES={grab=true}
-ProjectYakuza.VERSION = "0.84.0"
+ProjectYakuza.VERSION = "0.85.0"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -504,6 +504,11 @@ function ProjectYakuza.validateStyle(style)
             if kind=="grab"then
                 local function offset(value)
                     return type(value)=="table"and number(value.forward)and value.forward>=.05 and value.forward<=1.5 and number(value.right)and math.abs(value.right)<=.75
+                end
+                if slot.throwContactMs~=nil and(not number(slot.throwContactMs)or slot.throwContactMs<0 or not number(slot.throwDuration)or slot.throwDuration<=0 or slot.throwDuration>10 or slot.throwContactMs>=slot.throwDuration*1000)then problem("invalid grab throw contact timing")end
+                if slot.throwCrowd~=nil and slot.throwCrowd~=false then
+                    local cfg=slot.throwCrowd
+                    if type(cfg)~="table"or not number(cfg.radius)or cfg.radius<.25 or cfg.radius>2 or not number(cfg.forward)or cfg.forward<0 or cfg.forward>1 or not number(cfg.maxTargets)or cfg.maxTargets<1 or cfg.maxTargets>8 or cfg.maxTargets~=math.floor(cfg.maxTargets)or not number(cfg.force)or cfg.force<0 or cfg.force>1.5 then problem("invalid grab crowd-throw settings")end
                 end
                 if slot.distance~=nil and(not number(slot.distance)or slot.distance<.25 or slot.distance>1)then problem("grab.distance must be between .25 and 1")end
                 if slot.lateral~=nil and(not number(slot.lateral)or math.abs(slot.lateral)>.75)then problem("invalid grab lateral offset")end
