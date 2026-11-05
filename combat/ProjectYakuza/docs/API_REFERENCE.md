@@ -229,3 +229,5 @@ Shared `HeatActions.begin(player,ownerKey,definition)` and `HeatActions.finish(p
 ## QTE failure policy (0.73.0)
 
 QTE definitions support per-prompt timing/bindings plus `failureLimit`, `failureMode` and `feedback`. Sessions expose total/consecutive misses, failure identity and accepted input times. `qteFailed` and callback `failure` select author-supplied failure endings. Client `QTEFeedback` maps existing style sounds to success/miss/failure. DoD's paired backend supports `qteFailure` and deferred final health settlement while preserving native victim playback. See [QTE API](QTE.md) for bounds, sound setup, author examples and MP responsibilities.
+
+Attack effects (0.87.0) resolve the actually playing native clip within its committed `actionAnimation` family. Catalogue windows select independent arm/leg tracks per contact, including linked finishers and paired endings. `AttackEffects.finish(player)` retires the live coat into a short world-space wake; `clear(player)` and `clearAll()` also remove retired wakes. MP visual deduplication uses action, swing and clip identity. See ATTACK_EFFECTS.md for the numeric-track/provider contract and bounded budgets.

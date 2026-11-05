@@ -9,6 +9,7 @@ import sys
 import tokenize
 
 ROOT=Path(__file__).resolve().parents[2]
+LUA_BRACKET=re.compile(r"\[(=*)\[")
 
 def blank(text):
     return " " + "\n"*text.count("\n")
@@ -22,7 +23,7 @@ def parts(text,kind):
     while i<len(text):
         if kind=="lua":
             if text.startswith("--",i):
-                match=re.match(r"\[(=*)\[",text[i+2:])
+                match=LUA_BRACKET.match(text,i+2)
                 if match:
                     close="]"+match[1]+"]";end=text.find(close,i+2+len(match[0]))
                     if end<0:raise ValueError("unclosed Lua comment")
@@ -30,7 +31,7 @@ def parts(text,kind):
                 else:
                     end=text.find("\n",i);emit("comment",len(text) if end<0 else end)
                 continue
-            match=re.match(r"\[(=*)\[",text[i:])
+            match=LUA_BRACKET.match(text,i)
             if match:
                 close="]"+match[1]+"]";end=text.find(close,i+len(match[0]))
                 if end<0:raise ValueError("unclosed Lua string")

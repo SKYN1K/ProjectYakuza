@@ -2,8 +2,6 @@ require "ProjectYakuza/Registry"
 require "ProjectYakuza/GrabMoves"
 require "ProjectYakuza/RushMove"
 require "ProjectYakuza/CrateHeatMove"
-require "ProjectYakuza/RushMove"
-require "ProjectYakuza/CrateHeatMove"
 ProjectYakuza.registerStyle({
     id = "dragon_of_dojima",
     name = "Dragon of Dojima",

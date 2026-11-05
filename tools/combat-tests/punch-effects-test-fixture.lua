@@ -89,7 +89,7 @@ F.start(p,style,1,{animation='Other'});check(not F.states[p],'unconfigured moves
 emit('lightAttackStarted',p,style,1,move);check(F.states[p]and F.hooked and allocated==0,'allocation waits for actual clip window')
 p.time=.04;F.tick();F.render();check(allocated==0 and #draws==0,'no particles before source window')
 p.time=.2;F.tick();F.render()
-check(allocated==22 and #F.states[p].points==22,'full arm has a fixed twenty-two-sprite budget')
+check(allocated==30 and #F.states[p].points==30,'limb coating and lingering trails have a fixed thirty-sprite budget')
 check(#draws>=14 and additive,'contiguous coat and inner arm layers draw, restoring renderer state')
 check(near(F.states[p].points[1].scale,.88),'coating is wide enough for the PZ arm')
 for _,d in ipairs(draws)do check(not d.additive and d.alpha<=.55,'all arm layers use restrained ordinary alpha')end
@@ -126,11 +126,11 @@ local sample={};check(F.historyPose(state,oldAt,sample),'recorded earlier world 
 for i=1,9 do check(near(sample[i],old[i]),'turning does not rotate historical arm positions')end
 local trail
 for _,d in ipairs(draws)do if d.instance==state.points[15].instance then trail=d end end
-check(trail and near(trail.x,old[7]+(fresh[7]-old[7])*.1)and near(trail.y,old[8]+(fresh[8]-old[8])*.1),'rendered history trail interpolates past world positions, not current facing')
+check(trail and near(trail.x,select(1,F.armPoint(old,.5)))and near(trail.y,select(2,F.armPoint(old,.5))),'rendered history trail interpolates past world positions, not current facing')
 clock=clock+20;p.x=p.x+5;draws={};F.render()
 check(state.historyCount==1,'teleport clears the trail instead of drawing across the map')
 for i=1,40 do clock=clock+10;p.angle=p.angle+.02;F.render()end
-check(state.historyCount==12 and #state.history==12 and allocated==allocations,'world history and native instances stay bounded during repeated frames')
+check(state.historyCount==24 and #state.history==24 and allocated==allocations,'world history and native instances stay bounded during repeated frames')
 local ticks=state.clock;local beforeUpdate=updated;paused=true;clock=clock+1000;p.time=.3;F.tick();F.render()
 check(state.time==.2 and state.clock==ticks and updated==beforeUpdate,'pause freezes source clock, pose history and flames')
 paused=false;p.time=.25;p.extreme=true;clock=clock+16;F.tick();draws={};F.render()
@@ -163,7 +163,7 @@ p.reaction='Bite';F.tick();check(not F.states[p]and not F.hooked and allocated==
 p.empty=true;F.start(p,style,1,move);clock=clock+351;F.tick();check(not F.states[p],'missing animation times out cleanly');p.empty=false
 F.start(p,style,1,move);p.time=.8;F.tick();check(F.states[p]and not F.states[p].seen,'stale outgoing clip waits for replacement');clock=clock+351;F.tick();check(not F.states[p],'late incoming clip cannot produce stale burst')
 p.time=.2;F.start(p,style,1,move);F.tick();F.render();p.clip='Other';F.tick();check(not F.states[p],'clip change clears coating');p.clip=nil
-F.start(p,style,1,move);F.tick();p.time=.1;F.tick();check(not F.states[p],'native restart clears old history')
+F.start(p,style,1,move);F.tick();p.time=.1;F.tick();check(F.states[p]and F.states[p].historyCount==0,'native restart drops previous pose history before following the new cycle')
 p.time=.2;F.start(p,style,1,move);F.tick();F.render();emit('lightAttackFinished',p);check(not F.states[p],'light completion clears coating')
 for _,key in ipairs({'comboCancelled','finisherStarted','runningAttackStarted','quickstepAttackStarted','chargedHeavyStarted','groundAttackStarted','styleChanged'})do
  F.start(p,style,1,move);emit(key,p);check(not F.states[p],key..' cleans up')
@@ -251,7 +251,7 @@ for animation,entry in pairs(catalog)do
   for facing=0,7 do
    p.angle=facing*math.pi/4;clock=clock+10;F.tick();draws={};F.render()
    check(F.states[p]==active and active.track==ProjectYakuza.AttackTracks[window.track],'correct source limb selected at contact')
-   check(#draws>=14 and #active.points==22,'every contact has bounded animated coating')
+   check(#draws>=14 and #active.points==30,'every contact has bounded animated coating')
    for i=1,11 do
     local x,y,z=F.armPoint(active.joints,(i-1)/10);local d=draws[i]
     check(math.sqrt((d.x-x)^2+(d.y-y)^2+(d.z-z)^2)<.025,'chaos remains tightly around the attacking limb')
@@ -261,8 +261,34 @@ for animation,entry in pairs(catalog)do
  emit('actionCompleted',stamp);check(not F.states[p],'matching action completion clears coating')
  F.remote(p,style,{clip=animation});check(F.states[p],'observer catalogue covers every attack');F.clear(p)
 end
-check(clips==72 and contacts==83,'complete active moveset coverage')
+check(clips==83 and contacts==104,'complete active moveset coverage')
 p.style={id='other_style'};F.start(p,p.style,0,{animation='ProjectYakuza_DD_Heavy'});check(not F.states[p],'builtin catalogue remains style exclusive');p.style=nil
 F.remote(p,nil,{clip='Unknown'});check(not F.states[p],'missing remote style is safe')
+
+F.clearAll();p.clip=move.animation;p.time=.2;p.angle=0;p.x=0;p.y=0
+F.start(p,style,1,move);F.tick();F.render()
+for i=1,16 do clock=clock+10;p.time=.2+i*.005;p.angle=p.angle+.04;p.x=p.x+.004;F.tick();F.render()end
+local old=F.states[p];local oldRoot={p.x,p.y};emit('lightAttackFinished',p)
+check(not F.states[p]and #F.tails==1 and F.hooked,'finished attack leaves a short world-space trail')
+for i,point in ipairs(old.points)do check((point.instance~=nil)==(i>=15 and i<=26),'retired state keeps only twelve historical flame instances')end
+clock=clock+20;p.angle=p.angle+2;p.x=p.x+.1;draws={};F.render();check(#draws>0,'world history still renders after the source attack finishes')
+for _,draw in ipairs(draws)do check(draw.x<oldRoot[1]+.7 and draw.alpha<.32,'retired trail is restrained and stays near prior world positions')end
+F.start(p,style,1,move);F.tick();F.render();check(F.states[p]and #F.tails==1,'new attack does not erase the previous attack trail')
+paused=true;local clocked=old.clock;clock=clock+1000;F.render();check(old.clock==clocked,'retired trail freezes during pause');paused=false
+clock=clock+210;F.render();check(#F.tails==0,'retired trail expires without following the current hand')
+F.clearAll()
+local base='ProjectYakuza_DD_DoubleFinisher03';local linked='ProjectYakuza_DD_LinkedDoubleFinisher03'
+p.clip=linked;local cfg=catalog[linked];p.time=(cfg.windows[1].from+cfg.windows[1].to)/2
+local linkedMove={animation=base};F.start(p,style,0,linkedMove,901);F.tick();draws={};F.render()
+check(F.states[p]and F.states[p].track.animation==linked and F.states[p].track.limb=='leftLeg','base double-finisher request follows the actual playing linked kick and its native leg')
+for facing=0,15 do p.angle=facing*math.pi/8;clock=clock+5;draws={};F.render();local a=F.states[p];local x,y,z=F.armPoint(a.joints,1);check(near(draws[11].x,x)and near(draws[11].y,y)and near(draws[11].z,z),'kicking foot endpoint matches current clip in every facing')end
+F.clearAll();p.clip='ProjectYakuza_DD_Light01';F.start(p,style,0,linkedMove);clock=clock+351;F.tick();check(not F.states[p],'unrelated visible punch cannot substitute for a committed kick')
+check(ProjectYakuza.AttackTracks[catalog.ProjectYakuza_DD_Finisher03.track].limb=='rightArm','normal finisher uses its own striking arm rather than the charge-up arm')
+check(ProjectYakuza.AttackTracks[catalog.ProjectYakuza_DD_Finisher02.track].limb=='rightLeg','high-kick finisher retains the striking leg when recovering arms move faster')
+check(#catalog.ProjectYakuza_DD_HeatRush.windows==13 and ProjectYakuza.AttackTracks[catalog.ProjectYakuza_DD_HeatRush.windows[13].track].limb=='rightLeg','current Rush has twelve original punch contacts followed by its actual kick')
+p.clip=linked;p.time=(cfg.windows[1].from+cfg.windows[1].to)/2;p.localPlayer=false
+F.remote(p,style,{clip=linked,action=77,swing=12});F.tick();F.render();local remote=F.states[p];F.remote(p,style,{clip=linked,action=77,swing=12});check(F.states[p]==remote,'repeated MP snapshots cannot reset current limb phase/history')
+F.clear(p);p.localPlayer=true
+
 p.clip=nil;F.clearAll();check(allocated==disposed and not F.hooked,'expanded effects release all sprites and hooks')
 return 'PASS '..count..' original-punch tracking, world projection, lifecycle, bounded MP and source-clock audio checks'

@@ -1,12 +1,14 @@
 {
-  "operation": "Code-side numeric FK only from existing supplied PZ clips. All active registered damaging DoD moves and weapon profiles are included. Contacts use existing native collision events, QTE times or the documented parry fallback. Active limbs use existing charge mappings or contact-local endpoint/relative velocity, not decoded Y6 hitbox bone enums. No visual/audio/animation/model assets are generated or modified.",
+  "operation": "Code-side numeric FK only from existing supplied PZ clips, including current paired contacts/endings and linked native finisher variants. Contacts use native collision events, authored Heat Action contacts or the documented parry fallback. Clips use contact-local endpoint/relative motion with verified original left-light and right-high-kick pose overrides, independent of charge-up pose. The high kick has right-foot height 0.721 versus planted left foot 0.093 at source frame 24; recovering arms can be faster than the striking leg. Runtime resolves the actual playing clip within the committed move family. No visual/audio/animation/model assets are generated or modified.",
   "catalog": "42/media/lua/client/ProjectYakuza/AttackTrailCatalog.lua",
-  "sha256": "6f7f8e9f537a9911d2ea329c69739701148852d4d05ef4016a2be0b6b1fa6ec3",
+  "sha256": "6f98254d82ecbffae03c51c48604bfdf462079f34b8de8e61e30243d344aac1a",
   "clips": [
     {
       "profile": "bat",
       "kind": "ground",
       "animation": "ProjectYakuza_DD_BatGround",
+      "family": "ProjectYakuza_DD_BatGround",
+      "node": "dd_bat_ground",
       "impact": 0.18181818181818182,
       "kick": false,
       "qte": [],
@@ -26,7 +28,8 @@
             0.9518425894691056,
             0.1551532035130656,
             0.25083593731165865
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -34,6 +37,8 @@
       "profile": "bat",
       "kind": "finisher",
       "animation": "ProjectYakuza_DD_BatHeavy",
+      "family": "ProjectYakuza_DD_BatHeavy",
+      "node": "dd_bat_heavy",
       "impact": 0.2641509433962264,
       "kick": false,
       "qte": [],
@@ -53,7 +58,8 @@
             0.9327608829730297,
             0.26230986502604964,
             0.31722630296936644
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -61,6 +67,8 @@
       "profile": "bat",
       "kind": "light",
       "animation": "ProjectYakuza_DD_BatLight01",
+      "family": "ProjectYakuza_DD_BatLight01",
+      "node": "dd_bat_light_01",
       "impact": 0.275,
       "kick": false,
       "qte": [],
@@ -80,7 +88,8 @@
             1.068680448530945,
             0.18790728337220686,
             0.2814016812389134
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -88,6 +97,8 @@
       "profile": "bat",
       "kind": "light",
       "animation": "ProjectYakuza_DD_BatLight02",
+      "family": "ProjectYakuza_DD_BatLight02",
+      "node": "dd_bat_light_02",
       "impact": 0.37142857142857144,
       "kick": false,
       "qte": [],
@@ -107,7 +118,8 @@
             0.9074359713275195,
             0.21932055265837797,
             0.2317609140153582
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -115,6 +127,8 @@
       "profile": "bat",
       "kind": "light",
       "animation": "ProjectYakuza_DD_BatLight03",
+      "family": "ProjectYakuza_DD_BatLight03",
+      "node": "dd_bat_light_03",
       "impact": 0.3191489361702128,
       "kick": false,
       "qte": [],
@@ -134,7 +148,8 @@
             1.1876947842141965,
             0.1575474298385827,
             0.16211110409033633
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -142,6 +157,8 @@
       "profile": "blade",
       "kind": "ground",
       "animation": "ProjectYakuza_DD_BladeGround",
+      "family": "ProjectYakuza_DD_BladeGround",
+      "node": "dd_blade_ground",
       "impact": 0.22413793103448276,
       "kick": false,
       "qte": [],
@@ -161,7 +178,8 @@
             0.5152064078389947,
             0.1913032012321918,
             0.16540054907367308
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -169,6 +187,8 @@
       "profile": "blade",
       "kind": "finisher",
       "animation": "ProjectYakuza_DD_BladeHeavy",
+      "family": "ProjectYakuza_DD_BladeHeavy",
+      "node": "dd_blade_heavy",
       "impact": 0.3142857142857143,
       "kick": false,
       "qte": [],
@@ -188,7 +208,8 @@
             0.6233108611180103,
             0.317408429531056,
             0.22169364852419396
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -196,6 +217,8 @@
       "profile": "blade",
       "kind": "light",
       "animation": "ProjectYakuza_DD_BladeLight01",
+      "family": "ProjectYakuza_DD_BladeLight01",
+      "node": "dd_blade_light_01",
       "impact": 0.25862068965517243,
       "kick": false,
       "qte": [],
@@ -215,7 +238,8 @@
             0.5461537275013841,
             0.2477983488655232,
             0.1856901940640264
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -223,6 +247,8 @@
       "profile": "blade",
       "kind": "light",
       "animation": "ProjectYakuza_DD_BladeLight02",
+      "family": "ProjectYakuza_DD_BladeLight02",
+      "node": "dd_blade_light_02",
       "impact": 0.4583333333333333,
       "kick": false,
       "qte": [],
@@ -242,7 +268,8 @@
             0.5869949781071828,
             0.11539496684139716,
             0.14797212452299321
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -250,6 +277,8 @@
       "profile": "blade",
       "kind": "light",
       "animation": "ProjectYakuza_DD_BladeLight03",
+      "family": "ProjectYakuza_DD_BladeLight03",
+      "node": "dd_blade_light_03",
       "impact": 0.26229508196721313,
       "kick": false,
       "qte": [],
@@ -269,7 +298,8 @@
             0.6388103704661732,
             0.16651501521742929,
             0.14671177841355898
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -277,6 +307,8 @@
       "profile": "unarmed",
       "kind": "light",
       "animation": "ProjectYakuza_DD_BoostLight01",
+      "family": "ProjectYakuza_DD_BoostLight01",
+      "node": "dd_boost_light_01",
       "impact": 0.21212121212121213,
       "kick": false,
       "qte": [],
@@ -296,7 +328,8 @@
             1.2192106940074448,
             0.24244206986379316,
             0.2776763233250312
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -304,6 +337,8 @@
       "profile": "unarmed",
       "kind": "light",
       "animation": "ProjectYakuza_DD_BoostLight02",
+      "family": "ProjectYakuza_DD_BoostLight02",
+      "node": "dd_boost_light_02",
       "impact": 0.16666666666666666,
       "kick": false,
       "qte": [],
@@ -323,7 +358,8 @@
             0.36089692428452846,
             0.20084892288750752,
             0.24811089797895813
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -331,6 +367,8 @@
       "profile": "unarmed",
       "kind": "light",
       "animation": "ProjectYakuza_DD_BoostLight03",
+      "family": "ProjectYakuza_DD_BoostLight03",
+      "node": "dd_boost_light_03",
       "impact": 0.16129032258064516,
       "kick": false,
       "qte": [],
@@ -350,7 +388,8 @@
             1.1482976860359266,
             0.24760421071016409,
             0.2835864998656026
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -358,6 +397,8 @@
       "profile": "unarmed",
       "kind": "light",
       "animation": "ProjectYakuza_DD_BoostLight04",
+      "family": "ProjectYakuza_DD_BoostLight04",
+      "node": "dd_boost_light_04",
       "impact": 0.16666666666666666,
       "kick": false,
       "qte": [],
@@ -377,7 +418,8 @@
             0.4015353395061954,
             0.20098823033884078,
             0.24652235798297356
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -385,6 +427,8 @@
       "profile": "bottle",
       "kind": "ground",
       "animation": "ProjectYakuza_DD_BottleGround",
+      "family": "ProjectYakuza_DD_BottleGround",
+      "node": "dd_bottle_ground",
       "impact": 0.18181818181818182,
       "kick": false,
       "qte": [],
@@ -404,7 +448,8 @@
             0.9518423107983164,
             0.15515346872929325,
             0.25083600126226696
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -412,6 +457,8 @@
       "profile": "bottle",
       "kind": "heatAction",
       "animation": "ProjectYakuza_DD_BottleHeat",
+      "family": "ProjectYakuza_DD_BottleHeat",
+      "node": "dd_bottle_heat",
       "impact": -1.0,
       "kick": false,
       "qte": [
@@ -435,7 +482,8 @@
             0.39193166965310167,
             0.08480797686426184,
             0.06986910526187136
-          ]
+          ],
+          "selection": "contact-local relative motion"
         },
         {
           "track": "dd_trail_bottleheat_2",
@@ -448,7 +496,8 @@
             0.19241086707395397,
             0.12987291688880612,
             0.0636852904813079
-          ]
+          ],
+          "selection": "contact-local relative motion"
         },
         {
           "track": "dd_trail_bottleheat_3",
@@ -461,7 +510,8 @@
             0.1825260102275934,
             0.04811603525610948,
             0.050120100568957826
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -469,6 +519,8 @@
       "profile": "bottle",
       "kind": "finisher",
       "animation": "ProjectYakuza_DD_BottleHeavy",
+      "family": "ProjectYakuza_DD_BottleHeavy",
+      "node": "dd_bottle_heavy",
       "impact": 0.2641509433962264,
       "kick": false,
       "qte": [],
@@ -488,7 +540,8 @@
             0.9327606132838153,
             0.2623093724403274,
             0.31722582095807994
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -496,6 +549,8 @@
       "profile": "bottle",
       "kind": "light",
       "animation": "ProjectYakuza_DD_BottleLight01",
+      "family": "ProjectYakuza_DD_BottleLight01",
+      "node": "dd_bottle_light_01",
       "impact": 0.275,
       "kick": false,
       "qte": [],
@@ -515,7 +570,8 @@
             1.0686802133954671,
             0.1879070338274403,
             0.28140168842453417
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -523,6 +579,8 @@
       "profile": "bottle",
       "kind": "light",
       "animation": "ProjectYakuza_DD_BottleLight02",
+      "family": "ProjectYakuza_DD_BottleLight02",
+      "node": "dd_bottle_light_02",
       "impact": 0.37142857142857144,
       "kick": false,
       "qte": [],
@@ -542,7 +600,8 @@
             0.9074359764350486,
             0.21932041784886439,
             0.23176094832172023
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -550,6 +609,8 @@
       "profile": "bottle",
       "kind": "light",
       "animation": "ProjectYakuza_DD_BottleLight03",
+      "family": "ProjectYakuza_DD_BottleLight03",
+      "node": "dd_bottle_light_03",
       "impact": 0.3191489361702128,
       "kick": false,
       "qte": [],
@@ -569,7 +630,8 @@
             1.1876946861317617,
             0.15754760888980288,
             0.16211102643911962
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -577,6 +639,8 @@
       "profile": "unarmed",
       "kind": "chargedHeavy",
       "animation": "ProjectYakuza_DD_ChargeEnd",
+      "family": "ProjectYakuza_DD_ChargeEnd",
+      "node": "dd_charged_heavy",
       "impact": 0.21818181818181817,
       "kick": false,
       "qte": [],
@@ -596,7 +660,8 @@
             0.5966908829882213,
             0.35954522734690786,
             0.6714468237167273
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -604,6 +669,8 @@
       "profile": "unarmed",
       "kind": "chargedHeavy",
       "animation": "ProjectYakuza_DD_ChargedFinisher01",
+      "family": "ProjectYakuza_DD_ChargedFinisher01",
+      "node": "dd_charged_finisher_01",
       "impact": 0.235294118,
       "kick": false,
       "qte": [],
@@ -623,7 +690,8 @@
             0.7019821115407291,
             0.18376719003794506,
             0.1903052213955107
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -631,6 +699,8 @@
       "profile": "unarmed",
       "kind": "chargedHeavy",
       "animation": "ProjectYakuza_DD_ChargedFinisher02",
+      "family": "ProjectYakuza_DD_ChargedFinisher02",
+      "node": "dd_charged_finisher_02",
       "impact": 0.260869565,
       "kick": false,
       "qte": [],
@@ -650,7 +720,8 @@
             0.7476940704231083,
             0.16188322807580874,
             1.485286440193914
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -658,6 +729,8 @@
       "profile": "unarmed",
       "kind": "chargedHeavy",
       "animation": "ProjectYakuza_DD_ChargedFinisher03",
+      "family": "ProjectYakuza_DD_ChargedFinisher03",
+      "node": "dd_charged_finisher_03",
       "impact": 0.163636364,
       "kick": false,
       "qte": [],
@@ -677,7 +750,8 @@
             0.372699320428831,
             0.18781469198865364,
             0.23678074382667913
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -685,6 +759,8 @@
       "profile": "unarmed",
       "kind": "chargedHeavy",
       "animation": "ProjectYakuza_DD_ChargedFinisher04",
+      "family": "ProjectYakuza_DD_ChargedFinisher04",
+      "node": "dd_charged_finisher_04",
       "impact": 0.236363636,
       "kick": false,
       "qte": [],
@@ -704,7 +780,8 @@
             0.5633321658156222,
             0.3216701349843349,
             1.5432630960043694
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -712,6 +789,8 @@
       "profile": "crate",
       "kind": "ground",
       "animation": "ProjectYakuza_DD_CrateGround",
+      "family": "ProjectYakuza_DD_CrateGround",
+      "node": "dd_crate_ground",
       "impact": 0.4461538461538462,
       "kick": false,
       "qte": [],
@@ -731,7 +810,132 @@
             0.7215236328025552,
             0.1062489111943527,
             0.19968031740361478
-          ]
+          ],
+          "selection": "contact-local relative motion"
+        }
+      ]
+    },
+    {
+      "profile": "crate",
+      "kind": "heatAction",
+      "animation": "ProjectYakuza_DD_CrateHeat",
+      "family": "ProjectYakuza_DD_CrateHeat",
+      "node": "dd_crate_heat",
+      "impact": -1.0,
+      "kick": false,
+      "qte": [
+        0.433333333,
+        1.4666666700000002,
+        2.46666667,
+        3.46666667,
+        4.733333330000001
+      ],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_CrateHeat.x",
+      "clipSha256": "ae2805de9a568767c43ffab07b475af234d8a249bcce3afc71b4a93461a35193",
+      "samples": 190,
+      "duration": 6.3,
+      "windows": [
+        {
+          "track": "dd_trail_crateheat_1",
+          "from": 0.313333333,
+          "to": 0.6333333329999999,
+          "contact": 0.433333333,
+          "limb": "rightArm",
+          "scores": [
+            0.48393096043430034,
+            0.4909451374504035,
+            0.12314698580214718,
+            0.22740316907855496
+          ],
+          "selection": "contact-local relative motion"
+        },
+        {
+          "track": "dd_trail_crateheat_2",
+          "from": 1.3466666700000003,
+          "to": 1.6666666700000001,
+          "contact": 1.4666666700000002,
+          "limb": "rightArm",
+          "scores": [
+            0.28636484500245984,
+            0.5558861276081095,
+            0.048836566398847245,
+            0.05152790202318102
+          ],
+          "selection": "contact-local relative motion"
+        },
+        {
+          "track": "dd_trail_crateheat_3",
+          "from": 2.34666667,
+          "to": 2.66666667,
+          "contact": 2.46666667,
+          "limb": "rightArm",
+          "scores": [
+            0.28636484500245984,
+            0.5558861276081095,
+            0.048836566398847245,
+            0.05152790202318102
+          ],
+          "selection": "contact-local relative motion"
+        },
+        {
+          "track": "dd_trail_crateheat_4",
+          "from": 3.34666667,
+          "to": 3.66666667,
+          "contact": 3.46666667,
+          "limb": "rightArm",
+          "scores": [
+            0.28636484500245984,
+            0.5558861276081095,
+            0.048836566398847245,
+            0.05152790202318102
+          ],
+          "selection": "contact-local relative motion"
+        },
+        {
+          "track": "dd_trail_crateheat_5",
+          "from": 4.613333330000001,
+          "to": 4.933333330000001,
+          "contact": 4.733333330000001,
+          "limb": "rightArm",
+          "scores": [
+            0.3895427118892975,
+            0.931286029211861,
+            0.17977151367858177,
+            0.32020767492516344
+          ],
+          "selection": "contact-local relative motion"
+        }
+      ]
+    },
+    {
+      "profile": "crate",
+      "kind": "heatAction",
+      "animation": "ProjectYakuza_DD_CrateHeatFail",
+      "family": "ProjectYakuza_DD_CrateHeat",
+      "node": "dd_crate_heat_fail",
+      "impact": -1.0,
+      "kick": false,
+      "qte": [
+        0.633333333
+      ],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_CrateHeatFail.x",
+      "clipSha256": "c343bea3e8b8cb6d2258868bc1a3a484d778d7fcbe0c0ce248d073a12b48245f",
+      "samples": 67,
+      "duration": 2.2,
+      "windows": [
+        {
+          "track": "dd_trail_crateheatfail_1",
+          "from": 0.5133333330000001,
+          "to": 0.8333333330000001,
+          "contact": 0.633333333,
+          "limb": "rightArm",
+          "scores": [
+            0.3895427118892975,
+            0.931286029211861,
+            0.17977151367858177,
+            0.32020767492516344
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -739,6 +943,8 @@
       "profile": "crate",
       "kind": "finisher",
       "animation": "ProjectYakuza_DD_CrateHeavy",
+      "family": "ProjectYakuza_DD_CrateHeavy",
+      "node": "dd_crate_heavy",
       "impact": 0.3333333333333333,
       "kick": false,
       "qte": [],
@@ -758,7 +964,8 @@
             0.38981639025240644,
             0.30574768286376675,
             0.460122138641514
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -766,6 +973,8 @@
       "profile": "crate",
       "kind": "light",
       "animation": "ProjectYakuza_DD_CrateLight01",
+      "family": "ProjectYakuza_DD_CrateLight01",
+      "node": "dd_crate_light_01",
       "impact": 0.273972602739726,
       "kick": false,
       "qte": [],
@@ -785,7 +994,8 @@
             0.536355958802373,
             0.16483618849450968,
             0.18837453191210726
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -793,6 +1003,8 @@
       "profile": "crate",
       "kind": "light",
       "animation": "ProjectYakuza_DD_CrateLight02",
+      "family": "ProjectYakuza_DD_CrateLight02",
+      "node": "dd_crate_light_02",
       "impact": 0.25,
       "kick": false,
       "qte": [],
@@ -812,7 +1024,8 @@
             0.5791842483188558,
             0.2213542303803294,
             0.19890815023318734
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -820,6 +1033,8 @@
       "profile": "crate",
       "kind": "light",
       "animation": "ProjectYakuza_DD_CrateLight03",
+      "family": "ProjectYakuza_DD_CrateLight03",
+      "node": "dd_crate_light_03",
       "impact": 0.2702702702702703,
       "kick": false,
       "qte": [],
@@ -839,7 +1054,8 @@
             0.3679097650382041,
             0.27637270815463466,
             0.20168848890816468
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -847,6 +1063,8 @@
       "profile": "unarmed",
       "kind": "directional",
       "animation": "ProjectYakuza_DD_DirectionalLeft",
+      "family": "ProjectYakuza_DD_DirectionalLeft",
+      "node": "dd_directional_left",
       "impact": 0.2222222222222222,
       "kick": false,
       "qte": [],
@@ -866,7 +1084,8 @@
             0.4207167397790305,
             0.35242079313789776,
             0.167222481334181
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -874,6 +1093,8 @@
       "profile": "unarmed",
       "kind": "directional",
       "animation": "ProjectYakuza_DD_DirectionalRear",
+      "family": "ProjectYakuza_DD_DirectionalRear",
+      "node": "dd_directional_rear",
       "impact": 0.19298245614035087,
       "kick": true,
       "qte": [],
@@ -893,7 +1114,8 @@
             0.43164690751398993,
             0.8672959539839776,
             0.16134972284872842
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -901,6 +1123,8 @@
       "profile": "unarmed",
       "kind": "directional",
       "animation": "ProjectYakuza_DD_DirectionalRight",
+      "family": "ProjectYakuza_DD_DirectionalRight",
+      "node": "dd_directional_right",
       "impact": 0.2222222222222222,
       "kick": false,
       "qte": [],
@@ -920,7 +1144,8 @@
             0.9885319294734434,
             0.6788061254092995,
             0.46207916029749346
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -928,6 +1153,8 @@
       "profile": "unarmed",
       "kind": "finisher",
       "animation": "ProjectYakuza_DD_DoubleFinisher01",
+      "family": "ProjectYakuza_DD_DoubleFinisher01",
+      "node": "dd_double_01",
       "impact": 0.34146341463414637,
       "kick": false,
       "qte": [],
@@ -947,7 +1174,8 @@
             0.6120067636196509,
             0.38921839119725377,
             0.33402007658748095
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -955,6 +1183,8 @@
       "profile": "unarmed",
       "kind": "finisher",
       "animation": "ProjectYakuza_DD_DoubleFinisher02",
+      "family": "ProjectYakuza_DD_DoubleFinisher02",
+      "node": "dd_double_02",
       "impact": 0.345679012345679,
       "kick": false,
       "qte": [],
@@ -974,7 +1204,8 @@
             0.3346368855296013,
             0.14534301309960387,
             0.5160752294786997
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -982,6 +1213,8 @@
       "profile": "unarmed",
       "kind": "finisher",
       "animation": "ProjectYakuza_DD_DoubleFinisher03",
+      "family": "ProjectYakuza_DD_DoubleFinisher03",
+      "node": "dd_double_03",
       "impact": 0.39344262295081966,
       "kick": false,
       "qte": [],
@@ -1001,7 +1234,8 @@
             0.483048474749211,
             1.4437716968531038,
             0.10554329289897488
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -1009,6 +1243,8 @@
       "profile": "unarmed",
       "kind": "finisher",
       "animation": "ProjectYakuza_DD_DoubleFinisher04",
+      "family": "ProjectYakuza_DD_DoubleFinisher04",
+      "node": "dd_double_04",
       "impact": 0.36619718309859156,
       "kick": false,
       "qte": [],
@@ -1028,7 +1264,8 @@
             0.1931283953330552,
             0.1486400796563844,
             0.32658875113563435
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -1036,6 +1273,8 @@
       "profile": "unarmed",
       "kind": "finisher",
       "animation": "ProjectYakuza_DD_Finisher01",
+      "family": "ProjectYakuza_DD_Finisher01",
+      "node": "dd_finisher_01",
       "impact": 0.2807017543859649,
       "kick": false,
       "qte": [],
@@ -1055,7 +1294,8 @@
             0.8779932953727673,
             0.21330511744217726,
             0.25062748857754413
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -1063,6 +1303,8 @@
       "profile": "unarmed",
       "kind": "finisher",
       "animation": "ProjectYakuza_DD_Finisher02",
+      "family": "ProjectYakuza_DD_Finisher02",
+      "node": "dd_finisher_02",
       "impact": 0.4528301886792453,
       "kick": false,
       "qte": [],
@@ -1082,7 +1324,8 @@
             0.6152311959179252,
             0.15848002819770862,
             0.48838271559987223
-          ]
+          ],
+          "selection": "verified native contact pose"
         }
       ]
     },
@@ -1090,6 +1333,8 @@
       "profile": "unarmed",
       "kind": "finisher",
       "animation": "ProjectYakuza_DD_Finisher03",
+      "family": "ProjectYakuza_DD_Finisher03",
+      "node": "dd_finisher_03",
       "impact": 0.32786885245901637,
       "kick": false,
       "qte": [],
@@ -1103,13 +1348,14 @@
           "from": 0.5466666666666666,
           "to": 0.8666666666666667,
           "contact": 0.6666666666666666,
-          "limb": "leftArm",
+          "limb": "rightArm",
           "scores": [
             0.32758150684150567,
             0.7762776056996508,
             0.17917557310251858,
             0.1586876435316543
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -1117,6 +1363,8 @@
       "profile": "unarmed",
       "kind": "finisher",
       "animation": "ProjectYakuza_DD_Finisher04",
+      "family": "ProjectYakuza_DD_Finisher04",
+      "node": "dd_finisher_04",
       "impact": 0.4,
       "kick": false,
       "qte": [],
@@ -1136,7 +1384,136 @@
             0.5380057455616369,
             0.17658274624395626,
             0.7188225262842582
-          ]
+          ],
+          "selection": "contact-local relative motion"
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "light",
+      "animation": "ProjectYakuza_DD_GrabStrike01",
+      "family": "ProjectYakuza_DD_GrabStrike01",
+      "node": "",
+      "impact": -1.0,
+      "kick": false,
+      "qte": [
+        0.23333333333333334
+      ],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_GrabStrike01.x",
+      "clipSha256": "7d9768ee6346024992803f61bef4372d7660dc63df08d39c4172c60d5500d5ad",
+      "samples": 31,
+      "duration": 1.0,
+      "windows": [
+        {
+          "track": "dd_trail_grabstrike01_1",
+          "from": 0.11333333333333334,
+          "to": 0.43333333333333335,
+          "contact": 0.23333333333333334,
+          "limb": "rightArm",
+          "scores": [
+            0.11918432793740318,
+            0.37316925058117445,
+            0.09983974909917247,
+            0.15984822346879007
+          ],
+          "selection": "contact-local relative motion"
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "light",
+      "animation": "ProjectYakuza_DD_GrabStrike02",
+      "family": "ProjectYakuza_DD_GrabStrike02",
+      "node": "",
+      "impact": -1.0,
+      "kick": false,
+      "qte": [
+        0.5666666666666667
+      ],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_GrabStrike02.x",
+      "clipSha256": "77217bc15f4413139966be2e6b25c6afb7b917e47d1a881940e7e0b1b4c6501b",
+      "samples": 40,
+      "duration": 1.3,
+      "windows": [
+        {
+          "track": "dd_trail_grabstrike02_1",
+          "from": 0.44666666666666666,
+          "to": 0.7666666666666666,
+          "contact": 0.5666666666666667,
+          "limb": "rightArm",
+          "scores": [
+            0.19774276627889553,
+            0.269512978470379,
+            0.03745151817353152,
+            0.03819347076260364
+          ],
+          "selection": "contact-local relative motion"
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "light",
+      "animation": "ProjectYakuza_DD_GrabStrike03",
+      "family": "ProjectYakuza_DD_GrabStrike03",
+      "node": "",
+      "impact": -1.0,
+      "kick": false,
+      "qte": [
+        0.5666666666666667
+      ],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_GrabStrike03.x",
+      "clipSha256": "e305a2932572473f98d076bd1086e63e6059c5a65bf0c0e71ee5e99d23915077",
+      "samples": 40,
+      "duration": 1.3,
+      "windows": [
+        {
+          "track": "dd_trail_grabstrike03_1",
+          "from": 0.44666666666666666,
+          "to": 0.7666666666666666,
+          "contact": 0.5666666666666667,
+          "limb": "rightArm",
+          "scores": [
+            0.14673468915760302,
+            0.5513498436788088,
+            0.05944066754438365,
+            0.07911522362770804
+          ],
+          "selection": "contact-local relative motion"
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "light",
+      "animation": "ProjectYakuza_DD_GrabStrike04",
+      "family": "ProjectYakuza_DD_GrabStrike04",
+      "node": "",
+      "impact": -1.0,
+      "kick": false,
+      "qte": [
+        0.5666666666666667
+      ],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_GrabStrike04.x",
+      "clipSha256": "caefe4754019f34b15430f362429dfbddf2877ed874a785ca4f4c16519ae5bb9",
+      "samples": 40,
+      "duration": 1.3,
+      "windows": [
+        {
+          "track": "dd_trail_grabstrike04_1",
+          "from": 0.44666666666666666,
+          "to": 0.7666666666666666,
+          "contact": 0.5666666666666667,
+          "limb": "rightArm",
+          "scores": [
+            0.2901379370681526,
+            0.39943777109776923,
+            0.05722851212298362,
+            0.04132837021343228
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -1144,6 +1521,8 @@
       "profile": "unarmed",
       "kind": "ground",
       "animation": "ProjectYakuza_DD_GroundStomp01",
+      "family": "ProjectYakuza_DD_GroundStomp01",
+      "node": "dd_ground_01",
       "impact": 0.25925925925925924,
       "kick": false,
       "qte": [],
@@ -1163,7 +1542,8 @@
             0.67737184977676,
             0.2579930267720817,
             0.5655658576830407
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -1171,6 +1551,8 @@
       "profile": "unarmed",
       "kind": "ground",
       "animation": "ProjectYakuza_DD_GroundStomp02",
+      "family": "ProjectYakuza_DD_GroundStomp02",
+      "node": "dd_ground_02",
       "impact": 0.25925925925925924,
       "kick": false,
       "qte": [],
@@ -1190,7 +1572,8 @@
             0.6402718614040229,
             0.26248592467383697,
             0.5566613965116518
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -1198,112 +1581,243 @@
       "profile": "unarmed",
       "kind": "heatAction",
       "animation": "ProjectYakuza_DD_HeatRush",
+      "family": "ProjectYakuza_DD_HeatRush",
+      "node": "dd_heat_rush",
       "impact": -1.0,
       "kick": false,
       "qte": [
-        1.8666666666666667,
+        1.86666667,
         2.1,
-        2.566666666666667,
-        2.8333333333333335,
-        3.4,
-        3.6666666666666665,
-        4.766666666666667
+        2.63333333,
+        2.9,
+        3.8,
+        4.06666667,
+        4.86666667,
+        5.1,
+        5.63333333,
+        5.9,
+        6.8,
+        7.06666667,
+        8.16666667
       ],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_HeatRush.x",
-      "clipSha256": "a20af398e31633d00e18e2b95e6c27ade071c2fd17d375f288ea934d5e6e7088",
-      "samples": 225,
-      "duration": 7.466666666666667,
+      "clipSha256": "41367c866dc56924a8e8fd293b14aa50bdef6337be6b706ea6587df58ae8b493",
+      "samples": 327,
+      "duration": 10.866666666666667,
       "windows": [
         {
           "track": "dd_trail_heatrush_1",
-          "from": 1.7466666666666666,
-          "to": 1.9833333333333334,
-          "contact": 1.8666666666666667,
+          "from": 1.7466666700000002,
+          "to": 1.9833333350000002,
+          "contact": 1.86666667,
           "limb": "rightArm",
           "scores": [
-            0.41758835543801,
-            1.1226950393241193,
-            0.10884963494837978,
-            0.11690569918322864
-          ]
+            0.417588185371234,
+            1.122694333991875,
+            0.10884867062939632,
+            0.11690547023992749
+          ],
+          "selection": "contact-local relative motion"
         },
         {
           "track": "dd_trail_heatrush_2",
-          "from": 1.9833333333333334,
+          "from": 1.9833333350000002,
           "to": 2.3000000000000003,
           "contact": 2.1,
           "limb": "rightArm",
           "scores": [
-            0.259107982126071,
-            0.7029840092231194,
-            0.0827937175886581,
-            0.12926933722952788
-          ]
+            0.2591079697065506,
+            0.702983872362452,
+            0.08279355280618339,
+            0.12926926157242583
+          ],
+          "selection": "contact-local relative motion"
         },
         {
           "track": "dd_trail_heatrush_3",
-          "from": 2.4466666666666668,
-          "to": 2.7,
-          "contact": 2.566666666666667,
+          "from": 2.51333333,
+          "to": 2.766666665,
+          "contact": 2.63333333,
           "limb": "rightArm",
           "scores": [
-            0.4041191818193583,
-            0.9799355388525672,
-            0.1062669048047512,
-            0.07596340258762124
-          ]
+            0.40411932966825886,
+            0.9799353570885739,
+            0.10626719359519805,
+            0.07596340925642395
+          ],
+          "selection": "contact-local relative motion"
         },
         {
           "track": "dd_trail_heatrush_4",
-          "from": 2.7133333333333334,
-          "to": 3.0333333333333337,
-          "contact": 2.8333333333333335,
+          "from": 2.78,
+          "to": 3.1,
+          "contact": 2.9,
           "limb": "rightArm",
           "scores": [
-            0.26959816822151944,
-            0.4029232221611474,
-            0.06260654292602699,
-            0.059610764591665824
-          ]
+            0.26959812953649703,
+            0.40292314380466293,
+            0.06260630219145127,
+            0.05961104898597638
+          ],
+          "selection": "contact-local relative motion"
         },
         {
           "track": "dd_trail_heatrush_5",
-          "from": 3.28,
-          "to": 3.533333333333333,
-          "contact": 3.4,
+          "from": 3.6799999999999997,
+          "to": 3.933333335,
+          "contact": 3.8,
           "limb": "rightArm",
           "scores": [
-            0.32771571047491277,
-            1.3421185004300111,
-            0.08892403390661516,
-            0.1231894222626948
-          ]
+            0.3277155830015473,
+            1.342118268203049,
+            0.0889243799156265,
+            0.12319011538826938
+          ],
+          "selection": "contact-local relative motion"
         },
         {
           "track": "dd_trail_heatrush_6",
-          "from": 3.5466666666666664,
-          "to": 3.8666666666666667,
-          "contact": 3.6666666666666665,
-          "limb": "rightArm",
+          "from": 3.94666667,
+          "to": 4.26666667,
+          "contact": 4.06666667,
+          "limb": "leftArm",
           "scores": [
-            0.5901831186165932,
-            0.4652523078336699,
-            0.0978523930921203,
-            0.13416170486025097
-          ]
+            0.5901831360086756,
+            0.4652524117299157,
+            0.09785265913571536,
+            0.13416191339777306
+          ],
+          "selection": "contact-local relative motion"
         },
         {
           "track": "dd_trail_heatrush_7",
-          "from": 4.6466666666666665,
-          "to": 4.966666666666667,
-          "contact": 4.766666666666667,
+          "from": 4.74666667,
+          "to": 4.983333334999999,
+          "contact": 4.86666667,
+          "limb": "rightArm",
+          "scores": [
+            0.417588185371234,
+            1.122694333991875,
+            0.10884867062939632,
+            0.11690547023992749
+          ],
+          "selection": "contact-local relative motion"
+        },
+        {
+          "track": "dd_trail_heatrush_8",
+          "from": 4.983333334999999,
+          "to": 5.3,
+          "contact": 5.1,
+          "limb": "rightArm",
+          "scores": [
+            0.2591079697065506,
+            0.702983872362452,
+            0.08279355280618339,
+            0.12926926157242583
+          ],
+          "selection": "contact-local relative motion"
+        },
+        {
+          "track": "dd_trail_heatrush_9",
+          "from": 5.51333333,
+          "to": 5.766666665000001,
+          "contact": 5.63333333,
+          "limb": "rightArm",
+          "scores": [
+            0.40411932966825886,
+            0.9799353570885739,
+            0.10626719359519805,
+            0.07596340925642395
+          ],
+          "selection": "contact-local relative motion"
+        },
+        {
+          "track": "dd_trail_heatrush_10",
+          "from": 5.78,
+          "to": 6.1000000000000005,
+          "contact": 5.9,
+          "limb": "rightArm",
+          "scores": [
+            0.26959812953649703,
+            0.40292314380466293,
+            0.06260630219145127,
+            0.05961104898597638
+          ],
+          "selection": "contact-local relative motion"
+        },
+        {
+          "track": "dd_trail_heatrush_11",
+          "from": 6.68,
+          "to": 6.933333335,
+          "contact": 6.8,
+          "limb": "rightArm",
+          "scores": [
+            0.3277155830015473,
+            1.342118268203049,
+            0.0889243799156265,
+            0.12319011538826938
+          ],
+          "selection": "contact-local relative motion"
+        },
+        {
+          "track": "dd_trail_heatrush_12",
+          "from": 6.94666667,
+          "to": 7.26666667,
+          "contact": 7.06666667,
+          "limb": "leftArm",
+          "scores": [
+            0.5901831360086756,
+            0.4652524117299157,
+            0.09785265913571536,
+            0.13416191339777306
+          ],
+          "selection": "contact-local relative motion"
+        },
+        {
+          "track": "dd_trail_heatrush_13",
+          "from": 8.04666667,
+          "to": 8.366666669999999,
+          "contact": 8.16666667,
           "limb": "rightLeg",
           "scores": [
-            0.37127920089939387,
-            0.5079294415283613,
-            0.13357387340801258,
-            0.6624374394321099
-          ]
+            0.37127900875616665,
+            0.5079294148705608,
+            0.1335734897654299,
+            0.662436949717542
+          ],
+          "selection": "contact-local relative motion"
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "heatAction",
+      "animation": "ProjectYakuza_DD_HeatRushFail",
+      "family": "ProjectYakuza_DD_HeatRush",
+      "node": "dd_heat_rush_fail",
+      "impact": -1.0,
+      "kick": false,
+      "qte": [
+        0.833333333
+      ],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_HeatRushFail.x",
+      "clipSha256": "db5daca0c8fa1987f50973a3ff5b98479fd03f2e70a628d2d63d2945558ac127",
+      "samples": 107,
+      "duration": 3.533333333333333,
+      "windows": [
+        {
+          "track": "dd_trail_heatrushfail_1",
+          "from": 0.713333333,
+          "to": 1.033333333,
+          "contact": 0.833333333,
+          "limb": "rightLeg",
+          "scores": [
+            0.37127900875616665,
+            0.5079294148705608,
+            0.1335734897654299,
+            0.662436949717542
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -1311,6 +1825,8 @@
       "profile": "unarmed",
       "kind": "finisher",
       "animation": "ProjectYakuza_DD_Heavy",
+      "family": "ProjectYakuza_DD_Heavy",
+      "node": "dd_heavy",
       "impact": 0.18,
       "kick": false,
       "qte": [],
@@ -1330,7 +1846,8 @@
             0.6486269979881344,
             0.3533736666530499,
             0.7631705451140862
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -1338,6 +1855,8 @@
       "profile": "blade",
       "kind": "heatAction",
       "animation": "ProjectYakuza_DD_KatanaHeat",
+      "family": "ProjectYakuza_DD_KatanaHeat",
+      "node": "dd_katana_heat",
       "impact": -1.0,
       "kick": false,
       "qte": [
@@ -1362,7 +1881,8 @@
             0.5629780287793438,
             0.0836781967010944,
             0.06912437594054753
-          ]
+          ],
+          "selection": "contact-local relative motion"
         },
         {
           "track": "dd_trail_katanaheat_2",
@@ -1375,7 +1895,8 @@
             0.3083653739913751,
             0.21487377635091515,
             0.12805799340496896
-          ]
+          ],
+          "selection": "contact-local relative motion"
         },
         {
           "track": "dd_trail_katanaheat_3",
@@ -1388,7 +1909,8 @@
             0.34063117454012487,
             0.05335876419917866,
             0.08990349554393923
-          ]
+          ],
+          "selection": "contact-local relative motion"
         },
         {
           "track": "dd_trail_katanaheat_4",
@@ -1401,7 +1923,8 @@
             0.06465483005280777,
             0.03460105617042438,
             0.04804304642232506
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -1409,6 +1932,8 @@
       "profile": "knife",
       "kind": "ground",
       "animation": "ProjectYakuza_DD_KnifeGround",
+      "family": "ProjectYakuza_DD_KnifeGround",
+      "node": "dd_knife_ground",
       "impact": 0.25,
       "kick": false,
       "qte": [],
@@ -1428,7 +1953,8 @@
             0.6716901214634632,
             0.08678893698401327,
             0.11078107487022171
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -1436,6 +1962,8 @@
       "profile": "knife",
       "kind": "finisher",
       "animation": "ProjectYakuza_DD_KnifeHeavy",
+      "family": "ProjectYakuza_DD_KnifeHeavy",
+      "node": "dd_knife_heavy",
       "impact": 0.24444444444444444,
       "kick": false,
       "qte": [],
@@ -1455,7 +1983,8 @@
             0.6140282232012383,
             0.27024859048711264,
             0.4902892446247411
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -1463,6 +1992,8 @@
       "profile": "knife",
       "kind": "light",
       "animation": "ProjectYakuza_DD_KnifeLight01",
+      "family": "ProjectYakuza_DD_KnifeLight01",
+      "node": "dd_knife_light_01",
       "impact": 0.225,
       "kick": false,
       "qte": [],
@@ -1482,7 +2013,8 @@
             0.8432718319149579,
             0.2523015279906702,
             0.4608370431078481
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -1490,6 +2022,8 @@
       "profile": "knife",
       "kind": "light",
       "animation": "ProjectYakuza_DD_KnifeLight02",
+      "family": "ProjectYakuza_DD_KnifeLight02",
+      "node": "dd_knife_light_02",
       "impact": 0.3,
       "kick": false,
       "qte": [],
@@ -1509,7 +2043,8 @@
             0.9286219990912372,
             0.20922225154896135,
             0.23761003428154004
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -1517,6 +2052,8 @@
       "profile": "knife",
       "kind": "light",
       "animation": "ProjectYakuza_DD_KnifeLight03",
+      "family": "ProjectYakuza_DD_KnifeLight03",
+      "node": "dd_knife_light_03",
       "impact": 0.28888888888888886,
       "kick": false,
       "qte": [],
@@ -1536,7 +2073,8 @@
             1.0713583280415362,
             0.1289992526278093,
             0.13884295361323687
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -1544,6 +2082,8 @@
       "profile": "unarmed",
       "kind": "light",
       "animation": "ProjectYakuza_DD_Light01",
+      "family": "ProjectYakuza_DD_Light01",
+      "node": "dd_light_01",
       "impact": 0.2,
       "kick": false,
       "qte": [],
@@ -1563,7 +2103,8 @@
             0.2498754414751612,
             0.156342592056957,
             0.14613899787405332
-          ]
+          ],
+          "selection": "verified native contact pose"
         }
       ]
     },
@@ -1571,6 +2112,8 @@
       "profile": "unarmed",
       "kind": "light",
       "animation": "ProjectYakuza_DD_Light02",
+      "family": "ProjectYakuza_DD_Light02",
+      "node": "dd_light_02",
       "impact": 0.1702127659574468,
       "kick": false,
       "qte": [],
@@ -1590,7 +2133,8 @@
             1.0523291254104141,
             0.11193651009366556,
             0.17681154204034277
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -1598,6 +2142,8 @@
       "profile": "unarmed",
       "kind": "light",
       "animation": "ProjectYakuza_DD_Light03",
+      "family": "ProjectYakuza_DD_Light03",
+      "node": "dd_light_03",
       "impact": 0.2619047619047619,
       "kick": false,
       "qte": [],
@@ -1617,7 +2163,8 @@
             0.13230630971981044,
             0.05428598890702638,
             0.06321282191107017
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -1625,6 +2172,8 @@
       "profile": "unarmed",
       "kind": "light",
       "animation": "ProjectYakuza_DD_Light04",
+      "family": "ProjectYakuza_DD_Light04",
+      "node": "dd_light_04",
       "impact": 0.23404255319148937,
       "kick": false,
       "qte": [],
@@ -1644,7 +2193,128 @@
             0.3631417305059127,
             0.045709455504725216,
             0.06284639809570008
-          ]
+          ],
+          "selection": "contact-local relative motion"
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "finisher",
+      "animation": "ProjectYakuza_DD_LinkedDoubleFinisher01",
+      "family": "ProjectYakuza_DD_DoubleFinisher01",
+      "node": "dd_double_01",
+      "impact": 0.34146341463414637,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_LinkedDoubleFinisher01.x",
+      "clipSha256": "b41bbd5b055b11212e572cd309001a7af9e808f6210448f0e3817e28f0354781",
+      "samples": 83,
+      "duration": 2.7333333333333334,
+      "windows": [
+        {
+          "track": "dd_trail_linkeddoublefinisher01_1",
+          "from": 0.8133333333333334,
+          "to": 1.1333333333333333,
+          "contact": 0.9333333333333333,
+          "limb": "rightArm",
+          "scores": [
+            0.44961855163792674,
+            0.6120067256589747,
+            0.38921815356589196,
+            0.3340201817920046
+          ],
+          "selection": "contact-local relative motion"
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "finisher",
+      "animation": "ProjectYakuza_DD_LinkedDoubleFinisher02",
+      "family": "ProjectYakuza_DD_DoubleFinisher02",
+      "node": "dd_double_02",
+      "impact": 0.345679012345679,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_LinkedDoubleFinisher02.x",
+      "clipSha256": "39d8f00b058a0bf9c2c43b2c331faaf16a0a1b95de2db2960ce1ff0d7e1b51f3",
+      "samples": 78,
+      "duration": 2.566666666666667,
+      "windows": [
+        {
+          "track": "dd_trail_linkeddoublefinisher02_1",
+          "from": 0.68,
+          "to": 1.0,
+          "contact": 0.8,
+          "limb": "rightLeg",
+          "scores": [
+            0.3606480462761111,
+            0.3346367900893278,
+            0.14534312410783157,
+            0.5160751873388619
+          ],
+          "selection": "contact-local relative motion"
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "finisher",
+      "animation": "ProjectYakuza_DD_LinkedDoubleFinisher03",
+      "family": "ProjectYakuza_DD_DoubleFinisher03",
+      "node": "dd_double_03",
+      "impact": 0.39344262295081966,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_LinkedDoubleFinisher03.x",
+      "clipSha256": "7f6acdd51e3d01b48d9adf210b8045ec3afca8f4ef349979b48dbbb0a1eeac9f",
+      "samples": 62,
+      "duration": 2.033333333333333,
+      "windows": [
+        {
+          "track": "dd_trail_linkeddoublefinisher03_1",
+          "from": 0.68,
+          "to": 1.0,
+          "contact": 0.8,
+          "limb": "leftLeg",
+          "scores": [
+            0.41937410505211337,
+            0.48304828863249294,
+            1.443771175363529,
+            0.10554370296057713
+          ],
+          "selection": "contact-local relative motion"
+        }
+      ]
+    },
+    {
+      "profile": "unarmed",
+      "kind": "finisher",
+      "animation": "ProjectYakuza_DD_LinkedDoubleFinisher04",
+      "family": "ProjectYakuza_DD_DoubleFinisher04",
+      "node": "dd_double_04",
+      "impact": 0.36619718309859156,
+      "kick": false,
+      "qte": [],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_LinkedDoubleFinisher04.x",
+      "clipSha256": "fec14c927328326b873a82f222a3ac4799949d84541a575e24af24da533c5885",
+      "samples": 70,
+      "duration": 2.3,
+      "windows": [
+        {
+          "track": "dd_trail_linkeddoublefinisher04_1",
+          "from": 0.68,
+          "to": 1.0,
+          "contact": 0.8,
+          "limb": "rightLeg",
+          "scores": [
+            0.21474957198368383,
+            0.19312849663934945,
+            0.14864045598800282,
+            0.3265885422782486
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -1652,6 +2322,8 @@
       "profile": "unarmed",
       "kind": "quickstepAttack",
       "animation": "ProjectYakuza_DD_QuickstepAttack01",
+      "family": "ProjectYakuza_DD_QuickstepAttack01",
+      "node": "dd_quickattack_01",
       "impact": 0.25,
       "kick": false,
       "qte": [],
@@ -1671,7 +2343,8 @@
             0.07648096935940213,
             0.025843901038094058,
             0.05499369049266226
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -1679,6 +2352,8 @@
       "profile": "unarmed",
       "kind": "quickstepAttack",
       "animation": "ProjectYakuza_DD_QuickstepAttack02",
+      "family": "ProjectYakuza_DD_QuickstepAttack02",
+      "node": "dd_quickattack_02",
       "impact": 0.2463768115942029,
       "kick": false,
       "qte": [],
@@ -1698,7 +2373,8 @@
             0.5279242014725964,
             0.19236941227411877,
             0.32749813316906534
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -1706,6 +2382,8 @@
       "profile": "unarmed",
       "kind": "quickstepAttack",
       "animation": "ProjectYakuza_DD_QuickstepAttack03",
+      "family": "ProjectYakuza_DD_QuickstepAttack03",
+      "node": "dd_quickattack_03",
       "impact": 0.23404255319148937,
       "kick": false,
       "qte": [],
@@ -1725,7 +2403,8 @@
             0.43688217125953777,
             0.9043397266918701,
             0.17502098165232102
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -1733,6 +2412,8 @@
       "profile": "unarmed",
       "kind": "quickstepAttack",
       "animation": "ProjectYakuza_DD_QuickstepAttack04",
+      "family": "ProjectYakuza_DD_QuickstepAttack04",
+      "node": "dd_quickattack_04",
       "impact": 0.24561403508771928,
       "kick": false,
       "qte": [],
@@ -1752,7 +2433,8 @@
             0.18525550924376308,
             0.1741490807147651,
             0.3300113783482971
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -1760,6 +2442,8 @@
       "profile": "unarmed",
       "kind": "finisher",
       "animation": "ProjectYakuza_DD_ReverseDoubleFinisher01",
+      "family": "ProjectYakuza_DD_ReverseDoubleFinisher01",
+      "node": "dd_reverse_double_1",
       "impact": 0.46,
       "kick": false,
       "qte": [],
@@ -1779,7 +2463,8 @@
             1.07814694268537,
             0.4808706405222187,
             0.6080719870499816
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -1787,6 +2472,8 @@
       "profile": "unarmed",
       "kind": "finisher",
       "animation": "ProjectYakuza_DD_ReverseDoubleFinisher02",
+      "family": "ProjectYakuza_DD_ReverseDoubleFinisher02",
+      "node": "dd_reverse_double_2",
       "impact": 0.22972972972972974,
       "kick": false,
       "qte": [],
@@ -1806,7 +2493,8 @@
             0.5854401079733736,
             1.3823246935149915,
             0.24907797452330588
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -1814,6 +2502,8 @@
       "profile": "unarmed",
       "kind": "finisher",
       "animation": "ProjectYakuza_DD_ReverseDoubleFinisher03",
+      "family": "ProjectYakuza_DD_ReverseDoubleFinisher03",
+      "node": "dd_reverse_double_3",
       "impact": 0.24,
       "kick": false,
       "qte": [],
@@ -1833,7 +2523,8 @@
             0.9542540738623947,
             0.48988936910304,
             1.0583696208473765
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -1841,6 +2532,8 @@
       "profile": "unarmed",
       "kind": "finisher",
       "animation": "ProjectYakuza_DD_ReverseDoubleFinisher04",
+      "family": "ProjectYakuza_DD_ReverseDoubleFinisher04",
+      "node": "dd_reverse_double_4",
       "impact": 0.36585365853658536,
       "kick": false,
       "qte": [],
@@ -1860,7 +2553,8 @@
             1.0491045018593053,
             0.17705921673892394,
             0.33101781419245774
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -1868,6 +2562,8 @@
       "profile": "unarmed",
       "kind": "finisher",
       "animation": "ProjectYakuza_DD_ReverseFinisher01",
+      "family": "ProjectYakuza_DD_ReverseFinisher01",
+      "node": "dd_reverse_finisher_1",
       "impact": 0.22388059701492538,
       "kick": false,
       "qte": [],
@@ -1887,7 +2583,8 @@
             0.4403717663499127,
             0.8167249337431791,
             0.20907499953768638
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -1895,6 +2592,8 @@
       "profile": "unarmed",
       "kind": "finisher",
       "animation": "ProjectYakuza_DD_ReverseFinisher02",
+      "family": "ProjectYakuza_DD_ReverseFinisher02",
+      "node": "dd_reverse_finisher_2",
       "impact": 0.2962962962962963,
       "kick": false,
       "qte": [],
@@ -1914,7 +2613,8 @@
             0.17238684923339587,
             0.20084233206075583,
             0.6188541696177978
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -1922,6 +2622,8 @@
       "profile": "unarmed",
       "kind": "finisher",
       "animation": "ProjectYakuza_DD_ReverseFinisher03",
+      "family": "ProjectYakuza_DD_ReverseFinisher03",
+      "node": "dd_reverse_finisher_3",
       "impact": 0.16923076923076924,
       "kick": false,
       "qte": [],
@@ -1941,7 +2643,8 @@
             0.3591324116739322,
             0.1544974872251932,
             0.864943180677976
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -1949,6 +2652,8 @@
       "profile": "unarmed",
       "kind": "finisher",
       "animation": "ProjectYakuza_DD_ReverseFinisher04",
+      "family": "ProjectYakuza_DD_ReverseFinisher04",
+      "node": "dd_reverse_finisher_4",
       "impact": 0.1875,
       "kick": false,
       "qte": [],
@@ -1968,7 +2673,8 @@
             0.5976197011007012,
             1.2040932331111227,
             0.21927544285041525
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -1976,6 +2682,8 @@
       "profile": "unarmed",
       "kind": "runningAttack",
       "animation": "ProjectYakuza_DD_RunningAttack01",
+      "family": "ProjectYakuza_DD_RunningAttack01",
+      "node": "dd_run_01",
       "impact": 0.18181818181818182,
       "kick": false,
       "qte": [],
@@ -1995,7 +2703,8 @@
             0.5045699547568683,
             0.30095109473763937,
             0.6765540120052047
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -2003,6 +2712,8 @@
       "profile": "unarmed",
       "kind": "runningAttack",
       "animation": "ProjectYakuza_DD_RunningAttack02",
+      "family": "ProjectYakuza_DD_RunningAttack02",
+      "node": "dd_run_02",
       "impact": 0.225,
       "kick": false,
       "qte": [],
@@ -2022,7 +2733,8 @@
             0.6625007662649397,
             0.25235519235648046,
             0.8220881770404418
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -2030,6 +2742,8 @@
       "profile": "unarmed",
       "kind": "runningAttack",
       "animation": "ProjectYakuza_DD_RunningAttack03",
+      "family": "ProjectYakuza_DD_RunningAttack03",
+      "node": "dd_run_03",
       "impact": 0.24,
       "kick": false,
       "qte": [],
@@ -2049,7 +2763,8 @@
             0.45962116974490436,
             0.25462727875295066,
             0.27554830139249203
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -2057,6 +2772,8 @@
       "profile": "unarmed",
       "kind": "runningAttack",
       "animation": "ProjectYakuza_DD_RunningAttack04",
+      "family": "ProjectYakuza_DD_RunningAttack04",
+      "node": "dd_run_04",
       "impact": 0.21875,
       "kick": false,
       "qte": [],
@@ -2076,7 +2793,8 @@
             0.9479583713602163,
             0.8342378349379264,
             0.4572048298710697
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     },
@@ -2084,6 +2802,8 @@
       "profile": "unarmed",
       "kind": "parry",
       "animation": "ProjectYakuza_DD_TigerDrop",
+      "family": "ProjectYakuza_DD_TigerDrop",
+      "node": "dd_tiger_drop",
       "impact": -1.0,
       "kick": false,
       "qte": [],
@@ -2103,7 +2823,8 @@
             0.2744535909222584,
             0.053959914173122216,
             0.041696772562449795
-          ]
+          ],
+          "selection": "contact-local relative motion"
         }
       ]
     }

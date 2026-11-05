@@ -3,7 +3,7 @@ require "ProjectYakuza/WorldEffects"
 require "ProjectYakuza/AttackTracks"
 require "ProjectYakuza/AttackTrailCatalog"
 local PY=ProjectYakuza
-local F={states=setmetatable({}, {__mode="k"}),maxActors=8,pointCount=22,historySize=12}
+local F={states=setmetatable({}, {__mode="k"}),maxActors=8,maxTails=8,pointCount=30,historySize=24,trailMs=200,tails={}}
 PY.AttackEffects=F
 local function valid(p,s)
     local style=PY.getPlayerStyle(p)
@@ -87,17 +87,34 @@ function F.facing(p)
 
     return p:getAnimAngleRadians()
 end
-function F.clear(p)
-    local s=F.states[p];if not s then return end
-    for _,point in ipairs(s.points or {}) do point.instance:Dispose();IsoSpriteInstance.add(point.instance) end
-    F.states[p]=nil
-    local any=false;for _ in pairs(F.states) do any=true;break end
-    if not any and F.hooked then
-        Events.OnTick.Remove(F.tick);Events.OnPostRender.Remove(F.render);F.hooked=false
+function F.dispose(s,tailOnly)
+    for i,point in ipairs(s.points or {})do
+        if point.instance and(not tailOnly or i<15 or i>26)then point.instance:Dispose();IsoSpriteInstance.add(point.instance);point.instance=nil end
     end
 end
+function F.syncHook()
+    local any=#F.tails>0;for _ in pairs(F.states)do any=true;break end
+    if any and not F.hooked then Events.OnTick.Add(F.tick);Events.OnPostRender.Add(F.render);F.hooked=true
+    elseif not any and F.hooked then Events.OnTick.Remove(F.tick);Events.OnPostRender.Remove(F.render);F.hooked=false end
+end
+function F.clear(p)
+    local s=F.states[p];if s then F.dispose(s);F.states[p]=nil end
+    for i=#F.tails,1,-1 do if F.tails[i].owner==p then F.dispose(F.tails[i]);table.remove(F.tails,i)end end
+    F.syncHook()
+end
+function F.finish(p)
+    local s=F.states[p];if not s then return end;F.states[p]=nil
+    local now=getTimestampMs();if not isGamePaused()then s.clock=s.clock+math.max(0,now-s.last)end;s.last=now
+    if s.lastEmission and s.clock-s.lastEmission<F.trailMs and valid(p,s)then
+        if #F.tails>=F.maxTails then F.dispose(F.tails[1]);table.remove(F.tails,1)end
+        F.dispose(s,true);s.owner=p;s.last=getTimestampMs();F.tails[#F.tails+1]=s
+    else F.dispose(s)end
+    F.syncHook()
+end
 function F.clearAll()
-    for p in pairs(F.states) do F.clear(p) end
+    for _,s in pairs(F.states)do F.dispose(s)end
+    for _,s in ipairs(F.tails)do F.dispose(s)end
+    F.states=setmetatable({}, {__mode="k"});F.tails={};F.syncHook()
 end
 function F.configuration(style,move)
     if not move then return end
@@ -106,15 +123,15 @@ function F.configuration(style,move)
 end
 function F.start(p,style,step,move,stamp)
     local old=F.states[p]
-    if stamp and old and old.stamp==stamp and old.move==move then return end
-    F.clear(p)
+    if stamp and old and old.stamp==stamp and old.family==move.animation then return end
+    F.finish(p)
     local config=F.configuration(style,move)
     local track=config and PY.AttackTracks[config.track]
     if not track or track.animation~=move.animation then return end
     local count=0;for _ in pairs(F.states) do count=count+1 end
     if count>=F.maxActors then return end
     local seed=p.getOnlineID and p:getOnlineID()or 0
-    local s={style=style.id,track=track,config=config,move=move,stamp=stamp,seed=seed%97,timeout=math.max(1200,(config.duration or (#track.frames-1)/track.fps)*2000+500),chaos=type(config.chaos)=="number"and math.max(0,math.min(1,config.chaos))or .65,clock=0,last=getTimestampMs(),history={},historyHead=0,historyCount=0,joints={},scratch={}}
+    local s={style=style.id,track=track,config=config,baseConfig=config,family=move.animation,move=move,stamp=stamp,seed=seed%97,timeout=math.max(1200,(config.duration or (#track.frames-1)/track.fps)*2000+500),chaos=type(config.chaos)=="number"and math.max(0,math.min(1,config.chaos))or .65,clock=0,last=getTimestampMs(),history={},historyHead=0,historyCount=0,joints={},scratch={}}
     for i=1,F.historySize do s.history[i]={}end
     if not valid(p,s) then return end
     F.states[p]=s
@@ -123,12 +140,36 @@ end
 function F.remote(p,style,packet)
     local animation=packet.clip
     if style and PY.NetworkProtocol then local clip=PY.NetworkProtocol.clip(style.id,packet.clip);animation=clip and clip.animation or animation end
-    for i,move in ipairs(style and style.lightAttacks or {})do
-        if move.attackEffects and animation==move.animation then F.start(p,style,i,move);return end
-    end
     local catalog=style and PY.AttackEffectCatalog and PY.AttackEffectCatalog[style.id]
     local config=catalog and catalog[animation]
-    if config then F.start(p,style,0,config)else F.clear(p)end
+    local stamp=tostring(packet.action or 0)..":"..tostring(packet.swing or 0)..":"..tostring(animation)
+    for i,move in ipairs(style and style.lightAttacks or {})do
+        if move.attackEffects and animation==move.animation then F.start(p,style,i,move,stamp);return end
+    end
+    if config then F.start(p,style,0,{animation=config.actionAnimation or animation},stamp)else F.finish(p)end
+end
+function F.playing(p,s)
+    local now=getTimestampMs()
+    if s.location and now<(s.nextResolve or 0)then
+        local time,weight,location=F.findTrack(p,s.track.animation,s.location)
+        if location then return time,weight,location end
+    end
+    s.nextResolve=now+100
+    local catalog=PY.AttackEffectCatalog and PY.AttackEffectCatalog[s.style]
+    local bestTime,bestWeight,bestLocation,bestConfig
+    for layer=0,3 do for slot=0,7 do
+        local name=p:dbgGetAnimTrackName(layer,slot);if not name or name==""then break end
+        local config=name==s.family and s.baseConfig or catalog and catalog[name]
+        local track=config and PY.AttackTracks[config.track]
+        if track and track.animation==name and(name==s.family or config.actionAnimation==s.family)then
+            local time=p:dbgGetAnimTrackTime(layer,slot);local weight=p:dbgGetAnimTrackWeight(layer,slot)
+            if weight>=.05 and(not bestWeight or weight>bestWeight or weight==bestWeight and time<bestTime)then bestTime=time;bestWeight=weight;bestLocation={layer=layer,slot=slot};bestConfig=config end
+        end
+    end end
+    if bestConfig and bestConfig~=s.config then
+        s.config=bestConfig;s.track=PY.AttackTracks[bestConfig.track];s.windowRef=nil;s.historyCount=0;s.recordedAt=nil;s.lastEmission=nil;s.time=nil;s.seen=false
+    end
+    return bestTime,bestWeight,bestLocation
 end
 function F.window(s,time)
     if not s.config.windows then return s.config end
@@ -142,18 +183,19 @@ function F.tick()
         if not paused then s.clock=s.clock+dt end
         if not valid(p,s) or s.clock>s.timeout then F.clear(p)
         elseif not paused then
-            local time,weight,location=F.findTrack(p,s.track.animation,s.location)
+            local time,weight,location=F.playing(p,s)
             s.location=location
             if time and weight>=.05 then
-                if s.seen and time+0.02<(s.time or 0) then F.clear(p)
+                if s.seen and time+0.02<(s.time or 0) then s.historyCount=0;s.recordedAt=nil;s.lastEmission=nil;s.time=time
                 elseif time>s.config.to+.12 then
-                    if s.seen or s.clock>350 then F.clear(p) else s.location=nil end
+                    if s.seen then F.finish(p)elseif s.clock>350 then F.clear(p) else s.location=nil end
                 else s.time=time;s.weight=weight;s.seen=true end
-            elseif s.seen or s.clock>350 then F.clear(p) end
+            elseif s.seen then F.finish(p)elseif s.clock>350 then F.clear(p) end
         end
     end
 end
 local corePositions={.25,.62,1}
+local trailPositions={.5,.75,1}
 local function sprite(path)
     local result=IsoSprite.CreateSprite(nil);result:LoadFramesNoDirPageSimple(path);return result
 end
@@ -166,11 +208,11 @@ local function allocate(s)
     end
     local tile=Core.getTileScale();s.points={}
     for i=1,F.pointCount do
-        local flame=i<=11 or i>=15 and i<=18
-        local sp=flame and F.flame or i>=19 and F.spark or F.glint
-        local scale=(i<=11 and .44 or i==14 and .18 or i<=14 and .13 or i<=18 and .35 or .16)*tile
+        local flame=i<=11 or i>=15 and i<=26
+        local sp=flame and F.flame or i>=27 and F.spark or F.glint
+        local scale=(i<=11 and .44 or i==14 and .18 or i<=14 and .13 or i<=26 and .35 or .16)*tile
         local instance=PY.WorldEffects.detached(sp,scale,flame and .72 or 0)
-        s.points[i]={instance=instance,height=(flame or i>=19)and 32 or 64,scale=scale}
+        s.points[i]={instance=instance,height=(flame or i>=27)and 32 or 64,scale=scale}
     end
 end
 function F.armPoint(joints,t)
@@ -231,6 +273,18 @@ local function drawPoint(p,s,index,x,y,z,alpha,color)
     if point.alpha~=alpha then point.instance:SetAlpha(alpha);point.instance:SetTargetAlpha(alpha);point.alpha=alpha end
     point.instance:render(p,x,y,z,IsoDirections.N,0,-point.height*point.scale/2,color)
 end
+function F.drawHistory(p,s,animate)
+    if not s.lastEmission or s.clock-s.lastEmission>=F.trailMs then return end
+    for i=15,26 do
+        local lag=20+math.floor((i-15)/3)*45;local target=s.clock-lag
+        if target<=s.lastEmission and F.historyPose(s,target,s.scratch)then
+            local x,y,z=F.armPoint(s.scratch,trailPositions[(i-15)%3+1])
+            if animate then F.flame:update(s.points[i].instance)end
+            local fade=math.max(0,1-lag/F.trailMs)^1.5*math.max(0,1-(s.clock-s.lastEmission)/F.trailMs)
+            drawPoint(p,s,i,x,y,z,.32*fade*(s.lastWeight or 1),s.lastColor)
+        end
+    end
+end
 function F.draw()
     if not F.normal then F.normal=ColorInfo.new(.70,.86,1,1);F.extreme=ColorInfo.new(.62,.76,1,1)end
     local now=getTimestampMs();local paused=isGamePaused()
@@ -238,56 +292,48 @@ function F.draw()
         local dt=math.max(0,now-s.last);s.last=now;if not paused then s.clock=s.clock+dt end
         local time=s.time
         if not paused then
-            local current,weight,location=F.findTrack(p,s.track.animation,s.location)
-            if current and weight>=.05 and (not time or current>=time-.02)then time=current;s.time=current;s.weight=weight;s.location=location end
+            local current,weight,location=F.playing(p,s)
+            if current and weight>=.05 and(not time or not s.seen or current>=time-.02)then time=current;s.time=current;s.weight=weight;s.location=location end
         end
+        local animate=not paused and s.lastFlameClock~=s.clock
         if time and time>=s.config.from and time<=s.config.to+.12 then
             local window=F.window(s,time)
             if window then
-            if s.windowRef~=window then
-                s.windowRef=window;s.track=PY.AttackTracks[window.track];s.historyCount=0;s.recordedAt=nil
-            end
-            if not s.points then allocate(s)end
-            local pose=F.pose(p,s,time);local joints=F.worldJoints(p,s,time,pose)
-            if not paused then F.record(s)end
-            local extreme=PY.Heat.isExtreme(p);local color=extreme and F.extreme or F.normal
-            local fade=math.max(0,math.min(1,(time-window.from)/.04,(window.to+.06-time)/.06))*math.min(1,s.weight)
-            local animate=not paused and s.lastFlameClock~=s.clock
-            for i=1,11 do
-                local t=(i-1)/10;local x,y,z=F.armPoint(joints,t)
-                local envelope=math.sin(t*math.pi)*s.chaos
-                local noise=(math.sin(time*73+i*1.9+s.seed)*.012+math.sin(time*119-i*2.4+s.seed)*.008)*envelope
-                local dx,dy=joints[8]-joints[2],joints[1]-joints[7];local length=math.sqrt(dx*dx+dy*dy)
-                if length>.00001 then x=x+dx/length*noise;y=y+dy/length*noise end
-                z=z+math.sin(time*91+i*2.7+s.seed)*.009*envelope
-                local alpha=fade*(extreme and .34 or .28)*(.90+.10*math.sin(s.clock*.012+i*.8))
-                if animate then F.flame:update(s.points[i].instance)end
-                drawPoint(p,s,i,x,y,z,alpha,color)
-            end
-            for i=12,14 do
-                local x,y,z=F.armPoint(joints,corePositions[i-11])
-                drawPoint(p,s,i,x,y,z,fade*(extreme and .25 or .20),color)
-            end
-            for i=15,18 do
-                local lag=(i-14)*18
-                if F.historyPose(s,s.clock-lag,s.scratch)then
-                    local x,y,z=F.armPoint(s.scratch,i%2==1 and 1 or .65)
+                if s.windowRef~=window then s.windowRef=window;s.track=PY.AttackTracks[window.track];s.historyCount=0;s.recordedAt=nil end
+                if not s.points then allocate(s)end
+                local pose=F.pose(p,s,time);local joints=F.worldJoints(p,s,time,pose)
+                if not paused then F.record(s)end
+                local extreme=PY.Heat.isExtreme(p);local color=extreme and F.extreme or F.normal
+                s.lastEmission=s.clock;s.lastColor=color;s.lastWeight=s.weight
+                local fade=math.max(0,math.min(1,(time-window.from)/.04,(window.to+.06-time)/.06))*math.min(1,s.weight)
+                for i=1,11 do
+                    local t=(i-1)/10;local x,y,z=F.armPoint(joints,t);local envelope=math.sin(t*math.pi)*s.chaos
+                    local noise=(math.sin(time*73+i*1.9+s.seed)*.012+math.sin(time*119-i*2.4+s.seed)*.008)*envelope
+                    local dx,dy=joints[8]-joints[2],joints[1]-joints[7];local length=math.sqrt(dx*dx+dy*dy)
+                    if length>.00001 then x=x+dx/length*noise;y=y+dy/length*noise end
+                    z=z+math.sin(time*91+i*2.7+s.seed)*.009*envelope
                     if animate then F.flame:update(s.points[i].instance)end
-                    drawPoint(p,s,i,x,y,z,fade*.24*(1-lag/100),color)
+                    drawPoint(p,s,i,x,y,z,fade*(extreme and .34 or .28)*(.90+.10*math.sin(s.clock*.012+i*.8)),color)
+                end
+                for i=12,14 do local x,y,z=F.armPoint(joints,corePositions[i-11]);drawPoint(p,s,i,x,y,z,fade*(extreme and .25 or .20),color)end
+                for i=27,30 do
+                    local age=(s.clock+(i-27)*23)%92
+                    if F.historyPose(s,s.clock-age,s.scratch)then
+                        local x,y,z=F.armPoint(s.scratch,1);local k=age/92;local angle=(i-27)*math.pi/2+s.chaos*math.sin(time*67+i+s.seed)
+                        drawPoint(p,s,i,x+math.cos(angle)*(.055+.035*s.chaos)*k,y+math.sin(angle)*(.055+.035*s.chaos)*k,z+(.035+.015*s.chaos)*k,fade*.55*(1-k),color)
+                    end
                 end
             end
-            for i=19,22 do
-                local age=(s.clock+(i-19)*23)%92
-                if F.historyPose(s,s.clock-age,s.scratch)then
-                    local x,y,z=F.armPoint(s.scratch,1);local k=age/92
-                    local angle=(i-19)*math.pi/2+s.chaos*math.sin(time*67+i+s.seed)
-                    drawPoint(p,s,i,x+math.cos(angle)*(.055+.035*s.chaos)*k,y+math.sin(angle)*(.055+.035*s.chaos)*k,z+(.035+.015*s.chaos)*k,fade*.55*(1-k),color)
-                end
-            end
-            if animate then s.lastFlameClock=s.clock end
-            else s.historyCount=0;s.recordedAt=nil end
         end
+        if s.points then F.drawHistory(p,s,animate)end
+        if animate then s.lastFlameClock=s.clock end
     end
+    for i=#F.tails,1,-1 do
+        local s=F.tails[i];local p=s.owner;local dt=math.max(0,now-s.last);s.last=now;if not paused then s.clock=s.clock+dt end
+        if not valid(p,s)or s.clock-s.lastEmission>=F.trailMs or (p:getX()-s.rootX)^2+(p:getY()-s.rootY)^2>1 or math.abs(p:getZ()-s.rootZ)>.5 then F.dispose(s);table.remove(F.tails,i)
+        else local animate=not paused and s.lastFlameClock~=s.clock;F.drawHistory(p,s,animate);if animate then s.lastFlameClock=s.clock end end
+    end
+    F.syncHook()
 end
 function F.render()
     local renderer=SpriteRenderer.instance;local previous=renderer:getDoAdditive();renderer:setDoAdditive(false)
@@ -308,16 +354,16 @@ PY.on("runningAttackStarted",special)
 PY.on("quickstepAttackStarted",special)
 PY.on("chargedHeavyStarted",special)
 PY.on("groundAttackStarted",special)
-PY.on("lightAttackFinished",F.clear)
-PY.on("finisherFinished",F.clear)
-PY.on("runningAttackFinished",F.clear)
-PY.on("quickstepAttackFinished",F.clear)
-PY.on("chargedHeavyFinished",F.clear)
-PY.on("groundAttackFinished",F.clear)
+PY.on("lightAttackFinished",F.finish)
+PY.on("finisherFinished",F.finish)
+PY.on("runningAttackFinished",F.finish)
+PY.on("quickstepAttackFinished",F.finish)
+PY.on("chargedHeavyFinished",F.finish)
+PY.on("groundAttackFinished",F.finish)
 PY.on("comboCancelled",F.clear)
 PY.on("styleChanged",F.clear)
 PY.on("actionCancelled",function(context)if context and F.states[context.player] and F.states[context.player].stamp==context then F.clear(context.player)end end)
-PY.on("actionCompleted",function(context)if context and F.states[context.player] and F.states[context.player].stamp==context then F.clear(context.player)end end)
+PY.on("actionCompleted",function(context)if context and F.states[context.player] and F.states[context.player].stamp==context then F.finish(context.player)end end)
 Events.OnSave.Add(F.clearAll)
 Events.OnMainMenuEnter.Add(F.clearAll)
 Events.OnGameStart.Add(F.clearAll)
