@@ -214,6 +214,9 @@
 !/tools/combat-tests/StyleFXProbe.java
 !/tools/combat-tests/validate_style_fx.py
 
-!/tools/combat-tests/PacedHeatProbe.java
+!/tools/combat-tests/NativeRushTimingProbe.java
 
 !/tools/combat-tests/validate_grab_alignment.py
+
+!/tools/combat-tests/build_rush_twohit_assets.py
+!/tools/combat-tests/validate_rush_twohit_assets.py

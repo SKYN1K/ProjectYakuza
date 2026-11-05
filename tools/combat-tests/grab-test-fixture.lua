@@ -25,7 +25,9 @@ function base:setActionAnim(v)self.animation=v end
 function base:forceStop()self:stop()end;function base:forceComplete()self:perform()end
 local oldNew=base.new
 base.new=function(class,player)local a=oldNew(class,player);a.action={setOverrideHandModelsObject=function()end};return a end
+ZombieOnGroundState={instance=function()return 'ZombieOnGroundState'end}
 local z={x=.5,y=.9,health=10,vars={},hits=0,deferred=true,target=p,state='idle'}
+function z:changeState(v)self.state=v end
 function z:getX()return self.x end;function z:getY()return self.y end;function z:getZ()return 0 end
 function z:setX(v)self.x=v end;function z:setY(v)self.y=v end
 function z:setNextX(v)self.nx=v end;function z:setNextY(v)self.ny=v end
@@ -207,5 +209,15 @@ do
  local returning=R.alignment(slot,'hold',state,230);check(returning.forward==final.forward and returning.right==final.right,'return to hold begins at previous paired offset')
  local restore=R.alignment(slot,'hold',state,350);check(math.abs(restore.forward-slot.distance)<.000001,'returning hold restores walking grab spacing')
  local original=slot.throwOffset;slot.throwOffset={forward=0/0,right=0};check(not PY.validateStyle(style),'invalid paired offsets cannot enter registered styles');slot.throwOffset=original
+end
+do
+ p.x=.5;p.y=.2;z.floor=false;z.knock=false;z.front=false
+ local thrown=startGrab();check(thrown:throw(),'paired hold starts throw')
+ local hits=z.hits
+ p.vars.ProjectYakuzaDefenseMarker='throw_impact';z.vars.ProjectYakuzaGrabMarker='throw_impact';clock=clock+1500;thrown:update()
+ check(thrown.cleaned and z.hits==hits+1,'completed throw deals one hit and releases paired action')
+ check(z.floor and not z.front and not z.stagger and z.force==0 and z:getHitReaction()=='','throw cleanup leaves victim face-up on the floor without a stumble reaction')
+ check(not z.ignore and not z.useless and z.deferred and not z.locked,'prone landing restores normal AI and owned movement locks')
+ z.floor=false;z.knock=false
 end
 return 'PASS '..checks..' reliable grab lifecycle, four source-timed strikes, following, cleanup, wall geometry, handoff and action protection checks'

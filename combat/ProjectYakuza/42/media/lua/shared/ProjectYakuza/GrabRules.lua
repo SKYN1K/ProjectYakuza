@@ -89,3 +89,9 @@ function G.alignment(slot,phase,state,t)
     state.pairOffset={forward=source.forward+(target.forward-source.forward)*f,right=source.right+(target.right-source.right)*f}
     return state.pairOffset
 end
+
+function G.land(z)
+    if not z or z:isDead()then return end
+    z:setHitReaction("");z:setStaggerBack(false);z:setHitForce(0);z:setKnockedDown(true);z:setFallOnFront(false);z:setOnFloor(true)
+    if ZombieOnGroundState and z.changeState then z:changeState(ZombieOnGroundState.instance())end
+end

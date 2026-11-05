@@ -1,3 +1,4 @@
+ZombieOnGroundState={instance=function()return 'ZombieOnGroundState'end}
 local count=0
 local function check(ok,msg)count=count+1;if not ok then error(msg) end end
 require=function()end
@@ -56,6 +57,7 @@ local function zombie(id,x)
  local z={id=id,x=x,y=0,z=0,health=1,hits=0,vars={},target=p,deferred=true}
  function z:getStateMachine()local z=self;return {isLocked=function()return z.stateLocked==true end}end
  function z:setStateMachineLocked(v)self.stateLocked=v end
+ function z:changeState(v)self.state=v end
  function z:getOnlineID()return self.id end
  function z:getX()return self.x end;function z:getY()return self.y end;function z:getZ()return self.z end
  function z:setX(v)self.x=v end;function z:setY(v)self.y=v end
@@ -142,9 +144,9 @@ command('grabRequest',{zombie=z1.id});check(s.grab and z1.useless and z1.ignore,
 snapshot(remote);command('grabRequest',{zombie=z1.id},remote)
 check(server.players[2].grab==nil,'second player cannot grab leased zombie')
 snapshot(p,{phase='hold',clip='ProjectYakuza_DD_GrabHold'});server.tick()
-check(math.abs(z1.x-.291238)<.000001 and z1.nextX==z1.x and math.abs(z1.y+.019355)<.000001,'server aligns paired roots with native collar spacing')
+check(math.abs(z1.x-.5)<.000001 and z1.nextX==z1.x and math.abs(z1.y+.019355)<.000001,'server aligns paired roots with native collar spacing')
 snapshot(p,{phase='throw',clip='ProjectYakuza_DD_Throw'});command('throw',{zombie=z1.id})
-check(z1.hits==1 and z1.knock and s.grab==nil and not z1.useless and not z1.ignore,'throw hits once and releases AI lease')
+check(z1.hits==1 and z1.nativeFloor and not z1.stagger and z1.force==0 and s.grab==nil and not z1.useless and not z1.ignore,'throw lands prone without a fresh stumble and releases AI lease')
 command('throw',{zombie=z1.id});check(z1.hits==1,'repeated throw does not damage twice')
 z1.health=1;clock=clock+1100;snapshot(p);command('grabRequest',{zombie=z1.id})
 check(s.grab~=nil,'can acquire another grab after release')
@@ -676,17 +678,19 @@ wall=true;command('heatRushBegin',{zombie=z1.id,request=2});check(not rush.lease
 command('heatRushBegin',{zombie=z1.id,request=3});local lease=rush.leases[p];check(lease and rush.held[z1]==lease,'server grants one target/action lease')
 command('heatRushReady',{action=lease.action});check(lease.started and z1.useless and z1.ignore,'server owns paired victim lock only after ready')
 local before=z1.hits;command('heatRushHit',{action=lease.action,index=1,damage=999});check(z1.hits==before,'no QTE input means no hit')
-for i,prompt in ipairs(lease.definition.prompts)do
- clock=lease.started+prompt.atMs-100;snapshot(p,{extreme=true,clip='ProjectYakuza_DD_HeatRush',move='dd_heat_rush',action=lease.action,swing=1800})
- command('heatRushPress',{action=lease.action,index=i});check(lease.presses[i],'source-time prompt accepted '..i)
- command('heatRushHit',{action=lease.action+1,index=i});check(z1.hits==before,'wrong action serial rejects QTE damage')
- clock=lease.started+prompt.atMs+10;command('heatRushHit',{action=lease.action,index=i,damage=999})
- check(z1.hits==before,'successful timed punch remains presentation-only')
- command('heatRushHit',{action=lease.action,index=i});check(z1.hits==before,'replayed QTE hit cannot duplicate damage')
+local events={}
+for i,prompt in ipairs(lease.definition.prompts)do events[#events+1]={time=prompt.atMs-50,kind='press',index=i}end
+for i,contact in ipairs(lease.contacts)do if not contact.sumQTE then events[#events+1]={time=contact.atMs+10,kind='hit',index=i}end end
+table.sort(events,function(a,b)return a.time<b.time end)
+for _,event in ipairs(events)do
+ clock=lease.started+event.time;snapshot(p,{extreme=true,clip='ProjectYakuza_DD_HeatRush',move='dd_heat_rush',action=lease.action,swing=1800})
+ command(event.kind=='press'and'heatRushPress'or'heatRushHit',{action=lease.action,index=event.index})
+ check(z1.hits==before,'both original punches are presentation-only before the automatic kick')
 end
-clock=lease.started+rules.time(lease.move,143/30)*1000+10;snapshot(p,{extreme=true,clip='ProjectYakuza_DD_HeatRush',move='dd_heat_rush',action=lease.action,swing=1800})
+check(#events==18 and #lease.definition.prompts==6,'six fresh prompts cover twelve independent punch contacts')
+clock=lease.started+rules.time(lease.move,245/30)*1000+10;snapshot(p,{extreme=true,clip='ProjectYakuza_DD_HeatRush',move='dd_heat_rush',action=lease.action,swing=1800})
 command('heatRushPress',{action=lease.action,index=7});check(not lease.presses[7],'automatic final kick is not a seventh QTE')
-command('heatRushHit',{action=lease.action,index=7,damage=999});command('heatRushHit',{action=lease.action,index=7})
+command('heatRushHit',{action=lease.action,index=13,damage=999});command('heatRushHit',{action=lease.action,index=13})
 check(z1.hits==before and math.abs(lease.pendingDamage-2.25)<.000001,'final kick defers native damage to preserve paired victim playback')
 clock=lease.started+rules.wallDuration(lease.move)*1000+10;snapshot(p,{extreme=true,clip='ProjectYakuza_DD_HeatRush',move='dd_heat_rush',action=lease.action,swing=1800});command('heatRushEnd',{action=lease.action,completed=true})
 check(not rush.leases[p]and not rush.held[z1]and not z1.useless and not z1.ignore and z1.deferred and z1.knock,'server completion restores victim state and terminal knockdown')
@@ -967,13 +971,15 @@ do
  end
  local lease=begin(1,'consecutive');local before=z1.hits
  clock=lease.started+lease.definition.prompts[1].atMs+190;rush.tick(clock,{[p]=true})
- check(lease.failed and lease.failedIndex==1 and not z1.useless and not z1.ignore and not rush.held[z1],'server automatically branches a missed first cue and releases only the victim lock')
+ check(lease.failed and lease.failedIndex==1 and z1.useless and z1.ignore and rush.held[z1]==lease and lease.failurePose,'a missed first section keeps both actors paired for the automatic kick')
  local failureClip=P.clip(style.id,'ProjectYakuza_DD_HeatRushFail');check(failureClip and P.supports(style,failureClip),'registered recovery clip is accepted by the real MP snapshot validator')
  snapshot(p,{extreme=true,clip='ProjectYakuza_DD_HeatRushFail',move='dd_light_01',action=lease.action,swing=serial})
  check(server.players[p.id].packet.clip=='ProjectYakuza_DD_HeatRushFail','failure motion is retained in the actual relayed player state')
 
  command('heatRushHit',{action=lease.action,index=7});check(z1.hits==before and not lease.pendingDamage,'failed action cannot claim a finishing hit')
- local newer={};rush.held[z1]=newer;clock=lease.failedAt+1000;rush.tick(clock,{[p]=true})
+ clock=lease.failedAt+lease.move.qteFailure.contactMs+10;command('heatRushHit',{action=lease.action,index=#lease.contacts});command('heatRushHit',{action=lease.action,index=#lease.contacts})
+ check(lease.hits[#lease.contacts]and z1.hits==before and not lease.pendingDamage,'failed first QTE still has one automatic source kick contact with no unearned payoff')
+ local newer={};rush.held[z1]=newer;clock=lease.failedAt+lease.move.qteFailure.duration*1000+600;rush.tick(clock,{[p]=true})
  check(not rush.leases[p]and rush.held[z1]==newer and not p.invincible,'failed recovery ends and stale cleanup cannot release another victim lease');rush.held[z1]=nil
  lease=begin(2,'consecutive')
  for i=1,4 do
@@ -984,7 +990,11 @@ do
   if i<4 then check(not lease.failed,'one isolated missed cue is tolerated under a two-consecutive policy')end
  end
  check(lease.failed and lease.failedIndex==4 and lease.failures==3,'server resets consecutive failures after a correct input and aborts at the configured threshold')
- rush.finish(p,false);config.failureLimit=originalLimit;config.failureMode=originalMode
+ clock=lease.failedAt+lease.move.qteFailure.contactMs+10;command('heatRushHit',{action=lease.action,index=#lease.contacts})
+ check(lease.hits[#lease.contacts]and math.abs(lease.pendingDamage-.375)<.000001,'failed sequence kick retains only the payoff earned by its passed QTE section')
+ clock=lease.failedAt+lease.move.qteFailure.duration*1000+10;command('heatRushEnd',{action=lease.action,completed=true})
+ check(not rush.leases[p]and z1.nativeFloor and not z1.ignore and not p.invincible,'failed paired kick completes prone and releases both actors')
+ config.failureLimit=originalLimit;config.failureMode=originalMode
  ProjectYakuza.HeatActions.clear()
 end
 do

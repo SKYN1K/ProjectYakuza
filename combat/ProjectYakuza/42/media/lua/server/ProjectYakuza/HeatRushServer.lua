@@ -8,23 +8,27 @@ function H.reply(p,command,a)a.player=p:getOnlineID();sendServerCommand(p,P.modu
 function H.finish(p,completed)
     local job=H.leases[p];if not job then return end
     H.leases[p]=nil;if H.held[job.z]==job then H.held[job.z]=nil end;local z=job.z
-    if completed and not job.failed and job.hits[#job.contacts]then R.ground(z,R.endFacing(job))end
+    if completed and(not job.failed or R.pairedFailure(job.move))and job.hits[#job.contacts]then R.ground(z,R.endFacing(job))end
     if job.started then PY.HeatActions.finish(p,job);if not job.victimRestored then R.restore(z,job.old);job.victimRestored=true end end
-    if completed and not job.failed and job.pendingDamage and not z:isDead()and (R.targetKind(z)~="player"or R.playerAllowed(p,z))then
+    if completed and(not job.failed or R.pairedFailure(job.move))and job.pendingDamage and not z:isDead()and (R.targetKind(z)~="player"or R.playerAllowed(p,z))then
         local state=S.players[p:getOnlineID()]
         if state and state.packet then
             if R.targetKind(z)=="player"then S.processing=true;local ok,err=pcall(z.Hit,z,job.weapon,p,job.pendingDamage,false,1);S.processing=false;if not ok then print("[ProjectYakuza] deferred paired hit failed: "..tostring(err))end
             else S.damage(p,z,job.pendingDamage,false,false,state,job.move,job.style,nil,nil,true)end
         end
     end
-    if completed and not job.failed and job.hits[#job.contacts]and not z:isDead()then R.ground(z,R.endFacing(job))end
+    if completed and(not job.failed or R.pairedFailure(job.move))and job.hits[#job.contacts]and not z:isDead()then R.ground(z,R.endFacing(job))end
     S.fanout(p,"heatRushEnd",{player=p:getOnlineID(),action=job.action,zombie=z:getOnlineID(),targetKind=R.targetKind(z),useless=job.old.useless,ignore=job.old.ignore,deferred=job.old.deferred,locked=job.old.locked,completed=completed==true})
 end
 function H.abort(job,index)
     if job.failed or not job.move.qteFailure then return end
     job.failed=true;job.failedIndex=index;job.failedAt=now();job.pendingDamage=nil;job.expires=job.failedAt+job.move.qteFailure.duration*1000+1000
-    if H.held[job.z]==job then H.held[job.z]=nil end
-    if not job.victimRestored then R.restore(job.z,job.old);job.victimRestored=true end
+    if R.pairedFailure(job.move)then
+        local age=R.sourceTime(job.move,(now()-job.started)/1000);job.failurePose=R.failurePose(job,age);job.z:setVariable("ProjectYakuzaPairedVictimClip",job.move.qteFailure.targetAnimation);R.hold(job.z)
+    else
+        if H.held[job.z]==job then H.held[job.z]=nil end
+        if not job.victimRestored then R.restore(job.z,job.old);job.victimRestored=true end
+    end
     S.fanout(job.p,"heatRushFailed",{player=job.p:getOnlineID(),action=job.action,index=index})
 end
 function H.results(job,age,requested)
@@ -93,7 +97,7 @@ function H.command(p,command,a,s)
         if not pose then H.reply(p,"heatRushDenied",{request=a.request});return end
         if not P.path(p,z:getX(),z:getY())or not R.space(p,pose)then H.reply(p,"heatRushDenied",{request=a.request});return end
         if grabHeat then S.release(p)end
-        H.serial=H.serial+1;pose.action=H.serial;pose.p=p;pose.z=z;pose.weapon=p:getPrimaryHandItem();pose.style=style.id;pose.expires=t+7000;pose.presses={};pose.hits={};pose.move=move;pose.definition=R.qte(move);pose.contacts=R.contacts(move);pose.old=R.capture(z)
+        H.serial=H.serial+1;pose.action=H.serial;pose.p=p;pose.z=z;pose.weapon=p:getPrimaryHandItem();pose.style=style.id;pose.expires=t+7000;pose.presses={};pose.hits={};pose.move=move;pose.definition=R.qte(move);if move.qteStages then pose.hits.qte=pose.presses end;pose.contacts=R.contacts(move);pose.old=R.capture(z)
         H.leases[p]=pose;H.held[z]=pose;s.rushCount=0
         H.reply(p,"heatRushGranted",{request=a.request,action=pose.action,zombie=z:getOnlineID(),targetKind=R.targetKind(z),x=pose.x,y=pose.y,fx=pose.fx,fy=pose.fy,grabHeat=grabHeat});return
     end
@@ -107,8 +111,20 @@ function H.command(p,command,a,s)
         job.old=R.lock(job.z,job.move.targetAnimation);PY.HeatActions.begin(p,job,R.protection(job.move))
         S.fanout(p,"heatRushPose",{player=p:getOnlineID(),action=job.action,zombie=job.z:getOnlineID(),targetKind=R.targetKind(job.z),x=job.x,y=job.y,fx=job.fx,fy=job.fy,motionId=job.move.motionId,node=job.move.nodeValue,age=0});return
     end
-    if command=="heatRushEnd"then H.finish(p,not job.failed and a.completed==true and job.started and t-job.started>=R.wallDuration(job.move)*1000-150);return end
-    if job.failed then return end
+    if command=="heatRushEnd"then
+        local ended=job.failed and R.pairedFailure(job.move)and t-job.failedAt>=job.move.qteFailure.duration*1000-150 or not job.failed and job.started and t-job.started>=R.wallDuration(job.move)*1000-150
+        H.finish(p,a.completed==true and ended);return
+    end
+    if job.failed then
+        if R.pairedFailure(job.move)and command=="heatRushHit"and a.index==#job.contacts and not job.hits[a.index]then
+            local age=t-job.failedAt;local contact=job.move.qteFailure.contactMs
+            if age>=contact-100 and age<=contact+R.contactGraceMs and not job.z:isDead()and(R.targetKind(job.z)~="player"or R.playerAllowed(p,job.z))and P.near(p,job.z,2)and P.path(p,job.z:getX(),job.z:getY())then
+                job.hits[a.index]=true;local amount=R.amount(job.move,a.index,job.weapon,job.hits);if amount and amount>0 then job.pendingDamage=amount end
+                S.fanout(p,"heatRushContact",{player=p:getOnlineID(),action=job.action,index=a.index,zombie=job.z:getOnlineID(),targetKind=R.targetKind(job.z),node=job.move.nodeValue,presentation=true,strong=true})
+            end
+        end
+        return
+    end
     if not job.started then return end
     local realAge=(t-job.started)/1000;local age=R.sourceTime(job.move,realAge)
     if command=="heatRushFail"then
@@ -146,11 +162,15 @@ function H.tick(t,online)
             if not job.failed then H.results(job,sourceAge)end
             if job.failed then
                 S.fanout(p,"heatRushFailed",{player=p:getOnlineID(),action=job.action,index=job.failedIndex})
-                if t-job.failedAt>=job.move.qteFailure.duration*1000+150 then H.finish(p,false)end
+                if job.failurePose then
+                    local age=math.min(job.move.qteFailure.duration,(t-job.failedAt)/1000);local x,y=R.point(job.failurePose,job.failurePose.motion.victim,age)
+                    if not P.path(z,x,y)then H.finish(p,false)else z:setX(x);z:setY(y);z:setNextX(x);z:setNextY(y);R.hold(z)end
+                end
+                if H.leases[p]and t-job.failedAt>=job.move.qteFailure.duration*1000+500 then H.finish(p,job.hits[#job.contacts]==true and R.pairedFailure(job.move))end
             else
             local age=math.min(job.duration,R.sourceTime(job.move,(t-job.started)/1000));local x,y=R.point(job,job.motion.victim,age)
             if not z:isDead()and (not P.near(p,z,3)or not P.path(z,x,y))then H.finish(p,false)
-            else if not z:isDead()then z:setX(x);z:setY(y);z:setNextX(x);z:setNextY(y);z:setVariable("ProjectYakuzaHeatRushSpeed",R.speed(job.move,age));R.hold(z)end
+            else if not z:isDead()then z:setX(x);z:setY(y);z:setNextX(x);z:setNextY(y);R.hold(z)end
                 S.fanout(p,"heatRushPose",{player=p:getOnlineID(),action=job.action,zombie=z:getOnlineID(),targetKind=R.targetKind(z),x=job.x,y=job.y,fx=job.fx,fy=job.fy,motionId=job.move.motionId,node=job.move.nodeValue,age=age})end
             end
         end

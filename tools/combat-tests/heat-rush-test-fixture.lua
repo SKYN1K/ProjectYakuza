@@ -115,13 +115,13 @@ check(#heard==3 and heard[1].cue=='good'and heard[2].cue=='miss'and heard[3].cue
 PY.Feedback=savedFeedback
 
 for i,binding in ipairs({'light','finisher','grab','light','finisher','grab'})do check(style.actions.heatAction.qte.prompts[i].binding==binding,'requested six-role QTE order')end
-check(#style.actions.heatAction.contacts==7 and R.duration==224/30,'retail source duration and finishing contact')
-check(R.amount(style.actions.heatAction,7,token,{[1]=true,[6]=true})==.75,'missed QTEs reduce final payoff without applying early damage')
+check(#style.actions.heatAction.contacts==13 and R.duration==326/30,'retail source duration and finishing contact')
+check(R.amount(style.actions.heatAction,13,token,{qte={[1]=true,[6]=true}})==.75,'missed QTEs reduce final payoff without applying early damage')
 check(style.actions.grab.enabled==true,'ordinary grabs are enabled independently of the QTE grab binding')
 local playback=PY.QTEPlayback;local paced=R.qte(style.actions.heatAction)
 for i,prompt in ipairs(paced.prompts)do
- check(prompt.windowMs==1000 and style.actions.heatAction.qte.prompts[i].countdownMs==1000,'each DoD QTE has a full one-second countdown')
- if i>1 then check(math.abs(prompt.atMs-prompt.windowMs-paced.prompts[i-1].atMs)<.000001,'later QTEs start after the previous full countdown')end
+ check(prompt.windowMs==1000 and style.actions.heatAction.qte.prompts[i].countdownMs==nil,'each two-hit section has one full original-speed one-second countdown')
+ check(math.abs(prompt.atMs-(40+i*30)/30*1000)<.00001,'one QTE closes after each original-speed two-hit section')
 end
 for source=0,7466,13 do check(math.abs(playback.source(style.actions.heatAction.qte,playback.time(style.actions.heatAction.qte,source))-source)<.000001,'paced source and wall clocks round trip throughout the original clip')end
 local authored={prompts={{atMs=500,windowMs=400,countdownMs=700,binding='light'},{atMs=900,windowMs=400,countdownMs=1200,binding='grab'}}}
@@ -132,10 +132,10 @@ for _,prompt in ipairs(late.definition.prompts)do
  Q.update(late,prompt.atMs-1,function(binding)return binding==prompt.binding end)
  Q.update(late,prompt.atMs,function()return false end)
 end
-check(late.successes==6,'late valid presses still leave a complete countdown for every following prompt')
+check(late.successes==6,'late valid presses pass without changing any original collision deadline')
 local legacy=def(2);check(playback.definition(legacy)==legacy and playback.time(legacy,900)==900 and playback.source(legacy,900)==900 and playback.speed(legacy,300)==1,'other unpaced moves keep their existing clocks and speed')
 for _,bad in ipairs({{atMs=500,windowMs=400,countdownMs=50,binding='light'},{atMs=500,windowMs=400,countdownMs=1000,sourceStartMs=500,binding='light'},{atMs=500,windowMs=400,sourceStartMs=100,binding='light'}})do check(not Q.valid({prompts={bad}}),'invalid paced timing is rejected')end
-for _,age in ipairs({1267,1500,1866})do
+for _,age in ipairs({1334,1800,2332})do
  local sample=Q.create(style.actions.heatAction.qte,function()return false end);Q.update(sample,age,function(binding)return binding=='light'end)
  check(sample.accepted[1]==true,'any fresh press from visible ring start until its last moment passes')
 end
@@ -147,8 +147,8 @@ local function invalidContact(index,key,value)
  contacts[index][key]=value;authored.actions.heatAction.contacts=contacts
  check(not PY.validateStyle(authored),'invalid mapped contact rejected: '..key)
 end
-invalidContact(1,'qteIndex',8);invalidContact(2,'qteIndex',1);invalidContact(1,'atMs',1)
-invalidContact(1,'qteIndex',nil);invalidContact(7,'sumQTE','yes');invalidContact(1,'sumQTE',true);invalidContact(1,'strong',2)
+invalidContact(1,'qteIndex',8);invalidContact(2,'qteIndex',1);invalidContact(1,'atMs',-1)
+invalidContact(13,'sumQTE','yes');invalidContact(1,'sumQTE',true);invalidContact(1,'strong',2)
 local codes={light=20,finisher=21,grab=22}
 PY.Bindings.options={getOption=function(_,id)
  local role=id:match('^input_(.+)$');if codes[role]then return {getValue=function()return 4 end}end
@@ -196,10 +196,10 @@ for _,binding in ipairs({'light','finisher','grab'})do press(binding,false)end
 phase=0;a:update()
 for i,prompt in ipairs(c.action.qte.prompts)do
  phase=(prompt.atMs-100)/1000;press(prompt.binding,true);a:update();check(z.hits==0,'QTE input alone never deals early damage')
- phase=prompt.atMs/1000+(i==6 and .25 or 0);press(prompt.binding,false);a:update();check(z.hits==0 and a.success[i],'successful prompt is presentation-only until final kick')
+ phase=prompt.atMs/1000+(i==6 and .25 or 0);press(prompt.binding,false);a:update();check(z.hits==0 and a.success.qte[i],'successful prompt is presentation-only until final kick')
  a:update();check(z.hits==0,'repeated update cannot duplicate contact')
 end
-phase=143/30;a:update();a:update();check(z.hits==0 and math.abs(a.pendingDamage-2.25)<.000001,'final kick queues earned damage without resetting the paired victim track')
+phase=(c.action.contacts[#c.action.contacts].atMs+1)/1000;a:update();a:update();check(z.hits==0 and math.abs(a.pendingDamage-2.25)<.000001,'final kick queues earned damage without resetting the paired victim track')
 check(committed==1,'QTE hit count does not publish repeated exertion commitments')
 check(z.total==0 and creates==1,'paired victim takes no native hit while its original animation is playing')
 phase=R.duration;a:update()
@@ -212,10 +212,13 @@ local ticket={z=z};check(PY.requestAction(p,'heatAction',nil,ticket),'second pai
 c=PY.activeActions[p];a=c.timedAction;a.action={setOverrideHandModelsObject=function()end};a:start();phase=0
 local before=z.hits
 phase=c.action.qte.prompts[1].atMs/1000;a:update()
-check(a.failed and a.qte.failed and a.animation=='ProjectYakuza_DD_HeatRushFail'and not z.useless and not z.ignore and p.blocked,'first missed prompt releases the victim and plays the original short abort recovery')
+check(a.failed and a.qte.failed and a.animation=='ProjectYakuza_DD_HeatRushFail'and z.useless and z.ignore and p.blocked and a.failurePose,'a missed two-hit section retains the paired victim for the original automatic kick')
 check(z.hits==before and not a.pendingDamage,'a missed cue cannot auto-complete or earn the final hit')
 paused=true;phase=.3;a:update();check(not a.cleaned,'pause does not consume the failure recovery');paused=false
-phase=.3;a:update();phase=20/30;a:update()
+local kicks=0;local originalPresent=H.present;H.present=function(actor,target,move,index,effects)if index==13 then kicks=kicks+1 end;return originalPresent(actor,target,move,index,effects)end
+phase=.3;a:update();phase=c.action.qteFailure.contactMs/1000+.001;a:update();a:update()
+check(kicks==1,'failed QTE still plays the source kick contact automatically, exactly once')
+H.present=originalPresent;phase=c.action.qteFailure.duration;a:update()
 check(a.cleaned and not p.blocked and not p.ignore and not z.useless,'failure recovery restores actor movement and protection')
 
 PY.NetworkProtocol.number=function(v,lo,hi)return type(v)=='number'and v==v and v>=lo and v<=hi end
@@ -227,7 +230,7 @@ getPlayerByOnlineID=function(id)return id==2 and p end
 local pose={player=2,action=10,zombie=25,session=1,age=0,x=0,y=0,fx=1,fy=0}
 H.receive('ProjectYakuza','heatRushPose',pose);check(H.remote[2]and z.useless,'remote paired pose enters native victim state')
 pose.age=6.5;H.receive('ProjectYakuza','heatRushPose',pose);check(H.remote[2]and H.remote[2].age==6.5,'retail observer accepts poses after the old five-second cutoff')
-pose.age=8;H.receive('ProjectYakuza','heatRushPose',pose);check(H.remote[2].age==6.5,'observer rejects poses beyond registered source duration')
+pose.age=R.duration+1;H.receive('ProjectYakuza','heatRushPose',pose);check(H.remote[2].age==6.5,'observer rejects poses beyond registered source duration')
 pose.age=0
 
 H.receive('ProjectYakuza','heatRushEnd',{player=2,action=10,session=1,useless=false,ignore=false,deferred=true})
@@ -278,10 +281,10 @@ check(not H.input(p,state,PY.getPlayerStyle(p))and not H.tickets[p]and ended==1,
 H.tickets[p]={granted={action=23}};H.clear(p);check(not H.tickets[p]and ended==2,'style cancellation releases an unstarted granted lease')
 H.receive('ProjectYakuza','heatRushGranted',{player=2,request=999,action=24});check(ended==3,'obsolete grant is released rather than holding an abandoned target')
 local oldEffects,oldFeedback=PY.HitEffects,PY.Feedback;local visualHits,sounds=0,{}
-PY.HitEffects={spawn=function(_,_,_,charged)visualHits=visualHits+1;if visualHits==7 then check(charged,'finishing kick uses supplied stronger sparks')end end}
+PY.HitEffects={spawn=function(_,_,_,charged)visualHits=visualHits+1;if visualHits==13 then check(charged,'finishing kick uses supplied stronger sparks')end end}
 PY.Feedback={sound=function(_,cue)return cue end,play=function(_,cue)sounds[#sounds+1]=cue end}
-for i=1,7 do H.present(p,z,style.actions.heatAction,i)end
-check(visualHits==7 and #sounds==9 and sounds[7]=='kickImpact'and sounds[8]=='heavyImpact'and sounds[9]=='heatImpact','seven original contacts carry varied timed effects and finishing sound layers')
+for i=1,13 do H.present(p,z,style.actions.heatAction,i)end
+check(visualHits==13 and #sounds==15 and sounds[13]=='kickImpact'and sounds[14]=='heavyImpact'and sounds[15]=='heatImpact','twelve punches and automatic kick carry timed effects and layered finishing sounds')
 PY.HitEffects=oldEffects;PY.Feedback=oldFeedback
 local responses=PY.HitResponses
 
@@ -356,7 +359,7 @@ check(victim.blocked and not victim.authorize,'player paired action locks the co
 for _,binding in ipairs({'light','finisher','grab'})do press(binding,false)end
 phase=0;playerAction:update()
 for i,prompt in ipairs(playerContext.action.qte.prompts)do phase=(prompt.atMs-100)/1000;press(prompt.binding,true);playerAction:update();phase=prompt.atMs/1000;press(prompt.binding,false);playerAction:update()end
-phase=143/30;playerAction:update()
+phase=(playerContext.action.contacts[#playerContext.action.contacts].atMs+1)/1000;playerAction:update()
 check(victim.total==0 and math.abs(playerAction.pendingDamage-2.25)<.000001,'player victim animation is preserved until completion')
 phase=R.duration;playerAction:update();check(math.abs(victim.total-2.25)<.000001,'player completed rush applies canonical native Hit damage')
 check(not victim.blocked and victim.authorize and not victim.ignore,'player interruption restores movement and attack authorization')

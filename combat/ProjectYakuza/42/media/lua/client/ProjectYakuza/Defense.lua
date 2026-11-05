@@ -166,7 +166,8 @@ function A:cleanup(completed)
             z:setVariable("ProjectYakuzaGrabbed",false);z:setVariable("ProjectYakuzaGrabPhase","");z:setVariable("ProjectYakuzaGrabMarker","")
             z:setVariable("ProjectYakuzaGrabMoving",false);z:setVariable("ProjectYakuzaGrabWalkDirection","")
             ProjectYakuza.GrabRules.restore(z,self.victimState)
-            if z:getHitReaction()=="ProjectYakuzaGrabbed" then z:setHitReaction("");z:reportEvent("ActiveAnimFinishing") end
+            if self.impacted and self.phaseName=="throw"then ProjectYakuza.GrabRules.land(z)
+            elseif z:getHitReaction()=="ProjectYakuzaGrabbed" then z:setHitReaction("");z:reportEvent("ActiveAnimFinishing") end
             if not z:isDead() and z:getTarget()==nil and self.victimState.target then z:setTarget(self.victimState.target) end
         end
     end
@@ -268,7 +269,7 @@ function A:grab(dt)
             if isClient() and ProjectYakuza.Network then ProjectYakuza.Network.send(p,"throw",{zombie=z:getOnlineID()})
             else
                 z:Hit(p:getPrimaryHandItem(),p,.7,false,1)
-                z:setKnockedDown(true);z:setFallOnFront(false)
+                ProjectYakuza.GrabRules.land(z)
                 ProjectYakuza.emit("throwHit",p,z)
             end
             self:forceComplete();return

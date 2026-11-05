@@ -18,13 +18,14 @@
         0.0682811513543129
       ],
       "expected": [
-        0.2912384457886219,
+        0.5000004457886219,
         0.019354211166501045
       ],
       "configured": [
-        0.291238,
+        0.5,
         0.019355
-      ]
+      ],
+      "additionalHoldClearance": 0.208762
     },
     {
       "actor": "Throw",
@@ -49,7 +50,8 @@
       "configured": [
         0.253831,
         0.019526
-      ]
+      ],
+      "additionalHoldClearance": 0
     },
     {
       "actor": "GrabStrike01",
@@ -74,7 +76,8 @@
       "configured": [
         0.217317,
         -0.109264
-      ]
+      ],
+      "additionalHoldClearance": 0
     },
     {
       "actor": "GrabStrike02",
@@ -99,7 +102,8 @@
       "configured": [
         0.209614,
         0.069149
-      ]
+      ],
+      "additionalHoldClearance": 0
     },
     {
       "actor": "GrabStrike03",
@@ -124,7 +128,8 @@
       "configured": [
         0.108792,
         -0.069198
-      ]
+      ],
+      "additionalHoldClearance": 0
     },
     {
       "actor": "GrabStrike04",
@@ -149,7 +154,8 @@
       "configured": [
         0.118831,
         0.09328
-      ]
+      ],
+      "additionalHoldClearance": 0
     }
   ]
 }

@@ -6,7 +6,8 @@ require "ProjectYakuza/GrabRules"
 require "ProjectYakuza/WallHeatPaths"
 require "ProjectYakuza/GroundHeatPaths"
 require "ProjectYakuza/QTEPlayback"
-local R={duration=224/30,targetRange=2,contactGraceMs=650}
+require "ProjectYakuza/RushEndingPaths"
+local R={duration=326/30,targetRange=2,contactGraceMs=650}
 ProjectYakuza.HeatRushRules=R
 function R.motion(action)
     return action and action.motionId and ProjectYakuza.PairedMotions[action.motionId] or ProjectYakuza.HeatRushPaths
@@ -15,7 +16,6 @@ function R.durationFor(action)return action and action.duration or R.duration en
 function R.qte(action)return ProjectYakuza.QTEPlayback.definition(action and action.qte)end
 function R.time(action,source)return ProjectYakuza.QTEPlayback.time(action and action.qte,source*1000)/1000 end
 function R.sourceTime(action,time)return ProjectYakuza.QTEPlayback.source(action and action.qte,time*1000)/1000 end
-function R.speed(action,source)return ProjectYakuza.QTEPlayback.speed(action and action.qte,source*1000)end
 function R.wallDuration(action)return R.time(action,R.durationFor(action))end
 function R.protection(action)return {duration=R.wallDuration(action),targetGraceMs=action.targetGraceMs}end
 function R.contacts(action)return action.contacts or action.qte and action.qte.prompts or {}end
@@ -42,7 +42,9 @@ function R.point(job,path,time)
     local forward,right=R.sample(path,time)
     local motion=job.motion or ProjectYakuza.HeatRushPaths;local offset=motion.contactOffset
     if offset and path==motion.victim then forward=forward+offset.forward;right=right+offset.right end
-    return job.x+job.fx*forward+job.fy*right,job.y+job.fy*forward-job.fx*right
+    local x,y=job.x+job.fx*forward+job.fy*right,job.y+job.fy*forward-job.fx*right
+    if job.victimCorrection and path==motion.victim then local fade=1-math.min(1,time/.2);fade=fade*fade*(3-2*fade);x=x+job.victimCorrection.x*fade;y=y+job.victimCorrection.y*fade end
+    return x,y
 end
 function R.targetKind(z)
     if z and instanceof(z,"IsoZombie")then return "zombie"end
@@ -107,7 +109,6 @@ function R.lock(z,clip)
     return old
 end
 function R.restore(z,old)
-    z:setVariable("ProjectYakuzaHeatRushSpeed",1)
     z:setVariable("ProjectYakuzaPairedVictimClip","");z:setVariable("ProjectYakuzaHeatRushVictim",false);z:setIgnoreMovement(old.ignore==true);z:setDeferredMovementEnabled(old.deferred~=false)
     if R.targetKind(z)=="zombie"then
         ProjectYakuza.GrabRules.releaseLock(z,old)
@@ -186,7 +187,7 @@ function R.amount(action,index,held,success)
     local multiplier=prompt.damageMultiplier or 1
     if prompt.sumQTE then
         multiplier=0
-        for i,v in ipairs(action.qte.prompts)do if success and success[R.promptContact(action,i)]then multiplier=multiplier+(v.damageMultiplier or 1)end end
+        for i,v in ipairs(action.qte.prompts)do if success and (action.qteStages and success.qte and success.qte[i]or not action.qteStages and success[R.promptContact(action,i)])then multiplier=multiplier+(v.damageMultiplier or 1)end end
     end
     if action.weaponHeat then
         if not held then return end
@@ -199,3 +200,15 @@ function R.amount(action,index,held,success)
     if not R.base then return end
     return math.max(0,math.min(2,(R.base:getMinDamage()+R.base:getMaxDamage())*.5))*multiplier*1.5
 end
+
+function R.failurePose(job,age)
+    local old=job.motion or ProjectYakuza.HeatRushPaths
+    local x,y=R.point(job,old.actor,age);local zx,zy=R.point(job,old.victim,age)
+    local recovery=job.move and job.move.qteFailure
+    local motion=assert(recovery and recovery.motionId and ProjectYakuza.PairedMotions[recovery.motionId],"paired failure motion is not registered")
+    local af,ar=R.sample(motion.actor,0)
+    local result={p=job.p,z=job.z,x=x-job.fx*af-job.fy*ar,y=y-job.fy*af+job.fx*ar,fx=job.fx,fy=job.fy,motion=motion,duration=motion.duration}
+    local tx,ty=R.point(result,result.motion.victim,0);result.victimCorrection={x=zx-tx,y=zy-ty}
+    return result
+end
+function R.pairedFailure(move)return move and move.qteFailure and move.qteFailure.paired==true end

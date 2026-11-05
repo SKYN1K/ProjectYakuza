@@ -148,14 +148,15 @@ function H.align(job,time)
     local paths=job.motion or PY.HeatRushPaths;local p,z=job.p,job.z
     local x,y=R.point(job,paths.actor,time);local zx,zy=R.point(job,paths.victim,time)
     if not PY.NetworkProtocol.path(p,x,y)or not z:isDead()and not PY.NetworkProtocol.path(z,zx,zy)then return false end
-    PY.Defense.snapActor(p,x,y);p:setTargetAndCurrentDirection(job.fx,job.fy);p:setVariable("ProjectYakuzaHeatRushSpeed",R.speed(job.move,time))
-    if not z:isDead()then PY.Defense.snapActor(z,zx,zy);z:setTargetAndCurrentDirection(job.fx,job.fy);z:setVariable("ProjectYakuzaHeatRushSpeed",R.speed(job.move,time))end
+    PY.Defense.snapActor(p,x,y);p:setTargetAndCurrentDirection(job.fx,job.fy)
+    if not z:isDead()then PY.Defense.snapActor(z,zx,zy);z:setTargetAndCurrentDirection(job.fx,job.fy)end
     p:getMovementLastFrame():set(0,0);p:setMoving(false);p:setRunning(false);p:setSprinting(false);return true
 end
 function A:start()
     local p,z=self.character,self.context.target.z
     if self.context.action.groundHeat and not R.validFor(p,z,self.context.action)then self:forceStop();return end
     self.started=true;self.last=now();self.elapsed=0;self.index=1;self.success={};self.autoSeen={};self.qte=self.context.action.qte and PY.QTE.create(R.qte(self.context.action),PY.Bindings.down,self.context)
+    if self.qte and self.context.action.qteStages then self.success.qte=self.qte.accepted end
     self.old={block=p:isBlockMovement(),ignore=p:getIgnoreMovement(),deferred=p:isDeferredMovementEnabled()};p:setBlockMovement(true);p:setIgnoreMovement(true);p:setDeferredMovementEnabled(false)
     local granted=self.context.target.granted;local f=p:getForwardDirection()
     local origin=granted or self.context.target.pose or {x=p:getX(),y=p:getY(),fx=f:getX(),fy=f:getY()}
@@ -163,7 +164,6 @@ function A:start()
     self.pose.move=self.context.action;self.pose.motion=R.motion(self.context.action);self.pose.duration=R.durationFor(self.context.action)
     self.victim=R.lock(z,self.context.action.targetAnimation)
     PY.setVisual(p,true,self.context.action.nodeValue);p:setVariable("ProjectYakuzaStyle",self.context.style.id);p:setVariable("ProjectYakuzaWeaponProfile",self.context.style.weaponProfile or "");p:setVariable("ProjectYakuzaHeatRush","")
-    p:setVariable("ProjectYakuzaHeatRushSpeed",1);z:setVariable("ProjectYakuzaHeatRushSpeed",1)
     self:setActionAnim(self.context.action.animation);self.action:setOverrideHandModelsObject(self.held,nil,false)
     H.active[p]=self;PY.HeatActions.begin(p,self,R.protection(self.context.action));PY.Heat.onSwing(p,{damageMultiplier=1})
     if not H.align(self.pose,0)then self:forceStop()end
@@ -205,8 +205,10 @@ function A:fail(index,remote)
     self.failed=true;self.failedIndex=index;self.failureStarted=now();self.failureElapsed=0;self.failureSeen=false;self.slot=nil;self.pendingDamage=nil
     if remote and not self.qte.failed and PY.QTEFeedback then PY.QTEFeedback.play(self.context,"failure")end
     PY.QTE.cancel(self.qte,"failed")
-    if not self.victimRestored then R.restore(self.context.target.z,self.victim);self.victimRestored=true end
-    local p=self.character;p:setVariable("ProjectYakuzaHeatRushSpeed",1);PY.setVisual(p,true,recovery.nodeValue);p:setVariable("ProjectYakuzaHeatRush","");self:setActionAnim(recovery.animation)
+    if R.pairedFailure(self.context.action)then
+        self.failurePose=R.failurePose(self.pose,self.elapsed);self.context.target.z:setVariable("ProjectYakuzaPairedVictimClip",recovery.targetAnimation);R.hold(self.context.target.z)
+    elseif not self.victimRestored then R.restore(self.context.target.z,self.victim);self.victimRestored=true end
+    local p=self.character;PY.setVisual(p,true,recovery.nodeValue);p:setVariable("ProjectYakuzaHeatRush","");self:setActionAnim(recovery.animation)
     if not remote and self.context.target.granted then PY.Network.send(p,"heatRushFail",{action=self.context.target.granted.action,index=index})end
     if PY.Network then PY.Network.capture(p,true,true)end
 end
@@ -218,7 +220,12 @@ function A:update()
     if self.failed then
         local recovery=self.context.action.qteFailure
         local phase,weight,slot=PY.AttackEffects.findTrack(self.character,recovery.animation,self.slot);self.slot=slot
-        if phase and weight>=.35 then self.failureSeen=true;self.failureElapsed=phase
+        if phase and weight>=.35 then
+            self.failureSeen=true;self.failureElapsed=phase
+            if self.failurePose then
+                R.hold(self.context.target.z);if not H.align(self.failurePose,phase)then self:forceStop();return end
+                if not self.failureContact and phase*1000>=recovery.contactMs then self.failureContact=true;local index=#R.contacts(self.context.action);self.success[index]=true;self:contact(index)end
+            end
         elseif self.failureSeen and self.failureElapsed>=recovery.duration-.12 then self:forceComplete();return
         elseif self.failureSeen or now()-self.failureStarted>650 then self:forceStop();return end
         if self.failureElapsed>=recovery.duration-.005 or now()-self.failureStarted>(recovery.duration+1)*1000 then self:forceComplete()end
@@ -227,8 +234,9 @@ function A:update()
     R.hold(self.context.target.z)
     local phase,weight,slot=PY.AttackEffects.findTrack(self.character,self.context.action.animation,self.slot);self.slot=slot
     if phase and weight>=.35 then
-        if self.seen and phase+.02<self.elapsed then if self.elapsed>=self.pose.duration-.12 then self:forceComplete()else self:forceStop()end;return end
-        self.seen=true;self.elapsed=phase;self.wait=0
+        local sourcePhase=self.context.action.pacedAnimation and R.sourceTime(self.context.action,phase)or phase
+        if self.seen and sourcePhase+.02<self.elapsed then if self.elapsed>=self.pose.duration-.12 then self:forceComplete()else self:forceStop()end;return end
+        self.seen=true;self.elapsed=self.context.action.pacedAnimation and R.sourceTime(self.context.action,phase)or phase;self.wait=0
     else self.wait=(self.wait or 0)+dt;if self.seen and self.elapsed>=self.pose.duration-.12 then self:forceComplete()elseif self.seen or self.wait>650 then self:forceStop()end;return end
     if not H.align(self.pose,self.elapsed)then self:forceStop();return end
     if self.qte then PY.QTE.update(self.qte,R.time(self.context.action,self.elapsed)*1000,PY.Bindings.down,function(kind,index,success,prompt)
@@ -262,16 +270,16 @@ function A:cleanup(done)
     if self.started then
         PY.HeatActions.finish(p,self)
         if self.qte then PY.QTE.cancel(self.qte,done and "complete"or"interrupted")end
-        p:setBlockMovement(self.old.block==true);p:setIgnoreMovement(self.old.ignore==true);p:setDeferredMovementEnabled(self.old.deferred);p:setVariable("ProjectYakuzaHeatRush","");p:setVariable("ProjectYakuzaHeatRushSpeed",1)
-        local settled=done and not self.failed and self.success[#R.contacts(self.context.action)]
+        p:setBlockMovement(self.old.block==true);p:setIgnoreMovement(self.old.ignore==true);p:setDeferredMovementEnabled(self.old.deferred);p:setVariable("ProjectYakuzaHeatRush","")
+        local settled=done and(not self.failed or R.pairedFailure(self.context.action))and self.success[#R.contacts(self.context.action)]
         if settled then R.ground(z,R.endFacing(self.pose))end
         if not self.victimRestored then R.restore(z,self.victim);self.victimRestored=true end
         local clip=p:GetVariable("PerformingAction")
         if clip==self.context.action.animation or self.failed and clip==self.context.action.qteFailure.animation then p:setVariable("PerformingAction","");p:setVariable("IsPerformingAnAction",false)end
-        if not isClient()and done and not self.failed and self.pendingDamage and not z:isDead()then local ok,err=PY.HitResponses.nativeHit(p,z,self.held,self.pendingDamage,self.context.action);self.pendingDamage=nil;if not ok then print("[ProjectYakuza] completed paired hit failed: "..tostring(err))end end
-        if not isClient()and done and not self.failed and self.success[#R.contacts(self.context.action)]and not z:isDead()then R.ground(z,R.endFacing(self.pose))end
+        if not isClient()and done and(not self.failed or R.pairedFailure(self.context.action))and self.pendingDamage and not z:isDead()then local ok,err=PY.HitResponses.nativeHit(p,z,self.held,self.pendingDamage,self.context.action);self.pendingDamage=nil;if not ok then print("[ProjectYakuza] completed paired hit failed: "..tostring(err))end end
+        if not isClient()and done and(not self.failed or R.pairedFailure(self.context.action))and self.success[#R.contacts(self.context.action)]and not z:isDead()then R.ground(z,R.endFacing(self.pose))end
     end
-    local granted=self.context.target.granted;if granted then PY.Network.send(p,"heatRushEnd",{action=granted.action,completed=done==true and not self.failed})end
+    local granted=self.context.target.granted;if granted then PY.Network.send(p,"heatRushEnd",{action=granted.action,completed=done==true and(not self.failed or R.pairedFailure(self.context.action))})end
     if PY.activeActions[p]==self.context then if done then PY.completeAction(p)else PY.cancelAction(p,"heat_rush_interrupted")end end
     PY.resetPlayer(p,"heat_rush_finished")
 end
@@ -323,7 +331,6 @@ H.remote={};H.ended={};H.remoteSessions={};H.failedPackets={}
 function H.remoteEnd(id,action,packet)
     if type(action)~="number"then return end;H.ended[id]=math.max(H.ended[id]or 0,action)
     local job=H.remote[id];if not job or job.action~=action then return end;H.remote[id]=nil
-    job.p:setVariable("ProjectYakuzaHeatRushSpeed",1);job.z:setVariable("ProjectYakuzaHeatRushSpeed",1)
     local z=job.z;local saved=R.targetKind(z)=="zombie"and packet or job.old
     if saved and saved~=job.old then saved={useless=saved.useless,ignore=saved.ignore,deferred=saved.deferred,locked=saved.locked,target=job.old.target,groundAction=job.old.groundAction,floor=job.old.floor,knocked=job.old.knocked}end
     if packet and packet.completed then R.ground(z,R.endFacing(job))end;PY.HeatActions.finish(job.p,job);if not job.victimRestored then R.restore(z,saved or job.old)end;if packet and packet.completed then R.ground(z,R.endFacing(job))end
@@ -361,8 +368,12 @@ function H.receive(module,command,a)
         if p:isLocalPlayer()and localAction and localAction.context.target.granted and localAction.context.target.granted.action==a.action then localAction:fail(a.index,true);return end
         local job=H.remote[a.player]
         if job and job.action==a.action then
-            if not job.victimRestored then R.restore(job.z,job.old);job.victimRestored=true end
-            job.failed=true;job.at=now()
+            if not job.failed then
+                if R.pairedFailure(job.move)then job.failurePose=R.failurePose(job,job.age or 0);job.z:setVariable("ProjectYakuzaPairedVictimClip",job.move.qteFailure.targetAnimation)
+                elseif not job.victimRestored then R.restore(job.z,job.old);job.victimRestored=true end
+                job.failed=true;job.failureAt=now()
+            end
+            job.at=now()
         end
         return
     end
@@ -409,7 +420,7 @@ function H.updateRemote()
     local t=now();local active=false
     for id,job in pairs(H.remote)do
         if t-job.at>1000 or job.p:isDead()or job.z:isDead()and not job.motion then H.remoteEnd(id,job.action)
-        else active=true;if not job.failed and not isGamePaused()then H.align(job,math.min(job.duration or R.duration,R.sourceTime(job.move,R.time(job.move,job.age)+(t-job.at)/1000)))end end
+        else active=true;if not isGamePaused()then if job.failurePose then H.align(job.failurePose,math.min(job.failurePose.duration,(t-job.failureAt)/1000))elseif not job.failed then H.align(job,math.min(job.duration or R.duration,R.sourceTime(job.move,R.time(job.move,job.age)+(t-job.at)/1000)))end end end
     end
     for key,job in pairs(H.contacts or {})do if t-job.at>6000 then H.contacts[key]=nil end end
     if not active and H.remoteHook then Events.OnTick.Remove(H.updateRemote);H.remoteHook=false end

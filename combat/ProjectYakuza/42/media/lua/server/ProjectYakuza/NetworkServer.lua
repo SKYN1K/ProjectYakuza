@@ -37,9 +37,10 @@ function S.release(p)
     local z=lease.z;S.grabs[z]=nil;s.grab=nil
     ProjectYakuza.GrabRules.restore(z,lease)
     z:setVariable("ProjectYakuzaGrabbed",false);z:setVariable("ProjectYakuzaGrabPhase","");z:setVariable("ProjectYakuzaGrabMoving",false)
-    if z:getHitReaction()=="ProjectYakuzaGrabbed"then z:setHitReaction("");z:reportEvent("ActiveAnimFinishing")end
+    if lease.thrown then ProjectYakuza.GrabRules.land(z)
+    elseif z:getHitReaction()=="ProjectYakuzaGrabbed"then z:setHitReaction("");z:reportEvent("ActiveAnimFinishing")end
     if not z:isDead() and z:getTarget()==nil and lease.target then z:setTarget(lease.target) end
-    S.fanout(p,"grabEnd",{player=p:getOnlineID(),zombie=z:getOnlineID(),useless=lease.useless,ignore=lease.ignore,deferred=lease.deferred,locked=lease.locked,grabId=lease.id})
+    S.fanout(p,"grabEnd",{player=p:getOnlineID(),zombie=z:getOnlineID(),useless=lease.useless,ignore=lease.ignore,deferred=lease.deferred,locked=lease.locked,grabId=lease.id,landed=lease.thrown==true})
 end
 function S.extremeMoveAllowed(s,style,move,swing,active)
     if not move or not move.extremeHeat or active then return true end
@@ -219,7 +220,7 @@ function S.damage(p,z,amount,knock,kill,s,hitMove,hitStyle,jugglePlan,swing,quie
     local response=not kill and not knock and ProjectYakuza.HitResponses.resolve(style,move)
     local juggle,juggling=ProjectYakuza.Juggling.hit(p,z,not kill and not knock and (jugglePlan or ProjectYakuza.Juggling.plan(style,move)) or nil,swing)
     if response and not juggling then ProjectYakuza.HitResponses.apply(p,z,response) end
-    S.fanout(p,"damage",{player=p:getOnlineID(),event=s.result,zombie=z:getOnlineID(),health=math.max(0,z:getHealth()),amount=amount,quiet=quiet==true,knock=knock==true,kill=kill==true,
+    S.fanout(p,"damage",{player=p:getOnlineID(),event=s.result,zombie=z:getOnlineID(),health=math.max(0,z:getHealth()),amount=amount,quiet=quiet==true,knock=knock==true,kill=kill==true,landed=hitMove and hitMove.grabThrow==true or false,
         dx=dx/n,dy=dy/n,force=z:getHitForce(),hitReaction=z:getHitReaction() or "ShotBelly",reaction=move and move.reaction or "",style=styleId,sourceSwing=swing,impactFeedback=style and style.impactFeedback,strong=move and ((style.weaponStandaloneHeavy and style.actions.finisher.variants.default.nodeValue==move.nodeValue)or move.neutralHeavy==true or move.afterLight~=nil or move.chargedHeavy==true or move.heatRush==true or move.weaponHeat==true),charged=move and move.chargedHeavy==true,juggle=juggle,responseKind=response and response.kind,responseForce=response and response.force})
     return true
 end
@@ -282,7 +283,7 @@ function S.command(module,command,p,a)
         if ProjectYakuza.FEATURES.grab==false then S.release(p);return end
         local lease=s.grab
         if not lease or lease.z:getOnlineID()~=a.zombie or lease.thrown or not S.validVictim(p,a.zombie,1.5) or s.packet.phase~="throw" then return end
-        lease.thrown=true;S.damage(p,lease.z,.7,true,false,s);S.release(p);return
+        lease.thrown=true;S.damage(p,lease.z,.7,true,false,s,{noKnockback=true,hitResponse=false,grabThrow=true},nil,nil,nil,true);S.release(p);return
     end
     if command=="guard" then
         local clip=P.clip(s.packet.style,s.packet.clip);local z=S.validVictim(p,a.zombie,1.6,.35)

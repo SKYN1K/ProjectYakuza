@@ -1,4 +1,4 @@
-# QTE framework API (0.83.0)
+# QTE framework API (0.84.0)
 
 ProjectYakuza.QTE is a shared code-only sequence engine for custom style actions. It does not create artwork/audio, choose targets, start animations, grant immunity or deal damage. An action handler owns its animation, lifecycle, presentation and multiplayer authorization; QTE supplies bounded prompt validation, fresh-input tracking and result events. DoD's paired Heat Rush is one consumer rather than a global handler for every style.
 
@@ -114,17 +114,16 @@ Paired contacts can additionally define `charged=true` to select the existing st
 Unpaced moves use their authored press windows. Its UI displays a blue textured radial countdown for exactly prompt.windowMs, with no extra preview period that rejects early presses. Rendering uses the original quarter-ring pixels on native UV-mapped geometry. Held buttons still require release and a fresh press; expiry remains exclusive. Other styles keep their authored windows.
 
 
-## Full countdowns with paced paired animation
+## Source sections and automatic contacts (0.84.0)
 
-For the built-in paired Heat Action handler, a prompt can set `countdownMs` (100–2000) independently of `atMs` and `windowMs`. `atMs` remains the original source animation impact time. `windowMs` defines the source interval to stretch; optional `sourceStartMs` chooses its exact start. The default is the later of the previous source impact and `atMs-windowMs`. Intervals must be ordered, nonempty and produce a speed ratio between 0.05 and 4. The action and victim XML nodes must use `ProjectYakuzaHeatRushSpeed` as their speed scale, including observer nodes.
+`qteStages=true` separates stage decisions from physical contacts. The action's `contacts` contain automatic source-timed hits without `qteIndex`; prompts define when each section must be passed. A missed prompt follows the configured failure policy. A final `sumQTE=true` contact derives its damage only from passed prompt inputs. This lets multiple punches animate and present their own sounds/effects inside one QTE, without asking for one input per hit.
 
-```lua
-qte={prompts={
-    {atMs=1000,windowMs=400,countdownMs=900,binding="light"},
-    {atMs=1400,windowMs=400,countdownMs=1100,binding="finisher"},
-}}
-```
+DoD uses six one-second sections, each containing two original punches. The input order is light, heavy, grab, light, heavy, grab. The original three paired sections are replayed twice at 30 fps, then the original kick plays automatically. Its twelve physical punch contacts and six prompt deadlines are distinct. Repeated section boundaries preserve the attacker root position and blend the victim staging correction over six frames. The kick is not a QTE. See `rush-twohit-sections.json` for exact source frame maps and contact times.
 
-`ProjectYakuza.QTEPlayback` compiles the runtime windows and maps source milliseconds with `time(def,sourceMs)`, `source(def,realMs)` and `speed(def,sourceMs)`. `definition(def)` returns the paced runtime definition. The paired handler loads this module, advances both native actor tracks at the same rate, renders the radial timer on the mapped clock, and keeps contacts/paths on their original source poses. Server reservations, failure handling, completion, protection and remote extrapolation use the same mapping. Custom handlers must load this helper and apply the same mapping themselves; QTE alone does not change animation speed.
+A paired failure ending adds `paired=true`, a supplied `targetAnimation`, a registered `motionId` and `contactMs` inside `qteFailure.duration`. Register normalized actor/victim paths under that motion ID before registering the style. Both actors remain locked and protected for the paired ending; the ending contact uses the action's final contact presentation and earned payoff. The existing `failureLimit` and `failureMode` determine when to branch. Custom styles choose their own supplied clips, path data, durations, prompt counts, inputs and feedback.
 
-DoD alone authors six full 1000 ms countdowns for its Extreme Heat Rush. Each starts after the previous deadline, so accepting an earlier prompt late cannot shorten the next window. Early acceptance does not skip the current source impact. The existing light/heavy/grab input order and failure ending remain. Definitions without `countdownMs` retain their original clocks, window lengths and playback speed.
+## Pre-paced animation clips
+
+`countdownMs` and optional `sourceStartMs` remain available for author-supplied pre-paced clips. They do not change a live native track's speed: B42 reads an XML speed variable when the track starts. The built-in paired handler requires `pacedAnimation=true` when using these fields and maps the supplied clip's phase back to its source clock. Authors must provide a compatible clip whose keyframe times already follow that mapping, or implement their own handler. DoD does not use this mode and retains original motion speed.
+
+`ProjectYakuza.QTEPlayback` supplies `definition(def)`, `time(def,sourceMs)`, `source(def,realMs)` and `speed(def,sourceMs)` for custom backends. Countdown bounds remain 100–2000 ms and the complete mapped action must fit within 120 seconds. Definitions without these options use their original clocks.

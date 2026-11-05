@@ -1,10 +1,10 @@
-# Project Yakuza 0.83.0
+# Project Yakuza 0.84.0
 
-- Gave all six Dragon of Dojima Extreme Heat Rush QTEs a full one-second countdown. Original source contact poses remain intact; actor/victim playback, timers and MP authority share a paced clock. Other styles keep their authored timing.
-- Added per-cue `countdownMs` and optional `sourceStartMs` for developers, with bounded validation and unchanged legacy timing.
-- Starts the DoD Rush handoff after the eighth confirmed contact without waiting for the late chain marker. MP reservations overlap recovery; unrelated supplemental hit settlement is bounded to 80 ms.
-- Face stomp now requires a living zombie lying face-up on the floor, excluding falling/getting-up targets; rechecked when the action starts and by the server.
-- Recalibrated grab holds, all four grab strikes and throws against the converted Zomboid skeleton. Added per-move forward/lateral offsets, short position blends, stable strike/throw facing and continued victim following through throws. MP uses the same staging rules.
-- Removed DoD's voice loudness multiplier and taunt gain override. The combat Voices slider remains; the separate CVF voice pack is untouched.
+- Increased the walking grab distance from about 0.29 to 0.5 tiles while preserving individual strike/throw contact offsets and short position blends.
+- Completed grab throws now settle the victim directly in the native face-up ground state. Standing hit/stumble reactions and residual push force are cleared after cleanup, including MP release/damage packet handling.
+- Rebuilt Extreme Heat Rush around six QTE sections with two automatic punches per section: twelve punches total, followed by the automatic kick. The input order remains light, heavy, grab, light, heavy, grab.
+- Split/replayed supplied source sections at their original 30-fps speed. Each prompt has a full one-second section. Removed the ineffective live-speed-variable approach; no slow-motion retiming is applied.
+- The original kick now also plays as the paired ending after a QTE failure. Both actors stay paired through it; only passed QTE sections contribute to its damage. The kick never requires another input.
+- Added framework support for stage-based QTEs with independent physical contacts and supplied paired failure endings. Existing per-move timing, failure-count and binding options remain.
 
-Code/XML changes only. No animation, artwork or audio files were created or changed. Validated offline without launching PZ; see [validation](VALIDATION_0.83.0.md). Restart with matching client/server versions.
+Only user-approved source-motion conversion was used: existing poses were split and replayed, without AI, invented motion, new artwork, audio or upscaling. Voices and the separate voice pack are unchanged. See [validation](VALIDATION_0.84.0.md) and [QTE authoring](QTE.md). PZ was not launched; restart with matching MP versions.

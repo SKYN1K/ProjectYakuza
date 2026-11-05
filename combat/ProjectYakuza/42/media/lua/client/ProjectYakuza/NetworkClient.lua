@@ -247,7 +247,6 @@ function N.applyState(p,packet,s)
     if s.style~=packet.style or s.clip~=packet.clip or serialChanged then
         N.stopObserver(p,s)
         p:setVariable("ProjectYakuzaRemoteClip",packet.clip)
-        if packet.clip=="ProjectYakuza_DD_HeatRush"then p:setVariable("ProjectYakuzaHeatRushSpeed",1)end
         s.cycle=((s.cycle or 0)+1)%2
         p:setVariable("ProjectYakuzaRemoteCycle",tostring(s.cycle))
         if clip and clip.group=="actions" then
@@ -391,7 +390,8 @@ function N.command(module,command,a)
         if not p:isLocalPlayer() then
             z:setVariable("ProjectYakuzaGrabbed",false);z:setVariable("ProjectYakuzaGrabPhase","");z:setVariable("ProjectYakuzaGrabMoving",false)
             if z:GetVariable("ProjectYakuzaHeatRushVictim")~="true"then ProjectYakuza.GrabRules.restore(z,a)end
-            if z:getHitReaction()=="ProjectYakuzaGrabbed" then z:setHitReaction("");z:reportEvent("ActiveAnimFinishing") end
+            if a.landed==true then ProjectYakuza.GrabRules.land(z)
+            elseif z:getHitReaction()=="ProjectYakuzaGrabbed" then z:setHitReaction("");z:reportEvent("ActiveAnimFinishing") end
             local s=N.remote[a.player];if s then s.grab=nil end
         end
     elseif command=="grabPose" then
@@ -429,6 +429,7 @@ function N.command(module,command,a)
         if not a.quiet and a.responseKind~="stun"and type(a.hitReaction)=="string" and #a.hitReaction<80 then z:setHitReaction(a.hitReaction);z:reportEvent("wasHit") end
         if a.kill then z:getHitDir():set(a.dx,a.dy);z:setHitForce(12);z:setUsePhysicHitReaction(true);z:setHitReaction("ShotBelly") end
         if a.knock then z:setKnockedDown(true);z:setFallOnFront(false) end
+        if a.landed==true then ProjectYakuza.GrabRules.land(z)end
         ProjectYakuza.Juggling.receive(p,z,a.juggle)
         if not a.kill and not a.knock and ProjectYakuza.Reactions then
             local clip=P.reaction(a.style,a.reaction) and a.reaction or nil

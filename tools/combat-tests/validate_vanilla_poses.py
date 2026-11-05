@@ -21,6 +21,9 @@ with zipfile.ZipFile(root/'dist/ProjectYakuza-B42-v0.77.0.zip')as archive:
         if relative.endswith('/')or not relative:continue
         if relative.startswith('42/media/anims_X/')or any(relative.startswith('42/media/AnimSets/player/'+g+'/')for g in ['melee','stomp','actions']):
             actual=(mod/relative).read_bytes();original=archive.read(name)
+            remixed={v['output']:v for v in json.loads((mod/'docs/rush-twohit-sections.json').read_text())['clips']}
+            if relative in remixed:
+                assert hashlib.sha256(actual).hexdigest()==remixed[relative]['sha256'];continue
             if relative.endswith('.xml')and ('StyleEntry'in relative or E.fromstring(actual).findtext('m_AnimName')in ['ProjectYakuza_DD_HeatRush','ProjectYakuza_DD_HeatRushVictim']):
                 node=E.fromstring(actual);old=E.fromstring(original);node.find('m_BlendOutTime').text=old.findtext('m_BlendOutTime')
                 if node.findtext('m_AnimName')in ['ProjectYakuza_DD_HeatRush','ProjectYakuza_DD_HeatRushVictim']:node.find('m_SpeedScale').text=old.findtext('m_SpeedScale')

@@ -252,7 +252,7 @@ end
 
 local ProjectYakuza = ProjectYakuza
 ProjectYakuza.FEATURES={grab=true}
-ProjectYakuza.VERSION = "0.83.0"
+ProjectYakuza.VERSION = "0.84.0"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -331,8 +331,14 @@ function ProjectYakuza.validateStyle(style)
             end end
         end
         if value.qte~=nil then local ok,reason=ProjectYakuza.QTE.valid(value.qte,type(value.duration)=="number"and value.duration*1000 or nil);if not ok then problem(path..".qte: "..reason)end end
+        if value.qteStages~=nil and type(value.qteStages)~="boolean"then problem(path..".qteStages must be boolean")end
+        if value.pacedAnimation~=nil and type(value.pacedAnimation)~="boolean"then problem(path..".pacedAnimation must be boolean")end
+        if type(value.qte)=="table"and type(value.qte.prompts)=="table"then
+            for _,prompt in ipairs(value.qte.prompts)do if type(prompt)=="table"and prompt.countdownMs and value.pacedAnimation~=true then problem(path..".qte countdownMs requires a supplied pre-paced animation and pacedAnimation=true")end end
+        end
         if value.qteFailure~=nil then
             local f=value.qteFailure
+            if type(f)=="table"and f.paired~=nil and(type(f.paired)~="boolean"or f.paired and(not text(f.motionId)or not ProjectYakuza.PairedMotions or not ProjectYakuza.PairedMotions[f.motionId]or not text(f.targetAnimation)or not number(f.contactMs)or f.contactMs<0 or not number(f.duration)or f.contactMs>=f.duration*1000))then problem(path..".qteFailure paired ending requires targetAnimation and a contact inside its duration")end
             if type(f)~="table"or not text(f.animation)or not text(f.nodeValue)or not number(f.duration)or f.duration<=0 or f.duration>10 then problem(path..".qteFailure requires an authored recovery clip and duration")end
         end
         if value.deferFinalDamage~=nil and type(value.deferFinalDamage)~="boolean"then problem(path..".deferFinalDamage must be boolean")end
@@ -356,7 +362,7 @@ function ProjectYakuza.validateStyle(style)
                     if contact.sumQTE and (i~=nil or type(prompts)~="table"or #prompts==0 or not number(contact.atMs)or type(prompts[#prompts])~="table"or not number(prompts[#prompts].atMs)or contact.atMs<=prompts[#prompts].atMs)then problem(path..".contacts summed damage must follow all QTE prompts")end
                 end
             end
-            if type(prompts)=="table"then for i=1,#prompts do if not mapped[i]then problem(path..".contacts is missing a QTE prompt")end end end
+            if type(prompts)=="table"and value.qteStages~=true then for i=1,#prompts do if not mapped[i]then problem(path..".contacts is missing a QTE prompt")end end end
         end
         if value.hitResponse~=nil and value.hitResponse~=false
             and (not text(value.hitResponse) or type(style.hitResponses)~="table" or not style.hitResponses[value.hitResponse]) then problem(path..".hitResponse must name a hitResponses profile or be false") end
