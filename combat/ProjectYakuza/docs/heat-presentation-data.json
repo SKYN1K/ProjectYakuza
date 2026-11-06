@@ -329,20 +329,6 @@
           ],
           "bone": "Bip01_Pelvis",
           "layers": []
-        },
-        {
-          "atMs": 3233.3333333333335,
-          "index": 4,
-          "cue": "throwImpact",
-          "base": true,
-          "point": [
-            0.006536556,
-            0.094434693,
-            -0.141521335
-          ],
-          "bone": "Bip01_Spine1",
-          "layers": [],
-          "feedback": "blunt"
         }
       ]
     },

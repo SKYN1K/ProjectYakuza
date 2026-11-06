@@ -916,11 +916,12 @@ do
  local lease=rush.leases[p];check(lease and lease.motion==ProjectYakuza.PairedMotions.dod_katana and not lease.definition,'MP katana uses original paired motion without eight-hit QTE proof')
  local hits=z1.hits;command('heatRushReady',{action=lease.action})
  check(p.ghost and p.invincible and z1.vars.ProjectYakuzaPairedVictimClip=='ProjectYakuza_DD_KatanaHeatVictim','server protects attacker and selects katana victim clip')
- command('heatRushHit',{action=lease.action,index=4});check(z1.hits==hits,'early final contact cannot bypass source timing')
+ command('heatRushHit',{action=lease.action,index=3});check(z1.hits==hits,'early final contact cannot bypass source timing')
+ command('heatRushHit',{action=lease.action,index=4});check(z1.hits==hits,'removed fourth contact cannot apply MP damage')
  for i,contact in ipairs(lease.contacts)do
   clock=lease.started+contact.atMs+10;command('heatRushHit',{action=lease.action,index=i,damage=999})
   command('heatRushHit',{action=lease.action,index=i,damage=999})
-  check(z1.hits==hits+(i==4 and 1 or 0),'server auto contact deduplicates and preserves presentation-only contacts '..i)
+  check(z1.hits==hits+i,'server applies each of three katana strikes once despite duplicate packets '..i)
  end
  check(math.abs(z1.health-8.5)<.000001,'server computes final katana damage from actual weapon')
  clock=lease.started+lease.duration*1000-50;neutral({clip='ProjectYakuza_DD_KatanaHeat',move='dd_katana_heat'});command('heatRushEnd',{action=lease.action,completed=true})

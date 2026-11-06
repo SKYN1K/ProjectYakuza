@@ -39,7 +39,7 @@ for animation,data in pairs(D.moves)do
   total=total+1
  end
 end
-check(total==31,'all main and failure-ending physical impacts covered')
+check(total==30,'all enabled main and failure-ending physical impacts covered')
 C.clearAll();move={animation='Custom',contacts={{atMs=500,cue='punchImpact',layers={'kickImpact'}}}};source={};plays={};fx={};phase=0;C.start(p,z,move,source);step(500-lead)
 check(#plays==2 and plays[1].gain==.55 and plays[2].gain==.3,'custom styles retain primary and layered sound gains')
 step(500);check(#fx==1 and fx[1].anchor==nil,'custom action without numeric sample retains legacy placement')
@@ -67,4 +67,11 @@ C.clearAll();move={animation='Custom',contacts={{atMs=500,cue='punchImpact'}}};s
 local localMethod=p.isLocalPlayer;p.isLocalPlayer=function()return false end;C.start(p,z,move,source);step(500-lead);step(500)
 check(#plays==1 and #fx==1,'observer reconstructs presentation without owner-only sound packets');p.isLocalPlayer=localMethod
 C.stop(p,source,true);check(not plays[1].stopped,'natural completion preserves current impact tail')
-return true,'PASS '..checks..' paired Heat Action timing, 31 native contact anchors, clip lead-ins, custom layers, replay suppression, rotation and lifecycle checks'
+local katana=PY.Weapons.views.dragon_of_dojima.blade.actions.heatAction
+check(#katana.contacts==3 and katana.contacts[4]==nil,'katana has exactly three damaging contacts')
+for i=1,3 do check(katana.contacts[i].damageMultiplier==.5,'katana splits unchanged total damage evenly across three hits')end
+check(#D.moves[katana.animation].contacts==3,'katana numeric timeline contains only three presented contacts')
+plays={};fx={};local eventCount=emitted;H.present(p,z,katana,4,true,true,{x=0,y=0,z=1})
+check(#plays==0 and #fx==0 and emitted==eventCount,'removed fourth katana contact cannot present sounds, effects or voices')
+C.clearAll()
+return true,'PASS '..checks..' paired Heat Action timing, 30 native contact anchors, three damaging katana strikes, clip lead-ins, custom layers, replay suppression, rotation and lifecycle checks'

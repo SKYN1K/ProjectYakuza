@@ -409,8 +409,8 @@ PY.HeatActions.zombie(z);check(z.target==nil,'protected attacker is cleared as a
 local pairedCues={};PY.on('heatRushHit',function(_,_,index)pairedCues[#pairedCues+1]=index end)
 for i,contact in ipairs(kc.action.contacts)do
  phase=contact.atMs/1000+(i==2 and .25 or 0);ka:update();ka:update()
- check(#pairedCues==i and pairedCues[i]==i,'late frame still emits each automatic contact exactly once '..i)
- check(z.hits==beforeHits+(i==4 and 1 or 0),'automatic contact timing is presentation-only until final damage '..i)
+ check(#pairedCues==i and pairedCues[i]==i,'katana emits each of its three impact cues once '..i)
+ check(z.hits==beforeHits+i,'each katana strike applies damage once '..i)
 end
 check(math.abs(z.health-8.5)<.000001,'weapon action damage uses canonical held weapon without repeated bonus')
 phase=kc.action.duration;ka:update()
@@ -473,13 +473,13 @@ PY.Network={send=function(_,command)if command=='heatRushHit'then packets=packet
 PY.Feedback={sound=function(_,cue)return cue end,play=function()heard=heard+1 end};PY.HitEffects={spawn=function()shown=shown+1 end}
 context.target.granted={action=901,session=44};local health=z.hits
 phase=context.action.contacts[1].atMs/1000+.25;action:update();action:update()
-check(heard==1 and shown==1 and packets==1 and z.hits==health,'owner source contact presents audio/FX without predicting authoritative damage or repeating')
+check(heard==1 and shown==0 and packets==1 and z.hits==health,'legacy damage contact sends one request without predicting authoritative damage or effects')
 check(H.localContacts[p].action==901 and H.localContacts[p].seen[1],'owner records its presented action/contact identity')
 local echo={player=2,session=44,action=901,index=1,zombie=25,targetKind='zombie',node=context.action.nodeValue,presentation=true}
 H.remoteSessions[2]=nil;H.receive('ProjectYakuza','heatRushContact',echo);H.receive('ProjectYakuza','heatRushContact',echo)
-check(heard==1 and shown==1,'first-session server confirmation and duplicate echo cannot replay owner feedback')
+check(heard==1 and shown==0,'first-session server confirmation and duplicate echo cannot replay owner feedback')
 action:cleanup(false);H.receive('ProjectYakuza','heatRushContact',echo)
-check(heard==1 and shown==1,'late confirmation after cleanup cannot replay a locally presented contact')
+check(heard==1 and shown==0,'late confirmation after cleanup cannot replay a locally presented contact')
 echo.session=43;H.receive('ProjectYakuza','heatRushContact',echo);check(heard==1,'stale session remains rejected before feedback')
 isClient=client;PY.Network=network;PY.Feedback=feedback;PY.HitEffects=effects;p.held=nil;PY.MultiHit.targets=oldTargets;PY.HeatActions.clear()
 do

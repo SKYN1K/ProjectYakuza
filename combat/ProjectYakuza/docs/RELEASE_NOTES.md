@@ -1,8 +1,7 @@
-# Project Yakuza 0.90.0
+# Project Yakuza 0.90.1
 
-- Synchronized sounds, sparks and blood to the actual playing Heat Action animation for Extreme Heat Rush, katana, bottle, beer crate, wall and ground stomp, including paired failure endings.
-- Measured the existing audio clips' transient lead-ins and start playback just before the corresponding contact. Bare punches and kicks use body-impact sounds; Rush no longer stacks rising boost effects over every second punch.
-- Replaced fixed standing/ground effect heights with 31 head/torso contact samples from the existing native PZ victim animations. Impact effects and blood share the same copied world contact position in every direction.
-- Prevented stale impact catch-up bursts and duplicate presentation from damage/network messages. Multiplayer observers reconstruct presentation from their playing paired animation. Interrupted actions stop their presentation sounds and remove idle hooks.
+- Removed the katana Heat Action's fourth contact entirely: no fourth damage, impact sound, sparks, blood burst or attack voice cue.
+- The three original strike contacts now each apply 0.5 times the canonical equipped-weapon damage. The previous total of 1.5 times weapon damage is preserved and delivered on those three strikes, in both single-player and multiplayer.
+- Rebuilt the numeric presentation catalogue with only the katana's three strike contacts; its final slash retains blade-impact feedback. Other Heat Action timing, cues, effects and QTEs are unchanged.
 
-No animations, textures or audio assets were created or modified. QTE inputs/windows, hit damage and gameplay contact timing are unchanged. Offline validation only; PZ was not launched. See [validation](VALIDATION_0.90.0.md) and [presentation details](HEAT_ACTION_PRESENTATION.md). Restart game/server after installing matching MP versions.
+Reference: the supplied Yakuza 6 Heat Action compilation around 06:18, inspected from the existing local video. No visual/audio assets were created or edited. PZ was not launched. See [validation](VALIDATION_0.90.1.md). Restart matching game/server versions after updating.

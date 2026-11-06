@@ -20,8 +20,8 @@ parts=['require=function()end']
 for name in ['Registry','Weapons','HeatRushPaths','KatanaHeatPaths','BottleHeatPaths'] :parts.append('do\n'+module_source(lua/f'shared/ProjectYakuza/{name}.lua')+'\nend')
 parts.append('do\n'+module_source(lua/'shared/ProjectYakuza/Styles/DragonOfDojima.lua')+'\nend');parts.append('do\n'+module_source(lua/'shared/ProjectYakuza/HeatRushRules.lua')+'\nend')
 p=w/'export-heat-presentation.lua';p.write_text('\n'.join(parts)+'\n'+export)
-r=subprocess.run([java,'-Xmx256m','-XX:ActiveProcessorCount=2','-cp','.;'+str(game/'projectzomboid.jar'),'LuaRunner',p.name],cwd=w,capture_output=True,text=True);assert r.returncode==0,r.stdout+r.stderr;rows=json.loads(r.stdout.split('=> [true, ',1)[1].strip()[:-1]);folder=w/'heat-presentation-native';folder.mkdir(exist_ok=True)
-names=sorted({r[k]for r in rows for k in ['animation','targetAnimation']});args=[java,'-Xmx512m','-XX:ActiveProcessorCount=2','--enable-native-access=ALL-UNNAMED','-cp','.;'+str(game/'*'),'LimbTrailProbe']
+r=subprocess.run([java,'-Xms16m','-Xmx256m','-XX:ActiveProcessorCount=2','-cp','.;'+str(game/'projectzomboid.jar'),'LuaRunner',p.name],cwd=w,capture_output=True,text=True);assert r.returncode==0,r.stdout+r.stderr;rows=json.loads(r.stdout.split('=> [true, ',1)[1].strip()[:-1]);folder=w/'heat-presentation-native';folder.mkdir(exist_ok=True)
+names=sorted({r[k]for r in rows for k in ['animation','targetAnimation']});args=[java,'-Xms16m','-Xmx256m','-XX:ActiveProcessorCount=2','--enable-native-access=ALL-UNNAMED','-cp','.;'+str(game/'*'),'LimbTrailProbe']
 for n in names:args.extend([str(mod/f'42/media/anims_X/Bob/{n}.x'),str(folder/(n+'.json'))])
 r=subprocess.run(args,cwd=w,capture_output=True,text=True);assert r.returncode==0,r.stdout+r.stderr
 catalog=json.loads((mod/'docs/attack-trail-catalog.json').read_text());tracks={r['animation']:r for r in catalog['clips']};definitions={};records=[];sounds=set()
@@ -33,13 +33,13 @@ for row in rows:
   targets=range(16,21)
   if 'GroundHeat'in row['animation']:targets=[16]
   if 'WallHeat'in row['animation']:targets=[16]if i==0 else[18]
-  if row['animation'].endswith(('KatanaHeat','BottleHeat','WallHeat'))and i==len(row['contacts'])-1:targets=[18]
+  if row['animation'].endswith(('BottleHeat','WallHeat'))and i==len(row['contacts'])-1:targets=[18]
   def distance(n):
    b=victim['frames'][f][n];return math.dist([af-a[2]*1.5,ar+a[0]*1.5,a[1]*1.5],[vf-b[2]*1.5,vr+b[0]*1.5,b[1]*1.5])
   bone=min(targets,key=distance);cue=c.get('cue','heavyImpact');base=False;layers=c.get('layers',[])
   if 'HeatRush'in row['animation']:cue='kickImpact'if limb.endswith('Leg')else'punchImpact';layers=[];base=True
   if row['animation'].endswith('KatanaHeat')and i==1:cue='punchImpact';base=True
-  if row['animation'].endswith(('KatanaHeat','BottleHeat','WallHeat'))and i==len(row['contacts'])-1:cue='throwImpact';base=True
+  if row['animation'].endswith(('BottleHeat','WallHeat'))and i==len(row['contacts'])-1:cue='throwImpact';base=True
   if row['animation'].endswith('WallHeat')and i==1:cue='kickImpact';base=True
   if row['animation'].startswith('ProjectYakuza_DD_CrateHeat')and i>0 and i<len(row['contacts'])-1:cue='punchImpact';base=True
   event=(row['baseSounds']if base else row['sounds']).get(cue)or row['sounds'].get('heavyImpact');sounds.add(event)
