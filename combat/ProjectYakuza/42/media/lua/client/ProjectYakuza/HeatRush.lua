@@ -7,6 +7,7 @@ require "ProjectYakuza/Defense"
 require "ProjectYakuza/QTEFeedback"
 require "ProjectYakuza/Feedback"
 require "ProjectYakuza/CombatVoices"
+require "ProjectYakuza/HeatActionPresentation"
 require "TimedActions/ISBaseTimedAction"
 require "TimedActions/ISTimedActionQueue"
 local PY=ProjectYakuza;local R=PY.HeatRushRules
@@ -167,13 +168,15 @@ function A:start()
     self:setActionAnim(self.context.action.animation);self.action:setOverrideHandModelsObject(self.held,nil,false)
     H.active[p]=self;PY.HeatActions.begin(p,self,R.protection(self.context.action));PY.Heat.onSwing(p,{damageMultiplier=1})
     if not H.align(self.pose,0)then self:forceStop()end
+    if not self.cleaned and PY.HeatActionPresentation then PY.HeatActionPresentation.start(p,z,self.context.action,self)end
     if not self.cleaned then PY.emit("attackCommitted",p,self.context.style,self.context.action,self.context,"heatAction")end
     if granted then PY.Network.send(p,"heatRushReady",{action=granted.action})end
 end
-function H.present(p,z,move,index,effects)
+function H.present(p,z,move,index,effects,scheduled,anchor,feedback)
     local contact=R.contacts(move)[index];if not contact then return end
-    if effects~=false and PY.HitEffects then PY.HitEffects.spawn(p,z,contact.strong~=false,contact.charged==true)end
-    if p:isLocalPlayer()and PY.Feedback then
+    if PY.HeatActionPresentation and not scheduled then return end
+    if effects~=false and PY.HitEffects then PY.HitEffects.spawn(p,z,contact.strong~=false,contact.charged==true,nil,feedback,anchor)end
+    if not scheduled and p:isLocalPlayer()and PY.Feedback then
         PY.Feedback.play(p,PY.Feedback.sound(p,contact.cue or "heavyImpact")or PY.Feedback.sound(p,"heavyImpact")or PY.Feedback.sound(p,"finisher"),.55)
         for _,cue in ipairs(contact.layers or {})do PY.Feedback.play(p,PY.Feedback.sound(p,cue),.3)end
     end
@@ -268,6 +271,7 @@ function A:update()
 end
 function A:cleanup(done)
     if self.cleaned then return end;self.cleaned=true;local p,z=self.character,self.context.target.z;H.active[p]=nil
+    if PY.HeatActionPresentation then PY.HeatActionPresentation.stop(p,self,done)end
     if self.started then
         PY.HeatActions.finish(p,self)
         if self.qte then PY.QTE.cancel(self.qte,done and "complete"or"interrupted")end
@@ -332,6 +336,7 @@ H.remote={};H.ended={};H.remoteSessions={};H.failedPackets={}
 function H.remoteEnd(id,action,packet)
     if type(action)~="number"then return end;H.ended[id]=math.max(H.ended[id]or 0,action)
     local job=H.remote[id];if not job or job.action~=action then return end;H.remote[id]=nil
+    if PY.HeatActionPresentation then PY.HeatActionPresentation.stop(job.p,job,packet and packet.completed)end
     local z=job.z;local saved=R.targetKind(z)=="zombie"and packet or job.old
     if saved and saved~=job.old then saved={useless=saved.useless,ignore=saved.ignore,deferred=saved.deferred,locked=saved.locked,target=job.old.target,groundAction=job.old.groundAction,floor=job.old.floor,knocked=job.old.knocked}end
     if packet and packet.completed then R.ground(z,R.endFacing(job))end;PY.HeatActions.finish(job.p,job);if not job.victimRestored then R.restore(z,saved or job.old)end;if packet and packet.completed then R.ground(z,R.endFacing(job))end
@@ -415,6 +420,7 @@ function H.receive(module,command,a)
     job.motion=motion;job.duration=motion and motion.duration or R.duration
     job.x,job.y,job.fx,job.fy,job.age,job.at=a.x,a.y,a.fx,a.fy,a.age,now();H.remote[a.player]=job
     if not old then job.old=R.lock(z,motion and motion.targetAnimation);PY.HeatActions.begin(p,job,{duration=move and R.wallDuration(move)or job.duration})end
+    if move and PY.HeatActionPresentation then PY.HeatActionPresentation.start(p,z,move,job)end
     if not H.remoteHook then Events.OnTick.Add(H.updateRemote);H.remoteHook=true end
 end
 function H.updateRemote()

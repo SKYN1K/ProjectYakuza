@@ -175,6 +175,15 @@ for facing=1,8 do
  F.clear()
 end
 check(not F.ticking and not B.hooked and allocated==disposed,'all family effects release their instances and idle hooks')
+for facing=1,8 do
+ local anchor={x=15+facing/10,y=19-facing/10,z=.63};F.spawn(p,z,true,false,false,'unarmed',anchor)
+ anchor.x=-999;anchor.y=-999;anchor.z=-999
+ clock=clock+50;renders={};F.render();B.render()
+ check(#renders>1,'anchored Heat Action renders impact and blood')
+ for _,r in ipairs(renders)do check(r.x==15+facing/10 and r.y==19-facing/10 and r.z==.63,'impact and blood use copied physical contact without root offsets')end
+ F.clear()
+end
+check(allocated==disposed,'anchored instances release on interruption')
 
 
 return true,'PASS '..checks..' source-frame blood animation, confirmed hit, world anchor, MP budgets and cleanup checks'

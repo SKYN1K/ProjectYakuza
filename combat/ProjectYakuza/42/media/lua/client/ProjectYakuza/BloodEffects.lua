@@ -28,7 +28,7 @@ local function selectFrame(b,frame)
     end
     b.instance=PY.WorldEffects.detached(sprite,b.scale,0);b.frame=frame
 end
-function B.spawn(player,victim,strong,charged,feedback)
+function B.spawn(player,victim,strong,charged,feedback,anchor)
     local style=PY.getPlayerStyle(player)
     if not style or style.bloodEffects~="yakuza6" or not victim or player:getModData().ProjectYakuzaHitEffectsDisabled then return end
     local count=0
@@ -42,6 +42,7 @@ function B.spawn(player,victim,strong,charged,feedback)
     local family=feedback;if family==nil then family=style.impactFeedback end
     local scale=family=="blade"and 1.15 or family=="blunt"and .85 or 1
     local b={player=player,victim=victim,age=0,last=getTimestampMs(),life=family=="blade"and 360 or B.life,scale=.18*tile*(charged and 1.35 or strong and 1.2 or 1)*scale,height=((victim:isOnFloor()or victim.GetVariable and victim:GetVariable("ProjectYakuzaPairedVictimClip")=="ProjectYakuza_DD_GroundHeatVictim")and 5 or 26)*tile}
+    if anchor then b.anchor={x=anchor.x,y=anchor.y,z=anchor.z}end
     selectFrame(b,0);B.bursts[#B.bursts+1]=b
     if not B.hooked then Events.OnTick.Add(B.update);Events.OnPostRender.Add(B.render);B.hooked=true end
 end
@@ -64,7 +65,8 @@ function B.draw()
     for _,b in ipairs(B.bursts) do
         local alpha=.85*math.min(1,(b.life-b.age)/100)
         b.instance:SetAlpha(alpha);b.instance:SetTargetAlpha(alpha)
-        PY.WorldEffects.renderCentered(b.victim,b.instance,128,b.scale,0,-b.height,B.color)
+        if b.anchor then b.instance:render(b.victim,b.anchor.x,b.anchor.y,b.anchor.z,IsoDirections.N,0,-128*b.scale/2,B.color)
+        else PY.WorldEffects.renderCentered(b.victim,b.instance,128,b.scale,0,-b.height,B.color)end
     end
 end
 function B.render()

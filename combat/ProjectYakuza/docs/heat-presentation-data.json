@@ -1,0 +1,612 @@
+{
+  "operation": "Numeric source-pose anchors through native B42 FK and in-memory PCM onset analysis of unchanged supplied clips. No assets generated, converted to files, edited or upscaled. Contact timing and victim pose select impact location; each existing audio clip uses its measured strong-transient lead.",
+  "clips": [
+    {
+      "animation": "ProjectYakuza_DD_HeatRush",
+      "targetAnimation": "ProjectYakuza_DD_HeatRushVictim",
+      "actorSha256": "41367c866dc56924a8e8fd293b14aa50bdef6337be6b706ea6587df58ae8b493",
+      "victimSha256": "3dbad6f6994df8c3a44eeaffe85dc78994edabb299f80fe818db764a9631275d",
+      "contacts": [
+        {
+          "atMs": 1866.66667,
+          "index": 1,
+          "cue": "punchImpact",
+          "base": true,
+          "point": [
+            0.086424269,
+            0.706284761,
+            0.036850117
+          ],
+          "bone": "Bip01_Head",
+          "layers": [],
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 2100,
+          "index": 2,
+          "cue": "punchImpact",
+          "base": true,
+          "point": [
+            0.147877693,
+            0.606248677,
+            0.122053787
+          ],
+          "bone": "Bip01_Head",
+          "layers": [],
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 2633.33333,
+          "index": 3,
+          "cue": "punchImpact",
+          "base": true,
+          "point": [
+            -0.013299093,
+            0.566613615,
+            -0.029476034
+          ],
+          "bone": "Bip01_Spine1",
+          "layers": [],
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 2900,
+          "index": 4,
+          "cue": "punchImpact",
+          "base": true,
+          "point": [
+            -0.006034378,
+            0.445771635,
+            -0.005004046
+          ],
+          "bone": "Bip01_Spine",
+          "layers": [],
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 3800,
+          "index": 5,
+          "cue": "punchImpact",
+          "base": true,
+          "point": [
+            0.015520587,
+            0.700337827,
+            0.024176182
+          ],
+          "bone": "Bip01_Head",
+          "layers": [],
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 4066.66667,
+          "index": 6,
+          "cue": "punchImpact",
+          "base": true,
+          "point": [
+            -0.000272282,
+            0.45789656,
+            0.003123435
+          ],
+          "bone": "Bip01_Spine",
+          "layers": [],
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 4866.66667,
+          "index": 7,
+          "cue": "punchImpact",
+          "base": true,
+          "point": [
+            0.086424269,
+            0.706284761,
+            0.036850117
+          ],
+          "bone": "Bip01_Head",
+          "layers": [],
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 5100,
+          "index": 8,
+          "cue": "punchImpact",
+          "base": true,
+          "point": [
+            0.147877693,
+            0.606248677,
+            0.122053787
+          ],
+          "bone": "Bip01_Head",
+          "layers": [],
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 5633.33333,
+          "index": 9,
+          "cue": "punchImpact",
+          "base": true,
+          "point": [
+            -0.013299093,
+            0.566613615,
+            -0.029476034
+          ],
+          "bone": "Bip01_Spine1",
+          "layers": [],
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 5900,
+          "index": 10,
+          "cue": "punchImpact",
+          "base": true,
+          "point": [
+            -0.006034378,
+            0.445771635,
+            -0.005004046
+          ],
+          "bone": "Bip01_Spine",
+          "layers": [],
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 6800,
+          "index": 11,
+          "cue": "punchImpact",
+          "base": true,
+          "point": [
+            0.015520587,
+            0.700337827,
+            0.024176182
+          ],
+          "bone": "Bip01_Head",
+          "layers": [],
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 7066.66667,
+          "index": 12,
+          "cue": "punchImpact",
+          "base": true,
+          "point": [
+            -0.000272282,
+            0.45789656,
+            0.003123435
+          ],
+          "bone": "Bip01_Spine",
+          "layers": [],
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 8166.66667,
+          "index": 13,
+          "cue": "kickImpact",
+          "base": true,
+          "point": [
+            -0.001317216,
+            0.54656595,
+            -0.125306159
+          ],
+          "bone": "Bip01_Spine1",
+          "layers": [],
+          "feedback": "unarmed"
+        }
+      ]
+    },
+    {
+      "animation": "ProjectYakuza_DD_HeatRushFail",
+      "targetAnimation": "ProjectYakuza_DD_HeatRushFailVictim",
+      "actorSha256": "db5daca0c8fa1987f50973a3ff5b98479fd03f2e70a628d2d63d2945558ac127",
+      "victimSha256": "5b8cf98e4c800adcf0183f5e550753398ebdffd0e0f192304077e1e8e7b21328",
+      "contacts": [
+        {
+          "atMs": 833.333333,
+          "index": 13,
+          "cue": "kickImpact",
+          "base": true,
+          "point": [
+            -0.001317216,
+            0.54656595,
+            -0.125306159
+          ],
+          "bone": "Bip01_Spine1",
+          "layers": [],
+          "feedback": "unarmed"
+        }
+      ]
+    },
+    {
+      "animation": "ProjectYakuza_DD_WallHeat",
+      "targetAnimation": "ProjectYakuza_DD_WallHeatVictim",
+      "actorSha256": "5543160834f5395eeda1e56cc62c4ee3bd51323f1d8c2f01bbad46cb5ad86786",
+      "victimSha256": "3e7419f915fba5a699d08afb705bebe21add79f9cbc3b21c19ef3eb7d4e82258",
+      "contacts": [
+        {
+          "atMs": 33.333333333333336,
+          "index": 1,
+          "cue": "throwImpact",
+          "base": false,
+          "point": [
+            0.048919886,
+            0.734281003,
+            -0.088828042
+          ],
+          "bone": "Bip01_Head",
+          "layers": [],
+          "feedback": "blunt"
+        },
+        {
+          "atMs": 933.3333333333334,
+          "index": 2,
+          "cue": "kickImpact",
+          "base": true,
+          "point": [
+            -0.009528523,
+            0.444467545,
+            0.042217791
+          ],
+          "bone": "Bip01_Spine1",
+          "layers": [],
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 2433.333333333333,
+          "index": 3,
+          "cue": "throwImpact",
+          "base": true,
+          "point": [
+            -0.139608189,
+            0.419808686,
+            -0.015987933
+          ],
+          "bone": "Bip01_Spine1",
+          "layers": [],
+          "feedback": "blunt"
+        }
+      ]
+    },
+    {
+      "animation": "ProjectYakuza_DD_GroundHeat",
+      "targetAnimation": "ProjectYakuza_DD_GroundHeatVictim",
+      "actorSha256": "4003f1cc04ddf2b75933de265dc169c470aec819debe235ee00e4476d0cd9ef6",
+      "victimSha256": "55495c8f5447feb5920d5d090c08342001a51c09f0e713cbd9680ea940f80cb1",
+      "contacts": [
+        {
+          "atMs": 1000,
+          "index": 1,
+          "cue": "heavyImpact",
+          "base": false,
+          "point": [
+            0.269116163,
+            0.021458909,
+            -0.151517376
+          ],
+          "bone": "Bip01_Head",
+          "layers": []
+        }
+      ]
+    },
+    {
+      "animation": "ProjectYakuza_DD_KatanaHeat",
+      "targetAnimation": "ProjectYakuza_DD_KatanaHeatVictim",
+      "actorSha256": "9d817a59d232c07235295bc578bf4b9b4cf76d0a48b97d9c0eaad034b23feb6e",
+      "victimSha256": "d4a2f61ecd7d53243370078c7f4b16bfc2b56067236fda070329c577913c528e",
+      "contacts": [
+        {
+          "atMs": 666.6666666666666,
+          "index": 1,
+          "cue": "heavyImpact",
+          "base": false,
+          "point": [
+            4.62e-07,
+            0.476577342,
+            0.010861828
+          ],
+          "bone": "Bip01_Pelvis",
+          "layers": []
+        },
+        {
+          "atMs": 933.3333333333334,
+          "index": 2,
+          "cue": "punchImpact",
+          "base": true,
+          "point": [
+            4.5e-07,
+            0.456474513,
+            0.01086184
+          ],
+          "bone": "Bip01_Pelvis",
+          "layers": [],
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 1800,
+          "index": 3,
+          "cue": "heavyImpact",
+          "base": false,
+          "point": [
+            4.59e-07,
+            0.451907158,
+            0.01086184
+          ],
+          "bone": "Bip01_Pelvis",
+          "layers": []
+        },
+        {
+          "atMs": 3233.3333333333335,
+          "index": 4,
+          "cue": "throwImpact",
+          "base": true,
+          "point": [
+            0.006536556,
+            0.094434693,
+            -0.141521335
+          ],
+          "bone": "Bip01_Spine1",
+          "layers": [],
+          "feedback": "blunt"
+        }
+      ]
+    },
+    {
+      "animation": "ProjectYakuza_DD_BottleHeat",
+      "targetAnimation": "ProjectYakuza_DD_BottleHeatVictim",
+      "actorSha256": "5cac18683d2178238463f7d1d55e4f29ffa28a150ad34fce9a8db118d88d5c6a",
+      "victimSha256": "5e8090abb34ff95da811837b23b0103b6992b8bcb5eab4f02a1f0c0de6e64b3c",
+      "contacts": [
+        {
+          "atMs": 733.3333333333333,
+          "index": 1,
+          "cue": "heavyImpact",
+          "base": false,
+          "point": [
+            -0.022428289,
+            0.772897542,
+            0.008666141
+          ],
+          "bone": "Bip01_Head",
+          "layers": []
+        },
+        {
+          "atMs": 2433.333333333333,
+          "index": 2,
+          "cue": "heavyImpact",
+          "base": false,
+          "point": [
+            0.00088117,
+            0.532795429,
+            0.011324424
+          ],
+          "bone": "Bip01_Spine",
+          "layers": []
+        },
+        {
+          "atMs": 3066.666666666667,
+          "index": 3,
+          "cue": "throwImpact",
+          "base": true,
+          "point": [
+            0.062939808,
+            0.49239707,
+            0.04587587
+          ],
+          "bone": "Bip01_Spine1",
+          "layers": [],
+          "feedback": "blunt"
+        }
+      ]
+    },
+    {
+      "animation": "ProjectYakuza_DD_CrateHeat",
+      "targetAnimation": "ProjectYakuza_DD_CrateHeatVictim",
+      "actorSha256": "ae2805de9a568767c43ffab07b475af234d8a249bcce3afc71b4a93461a35193",
+      "victimSha256": "1871a3024b1a9a5e826210a69d2ff36f9a6c88d9fe089e15882578faa1b943ee",
+      "contacts": [
+        {
+          "atMs": 433.333333,
+          "index": 1,
+          "cue": "heavyImpact",
+          "base": false,
+          "point": [
+            -0.009949419,
+            0.543693066,
+            -0.023725789
+          ],
+          "bone": "Bip01_Spine1",
+          "layers": []
+        },
+        {
+          "atMs": 1466.66667,
+          "index": 2,
+          "cue": "punchImpact",
+          "base": true,
+          "point": [
+            -0.004045297,
+            0.514700472,
+            -0.001886268
+          ],
+          "bone": "Bip01_Spine",
+          "layers": [],
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 2466.66667,
+          "index": 3,
+          "cue": "punchImpact",
+          "base": true,
+          "point": [
+            -0.004045297,
+            0.514700472,
+            -0.001886268
+          ],
+          "bone": "Bip01_Spine",
+          "layers": [],
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 3466.66667,
+          "index": 4,
+          "cue": "punchImpact",
+          "base": true,
+          "point": [
+            -0.004045297,
+            0.514700472,
+            -0.001886268
+          ],
+          "bone": "Bip01_Spine",
+          "layers": [],
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 4733.33333,
+          "index": 5,
+          "cue": "heavyImpact",
+          "base": false,
+          "point": [
+            -0.024015166,
+            0.7294752,
+            -0.064357243
+          ],
+          "bone": "Bip01_Head",
+          "layers": []
+        }
+      ]
+    },
+    {
+      "animation": "ProjectYakuza_DD_CrateHeatFail",
+      "targetAnimation": "ProjectYakuza_DD_CrateHeatFailVictim",
+      "actorSha256": "c343bea3e8b8cb6d2258868bc1a3a484d778d7fcbe0c0ce248d073a12b48245f",
+      "victimSha256": "376d1b76bb171389483ac08efc0344be249940f20056d87c05bfcff176641763",
+      "contacts": [
+        {
+          "atMs": 633.333333,
+          "index": 5,
+          "cue": "heavyImpact",
+          "base": false,
+          "point": [
+            -0.024015166,
+            0.7294752,
+            -0.064357243
+          ],
+          "bone": "Bip01_Head",
+          "layers": []
+        }
+      ]
+    }
+  ],
+  "sounds": [
+    {
+      "file": "media/sound/ProjectYakuza/Y6Combat/battle_common_000.ogg",
+      "sha256": "830a2e6438a7ba07e3da89edc4aad41396f0f21a43706cbaaed1f4d82b3b5ad7",
+      "attackLeadMs": 120
+    },
+    {
+      "file": "media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_007.ogg",
+      "sha256": "60e371b12f9ba455fa3241983a39b1a10df82d00b7e463fba43a54cb65f1f8ad",
+      "attackLeadMs": 25
+    },
+    {
+      "file": "media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_008.ogg",
+      "sha256": "916c19c370cdd09edc2c31a07460ced631ffa084142cd8243ec9725d2c50c5a3",
+      "attackLeadMs": 35
+    },
+    {
+      "file": "media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_009.ogg",
+      "sha256": "8db2a09fb30e64d9d83fdc3eb9218e118526d005d14ca11b4a5d19e8b2623bb4",
+      "attackLeadMs": 25
+    },
+    {
+      "file": "media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_010.ogg",
+      "sha256": "81de88b99cc01613588dd396e28ee2ae238cdff0817f1093ef750e913f00597f",
+      "attackLeadMs": 45
+    },
+    {
+      "file": "media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_011.ogg",
+      "sha256": "8de0b107909d940c0b62809399e9581b9cacaa2fc91ac6a75af0e1ef963098a8",
+      "attackLeadMs": 30
+    },
+    {
+      "file": "media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_012.ogg",
+      "sha256": "f302f9c0bc5e52acab3e9518cadd1aab0126995afa2ca5869fe6ddcafa8eabc2",
+      "attackLeadMs": 30
+    },
+    {
+      "file": "media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_013.ogg",
+      "sha256": "38dce1c59e11d3f8b0de63a8160a461d7518235c0f4055310e8673eb2e6c3852",
+      "attackLeadMs": 10
+    },
+    {
+      "file": "media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_014.ogg",
+      "sha256": "10e20a427825bc6f952ed812a271cd38d6e7886728d1219d71ec2b34021dce15",
+      "attackLeadMs": 75
+    },
+    {
+      "file": "media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_015.ogg",
+      "sha256": "f1f6f9545766dbf377ef1e321c31c66b8831190227b8f57fa233e8e1fbc102ef",
+      "attackLeadMs": 75
+    },
+    {
+      "file": "media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_016.ogg",
+      "sha256": "cc1b1ea579ae2a728bef3d714a12838588148a1023feed738555346fd1b66b2b",
+      "attackLeadMs": 75
+    },
+    {
+      "file": "media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_017.ogg",
+      "sha256": "eb507edaffa05822aa7225220b3b8ab0e3bc72b24f6b35c528217c1d20ee7687",
+      "attackLeadMs": 65
+    },
+    {
+      "file": "media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_018.ogg",
+      "sha256": "3b8525f2f2882c26330ad99a8efc292cbf0ea29a6aedad8c561b617594903e72",
+      "attackLeadMs": 55
+    },
+    {
+      "file": "media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_019.ogg",
+      "sha256": "a38daeea6328987d5a486900ed4310ceaca0dc8d2ec78c5bb4fe663c96cb85ff",
+      "attackLeadMs": 45
+    },
+    {
+      "file": "media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_020.ogg",
+      "sha256": "d565af8711bfff94c128a26dbf4d3c5977489ba03c8b8d8f3fb3a47e4e0d4462",
+      "attackLeadMs": 55
+    },
+    {
+      "file": "media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_021.ogg",
+      "sha256": "13b672562fc8da3e6cf3465292375d83b8086d687995ff0bbe0841f631dfe835",
+      "attackLeadMs": 45
+    },
+    {
+      "file": "media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_022.ogg",
+      "sha256": "107cf30e8d9e3be0e4248d5cd609e1f52968f9cad64cf025ba758aea7581fe7e",
+      "attackLeadMs": 70
+    },
+    {
+      "file": "media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_024.ogg",
+      "sha256": "f0d0c5624ae3a09a3dd7e09b1c2cd8791ac099fbc7797c33ddc7a78e690636fc",
+      "attackLeadMs": 65
+    },
+    {
+      "file": "media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_025.ogg",
+      "sha256": "c15e816e95071f40c8f1268a21349280582bb7b6ae2d9428d750423ed42f64bb",
+      "attackLeadMs": 75
+    },
+    {
+      "file": "media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_026.ogg",
+      "sha256": "4632380bcddc417e96344353d75439569701794993de28caa63c2f8579bc6da8",
+      "attackLeadMs": 15
+    },
+    {
+      "file": "media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_027.ogg",
+      "sha256": "6aa163620836791c4c3bad7a24591b1b04e5e5392584102f7c1d75e3b0a53f8f",
+      "attackLeadMs": 55
+    },
+    {
+      "file": "media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_028.ogg",
+      "sha256": "07166989f6645772981468e44bdffdc8eb9b8ca55842ab53fbf1f8d0610edb85",
+      "attackLeadMs": 35
+    },
+    {
+      "file": "media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_029.ogg",
+      "sha256": "187300425bf5401533d3d218f0d87fb7993c9ef308d077ebdbe7cdd2026583ed",
+      "attackLeadMs": 25
+    }
+  ]
+}

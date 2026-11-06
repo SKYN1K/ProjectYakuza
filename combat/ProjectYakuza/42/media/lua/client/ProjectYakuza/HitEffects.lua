@@ -79,13 +79,13 @@ function F.onHit(player,victim,weapon,damage)
     local strong=(style.weaponProfile and s.finisherMove~=nil) or move and (move.neutralHeavy or move.double or move.afterLight or move.chargedHeavy) and not move.runningAttack and not move.quickstepAttack
     F.spawn(player,victim,strong,move and move.chargedHeavy)
 end
-function F.spawn(player,victim,strong,charged,guard,feedback)
+function F.spawn(player,victim,strong,charged,guard,feedback,anchor)
     local style=ProjectYakuza.getPlayerStyle(player)
     if not style or style.hitEffects~="yakuza6" then return end
     if player:getModData().ProjectYakuzaHitEffectsDisabled then return end
     local family=feedback;if family==nil then family=style.impactFeedback end
     if family~="blunt"and family~="blade"then family="unarmed"end
-    if not guard and ProjectYakuza.BloodEffects then ProjectYakuza.BloodEffects.spawn(player,victim,strong,charged,family) end
+    if not guard and ProjectYakuza.BloodEffects then ProjectYakuza.BloodEffects.spawn(player,victim,strong,charged,family,anchor) end
     local count=0
     for _,b in ipairs(F.bursts) do if b.player==player then count=count+1 end end
     if count>=F.maxBursts or #F.bursts>=F.maxTotal then
@@ -95,6 +95,7 @@ function F.spawn(player,victim,strong,charged,guard,feedback)
     end
     local tile=Core.getTileScale()
     local b={player=player,victim=victim,emitters={},last=getTimestampMs(),age=0,life=charged and 340 or strong and 280 or 240,strong=strong,charged=charged,guard=guard,family=family}
+    if anchor then b.anchor={x=anchor.x,y=anchor.y,z=anchor.z}end
     if not guard and not charged and family=="blade"then b.life=strong and 240 or 180 end
     local selected=guard and guardParticles or charged and chargedParticles or family=="blunt"and bluntParticles or family=="blade"and bladeParticles or particles
     local points={};for _,point in ipairs(selected) do points[#points+1]=point end
@@ -152,8 +153,11 @@ function F.draw()
             local scale=e.scale*growth
             e.instance:setScale(scale,scale)
             e.instance:SetAlpha(alpha*(ring and .20 or b.guard and .65 or 1));e.instance:SetTargetAlpha(alpha*(ring and .20 or b.guard and .65 or 1))
-            ProjectYakuza.WorldEffects.renderCentered(v,e.instance,e.point.size,scale,
+            if b.anchor then
+                e.instance:render(v,b.anchor.x,b.anchor.y,b.anchor.z,IsoDirections.N,-e.point.dx*t*tile,-e.point.dy*t*tile-e.point.size*scale/2,b.charged and F.chargeColor or b.family=="blunt"and F.bluntColor or b.family=="blade"and F.bladeColor or F.color)
+            else ProjectYakuza.WorldEffects.renderCentered(v,e.instance,e.point.size,scale,
                 bx+e.point.dx*t*tile,by-height+e.point.dy*t*tile,b.guard and F.guardColor or b.charged and F.chargeColor or b.family=="blunt"and F.bluntColor or b.family=="blade"and F.bladeColor or F.color,wx,wy,height/(96*tile))
+            end
         end
     end
 end

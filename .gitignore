@@ -232,3 +232,7 @@
 !/tools/combat-tests/build_low_health_tests.py
 !/tools/combat-tests/low-health-test-fixture.lua
 !/tools/combat-tests/LowHealthProbe.java
+
+!/tools/combat-tests/build_heat_presentation.py
+!/tools/combat-tests/build_heat_presentation_tests.py
+!/tools/combat-tests/heat-presentation-test-fixture.lua
