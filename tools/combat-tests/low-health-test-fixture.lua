@@ -11,7 +11,8 @@ local PY=ProjectYakuza;local rules=PY.LowHealthRules;local style=PY.getStyle('dr
 check(PY.validateStyle(style)and rules.forStyle(style).threshold==30,'DoD opts into validated low-health defaults')
 for _,cfg in ipairs({{threshold=0},{recover=30},{critical=30},{volume=2},{quietMs=20},{soundKey=''},{hud=1},{unknown=true},{threshold=0/0}})do check(not rules.valid(cfg),'invalid low-health configuration rejected')end
 check(rules.valid(false)and rules.valid(nil)and rules.valid({enabled=false})and rules.valid({soundKey=false,volume=0}),'explicitly disabled/HUD-only authoring is valid')
-local owner={health=100,localPlayer=true,equipped=true,style=style,reads=0,chasing=0,near=0,visible=0}
+local owner={playerType=true,health=100,localPlayer=true,equipped=true,style=style,reads=0,chasing=0,near=0,visible=0}
+instanceof=function(p,name)return type(p)=='table'and p.playerType==true and name=='IsoPlayer'end
 function owner:isLocalPlayer()return self.localPlayer end;function owner:isDead()return self.dead==true end
 function owner:getVehicle()return self.vehicle end;function owner:isAsleep()return self.asleep==true end
 function owner:getBodyDamage()local p=self;return {getOverallBodyHealth=function()p.reads=p.reads+1;return p.health end}end
@@ -37,6 +38,15 @@ local L=PY.LowHealthFeedback
 local function step(ms)clock=clock+ms;L.update(owner);L.tick()end
 L.update(owner);for i=1,1000 do L.update(owner)end
 check(owner.reads==1 and not L.hooked and not L.states[owner]and allocated==0,'healthy updates are throttled without a tick hook or audio allocation')
+local zombie=setmetatable({playerType=false},{__index=function(_,key)error('player-only member accessed on zombie: '..tostring(key))end})
+L.markCombat(zombie);L.update(zombie,true)
+for i=1,512 do for callback in pairs(Events.OnPlayerGetDamage)do if type(callback)=='function'then callback(zombie,'WEAPONHIT',.4)end end end
+check(not L.combat[zombie]and not L.polls[zombie]and not L.states[zombie]and allocated==0,'native zombie weapon-damage callbacks never call player methods, poll health or allocate feedback')
+L.markCombat(nil);L.update(nil,true);L.markCombat(false);L.update('WEAPONHIT',true)
+check(owner.reads==1 and not L.hooked,'non-player callback payloads cannot enter the local-player feedback path')
+for callback in pairs(Events.OnPlayerGetDamage)do if type(callback)=='function'then callback(owner,'WEAPONHIT',.4)end end
+check(L.combat[owner]==clock and owner.reads==2,'native local-player victim still records combat and refreshes health immediately')
+L.combat[owner]=nil
 owner.health=30;step(250);check(L.states[owner]and L.states[owner].fade==0,'warning enters at thirty percent with a fade')
 step(250);check(L.sample(owner)>0 and allocated==0,'low health has a quiet HUD warning outside combat')
 owner.health=15;step(250);step(250);local strength,critical=L.sample(owner)
@@ -48,7 +58,7 @@ local sounds=played;for i=1,100 do step(16)end;check(played==sounds,'playing hea
 state.emitter.handles[state.sound]=nil;state.nextBeat=clock+800;local beforeBeat=played;step(16);check(played==beforeBeat and not state.sound,'short native event cannot restart before the next heartbeat interval');step(800);check(played==beforeBeat+1,'ended heartbeat can repeat after its bounded interval')
 owner.nativeHeartbeat=true;owner.panic=50;step(250);check(not state.sound,'audible vanilla heartbeat takes precedence without a second overlapping heartbeat');owner.nativeHeartbeat=false;owner.panic=0;step(1000);check(state.sound,'private heartbeat can resume after native heartbeat stops')
 owner.nativeHeartbeat=true;step(250);check(state.sound,'retained but muted native heartbeat with zero panic cannot suppress mod feedback');owner.nativeHeartbeat=false
-local remote={localPlayer=false};function remote:isLocalPlayer()return false end
+local remote={playerType=true,localPlayer=false};function remote:isLocalPlayer()return false end
 L.update(remote,true);L.markCombat(remote);check(not L.states[remote]and not L.combat[remote],'remote players never allocate local warnings or sounds')
 local before=state.clock;paused=true;clock=clock+1000;L.tick();check(state.clock==before and not state.sound,'pause freezes animation and stops the private heartbeat')
 clock=clock+1000;L.sample(owner);check(state.clock==before,'HUD sampling also stays frozen during pause')

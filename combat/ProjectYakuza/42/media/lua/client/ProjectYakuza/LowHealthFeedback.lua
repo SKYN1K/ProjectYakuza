@@ -3,8 +3,11 @@ local PY=ProjectYakuza
 local L={states=setmetatable({}, {__mode="k"}),polls=setmetatable({}, {__mode="k"}),combat=setmetatable({}, {__mode="k"}),pollMs=250}
 PY.LowHealthFeedback=L
 local tickEvent=Events.OnTickEvenPaused or Events.OnTick
+local function localPlayer(p)
+    return p and instanceof(p,"IsoPlayer")and p:isLocalPlayer()
+end
 local function eligible(p)
-    if not p or not p:isLocalPlayer()or p:isDead()or not PY.isEquipped(p)or p:getVehicle()or p:isAsleep()then return end
+    if not localPlayer(p)or p:isDead()or not PY.isEquipped(p)or p:getVehicle()or p:isAsleep()then return end
     local style=PY.getPlayerStyle(p);local cfg=PY.LowHealthRules.forStyle(style)
     if cfg then return style,cfg end
 end
@@ -27,7 +30,7 @@ function L.clearAll()
     L.polls=setmetatable({}, {__mode="k"});L.combat=setmetatable({}, {__mode="k"})
 end
 function L.markCombat(p)
-    if p and p:isLocalPlayer()then L.combat[p]=getTimestampMs()end
+    if localPlayer(p)then L.combat[p]=getTimestampMs()end
 end
 function L.advance(s,t)
     local elapsed=math.max(0,t-s.last);s.last=t
@@ -41,7 +44,7 @@ function L.advance(s,t)
     return dt
 end
 function L.update(p,force)
-    if not p or not p:isLocalPlayer()then return end
+    if not localPlayer(p)then return end
     local t=getTimestampMs()
     if not force and t<(L.polls[p]or 0)then return end;L.polls[p]=t+L.pollMs
     local style,cfg=eligible(p);local s=L.states[p]
