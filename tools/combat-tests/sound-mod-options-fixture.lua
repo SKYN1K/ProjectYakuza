@@ -29,7 +29,9 @@ check(options:getOption('musicVolume'):getValue()==65 and options:getOption('hit
 for _,track in ipairs(ProjectYakuza.styles.dragon_of_dojima.music)do check(levels[track.sound]==1,'music group applies to supplied style tracks')end
 for _,cue in ipairs({'PunchImpact','KickImpact','HeatImpact','Finisher','ThrowImpact','GuardBreak'})do check(levels['ProjectYakuza_Y6_'..cue]==1.2,'hit group applies to impacts')end
 check(levels.ProjectYakuza_Y6_HeatGain==1.2 and levels.ProjectYakuza_Y6_HeatOnA==1.2,'Sounds covers orb and activation SFX as well')
+check(levels.ProjectYakuza_LowHealthHeartbeat==1.2 and levels.HeartBeat==nil,'mod heartbeat follows Sounds without changing the vanilla heartbeat event volume')
 options:getOption('hitVolume'):setValue(0);options:apply();check(levels.ProjectYakuza_Y6_PunchImpact==0 and levels.ProjectYakuza_FunkGoesOn==1,'zero mutes hits without muting music')
+check(levels.ProjectYakuza_LowHealthHeartbeat==0,'zero Sounds also mutes the mod low-health heartbeat')
 options:getOption('musicVolume'):setValue(500);options:apply();check(ProjectYakuza.SoundSettings.musicLevel()==2 and levels.ProjectYakuza_FunkGoesOn==1,'saved malformed values clamp to 200 percent')
 ProjectYakuza.registerStyle({id='addon.volume',name='Volume Addon',lightAttacks={{animation='Native',nodeValue='volume',duration=1}},music={{sound='AddonMusic'}},sounds={punchImpact='AddonImpact'}})
 check(levels.AddonMusic==1 and ProjectYakuza.SoundSettings.musicLevel()==2 and levels.AddonImpact==0,'late registered styles join grouped controls')

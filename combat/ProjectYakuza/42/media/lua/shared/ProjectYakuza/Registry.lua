@@ -57,6 +57,34 @@ function S.allowed(style,value,extreme)
 end
 end
 do
+local L={defaults={threshold=30,recover=35,critical=15,volume=.18,quietMs=6000,soundKey="lowHealth",hud=true,enabled=true}}
+ProjectYakuza.LowHealthRules=L
+local cache=setmetatable({}, {__mode="k"})
+local function finite(v)return type(v)=="number"and v==v and v<math.huge and v>-math.huge end
+function L.valid(cfg)
+    if cfg==nil or cfg==false then return true end
+    if type(cfg)~="table"then return false end
+    for key,value in pairs(cfg)do
+        if key=="enabled"or key=="hud"then if type(value)~="boolean"then return false end
+        elseif key=="soundKey"then if value~=false and(type(value)~="string"or not value:match("^[%w_.-]+$")or #value>120)then return false end
+        elseif not({threshold=true,recover=true,critical=true,volume=true,quietMs=true})[key]or not finite(value)then return false end
+    end
+    local threshold=cfg.threshold or L.defaults.threshold;local recover=cfg.recover or L.defaults.recover;local critical=cfg.critical or L.defaults.critical
+    return threshold>0 and threshold<100 and critical>=0 and critical<threshold and recover>threshold and recover<=100 and(cfg.volume or L.defaults.volume)>=0 and(cfg.volume or L.defaults.volume)<=1 and(cfg.quietMs or L.defaults.quietMs)>=500 and(cfg.quietMs or L.defaults.quietMs)<=30000
+end
+function L.forStyle(style)
+    local cfg=style and style.lowHealthFeedback
+    if type(cfg)~="table"or cfg.enabled==false then return end
+    local result=cache[cfg]
+    if not result then
+        if not L.valid(cfg)then return end
+        result={};for key,value in pairs(cfg)do result[key]=value end;setmetatable(result,{__index=L.defaults});cache[cfg]=result
+    end
+    return result
+end
+function L.invalidate(style)if type(style.lowHealthFeedback)=="table"then cache[style.lowHealthFeedback]=nil end end
+end
+do
 local Q={};ProjectYakuza.QTE=Q
 local function finite(x)return type(x)=="number"and x==x and x<math.huge and x>-math.huge end
 function Q.valid(def,durationMs)
@@ -261,7 +289,7 @@ end
 
 local ProjectYakuza = ProjectYakuza
 ProjectYakuza.FEATURES={grab=true}
-ProjectYakuza.VERSION = "0.87.0"
+ProjectYakuza.VERSION = "0.88.0"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -456,6 +484,7 @@ function ProjectYakuza.validateStyle(style)
         if style[key]~=nil and type(style[key])~="boolean" then problem(key.." must be true or false") end
     end
     if not ProjectYakuza.HeatRules.valid(style.heatConfig)then problem("invalid heatConfig capacity, gain or drain setting")end
+    if not ProjectYakuza.LowHealthRules.valid(style.lowHealthFeedback)then problem("invalid lowHealthFeedback thresholds, audio or HUD settings")end
     if not ProjectYakuza.HeatSpeed.valid(style.heatAttackSpeed)then problem("heatAttackSpeed requires max 1..2, optional power 0.25..4 and useExtremeFuel boolean")end
     if style.exertion~=nil and style.exertion~=false then
         local allowed={light=true,directional=true,quickstepAttack=true,ground=true,running=true,dropkick=true,heavy=true,finisher=true,double=true,charged=true,counter=true,heatAction=true}
@@ -569,6 +598,7 @@ function ProjectYakuza.registerStyle(style)
     style.lightBufferLimit = style.lightBufferLimit or 1
     if not ProjectYakuza.styles[style.id] then table.insert(ProjectYakuza.styleOrder, style.id) end
     ProjectYakuza.HeatRules.invalidate(style)
+    ProjectYakuza.LowHealthRules.invalidate(style)
     ProjectYakuza.styles[style.id] = style
     ProjectYakuza.emit("styleRegistered", style)
     return style

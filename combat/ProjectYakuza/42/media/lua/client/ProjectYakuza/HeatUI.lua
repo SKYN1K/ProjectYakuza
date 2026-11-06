@@ -1,5 +1,6 @@
 require "ProjectYakuza/Runtime"
 require "ProjectYakuza/StyleUI"
+require "ProjectYakuza/LowHealthFeedback"
 require "ISUI/ISPanel"
 local ProjectYakuza=ProjectYakuza
 local H=ISPanel:derive("ProjectYakuzaHeatGauge")
@@ -86,6 +87,12 @@ function H:drawGauge(p)
         for row=0,7 do local shine=1-math.abs(row-3.5)/4;self:drawRect(healthX+2,healthY+2+row*(14*H.scale/8),fill,14*H.scale/8+1,1,.48+.4*shine,.025+.045*shine,.035+.045*shine)end
     end
     if a.healthFrame then self:drawTextureScaled(a.healthFrame,healthX,healthY,healthWidth,18*H.scale,1,1,1,1)end
+    local warning,critical=0,false
+    if ProjectYakuza.LowHealthFeedback then warning,critical=ProjectYakuza.LowHealthFeedback.sample(p)end
+    if warning>0 then
+        if a.healthFrame then self:drawTextureScaled(a.healthFrame,healthX-1,healthY-1,healthWidth+2,18*H.scale+2,warning*.28,1,.12,.1)end
+        self:drawText(critical and "CRITICAL"or "LOW HEALTH",healthX+healthWidth-82,healthY-15,1,.32,.26,warning*.9,UIFont.Small)
+    end
     local capacity=(ProjectYakuza.Heat.rules and ProjectYakuza.Heat.rules(p)or ProjectYakuza.Heat.config).maxStocks
     local pairs=math.ceil(capacity/2)
     if self.setWidth then self:setWidth(math.max(348,healthX+healthWidth+12,H.originX+(56+38*capacity)*H.scale))end

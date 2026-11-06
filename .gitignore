@@ -228,3 +228,7 @@
 !/tools/combat-tests/validate_grab_crate_assets.py
 
 !/tools/combat-tests/validate_event_bursts.py
+
+!/tools/combat-tests/build_low_health_tests.py
+!/tools/combat-tests/low-health-test-fixture.lua
+!/tools/combat-tests/LowHealthProbe.java

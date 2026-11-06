@@ -1,0 +1,14 @@
+module Base
+{
+    sound ProjectYakuza_LowHealthHeartbeat
+    {
+        category = ProjectYakuza_Effects,
+        is3D = false,
+        loop = false,
+        clip
+        {
+            event = Character/Foley/Heartbeat,
+            volume = 1,
+        }
+    }
+}

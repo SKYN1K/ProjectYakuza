@@ -69,6 +69,7 @@ function U.render(channel,p,host,extra)
     local c={player=p,style=style,panel=host,channel=channel,dt=dt,time=session.clock,paused=paused,
         heat=H and H.display(p) or 0,stocks=H and H.stocks(p) or 0,
         maxStocks=H and (H.rules and H.rules(p)or H.config).maxStocks or 0,extreme=H and H.isExtreme(p) or false,
+        lowHealth=PY.LowHealthFeedback and PY.LowHealthFeedback.sample(p)or 0,
         action=PY.activeActions[p],combo=PY.stateFor and PY.stateFor(p),
         texture=U.texture,binding=PY.Bindings and PY.Bindings.label,inputPrompt=PY.InputPrompts and PY.InputPrompts.describe,drawInputPrompt=PY.InputPrompts and PY.InputPrompts.draw,
         viewport={x=getPlayerScreenLeft(p:getPlayerNum()),y=getPlayerScreenTop(p:getPlayerNum()),

@@ -1,6 +1,7 @@
 GameSound_EN = {
 
     GameSound_Category_ProjectYakuza_Effects = "Project Yakuza - Effects",
+    GameSound_ProjectYakuza_LowHealthHeartbeat = "Low-health heartbeat",
 
     GameSound_Category_ProjectYakuza_Music = "Dragon of Dojima - Music",
 

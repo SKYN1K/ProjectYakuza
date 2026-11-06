@@ -1,8 +1,8 @@
-# Project Yakuza 0.87.0
+# Project Yakuza 0.88.0
 
-- Attack effects now resolve the animation actually playing within the committed move, including linked double finishers and paired failure endings. They use that clip's native frame and PZ limb samples, with blend-weight selection and cached lookups.
-- Rebuilt the numeric effect catalogue from the current supplied motions: 83 clips and 104 contact windows, including grab strikes and the current Heat Rush sequence. Finishers select their own striking limb instead of inheriting a charge-up pose; kicks use hip/knee/foot tracks.
-- Added a fading world-space wake lasting up to 0.2 seconds. It can remain briefly after an attack ends or the next attack starts. Turning does not rotate old trail positions. Teleports, interruption, style changes and world exit clean up safely.
-- Kept fixed multiplayer budgets: eight active actors, eight retired wakes, 30 sprites per active actor and 12 retained sprites per wake. Observers reconstruct effects locally without new network packets, and repeated snapshots no longer reset them.
+- Added Dragon of Dojima low-health feedback: a restrained red pulse on the original health-bar frame and a low-health/critical label. Warning begins at 30% overall body health and intensifies at 15%; recovery at 35% prevents threshold flicker.
+- Added a quiet private 2D heartbeat during confirmed combat or native nearby/chasing threats. It uses PZ's existing Character/Foley/Heartbeat event through a separate mod sound definition, follows Sounds volume, and yields to the vanilla heartbeat instead of stacking it.
+- Heartbeat stops after six quiet seconds, healing, pausing, sleep, vehicle entry, death or style unequip. It does not broadcast to MP peers or attract zombies. The HUD warning remains while health is low outside combat.
+- Framework developers can opt styles into configurable thresholds, recovery, audio gain/cue, quiet timeout and HUD visibility. Custom style UI receives the current low-health pulse strength. Other styles remain opted out.
 
-No visual/audio/motion assets were created or changed. Existing supplied Y6 flame, glint and spark textures are reused. Damage, attack timing, charge effects and body auras are unchanged. Offline validation only; PZ was not launched. See [validation](VALIDATION_0.87.0.md). Restart game/server and use matching versions on all MP clients.
+Code-only update using existing HUD textures and the installed game's heartbeat event. No visual/audio/motion assets were generated or converted, no voice pack changes, and no damage/health/AI changes. Offline checks passed; PZ was not launched. See [validation](VALIDATION_0.88.0.md). Restart game/server and use matching versions for MP.
