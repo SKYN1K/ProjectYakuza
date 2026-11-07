@@ -61,7 +61,7 @@ isGamePaused=function()return paused end
 Events.OnServerCommand=event()
 PY.AttackEffects={findTrack=function()return phase,weight end}
 PY.NetworkProtocol={module='ProjectYakuza',path=function()return true end}
-PY.Defense={snapActor=function(actor,x,y)actor.x=x;actor.y=y end}
+PY.Defense={snapActor=function(actor,x,y)actor.x=x;actor.y=y end,update=function()return false end}
 PY.HitEffects={spawn=function()end}
 token.data={};token.min=.3;token.max=.5
 function token:getMinDamage()return self.min end;function token:getMaxDamage()return self.max end
@@ -192,7 +192,7 @@ savedTicket.granted=nil;PY.Network=oldNetwork;isClient=oldClient
 busy=false
 check(H.input(p,state,PY.getPlayerStyle(p)),'cleared recovery requests paired finish without another light')
 local c=PY.activeActions[p];check(c and c.kind=='heatAction','registered heat action handler starts')
-local a=c.timedAction;a.action={setOverrideHandModelsObject=function()end};a:start()
+local a=c.timedAction;a.action={setOverrideHandModelsObject=function()end};a:start();phase=0;a:update()
 check(p.blocked and p.ignore and z.useless and z.ignore,'paired action owns movement/AI locks')
 check(committed==1,'paired action publishes one exertion commitment when its motion starts')
 for _,binding in ipairs({'light','finisher','grab'})do press(binding,false)end
@@ -407,13 +407,14 @@ local oldHit=z.Hit;function z:Hit(item,who,amount)check(item==katana and who==p,
 local beforeHeat=PY.getHeat(p);local beforeHits=z.hits
 check(H.weaponInput(p,state,blade,true),'remapped action starts only with physical RMB and neutral combo')
 local kc=PY.activeActions[p];check(kc and kc.action.weaponHeat and not kc.action.qte,'weapon action uses automatic source contacts')
-check(math.abs(beforeHeat-PY.getHeat(p)-PY.Heat.stockSize(p))<.000001,'weapon heat action consumes one stock once')
+check(PY.getHeat(p)==beforeHeat,'accepted Heat Action reserves its cost without spending before playback')
 local ka=kc.timedAction;ka.action={setOverrideHandModelsObject=function()end};phase=0;ka:start()
 check(p.invincible and p.ghost and z.vars.ProjectYakuzaPairedVictimClip=='ProjectYakuza_DD_KatanaHeatVictim','framework protects actor and selects the correct original victim clip')
 check(ka.animation==p.vars.PerformingAction and p.vars.IsPerformingAnAction==true,'Heat Action owns native animation variables without a cancellable queue item')
 local queued=ISTimedActionQueue.add({character=p});check(queued==nil and not ka.cleaned,'native inventory actions cannot replace a running Heat Action')
 check(ISTimedActionQueue.add({character={}})~=nil,'unrelated actors keep their normal action queues')
-local clip=p.vars.PerformingAction;local oldPhase=phase;PY.updateCustomAction(p);check(not ka.cleaned and p.vars.PerformingAction==clip,'framework drives queue-free paired playback')
+local clip=p.vars.PerformingAction;local oldPhase=phase;fire('OnPlayerUpdate',p);check(ka.seen and not ka.cleaned and p.vars.PerformingAction==clip,'real Runtime drives queue-free paired playback')
+check(math.abs(beforeHeat-PY.getHeat(p)-PY.Heat.stockSize(p))<.000001,'visible weapon Heat Action consumes one stock once')
 
 PY.HeatActions.zombie(z);check(z.target==nil,'protected attacker is cleared as a zombie target')
 local pairedCues={};PY.on('heatRushHit',function(_,_,index)pairedCues[#pairedCues+1]=index end)
@@ -602,5 +603,64 @@ do
  check(target==crowd[18]and placements==18,'ground Heat Action scans past unrelated objects and tries farther valid placements')
  H.groundPreviews[p]=nil;H.previews[p]=nil;H.tickets[p]=nil;p.held=nil
  instanceof=oldInstance;R.placement=oldPlacement;getCell=oldCell;PY.Defense.safe=oldSafe;PY.MultiHit.targets=oldTargets
+end
+do
+ PY.resetPlayer(p,'runtime_heat_start');PY.Heat.stop(p,'test');p.x=0;p.y=0;p.held=katana;p.attacking=false;z.x=1.1;z.y=0;z.health=10;z.useless=false;z.knock=false;mouse[1]=true;phase=nil;weight=1
+ local before=100;PY.setHeat(p,before);H.tickets[p]=nil
+ check(PY.requestAction(p,'heatAction',nil,{z=z}),'runtime fixture accepts a normal weapon Heat Action')
+ local context=PY.activeActions[p];local action=context.timedAction
+ fire('OnPlayerUpdate',p)
+ check(action.started and H.active[p]==action and p.vars.PerformingAction==context.action.animation,'normal player update starts the paired actor and victim without a manual start')
+ check(PY.getHeat(p)==before,'missing native playback cannot consume a stock')
+ clock=clock+651;fire('OnPlayerUpdate',p)
+ check(action.cleaned and not PY.activeActions[p]and PY.getHeat(p)==before and not p.blocked and not z.useless,'missing animation cleans up through Runtime without losing Heat')
+ clock=clock+500;PY.HeatActions.tick();p.x=0;p.y=0;z.x=1.1;z.y=0;z.health=10;z.knock=false;phase=nil;PY.setHeat(p,before)
+ check(PY.requestAction(p,'heatAction',nil,{z=z}),'action can retry after a failed playback start')
+ context=PY.activeActions[p];action=context.timedAction;fire('OnPlayerUpdate',p);phase=.01;fire('OnPlayerUpdate',p)
+ local paid=PY.getHeat(p)
+ check(action.seen and math.abs(before-paid-PY.Heat.stockSize(p))<.000001,'Runtime confirms visible playback and pays exactly one stock')
+ fire('OnPlayerUpdate',p);check(PY.getHeat(p)==paid,'repeated real player updates cannot charge again')
+ PY.cancelAction(p,'test_end');check(PY.getHeat(p)==paid,'cancellation after real playback keeps the committed cost')
+ clock=clock+500;PY.HeatActions.tick();p.x=0;p.y=0;z.x=1.1;z.y=0;z.health=10;z.knock=false;phase=nil;PY.setHeat(p,before)
+ check(PY.requestAction(p,'heatAction',nil,{z=z}),'complete Runtime sequence starts from neutral input')
+ context=PY.activeActions[p];action=context.timedAction;fire('OnPlayerUpdate',p);phase=.01;fire('OnPlayerUpdate',p)
+ for _,contact in ipairs(context.action.contacts)do phase=contact.atMs/1000;fire('OnPlayerUpdate',p)end
+ phase=context.action.duration;fire('OnPlayerUpdate',p)
+ check(action.cleaned and not PY.activeActions[p]and z.health<10 and not p.blocked and not z.useless,'real player updates deliver every contact and finish the paired sequence')
+ check(math.abs(before-PY.getHeat(p)-PY.Heat.stockSize(p))<.000001,'full Runtime sequence retains exactly one stock payment')
+ clock=clock+500;PY.HeatActions.tick();p.x=0;p.y=0;z.x=1.1;z.y=0;z.health=10;z.knock=false;phase=nil;PY.setHeat(p,before)
+ check(PY.requestAction(p,'heatAction',nil,{z=z}),'pending playback can be paused')
+ context=PY.activeActions[p];action=context.timedAction;paused=true;clock=clock+2000;fire('OnPlayerUpdate',p)
+ check(not action.started and PY.getHeat(p)==before,'pause cannot start or charge a pending Heat Action')
+ paused=false;fire('OnPlayerUpdate',p);clock=clock+100;fire('OnPlayerUpdate',p)
+ paused=true;clock=clock+2000;fire('OnPlayerUpdate',p);paused=false;clock=clock+10;fire('OnPlayerUpdate',p)
+ check(not action.cleaned and not action.seen,'paused time cannot exhaust the native startup grace')
+ phase=.01;fire('OnPlayerUpdate',p);check(action.seen and context.heatPaid,'playback resumes and commits after a paused startup')
+ PY.cancelAction(p,'test_end');clock=clock+500;PY.HeatActions.tick();p.x=0;p.y=0;z.x=1.1;z.y=0;z.health=10;z.knock=false;phase=nil;PY.setHeat(p,before)
+ check(PY.requestAction(p,'heatAction',nil,{z=z}),'startup rechecks resources at playback')
+ context=PY.activeActions[p];action=context.timedAction;fire('OnPlayerUpdate',p);PY.setHeat(p,0);phase=.01;fire('OnPlayerUpdate',p)
+ check(action.cleaned and not context.heatPaid and PY.getHeat(p)==0,'resource loss before playback cancels without a negative or duplicate debit')
+ clock=clock+500;PY.HeatActions.tick();p.x=0;p.y=0;z.x=1.1;z.y=0;z.health=10;z.knock=false;phase=nil;PY.setHeat(p,PY.Heat.stockSize(p))
+ check(PY.Heat.start(p),'last-stock fixture enters Extreme Heat')
+ local fuel=PY.Heat.display(p);check(PY.requestAction(p,'heatAction',nil,{z=z}),'one remaining fuel stock can reserve the weapon action')
+ context=PY.activeActions[p];action=context.timedAction;fire('OnPlayerUpdate',p)
+ check(PY.Heat.isExtreme(p)and PY.Heat.display(p)==fuel,'pending playback cannot deplete the final fuel stock')
+ phase=.01;fire('OnPlayerUpdate',p)
+ check(action.seen and context.heatPaid and not PY.Heat.isExtreme(p),'confirmed playback pays the last fuel stock and safely ends the mode')
+ PY.cancelAction(p,'test_end');clock=clock+500;PY.HeatActions.tick();p.held=nil;PY.Weapons.sync(p)
+ local oldFloor=z.isOnFloor
+ for _,kind in ipairs({'groundHeat','grabHeat'})do
+  PY.resetPlayer(p,'runtime_alias');p.x=0;p.y=0;z.x=1.1;z.y=0;z.health=10;z.useless=false;z.knock=false;phase=nil;PY.setHeat(p,before)
+  z.isOnFloor=kind=='groundHeat'and function()return true end or oldFloor
+  local move=style.actions[kind];local pose=R.placement(p,z,move)
+  check(PY.requestAction(p,kind,nil,{z=z,fromGrab=kind=='grabHeat',pose=pose}),'native '..kind..' accepts its own action definition')
+  context=PY.activeActions[p];action=context.timedAction
+  check(action:isValid()and R.validFor(p,z,move),'pending '..kind..' remains eligible before Runtime startup: '..tostring(action:isValid())..'/'..tostring(R.validFor(p,z,move)))
+  fire('OnPlayerUpdate',p);phase=.01;fire('OnPlayerUpdate',p)
+  check(action.started and action.seen and context.heatPaid,'real Runtime starts and commits '..kind..' through the shared paired handler')
+  PY.cancelAction(p,'test_end');clock=clock+500;PY.HeatActions.tick()
+ end
+ z.isOnFloor=oldFloor
+ PY.HeatActions.clear();p.held=nil;H.tickets[p]=nil
 end
 return true,'PASS '..checks..' generic QTE validation, custom bindings, fresh presses, replay safety, native-phase contacts, canonical damage, paired cleanup and interruption checks'

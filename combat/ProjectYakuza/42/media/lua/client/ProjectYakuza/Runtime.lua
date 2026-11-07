@@ -399,14 +399,22 @@ local function onUpdate(player)
         heavyPressed=finisherPressed,heavyDown=finisherDown,
     }) then s.lastDown=B.down("light");return end
     if customAction or ProjectYakuza.isCustomAction(player) then s.lastDown=B.down("light");return end
+    local context=ProjectYakuza.activeActions[player]
+    if context and (context.kind=="heatAction"or context.kind=="grabHeat"or context.kind=="groundHeat")and context.timedAction then
+        local ok,err=pcall(context.handler.update,context)
+        if not ok then
+            print("[ProjectYakuza] Heat Action update error: "..tostring(err))
+            ProjectYakuza.cancelAction(player,"heat_action_update_failed",context)
+        end
+        s.lastDown=B.down("light");return
+    end
     local charging=ProjectYakuza.activeActions[player]
     if charging and charging.kind=="heavyCharge" and ProjectYakuza.ChargedHeavy then
         ProjectYakuza.ChargedHeavy.watch(player,charging);s.lastDown=B.down("light");return
     end
     if ProjectYakuza.GrabCombat and ProjectYakuza.GrabCombat.updatePending(player)then s.lastDown=B.down("light");return end
     if ProjectYakuza.Defense and ProjectYakuza.Defense.update(player) then s.lastDown=B.down("light");return end
-    local context=ProjectYakuza.activeActions[player]
-    if context and (context.kind=="heatAction"or context.kind=="grabHeat"or context.kind=="groundHeat")and context.timedAction then if not context.timedAction.started and now()-context.requestedAt>650 then ProjectYakuza.cancelAction(player,"heat_rush_start_timeout")end;s.lastDown=B.down("light");return end
+    context=ProjectYakuza.activeActions[player]
     if context and (context.kind=="parry" or context.kind=="heatActivation" or context.kind=="taunt") then
         if context.kind=="heatActivation" and ProjectYakuza.HeatActivation then ProjectYakuza.HeatActivation.watch(player,context) end
         if context.kind=="taunt" and ProjectYakuza.Taunts then ProjectYakuza.Taunts.watch(player,context) end

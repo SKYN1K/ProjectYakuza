@@ -42,7 +42,7 @@ Require `ProjectYakuza/Registry` for shared definitions, `ProjectYakuza/Runtime`
 | fullBody/groundAttack/runningAttack/quickstepAttack | Existing controller flags; not automatic node generation |
 | reaction | Existing victim-reaction mapping ID |
 | direction/distance | Directional variant / collision-checked travel in tiles |
-| heatStocks/heatCost | Accepted-start cost: stocks take precedence over raw points |
+| heatStocks/heatCost | Stocks take precedence over raw points; paired Heat Actions pay at confirmed playback, other kinds at accepted start |
 | requiresTarget/targetAnimation | Target/paired-clip descriptors; handler validates synchronization |
 | variants | Kind slot's move map; request variant defaults to default |
 
@@ -69,7 +69,7 @@ Token: ProjectYakuza.StyleToken. Do not mint client-only tokens in MP. Use names
 
 `registerStyleActionHandler(styleId,kind,handler)` overrides only that style; `registerActionHandler(kind,handler)` sets a fallback. Required start(context); optional canStart(context), update(context), cancel(context,reason). Automatic update is for custom kinds only; built-in controllers own their protocol.
 
-`requestAction(player,kind,variant,target)` returns ok,reason after equipment/idle/slot/target/cost/branch/readiness validation. Context fields: player,style,kind,variant,action,target,comboStep,handler. You may add transient fields. Accepted starts publish ownership, spend configured heat and emit actionStarted. Failed starts invoke cancel cleanup without spending cost.
+`requestAction(player,kind,variant,target)` returns ok,reason after equipment/idle/slot/target/cost/branch/readiness validation. Context fields: player,style,kind,variant,action,target,comboStep,handler. You may add transient fields. Accepted starts publish ownership and emit actionStarted. Custom and ordinary action kinds spend configured Heat at acceptance. Built-in paired heatAction/groundHeat/grabHeat defer payment until the first confirmed native playback sample; their controller calls payActionHeat(context), which rechecks the selected resource and cannot debit twice. Failed starts invoke cancel cleanup without spending cost. A paired startup that never reaches playback also spends nothing; cancellation after payment does not refund it.
 
 `completeAction(player,expectedContext)` clears matching ownership/emits completion, but does not call cancel cleanup. `cancelAction(player,reason,expectedContext)` clears it, calls the captured cancel handler and emits cancellation. Optional expectedContext prevents a stale timer ending a newer move. Full rules: [Actions](ACTIONS.md).
 

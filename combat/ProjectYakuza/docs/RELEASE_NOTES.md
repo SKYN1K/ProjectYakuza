@@ -1,9 +1,8 @@
-# Project Yakuza 0.93.0
+# Project Yakuza 0.93.1
 
-- Fixed quickstep cleanup when its native animation fades below the startup weight or disappears before the final update. End markers and a bounded missing-track fallback release movement, and cleanup explicitly exits the owned native timed-action animation once.
-- Limited quickstep startup retries to the period before visible playback. Changing aim or RMB during an established dodge no longer restarts it. Directional attacks and the three-per-15-second quota keep their existing rules.
-- Fixed crowded weapon and ground Heat Action selection. Candidates are tried nearest first until the paired animation fits. The weapon search no longer drops candidates after the first sixteen, and the ground search no longer stops after the first 96 moving objects.
-- Preserved a feasible combo Heat Action victim when later crowd contacts are blocked or ineligible. Valid later confirmed victims still follow the existing last-hit rule; a pending or granted multiplayer request keeps its feasible target.
-- Documented the existing Heat drain rules and stock retention. Heat tuning and action costs are unchanged.
+- Fixed Heat Actions spending a stock without playing. The ordinary player-update loop now starts and advances queue-free weapon, ground and grab Heat Actions; the previous branch only waited for a start that never occurred.
+- Paired Heat Actions now pay their stock or Extreme fuel cost once native playback is confirmed. Missing playback and cancellation before that point spend nothing. Repeated updates cannot charge twice, and cancellation after playback retains the committed cost.
+- Moved swing commitment and multiplayer readiness to confirmed playback. Startup pause handling preserves the animation grace period; ordinary custom action kinds retain accepted-start payment.
+- Replaced the misleading manual-start regression with checks through real player-update callbacks, including full contacts/completion, ground/grab startup, missing clips, pause, resource loss and the final Extreme fuel stock.
 
-Validated offline without launching PZ. All 11 selected Kahlua suites pass, all 75 production Lua files compile, and source checks find zero code comments. No motion, texture or audio assets changed. See [validation](VALIDATION_0.93.0.md) and [Heat rules](HEAT.md). Restart PZ after updating; server and clients must use matching versions.
+All 15 selected offline Kahlua suites pass; all 75 production Lua files compile and source checks report zero code comments. No supplied motion, texture or audio assets changed. PZ was not launched. See [validation](VALIDATION_0.93.1.md). Fully restart PZ after installation; servers and clients must use matching versions.

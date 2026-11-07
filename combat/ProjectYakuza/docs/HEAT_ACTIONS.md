@@ -1,5 +1,7 @@
 # Heat Action lifecycle
 
+As of 0.93.1, the normal player-update loop starts and advances built-in weapon, ground and grab Heat Actions directly. Their stock or Extreme fuel cost is paid once when native playback is first confirmed. A missing animation, failed startup or cancellation before playback does not spend the cost. Repeated updates cannot charge again; cancellation after visible playback retains the committed cost. Multiplayer readiness is sent at that same confirmed-playback point.
+
 Dragon of Dojima has an original katana action while Base.Katana is equipped. Hold physical RMB and press the Heat Action binding (default MMB) outside a combo, within two tiles of an eligible standing target. It costs one stock. In Extreme Heat the equivalent fuel pays the cost. MMB during an active combo retains normal weapon-heavy behavior. Other blade items do not receive this action.
 
 The Heat Action input is separate from the finisher, counter and QTE prompt bindings. Configure its mouse mode or keyboard key in Options > Mods > Project Yakuza. Keyboard aim alone does not satisfy the physical RMB requirement. Input cannot queue a Heat Action through an active combo or its follow-up window.

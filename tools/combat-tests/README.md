@@ -37,6 +37,8 @@ One-strike quicksteps: build_quickstep_once_tests.py embeds production modules i
 
 For 0.93.0, that quickstep suite also checks aim changes after visible playback, fading/disappearing terminal tracks, exactly-once native exit and bounded cleanup. build_heat_rush_tests.py adds nearest-placeable crowd selection beyond sixteen weapon candidates, ground searches beyond 96 moving objects, forced preview refresh and preservation of feasible combo victims after blocked or ineligible contacts. Both tests first reproduced failures against the previous production modules. Heat-speed, heat-shove, MP, weapon, weapon-MP, grab, charged-UI, directional and Extreme-attack suites cover surrounding behavior without starting PZ.
 
+For 0.93.1, heat-rush tests invoke the real OnPlayerUpdate callbacks for startup, native-track confirmation, contacts and completion. They reproduce the previous missing-dispatch bug, cover ground/grab definitions through the same update loop, and verify no cost for missing playback, one payment on visible playback, pause-safe startup, resource loss before playback and the final Extreme fuel stock. Presentation, damage, extension API and addon starter suites also run with current production code. Manually calling a timed action's start method alone does not establish that Runtime dispatches it.
+
 ## API 3 charged heavy and style UI
 
 Run `python tools/combat-tests/build_charged_ui_tests.py` from the repository root,

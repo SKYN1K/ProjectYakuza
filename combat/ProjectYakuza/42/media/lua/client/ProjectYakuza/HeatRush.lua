@@ -184,11 +184,9 @@ function A:start()
     self.victim=R.lock(z,self.context.action.targetAnimation)
     PY.setVisual(p,true,self.context.action.nodeValue);p:setVariable("ProjectYakuzaStyle",self.context.style.id);p:setVariable("ProjectYakuzaWeaponProfile",self.context.style.weaponProfile or "");p:setVariable("ProjectYakuzaHeatRush","")
     self:setActionAnim(self.context.action.animation)
-    H.active[p]=self;PY.HeatActions.begin(p,self,R.protection(self.context.action));PY.Heat.onSwing(p,{damageMultiplier=1})
+    H.active[p]=self;PY.HeatActions.begin(p,self,R.protection(self.context.action))
     if not H.align(self.pose,0)then self:forceStop()end
     if not self.cleaned and PY.HeatActionPresentation then PY.HeatActionPresentation.start(p,z,self.context.action,self)end
-    if not self.cleaned then PY.emit("attackCommitted",p,self.context.style,self.context.action,self.context,"heatAction")end
-    if granted then PY.Network.send(p,"heatRushReady",{action=granted.action})end
 end
 function H.present(p,z,move,index,effects,scheduled,anchor,feedback,bloodOnly)
     local contact=R.contacts(move)[index];if not contact then return end
@@ -257,6 +255,13 @@ function A:update()
     R.hold(self.context.target.z)
     local phase,weight,slot=PY.AttackEffects.findTrack(self.character,self.context.action.animation,self.slot);self.slot=slot
     if phase and weight>=.35 then
+        if not self.seen then
+            if not PY.payActionHeat(self.context)then self:forceStop();return end
+            PY.Heat.onSwing(self.character,{damageMultiplier=1})
+            PY.emit("attackCommitted",self.character,self.context.style,self.context.action,self.context,"heatAction")
+            local granted=self.context.target.granted
+            if granted then PY.Network.send(self.character,"heatRushReady",{action=granted.action})end
+        end
         local sourcePhase=self.context.action.pacedAnimation and R.sourceTime(self.context.action,phase)or phase
         if self.seen and sourcePhase+.02<self.elapsed then if self.elapsed>=self.pose.duration-.12 then self:forceComplete()else self:forceStop()end;return end
         self.seen=true;self.elapsed=self.context.action.pacedAnimation and R.sourceTime(self.context.action,phase)or phase;self.wait=0
@@ -346,7 +351,11 @@ PY.registerStyleActionHandler("dragon_of_dojima","heatAction",{
     start=function(c)
         PY.resetPlayer(c.player,"heat_rush_started");c.timedAction=A:new(c);c.requestedAt=now();return true
     end,
-    update=function(c)local a=c.timedAction;if a then if not a.started then a:start()else a:update()end end end,
+    update=function(c)
+        local a=c.timedAction;if not a then return end
+        if isGamePaused()then a.last=now();return end
+        if not a.started then a:start()else a:update()end
+    end,
     cancel=function(c)if c.timedAction then c.timedAction:cancel()end end,
 })
 PY.registerActionHandler("groundHeat",PY.getActionHandler("dragon_of_dojima","heatAction"))

@@ -13,7 +13,7 @@ Client code registers a style-specific handler. Required start(context) queues n
 ## Lifecycle contract
 
 1. requestAction validates equipment, idle state, slot/variant, target descriptors, combo branch and heat; canStart may return false,reason.
-2. start queues the action. Only after true returns does the registry publish ownership, spend cost and emit actionStarted. Do not complete or recursively request another move synchronously inside start.
+2. start prepares or queues the action. Only after true returns does the registry publish ownership, spend cost and emit actionStarted. Built-in paired heatAction/groundHeat/grabHeat defer cost payment until native playback; their handler commits that payment once. Custom action kinds retain accepted-start payment. Do not complete or recursively request another move synchronously inside start.
 3. Native playback owns the actual animation. Set context.timedAction.started=true when it really starts; MP actions capture needs it and matching PerformingAction variables.
 4. Custom update(context) runs through existing local-player Runtime updates. Normal combo/finisher/running/defense routing is consumed; style input callbacks still handle release/cancel. The completion update is also consumed to avoid leaking a held light.
 5. On success, restore overrides then completeAction(player,context). On interruption use cancelAction(player,reason,context). The registry clears ownership before invoking the captured cancel handler. Completion does not invoke cancel cleanup.

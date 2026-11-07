@@ -289,7 +289,7 @@ end
 
 local ProjectYakuza = ProjectYakuza
 ProjectYakuza.FEATURES={grab=true}
-ProjectYakuza.VERSION = "0.93.0"
+ProjectYakuza.VERSION = "0.93.1"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -759,6 +759,20 @@ function ProjectYakuza.actionHeat(player,action)
     if action.useExtremeFuel and state and state.extreme then return state.fuel or 0,true end
     return ProjectYakuza.getHeat(player),false
 end
+function ProjectYakuza.payActionHeat(context)
+    if context.heatPaid then return true end
+    local player=context.player;local cost=context.heatCost or 0
+    if ProjectYakuza.activeActions[player]~=context then return false end
+    if cost<=0 then context.heatPaid=true;return true end
+    local available,fuelPayment=ProjectYakuza.actionHeat(player,context.action)
+    if available<cost or fuelPayment~=context.heatFuel then return false end
+    context.heatPaid=true
+    if fuelPayment then
+        local heat=ProjectYakuza.Heat;local state=heat.states[player];state.fuel=math.max(0,(state.fuel or 0)-cost)
+        if state.extreme and state.fuel==0 then heat.stop(player,"depleted")end
+    else ProjectYakuza.setHeat(player,ProjectYakuza.getHeat(player)-cost)end
+    return true
+end
 function ProjectYakuza.requestAction(player, kind, variant, target)
     if kind=="grab" and ProjectYakuza.FEATURES.grab==false then return false,"temporarily_disabled" end
     if not ProjectYakuza.actionKinds[kind] then return false, "unknown_action" end
@@ -785,7 +799,7 @@ function ProjectYakuza.requestAction(player, kind, variant, target)
         if comboStep ~= action.afterLight then return false, "wrong_combo_step" end
         if not combo.finishedAt or getTimestampMs() - combo.finishedAt > style.comboResetMs then return false, "combo_window_closed" end
     end
-    local context = { player=player, style=style, kind=kind, variant=variant, action=action, target=target, comboStep=comboStep, handler=handler }
+    local context = { player=player, style=style, kind=kind, variant=variant, action=action, target=target, comboStep=comboStep, handler=handler,heatCost=cost,heatFuel=fuelPayment }
     if handler.canStart then
         local ok, allowed, reason = pcall(handler.canStart, context)
         if not ok then return false, "handler_error" end
@@ -802,11 +816,8 @@ function ProjectYakuza.requestAction(player, kind, variant, target)
     end
     ProjectYakuza.activeActions[player] = context
     if ProjectYakuza.blocksNativeAttacks(player) and ProjectYakuza.Bindings then ProjectYakuza.Bindings.update(player) end
-    if cost>0 then
-        if fuelPayment then
-            local heat=ProjectYakuza.Heat;local state=heat.states[player];state.fuel=math.max(0,(state.fuel or 0)-cost)
-            if state.extreme and state.fuel==0 then heat.stop(player,"depleted")end
-        else ProjectYakuza.setHeat(player,ProjectYakuza.getHeat(player)-cost)end
+    if kind~="heatAction"and kind~="groundHeat"and kind~="grabHeat"and not ProjectYakuza.payActionHeat(context)then
+        ProjectYakuza.cancelAction(player,"insufficient_heat",context);return false,"insufficient_heat"
     end
     ProjectYakuza.emit("actionStarted", context)
     return true
