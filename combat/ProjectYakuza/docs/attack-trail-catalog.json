@@ -1,7 +1,7 @@
 {
   "operation": "Code-side numeric FK only from existing supplied PZ clips, including current paired contacts/endings and linked native finisher variants. Contacts use native collision events, authored Heat Action contacts or the documented parry fallback. Clips use contact-local endpoint/relative motion with verified original left-light and right-high-kick pose overrides, independent of charge-up pose. The high kick has right-foot height 0.721 versus planted left foot 0.093 at source frame 24; recovering arms can be faster than the striking leg. Runtime resolves the actual playing clip within the committed move family. No visual/audio/animation/model assets are generated or modified.",
   "catalog": "42/media/lua/client/ProjectYakuza/AttackTrailCatalog.lua",
-  "sha256": "6f98254d82ecbffae03c51c48604bfdf462079f34b8de8e61e30243d344aac1a",
+  "sha256": "6c40abe6c21a8ef9c4229d148918691edd824c57a62a8399dd71826b1571eaf0",
   "clips": [
     {
       "profile": "bat",
@@ -1862,8 +1862,7 @@
       "qte": [
         0.6666666666666666,
         0.9333333333333333,
-        1.8,
-        3.2333333333333334
+        1.8
       ],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_KatanaHeat.x",
       "clipSha256": "9d817a59d232c07235295bc578bf4b9b4cf76d0a48b97d9c0eaad034b23feb6e",
@@ -1882,7 +1881,7 @@
             0.0836781967010944,
             0.06912437594054753
           ],
-          "selection": "contact-local relative motion"
+          "selection": "verified katana slash, opposite-hand punch, sword thrust"
         },
         {
           "track": "dd_trail_katanaheat_2",
@@ -1896,7 +1895,7 @@
             0.21487377635091515,
             0.12805799340496896
           ],
-          "selection": "contact-local relative motion"
+          "selection": "verified katana slash, opposite-hand punch, sword thrust"
         },
         {
           "track": "dd_trail_katanaheat_3",
@@ -1910,21 +1909,7 @@
             0.05335876419917866,
             0.08990349554393923
           ],
-          "selection": "contact-local relative motion"
-        },
-        {
-          "track": "dd_trail_katanaheat_4",
-          "from": 3.1133333333333333,
-          "to": 3.4333333333333336,
-          "contact": 3.2333333333333334,
-          "limb": "leftArm",
-          "scores": [
-            0.09036528754516718,
-            0.06465483005280777,
-            0.03460105617042438,
-            0.04804304642232506
-          ],
-          "selection": "contact-local relative motion"
+          "selection": "verified katana slash, opposite-hand punch, sword thrust"
         }
       ]
     },

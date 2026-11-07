@@ -53,7 +53,7 @@ for p in (MOD/'42/media/AnimSets/player').rglob('*.xml'):
  for event in n.findall('m_Events'):
   if event.findtext('m_EventName')=='AttackCollisionCheck':contacts.setdefault(animation,set()).add(float(event.findtext('m_TimePc')))
 folder=WORK/'all-trail-native';folder.mkdir(exist_ok=True)
-args=[JAVA,'-Xms16m','-Xmx512m','-XX:ActiveProcessorCount=2','--enable-native-access=ALL-UNNAMED','-cp','.;'+str(GAME/'*'),'LimbTrailProbe']
+args=[JAVA,'-Xms16m','-Xmx256m','-XX:ActiveProcessorCount=2','--enable-native-access=ALL-UNNAMED','-cp','.;'+str(GAME/'*'),'LimbTrailProbe']
 for animation in sorted(moves):args.extend([str(MOD/f'42/media/anims_X/Bob/{animation}.x'),str(folder/(animation+'.json'))])
 run(args)
 names=['leftArm','rightArm','leftLeg','rightLeg'];triplets=[(0,1,2,12),(3,4,5,13),(6,7,8,14),(9,10,11,15)]
@@ -75,7 +75,7 @@ for animation,move in sorted(moves.items()):
     score+=.35*speed+.65*relative
    scores.append(score)
   allowed=[0,1]if move['profile']!='unarmed'else [2,3]if move['kick']or move['kind']in ('ground','runningAttack')else list(range(4))
-  limb=verified.get(animation,max(allowed,key=lambda i:scores[i]))
+  limb=[1,0,1][hit]if animation=='ProjectYakuza_DD_KatanaHeat'else verified.get(animation,max(allowed,key=lambda i:scores[i]))
   a,b,c,upper=triplets[limb];key='dd_trail_'+animation.removeprefix('ProjectYakuza_DD_').lower()+'_'+str(hit+1)
   output.append('T["'+key+'"]=(function()return {animation="'+animation+'",fps=30,limb="'+names[limb]+'",duration='+str(duration)+',frames={')
   output.extend('    {'+','.join(f'{v:.9f}'for bone in (a,b,c)for v in frame[bone])+'},'for frame in frames)
@@ -85,7 +85,7 @@ for animation,move in sorted(moves.items()):
   start=max(0,time-.12);end=min(duration,time+.20)
   if hit:start=max(start,(times[hit-1]+time)/2)
   if hit+1<len(times):end=min(end,(time+times[hit+1])/2)
-  windows.append({'track':key,'from':start,'to':end,'contact':time,'limb':names[limb],'scores':scores,'selection':'verified native contact pose'if animation in verified else'contact-local relative motion'})
+  windows.append({'track':key,'from':start,'to':end,'contact':time,'limb':names[limb],'scores':scores,'selection':'verified katana slash, opposite-hand punch, sword thrust'if animation=='ProjectYakuza_DD_KatanaHeat'else'verified native contact pose'if animation in verified else'contact-local relative motion'})
  output.append('C["'+animation+'"]={animation="'+animation+'",actionAnimation="'+move['family']+'",track="'+windows[0]['track']+'",duration='+str(duration)+',from='+str(windows[0]['from'])+',to='+str(windows[-1]['to'])+',windows={'+','.join('{track="'+r['track']+'",from='+str(r['from'])+',to='+str(r['to'])+'}'for r in windows)+'}}')
  records.append({**move,'clip':f'42/media/anims_X/Bob/{animation}.x','clipSha256':digest(MOD/f'42/media/anims_X/Bob/{animation}.x'),'samples':len(frames),'duration':duration,'windows':windows})
 code=('\n'.join(output)+'\n').encode();target=LUA/'client/ProjectYakuza/AttackTrailCatalog.lua'

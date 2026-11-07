@@ -13,3 +13,5 @@ The numeric data and provenance manifest are reproducible with tools/combat-test
 Render polling is active only during a session, capped at eight simultaneous actors. Pause freezes emission. Style changes, unequip, death, action interruption, backward animation restarts, save and main menu clear it. Missing tracks get 1.5 seconds from the last observed phase before cleanup. Natural completion preserves an impact sound's existing tail.
 
 DoD's katana uses exactly three damaging strike contacts, each at 0.5 times canonical weapon damage. Its previous fourth contact is removed from gameplay and presentation. The three source strike timestamps, animation speed and duration are preserved; the third slash retains blade-impact feedback.
+
+The shared [paired damage policy](HEAT_ACTION_DAMAGE.md) applies nonlethal damage on contact and holds lethal damage through full recovery. Presentation and three-contact katana trails remain tied to the playing source clip.

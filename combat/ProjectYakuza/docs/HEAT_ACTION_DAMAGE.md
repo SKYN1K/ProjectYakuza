@@ -1,0 +1,15 @@
+# Paired Heat Action damage
+
+Every standard paired Heat Action uses HeatActions.strike(job, attacker, victim, item, amount, contactIndex). The amount comes from HeatRushRules.amount and is the canonical contact damage defined by the registered move and equipped weapon. A zero-damage presentation contact remains zero. This policy applies to zombie and permitted PvP victims; current PvP/safety/faction checks remain mandatory.
+
+The job deduplicates contact identities. A positive nonlethal hit immediately subtracts its canonical amount from character health. If a hit would reduce health to zero, it leaves health unchanged and reserves that entire hit. Later positive hits are added to the same reserved sum. Sounds, blood, impact effects and attack voices remain scheduled at their original source contacts, independently of health.
+
+HeatActions.settle(job, attacker, victim, item, completed) is called once after the paired animation and recovery end, after restoring the victim's native state. Completion applies the reserved sum. If the victim dies, native IsoGameCharacter.hitConsequences handles terminal death and kill credit with damage application disabled to avoid charging damage twice. The terminal call does not run during the animation. A victim with more health than the total damage remains alive. Prior invulnerability is respected; the framework never enables God mode or heals a victim.
+
+Interrupted/cancelled playback discards reserved damage, retains nonlethal damage already applied and marks the job settled so late contacts cannot apply damage. A verified paired failure ending can retain earned reservations until that ending completes. Existing QTE scoring still controls the move's earned damage; failed inputs do not invent damage.
+
+Cinematic damage intentionally uses the move's fixed canonical contact amounts rather than starting a new ordinary melee Hit for every visual impact. Ordinary native Hit can apply extra normal-attack critical/knockback processing and transition the victim's reaction state. Avoiding that path keeps the original pair playing while health changes. Ordinary attacks outside Heat Actions retain their existing native damage handling.
+
+The server computes contacts and health. HeatRushContact and HeatRushEnd carry optional authoritative health snapshots. Matching action/session records apply each snapshot once, even for the owner whose visual contact was already predicted. Duplicated or stale action snapshots cannot restore health or damage a healed target again. Clients never claim damage amounts. Both actors retain the original paired motion; zombie victims latch their native hitreaction state and release it during cleanup.
+
+Custom paired action handlers can call these same shared APIs with their own registered contact identities and canonical damage. Keep each sequence's job until completion/cancellation. Never call ordinary native Hit in parallel with HeatActions.strike or apply the reserved sum twice. Standard HeatRush/weapon/wall/ground handlers already do this. No per-move deferral switch is needed.

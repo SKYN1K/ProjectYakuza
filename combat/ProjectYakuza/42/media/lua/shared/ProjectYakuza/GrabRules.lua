@@ -15,10 +15,10 @@ end
 function G.capture(z)
     return {useless=z:isUseless(),ignore=z:getIgnoreMovement(),deferred=z:isDeferredMovementEnabled(),target=z:getTarget(),locked=G.captureLock(z)}
 end
-function G.latch(z)
+function G.latch(z,paired)
     local name=z:getCurrentStateName()
     if G.locks[z]then return true end
-    if G.origins[z]and name~=G.origins[z]and name and string.find(string.lower(name),"hitreaction",1,true)then z:setStateMachineLocked(true);G.locks[z]=true;return true end
+    if (paired or G.origins[z]and name~=G.origins[z])and name and string.find(string.lower(name),"hitreaction",1,true)then z:setStateMachineLocked(true);G.locks[z]=true;return true end
     return false
 end
 function G.keep(z)

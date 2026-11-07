@@ -71,6 +71,7 @@ local katana=PY.Weapons.views.dragon_of_dojima.blade.actions.heatAction
 check(#katana.contacts==3 and katana.contacts[4]==nil,'katana has exactly three damaging contacts')
 for i=1,3 do check(katana.contacts[i].damageMultiplier==.5,'katana splits unchanged total damage evenly across three hits')end
 check(#D.moves[katana.animation].contacts==3,'katana numeric timeline contains only three presented contacts')
+check(D.moves[katana.animation].contacts[1].bone=='Bip01_Neck'and D.moves[katana.animation].contacts[2].bone=='Bip01_Head'and D.moves[katana.animation].contacts[3].bone=='Bip01_Spine1','katana effects follow neck slash, head punch and torso thrust contacts')
 plays={};fx={};local eventCount=emitted;H.present(p,z,katana,4,true,true,{x=0,y=0,z=1})
 check(#plays==0 and #fx==0 and emitted==eventCount,'removed fourth katana contact cannot present sounds, effects or voices')
 C.clearAll()

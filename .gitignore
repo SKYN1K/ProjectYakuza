@@ -236,3 +236,6 @@
 !/tools/combat-tests/build_heat_presentation.py
 !/tools/combat-tests/build_heat_presentation_tests.py
 !/tools/combat-tests/heat-presentation-test-fixture.lua
+
+!/tools/combat-tests/build_heat_damage_tests.py
+!/tools/combat-tests/heat-damage-test-fixture.lua

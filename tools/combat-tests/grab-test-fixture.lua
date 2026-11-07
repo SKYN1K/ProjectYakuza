@@ -28,6 +28,8 @@ local oldNew=base.new
 base.new=function(class,player)local a=oldNew(class,player);a.action={setOverrideHandModelsObject=function()end};return a end
 ZombieOnGroundState={instance=function()return 'ZombieOnGroundState'end}
 local z={x=.5,y=.9,health=10,vars={},hits=0,deferred=true,target=p,state='idle'}
+function z:getHealth()return self.health end;function z:setHealth(v)self.health=v end;function z:setAttackedBy(v)self.attacker=v end
+function z:hitConsequences(_,_,skip,amount)check(skip and amount==0 and self:isDead(),'terminal paired death cannot apply damage twice')end
 function z:changeState(v)self.state=v end
 function z:getX()return self.x end;function z:getY()return self.y end;function z:getZ()return 0 end
 function z:setX(v)self.x=v end;function z:setY(v)self.y=v end
@@ -160,7 +162,7 @@ do
  local ticket={z=z,pose=pose,ground=true,pressed=true,expires=clock+600}
  check(PY.requestAction(p,'groundHeat',nil,ticket),'ground heat is registered in the shared paired framework')
  local action=PY.activeActions[p].timedAction;action:start();check(p.invincible and not z.floor and not z.knock,'ground action protects actor and suspends native downed overrides')
- local before=z.hits;track=1;clock=clock+1000;action:update();check(z.hits==before,'ground damage is deferred to preserve the original victim clip')
+ local before=z.hits;local health=z.health;track=1;clock=clock+1000;action:update();check(z.hits==before and z.health<health,'nonlethal ground damage preserves the original victim clip without native Hit')
  action:cleanup(false);check(not p.invincible and z.floor and z.knock,'ground interruption restores downed victim and protection')
  wall=true;z.floor=false;z.knock=false
 end

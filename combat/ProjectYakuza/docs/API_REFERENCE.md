@@ -235,3 +235,5 @@ Attack effects (0.87.0) resolve the actually playing native clip within its comm
 Styles may opt into `lowHealthFeedback` for configurable native-health warning thresholds, recovery hysteresis, HUD visibility and private heartbeat audio. `LowHealthRules` validates and caches configuration; `LowHealthFeedback.sample(player)` exposes the current local pulse, critical flag and health. Style UI context adds `lowHealth`. Existing style sound groups control the optional cue without adding MP packets or remote-player audio. See LOW_HEALTH_FEEDBACK.md for defaults, constraints and lifecycle events.
 
 Heat Action sound/visual presentation follows the native playing clip independently of authoritative contacts. See [Heat Action presentation](HEAT_ACTION_PRESENTATION.md) for sound preroll, shared victim contact anchors, custom cue/layer fallback, observer playback and cleanup. QTE and damage timing are unchanged.
+
+The shared [paired damage policy](HEAT_ACTION_DAMAGE.md) applies nonlethal damage on contact and holds lethal damage through full recovery. Presentation and three-contact katana trails remain tied to the playing source clip.

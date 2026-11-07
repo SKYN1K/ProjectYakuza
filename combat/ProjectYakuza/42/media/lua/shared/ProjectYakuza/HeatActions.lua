@@ -1,5 +1,24 @@
 require "ProjectYakuza/Registry"
 local H={active=setmetatable({}, {__mode="k"})};ProjectYakuza.HeatActions=H
+function H.strike(job,p,z,item,amount,index)
+    if not job or job.damageSettled or not z or z:isDead()or type(index)~="number"and type(index)~="string"or type(amount)~="number"or amount~=amount or amount<0 or amount>1000000 then return false end
+    job.damageContacts=job.damageContacts or {}
+    if job.damageContacts[index]then return false end;job.damageContacts[index]=true
+    if amount==0 then return true end
+    if z.isInvulnerable and z:isInvulnerable()then return true end
+    local health=z:getHealth()
+    if job.pendingDamage or amount>=health then job.pendingDamage=(job.pendingDamage or 0)+amount
+    else z:setHealth(health-amount)end
+    z:setAttackedBy(p)
+    return true
+end
+function H.settle(job,p,z,item,completed)
+    local amount=job.pendingDamage;job.pendingDamage=nil;job.damageContacts=nil;job.damageSettled=true
+    if not completed or not amount or amount<=0 or z:isDead()or z.isInvulnerable and z:isInvulnerable()then return false end
+    z:setAttackedBy(p);z:setHealth(math.max(0,z:getHealth()-amount))
+    if z:isDead()then z:hitConsequences(item,p,true,0,false)end
+    return true
+end
 function H.restore(p,job)
     if H.active[p]~=job then return false end
     p:setInvincible(job.invincible);p:setGhostMode(job.ghost);H.active[p]=nil

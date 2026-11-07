@@ -289,7 +289,7 @@ end
 
 local ProjectYakuza = ProjectYakuza
 ProjectYakuza.FEATURES={grab=true}
-ProjectYakuza.VERSION = "0.90.1"
+ProjectYakuza.VERSION = "0.91.0"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -378,7 +378,6 @@ function ProjectYakuza.validateStyle(style)
             if type(f)=="table"and f.paired~=nil and(type(f.paired)~="boolean"or f.paired and(not text(f.motionId)or not ProjectYakuza.PairedMotions or not ProjectYakuza.PairedMotions[f.motionId]or not text(f.targetAnimation)or not number(f.contactMs)or f.contactMs<0 or not number(f.duration)or f.contactMs>=f.duration*1000))then problem(path..".qteFailure paired ending requires targetAnimation and a contact inside its duration")end
             if type(f)~="table"or not text(f.animation)or not text(f.nodeValue)or not number(f.duration)or f.duration<=0 or f.duration>10 then problem(path..".qteFailure requires an authored recovery clip and duration")end
         end
-        if value.deferFinalDamage~=nil and type(value.deferFinalDamage)~="boolean"then problem(path..".deferFinalDamage must be boolean")end
         if type(value.contacts)=="table"then
             local mapped={};local prompts=type(value.qte)=="table"and value.qte.prompts
             for _,contact in ipairs(value.contacts)do

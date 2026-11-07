@@ -94,7 +94,7 @@ function R.capture(z)
 end
 function R.hold(z)
     z:setIgnoreMovement(true);z:setDeferredMovementEnabled(false)
-    if R.targetKind(z)=="zombie"then z:setTarget(nil);z:setUseless(true);z:setAttackOutcome("fail");if z:GetVariable("ProjectYakuzaPairedVictimClip")=="ProjectYakuza_DD_WallHeatVictim"then ProjectYakuza.GrabRules.latch(z)end
+    if R.targetKind(z)=="zombie"then z:setTarget(nil);z:setUseless(true);z:setAttackOutcome("fail");ProjectYakuza.GrabRules.latch(z,z:GetVariable("ProjectYakuzaHeatRushVictim")=="true")
     else z:setBlockMovement(true);z:setAuthorizeMeleeAction(false)end
 end
 function R.lock(z,clip)

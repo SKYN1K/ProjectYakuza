@@ -296,11 +296,11 @@
           "cue": "heavyImpact",
           "base": false,
           "point": [
-            4.62e-07,
-            0.476577342,
-            0.010861828
+            -0.030836575,
+            0.763190925,
+            0.000323537
           ],
-          "bone": "Bip01_Pelvis",
+          "bone": "Bip01_Neck",
           "layers": []
         },
         {
@@ -309,11 +309,11 @@
           "cue": "punchImpact",
           "base": true,
           "point": [
-            4.5e-07,
-            0.456474513,
-            0.01086184
+            -0.071413592,
+            0.745553732,
+            -0.052542731
           ],
-          "bone": "Bip01_Pelvis",
+          "bone": "Bip01_Head",
           "layers": [],
           "feedback": "unarmed"
         },
@@ -323,11 +323,11 @@
           "cue": "heavyImpact",
           "base": false,
           "point": [
-            4.59e-07,
-            0.451907158,
-            0.01086184
+            -0.038287584,
+            0.594800651,
+            -0.043787695
           ],
-          "bone": "Bip01_Pelvis",
+          "bone": "Bip01_Spine1",
           "layers": []
         }
       ]

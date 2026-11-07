@@ -31,6 +31,7 @@ for row in rows:
  for i,c in enumerate(row['contacts']):
   f=round(c['atMs']*.03);entry=tracks.get(row['animation']);limb=entry['windows'][i]['limb']if entry else'rightLeg'if 'GroundHeat'in row['animation']else'rightArm';hand={'leftArm':1,'rightArm':4,'leftLeg':7,'rightLeg':10}[limb];a=actor['frames'][f][hand];af,ar=path(row['motion']['actor'],f);vf,vr=path(row['motion']['victim'],f);offset=row['motion'].get('contactOffset',{});vf+=offset.get('forward',0);vr+=offset.get('right',0)
   targets=range(16,21)
+  if row['animation'].endswith('KatanaHeat'):targets=[[17],[16],[18]][i]
   if 'GroundHeat'in row['animation']:targets=[16]
   if 'WallHeat'in row['animation']:targets=[16]if i==0 else[18]
   if row['animation'].endswith(('BottleHeat','WallHeat'))and i==len(row['contacts'])-1:targets=[18]

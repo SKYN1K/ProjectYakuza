@@ -191,21 +191,20 @@ function A:contact(index)
         if not previous or previous.action~=granted.action or previous.session~=granted.session then previous={action=granted.action,session=granted.session,seen={}};H.localContacts[p]=previous end
         if not previous.seen[index]then
             previous.seen[index]=true
-            local amount=R.amount(self.context.action,index,self.held,self.success)
-            H.present(p,z,self.context.action,index,self.context.action.deferFinalDamage==true or amount==0 or R.targetKind(z)=="player")
+            H.present(p,z,self.context.action,index,true)
         end
         PY.Network.send(p,"heatRushHit",{action=granted.action,index=index});return
     end
     local amount=R.amount(self.context.action,index,self.held,self.success);if not amount then return end
     if R.targetKind(z)=="player"and not R.playerAllowed(p,z)then return end
-    if amount>0 then if self.context.action.deferFinalDamage then self.pendingDamage=amount else z:Hit(self.held,p,amount,false,1)end end
+    PY.HeatActions.strike(self,p,z,self.held,amount,index)
     H.present(p,z,self.context.action,index)
 end
 function A:fail(index,remote)
     if self.failed or self.cleaned then return end
     local recovery=self.context.action.qteFailure
     if not recovery then self:forceStop();return end
-    self.failed=true;self.failedIndex=index;self.failureStarted=now();self.failureElapsed=0;self.failureSeen=false;self.slot=nil;self.pendingDamage=nil
+    self.failed=true;self.failedIndex=index;self.failureStarted=now();self.failureElapsed=0;self.failureSeen=false;self.slot=nil
     if remote and not self.qte.failed and PY.QTEFeedback then PY.QTEFeedback.play(self.context,"failure")end
     PY.QTE.cancel(self.qte,"failed")
     if R.pairedFailure(self.context.action)then
@@ -281,7 +280,7 @@ function A:cleanup(done)
         if not self.victimRestored then R.restore(z,self.victim);self.victimRestored=true end
         local clip=p:GetVariable("PerformingAction")
         if clip==self.context.action.animation or self.failed and clip==self.context.action.qteFailure.animation then p:setVariable("PerformingAction","");p:setVariable("IsPerformingAnAction",false)end
-        if not isClient()and done and(not self.failed or R.pairedFailure(self.context.action))and self.pendingDamage and not z:isDead()then local ok,err=PY.HitResponses.nativeHit(p,z,self.held,self.pendingDamage,self.context.action);self.pendingDamage=nil;if not ok then print("[ProjectYakuza] completed paired hit failed: "..tostring(err))end end
+        if not isClient()then PY.HeatActions.settle(self,p,z,self.held,done and(not self.failed or R.pairedFailure(self.context.action)))end
         if not isClient()and done and(not self.failed or R.pairedFailure(self.context.action))and self.success[#R.contacts(self.context.action)]and not z:isDead()then R.ground(z,R.endFacing(self.pose))end
     end
     local granted=self.context.target.granted;if granted then PY.Network.send(p,"heatRushEnd",{action=granted.action,completed=done==true and(not self.failed or R.pairedFailure(self.context.action))})end
@@ -349,6 +348,19 @@ function H.session(id,session)
     end
     return true
 end
+function H.syncHealth(p,a)
+    if not PY.NetworkProtocol.number(a.health,0,1000)then return end
+    local active=H.active[p];local grant=active and active.context.target.granted;local remote=H.remote[a.player];local previous=H.localContacts[p]
+    if not(grant and grant.action==a.action or remote and remote.action==a.action or previous and previous.action==a.action)then return end
+    local z=R.target(p,a.zombie,a.targetKind)
+    if not z or z:isDead()then return end
+    H.contacts=H.contacts or {};local record=H.contacts[a.player]
+    if record and record.action>a.action then return end
+    if not record or record.action~=a.action then record={action=a.action,seen={}};H.contacts[a.player]=record end
+    record.healthSeen=record.healthSeen or {};local key=a.index or "end"
+    if record.healthSeen[key]then return end;record.healthSeen[key]=true;record.at=now()
+    z:setHealth(math.min(z:getHealth(),a.health))
+end
 function H.receive(module,command,a)
     if module~=PY.NetworkProtocol.module or type(a)~="table"or not PY.NetworkProtocol.integer(a.player,0,32767)then return end
     local p=getPlayerByOnlineID(a.player);if not p then return end
@@ -363,6 +375,7 @@ function H.receive(module,command,a)
     if command=="heatRushDenied"and p:isLocalPlayer()then local ticket=H.tickets[p];if ticket and ticket.request==a.request then if not ticket.weapon and not ticket.ground and now()<ticket.expires then ticket.sent=nil;ticket.retryAt=now()+100 else H.tickets[p]=nil end end;return end
     if command=="heatRushEnd"then
         if not H.session(a.player,a.session)then return end
+        H.syncHealth(p,a)
         local active=p:isLocalPlayer()and H.active[p];local grant=active and active.context.target.granted
         if grant and grant.action==a.action and a.completed~=true then active:cancel()end
         H.remoteEnd(a.player,a.action,a);return
@@ -385,6 +398,7 @@ function H.receive(module,command,a)
     end
     if command=="heatRushContact"then
         if not H.session(a.player,a.session)or not PY.NetworkProtocol.integer(a.action,1,1000000000)or not PY.NetworkProtocol.integer(a.index,1,32)then return end
+        H.syncHealth(p,a)
         local predicted=H.localContacts[p]
         if p:isLocalPlayer()and predicted and(predicted.session==nil or predicted.session==a.session)and(predicted.action>a.action or predicted.action==a.action and predicted.seen[a.index])then return end
         H.contacts=H.contacts or {};local previous=H.contacts[a.player]

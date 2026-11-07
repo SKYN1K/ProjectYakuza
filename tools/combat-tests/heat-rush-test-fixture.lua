@@ -83,6 +83,8 @@ function z:getStateMachine()local z=self;return {isLocked=function()return z.sta
 function z:setStateMachineLocked(v)self.stateLocked=v end;function z:getCurrentStateName()return self.state or "idle"end
 function z:getX()return self.x end;function z:getY()return self.y end;function z:getZ()return 0 end
 function z:isFallOnFront()return self.front==true end
+function z:getHealth()return self.health end;function z:setHealth(v)self.health=v end;function z:setAttackedBy(v)self.attacker=v end
+function z:hitConsequences(item,who,skip,amount)check(skip and amount==0 and who==p and self:isDead(),"terminal native consequences only after paired completion");self.deathFinalizations=(self.deathFinalizations or 0)+1 end
 function z:isDead()return self.health<=0 end;function z:isOnFloor()return false end;function z:isKnockedDown()return false end
 function z:isUseless()return self.useless end;function z:setUseless(v)self.useless=v end
 function z:isAttacking()return false end;function z:getIgnoreMovement()return self.ignore end;function z:setIgnoreMovement(v)self.ignore=v end
@@ -199,11 +201,11 @@ for i,prompt in ipairs(c.action.qte.prompts)do
  phase=prompt.atMs/1000+(i==6 and .25 or 0);press(prompt.binding,false);a:update();check(z.hits==0 and a.success.qte[i],'successful prompt is presentation-only until final kick')
  a:update();check(z.hits==0,'repeated update cannot duplicate contact')
 end
-phase=(c.action.contacts[#c.action.contacts].atMs+1)/1000;a:update();a:update();check(z.hits==0 and math.abs(a.pendingDamage-2.25)<.000001,'final kick queues earned damage without resetting the paired victim track')
+phase=(c.action.contacts[#c.action.contacts].atMs+1)/1000;a:update();a:update();check(z.hits==0 and not a.pendingDamage and math.abs(z.health-7.75)<.000001,'nonlethal final kick deals earned damage without resetting paired animation')
 check(committed==1,'QTE hit count does not publish repeated exertion commitments')
 check(z.total==0 and creates==1,'paired victim takes no native hit while its original animation is playing')
 phase=R.duration;a:update()
-check(z.hits==1 and math.abs(z.total-2.25)<.000001,'completion applies canonical earned damage once after the paired animation')
+check(z.hits==0 and math.abs(z.health-7.75)<.000001,'completion cannot duplicate damage already applied at its contact')
 check(a.cleaned and not p.blocked and not p.ignore and not z.useless and not z.ignore and z.deferred and z.target==p and z.knock,'full source recovery restores actor/victim state')
 check(not PY.activeActions[p]and not H.active[p],'completed paired action releases context')
 check(z.nativeFloor==true and math.abs(z.facingX+1)<.000001 and math.abs(z.facingY)<.000001,'paired ending settles a surviving zombie on the ground with its original opposite facing')
@@ -304,6 +306,8 @@ clock=clock+2;responses.tickStuns();check(not z.useless and not z.ignore and z.d
 responses.stun(z);local previous=R.lock(z);check(not responses.stuns[z]and not previous.useless,'paired finisher takes over a stunned zombie without retaining the temporary stun');R.restore(z,previous)
 local victim={x=1.1,y=0,health=10,vars={},ignore=false,deferred=true,blocked=false,authorize=true,total=0}
 function victim:getOnlineID()return 26 end;function victim:getX()return self.x end;function victim:getY()return self.y end;function victim:getZ()return 0 end
+function victim:getHealth()return self.health end;function victim:setHealth(v)self.health=v end;function victim:setAttackedBy(v)self.attacker=v end
+function victim:hitConsequences(_,who,skip,amount)check(who==p and skip and amount==0 and self:isDead(),"player terminal consequences after paired completion")end
 function victim:isDead()return self.health<=0 end;function victim:isOnFloor()return false end;function victim:isKnockedDown()return false end
 function victim:isGodMod()return self.god==true end;function victim:isInvincible()return self.invincible==true end;function victim:isGhostMode()return self.ghost==true end
 function victim:isClimbing()return false end;function victim:getVehicle()return nil end;function victim:isFactionPvp()return false end
@@ -360,8 +364,8 @@ for _,binding in ipairs({'light','finisher','grab'})do press(binding,false)end
 phase=0;playerAction:update()
 for i,prompt in ipairs(playerContext.action.qte.prompts)do phase=(prompt.atMs-100)/1000;press(prompt.binding,true);playerAction:update();phase=prompt.atMs/1000;press(prompt.binding,false);playerAction:update()end
 phase=(playerContext.action.contacts[#playerContext.action.contacts].atMs+1)/1000;playerAction:update()
-check(victim.total==0 and math.abs(playerAction.pendingDamage-2.25)<.000001,'player victim animation is preserved until completion')
-phase=R.duration;playerAction:update();check(math.abs(victim.total-2.25)<.000001,'player completed rush applies canonical native Hit damage')
+check(victim.total==0 and not playerAction.pendingDamage and math.abs(victim.health-7.75)<.000001,'player receives nonlethal damage without native Hit resetting paired animation')
+phase=R.duration;playerAction:update();check(victim.total==0 and math.abs(victim.health-7.75)<.000001,'player completion cannot duplicate contact damage')
 check(not victim.blocked and victim.authorize and not victim.ignore,'player interruption restores movement and attack authorization')
 PY.Network={acceptSession=function()return true end};getPlayerByOnlineID=function(id)return id==2 and p or id==26 and victim or nil end
 function p:isLocalPlayer()return false end
@@ -410,14 +414,42 @@ local pairedCues={};PY.on('heatRushHit',function(_,_,index)pairedCues[#pairedCue
 for i,contact in ipairs(kc.action.contacts)do
  phase=contact.atMs/1000+(i==2 and .25 or 0);ka:update();ka:update()
  check(#pairedCues==i and pairedCues[i]==i,'katana emits each of its three impact cues once '..i)
- check(z.hits==beforeHits+i,'each katana strike applies damage once '..i)
+ check(z.hits==beforeHits and math.abs(z.health-(10-.5*i))<.000001,'each katana strike deals damage without native Hit restarting the victim '..i)
 end
 check(math.abs(z.health-8.5)<.000001,'weapon action damage uses canonical held weapon without repeated bonus')
 phase=kc.action.duration;ka:update()
 check(ka.cleaned and not p.invincible and p.ghost,'invulnerability ends with the action while targeting grace remains')
 clock=clock+499;PY.HeatActions.tick();check(p.ghost and not p.invincible,'targeting grace grants no extra invulnerability')
 clock=clock+1;PY.HeatActions.tick();check(not p.ghost and not PY.HeatActions.active[p],'targeting grace ends after exactly half a second')
+do
+ PY.resetPlayer(p,'low_health_katana');p.x=0;p.y=0;z.x=1.1;z.y=0;z.health=.75;z.useless=false;z.knock=false;z.reaction='';phase=0;PY.setHeat(p,100)
+ local prior=z.hits;local deaths=z.deathFinalizations or 0
+ check(H.weaponInput(p,PY.stateFor(p),PY.getPlayerStyle(p),true),'low-health target can start the complete katana sequence')
+ local context=PY.activeActions[p];local action=context.timedAction;action.action={setOverrideHandModelsObject=function()end};action:start()
+ for i,contact in ipairs(context.action.contacts)do
+  phase=contact.atMs/1000;action:update();action:update()
+  check(math.abs(z.health-.25)<.000001 and not z:isDead(),'nonlethal first hit lands and lethal later contacts preserve positive health '..i)
+  check(z.vars.ProjectYakuzaPairedVictimClip=='ProjectYakuza_DD_KatanaHeatVictim'and z.hits==prior,'no native Hit resets the paired victim track '..i)
+ end
+ check(math.abs(action.pendingDamage-1)<.000001,'each withheld katana contact accumulates once')
+ phase=context.action.duration-.13;action:update();check(not action.cleaned and not z:isDead(),'victim stays alive through the original recovery')
+ phase=context.action.duration;action:update();action:update()
+ check(action.cleaned and z:isDead()and z.deathFinalizations==deaths+1,'full completion finalizes death once through native consequences')
+ clock=clock+500;PY.HeatActions.tick();z.health=10;z.knock=false;z.useless=false
+end
 local protect=PY.HeatActions;local key={};p.ghost=true;p.invincible=true
+do
+ local clips={'KatanaHeat','BottleHeat','HeatRush','WallHeat','GroundHeat','CrateHeat'};local native=z.nativeState
+ for _,name in ipairs(clips)do
+  z.nativeState='idle';local old=R.lock(z,'ProjectYakuza_DD_'..name..'Victim');z.nativeState='ZombieHitReactionState';R.hold(z)
+  check(z.stateLocked and PY.GrabRules.locks[z],'every paired action retains its native hitreaction state '..name)
+  R.restore(z,old);check(not z.stateLocked and not PY.GrabRules.locks[z],'paired state lock restores after cleanup '..name)
+  z.nativeState='ZombieHitReactionState';old=R.lock(z,'ProjectYakuza_DD_'..name..'Victim');R.hold(z)
+  check(z.stateLocked,'paired action also latches a victim that was already reacting '..name)
+  R.restore(z,old);check(not z.stateLocked,'already-reacting target restores its original unlocked state '..name)
+ end
+ z.nativeState=native
+end
 check(protect.begin(p,key,{duration=1}),'framework API accepts custom action owner');protect.finish(p,key);clock=clock+500;protect.tick()
 check(p.ghost and p.invincible,'framework preserves pre-existing native protection flags');p.ghost=false;p.invincible=false
 protect.begin(p,key,{duration=1});protect.finish(p,{});check(protect.active[p].playing,'stale action cleanup cannot unlock a newer owner');protect.clear()
@@ -440,7 +472,7 @@ for _,id in ipairs({'ProjectYakuza.IntactBeerBottle','ProjectYakuza.IntactWineBo
  local context=PY.activeActions[p];local action=context.timedAction;action.action={setOverrideHandModelsObject=function()end};action:start()
  check(z.vars.ProjectYakuzaPairedVictimClip=='ProjectYakuza_DD_BottleHeatVictim','bottle victim clip cannot select the katana motion')
  for _,contact in ipairs(context.action.contacts)do phase=contact.atMs/1000;action:update();action:update()end
- check(z.hits==before+1 and math.abs(z.health-8.8)<.000001,'bottle contacts apply exactly one canonical final hit')
+ check(z.hits==before and math.abs(z.health-8.8)<.000001,'bottle contacts apply exactly one canonical final hit')
  phase=5;action:update();check(action.cleaned and not p.invincible and p.ghost,'bottle preserves full recovery and action-only invulnerability')
  clock=clock+500;PY.HeatActions.tick();check(not p.ghost,'bottle targeting grace cleans up')
  bottle.condition=0;check(not R.weaponAllowed(p,view,view.actions.heatAction),'broken bottle cannot start the intact-bottle action')
@@ -473,13 +505,15 @@ PY.Network={send=function(_,command)if command=='heatRushHit'then packets=packet
 PY.Feedback={sound=function(_,cue)return cue end,play=function()heard=heard+1 end};PY.HitEffects={spawn=function()shown=shown+1 end}
 context.target.granted={action=901,session=44};local health=z.hits
 phase=context.action.contacts[1].atMs/1000+.25;action:update();action:update()
-check(heard==1 and shown==0 and packets==1 and z.hits==health,'legacy damage contact sends one request without predicting authoritative damage or effects')
+check(heard==1 and shown==1 and packets==1 and z.hits==health,'legacy damage contact sends one request and presentation without predicting authoritative damage')
 check(H.localContacts[p].action==901 and H.localContacts[p].seen[1],'owner records its presented action/contact identity')
-local echo={player=2,session=44,action=901,index=1,zombie=25,targetKind='zombie',node=context.action.nodeValue,presentation=true}
+local echo={player=2,session=44,action=901,index=1,zombie=25,targetKind='zombie',node=context.action.nodeValue,presentation=true,health=9.5}
 H.remoteSessions[2]=nil;H.receive('ProjectYakuza','heatRushContact',echo);H.receive('ProjectYakuza','heatRushContact',echo)
-check(heard==1 and shown==0,'first-session server confirmation and duplicate echo cannot replay owner feedback')
+check(heard==1 and shown==1,'first-session server confirmation and duplicate echo cannot replay owner feedback')
+check(z.health==9.5,'owner accepts authoritative health even when presentation was predicted')
+z.health=10;H.receive('ProjectYakuza','heatRushContact',echo);check(z.health==10,'duplicate old health cannot damage a healed target again')
 action:cleanup(false);H.receive('ProjectYakuza','heatRushContact',echo)
-check(heard==1 and shown==0,'late confirmation after cleanup cannot replay a locally presented contact')
+check(heard==1 and shown==1,'late confirmation after cleanup cannot replay a locally presented contact')
 echo.session=43;H.receive('ProjectYakuza','heatRushContact',echo);check(heard==1,'stale session remains rejected before feedback')
 isClient=client;PY.Network=network;PY.Feedback=feedback;PY.HitEffects=effects;p.held=nil;PY.MultiHit.targets=oldTargets;PY.HeatActions.clear()
 do

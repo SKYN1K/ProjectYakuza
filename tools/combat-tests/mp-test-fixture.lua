@@ -32,6 +32,8 @@ local function player(id,x)
  function p:updateHandEquips()self.equipSent=(self.equipSent or 0)+1 end
  function p:setIgnoreMovement(v)self.ignore=v;if v then self.nativeUpdates=(self.nativeUpdates or 0)+1 end end
  function p:getOnlineID()return self.id end
+ function p:getHealth()return self.health end;function p:setHealth(v)self.health=v;self.dead=v<=0 end;function p:setAttackedBy(v)self.attacker=v end
+ function p:hitConsequences(item,attacker,skip,amount)check(skip and amount==0 and self:isDead(),'player terminal consequences only after paired completion')end
  function p:getX()return self.x end;function p:getY()return self.y end;function p:getZ()return self.z end
  function p:isOnFloor()return false end;function p:isKnockedDown()return false end;function p:isClimbing()return false end;function p:getHitReaction()return self.reaction or ""end
  function p:isDead()return self.dead==true end;function p:getVehicle()return self.vehicle end
@@ -81,6 +83,7 @@ function z:isDead()return self.health<=0 end;function z:isOnFloor()return false 
  function z:getCurrentStateName()return self.state or 'idle' end
  function z:Kill(v)self.kills=(self.kills or 0)+1;self.health=0 end
  function z:Hit(item,attacker,damage)self.hits=self.hits+1;self.health=math.max(0,self.health-damage)end
+ function z:hitConsequences(item,attacker,skip,amount)check(skip and amount==0 and self:isDead(),"server finalizes death after paired completion");self.deathFinalizations=(self.deathFinalizations or 0)+1 end
  function z:getHealth()return self.health end;function z:setHealth(v)self.health=v end
  function z:setOnFloor(v)self.nativeFloor=v end
  function z:setKnockedDown(v)self.knock=v end;function z:setFallOnFront(v)self.front=v end
@@ -698,11 +701,11 @@ check(#events==18 and #lease.definition.prompts==6,'six fresh prompts cover twel
 clock=lease.started+rules.time(lease.move,245/30)*1000+10;snapshot(p,{extreme=true,clip='ProjectYakuza_DD_HeatRush',move='dd_heat_rush',action=lease.action,swing=1800})
 command('heatRushPress',{action=lease.action,index=7});check(not lease.presses[7],'automatic final kick is not a seventh QTE')
 command('heatRushHit',{action=lease.action,index=13,damage=999});command('heatRushHit',{action=lease.action,index=13})
-check(z1.hits==before and math.abs(lease.pendingDamage-2.25)<.000001,'final kick defers native damage to preserve paired victim playback')
+check(z1.hits==before and not lease.pendingDamage and math.abs(z1.health-7.75)<.000001,'nonlethal server kick damages at contact without restarting paired playback')
 clock=lease.started+rules.wallDuration(lease.move)*1000+10;snapshot(p,{extreme=true,clip='ProjectYakuza_DD_HeatRush',move='dd_heat_rush',action=lease.action,swing=1800});command('heatRushEnd',{action=lease.action,completed=true})
 check(not rush.leases[p]and not rush.held[z1]and not z1.useless and not z1.ignore and z1.deferred and z1.knock,'server completion restores victim state and terminal knockdown')
-check(z1.hits==before+1 and math.abs(z1.health-7.75)<.000001,'server completion commits earned canonical damage exactly once')
-command('heatRushHit',{action=lease.action,index=3});check(z1.hits==before+1,'ended action cannot replay a QTE hit')
+check(z1.hits==before and math.abs(z1.health-7.75)<.000001,'server completion commits earned canonical damage exactly once')
+command('heatRushHit',{action=lease.action,index=3});check(z1.hits==before and math.abs(z1.health-7.75)<.000001,'ended action cannot replay a QTE hit')
 clock=clock+2000;p.x=0;p.y=0;p.equipped=true;p.hand=p.token;p.dead=false;p.data.ProjectYakuzaStyle='dragon_of_dojima'
 snapshot(p,{clip='ProjectYakuza_DD_Light01',move='dd_light_01',swing=2100})
 local speedPeer=server.players[p.id];check(speedPeer.packet.attackHeatSpeed==nil,'DoD server snapshots keep the heat-speed feature absent')
@@ -921,12 +924,23 @@ do
  for i,contact in ipairs(lease.contacts)do
   clock=lease.started+contact.atMs+10;command('heatRushHit',{action=lease.action,index=i,damage=999})
   command('heatRushHit',{action=lease.action,index=i,damage=999})
-  check(z1.hits==hits+i,'server applies each of three katana strikes once despite duplicate packets '..i)
+  check(z1.hits==hits and math.abs(z1.health-(10-.5*i))<.000001,'server applies each katana health decrement once without native reaction '..i)
  end
  check(math.abs(z1.health-8.5)<.000001,'server computes final katana damage from actual weapon')
  clock=lease.started+lease.duration*1000-50;neutral({clip='ProjectYakuza_DD_KatanaHeat',move='dd_katana_heat'});command('heatRushEnd',{action=lease.action,completed=true})
  check(not rush.leases[p]and not p.invincible and p.ghost and not z1.ignore,'server ends invulnerability immediately and releases victim')
  clock=clock+500;ProjectYakuza.HeatActions.tick();check(not p.ghost,'server targeting grace expires after half a second')
+ z1.health=.75;z1.x=1.1;z1.y=0;z1.knock=false;z1.nativeFloor=false;z1.useless=false;z1.reaction='';p.x=0;p.y=0;clock=clock+1000;neutral()
+ command('heatRushBegin',{weaponHeat=true,zombie=z1.id,request=1010});local low=rush.leases[p]
+ check(low~=nil,'server grants katana action against a low-health target');command('heatRushReady',{action=low.action})
+ local deaths=z1.deathFinalizations or 0
+ for i,contact in ipairs(low.contacts)do
+  clock=low.started+contact.atMs+10;command('heatRushHit',{action=low.action,index=i});command('heatRushHit',{action=low.action,index=i})
+  check(math.abs(z1.health-.25)<.000001 and not z1:isDead(),'MP lethal contacts preserve positive health through the paired animation '..i)
+ end
+ check(math.abs(low.pendingDamage-1)<.000001,'MP held damage accumulates once despite duplicate packets')
+ clock=low.started+low.duration*1000;neutral({clip='ProjectYakuza_DD_KatanaHeat',move='dd_katana_heat'});command('heatRushEnd',{action=low.action,completed=true});command('heatRushEnd',{action=low.action,completed=true})
+ check(z1:isDead()and z1.deathFinalizations==deaths+1 and not rush.leases[p],'MP finalizes death once after the full original recovery')
  p.hand=p.token
 end
 
@@ -956,7 +970,7 @@ do
  for i,contact in ipairs(lease.contacts)do
   clock=lease.started+contact.atMs+10;command('heatRushHit',{action=lease.action,index=i,damage=999})
   command('heatRushHit',{action=lease.action,index=i,damage=999})
-  check(z1.hits==hits+(i==3 and 1 or 0),'server auto contact deduplicates and preserves presentation-only contacts '..i)
+  check(z1.hits==hits and math.abs(z1.health-(i==3 and 8.8 or 10))<.000001,'server bottle contacts deduplicate without a native animation reset '..i)
  end
  check(math.abs(z1.health-8.8)<.000001,'server computes final bottle damage from actual weapon')
  clock=lease.started+lease.duration*1000-50;neutral({clip='ProjectYakuza_DD_BottleHeat',move='dd_bottle_heat'});command('heatRushEnd',{action=lease.action,completed=true})
@@ -999,7 +1013,7 @@ do
  end
  check(lease.failed and lease.failedIndex==4 and lease.failures==3,'server resets consecutive failures after a correct input and aborts at the configured threshold')
  clock=lease.failedAt+lease.move.qteFailure.contactMs+10;command('heatRushHit',{action=lease.action,index=#lease.contacts})
- check(lease.hits[#lease.contacts]and math.abs(lease.pendingDamage-.375)<.000001,'failed sequence kick retains only the payoff earned by its passed QTE section')
+ check(lease.hits[#lease.contacts]and not lease.pendingDamage and math.abs(z1.health-9.625)<.000001,'failed sequence kick retains only the payoff earned by its passed QTE section')
  clock=lease.failedAt+lease.move.qteFailure.duration*1000+10;command('heatRushEnd',{action=lease.action,completed=true})
  check(not rush.leases[p]and z1.nativeFloor and not z1.ignore and not p.invincible,'failed paired kick completes prone and releases both actors')
  config.failureLimit=originalLimit;config.failureMode=originalMode
@@ -1044,7 +1058,7 @@ do
  check(rules.wallPresent(p,job),'selected wall remains valid after the original pair staging moves the victim')
  command('heatRushReady',{action=job.action});check(job.started and p.invincible and p.ghost,'wall action gets native framework protection')
  for i,contact in ipairs(job.contacts)do clock=job.started+contact.atMs;command('heatRushHit',{action=job.action,index=i})end
- check(job.pendingDamage and z1.health==10,'wall action defers damage to preserve paired victim motion')
+ check(not job.pendingDamage and z1.health<10,'nonlethal wall damage preserves paired victim motion without native Hit')
  clock=job.started+job.duration*1000;snapshot(p,{clip='ProjectYakuza_DD_WallHeat',move='dd_wall_heat',action=job.action,rightAim=true,heat=80});command('heatRushEnd',{action=job.action,completed=true})
  check(not rush.leases[p]and z1.health<10 and not z1.stateLocked and not p.invincible,'wall completion applies damage once and restores victim/player state')
  clock=clock+600;ProjectYakuza.HeatActions.tick();check(not p.ghost,'wall action target grace expires normally')
@@ -1078,7 +1092,7 @@ do
  check(job and job.move.groundHeat and job.motion==ProjectYakuza.PairedMotions.dod_ground,'server grants original ground pair only for a downed target')
  command('heatRushReady',{action=job.action});check(job.started and p.invincible and not z1.nativeFloor,'ground action suspends native floor override and protects player')
  clock=job.started+1000;command('heatRushHit',{action=job.action,index=1});command('heatRushHit',{action=job.action,index=1})
- check(job.pendingDamage and z1.health==10,'ground source contact is replay safe and defers damage')
+ check(not job.pendingDamage and z1.health<10,'nonlethal ground damage is replay safe without restarting victim motion')
  clock=job.started+job.duration*1000;snapshot(p,{clip='ProjectYakuza_DD_GroundHeat',move='dd_ground_heat',action=job.action,rightAim=true,heat=80});command('heatRushEnd',{action=job.action,completed=true})
  check(not rush.leases[p]and z1.health<10 and z1.nativeFloor and not p.invincible,'ground completion applies damage once and returns victim to floor')
  z1.nativeFloor=false;z1.knock=false;z1.useless=false;clock=clock+2000;snapshot(p,{clip='',rightAim=true,comboBusy=false,heat=100})
@@ -1120,7 +1134,7 @@ do
  clock=job.started+first+500;command('heatRushPress',{action=job.action,index=1,tap=2,tapAt=first+500});check(job.presses[1],'second valid tap completes authoritative mash')
  clock=job.started+prompt.atMs+1;rush.tick(clock,{[p]=true});check(not job.failed,'completed mash continues to the next original source repeat')
  clock=job.started+job.definition.prompts[2].atMs+200;rush.tick(clock,{[p]=true});check(job.failed and job.failedIndex==2 and job.failurePose,'missing next mash branches to original paired ending')
- clock=job.failedAt+job.move.qteFailure.contactMs+10;command('heatRushHit',{action=job.action,index=#job.contacts});check(job.pendingDamage and job.pendingDamage>0,'failed mash retains base damage plus completed sections')
+ clock=job.failedAt+job.move.qteFailure.contactMs+10;command('heatRushHit',{action=job.action,index=#job.contacts});check(not job.pendingDamage and z1.health<10,'failed mash applies nonlethal earned damage at its ending contact')
  clock=job.failedAt+job.move.qteFailure.duration*1000+10;snapshot(p,{weaponProfile='crate',clip='ProjectYakuza_DD_CrateHeatFail',move='dd_crate_heat',rightAim=true});command('heatRushEnd',{action=job.action,completed=true});check(not rush.leases[p]and not p.invincible,'finite original ending releases protection and lease')
  p.hand=p.token;z1.health=10;z1.x=.5;z1.y=0;z1.useless=false;z1.ignore=false;z1.deferred=true;z1.knock=false;z1.reaction='';z1.state='idle';clock=clock+3000
  snapshot(p,{weaponProfile='',clip='ProjectYakuza_DD_GrabHold',phase='hold',rightAim=true,heat=100,extreme=false,comboBusy=false});command('grabRequest',{zombie=z1.id});local lease=server.players[p.id].grab

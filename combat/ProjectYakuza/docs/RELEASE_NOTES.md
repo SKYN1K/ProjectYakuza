@@ -1,7 +1,9 @@
-# Project Yakuza 0.90.1
+# Project Yakuza 0.91.0
 
-- Removed the katana Heat Action's fourth contact entirely: no fourth damage, impact sound, sparks, blood burst or attack voice cue.
-- The three original strike contacts now each apply 0.5 times the canonical equipped-weapon damage. The previous total of 1.5 times weapon damage is preserved and delivered on those three strikes, in both single-player and multiplayer.
-- Rebuilt the numeric presentation catalogue with only the katana's three strike contacts; its final slash retains blade-impact feedback. Other Heat Action timing, cues, effects and QTEs are unchanged.
+- Reworked paired Heat Action damage in the shared framework: nonlethal configured hits reduce health on contact; a lethal hit and subsequent damage are held until the entire paired animation, including recovery, finishes. Every authored hit retains its sounds, blood, sparks and voice feedback.
+- Cinematic contact damage no longer calls ordinary native melee Hit, which could switch the victim animation or kill the target mid-sequence. Native terminal consequences handle death and kill credit after completion. Interrupted sequences discard held lethal damage while preserving nonlethal damage already dealt.
+- Extended the native hitreaction-state latch to all paired Heat Actions and restore it on cleanup. This prevents katana contacts from restarting the victim's original paired clip.
+- Rebuilt katana trails from the current three-contact move: sword-hand slash, opposite-hand punch and sword-hand thrust. Removed the stale fourth trail during recovery. Sparks/blood use source-pose neck/torso anchors for the sword hits.
+- Server health snapshots accompany confirmed paired contacts and completion, including owner echoes. Replay guards prevent duplicate packets from applying an old health snapshot twice. Damage, input and target validation remain server-authoritative.
 
-Reference: the supplied Yakuza 6 Heat Action compilation around 06:18, inspected from the existing local video. No visual/audio assets were created or edited. PZ was not launched. See [validation](VALIDATION_0.90.1.md). Restart matching game/server versions after updating.
+Original attacker/victim animation frames, speeds, durations, three katana strike times and supplied visual/audio assets are unchanged. Reference: the supplied Yakuza 6 video around 06:18. QTE windows are unchanged. Offline validation only; PZ was not launched. See [damage policy](HEAT_ACTION_DAMAGE.md) and [validation](VALIDATION_0.91.0.md). Restart matching game/server versions after installing.
