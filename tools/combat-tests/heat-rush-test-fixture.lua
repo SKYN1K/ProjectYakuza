@@ -68,6 +68,7 @@ function token:getMinDamage()return self.min end;function token:getMaxDamage()re
 function token:setMinDamage(v)self.min=v end;function token:setMaxDamage(v)self.max=v end
 function token:getModData()return self.data end
 local creates=0;instanceItem=function(name)check(name==PY.TOKEN,'canonical damage item uses B42 factory');creates=creates+1;return {getMinDamage=function()return .3 end,getMaxDamage=function()return .5 end}end
+function p:StopTimedActionAnim()self.stoppedAnim=(self.stoppedAnim or 0)+1 end
 function p:isInvincible()return self.invincible==true end;function p:setInvincible(v)self.invincible=v end
 function p:isGhostMode()return self.ghost==true end;function p:setGhostMode(v)self.ghost=v end
 function p:getX()return self.x or 0 end;function p:getY()return self.y or 0 end
@@ -409,12 +410,17 @@ local kc=PY.activeActions[p];check(kc and kc.action.weaponHeat and not kc.action
 check(math.abs(beforeHeat-PY.getHeat(p)-PY.Heat.stockSize(p))<.000001,'weapon heat action consumes one stock once')
 local ka=kc.timedAction;ka.action={setOverrideHandModelsObject=function()end};phase=0;ka:start()
 check(p.invincible and p.ghost and z.vars.ProjectYakuzaPairedVictimClip=='ProjectYakuza_DD_KatanaHeatVictim','framework protects actor and selects the correct original victim clip')
+check(ka.animation==p.vars.PerformingAction and p.vars.IsPerformingAnAction==true,'Heat Action owns native animation variables without a cancellable queue item')
+local queued=ISTimedActionQueue.add({character=p});check(queued==nil and not ka.cleaned,'native inventory actions cannot replace a running Heat Action')
+check(ISTimedActionQueue.add({character={}})~=nil,'unrelated actors keep their normal action queues')
+local clip=p.vars.PerformingAction;local oldPhase=phase;PY.updateCustomAction(p);check(not ka.cleaned and p.vars.PerformingAction==clip,'framework drives queue-free paired playback')
+
 PY.HeatActions.zombie(z);check(z.target==nil,'protected attacker is cleared as a zombie target')
 local pairedCues={};PY.on('heatRushHit',function(_,_,index)pairedCues[#pairedCues+1]=index end)
 for i,contact in ipairs(kc.action.contacts)do
  phase=contact.atMs/1000+(i==2 and .25 or 0);ka:update();ka:update()
  check(#pairedCues==i and pairedCues[i]==i,'katana emits each of its three impact cues once '..i)
- check(z.hits==beforeHits and math.abs(z.health-(10-.5*i))<.000001,'each katana strike deals damage without native Hit restarting the victim '..i)
+ check(z.hits==beforeHits and math.abs(z.health-(10-({.375,.75,1.5})[i]))<.000001,'each katana strike deals damage without native Hit restarting the victim '..i)
 end
 check(math.abs(z.health-8.5)<.000001,'weapon action damage uses canonical held weapon without repeated bonus')
 phase=kc.action.duration;ka:update()
@@ -428,10 +434,10 @@ do
  local context=PY.activeActions[p];local action=context.timedAction;action.action={setOverrideHandModelsObject=function()end};action:start()
  for i,contact in ipairs(context.action.contacts)do
   phase=contact.atMs/1000;action:update();action:update()
-  check(math.abs(z.health-.25)<.000001 and not z:isDead(),'nonlethal first hit lands and lethal later contacts preserve positive health '..i)
+  check(math.abs(z.health-.375)<.000001 and not z:isDead(),'nonlethal first hit lands and lethal later contacts preserve positive health '..i)
   check(z.vars.ProjectYakuzaPairedVictimClip=='ProjectYakuza_DD_KatanaHeatVictim'and z.hits==prior,'no native Hit resets the paired victim track '..i)
  end
- check(math.abs(action.pendingDamage-1)<.000001,'each withheld katana contact accumulates once')
+ check(math.abs(action.pendingDamage-1.125)<.000001,'each withheld katana contact accumulates once')
  phase=context.action.duration-.13;action:update();check(not action.cleaned and not z:isDead(),'victim stays alive through the original recovery')
  phase=context.action.duration;action:update();action:update()
  check(action.cleaned and z:isDead()and z.deathFinalizations==deaths+1,'full completion finalizes death once through native consequences')

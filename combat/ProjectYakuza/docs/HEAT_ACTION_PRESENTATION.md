@@ -1,6 +1,6 @@
 # Heat Action presentation
 
-HeatActionPresentation separates visual/audio presentation from authoritative damage and QTE evaluation. HeatRush starts it for the owner timed action and remote paired-animation jobs; matching cleanup stops it. Server damage messages no longer replay locally reconstructed sounds or effects. Observers use their own native animation phase, so network delivery delay does not queue a second set of impacts. The protocol is unchanged.
+HeatActionPresentation separates visual/audio presentation from authoritative damage and QTE evaluation. HeatRush starts it for the owner paired controller and remote paired-animation jobs; matching cleanup stops it. Server damage messages no longer replay locally reconstructed sounds or effects. Observers use their own native animation phase, so network delivery delay does not queue a second set of impacts. The protocol is unchanged.
 
 The controller reads AttackEffects.findTrack for the currently playing actor clip. It prepares an original GameSoundClip up to 160 ms before contact and subtracts that exact clip's measured strong-transient lead-in from the contact time. The existing GameSound user volume still applies, including the mod Sounds slider; primary/layer gains remain 0.55/0.30. It does not change Voices volume. Primary and optional layered sounds use world emitters. A presentation arriving over 100 ms late is dropped, independently of the longer gameplay/network contact grace period. No game clock, damage or QTE timing is changed.
 
@@ -12,6 +12,19 @@ The numeric data and provenance manifest are reproducible with tools/combat-test
 
 Render polling is active only during a session, capped at eight simultaneous actors. Pause freezes emission. Style changes, unequip, death, action interruption, backward animation restarts, save and main menu clear it. Missing tracks get 1.5 seconds from the last observed phase before cleanup. Natural completion preserves an impact sound's existing tail.
 
-DoD's katana uses exactly three damaging strike contacts, each at 0.5 times canonical weapon damage. Its previous fourth contact is removed from gameplay and presentation. The three source strike timestamps, animation speed and duration are preserved; the third slash retains blade-impact feedback.
+DoD's katana uses the actual Yakuza 6 CMN18 scene timeline from h23720_buki_e.par/cmn.par/cmn.bin. NodeBattleDamage contacts occur at source frames 24, 44 and 64 at 30 fps. The original damage weights 500/500/1000 become 0.375/0.375/0.75 times canonical weapon damage, retaining the previous 1.5 total. Its own original bank cues start at frames 8 (swing), 20 (slash), 28 (punch), 54 (thrust) and 97 (body landing). These bank clips contain lead-in audio and therefore must play at those independent source starts, without generic transient preroll. The landing is foley only, with no fourth damage, blood or attack trail. Actor combat voice roles start at frames 6 and 46 using existing CVF entries; no voice pack is modified.
+
+The katana blood points use the original chest, face and lower-torso particle attachment offsets transformed onto the native PZ skeleton. Its contact windows follow the actual right-arm slash, right-fist punch and right-arm thrust. Generic orange sparks are suppressed only for this scene. Both retargeted clips retain 141 original frames and original speed; source-derived arm directions are fitted to native segment lengths. A smooth victim-root correction peaks at the native face-punch contact and returns to the original paired path at the adjacent sword contacts.
 
 The shared [paired damage policy](HEAT_ACTION_DAMAGE.md) applies nonlethal damage on contact and holds lethal damage through full recovery. Presentation and three-contact katana trails remain tied to the playing source clip.
+
+
+## Independently authored sound and voice events
+
+A move can define audioEvents with up to 32 chronological entries. Each entry contains atMs (0 through duration in milliseconds), cue (a style sound key), optional target (actor or victim, default actor) and optional gain (0..1, default 0.55). Times refer to the same source clock as contacts. The controller prepares clips before their deadline but starts playback exactly at the authored time. It does not subtract measured clip lead-in. Defining audioEvents, including an empty array, replaces generic per-contact impact sounds for the main clip. Existing QTE feedback and failure-ending contact sounds remain independent.
+
+Optional voiceEvents contains up to 32 chronological entries with atMs and entry, an existing Combat-prefixed CVF entry name. Only the local actor requests these voices through CombatVoices.contact; observers do not repeat them. CVF availability, busy-channel handling and the mod Voices slider retain their existing behavior. Avoid contact.voice on the same moment if voiceEvents already supplies that voice.
+
+Both event lists are bounded and validated by the registry. They reset on clip changes, suppress duplicates and stale events, respect pause, and share session cleanup. Built-in sounds are reconstructed from local native animation phase on remote observers; clients never authorize damage through sound events.
+
+read_katana_scene.py reads the independently implemented CMN18 binary layout using the public HActLib format reference at https://github.com/Fronkln/HActLib. katana-scene-timeline.json records source motion, damage, bank cue and effect attachments; katana-scene-audio.json records native decoded WAV hashes. build_katana_scene_audio.py reproduces the five approved original bank decodes. validate_katana_scene.py verifies the timeline and bank/output contracts. The parser reads source data only and does not run Yakuza or PZ.

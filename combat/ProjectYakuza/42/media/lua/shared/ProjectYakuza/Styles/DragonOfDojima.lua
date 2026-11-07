@@ -26,6 +26,7 @@ ProjectYakuza.registerStyle({
     encounterIntro={enabled=true,radius=12,durationMs=2300,quietMs=12000,pollMs=400,
         titles={{max=10,text="A bunch of brain eaters"},{max=39,text="Zombies"},{text="The Horde"}}},
     sounds={
+        heatKatanaSwing="ProjectYakuza_KatanaSceneSwing",heatKatanaSlash="ProjectYakuza_KatanaSceneSlash",heatKatanaPunch="ProjectYakuza_KatanaScenePunch",heatKatanaThrust="ProjectYakuza_KatanaSceneThrust",heatKatanaBodyFall="ProjectYakuza_KatanaSceneBodyFall",
         lowHealth="ProjectYakuza_LowHealthHeartbeat",
         punchImpact="ProjectYakuza_Y6_PunchImpact",kickImpact="ProjectYakuza_Y6_KickImpact",heatImpact="ProjectYakuza_Y6_HeatImpact",
         punchSwing="ProjectYakuza_Y6_PunchSwing",kickSwing="ProjectYakuza_Y6_KickSwing",finisher="ProjectYakuza_Y6_Finisher",
@@ -205,7 +206,9 @@ if ProjectYakuza.Weapons then
         actions={
             heatAction={enabled=true,weaponHeat=true,weaponItems={"Base.Katana"},motionId="dod_katana",useExtremeFuel=true,heatStocks=1,noCombo=true,
                 animation="ProjectYakuza_DD_KatanaHeat",targetAnimation="ProjectYakuza_DD_KatanaHeatVictim",nodeValue="dd_katana_heat",requiresTarget=true,duration=140/30,speed=1,hitResponse=false,
-                contacts={{atMs=20/30*1000,damageMultiplier=.5,cue="heavyImpact",voice="CombatHeavyAttack"},{atMs=28/30*1000,damageMultiplier=.5,cue="punchImpact",voice="CombatLightAttack"},{atMs=54/30*1000,damageMultiplier=.5,cue="heavyImpact",voice="CombatHeavyAttack"}}},
+                audioEvents={{atMs=8/30*1000,cue="heatKatanaSwing",target="actor"},{atMs=20/30*1000,cue="heatKatanaSlash",target="victim"},{atMs=28/30*1000,cue="heatKatanaPunch",target="actor"},{atMs=54/30*1000,cue="heatKatanaThrust",target="victim"},{atMs=97/30*1000,cue="heatKatanaBodyFall",target="victim"}},
+                voiceEvents={{atMs=6/30*1000,entry="CombatHeavyAttack"},{atMs=46/30*1000,entry="CombatSpecialMove"}},
+                contacts={{atMs=24/30*1000,damageMultiplier=.375,cue="heatKatanaSlash"},{atMs=44/30*1000,damageMultiplier=.375,cue="heatKatanaPunch"},{atMs=64/30*1000,damageMultiplier=.75,cue="heatKatanaThrust"}}},
             finisher={enabled=true,variants={default={animation="ProjectYakuza_DD_BladeHeavy",nodeValue="dd_blade_heavy",duration=70/30/1.4,speed=1.4,impact=22/70,hitResponse=false,enabled=true,damageMultiplier=1.25}}},
             quickstep=base.actions.quickstep,
             block={enabled=true,animation="ProjectYakuza_DD_BladeGuard",staminaPerHit=.08},

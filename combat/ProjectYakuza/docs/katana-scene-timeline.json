@@ -1,0 +1,179 @@
+{
+  "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\katana-heat-070\\cmn.par\\cmn.bin",
+  "sha256": "7507408241a12a1e5b537f7bbc487d1708edbfa46d6e3447a6f6151ed1d74e8e",
+  "formatReference": "https://github.com/Fronkln/HActLib",
+  "format": "Yakuza 6 CMN18, original 30 fps frames",
+  "motionNodes": [
+    {
+      "guid": "04a05c31-1c3a-4e61-a424-b63ac71f78d1",
+      "name": "\u30e2\u30fc\u30b7\u30e7\u30f3",
+      "motion": {
+        "flags": 0,
+        "start": 0.0,
+        "end": 140.0,
+        "motionFrame": 0.0,
+        "previousMatrix": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      }
+    },
+    {
+      "guid": "097f3ef3-0187-4b6c-a0b1-625a94a0eef1",
+      "name": "\u30e2\u30fc\u30b7\u30e7\u30f3",
+      "motion": {
+        "flags": 0,
+        "start": 0.0,
+        "end": 140.0,
+        "motionFrame": 0.0,
+        "previousMatrix": [
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      }
+    }
+  ],
+  "damage": [
+    {
+      "frame": 24.0,
+      "damage": 500,
+      "forceDead": 0,
+      "noDead": 1,
+      "vanish": 0
+    },
+    {
+      "frame": 44.0,
+      "damage": 500,
+      "forceDead": 0,
+      "noDead": 1,
+      "vanish": 0
+    },
+    {
+      "frame": 64.0,
+      "damage": 1000,
+      "forceDead": 0,
+      "noDead": 0,
+      "vanish": 0
+    }
+  ],
+  "audio": [
+    {
+      "frame": 8,
+      "cueSheet": 3790,
+      "cueId": 2,
+      "stream": "katana_swing"
+    },
+    {
+      "frame": 20,
+      "cueSheet": 3790,
+      "cueId": 4,
+      "stream": "slash"
+    },
+    {
+      "frame": 28,
+      "cueSheet": 3790,
+      "cueId": 3,
+      "stream": "punch"
+    },
+    {
+      "frame": 54,
+      "cueSheet": 3790,
+      "cueId": 5,
+      "stream": "tuki"
+    },
+    {
+      "frame": 97,
+      "cueSheet": 3790,
+      "cueId": 1,
+      "stream": "bodyfall"
+    }
+  ],
+  "actorVoiceLabels": [
+    [
+      6.0,
+      "GV_FIGHTER_ATTACK_XL"
+    ],
+    [
+      46.0,
+      "GV_FIGHTER_THROW"
+    ]
+  ],
+  "effectAttachments": [
+    {
+      "frame": 24,
+      "bone": "Bip01_Spine1",
+      "point": [
+        -0.051897577941417694,
+        0.5144577622413635,
+        0.06140928342938423
+      ],
+      "sourceEmitter": "YNb0014 : cima \u30d2\u30fc\u30c8014\u3000\u4e2d\u5ddd\ufffd",
+      "sourceFrame": 20.0,
+      "sourceLocalOffset": [
+        0.15700000524520874,
+        -0.21500009298324585,
+        0.06099998950958252
+      ]
+    },
+    {
+      "frame": 44,
+      "bone": "Bip01_Head",
+      "point": [
+        -0.08642247319221497,
+        0.7850936651229858,
+        -0.06688094139099121
+      ],
+      "sourceEmitter": "YNb0009 : \u8840\u3057\u3076\u304d(\u30e1\u30bf\u30dc\u542b\u3080)",
+      "sourceFrame": 43.0,
+      "sourceLocalOffset": [
+        -0.005200000014156103,
+        0.018300000578165054,
+        0.11079999804496765
+      ]
+    },
+    {
+      "frame": 64,
+      "bone": "Bip01_Spine",
+      "point": [
+        0.04855196550488472,
+        0.5088510513305664,
+        -0.0034565795212984085
+      ],
+      "sourceEmitter": "YNb0013 : cima \u30d2\u30fc\u30c8013\u3000\u4e2d\u5ddd\ufffd",
+      "sourceFrame": 62.0,
+      "sourceLocalOffset": [
+        -0.10999999940395355,
+        -0.02800000086426735,
+        0.047000009566545486
+      ]
+    }
+  ]
+}

@@ -289,7 +289,7 @@ end
 
 local ProjectYakuza = ProjectYakuza
 ProjectYakuza.FEATURES={grab=true}
-ProjectYakuza.VERSION = "0.91.0"
+ProjectYakuza.VERSION = "0.92.0"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -366,6 +366,23 @@ function ProjectYakuza.validateStyle(style)
                 else last=contact.atMs end
                 if type(contact)=="table"and contact.damageMultiplier~=nil and (not number(contact.damageMultiplier)or contact.damageMultiplier<0 or contact.damageMultiplier>10)then problem(path..".contacts has invalid damage multiplier")end
             end end
+        end
+        for _,field in ipairs({"audioEvents","voiceEvents"})do
+            local list=value[field]
+            if list~=nil then
+                if type(list)~="table"or #list>32 then problem(path.."."..field.." requires at most 32 events")
+                else local last=-1;for _,event in ipairs(list)do
+                    if type(event)~="table"then problem(path.."."..field.." contains an invalid event")
+                    else
+                        if not number(event.atMs)or event.atMs<last or event.atMs<0 or not number(value.duration)or event.atMs>value.duration*1000 then problem(path.."."..field.." has invalid source timing")else last=event.atMs end
+                        if field=="audioEvents"then
+                            if not text(event.cue)or #event.cue>120 then problem(path..".audioEvents requires a sound cue")end
+                            if event.target~=nil and event.target~="actor"and event.target~="victim"then problem(path..".audioEvents target must be actor or victim")end
+                            if event.gain~=nil and(not number(event.gain)or event.gain<0 or event.gain>1)then problem(path..".audioEvents gain must be 0..1")end
+                        elseif not text(event.entry)or not event.entry:match("^Combat[%w_]+$")then problem(path..".voiceEvents requires a combat voice entry")end
+                    end
+                end end
+            end
         end
         if value.qte~=nil then local ok,reason=ProjectYakuza.QTE.valid(value.qte,type(value.duration)=="number"and value.duration*1000 or nil);if not ok then problem(path..".qte: "..reason)end end
         if value.qteStages~=nil and type(value.qteStages)~="boolean"then problem(path..".qteStages must be boolean")end

@@ -1,0 +1,13 @@
+# Project Yakuza 0.92.0 validation
+
+PZ was not launched. The supplied cut video near 06:18 was inspected, and the original Yakuza 6 h23720_buki_e CMN18 scene was parsed using the public HActLib binary-format reference. Its NodeBattleDamage nodes define hits at frames 24/44/64 with damage weights 500/500/1000 and first-two-hit NoDead flags. Independent sound nodes define bank 3790 cues at frames 8/20/28/54/97, actor voice labels at frames 6/46, and blood particle attachments on chest, face and lower torso. katana-scene-timeline.json records the data; the independent parser and validator reproduce it.
+
+Five existing embedded HCA streams were decoded with vgmstream to unchanged native 44.1 kHz stereo PCM16 WAVs. Bank and output hashes, sample counts, source cue IDs and times are checked. B42's actual GameSoundScript parser resolves all five definitions. No new sounds were synthesized or mixed.
+
+The source-motion check verifies both original GMT/archive hashes, all 141 frames/timestamps, 6204 unchanged non-arm body samples, original source arm directions within 0.032 degrees and native hand-to-prop offsets. The PZ importer loads both repaired clips and all eight owner/victim/observer selectors. Native FK checks the right-fist face contact against the shorter PZ skeleton, shared scene-cut normalization, smooth root correction and original standing victim height. Existing textures and all unrelated animation/audio assets are unchanged.
+
+All 31 Kahlua suites pass, including MP server authority and replay guards, low-health lethal reservations through full recovery, queue-free paired lifecycle, prevention of queued action replacement, independent original bank cue starts, authored voice roles, three blood-only contacts, source attachment rotations, event validation and cleanup. All 75 production Lua files compile. Existing native RMB routing, stun/PvP APIs and menu-image importer checks also pass. The source comment scanner reports zero comments. Generated trail/presentation data reproduce deterministically from current native clips.
+
+Installation checks the previous release bytes, backs up only changed installed files and verifies the complete installation. Publication uses a fresh versioned ZIP and release; complete source/install/ZIP hashes and the remote release asset digest are compared. Extraction folders, vendor inspection tools, previews, credentials and the separate CVF project stay out of Git and the ZIP.
+
+These checks establish source timing, native importer compatibility and offline logic. They do not establish live visual alignment, audible balance or cancellation behavior in a running multiplayer session; those still need an in-game test after restart.

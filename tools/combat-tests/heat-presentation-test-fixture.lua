@@ -16,11 +16,12 @@ getWorld=function()return {getFreeEmitter=function(_,x,y,z)
  return emitter
 end}end
 PY.AttackEffects.project=function(x,y,z,angle,tile)return 0,0,x*math.cos(angle)-z*math.sin(angle),x*math.sin(angle)+z*math.cos(angle),y end
+PY.BloodEffects={spawn=function(a,v,strong,charged,feedback,anchor)fx[#fx+1]={time=phase*1000,anchor=anchor,feedback=feedback,blood=true}end}
 PY.HitEffects.spawn=function(a,v,strong,charged,ground,feedback,anchor)fx[#fx+1]={time=phase*1000,anchor=anchor,feedback=feedback}end
 PY.emit=function(name)if name=='heatRushHit'then emitted=emitted+1 end end
 function p:getAnimAngleRadians()return self.angle or 0 end
 p.dead=false;p.equipped=true;z.dead=false;paused=false;weight=1
-local function step(ms)phase=ms/1000;clock=clock+16;C.tick()end
+local function step(ms)phase=(ms+.00001)/1000;clock=clock+16;C.tick()end
 local total=0;local move,source
 for animation,data in pairs(D.moves)do
  move={animation=animation,contacts={}}
@@ -31,7 +32,7 @@ for animation,data in pairs(D.moves)do
   local at=meta.atMs
   step(math.max(0,at-160))
   step(math.max(0,at-lead));local matched=false;for _,play in ipairs(plays)do if math.abs(play.time-math.max(0,at-lead))<.001 then matched=true end end
-  check(matched,'source transient preroll follows live phase at its measured lead')
+  check(matched,'source transient preroll '..animation..' '..meta.atMs..' lead '..lead..' plays '..#plays)
   local fbefore=#fx;step(at);check(#fx==fbefore+1,'one effect at physical contact')
   check(fx[#fx].anchor~=nil,'all built-in contacts have a sampled native victim anchor')
   local count=#fx;step(at+1);check(#fx==count,'contact cannot duplicate on next render')
@@ -69,10 +70,26 @@ check(#plays==1 and #fx==1,'observer reconstructs presentation without owner-onl
 C.stop(p,source,true);check(not plays[1].stopped,'natural completion preserves current impact tail')
 local katana=PY.Weapons.views.dragon_of_dojima.blade.actions.heatAction
 check(#katana.contacts==3 and katana.contacts[4]==nil,'katana has exactly three damaging contacts')
-for i=1,3 do check(katana.contacts[i].damageMultiplier==.5,'katana splits unchanged total damage evenly across three hits')end
+for i=1,3 do check(katana.contacts[i].damageMultiplier==({.375,.375,.75})[i],'katana uses original 1:1:2 damage weighting with unchanged total')end
 check(#D.moves[katana.animation].contacts==3,'katana numeric timeline contains only three presented contacts')
-check(D.moves[katana.animation].contacts[1].bone=='Bip01_Neck'and D.moves[katana.animation].contacts[2].bone=='Bip01_Head'and D.moves[katana.animation].contacts[3].bone=='Bip01_Spine1','katana effects follow neck slash, head punch and torso thrust contacts')
+check(D.moves[katana.animation].contacts[1].bone=='Bip01_Spine1'and D.moves[katana.animation].contacts[2].bone=='Bip01_Head'and D.moves[katana.animation].contacts[3].bone=='Bip01_Spine','katana effects follow original chest, face and lower-torso particle bones contacts')
 plays={};fx={};local eventCount=emitted;H.present(p,z,katana,4,true,true,{x=0,y=0,z=1})
 check(#plays==0 and #fx==0 and emitted==eventCount,'removed fourth katana contact cannot present sounds, effects or voices')
+C.clearAll();plays={};fx={};local voices={};PY.CombatVoices={contact=function(a,entry)voices[#voices+1]={at=phase*1000,entry=entry}end}
+for _,key in ipairs({'heatKatanaSwing','heatKatanaSlash','heatKatanaPunch','heatKatanaThrust','heatKatanaBodyFall'})do activeStyle.sounds[key]=key end
+phase=0;source={};C.start(p,z,katana,source);step(0)
+local events={};for _,event in ipairs(katana.audioEvents)do events[#events+1]={at=event.atMs,audio=true}end
+for _,event in ipairs(katana.voiceEvents)do events[#events+1]={at=event.atMs}end
+for _,event in ipairs(katana.contacts)do events[#events+1]={at=event.atMs}end
+table.sort(events,function(a,b)return a.at<b.at end)
+for _,event in ipairs(events)do step(math.max(0,event.at-1));local before=#plays;step(event.at);step(event.at);if event.audio then check(#plays==before+1,'source cue fires exactly at authored start once, without generic preroll')end end
+check(#plays==5 and #fx==3 and #voices==2,'five original cues, three blood contacts and two original voice events remain independent')
+for i,effect in ipairs(fx)do check(effect.blood==true and math.abs(effect.time-katana.contacts[i].atMs)<.001,'katana blood follows the real damage frame without generic sparks')end
+check(voices[1].entry=='CombatHeavyAttack'and voices[2].entry=='CombatSpecialMove','original source voice roles use existing CVF combat entries')
 C.clearAll()
+local style=PY.Weapons.views.dragon_of_dojima.blade;local audio,voice=katana.audioEvents,katana.voiceEvents
+check(PY.validateStyle(style),'authored source sound and voice event arrays validate')
+for _,bad in ipairs({{atMs=-1,cue='punchImpact'},{atMs=1,cue='punchImpact',gain=2},{atMs=1,cue='punchImpact',target='other'},{atMs=katana.duration*1000+1,cue='punchImpact'}})do katana.audioEvents={bad};check(not PY.validateStyle(style),'invalid authored audio event rejected')end
+katana.audioEvents=audio;katana.voiceEvents={{atMs=1,entry='UnrelatedVoice'}};check(not PY.validateStyle(style),'authored voice must use Combat prefix')
+katana.voiceEvents=voice
 return true,'PASS '..checks..' paired Heat Action timing, 30 native contact anchors, three damaging katana strikes, clip lead-ins, custom layers, replay suppression, rotation and lifecycle checks'

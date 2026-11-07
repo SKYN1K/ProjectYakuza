@@ -20,7 +20,7 @@ function C.start(p,z,move,source)
     local old=C.states[p];if old and old.source==source then return end
     C.stop(p)
     local count=0;for _ in pairs(C.states)do count=count+1 end;if count>=C.maxActors then return end
-    C.states[p]={victim=z,move=move,source=source,handles={},audio={},effects={},last=0,waitAt=getTimestampMs(),style=style.id};C.sync()
+    C.states[p]={victim=z,move=move,source=source,handles={},audio={},voices={},authored={},effects={},last=0,waitAt=getTimestampMs(),style=style.id};C.sync()
 end
 function C.definition(s,ending)
     local clip=ending and s.move.qteFailure.animation or s.move.animation
@@ -51,6 +51,29 @@ function C.play(p,s,entry,anchor)
     local id=emitter:playClip(entry.clip,p)
     if type(id)=="number"and id~=0 then emitter:setVolume(id,entry.gain);s.handles[#s.handles+1]={emitter=emitter,id=id}end
 end
+function C.authoredEvents(p,s,time)
+    local style=PY.getPlayerStyle(p)
+    for i,event in ipairs(s.move.audioEvents or {})do
+        local audio=s.authored[i]
+        if audio==nil and time>=event.atMs-C.prepareMs then
+            local name=style.sounds and style.sounds[event.cue];local sound=name and GameSounds.getSound(name);local clip=sound and sound:getRandomClip()
+            audio=clip and {clip=clip,gain=event.gain or .55}or {done=true};s.authored[i]=audio
+        end
+        if audio and not audio.done and time>=event.atMs then
+            audio.done=true
+            if time-event.atMs<=C.lateMs then
+                local target=event.target=="victim"and s.victim or p
+                C.play(p,s,audio,{x=target:getX(),y=target:getY(),z=target:getZ()})
+            end
+        end
+    end
+    if p:isLocalPlayer()and PY.CombatVoices then for i,event in ipairs(s.move.voiceEvents or {})do
+        if not s.voices[i]and time>=event.atMs then
+            s.voices[i]=true
+            if time-event.atMs<=C.lateMs then PY.CombatVoices.contact(p,event.entry)end
+        end
+    end end
+end
 function C.tick()
     if isGamePaused()then return end
     for p,s in pairs(C.states)do
@@ -59,18 +82,19 @@ function C.tick()
         else
             local ending=s.source.failed and PY.HeatRushRules.pairedFailure(s.move)
             local clip,contacts=C.definition(s,ending)
-            if s.clip~=clip then s.clip=clip;s.audio={};s.effects={};s.location=nil;s.last=0;s.waitAt=getTimestampMs()end
+            if s.clip~=clip then s.clip=clip;s.audio={};s.voices={};s.authored={};s.effects={};s.location=nil;s.last=0;s.waitAt=getTimestampMs()end
             local phase,weight,slot=PY.AttackEffects.findTrack(p,clip,s.location);s.location=slot
             if phase and weight>=.05 then
                 local time=s.move.pacedAnimation and not ending and PY.HeatRushRules.sourceTime(s.move,phase)*1000 or phase*1000
                 if time+20<s.last then C.stop(p,s.source)
                 else
                     s.last=time;s.waitAt=getTimestampMs()
+                    if not ending then C.authoredEvents(p,s,time)end
                     for i,meta in ipairs(contacts)do
                         local index=meta.index or i;local contact=PY.HeatRushRules.contacts(s.move)[index]
                         local allowed=contact and(not contact.qteIndex or s.source.qte and s.source.qte.accepted[contact.qteIndex])
                         if allowed then
-                            if s.audio[i]==nil and time>=meta.atMs-C.prepareMs then s.audio[i]=C.prepare(p,s,contact,meta)end
+                            if (ending or s.move.audioEvents==nil)and s.audio[i]==nil and time>=meta.atMs-C.prepareMs then s.audio[i]=C.prepare(p,s,contact,meta)end
                             local audio=s.audio[i]
                             if audio and not audio.done and time>=meta.atMs-audio.lead then
                                 audio.done=true
@@ -81,7 +105,7 @@ function C.tick()
                             end end
                             if not s.effects[i]and time>=meta.atMs then
                                 s.effects[i]=true
-                                if time-meta.atMs<=C.lateMs then PY.HeatRush.present(p,s.victim,s.move,index,true,true,C.anchor(p,s.victim,meta.point),meta.feedback)end
+                                if time-meta.atMs<=C.lateMs then PY.HeatRush.present(p,s.victim,s.move,index,true,true,C.anchor(p,s.victim,meta.point),meta.feedback,meta.bloodOnly)end
                             end
                         end
                     end

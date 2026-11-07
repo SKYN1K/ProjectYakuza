@@ -1,5 +1,5 @@
 {
-  "operation": "Numeric source-pose anchors through native B42 FK and in-memory PCM onset analysis of unchanged supplied clips. No assets generated, converted to files, edited or upscaled. Contact timing and victim pose select impact location; each existing audio clip uses its measured strong-transient lead.",
+  "operation": "Numeric source-pose anchors through native B42 FK and in-memory PCM onset analysis of unchanged supplied clips. No assets generated, converted to files, edited or upscaled. Contact timing and victim pose select impact location. Katana contacts use original CMN damage nodes and particle-bone offsets, and its independently authored audioEvents retain the original bank cue starts. Generic clips use measured transient leads.",
   "clips": [
     {
       "animation": "ProjectYakuza_DD_HeatRush",
@@ -287,48 +287,53 @@
     {
       "animation": "ProjectYakuza_DD_KatanaHeat",
       "targetAnimation": "ProjectYakuza_DD_KatanaHeatVictim",
-      "actorSha256": "9d817a59d232c07235295bc578bf4b9b4cf76d0a48b97d9c0eaad034b23feb6e",
-      "victimSha256": "d4a2f61ecd7d53243370078c7f4b16bfc2b56067236fda070329c577913c528e",
+      "actorSha256": "9afde1243164cd0dc1a459aab74006b24a7f16c378ad989054ca3ab08d66fa30",
+      "victimSha256": "47d20dc05f192103f56771b7c454ed741b97810588aa0e805e96e96e481a78e6",
       "contacts": [
         {
-          "atMs": 666.6666666666666,
+          "atMs": 800,
           "index": 1,
-          "cue": "heavyImpact",
+          "cue": "heatKatanaSlash",
           "base": false,
           "point": [
-            -0.030836575,
-            0.763190925,
-            0.000323537
+            -0.051897577941417694,
+            0.5144577622413635,
+            0.06140928342938423
           ],
-          "bone": "Bip01_Neck",
-          "layers": []
+          "bone": "Bip01_Spine1",
+          "bloodOnly": true,
+          "layers": [],
+          "feedback": "blade"
         },
         {
-          "atMs": 933.3333333333334,
+          "atMs": 1466.6666666666665,
           "index": 2,
-          "cue": "punchImpact",
-          "base": true,
+          "cue": "heatKatanaPunch",
+          "base": false,
           "point": [
-            -0.071413592,
-            0.745553732,
-            -0.052542731
+            -0.08642247319221497,
+            0.7850936651229858,
+            -0.06688094139099121
           ],
           "bone": "Bip01_Head",
+          "bloodOnly": true,
           "layers": [],
           "feedback": "unarmed"
         },
         {
-          "atMs": 1800,
+          "atMs": 2133.3333333333335,
           "index": 3,
-          "cue": "heavyImpact",
+          "cue": "heatKatanaThrust",
           "base": false,
           "point": [
-            -0.038287584,
-            0.594800651,
-            -0.043787695
+            0.04855196550488472,
+            0.5088510513305664,
+            -0.0034565795212984085
           ],
-          "bone": "Bip01_Spine1",
-          "layers": []
+          "bone": "Bip01_Spine",
+          "bloodOnly": true,
+          "layers": [],
+          "feedback": "blade"
         }
       ]
     },
@@ -480,9 +485,29 @@
   ],
   "sounds": [
     {
-      "file": "media/sound/ProjectYakuza/Y6Combat/battle_common_000.ogg",
-      "sha256": "830a2e6438a7ba07e3da89edc4aad41396f0f21a43706cbaaed1f4d82b3b5ad7",
+      "file": "media/sound/ProjectYakuza/KatanaSceneBodyFall.wav",
+      "sha256": "a7a201603608b02817c8f53cf76e3169662426f6997c5b3d7903af281e9087fb",
+      "attackLeadMs": 65
+    },
+    {
+      "file": "media/sound/ProjectYakuza/KatanaScenePunch.wav",
+      "sha256": "c83cafe77088fe10d438a35f9e99fa8ad21e33019727188dbd908ea661d7d178",
       "attackLeadMs": 120
+    },
+    {
+      "file": "media/sound/ProjectYakuza/KatanaSceneSlash.wav",
+      "sha256": "eb3675194be1c07db1c4740d6ec4cc9c8bd31065ff8af7678cec080b1f5f05c6",
+      "attackLeadMs": 60
+    },
+    {
+      "file": "media/sound/ProjectYakuza/KatanaSceneSwing.wav",
+      "sha256": "957d455cbe5284a8140abb3a396fc2be1f6d2bbb5edacb466ae8f0538779d967",
+      "attackLeadMs": 120
+    },
+    {
+      "file": "media/sound/ProjectYakuza/KatanaSceneThrust.wav",
+      "sha256": "20f9c3e263d76c2448a73fb1db7f34b26c855f0cda450ac7f718a535c71490ca",
+      "attackLeadMs": 70
     },
     {
       "file": "media/sound/ProjectYakuza/Y6Combat/battle_se_kiryu_007.ogg",

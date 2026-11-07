@@ -1,6 +1,6 @@
 {
-  "authorization": "User approved conversion of the supplied original katana Heat Action on 2026-11-01.",
-  "operation": "Original 141 frames and source vector rotations retained through existing non-AI retargeting. Native PZ hand-to-prop grip preserved. No invented body motion, image, audio or model artwork.",
+  "authorization": "User approved original katana sound extraction and paired motion repair on 2026-11-07.",
+  "operation": "Original 141 frames, source vector rotations and frame timing retained. Native arm-segment directions follow original source joints while retaining native PZ lengths, source wrist articulation, native fingers and hand-to-prop grip. No AI, invented motion or artwork.",
   "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 6 - The Song of Life\\data\\hact\\h23720_buki_e.par",
   "archiveSha256": "55224af9511bc80d677046ec8d111f832f28a3d78c4488e94195a56967bfe2ba",
   "scene": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\katana-heat-070\\cmn.par\\cmn.bin",
@@ -29,12 +29,78 @@
     }
   },
   "contactFrames": [
-    20,
-    28,
-    54,
-    97
+    24,
+    44,
+    64
   ],
-  "contactsOperation": "Slash, punch, thrust and body-fall scene sound starts supply presentation timings. Damage is applied at the final fall contact to preserve the full paired victim motion. The last recovery remains original.",
+  "contactsOperation": "Original CMN NodeBattleDamage starts define the three hits. Sound cue starts are independent timeline events. First two damage nodes set NoDead; the framework retains lethal damage until full recovery by explicit user requirement.",
+  "nativeSkeletonCorrection": {
+    "operation": "Smooth victim-root adaptation for the original right-fist face contact on the shorter PZ skeleton. Zero at frames 0,24,64,140; full at frame44; no motion frames or timing removed.",
+    "frame": 44,
+    "delta": [
+      -0.1647037828762945,
+      0.12453949120490415
+    ],
+    "knots": [
+      24,
+      44,
+      64
+    ],
+    "requiredSeparation": [
+      0.552333624064018,
+      -0.16885577018977876
+    ]
+  },
+  "effectPoints": [
+    {
+      "frame": 24,
+      "bone": "Bip01_Spine1",
+      "point": [
+        -0.051897577941417694,
+        0.5144577622413635,
+        0.06140928342938423
+      ],
+      "sourceEmitter": "YNb0014 : cima \u30d2\u30fc\u30c8014\u3000\u4e2d\u5ddd\ufffd",
+      "sourceFrame": 20.0,
+      "sourceLocalOffset": [
+        0.15700000524520874,
+        -0.21500009298324585,
+        0.06099998950958252
+      ]
+    },
+    {
+      "frame": 44,
+      "bone": "Bip01_Head",
+      "point": [
+        -0.08642247319221497,
+        0.7850936651229858,
+        -0.06688094139099121
+      ],
+      "sourceEmitter": "YNb0009 : \u8840\u3057\u3076\u304d(\u30e1\u30bf\u30dc\u542b\u3080)",
+      "sourceFrame": 43.0,
+      "sourceLocalOffset": [
+        -0.005200000014156103,
+        0.018300000578165054,
+        0.11079999804496765
+      ]
+    },
+    {
+      "frame": 64,
+      "bone": "Bip01_Spine",
+      "point": [
+        0.04855196550488472,
+        0.5088510513305664,
+        -0.0034565795212984085
+      ],
+      "sourceEmitter": "YNb0013 : cima \u30d2\u30fc\u30c8013\u3000\u4e2d\u5ddd\ufffd",
+      "sourceFrame": 62.0,
+      "sourceLocalOffset": [
+        -0.10999999940395355,
+        -0.02800000086426735,
+        0.047000009566545486
+      ]
+    }
+  ],
   "nativeGrip": {
     "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_AttackBat01_Hit.x",
     "sha256": "d6ed4e304cce1ccce3e355cfe958cf304c494c850ae0790d669068b861e7075c",
@@ -817,160 +883,160 @@
         -0.25594164638423494
       ],
       [
-        0.7495560188403181,
-        -0.24889325129903572
+        0.7483619164144649,
+        -0.24799033998780018
       ],
       [
-        0.7455645725915057,
-        -0.24037674511119386
+        0.7409528666709694,
+        -0.23688963935745655
       ],
       [
-        0.7325223726250617,
-        -0.23101434039868954
+        0.7225166178153268,
+        -0.22344856630799162
       ],
       [
-        0.7110396479895462,
-        -0.21762964918066643
+        0.6939104545704116,
+        -0.2046775420953564
       ],
       [
-        0.6875005100905441,
-        -0.20156627269871666
+        0.6617655440161231,
+        -0.18210697719795038
       ],
       [
-        0.6661475641075268,
-        -0.19095944283025193
+        0.6305715470062472,
+        -0.16405891272999262
       ],
       [
-        0.6493143696571181,
-        -0.19159130165422825
+        0.6029090788317221,
+        -0.15650230000724652
       ],
       [
-        0.6420067143792222,
-        -0.20012868493299396
+        0.5840309828067665,
+        -0.1562907840288677
       ],
       [
-        0.6420067143792222,
-        -0.20012868493299396
+        0.5719664307110779,
+        -0.14716826629810847
       ],
       [
-        0.6482127706018728,
-        -0.20719235635886546
+        0.5658608791637255,
+        -0.14492261075641338
       ],
       [
-        0.6537531381888771,
-        -0.21493262897000465
+        0.5590896389807268,
+        -0.14335355639998598
       ],
       [
-        0.6558196694558369,
-        -0.2234271692970665
+        0.549091618151998,
+        -0.1427255789962886
       ],
       [
-        0.6551305831807407,
-        -0.23032219565508255
+        0.5368320911298421,
+        -0.14087170609716015
       ],
       [
-        0.653584941265407,
-        -0.23476353136549263
+        0.5244571754903922,
+        -0.1371245702608478
       ],
       [
-        0.6525809931193216,
-        -0.23814241605079
+        0.5136121763174482,
+        -0.13306222034665213
       ],
       [
-        0.6529179580821268,
-        -0.24185721113363134
+        0.5053433686249669,
+        -0.13026982701403722
       ],
       [
-        0.6554088683726587,
-        -0.2471246160571431
+        0.500710840306099,
+        -0.13015089894293685
       ],
       [
-        0.6641219044429925,
-        -0.25713080370058405
+        0.5040298274872342,
+        -0.13607841824941722
       ],
       [
-        0.6849139816341692,
-        -0.27438538262187906
+        0.5214043011837278,
+        -0.15074880272821045
       ],
       [
-        0.7170374069403125,
-        -0.2933952613946829
+        0.552333624064018,
+        -0.16885577018977876
       ],
       [
-        0.7488180834975501,
-        -0.3029098074121077
+        0.5853084030471087,
+        -0.1792732275184391
       ],
       [
-        0.7688034017576749,
-        -0.30325404172251164
+        0.6087113248019167,
+        -0.1822016562713448
       ],
       [
-        0.778605413828779,
-        -0.30666421746823913
+        0.6239073857622194,
+        -0.1896905003540329
       ],
       [
-        0.7848486940043178,
-        -0.31788173195745667
+        0.6372741045471579,
+        -0.20629434783786255
       ],
       [
-        0.7918852640199899,
-        -0.3333368007170511
+        0.6529164472181165,
+        -0.2282566050129132
       ],
       [
-        0.8021694299310073,
-        -0.351535404451848
+        0.6730416641559924,
+        -0.2538964433472032
       ],
       [
-        0.8141913066453926,
-        -0.3717444086586551
+        0.695892814594494,
+        -0.2822939191007327
       ],
       [
-        0.8262303762581859,
-        -0.3898474412703898
+        0.719502324954347,
+        -0.3091458509696119
       ],
       [
-        0.8392343081604315,
-        -0.40327370840288074
+        0.7445708089522812,
+        -0.3316946358328621
       ],
       [
-        0.8523888561911261,
-        -0.4128418336716803
+        0.7700369647529789,
+        -0.35057208806922824
       ],
       [
-        0.8661774814843012,
-        -0.41853969489496173
+        0.7961371978161569,
+        -0.36557927626007625
       ],
       [
-        0.8846855177754668,
-        -0.4217939461058196
+        0.826709786203011,
+        -0.37795604520169335
       ],
       [
-        0.9101138145207248,
-        -0.42806115372522563
+        0.8637085236953288,
+        -0.3929721520782439
       ],
       [
-        0.9380498975351362,
-        -0.4392372903748417
+        0.9024738804338566,
+        -0.41233676027458244
       ],
       [
-        0.9603683396471787,
-        -0.4489620532480301
+        0.9346333735727577,
+        -0.4295027577472639
       ],
       [
-        0.9730772984583067,
-        -0.45193618698275406
+        0.955948105039172,
+        -0.43898407989744404
       ],
       [
-        0.9793466849012437,
-        -0.4515945474531007
+        0.9693409300915088,
+        -0.44402877336240276
       ],
       [
-        0.9843632081989095,
-        -0.4533393493366877
+        0.9797515022783733,
+        -0.44985224358295034
       ],
       [
-        0.9910143245244694,
-        -0.4575224528262774
+        0.9898202220986162,
+        -0.45661954151504186
       ],
       [
         1.0028061174739862,
@@ -2467,7 +2533,7 @@
       "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\katana-heat-070\\000.par\\h23720_000_4.gmt",
       "sourceSha256": "235015995c03ff8f042c425fe4c18ad07ca44dc05aa3ab5df392f3ded91b2184",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_KatanaHeat.x",
-      "sha256": "9d817a59d232c07235295bc578bf4b9b4cf76d0a48b97d9c0eaad034b23feb6e",
+      "sha256": "9afde1243164cd0dc1a459aab74006b24a7f16c378ad989054ca3ab08d66fa30",
       "retargetSha256": "02b21354af17b8c9fb396c884441ff20f23fa3618e8c607ed680a3f02691e19d",
       "frames": 141,
       "fps": 30
@@ -2477,7 +2543,7 @@
       "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\katana-heat-070\\000.par\\h23720_000_6.gmt",
       "sourceSha256": "8c70b020f4040cc5b666e52afde2287694c90f31744657d0b21244fe8f6a6aba",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_KatanaHeatVictim.x",
-      "sha256": "d4a2f61ecd7d53243370078c7f4b16bfc2b56067236fda070329c577913c528e",
+      "sha256": "47d20dc05f192103f56771b7c454ed741b97810588aa0e805e96e96e481a78e6",
       "retargetSha256": "e402bca6c03c3d5727d3bdcefa738fe61d1c2ed9066bfe40d3ba727943eeae0d",
       "frames": 141,
       "fps": 30

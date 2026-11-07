@@ -1,9 +1,9 @@
-# Project Yakuza 0.91.0
+# Project Yakuza 0.92.0
 
-- Reworked paired Heat Action damage in the shared framework: nonlethal configured hits reduce health on contact; a lethal hit and subsequent damage are held until the entire paired animation, including recovery, finishes. Every authored hit retains its sounds, blood, sparks and voice feedback.
-- Cinematic contact damage no longer calls ordinary native melee Hit, which could switch the victim animation or kill the target mid-sequence. Native terminal consequences handle death and kill credit after completion. Interrupted sequences discard held lethal damage while preserving nonlethal damage already dealt.
-- Extended the native hitreaction-state latch to all paired Heat Actions and restore it on cleanup. This prevents katana contacts from restarting the victim's original paired clip.
-- Rebuilt katana trails from the current three-contact move: sword-hand slash, opposite-hand punch and sword-hand thrust. Removed the stale fourth trail during recovery. Sparks/blood use source-pose neck/torso anchors for the sword hits.
-- Server health snapshots accompany confirmed paired contacts and completion, including owner echoes. Replay guards prevent duplicate packets from applying an old health snapshot twice. Damage, input and target validation remain server-authoritative.
+- Replaced guessed katana timing with the original Yakuza 6 CMN scene data. Three damage hits occur at source frames 24, 44 and 64. Total damage is unchanged, with the original 1:1:2 weighting.
+- Added the action's five original sound-bank cues at their authored starts: swing, slash, punch, thrust and landing. Removed generic layered impacts from this action; landing does not create a fourth hit.
+- Repaired the original paired clips for native PZ arm lengths, retained all 141 frames at original speed, and adjusted victim spacing smoothly for the face punch. Rebuilt blood anchors from original particle-bone offsets and regenerated the three right-arm trails.
+- Added validated, independent audioEvents and voiceEvents to the framework. Katana uses the source actor voice timings through existing CVF combat entries. No separate voice pack or voice volume was changed.
+- Moved built-in paired Heat Actions out of the cancellable native timed-action queue. Cancel inputs cannot remove them, and ordinary queued actions cannot replace them during playback. Pause and required world/server cleanup remain available.
 
-Original attacker/victim animation frames, speeds, durations, three katana strike times and supplied visual/audio assets are unchanged. Reference: the supplied Yakuza 6 video around 06:18. QTE windows are unchanged. Offline validation only; PZ was not launched. See [damage policy](HEAT_ACTION_DAMAGE.md) and [validation](VALIDATION_0.91.0.md). Restart matching game/server versions after installing.
+Lethal damage remains held until the full paired animation ends. QTE windows, other combat moves and other supplied media are unchanged. Only approved original source animation repairs and audio decoding were used: no AI, invented motion, generated artwork or synthesized sounds. Offline validation only; PZ was not launched. See [validation](VALIDATION_0.92.0.md) and [presentation](HEAT_ACTION_PRESENTATION.md). Restart the game; server and clients must use matching versions.

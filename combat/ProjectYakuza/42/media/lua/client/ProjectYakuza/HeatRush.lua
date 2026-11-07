@@ -1,4 +1,5 @@
 require "ProjectYakuza/Runtime"
+require "TimedActions/ISTimedActionQueue"
 require "ProjectYakuza/NetworkProtocol"
 require "ProjectYakuza/HeatRushRules"
 require "ProjectYakuza/HeatActions"
@@ -9,7 +10,6 @@ require "ProjectYakuza/Feedback"
 require "ProjectYakuza/CombatVoices"
 require "ProjectYakuza/HeatActionPresentation"
 require "TimedActions/ISBaseTimedAction"
-require "TimedActions/ISTimedActionQueue"
 local PY=ProjectYakuza;local R=PY.HeatRushRules
 local H={chains=setmetatable({}, {__mode="k"}),tickets=setmetatable({}, {__mode="k"}),active=setmetatable({}, {__mode="k"}),localContacts=setmetatable({}, {__mode="k"})};PY.HeatRush=H
 local function now()return getTimestampMs()end
@@ -139,8 +139,11 @@ function H.weaponInput(p,s,style,pressed)
     return H.input(p,s,style)
 end
 local A=ISBaseTimedAction:derive("ProjectYakuzaHeatRushAction");H.Action=A
-function A:isUsingTimeout()return false end
-function A:adjustMaxTime(v)return v end
+function A:setActionAnim(clip)
+    self.animation=clip;self.character:setVariable("PerformingAction",clip);self.character:setVariable("IsPerformingAnAction",true)
+end
+function A:forceStop()self:stop()end
+function A:forceComplete()self:perform()end
 function A:isValid()
     local p=self.character;local z=self.context.target.z;local style=PY.getPlayerStyle(p)
     return style and style.id==self.context.style.id and PY.isEquipped(p)and p:getPrimaryHandItem()==self.held and not p:isDead()and not p:isOnFloor()and not p:isKnockedDown()and not p:getVehicle()and not p:isClimbing()and (p:getHitReaction()or"")==""and (self.failed or z and (not z:isDead()or self.finalRequested)and (R.targetKind(z)~="player"or R.playerAllowed(p,z)))
@@ -154,6 +157,8 @@ function H.align(job,time)
     p:getMovementLastFrame():set(0,0);p:setMoving(false);p:setRunning(false);p:setSprinting(false);return true
 end
 function A:start()
+    if self.started or self.cleaned then return end
+    if not self:isValid()then self:cleanup(false);return end
     local p,z=self.character,self.context.target.z
     if self.context.action.groundHeat and not R.validFor(p,z,self.context.action)then self:forceStop();return end
     self.started=true;self.last=now();self.elapsed=0;self.index=1;self.success={};self.autoSeen={};self.qte=self.context.action.qte and PY.QTE.create(R.qte(self.context.action),PY.Bindings.down,self.context)
@@ -165,17 +170,20 @@ function A:start()
     self.pose.move=self.context.action;self.pose.motion=R.motion(self.context.action);self.pose.duration=R.durationFor(self.context.action)
     self.victim=R.lock(z,self.context.action.targetAnimation)
     PY.setVisual(p,true,self.context.action.nodeValue);p:setVariable("ProjectYakuzaStyle",self.context.style.id);p:setVariable("ProjectYakuzaWeaponProfile",self.context.style.weaponProfile or "");p:setVariable("ProjectYakuzaHeatRush","")
-    self:setActionAnim(self.context.action.animation);self.action:setOverrideHandModelsObject(self.held,nil,false)
+    self:setActionAnim(self.context.action.animation)
     H.active[p]=self;PY.HeatActions.begin(p,self,R.protection(self.context.action));PY.Heat.onSwing(p,{damageMultiplier=1})
     if not H.align(self.pose,0)then self:forceStop()end
     if not self.cleaned and PY.HeatActionPresentation then PY.HeatActionPresentation.start(p,z,self.context.action,self)end
     if not self.cleaned then PY.emit("attackCommitted",p,self.context.style,self.context.action,self.context,"heatAction")end
     if granted then PY.Network.send(p,"heatRushReady",{action=granted.action})end
 end
-function H.present(p,z,move,index,effects,scheduled,anchor,feedback)
+function H.present(p,z,move,index,effects,scheduled,anchor,feedback,bloodOnly)
     local contact=R.contacts(move)[index];if not contact then return end
     if PY.HeatActionPresentation and not scheduled then return end
-    if effects~=false and PY.HitEffects then PY.HitEffects.spawn(p,z,contact.strong~=false,contact.charged==true,nil,feedback,anchor)end
+    if effects~=false then
+        if bloodOnly and PY.BloodEffects then PY.BloodEffects.spawn(p,z,contact.strong~=false,contact.charged==true,feedback,anchor)
+        elseif PY.HitEffects then PY.HitEffects.spawn(p,z,contact.strong~=false,contact.charged==true,nil,feedback,anchor)end
+    end
     if not scheduled and p:isLocalPlayer()and PY.Feedback then
         PY.Feedback.play(p,PY.Feedback.sound(p,contact.cue or "heavyImpact")or PY.Feedback.sound(p,"heavyImpact")or PY.Feedback.sound(p,"finisher"),.55)
         for _,cue in ipairs(contact.layers or {})do PY.Feedback.play(p,PY.Feedback.sound(p,cue),.3)end
@@ -279,7 +287,7 @@ function A:cleanup(done)
         if settled then R.ground(z,R.endFacing(self.pose))end
         if not self.victimRestored then R.restore(z,self.victim);self.victimRestored=true end
         local clip=p:GetVariable("PerformingAction")
-        if clip==self.context.action.animation or self.failed and clip==self.context.action.qteFailure.animation then p:setVariable("PerformingAction","");p:setVariable("IsPerformingAnAction",false)end
+        if clip==self.context.action.animation or self.failed and clip==self.context.action.qteFailure.animation then p:setVariable("PerformingAction","");p:setVariable("IsPerformingAnAction",false);p:StopTimedActionAnim()end
         if not isClient()then PY.HeatActions.settle(self,p,z,self.held,done and(not self.failed or R.pairedFailure(self.context.action)))end
         if not isClient()and done and(not self.failed or R.pairedFailure(self.context.action))and self.success[#R.contacts(self.context.action)]and not z:isDead()then R.ground(z,R.endFacing(self.pose))end
     end
@@ -287,10 +295,24 @@ function A:cleanup(done)
     if PY.activeActions[p]==self.context then if done then PY.completeAction(p)else PY.cancelAction(p,"heat_rush_interrupted")end end
     PY.resetPlayer(p,"heat_rush_finished")
 end
-function A:perform()self:cleanup(true);ISBaseTimedAction.perform(self)end
-function A:stop()self:cleanup(false);ISBaseTimedAction.stop(self)end
-function A:cancel()self:cleanup(false);if self.action then self:forceStop()end end
-function A:new(c)local a=ISBaseTimedAction.new(self,c.player);a.context=c;a.held=c.player:getPrimaryHandItem();a.maxTime=-1;a.stopOnWalk=false;a.stopOnRun=false;a.stopOnAim=false;a.ignoreHandsWounds=true;return a end
+function A:perform()self:cleanup(true)end
+function A:stop()self:cleanup(false)end
+function A:cancel()self:cleanup(false)end
+function A:new(c)local a=ISBaseTimedAction.new(self,c.player);a.context=c;a.held=c.player:getPrimaryHandItem();return a end
+local gate=PY.HeatActionQueueGate or {add=ISTimedActionQueue.add,addAfter=ISTimedActionQueue.addAfter}
+PY.HeatActionQueueGate=gate
+local function protectedAction(action)
+    local p=action and action.character;local c=p and PY.activeActions[p]
+    return c and(c.kind=="heatAction"or c.kind=="groundHeat"or c.kind=="grabHeat")and c.timedAction and not c.timedAction.cleaned
+end
+ISTimedActionQueue.add=function(action,...)
+    if protectedAction(action)then return end
+    return gate.add(action,...)
+end
+if gate.addAfter then ISTimedActionQueue.addAfter=function(previous,action,...)
+    if protectedAction(action)then return end
+    return gate.addAfter(previous,action,...)
+end end
 PY.registerStyleActionHandler("dragon_of_dojima","heatAction",{
     canStart=function(c)
         local p=c.player;local ticket=c.target;local cfg=c.style.heatRush
@@ -309,10 +331,9 @@ PY.registerStyleActionHandler("dragon_of_dojima","heatAction",{
         return pose~=nil and R.space(p,pose)and (c.action.grabHeat or R.clearance(p,{x=pose.x,y=pose.y,fx=pose.fx,fy=pose.fy,motion=R.motion(c.action),duration=R.durationFor(c.action)})),"blocked_space"
     end,
     start=function(c)
-        PY.resetPlayer(c.player,"heat_rush_started");local a=A:new(c);c.timedAction=a;c.requestedAt=now();local ok,q=pcall(ISTimedActionQueue.add,a)
-        if not ok or not q then a:cleanup(false);return false,"queue_rejected"end
-        return true
+        PY.resetPlayer(c.player,"heat_rush_started");c.timedAction=A:new(c);c.requestedAt=now();return true
     end,
+    update=function(c)local a=c.timedAction;if a then if not a.started then a:start()else a:update()end end end,
     cancel=function(c)if c.timedAction then c.timedAction:cancel()end end,
 })
 PY.registerActionHandler("groundHeat",PY.getActionHandler("dragon_of_dojima","heatAction"))

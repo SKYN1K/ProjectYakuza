@@ -140,10 +140,10 @@ for _,case in ipairs({{item='ProjectYakuza.IntactBeerBottle',profile='bottle'},{
  for i,contact in ipairs(move.contacts)do
   clock=started+contact.atMs;local audio=#nativeSounds;before=#p.calls;H.present(p,nil,move,i,false)
   check(#nativeSounds==audio+1 and nativeSounds[#nativeSounds]==view.sounds[contact.cue],'actual Heat Action resolver plays registered impact '..case.profile..i)
-  check(#p.calls==before+1 and last(contact.voice),'actual CVF playback receives the configured source contact voice '..case.profile..i)
+  check(contact.voice and #p.calls==before+1 and last(contact.voice)or not contact.voice and #p.calls==before,'actual CVF playback receives the configured source contact voice '..case.profile..i)
  end
 end
-local context=ProjectYakuza.activeActions[p];clock=clock+6000;p.voiceBusy=true;before=#p.calls
+local context=ProjectYakuza.activeActions[p];context.action=ProjectYakuza.Weapons.views.dragon_of_dojima.bottle.actions.heatAction;clock=clock+6000;p.voiceBusy=true;before=#p.calls
 H.present(p,nil,context.action,1,false)
 check(#p.calls==before and V.states[p].contact~=nil,'busy actual provider queues Heat Action contact voice')
 clock=clock+300;p.voiceBusy=false;V.update(p)

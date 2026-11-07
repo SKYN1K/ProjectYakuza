@@ -239,3 +239,9 @@
 
 !/tools/combat-tests/build_heat_damage_tests.py
 !/tools/combat-tests/heat-damage-test-fixture.lua
+
+!/tools/combat-tests/read_katana_scene.py
+
+!/tools/combat-tests/build_katana_scene_audio.py
+
+!/tools/combat-tests/validate_katana_scene.py

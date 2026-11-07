@@ -20,7 +20,7 @@ Apply the same lifecycle on the authoritative MP server after validating the act
 
 ## Paired source timing
 
-The katana definition lives in the DoD blade weapon view. motionId selects its registered numeric source paths. animation and targetAnimation name the original retargeted clips. contacts contains 1..32 increasing finite atMs values inside duration; damageMultiplier is 0..10. Zero damage gives presentation only. The native animation track supplies time. Repeated updates and replayed packets cannot duplicate a contact, and updates more than 120 ms late skip it. The final fall contact deals 1.5 times the equipped katana's unscaled average base damage; earlier slash/punch/thrust timings preserve the full victim animation. No camera override is added.
+The katana definition lives in the DoD blade weapon view. motionId selects its registered numeric source paths. animation and targetAnimation name the original retargeted clips. contacts contains 1..32 increasing finite atMs values inside duration; damageMultiplier is 0..10. Zero damage gives presentation only. The native animation track supplies time. Repeated updates and replayed packets cannot duplicate a contact, and updates more than 120 ms late skip it. The three katana contacts at original frames 24, 44 and 64 deal 0.375/0.375/0.75 times the equipped katana's unscaled average base damage. The original frame-97 landing sound is not a damage contact. No camera override is added.
 
 useExtremeFuel allows stock-priced actions to use fuel while Extreme Heat is active. ProjectYakuza.actionHeat(player,action) returns available resource and whether it is fuel. The request lifecycle spends it once after a successful start. Unarmed Heat Rush keeps its eight-input eligibility and original QTE bindings.
 
@@ -66,3 +66,10 @@ The crate uses its supplied source object track after placement on the victim's 
 Heat Action sound/visual presentation follows the native playing clip independently of authoritative contacts. See [Heat Action presentation](HEAT_ACTION_PRESENTATION.md) for sound preroll, shared victim contact anchors, custom cue/layer fallback, observer playback and cleanup. QTE and damage timing are unchanged.
 
 The shared [paired damage policy](HEAT_ACTION_DAMAGE.md) applies nonlethal damage on contact and holds lethal damage through full recovery. Presentation and three-contact katana trails remain tied to the playing source clip.
+
+
+## Uncancellable paired playback
+
+The built-in heatAction, grabHeat and groundHeat handlers own their paired controller directly through the framework update lifecycle. PerformingAction and IsPerformingAnAction drive the native animation without placing a cancellable item in ISTimedActionQueue. Normal queue clearing, including the cancel input, cannot remove the Heat Action controller. New ordinary queued actions for that actor are rejected while its Heat Action owns playback; unrelated actors retain their normal queues. Pause/menu input is not intercepted. Death, invalid actors, explicit framework/world cleanup and authoritative server aborts still restore flags and terminate safely.
+
+Custom handlers remain responsible for their own playback and cancellation policy. Existing protection and damage APIs do not automatically replace a custom handler's action queue. Optional [authored presentation events](HEAT_ACTION_PRESENTATION.md) separate a sound bank's original starts from damage and VFX contacts.

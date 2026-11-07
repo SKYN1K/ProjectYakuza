@@ -1,3 +1,4 @@
+function p:StopTimedActionAnim()end
 ZombRand=function(max)return max-1 end
 Events.OnZombieUpdate=event();Events.OnGameStart=event();Events.OnServerCommand=event()
 CharacterStat={ENDURANCE=1}

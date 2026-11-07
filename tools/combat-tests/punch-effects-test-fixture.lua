@@ -287,7 +287,7 @@ check(ProjectYakuza.AttackTracks[catalog.ProjectYakuza_DD_Finisher03.track].limb
 check(ProjectYakuza.AttackTracks[catalog.ProjectYakuza_DD_Finisher02.track].limb=='rightLeg','high-kick finisher retains the striking leg when recovering arms move faster')
 check(#catalog.ProjectYakuza_DD_HeatRush.windows==13 and ProjectYakuza.AttackTracks[catalog.ProjectYakuza_DD_HeatRush.windows[13].track].limb=='rightLeg','current Rush has twelve original punch contacts followed by its actual kick')
 do
- local name='ProjectYakuza_DD_KatanaHeat';local config=catalog[name];local limbs={'rightArm','leftArm','rightArm'}
+ local name='ProjectYakuza_DD_KatanaHeat';local config=catalog[name];local limbs={'rightArm','rightArm','rightArm'}
  check(#config.windows==3,'katana has exactly three source strike windows')
  for i,window in ipairs(config.windows)do
   F.clearAll();p.clip=name;p.time=(window.from+window.to)/2;F.start(p,style,0,{animation=name},1000+i);F.tick();draws={};F.render()

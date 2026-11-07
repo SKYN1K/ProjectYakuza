@@ -924,7 +924,7 @@ do
  for i,contact in ipairs(lease.contacts)do
   clock=lease.started+contact.atMs+10;command('heatRushHit',{action=lease.action,index=i,damage=999})
   command('heatRushHit',{action=lease.action,index=i,damage=999})
-  check(z1.hits==hits and math.abs(z1.health-(10-.5*i))<.000001,'server applies each katana health decrement once without native reaction '..i)
+  check(z1.hits==hits and math.abs(z1.health-(10-({.375,.75,1.5})[i]))<.000001,'server applies each katana health decrement once without native reaction '..i)
  end
  check(math.abs(z1.health-8.5)<.000001,'server computes final katana damage from actual weapon')
  clock=lease.started+lease.duration*1000-50;neutral({clip='ProjectYakuza_DD_KatanaHeat',move='dd_katana_heat'});command('heatRushEnd',{action=lease.action,completed=true})
@@ -936,9 +936,9 @@ do
  local deaths=z1.deathFinalizations or 0
  for i,contact in ipairs(low.contacts)do
   clock=low.started+contact.atMs+10;command('heatRushHit',{action=low.action,index=i});command('heatRushHit',{action=low.action,index=i})
-  check(math.abs(z1.health-.25)<.000001 and not z1:isDead(),'MP lethal contacts preserve positive health through the paired animation '..i)
+  check(math.abs(z1.health-.375)<.000001 and not z1:isDead(),'MP lethal contacts preserve positive health through the paired animation '..i)
  end
- check(math.abs(low.pendingDamage-1)<.000001,'MP held damage accumulates once despite duplicate packets')
+ check(math.abs(low.pendingDamage-1.125)<.000001,'MP held damage accumulates once despite duplicate packets')
  clock=low.started+low.duration*1000;neutral({clip='ProjectYakuza_DD_KatanaHeat',move='dd_katana_heat'});command('heatRushEnd',{action=low.action,completed=true});command('heatRushEnd',{action=low.action,completed=true})
  check(z1:isDead()and z1.deathFinalizations==deaths+1 and not rush.leases[p],'MP finalizes death once after the full original recovery')
  p.hand=p.token

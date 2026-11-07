@@ -1,0 +1,80 @@
+{
+  "authorization": "User approved original katana sound extraction and paired motion repair on 2026-11-07.",
+  "operation": "Original embedded CRI HCA streams decoded to PCM16 WAV at their native 44100 Hz stereo format; no synthesis, filtering, mixing, upscaling or invented audio. Playback starts follow original CMN SE nodes rather than damage markers.",
+  "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 6 - The Song of Life\\data\\sound.par",
+  "entry": "hact_h23720_buki_e.acb",
+  "entryOffset": 141864960,
+  "entrySha256": "24ec15ea2e1d382c3ef59370f11b6501d7475d2f34253bc304c0c212e6a5c643",
+  "sounds": [
+    {
+      "cueSheet": 3790,
+      "cueId": 1,
+      "stream": "bodyfall",
+      "sound": "ProjectYakuza_KatanaSceneBodyFall",
+      "sourceFrame": 97,
+      "target": "victim",
+      "output": "42/media/sound/ProjectYakuza/KatanaSceneBodyFall.wav",
+      "sha256": "a7a201603608b02817c8f53cf76e3169662426f6997c5b3d7903af281e9087fb",
+      "sampleRate": 44100,
+      "channels": 2,
+      "samples": 30319,
+      "sampleWidth": 2
+    },
+    {
+      "cueSheet": 3790,
+      "cueId": 2,
+      "stream": "katana_swing",
+      "sound": "ProjectYakuza_KatanaSceneSwing",
+      "sourceFrame": 8,
+      "target": "actor",
+      "output": "42/media/sound/ProjectYakuza/KatanaSceneSwing.wav",
+      "sha256": "957d455cbe5284a8140abb3a396fc2be1f6d2bbb5edacb466ae8f0538779d967",
+      "sampleRate": 44100,
+      "channels": 2,
+      "samples": 70382,
+      "sampleWidth": 2
+    },
+    {
+      "cueSheet": 3790,
+      "cueId": 3,
+      "stream": "punch",
+      "sound": "ProjectYakuza_KatanaScenePunch",
+      "sourceFrame": 28,
+      "target": "actor",
+      "output": "42/media/sound/ProjectYakuza/KatanaScenePunch.wav",
+      "sha256": "c83cafe77088fe10d438a35f9e99fa8ad21e33019727188dbd908ea661d7d178",
+      "sampleRate": 44100,
+      "channels": 2,
+      "samples": 101677,
+      "sampleWidth": 2
+    },
+    {
+      "cueSheet": 3790,
+      "cueId": 4,
+      "stream": "slash",
+      "sound": "ProjectYakuza_KatanaSceneSlash",
+      "sourceFrame": 20,
+      "target": "victim",
+      "output": "42/media/sound/ProjectYakuza/KatanaSceneSlash.wav",
+      "sha256": "eb3675194be1c07db1c4740d6ec4cc9c8bd31065ff8af7678cec080b1f5f05c6",
+      "sampleRate": 44100,
+      "channels": 2,
+      "samples": 56339,
+      "sampleWidth": 2
+    },
+    {
+      "cueSheet": 3790,
+      "cueId": 5,
+      "stream": "tuki",
+      "sound": "ProjectYakuza_KatanaSceneThrust",
+      "sourceFrame": 54,
+      "target": "victim",
+      "output": "42/media/sound/ProjectYakuza/KatanaSceneThrust.wav",
+      "sha256": "20f9c3e263d76c2448a73fb1db7f34b26c855f0cda450ac7f718a535c71490ca",
+      "sampleRate": 44100,
+      "channels": 2,
+      "samples": 70167,
+      "sampleWidth": 2
+    }
+  ]
+}

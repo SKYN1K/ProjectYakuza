@@ -1,7 +1,7 @@
 {
   "operation": "Code-side numeric FK only from existing supplied PZ clips, including current paired contacts/endings and linked native finisher variants. Contacts use native collision events, authored Heat Action contacts or the documented parry fallback. Clips use contact-local endpoint/relative motion with verified original left-light and right-high-kick pose overrides, independent of charge-up pose. The high kick has right-foot height 0.721 versus planted left foot 0.093 at source frame 24; recovering arms can be faster than the striking leg. Runtime resolves the actual playing clip within the committed move family. No visual/audio/animation/model assets are generated or modified.",
   "catalog": "42/media/lua/client/ProjectYakuza/AttackTrailCatalog.lua",
-  "sha256": "6c40abe6c21a8ef9c4229d148918691edd824c57a62a8399dd71826b1571eaf0",
+  "sha256": "643b617fa4f65e9a14f829067d05dab901d1b0281dd42f7113b2b290852157d7",
   "clips": [
     {
       "profile": "bat",
@@ -1860,56 +1860,56 @@
       "impact": -1.0,
       "kick": false,
       "qte": [
-        0.6666666666666666,
-        0.9333333333333333,
-        1.8
+        0.8,
+        1.4666666666666666,
+        2.1333333333333333
       ],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_KatanaHeat.x",
-      "clipSha256": "9d817a59d232c07235295bc578bf4b9b4cf76d0a48b97d9c0eaad034b23feb6e",
+      "clipSha256": "9afde1243164cd0dc1a459aab74006b24a7f16c378ad989054ca3ab08d66fa30",
       "samples": 141,
       "duration": 4.666666666666667,
       "windows": [
         {
           "track": "dd_trail_katanaheat_1",
-          "from": 0.5466666666666666,
-          "to": 0.8,
-          "contact": 0.6666666666666666,
+          "from": 0.68,
+          "to": 1.0,
+          "contact": 0.8,
           "limb": "rightArm",
           "scores": [
-            0.5013638126950729,
-            0.5629780287793438,
-            0.0836781967010944,
-            0.06912437594054753
+            0.4618509113386609,
+            0.7312782717188417,
+            0.12379353386410402,
+            0.05870799492309553
           ],
-          "selection": "verified katana slash, opposite-hand punch, sword thrust"
+          "selection": "verified original damage frames 24,44,64: right-arm slash, right-fist punch, right-arm thrust"
         },
         {
           "track": "dd_trail_katanaheat_2",
-          "from": 0.8133333333333334,
-          "to": 1.1333333333333333,
-          "contact": 0.9333333333333333,
-          "limb": "leftArm",
+          "from": 1.3466666666666667,
+          "to": 1.6666666666666665,
+          "contact": 1.4666666666666666,
+          "limb": "rightArm",
           "scores": [
-            0.3524452971168415,
-            0.3083653739913751,
-            0.21487377635091515,
-            0.12805799340496896
+            0.308287634363707,
+            0.31055531320485713,
+            0.08164456718473072,
+            0.05498944523837798
           ],
-          "selection": "verified katana slash, opposite-hand punch, sword thrust"
+          "selection": "verified original damage frames 24,44,64: right-arm slash, right-fist punch, right-arm thrust"
         },
         {
           "track": "dd_trail_katanaheat_3",
-          "from": 1.6800000000000002,
-          "to": 2.0,
-          "contact": 1.8,
+          "from": 2.013333333333333,
+          "to": 2.3333333333333335,
+          "contact": 2.1333333333333333,
           "limb": "rightArm",
           "scores": [
-            0.27135301959026437,
-            0.34063117454012487,
-            0.05335876419917866,
-            0.08990349554393923
+            0.3619099790242301,
+            0.4766053383165518,
+            0.14243742619710673,
+            0.10855607929318048
           ],
-          "selection": "verified katana slash, opposite-hand punch, sword thrust"
+          "selection": "verified original damage frames 24,44,64: right-arm slash, right-fist punch, right-arm thrust"
         }
       ]
     },

@@ -1,17 +1,23 @@
 from pathlib import Path
 import sys,json,hashlib,struct
 root=Path(__file__).resolve().parents[2];sys.path.insert(0,str(root/'tools/combat-tests'))
-from locomotion_math import read,locals_at,blocks,write
+from locomotion_math import read,locals_at,blocks,write,world
 from paired_paths import bridge_scene_cuts
-from mathutils import Quaternion
-mod=root/'combat/ProjectYakuza';srcRoot=Path('E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack');converter=(root/'tools/combat-tests/retarget_locomotion.py').read_text().replace("OUT=DEST/'tools/locomotion-build'","OUT=DEST/'tools/katana-heat-build'");grip=json.loads((mod/'docs/prop-attachment-repair.json').read_text())['nativeGrips']['bat'];records=[]
+from mathutils import Quaternion,Vector
+from weapon_hold_geometry import fit_arms
+staging='--stage'in sys.argv;sourceMod=root/'combat/ProjectYakuza';mod=root/'tools/katana-scene-candidate-093/ProjectYakuza'if staging else sourceMod
+(mod/'docs').mkdir(parents=True,exist_ok=True)
+srcRoot=Path('E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack');converter=(root/'tools/combat-tests/retarget_locomotion.py').read_text().replace("OUT=DEST/'tools/locomotion-build'","OUT=DEST/'tools/katana-heat-build'");grip=json.loads((sourceMod/'docs/prop-attachment-repair.json').read_text())['nativeGrips']['bat'];records=[]
 sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
 jobs=[('ProjectYakuza_DD_KatanaHeat','extracted/katana-heat-070/000.par/h23720_000_4.gmt'),('ProjectYakuza_DD_KatanaHeatVictim','extracted/katana-heat-070/000.par/h23720_000_6.gmt')]
 converter=converter.replace(' tg={}', ' ab=a.bones.get("vector_c_n");vq=SCENE_ROTATION@sample(ab.rotation if ab else None,f,Quaternion((1,0,0,0)),True)\n sg={n:vq.to_matrix().to_4x4()@mat for n,mat in sg.items()}\n tg={}')
 converter=converter.replace("world.y=sg['ketu_c_n'].translation.y*scale","world.y=(sg['ketu_c_n'].translation.y+sample(a.bones['vector_c_n'].location,f,Vector((0,0,0))).y)*scale")
 scene_rotation=None
 
-poses=[];vectors=[]
+poses=[];vectors=[];native=[];effectPoints=[]
+from read_katana_scene import read_scene
+sceneData=read_scene(root/"extracted/katana-heat-070/cmn.par/cmn.bin")
+particles=[next(r for r in sceneData["nodes"]if r.get("element",{}).get("kind")==0x13 and r["name"].startswith(prefix)and r["element"]["start"]==frame)for prefix,frame in [("YNb0014",20),("YNb0009",43),("YNb0013",62)]]
 for name,source in jobs:
  src=root/source;sys.argv=['convert','--',name,str(src)]
  if scene_rotation is None:
@@ -19,24 +25,38 @@ for name,source in jobs:
   from yk.gmt_lib import read_gmt
   first=read_gmt(str(src)).animation.bones['vector_c_n'].rotation;first.fill_channels();v=first.keyframes[0].value;scene_rotation=Quaternion((v[3],*v[:3])).inverted()
  ns={'FINGER_SOURCE':'Bob_AttackPunch01_Hit.x','SCENE_ROTATION':scene_rotation};exec(compile(converter,'retarget_heat_rush','exec'),ns)
- raw=root/('tools/katana-heat-build/ProjectYakuza/42/media/anims_X/Bob/'+name+'.x');text,frames,anim,spans=read(raw);count=ns['a'].end_frame+1;times=[i*160 for i in range(count)];values=[locals_at(frames,anim,t)for t in times];output=mod/('42/media/anims_X/Bob/'+name+'.x');write(output,text,spans,blocks(frames,values,times,grip),name)
+ raw=root/('tools/katana-heat-build/ProjectYakuza/42/media/anims_X/Bob/'+name+'.x');text,frames,anim,spans=read(raw);count=ns['a'].end_frame+1;times=[i*160 for i in range(count)];values=[locals_at(frames,anim,t)for t in times]
+ fingers={n:v.copy()for n,v in values[0].items()if '_Finger'in n}
+ for frame in range(count):values[frame],_=fit_arms(frames,values[frame],ns['srcposes'][frame],ns['bind'],fingers)
+ output=mod/('42/media/anims_X/Bob/'+name+'.x');output.parent.mkdir(parents=True,exist_ok=True);write(output,text,spans,blocks(frames,values,times,grip),name)
  records.append({'animation':name,'source':str(src),'sourceSha256':sha(src),'output':output.relative_to(mod).as_posix(),'sha256':sha(output),'retargetSha256':sha(raw),'frames':count,'fps':30})
+ native.append([world(frames,v)for v in values])
+ if len(native)==2:
+  for particle,bone,frame in zip(particles,['Bip01_Spine1','Bip01_Head','Bip01_Spine'],[24,44,64]):
+   translation=Vector(particle['particle']['matrix'][12:15]);offset=ns['bind'][bone].to_quaternion().inverted()@(ns['C']@translation*ns['scale']);point=native[1][frame][bone]@offset
+   effectPoints.append({'frame':frame,'bone':bone,'point':list(point),'sourceEmitter':particle['name'],'sourceFrame':particle['element']['start'],'sourceLocalOffset':list(translation)})
  poses.append(ns['srcposes'])
  ab=ns['a'].bones.get('vector_c_n');vs=[ns['sample'](ab.location,f,ns['Vector']((0,0,0)))for f in range(count)];vectors.append(vs)
 anchor=vectors[0][0];factor=float(ns['scale'])*1.5
 raw_paths=[[[float((scene_rotation@(v-anchor)).z*factor),float((scene_rotation@(v-anchor)).x*factor)]for v in values]for values in vectors]
 paths,cuts=bridge_scene_cuts(raw_paths)
+punch=native[0][44]['Bip01_R_Hand'].translation;face=Vector(effectPoints[1]['point']);required=[paths[0][44][0]+(face.z-punch.z)*1.5,paths[0][44][1]+(punch.x-face.x)*1.5];correction=[required[i]-paths[1][44][i]for i in range(2)]
+for frame in range(25,64):
+ t=(frame-24)/20 if frame<=44 else (64-frame)/20;weight=t*t*(3-2*t)
+ for axis in range(2):paths[1][frame][axis]+=correction[axis]*weight
+nativeCorrection={'operation':'Smooth victim-root adaptation for the original right-fist face contact on the shorter PZ skeleton. Zero at frames 0,24,64,140; full at frame44; no motion frames or timing removed.','frame':44,'delta':correction,'knots':[24,44,64],'requiredSeparation':required}
+
 archive=Path('F:/SteamLibrary/steamapps/common/Yakuza 6 - The Song of Life/data/hact/h23720_buki_e.par')
 scene=root/'extracted/katana-heat-070/cmn.par/cmn.bin';data=scene.read_bytes()
 import re
 soundFrames={}
 for match in re.finditer(rb'SE_HACT_H23720[^\0]+',data):
     start,end=struct.unpack_from('<ff',data,match.start()+36);soundFrames[match.group().decode()]={'startFrame':start,'endFrame':end}
-report={'authorization':'User approved conversion of the supplied original katana Heat Action on 2026-11-01.','operation':'Original 141 frames and source vector rotations retained through existing non-AI retargeting. Native PZ hand-to-prop grip preserved. No invented body motion, image, audio or model artwork.','archive':str(archive),'archiveSha256':sha(archive),'scene':str(scene),'sceneSha256':sha(scene),'actorAssignment':'cmn.bin binds res.bin m_kiryu GUID at 0x18d0 to h23720_000_4 GUID at 0x1960; enemy model at 0x1dec binds h23720_000_6 at 0x1e7c. Katana prop h23720_000_7 identifies bs_e000_type_e_tachi_1 and the scene attaches it to buki1_r_n.','soundFrames':soundFrames,'contactFrames':[20,28,54,97],'contactsOperation':'Slash, punch, thrust and body-fall scene sound starts supply presentation timings. Damage is applied at the final fall contact to preserve the full paired victim motion. The last recovery remains original.','nativeGrip':grip,'pathScale':factor,'paths':paths,'rawPaths':raw_paths,'sceneCuts':cuts,'sceneRotation':list(scene_rotation),'rootHeightOperation':'Original vector_c_n elevation is added to the retarget root; the scene is normalized to the attacker initial heading. Code-side paths remove shared camera-stage translations and bridge relative cut changes over six source frames.','clips':records}
+report={'authorization':'User approved original katana sound extraction and paired motion repair on 2026-11-07.','operation':'Original 141 frames, source vector rotations and frame timing retained. Native arm-segment directions follow original source joints while retaining native PZ lengths, source wrist articulation, native fingers and hand-to-prop grip. No AI, invented motion or artwork.','archive':str(archive),'archiveSha256':sha(archive),'scene':str(scene),'sceneSha256':sha(scene),'actorAssignment':'cmn.bin binds res.bin m_kiryu GUID at 0x18d0 to h23720_000_4 GUID at 0x1960; enemy model at 0x1dec binds h23720_000_6 at 0x1e7c. Katana prop h23720_000_7 identifies bs_e000_type_e_tachi_1 and the scene attaches it to buki1_r_n.','soundFrames':soundFrames,'contactFrames':[24,44,64],'contactsOperation':'Original CMN NodeBattleDamage starts define the three hits. Sound cue starts are independent timeline events. First two damage nodes set NoDead; the framework retains lethal damage until full recovery by explicit user requirement.','nativeSkeletonCorrection':nativeCorrection,'effectPoints':effectPoints,'nativeGrip':grip,'pathScale':factor,'paths':paths,'rawPaths':raw_paths,'sceneCuts':cuts,'sceneRotation':list(scene_rotation),'rootHeightOperation':'Original vector_c_n elevation is added to the retarget root; the scene is normalized to the attacker initial heading. Code-side paths remove shared camera-stage translations and bridge relative cut changes over six source frames.','clips':records}
 def literal(value):
     if isinstance(value,list):return '{'+','.join(literal(v)for v in value)+'}'
     return format(value,'.9f')
 code='require "ProjectYakuza/Registry"\nProjectYakuza.PairedMotions=ProjectYakuza.PairedMotions or {}\nProjectYakuza.PairedMotions.dod_katana={fps=30,duration=140/30,actorAnimation="ProjectYakuza_DD_KatanaHeat",targetAnimation="ProjectYakuza_DD_KatanaHeatVictim",actor='+literal(paths[0])+',victim='+literal(paths[1])+'}\n'
-(mod/'42/media/lua/shared/ProjectYakuza/KatanaHeatPaths.lua').write_bytes(code.encode())
+(mod/'42/media/lua/shared/ProjectYakuza').mkdir(parents=True,exist_ok=True);(mod/'42/media/lua/shared/ProjectYakuza/KatanaHeatPaths.lua').write_bytes(code.encode())
 (mod/'docs/katana-heat-assets.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
 print('KATANA_ASSETS',len(records),'original paired clips,',count,'source frames; maximum separation',max(((a[0]-b[0])**2+(a[1]-b[1])**2)**.5 for a,b in zip(paths[0],paths[1])))

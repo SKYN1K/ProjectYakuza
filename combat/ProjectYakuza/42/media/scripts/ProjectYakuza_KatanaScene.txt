@@ -1,0 +1,68 @@
+module Base
+{
+    sound ProjectYakuza_KatanaSceneBodyFall
+    {
+        category = ProjectYakuza_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuza/KatanaSceneBodyFall.wav,
+            distanceMin = 1,
+            distanceMax = 16,
+            volume = 0.65,
+        }
+    }
+    sound ProjectYakuza_KatanaSceneSwing
+    {
+        category = ProjectYakuza_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuza/KatanaSceneSwing.wav,
+            distanceMin = 1,
+            distanceMax = 16,
+            volume = 0.65,
+        }
+    }
+    sound ProjectYakuza_KatanaScenePunch
+    {
+        category = ProjectYakuza_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuza/KatanaScenePunch.wav,
+            distanceMin = 1,
+            distanceMax = 16,
+            volume = 0.65,
+        }
+    }
+    sound ProjectYakuza_KatanaSceneSlash
+    {
+        category = ProjectYakuza_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuza/KatanaSceneSlash.wav,
+            distanceMin = 1,
+            distanceMax = 16,
+            volume = 0.65,
+        }
+    }
+    sound ProjectYakuza_KatanaSceneThrust
+    {
+        category = ProjectYakuza_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuza/KatanaSceneThrust.wav,
+            distanceMin = 1,
+            distanceMax = 16,
+            volume = 0.65,
+        }
+    }
+}
