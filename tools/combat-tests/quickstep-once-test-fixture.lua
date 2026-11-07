@@ -181,15 +181,16 @@ state,move=light(1);p:setVariable('ProjectYakuzaQuickstepCancelReady',move.nodeV
 keyState[57]=true;check(Q.pollShove(p) and Q.isCancelling(p),'actual quickstep binding triggers the light cancel')
 reports=p.exitReports;Q.pollShove(p);check(p.exitReports==reports,'held quickstep input cannot request another cancel')
 keyState[57]=false;Q.clearLightCancel(p);Q.restoreAllShoves();PY.resetPlayer(p,'test_done')
-local previousEffects=PY.AttackEffects;local previousAim=p.isAiming;local trackPhase
-PY.AttackEffects={findTrack=function()return trackPhase,1,{layer=0,slot=0}end};p.dbgGetAnimTrackName=function()return ''end
+local previousEffects=PY.AttackEffects;local previousAim=p.isAiming;local trackPhase,trackWeight
+PY.AttackEffects={findTrack=function()return trackPhase,trackWeight,{layer=0,slot=0}end};p.dbgGetAnimTrackName=function()return ''end
+function p:StopTimedActionAnim()self.animationStops=(self.animationStops or 0)+1 end
 function p:isAiming()return self.aimReady==true end
 function base:setActionAnim(name)self.animationRequests=(self.animationRequests or 0)+1 end
 function base:forceStop()self:stop()end;function base:forceComplete()self:perform()end
-local function dash()
+local function dash(direction)
  clock=clock+2000;Q.clearLightCancel(p);PY.resetPlayer(p,'startup_test');p.attacking=false;p.performingOverride=false;p.hit='';p.blocked=false;p.aimReady=false;mouse[1]=false
- p.data.ProjectYakuzaQuickstepTimes={};Q.nextAllowed[0]=nil;trackPhase=nil
- local c={player=p,style=style,action=style.actions.quickstep.variants.forward,shove=true,dx=1,dy=0}
+ p.data.ProjectYakuzaQuickstepTimes={};Q.nextAllowed[0]=nil;trackPhase=nil;trackWeight=1
+ local c={player=p,style=style,action=style.actions.quickstep.variants[direction or 'forward'],shove=true,dx=1,dy=0}
  local a=Q.Action:new(c);c.timedAction=a;a.action={setOverrideHandModelsObject=function()end,setUseProgressBar=function(_,v)a.progressBar=v end};PY.activeActions[p]=c;a:start();return a
 end
 local dashAction=dash();check(not dashAction.started and Q.quota(p)==3 and dashAction.progressBar==false,'Space startup has no quota or progress-bar cost before a visible dash')
@@ -201,5 +202,22 @@ check(dashAction.started and dashAction.moved>0 and Q.quota(p)==2,'Space then RM
 trackPhase=.2;dashAction:update();check(Q.quota(p)==2,'one dash cannot spend twice after aim startup recovery')
 trackPhase=dashAction.context.action.duration*dashAction.context.action.speed;dashAction:update()
 check(dashAction.cleaned and math.abs(dashAction.moved-dashAction.context.action.distance)<.000001 and not p.blocked,'recovered dash reaches its original distance and restores movement')
+for _,direction in ipairs({'forward','backward','left','right'})do
+ dashAction=dash(direction)
+ trackPhase=.1;dashAction:update();local requests=dashAction.animationRequests
+ mouse[1]=true;p.aimReady=true;clock=clock+20;dashAction:update()
+ check(dashAction.animationRequests==requests,'aim changes cannot restart a visible quickstep '..direction)
+ local stops=p.animationStops or 0
+ trackPhase=dashAction.context.action.duration*dashAction.context.action.speed;trackWeight=.08;dashAction:update()
+ check(dashAction.cleaned and not p.blocked and p:GetVariable('PerformingAction')=='','fading native track completes without waiting for a timeout '..direction)
+ check((p.animationStops or 0)==stops+1,'completion explicitly exits the native timed action once '..direction)
+ dashAction:update();dashAction:perform();check(p.animationStops==stops+1,'late update and completion cannot repeat the exit '..direction)
+end
+dashAction=dash();trackPhase=.1;dashAction:update();trackPhase=nil;p:setVariable('ProjectYakuzaQuickstepDone',dashAction.context.action.nodeValue)
+dashAction:update();check(dashAction.cleaned and not p.blocked,'native end event completes after its track has disappeared')
+dashAction=dash();trackPhase=.1;dashAction:update();trackPhase=nil;clock=clock+150;dashAction:update()
+check(not dashAction.cleaned and dashAction.animationRequests==1,'temporary track loss never re-arms an already visible dash')
+clock=clock+math.ceil(dashAction.context.action.duration*1000)+100;dashAction:update()
+check(dashAction.cleaned and not p.blocked,'lost terminal track has a bounded completion fallback')
 PY.AttackEffects=previousEffects;p.isAiming=previousAim;p.dbgGetAnimTrackName=nil;mouse[1]=false
 return 'PASS '..checks..' one-strike quickstep ownership, native gate, rapid taps, retries and asynchronous handoff checks'

@@ -19,8 +19,12 @@ function H.inputStarted(p,style,step,move)
     else H.chains[p]=nil end
 end
 function H.select(p,z,style,stamp)
-    H.discard(p,H.tickets[p])
-    if R.validTarget(p,z)then H.tickets[p]={z=z,pressed=true,stamp=stamp,created=now(),expires=now()+style.heatRush.windowMs};PY.stateFor(p).queued=0 end
+    local ticket=H.tickets[p];local action=style.actions.heatAction
+    local valid=R.validTarget(p,z)and R.placement(p,z,action)
+    if ticket and ticket.stamp==stamp and now()<=ticket.expires and R.validFor(p,ticket.z,action)and R.placement(p,ticket.z,action)
+        and (not valid or ticket.sent or ticket.granted)then return end
+    H.discard(p,ticket)
+    if valid then H.tickets[p]={z=z,pressed=true,stamp=stamp,created=now(),expires=now()+style.heatRush.windowMs};PY.stateFor(p).queued=0 end
 end
 function H.confirmedSupplement(p,z,damage,stamp)
     local style=PY.getPlayerStyle(p);local s=PY.stateFor(p)
@@ -92,17 +96,25 @@ end
 function H.groundCandidate(p,s,style,force)
     local move=style and style.actions.groundHeat
     if not move or not move.enabled or not isMouseButtonDown(1)or not PY.Defense.safe(p)or PY.activeActions[p]or H.tickets[p]or not R.noCombo(s,style,now())or PY.actionHeat(p,move)<(move.heatStocks or 0)*PY.Heat.stockSize(p)then return end
-    local cached=H.groundPreviews[p];if not force and cached and cached.ground and now()<cached.next then if cached.z and R.validFor(p,cached.z,move)then return cached.z,move end;return end
-    local selected,distance;local examined=0;local cell=getCell();if not cell then return end
+    local cached=H.groundPreviews[p]
+    if not force and cached and cached.style==style and now()<cached.next then
+        if cached.z and R.validFor(p,cached.z,move)then return cached.z,move end
+        if not cached.z then return end
+    end
+    local candidates,seen={},{};local cell=getCell();if not cell then return end
     local gx,gy,level=math.floor(p:getX()),math.floor(p:getY()),math.floor(p:getZ())
     for ox=-2,2 do for oy=-2,2 do local sq=cell:getGridSquare(gx+ox,gy+oy,level);local objects=sq and sq:getMovingObjects()
-        if objects and examined<96 then for i=0,objects:size()-1 do
-            if examined>=96 then break end;examined=examined+1;local z=objects:get(i)
-            if R.validFor(p,z,move)then local d=(z:getX()-p:getX())^2+(z:getY()-p:getY())^2;if not distance or d<distance then selected=z;distance=d end end
+        if objects then for i=0,objects:size()-1 do
+            local z=objects:get(i)
+            if not seen[z]and R.validFor(p,z,move)then candidates[#candidates+1]={z=z,distance=(z:getX()-p:getX())^2+(z:getY()-p:getY())^2}end
+            seen[z]=true
         end end
     end end
-    if selected and R.placement(p,selected,move)then H.groundPreviews[p]={z=selected,ground=true,next=now()+200};return selected,move end
-    H.groundPreviews[p]={ground=true,next=now()+200}
+    table.sort(candidates,function(a,b)return a.distance<b.distance end)
+    H.groundPreviews[p]={style=style,next=now()+200}
+    for _,entry in ipairs(candidates)do
+        if R.placement(p,entry.z,move)then H.groundPreviews[p].z=entry.z;return entry.z,move end
+    end
 end
 function H.weaponCandidate(p,s,style,force)
     local ground,groundMove=H.groundCandidate(p,s,style,force);if ground then return ground,groundMove end
@@ -110,25 +122,26 @@ function H.weaponCandidate(p,s,style,force)
     if not action then H.previews[p]=nil;return end
     local cached=H.previews[p];local t=now();local item=p:getPrimaryHandItem()
     if not force and cached and cached.style==style and cached.item==item and t<cached.next then
-        if cached.z and R.validTarget(p,cached.z)then return cached.z,action end
-        return
+        if cached.z and R.validFor(p,cached.z,action)and PY.NetworkProtocol.path(p,cached.z:getX(),cached.z:getY())then return cached.z,action end
+        if not cached.z then return end
     end
     cached={style=style,item=item,next=t+200};H.previews[p]=cached
-    local selected,distance
+    local candidates,seen={},{}
     local function consider(z)
-        if R.validTarget(p,z)and PY.NetworkProtocol.path(p,z:getX(),z:getY())then
+        if not seen[z]and R.validFor(p,z,action)and PY.NetworkProtocol.path(p,z:getX(),z:getY())then
             local dx,dy=z:getX()-p:getX(),z:getY()-p:getY();local d=dx*dx+dy*dy
-            if not distance or d<distance then selected=z;distance=d end
+            candidates[#candidates+1]={z=z,distance=d}
         end
+        if z then seen[z]=true end
     end
     local origin=PY.MultiHit.origin(p,R.targetRange);if not origin then return end
-    for _,entry in ipairs(PY.MultiHit.targets(p,origin,false,{},16))do consider(entry.victim)end
+    for _,entry in ipairs(PY.MultiHit.targets(p,origin,false,{},math.huge))do consider(entry.victim)end
     if isClient()then
         local players=getOnlinePlayers();for i=0,players:size()-1 do consider(players:get(i))end
     elseif getNumActivePlayers then for i=0,getNumActivePlayers()-1 do consider(getSpecificPlayer(i))end end
-    if selected then
-        local f=p:getForwardDirection()
-        if R.placement(p,selected,action)then cached.z=selected;return selected,action end
+    table.sort(candidates,function(a,b)return a.distance<b.distance end)
+    for _,entry in ipairs(candidates)do
+        if R.placement(p,entry.z,action)then cached.z=entry.z;return entry.z,action end
     end
 end
 function H.weaponInput(p,s,style,pressed)

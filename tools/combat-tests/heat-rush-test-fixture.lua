@@ -572,4 +572,35 @@ do
  check(move.contacts[#move.contacts].baseDamageMultiplier==1.5,'crate retains base impact damage on an early ending')
 end
 
+do
+ local oldInstance,oldPlacement,oldCell,oldSafe=instanceof,R.placement,getCell,PY.Defense.safe
+ local oldTargets=PY.MultiHit.targets
+ local crowd={};for i=1,18 do crowd[i]=setmetatable({x=.4+i*.06,y=0,health=10,vars={},useless=false},{__index=z})end
+ instanceof=function(obj,kind)if kind=='IsoZombie'then for _,v in ipairs(crowd)do if obj==v then return true end end end;return oldInstance(obj,kind)end
+ PY.resetPlayer(p,'crowd_targets');p.held=katana;p.x=0;p.y=0;p.attacking=false;mouse[1]=true;PY.setHeat(p,100);H.tickets[p]=nil
+ local state=PY.stateFor(p);local view=PY.getPlayerStyle(p);local placements=0
+ R.placement=function(_,victim)placements=placements+1;if victim==crowd[18]then return {x=0,y=0,fx=1,fy=0}end end
+ PY.MultiHit.targets=function(_,_,_,_,limit)local out={};for i=1,math.min(#crowd,limit)do out[i]={victim=crowd[i]}end;return out end
+ local target=H.weaponCandidate(p,state,view,true)
+ check(target==crowd[18],'blocked nearby zombies cannot hide a placeable Heat Action target beyond the first sixteen')
+ check(placements==18,'placement follows nearest-first candidate order until a viable pair is found')
+ crowd[18].health=0;placements=0;local repeated=H.weaponCandidate(p,state,view,false)
+ check(not repeated,'preview cannot retain a dead target');crowd[18].health=10
+ H.previews[p]={style=view,item=katana,z=crowd[1],next=clock+200}
+ check(H.weaponCandidate(p,state,view,true)==crowd[18],'fresh input bypasses a stale preview and repeats placement selection')
+ local stamp={};H.tickets[p]=nil;H.select(p,crowd[18],style,stamp);local ticket=H.tickets[p]
+ check(ticket and ticket.z==crowd[18],'combo contact reserves its feasible victim')
+ H.select(p,crowd[1],style,stamp);check(H.tickets[p]==ticket,'later blocked crowd contact cannot overwrite a feasible combo victim')
+ H.select(p,nil,style,stamp);check(H.tickets[p]==ticket,'later ineligible contact cannot erase a valid same-swing ticket')
+ H.tickets[p]=nil
+ local groundMove={enabled=true,groundHeat=true,heatStocks=0}
+ local groundStyle={actions={groundHeat=groundMove},comboResetMs=1000}
+ for _,v in ipairs(crowd)do v.isOnFloor=function()return true end end
+ PY.Defense.safe=function()return true end
+ getCell=function()return {getGridSquare=function(_,gx,gy)if gx~=0 or gy~=0 then return end;return {getMovingObjects=function()return {size=function()return #crowd+100 end,get=function(_,i)if i<100 then return p end;return crowd[i-99]end}end}end}end
+ placements=0;target=H.groundCandidate(p,state,groundStyle,true)
+ check(target==crowd[18]and placements==18,'ground Heat Action scans past unrelated objects and tries farther valid placements')
+ H.groundPreviews[p]=nil;H.previews[p]=nil;H.tickets[p]=nil;p.held=nil
+ instanceof=oldInstance;R.placement=oldPlacement;getCell=oldCell;PY.Defense.safe=oldSafe;PY.MultiHit.targets=oldTargets
+end
 return true,'PASS '..checks..' generic QTE validation, custom bindings, fresh presses, replay safety, native-phase contacts, canonical damage, paired cleanup and interruption checks'

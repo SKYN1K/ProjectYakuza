@@ -86,7 +86,9 @@ function A:cleanup(completed, reason)
         p:setVariable("ProjectYakuzaQuickstepProgress","")
         p:setVariable("ProjectYakuzaQuickstepStarted","")
         p:setVariable("ProjectYakuzaQuickstepDone","")
-        if p:GetVariable("PerformingAction")==self.context.action.animation then p:setVariable("PerformingAction","");p:setVariable("IsPerformingAnAction",false)end
+        if p:GetVariable("PerformingAction")==self.context.action.animation then
+            p:setVariable("PerformingAction","");p:setVariable("IsPerformingAnAction",false);p:StopTimedActionAnim()
+        end
     end
     if self.started then Q.nextAllowed[p:getPlayerNum()]=now()+(self.context.style.actions.quickstep.cooldownMs or 180)end
     if ProjectYakuza.activeActions[p]==self.context then
@@ -104,18 +106,24 @@ function A:update()
     local p,move=self.character,self.context.action
     local t=now();local elapsed=t-self.startedAt
     local aim,rmb=p:isAiming(),isMouseButtonDown(1)
-    if (aim~=self.wasAiming or rmb~=self.wasRmb)and t-self.startupAt<=400 and self.retries<3 then self.retries=self.retries+1;self:requestAnimation()end
+    if not self.animationStarted and (aim~=self.wasAiming or rmb~=self.wasRmb)and t-self.startupAt<=400 and self.retries<3 then self.retries=self.retries+1;self:requestAnimation()end
     self.wasAiming=aim;self.wasRmb=rmb
     local started=var(p,"ProjectYakuzaQuickstepStarted")==move.nodeValue
     local progress=math.max(0,math.min(1,tonumber(var(p,"ProjectYakuzaQuickstepProgress"))or 0))
     local nativePhase
     if ProjectYakuza.AttackEffects and p.dbgGetAnimTrackName then
         local phase,weight,track=ProjectYakuza.AttackEffects.findTrack(p,move.animation,self.track);self.track=track
-        nativePhase=phase;started=phase~=nil and weight>=.15
+        nativePhase=phase;started=phase~=nil and (self.animationStarted or weight>=.15)
         if started then progress=math.max(0,math.min(1,phase/(move.duration*(move.speed or 1)*.6)))end
     end
+    if started and not self.animationStarted then
+        self.animationStarted=true
+        self.animationDeadline=t+math.max(0,move.duration-(nativePhase or 0)/(move.speed or 1))*1000+100
+    end
+    if self.animationStarted and (var(p,"ProjectYakuzaQuickstepDone")==move.nodeValue
+        or not nativePhase and t>=self.animationDeadline)then self:forceComplete();return end
     if not started then
-        if t-self.startupAt<=400 and t-self.animationRequestedAt>=120 and self.retries<3 then self.retries=self.retries+1;self:requestAnimation()
+        if not self.animationStarted and t-self.startupAt<=400 and t-self.animationRequestedAt>=120 and self.retries<3 then self.retries=self.retries+1;self:requestAnimation()
         elseif t-self.animationRequestedAt>650 then self:forceStop()end
         return
     end

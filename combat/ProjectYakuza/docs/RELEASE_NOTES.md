@@ -1,9 +1,9 @@
-# Project Yakuza 0.92.0
+# Project Yakuza 0.93.0
 
-- Replaced guessed katana timing with the original Yakuza 6 CMN scene data. Three damage hits occur at source frames 24, 44 and 64. Total damage is unchanged, with the original 1:1:2 weighting.
-- Added the action's five original sound-bank cues at their authored starts: swing, slash, punch, thrust and landing. Removed generic layered impacts from this action; landing does not create a fourth hit.
-- Repaired the original paired clips for native PZ arm lengths, retained all 141 frames at original speed, and adjusted victim spacing smoothly for the face punch. Rebuilt blood anchors from original particle-bone offsets and regenerated the three right-arm trails.
-- Added validated, independent audioEvents and voiceEvents to the framework. Katana uses the source actor voice timings through existing CVF combat entries. No separate voice pack or voice volume was changed.
-- Moved built-in paired Heat Actions out of the cancellable native timed-action queue. Cancel inputs cannot remove them, and ordinary queued actions cannot replace them during playback. Pause and required world/server cleanup remain available.
+- Fixed quickstep cleanup when its native animation fades below the startup weight or disappears before the final update. End markers and a bounded missing-track fallback release movement, and cleanup explicitly exits the owned native timed-action animation once.
+- Limited quickstep startup retries to the period before visible playback. Changing aim or RMB during an established dodge no longer restarts it. Directional attacks and the three-per-15-second quota keep their existing rules.
+- Fixed crowded weapon and ground Heat Action selection. Candidates are tried nearest first until the paired animation fits. The weapon search no longer drops candidates after the first sixteen, and the ground search no longer stops after the first 96 moving objects.
+- Preserved a feasible combo Heat Action victim when later crowd contacts are blocked or ineligible. Valid later confirmed victims still follow the existing last-hit rule; a pending or granted multiplayer request keeps its feasible target.
+- Documented the existing Heat drain rules and stock retention. Heat tuning and action costs are unchanged.
 
-Lethal damage remains held until the full paired animation ends. QTE windows, other combat moves and other supplied media are unchanged. Only approved original source animation repairs and audio decoding were used: no AI, invented motion, generated artwork or synthesized sounds. Offline validation only; PZ was not launched. See [validation](VALIDATION_0.92.0.md) and [presentation](HEAT_ACTION_PRESENTATION.md). Restart the game; server and clients must use matching versions.
+Validated offline without launching PZ. All 11 selected Kahlua suites pass, all 75 production Lua files compile, and source checks find zero code comments. No motion, texture or audio assets changed. See [validation](VALIDATION_0.93.0.md) and [Heat rules](HEAT.md). Restart PZ after updating; server and clients must use matching versions.

@@ -35,6 +35,8 @@ Activation SFX: build_heat_audio_tests.py embeds the shipped Feedback.lua into h
 
 One-strike quicksteps: build_quickstep_once_tests.py embeds production modules into quickstep-once-tests.lua. Run via LuaRunner separately to test all four directions, rapid inputs, ticket replay/retry, native attack gating, key release and asynchronous first swings.
 
+For 0.93.0, that quickstep suite also checks aim changes after visible playback, fading/disappearing terminal tracks, exactly-once native exit and bounded cleanup. build_heat_rush_tests.py adds nearest-placeable crowd selection beyond sixteen weapon candidates, ground searches beyond 96 moving objects, forced preview refresh and preservation of feasible combo victims after blocked or ineligible contacts. Both tests first reproduced failures against the previous production modules. Heat-speed, heat-shove, MP, weapon, weapon-MP, grab, charged-UI, directional and Extreme-attack suites cover surrounding behavior without starting PZ.
+
 ## API 3 charged heavy and style UI
 
 Run `python tools/combat-tests/build_charged_ui_tests.py` from the repository root,
