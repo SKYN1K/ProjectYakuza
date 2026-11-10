@@ -1,6 +1,6 @@
 {
-  "authorization": "User approved original katana sound extraction and paired motion repair on 2026-11-07.",
-  "operation": "Original 141 frames, source vector rotations and frame timing retained. Native arm-segment directions follow original source joints while retaining native PZ lengths, source wrist articulation, native fingers and hand-to-prop grip. No AI, invented motion or artwork.",
+  "authorization": "User requested restoration of the original katana airborne grip change and sharp-end final thrust; supplied source motion conversion only.",
+  "operation": "Original 141 body frames, arm adaptation, source vector rotations and frame timing retained. The actor right prop follows the original independent sword track, including release, catch and reversed grip, instead of a rigid hand lock. No AI, invented motion or artwork.",
   "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 6 - The Song of Life\\data\\hact\\h23720_buki_e.par",
   "archiveSha256": "55224af9511bc80d677046ec8d111f832f28a3d78c4488e94195a56967bfe2ba",
   "scene": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\katana-heat-070\\cmn.par\\cmn.bin",
@@ -2533,7 +2533,7 @@
       "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\katana-heat-070\\000.par\\h23720_000_4.gmt",
       "sourceSha256": "235015995c03ff8f042c425fe4c18ad07ca44dc05aa3ab5df392f3ded91b2184",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_KatanaHeat.x",
-      "sha256": "9afde1243164cd0dc1a459aab74006b24a7f16c378ad989054ca3ab08d66fa30",
+      "sha256": "c29da89230e812f55200c9d7204f45b4391d5f0294eeadb1a8ae1f4e462d2b91",
       "retargetSha256": "02b21354af17b8c9fb396c884441ff20f23fa3618e8c607ed680a3f02691e19d",
       "frames": 141,
       "fps": 30
@@ -2548,5 +2548,29 @@
       "frames": 141,
       "fps": 30
     }
-  ]
+  ],
+  "propMotion": {
+    "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\katana-heat-070\\000.par\\h23720_000_7.gmt",
+    "sourceSha256": "69b956628be2222ad17b4855a9e8ae8fcab4e3fc71b66db5a9316f0a87cb1727",
+    "bone": "anm_root",
+    "sourceHand": "ude3_r_n",
+    "targetProp": "Bip01_Prop1",
+    "frames": 141,
+    "fps": 30,
+    "referenceFrame": 0,
+    "releaseFrame": 44,
+    "catchFrame": 54,
+    "retargetScale": 0.443085975814284,
+    "finalThrustFrame": 64,
+    "operation": "Original independent sword position and rotation sampled at every source frame. Actor vector transform is removed, relative release/catch/reverse-grip motion is reflected into native hand coordinates through the existing arm adaptation, and native grip calibration is retained at frame zero. Only the right prop block changes.",
+    "sourceRig": "E:\\Blender\\Yakuza Rips\\yakuza6\\chara.par.unpack\\bone\\c_man_bone.gmd",
+    "sourceRigSha256": "00638d8baeef2d4d761c3b8d59797ab8d1553bab4410790314aeea2030fc0632",
+    "nativeMesh": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\models_X\\weapons\\2handed\\Katana.x",
+    "nativeMeshSha256": "367764bc08cdd64e8ed9f28a57f5274b46472b88401e4dbe1cba7a4d4a7e12fd",
+    "nativeSharpAxis": [
+      0,
+      1,
+      0
+    ]
+  }
 }

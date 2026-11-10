@@ -1,8 +1,8 @@
-# Project Yakuza 0.93.1
+# Project Yakuza 0.94.0
 
-- Fixed Heat Actions spending a stock without playing. The ordinary player-update loop now starts and advances queue-free weapon, ground and grab Heat Actions; the previous branch only waited for a start that never occurred.
-- Paired Heat Actions now pay their stock or Extreme fuel cost once native playback is confirmed. Missing playback and cancellation before that point spend nothing. Repeated updates cannot charge twice, and cancellation after playback retains the committed cost.
-- Moved swing commitment and multiplayer readiness to confirmed playback. Startup pause handling preserves the animation grace period; ordinary custom action kinds retain accepted-start payment.
-- Replaced the misleading manual-start regression with checks through real player-update callbacks, including full contacts/completion, ground/grab startup, missing clips, pause, resource loss and the final Extreme fuel stock.
+- Restored the katana Heat Action's original independent sword animation. It now leaves the hand, turns in midair and is caught in the reversed grip before the final sharp-end thrust.
+- Converted all 141 samples from the supplied h23720_000_7.gmt sword track into the existing native right-prop attachment. The source release is at frame 44, the catch at frame 54 and the final thrust at frame 64.
+- Replaced the previous fixed-grip check with source-derived animated attachment checks, native importer/FK validation and a regression that rejects the old rigid grip at the release frame. Verified that the native katana sharp axis faces the victim at the final thrust.
+- Preserved all character/finger/left-prop bytes, the complete victim clip, hit timing, damage, audio and textures. Only the actor's right-prop animation block changes; dependent provenance hashes are refreshed.
 
-All 15 selected offline Kahlua suites pass; all 75 production Lua files compile and source checks report zero code comments. No supplied motion, texture or audio assets changed. PZ was not launched. See [validation](VALIDATION_0.93.1.md). Fully restart PZ after installation; servers and clients must use matching versions.
+This is a conversion of the supplied original sword motion, without invented motion or generated artwork/audio. Offline validation only; PZ was not launched. See [validation](VALIDATION_0.94.0.md). Restart PZ after updating, with matching server/client versions.

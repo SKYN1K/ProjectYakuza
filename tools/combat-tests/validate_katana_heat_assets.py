@@ -1,13 +1,22 @@
 from pathlib import Path
 import sys,json,hashlib,math,subprocess
-root=Path(__file__).resolve().parents[2];w=root/'tools/combat-tests';mod=root/'combat/ProjectYakuza'
+root=Path(__file__).resolve().parents[2];w=root/'tools/combat-tests';mod=root/('tools/katana-scene-candidate-093/ProjectYakuza'if '--stage'in sys.argv else'combat/ProjectYakuza')
 sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
 if '--inside-blender'not in sys.argv:
-    r=subprocess.run(['F:/SteamLibrary/steamapps/common/Blender/blender.exe','-b','--factory-startup','-t','1','--python',str(Path(__file__).resolve()),'--','--inside-blender'],cwd=root,capture_output=True,text=True,encoding='utf-8',errors='replace');print(r.stdout)
+    r=subprocess.run(['F:/SteamLibrary/steamapps/common/Blender/blender.exe','-b','--factory-startup','-t','1','--python',str(Path(__file__).resolve()),'--','--inside-blender',*(['--stage']if '--stage'in sys.argv else[])],cwd=root,capture_output=True,text=True,encoding='utf-8',errors='replace');print(r.stdout)
     if r.returncode or 'PASS katana source'not in r.stdout:raise SystemExit(r.stderr or 'source checks failed')
     java='F:/SteamLibrary/steamapps/common/ProjectZomboid/jre64/bin/java.exe';cp='.;F:/SteamLibrary/steamapps/common/ProjectZomboid/*'
     report=json.loads((mod/'docs/katana-heat-assets.json').read_text(encoding='utf-8'))
-    for args in [['AnimationProbe',*[str(mod/c['output'])for c in report['clips']]],['PropAttachmentProbe',str(w/'katana-heat-prop-contract.tsv')],['KatanaHeatProbe',str(mod/'42/media/AnimSets')]]:subprocess.run([java,'-Xms16m','-Xmx256m','-XX:ActiveProcessorCount=2','-cp',cp,*args],cwd=w,check=True)
+    for args in [['AnimationProbe',*[str(mod/c['output'])for c in report['clips']]],['PropAttachmentProbe',str(w/'katana-heat-prop-contract.tsv')],['KatanaHeatProbe',str(root/'combat/ProjectYakuza/42/media/AnimSets')]]:subprocess.run([java,'-Xms16m','-Xmx256m','-XX:ActiveProcessorCount=2','-cp',cp,*args],cwd=w,check=True)
+    import zipfile
+    with zipfile.ZipFile(root/'dist/ProjectYakuza-B42-v0.93.1.zip')as archive:
+        old=w/'katana-old-grip.x';old.write_bytes(archive.read('ProjectYakuza/'+report['clips'][0]['output']))
+    row=(w/'katana-heat-prop-contract.tsv').read_text().splitlines()[0].split('\t');row[0]=str(old)
+    samples=row[1].split(';');static=','.join(str(v)for r in report['nativeGrip']['nativeOffsets']['Bip01_Prop1']for v in r);samples[:44]=[static]*44;row[1]=';'.join(samples)
+    negative=w/'katana-old-grip-contract.tsv';negative.write_text('\t'.join(row))
+    result=subprocess.run([java,'-Xms16m','-Xmx256m','-XX:ActiveProcessorCount=2','-cp',cp,'PropAttachmentProbe',str(negative)],cwd=w,capture_output=True,text=True)
+    assert result.returncode!=0 and'prop detached'in result.stderr and'frame=44'in result.stderr,'previous rigid grip must fail at the source release frame'
+    print('PASS previous rigid katana grip fails the native animated-prop regression')
     raise SystemExit(0)
 sys.path.insert(0,str(w));from locomotion_math import read,locals_at,world
 report=json.loads((mod/'docs/katana-heat-assets.json').read_text(encoding='utf-8'))
@@ -15,7 +24,11 @@ assert len(report['clips'])==2 and sha(report['archive'])==report['archiveSha256
 assert report['contactFrames']==[24,44,64]
 contracts=[];samples=0;contexts={};worst=0
 from weapon_hold_geometry import source_pose
-from mathutils import Matrix
+from mathutils import Matrix,Vector
+import zipfile
+from katana_prop_motion import prop_offsets
+with zipfile.ZipFile(root/'dist/ProjectYakuza-B42-v0.93.1.zip')as archive:
+    baseline={record['animation']:archive.read('ProjectYakuza/'+record['output']).decode()for record in report['clips']}
 mirror=Matrix.Diagonal((1,1,-1,1));prefix=(w/'retarget_locomotion.py').read_text().split('poses=[];srcposes=[]')[0]
 
 for record in report['clips']:
@@ -44,7 +57,36 @@ for record in report['clips']:
             if bone in modified or '_Finger'in bone:continue
             if bone in ['Bip01_Prop1','Bip01_Prop2']:continue
             assert max(abs(actual[bone][a][b]-expected[bone][a][b])for a in range(4)for b in range(4))<.00001,(output,bone,i);samples+=1
-    grip=report['nativeGrip'];offsets=[','.join(str(v)for row in grip['nativeOffsets'][prop]for v in row)for prop in ['Bip01_Prop1','Bip01_Prop2']];contracts.append('\t'.join([str(output),*offsets,str(frames)]))
+    grip=report['nativeGrip'];offsets=[','.join(str(v)for row in grip['nativeOffsets'][prop]for v in row)for prop in ['Bip01_Prop1','Bip01_Prop2']]
+    if record['animation']=='ProjectYakuza_DD_KatanaHeat':
+        from yk.gmt_lib import read_gmt
+        metadata=report['propMotion'];assert sha(metadata['source'])==metadata['sourceSha256']and sha(metadata['sourceRig'])==metadata['sourceRigSha256']and sha(metadata['nativeMesh'])==metadata['nativeMeshSha256'];prop=read_gmt(metadata['source']).animation
+        assert prop.end_frame==140 and prop.frame_rate==30 and metadata['releaseFrame']==44 and metadata['catchFrame']==54
+        for bone in prop.bones.values():
+            for curve in bone.curves:
+                if int(curve.type)in(0,1):curve.fill_channels()
+        expected,sourceOffsets=prop_offsets(context,prop,bones,anim,Matrix(grip['authoredOffsets']['Bip01_Prop1']),frames)
+        offsets[0]=';'.join(','.join(str(v)for row in m for v in row)for m in expected)
+        for frame,matrix in enumerate(expected):
+            native=world(bones,locals_at(bones,anim,frame*160));relative=native['Bip01_R_Hand'].inverted()@native['Bip01_Prop1']
+            assert max(abs(relative[a][b]-matrix[a][b])for a in range(4)for b in range(4))<1e-5,frame
+        assert(sourceOffsets[48].translation-sourceOffsets[0].translation).length>.5
+        assert(sourceOffsets[54].translation-sourceOffsets[0].translation).length<.001
+        assert math.degrees(sourceOffsets[54].to_quaternion().rotation_difference(sourceOffsets[0].to_quaternion()).angle)>170
+        def without_prop(text):
+            from locomotion_math import read,brace
+            import re
+            match=re.search(r'Animation\s*\{\s*\{\s*Bip01_Prop1\s*\}',text);return text[:match.start()]+text[brace(text,text.index('{',match.start())):]
+        assert without_prop(output.read_bytes().decode())==without_prop(baseline[record['animation']]),'body, fingers and left prop must retain previous bytes'
+        native=world(bones,locals_at(bones,anim,64*160));target=Vector(report['effectPoints'][2]['point']);ap=report['paths'][0][64];vp=report['paths'][1][64];target.x+=(vp[1]-ap[1])/1.5;target.z-=(vp[0]-ap[0])/1.5
+        sword=native['Bip01_Prop1'];toward=(target-sword.translation).normalized();sharp=sword.to_quaternion()@Vector((0,1,0));assert sharp.dot(toward)>.9,'sharp end must face the final thrust victim'
+        old=native['Bip01_R_Hand']@Matrix(grip['authoredOffsets']['Bip01_Prop1']);assert(old.to_quaternion()@Vector((0,1,0))).dot((target-old.translation).normalized())<0,'old rigid grip must point the sharp end away'
+        import re
+        mesh=Path(metadata['nativeMesh']).read_text();start=re.search(r'\bMesh\s+Katana\s*\{\s*(\d+)\s*;',mesh);points=[list(map(float,p))for p in re.findall(r'([-+\d.eE]+);\s*([-+\d.eE]+);\s*([-+\d.eE]+);',mesh[start.end():])[:int(start[1])]]
+        extents=[max(p[i]for p in points)-min(p[i]for p in points)for i in range(3)];assert extents[1]>8*max(extents[0],extents[2])and max(p[1]for p in points)>.5 and metadata['nativeSharpAxis']==[0,1,0]
+        print('PASS original release/catch and reverse grip; native sharp-axis final-thrust alignment',sharp.dot(toward))
+    else:assert output.read_bytes().decode()==baseline[record['animation']],'victim clip must remain byte-identical'
+    contracts.append('\t'.join([str(output),*offsets,str(frames)]))
 (w/'katana-heat-prop-contract.tsv').write_text('\n'.join(contracts),encoding='utf-8')
 assert all(len(path)==141 and all(math.isfinite(v)for row in path for v in row)for path in report['paths'])
 from types import ModuleType

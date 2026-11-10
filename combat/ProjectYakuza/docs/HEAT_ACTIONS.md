@@ -1,5 +1,7 @@
 # Heat Action lifecycle
 
+Version 0.94.0 restores the original katana prop track: the sword is released at source frame 44, caught with reversed grip at frame 54 and thrust sharp-end first at frame 64. Character poses and all three hit times remain unchanged. The attachment follows the supplied independent sword GMT instead of remaining rigidly pinned to the hand.
+
 As of 0.93.1, the normal player-update loop starts and advances built-in weapon, ground and grab Heat Actions directly. Their stock or Extreme fuel cost is paid once when native playback is first confirmed. A missing animation, failed startup or cancellation before playback does not spend the cost. Repeated updates cannot charge again; cancellation after visible playback retains the committed cost. Multiplayer readiness is sent at that same confirmed-playback point.
 
 Dragon of Dojima has an original katana action while Base.Katana is equipped. Hold physical RMB and press the Heat Action binding (default MMB) outside a combo, within two tiles of an eligible standing target. It costs one stock. In Extreme Heat the equivalent fuel pays the cost. MMB during an active combo retains normal weapon-heavy behavior. Other blade items do not receive this action.

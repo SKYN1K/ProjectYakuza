@@ -3,8 +3,9 @@ import sys,json,hashlib,struct
 root=Path(__file__).resolve().parents[2];sys.path.insert(0,str(root/'tools/combat-tests'))
 from locomotion_math import read,locals_at,blocks,write,world
 from paired_paths import bridge_scene_cuts
-from mathutils import Quaternion,Vector
+from mathutils import Quaternion,Vector,Matrix
 from weapon_hold_geometry import fit_arms
+from katana_prop_motion import prop_offsets
 staging='--stage'in sys.argv;sourceMod=root/'combat/ProjectYakuza';mod=root/'tools/katana-scene-candidate-093/ProjectYakuza'if staging else sourceMod
 (mod/'docs').mkdir(parents=True,exist_ok=True)
 srcRoot=Path('E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack');converter=(root/'tools/combat-tests/retarget_locomotion.py').read_text().replace("OUT=DEST/'tools/locomotion-build'","OUT=DEST/'tools/katana-heat-build'");grip=json.loads((sourceMod/'docs/prop-attachment-repair.json').read_text())['nativeGrips']['bat'];records=[]
@@ -14,7 +15,7 @@ converter=converter.replace(' tg={}', ' ab=a.bones.get("vector_c_n");vq=SCENE_RO
 converter=converter.replace("world.y=sg['ketu_c_n'].translation.y*scale","world.y=(sg['ketu_c_n'].translation.y+sample(a.bones['vector_c_n'].location,f,Vector((0,0,0))).y)*scale")
 scene_rotation=None
 
-poses=[];vectors=[];native=[];effectPoints=[]
+poses=[];vectors=[];native=[];effectPoints=[];propMotion=None
 from read_katana_scene import read_scene
 sceneData=read_scene(root/"extracted/katana-heat-070/cmn.par/cmn.bin")
 particles=[next(r for r in sceneData["nodes"]if r.get("element",{}).get("kind")==0x13 and r["name"].startswith(prefix)and r["element"]["start"]==frame)for prefix,frame in [("YNb0014",20),("YNb0009",43),("YNb0013",62)]]
@@ -29,6 +30,21 @@ for name,source in jobs:
  fingers={n:v.copy()for n,v in values[0].items()if '_Finger'in n}
  for frame in range(count):values[frame],_=fit_arms(frames,values[frame],ns['srcposes'][frame],ns['bind'],fingers)
  output=mod/('42/media/anims_X/Bob/'+name+'.x');output.parent.mkdir(parents=True,exist_ok=True);write(output,text,spans,blocks(frames,values,times,grip),name)
+ if name=='ProjectYakuza_DD_KatanaHeat':
+  propSource=root/'extracted/katana-heat-070/000.par/h23720_000_7.gmt';prop=read_gmt(str(propSource)).animation
+  for bone in prop.bones.values():
+   for curve in bone.curves:
+    if int(curve.type)in(0,1):curve.fill_channels()
+  current,frames,anim,spans=read(output);offsets,sourceOffsets=prop_offsets(ns,prop,frames,anim,Matrix(grip['authoredOffsets']['Bip01_Prop1']),count)
+  dynamic=[]
+  for frame,offset in enumerate(offsets):
+   pose=locals_at(frames,anim,times[frame]);w=world(frames,pose);pose['Bip01_Prop1']=w[frames['Bip01_Prop1']['parent']].inverted()@w['Bip01_R_Hand']@offset;dynamic.append(pose)
+  write(output,current,{'Bip01_Prop1':spans['Bip01_Prop1']},{'Bip01_Prop1':blocks(frames,dynamic,times,None)['Bip01_Prop1']},name)
+  departures=[i for i,m in enumerate(sourceOffsets)if(m.translation-sourceOffsets[0].translation).length>.005]
+  flightStart=departures[0];catch=next(i for i in range(flightStart+1,count)if(sourceOffsets[i].translation-sourceOffsets[0].translation).length<.001)
+  propMotion={'source':str(propSource),'sourceSha256':sha(propSource),'bone':'anm_root','sourceHand':'ude3_r_n','targetProp':'Bip01_Prop1','frames':count,'fps':30,'referenceFrame':0,'releaseFrame':flightStart,'catchFrame':catch,'retargetScale':float(ns['scale']),'finalThrustFrame':64,'operation':'Original independent sword position and rotation sampled at every source frame. Actor vector transform is removed, relative release/catch/reverse-grip motion is reflected into native hand coordinates through the existing arm adaptation, and native grip calibration is retained at frame zero. Only the right prop block changes.'}
+  sourceRig=Path('E:/Blender/Yakuza Rips/yakuza6/chara.par.unpack/bone/c_man_bone.gmd');nativeMesh=Path('F:/SteamLibrary/steamapps/common/ProjectZomboid/media/models_X/weapons/2handed/Katana.x')
+  propMotion.update({'sourceRig':str(sourceRig),'sourceRigSha256':sha(sourceRig),'nativeMesh':str(nativeMesh),'nativeMeshSha256':sha(nativeMesh),'nativeSharpAxis':[0,1,0]})
  records.append({'animation':name,'source':str(src),'sourceSha256':sha(src),'output':output.relative_to(mod).as_posix(),'sha256':sha(output),'retargetSha256':sha(raw),'frames':count,'fps':30})
  native.append([world(frames,v)for v in values])
  if len(native)==2:
@@ -53,6 +69,9 @@ soundFrames={}
 for match in re.finditer(rb'SE_HACT_H23720[^\0]+',data):
     start,end=struct.unpack_from('<ff',data,match.start()+36);soundFrames[match.group().decode()]={'startFrame':start,'endFrame':end}
 report={'authorization':'User approved original katana sound extraction and paired motion repair on 2026-11-07.','operation':'Original 141 frames, source vector rotations and frame timing retained. Native arm-segment directions follow original source joints while retaining native PZ lengths, source wrist articulation, native fingers and hand-to-prop grip. No AI, invented motion or artwork.','archive':str(archive),'archiveSha256':sha(archive),'scene':str(scene),'sceneSha256':sha(scene),'actorAssignment':'cmn.bin binds res.bin m_kiryu GUID at 0x18d0 to h23720_000_4 GUID at 0x1960; enemy model at 0x1dec binds h23720_000_6 at 0x1e7c. Katana prop h23720_000_7 identifies bs_e000_type_e_tachi_1 and the scene attaches it to buki1_r_n.','soundFrames':soundFrames,'contactFrames':[24,44,64],'contactsOperation':'Original CMN NodeBattleDamage starts define the three hits. Sound cue starts are independent timeline events. First two damage nodes set NoDead; the framework retains lethal damage until full recovery by explicit user requirement.','nativeSkeletonCorrection':nativeCorrection,'effectPoints':effectPoints,'nativeGrip':grip,'pathScale':factor,'paths':paths,'rawPaths':raw_paths,'sceneCuts':cuts,'sceneRotation':list(scene_rotation),'rootHeightOperation':'Original vector_c_n elevation is added to the retarget root; the scene is normalized to the attacker initial heading. Code-side paths remove shared camera-stage translations and bridge relative cut changes over six source frames.','clips':records}
+report['propMotion']=propMotion
+report['authorization']='User requested restoration of the original katana airborne grip change and sharp-end final thrust; supplied source motion conversion only.'
+report['operation']='Original 141 body frames, arm adaptation, source vector rotations and frame timing retained. The actor right prop follows the original independent sword track, including release, catch and reversed grip, instead of a rigid hand lock. No AI, invented motion or artwork.'
 def literal(value):
     if isinstance(value,list):return '{'+','.join(literal(v)for v in value)+'}'
     return format(value,'.9f')

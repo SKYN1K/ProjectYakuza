@@ -245,3 +245,4 @@
 !/tools/combat-tests/build_katana_scene_audio.py
 
 !/tools/combat-tests/validate_katana_scene.py
+!/tools/combat-tests/katana_prop_motion.py

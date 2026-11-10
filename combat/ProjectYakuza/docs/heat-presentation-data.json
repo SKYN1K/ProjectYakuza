@@ -287,7 +287,7 @@
     {
       "animation": "ProjectYakuza_DD_KatanaHeat",
       "targetAnimation": "ProjectYakuza_DD_KatanaHeatVictim",
-      "actorSha256": "9afde1243164cd0dc1a459aab74006b24a7f16c378ad989054ca3ab08d66fa30",
+      "actorSha256": "c29da89230e812f55200c9d7204f45b4391d5f0294eeadb1a8ae1f4e462d2b91",
       "victimSha256": "47d20dc05f192103f56771b7c454ed741b97810588aa0e805e96e96e481a78e6",
       "contacts": [
         {

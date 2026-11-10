@@ -39,6 +39,8 @@ For 0.93.0, that quickstep suite also checks aim changes after visible playback,
 
 For 0.93.1, heat-rush tests invoke the real OnPlayerUpdate callbacks for startup, native-track confirmation, contacts and completion. They reproduce the previous missing-dispatch bug, cover ground/grab definitions through the same update loop, and verify no cost for missing playback, one payment on visible playback, pause-safe startup, resource loss before playback and the final Extreme fuel stock. Presentation, damage, extension API and addon starter suites also run with current production code. Manually calling a timed action's start method alone does not establish that Runtime dispatches it.
 
+For 0.94.0, build_katana_heat_assets.py uses katana_prop_motion.py to convert the independent source sword GMT into the actor's right prop channel. Use --stage for an isolated build. validate_katana_heat_assets.py supports that same option and checks all source samples, unchanged body/victim bytes, release/catch/reversed grip, sharp-axis direction and actual native importer/FK behavior. PropAttachmentProbe accepts either one constant matrix or frame-separated matrices per prop. Its katana negative contract requires the old rigid grip to fail at source frame 44; other static grip users retain their existing contracts. No preview rendering or game launch is involved.
+
 ## API 3 charged heavy and style UI
 
 Run `python tools/combat-tests/build_charged_ui_tests.py` from the repository root,
