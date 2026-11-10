@@ -14,7 +14,7 @@ rows[#rows+1]={animation=move.animation,targetAnimation=move.targetAnimation,con
  if move.qteFailure and move.qteFailure.paired then local f=move.qteFailure;local c={};for k,v in pairs(move.contacts[#move.contacts])do c[k]=v end;c.atMs=f.contactMs;c.index=#move.contacts;rows[#rows+1]={animation=f.animation,targetAnimation=f.targetAnimation,contacts={c},sounds=style.sounds,baseSounds=base.sounds,motion=PY.PairedMotions[f.motionId],audioEvents=f.audioEvents}end
 end
 add(base,base.actions.heatAction);add(base,base.actions.grabHeat);add(base,base.actions.groundHeat)
-for _,profile in ipairs({"blade","bottle","crate"})do local s=PY.Weapons.views[base.id][profile];add(s,s.actions.heatAction)end
+for _,profile in ipairs({"blade","bottle","crate","bat"})do local s=PY.Weapons.views[base.id][profile];add(s,s.actions.heatAction)end
 return enc(rows)'''
 parts=['require=function()end']
 for name in ['Registry','Weapons','HeatRushPaths','KatanaHeatPaths','BottleHeatPaths'] :parts.append('do\n'+module_source(lua/f'shared/ProjectYakuza/{name}.lua')+'\nend')
@@ -64,7 +64,7 @@ def literal(v):
  if isinstance(v,(int,float)):return format(v,'.9g')
  if isinstance(v,list):return '{'+','.join(literal(x)for x in v)+'}'
  return '{'+','.join('['+json.dumps(k)+']='+literal(x)for k,x in sorted(v.items()))+'}'
-code='require "ProjectYakuza/Registry"\nProjectYakuza.HeatPresentationData='+literal({'moves':definitions,'leads':leads})+'\n';output=lua/'client/ProjectYakuza/HeatPresentationData.lua';report={'operation':'Numeric source-pose anchors through native B42 FK and in-memory PCM onset analysis of unchanged supplied clips. No assets generated, converted to files, edited or upscaled. All six built-in scenes use original CMN victim damage and independently timed sound, voice and particle-bone events. Bounded QTE repeats and endings retain their source frame maps. Existing supplied blood pixels are reused. Custom clips retain measured transient leads.','clips':records,'sounds':audio}
+code='require "ProjectYakuza/Registry"\nProjectYakuza.HeatPresentationData='+literal({'moves':definitions,'leads':leads})+'\n';output=lua/'client/ProjectYakuza/HeatPresentationData.lua';report={'operation':'Numeric source-pose anchors through native B42 FK and in-memory PCM onset analysis of unchanged supplied clips. No assets generated, converted to files, edited or upscaled. All seven built-in scenes use original CMN victim damage and independently timed sound, voice and particle-bone events. Bounded QTE repeats and endings retain their source frame maps. Existing supplied blood pixels are reused. Custom clips retain measured transient leads.','clips':records,'sounds':audio}
 if '--write'in sys.argv:output.write_text(code);(mod/'docs/heat-presentation-data.json').write_text(json.dumps(report,indent=2)+'\n')
 else:assert output.read_text()==code and json.loads((mod/'docs/heat-presentation-data.json').read_text())==report
 print('PASS',len(records),'paired main/ending clips,',sum(len(r['contacts'])for r in records),'native victim contact anchors and',len(audio),'unchanged audio onset measurements')

@@ -14,7 +14,7 @@ for side in ['r','l']:
     for source,target in [('ude3','Hand'),('ude2','Forearm'),('asi2','Calf'),('asi3','Foot')]:names[source+'_'+side+'_n']='Bip01_'+side.upper()+'_'+target
 definitions={};records=[]
 for scene in data['scenes']:
-    manifest=json.loads((mod/('docs/'+{'rush':'heat-rush-assets','crate':'crate-heat-assets','katana':'katana-heat-assets','wall':'wall-heat-assets','ground':'ground-heat-assets','bottle':'bottle-heat-assets'}[scene['id']]+'.json')).read_text())
+    manifest=json.loads((mod/('docs/'+{'rush':'heat-rush-assets','crate':'crate-heat-assets','katana':'katana-heat-assets','wall':'wall-heat-assets','ground':'ground-heat-assets','bottle':'bottle-heat-assets','bat':'bat-heat-assets'}[scene['id']]+'.json')).read_text())
     scale=manifest['pathScale']/1.5
     for definition in scene['definitions']:
         actor=mod/('42/media/anims_X/Bob/'+definition['animation']+'.x');victim=actor.with_name(actor.stem+'Victim.x');_,bones,animation,_=read(victim);events=[]
@@ -22,7 +22,7 @@ for scene in data['scenes']:
             bone=names.get(event['bone']);assert bone in bones,(definition['animation'],event['bone'])
             pose=world(bones,locals_at(bones,animation,event['frame']*160));local=bind[bone].to_quaternion().inverted()@(mirror@Vector(event['localPoint'])*scale);point=pose[bone]@local
             index=event['contact']if definition['animation']==scene['animation']else len(scene['definitions'][0]['contacts'])
-            events.append({'atMs':event['frame']/30*1000,'index':index,'bone':bone,'point':list(point),'bloodOnly':True,'feedback':'blade'if scene['id']=='katana'and event['contact']!=2 else'unarmed'})
+            events.append({'atMs':event['frame']/30*1000,'index':index,'bone':bone,'point':list(point),'bloodOnly':True,'feedback':'blade'if scene['id']=='katana'and event['contact']!=2 else'blunt'if scene['id']=='bat'else'unarmed'})
         definitions[definition['animation']]=events;records.append({'animation':definition['animation'],'actorSha256':hashlib.sha256(actor.read_bytes()).hexdigest(),'victimSha256':hashlib.sha256(victim.read_bytes()).hexdigest(),'events':events})
 report={'operation':'Original CMN blood-emitter starts and bone-local positions transformed through unchanged supplied native victim poses. Existing supplied blood pixels and renderer are reused; no images, motion or audio generated. Engine-specific non-blood particle systems are recorded by the CMN audit rather than invented.','moves':definitions,'clips':records}
 p=mod/'docs/heat-scene-effects.json';text=json.dumps(report,indent=2)+'\n'

@@ -252,3 +252,9 @@
 !/tools/combat-tests/build_heat_scenes.py
 !/tools/combat-tests/build_heat_scene_anchors.py
 !/tools/combat-tests/validate_heat_scenes.py
+
+!/tools/combat-tests/extract_bat_heat_assets.py
+!/tools/combat-tests/bat_prop_motion.py
+!/tools/combat-tests/build_bat_heat_assets.py
+!/tools/combat-tests/validate_bat_heat_assets.py
+!/tools/combat-tests/BatHeatProbe.java

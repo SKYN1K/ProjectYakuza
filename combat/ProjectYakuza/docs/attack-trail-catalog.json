@@ -1,7 +1,7 @@
 {
   "operation": "Code-side numeric FK only from existing supplied PZ clips, including current paired contacts/endings and linked native finisher variants. Contacts use native collision events, authored Heat Action contacts or the documented parry fallback. Clips use contact-local endpoint/relative motion with verified original left-light and right-high-kick pose overrides, independent of charge-up pose. The high kick has right-foot height 0.721 versus planted left foot 0.093 at source frame 24; recovering arms can be faster than the striking leg. Runtime resolves the actual playing clip within the committed move family. No visual/audio/animation/model assets are generated or modified.",
   "catalog": "42/media/lua/client/ProjectYakuza/AttackTrailCatalog.lua",
-  "sha256": "7955b2b2adea782c268c14fbaf1c5658098cc3077c6395d5fbf27a7ae9ec35e8",
+  "sha256": "5c5d9ddd35ef3a1f173d62fd11be92c7b949672b95bf12f158317148ffce8cd3",
   "clips": [
     {
       "profile": "bat",
@@ -28,6 +28,53 @@
             0.9518425894691056,
             0.1551532035130656,
             0.25083593731165865
+          ],
+          "selection": "contact-local relative motion"
+        }
+      ]
+    },
+    {
+      "profile": "bat",
+      "kind": "heatAction",
+      "animation": "ProjectYakuza_DD_BatHeat",
+      "family": "ProjectYakuza_DD_BatHeat",
+      "node": "dd_bat_heat",
+      "impact": -1.0,
+      "kick": false,
+      "qte": [
+        0.466666666667,
+        1.66666666667
+      ],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BatHeat.x",
+      "clipSha256": "e14c393bfe70aa201679d920bf3c08fe02271f1786f338fd91e9291760269751",
+      "samples": 103,
+      "duration": 3.4,
+      "windows": [
+        {
+          "track": "dd_trail_batheat_1",
+          "from": 0.346666666667,
+          "to": 0.666666666667,
+          "contact": 0.466666666667,
+          "limb": "rightArm",
+          "scores": [
+            0.7787721066926282,
+            0.8305484449140146,
+            0.08551642772264297,
+            0.1274619075531023
+          ],
+          "selection": "contact-local relative motion"
+        },
+        {
+          "track": "dd_trail_batheat_2",
+          "from": 1.5466666666700002,
+          "to": 1.86666666667,
+          "contact": 1.66666666667,
+          "limb": "leftArm",
+          "scores": [
+            0.03171215318708665,
+            0.028454839990942126,
+            0.00959175029465114,
+            0.011045451466279894
           ],
           "selection": "contact-local relative motion"
         }

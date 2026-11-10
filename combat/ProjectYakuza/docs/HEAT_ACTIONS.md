@@ -1,5 +1,7 @@
 # Heat Action lifecycle
 
+Version 0.96.0 adds the [original Yakuza 6 bat Heat Action](BAT_HEAT_ACTION.md) for the six registered bat items. It uses the existing one-stock, neutral-combo, physical RMB plus Heat Action input, shared protection and confirmed-playback payment.
+
 Version 0.95.0 applies the [original scene contracts](HEAT_SCENES.md) to all six built-in actions and both QTE failure endings. Damage, sound, voice and blood-family starts are independently mapped from the supplied cmn.bin files. Total damage, prices, inputs and character/prop motion are preserved.
 
 Version 0.94.0 restores the original katana prop track: the sword is released at source frame 44, caught with reversed grip at frame 54 and thrust sharp-end first at frame 64. Character poses and all three hit times remain unchanged. The attachment follows the supplied independent sword GMT instead of remaining rigidly pinned to the hand.

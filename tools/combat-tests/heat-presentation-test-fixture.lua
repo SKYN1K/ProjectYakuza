@@ -1,7 +1,7 @@
 local C=PY.HeatActionPresentation;local D=PY.HeatPresentationData
 local builtin=PY.getStyle('dragon_of_dojima')
 local sourceMoves={builtin.actions.heatAction,builtin.actions.grabHeat,builtin.actions.groundHeat}
-for _,profile in ipairs({'bottle','crate','blade'})do sourceMoves[#sourceMoves+1]=PY.Weapons.views.dragon_of_dojima[profile].actions.heatAction end
+for _,profile in ipairs({'bottle','crate','blade','bat'})do sourceMoves[#sourceMoves+1]=PY.Weapons.views.dragon_of_dojima[profile].actions.heatAction end
 Events.OnPostRender=event()
 local activeStyle={id='presentation',sounds={heavyImpact='impact',punchImpact='punch',kickImpact='kick',throwImpact='fall'}}
 PY.getPlayerStyle=function()return activeStyle end;PY.getStyle=function()return activeStyle end
@@ -50,7 +50,7 @@ for animation,data in pairs(D.moves)do
   total=total+1
  end
 end
-check(total==33 and effectTotal==106,'all main and failure-ending contacts and source emitter starts covered')
+check(total==35 and effectTotal==112,'all main and failure-ending contacts and source emitter starts covered')
 C.clearAll();move={animation='Custom',contacts={{atMs=500,cue='punchImpact',layers={'kickImpact'}}}};source={};plays={};fx={};phase=0;C.start(p,z,move,source);step(500-lead)
 check(#plays==2 and plays[1].gain==.55 and plays[2].gain==.3,'custom styles retain primary and layered sound gains')
 step(500);check(#fx==1 and fx[1].anchor==nil,'custom action without numeric sample retains legacy placement')
@@ -133,4 +133,4 @@ for _,action in ipairs(sourceMoves)do
  end
 end
 C.clearAll()
-return true,'PASS '..checks..' paired Heat Action timing, 33 native contacts, 106 source emitters, independent cues and voices, custom layers, replay suppression, rotation and lifecycle checks'
+return true,'PASS '..checks..' paired Heat Action timing, 35 native contacts, 112 source emitters, independent cues and voices, custom layers, replay suppression, rotation and lifecycle checks'

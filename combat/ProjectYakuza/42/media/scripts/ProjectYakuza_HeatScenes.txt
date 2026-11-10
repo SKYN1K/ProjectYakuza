@@ -299,4 +299,69 @@ module Base
             volume = 0.65,
         }
     }
+    sound ProjectYakuza_HeatScene_bat_1
+    {
+        category = ProjectYakuza_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuza/HeatScene_bat_1.wav,
+            distanceMin = 1,
+            distanceMax = 16,
+            volume = 0.65,
+        }
+    }
+    sound ProjectYakuza_HeatScene_bat_4
+    {
+        category = ProjectYakuza_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuza/HeatScene_bat_4.wav,
+            distanceMin = 1,
+            distanceMax = 16,
+            volume = 0.65,
+        }
+    }
+    sound ProjectYakuza_HeatScene_bat_0
+    {
+        category = ProjectYakuza_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuza/HeatScene_bat_0.wav,
+            distanceMin = 1,
+            distanceMax = 16,
+            volume = 0.65,
+        }
+    }
+    sound ProjectYakuza_HeatScene_bat_3
+    {
+        category = ProjectYakuza_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuza/HeatScene_bat_3.wav,
+            distanceMin = 1,
+            distanceMax = 16,
+            volume = 0.65,
+        }
+    }
+    sound ProjectYakuza_HeatScene_bat_2
+    {
+        category = ProjectYakuza_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuza/HeatScene_bat_2.wav,
+            distanceMin = 1,
+            distanceMax = 16,
+            volume = 0.65,
+        }
+    }
 }

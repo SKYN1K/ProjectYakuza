@@ -261,7 +261,7 @@ for animation,entry in pairs(catalog)do
  emit('actionCompleted',stamp);check(not F.states[p],'matching action completion clears coating')
  F.remote(p,style,{clip=animation});check(F.states[p],'observer catalogue covers every attack');F.clear(p)
 end
-check(clips==83 and contacts==107,'complete active moveset coverage including four bottle hits and both punches in each crate loop')
+check(clips==84 and contacts==109,'complete active moveset coverage including four bottle hits and both punches in each crate loop')
 p.style={id='other_style'};F.start(p,p.style,0,{animation='ProjectYakuza_DD_Heavy'});check(not F.states[p],'builtin catalogue remains style exclusive');p.style=nil
 F.remote(p,nil,{clip='Unknown'});check(not F.states[p],'missing remote style is safe')
 

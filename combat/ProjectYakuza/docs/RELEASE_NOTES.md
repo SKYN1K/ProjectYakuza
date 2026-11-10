@@ -1,10 +1,10 @@
-# Project Yakuza 0.95.0
+# Project Yakuza 0.96.0
 
-- Read all six supplied Heat Action cmn.bin scenes, including the crate's big-endian Yakuza 5 format. Separate victim damage from prop damage, sound starts and particle starts.
-- Correct bottle contacts to frames 32/42/59/84 and wall contacts to 12/48. Restore both punches in each repeated crate section, and correct Rush punches, final kick and failure-ending timing against the retained source frame maps.
-- Preserve total damage, stock/fuel prices, eligibility, QTE controls and earned final-damage rules. Ground trample has no CMN damage markers and retains its verified frame-30 contact.
-- Play 23 original non-voice bank streams at their CMN starts, alongside five existing katana cues. Actor voice roles use existing Combat entries; the separate voice pack is untouched.
-- Schedule 106 source blood-family starts at native bone attachments across six main clips and two failure endings, using existing supplied blood pixels. Source cameras and non-blood engine effects are not recreated. Suppress generic contact layers for these scenes.
-- Preserve the katana's airborne grip reversal and every prior animation, texture and model byte. All 30 rebuilt Kahlua suites pass; source/PCM provenance, native sound parsing, deterministic scene/FK catalogs, Lua compilation and source-comment checks pass offline. Project Zomboid was not launched.
+- Added the original Yakuza 6 held-bat Heat Action from h23710_buki_d, using supplied CMN damage/audio/voice/blood timings and all 103 actor/victim motion samples at original speed.
+- Available to Dragon of Dojima with the six registered bat items: hold physical RMB and press the Heat Action binding (default MMB) near an eligible standing target outside a combo. Costs one stock or equivalent Extreme Heat fuel, paid only after confirmed playback. Other blunt items do not borrow it.
+- Retained the source animated right-weapon bone instead of using a rigid grip. Native owner, zombie/PvP victim and both MP observer cycles use isolated event-free selectors.
+- Two automatic source damage contacts at frames 14/50 use original 1:3 weights, totaling 1.5 canonical weapon damage. Existing protection, lethal deferral, interruption and multiplayer authority/replay rules apply.
+- Added five directly decoded original non-voice sound cues and six original blood-family emitter starts. Existing combat voice entries are reused; the separate voice pack is untouched. No images, textures or models are created or modified.
+- All 30 Kahlua suites, 78 production Lua compilations, original motion/PCM provenance, native importer/FK/selectors, 426 MP observer selectors and source-comment checks pass offline. Prior media bytes are preserved apart from the extended scene sound declarations. Project Zomboid was not launched.
 
-See [validation](VALIDATION_0.95.0.md), [scene contracts](HEAT_SCENES.md) and [source manifest](heat-scenes.json).
+See [controls and source contract](BAT_HEAT_ACTION.md), [validation](VALIDATION_0.96.0.md) and [motion provenance](bat-heat-assets.json).

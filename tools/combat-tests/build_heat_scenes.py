@@ -4,7 +4,7 @@ from read_heat_scene import read_scene
 from cri_cue_table import cue_names
 
 root=Path(__file__).resolve().parents[2];mod=root/'combat/ProjectYakuza';work=root/'extracted/all-heat-scene-095';work.mkdir(exist_ok=True);write='--write'in sys.argv
-scenes={'rush':('rush-reference-072','hact_h24010_100punchi.acb','ProjectYakuza_DD_HeatRush'),'bottle':('bottle-heat-071','hact_h23760_buki_n.acb','ProjectYakuza_DD_BottleHeat'),'wall':('grab-wall-080/wall-knock','hact_h2000_knock_wall_l.acb','ProjectYakuza_DD_WallHeat'),'ground':('ground-heat-081','hact_h1500.acb','ProjectYakuza_DD_GroundHeat'),'crate':('crate-heat-086','27d7.acb','ProjectYakuza_DD_CrateHeat'),'katana':('katana-heat-070','hact_h23720_buki_e.acb','ProjectYakuza_DD_KatanaHeat')}
+scenes={'rush':('rush-reference-072','hact_h24010_100punchi.acb','ProjectYakuza_DD_HeatRush'),'bottle':('bottle-heat-071','hact_h23760_buki_n.acb','ProjectYakuza_DD_BottleHeat'),'wall':('grab-wall-080/wall-knock','hact_h2000_knock_wall_l.acb','ProjectYakuza_DD_WallHeat'),'ground':('ground-heat-081','hact_h1500.acb','ProjectYakuza_DD_GroundHeat'),'crate':('crate-heat-086','27d7.acb','ProjectYakuza_DD_CrateHeat'),'katana':('katana-heat-070','hact_h23720_buki_e.acb','ProjectYakuza_DD_KatanaHeat'),'bat':('bat-heat-096/h23710_buki_d','hact_h23710_buki_d.acb','ProjectYakuza_DD_BatHeat')}
 sha=lambda b:hashlib.sha256(b).hexdigest()
 vgm=str(root/'tools/vgmstream/vgmstream-cli.exe');sounds={};audioRecords=[];sourceRecords=[];moves={};scripts=[];archiveCache={}
 def extract_bank(game,name):
@@ -65,7 +65,7 @@ for key,(folder,bankName,animation)in scenes.items():
         clip=animation.replace('HeatRush','HeatRushFail').replace('CrateHeat','CrateHeatFail')if failure else animation
         events=mapped_events(damage,frames,None if failure else segments);contacts=[]
         for i,(frame,node)in enumerate(events):
-            multiplier=0 if key in['rush','crate']else (1.5 if key in['bottle','katana']else 5)*node['damage']['damage']/sum(n['damage']['damage']for n in damage)
+            multiplier=0 if key in['rush','crate']else (1.5 if key in['bottle','katana','bat']else 5)*node['damage']['damage']/sum(n['damage']['damage']for n in damage)
             contacts.append({'atMs':frame/30*1000,'damageMultiplier':multiplier,'cue':'punchImpact','strong':i==len(events)-1,'charged':key=='rush'and i==len(events)-1})
         if key=='ground':contacts=[{'atMs':1000,'damageMultiplier':5,'cue':'heavyImpact','strong':True}]
         if key in['rush','crate']:
@@ -102,7 +102,7 @@ for key,(folder,bankName,animation)in scenes.items():
             if frame>=len(frames)-1:continue
             index=min(range(len(contacts)),key=lambda i:abs(contacts[i]['atMs']-frame/30*1000))+1
             particles.append({'frame':frame,'sourceFrame':node['element']['start'],'sourceOffset':node['offset'],'name':node['name'],'id':node['particle']['id'],'bone':node['bone'],'localPoint':node['particle']['matrix'][12:15],'contact':index})
-        definition={'animation':clip,'contacts':contacts,'audioEvents':audio,'voiceEvents':voices,'particles':particles,'sourceFrames':frames,'damagePolicy':'Preserve existing QTE-earned final damage aggregation.'if key in['rush','crate']else'Preserve total damage, distribute using original victim damage weights.'if damage else'No CMN damage nodes: retain verified frame-30 sole/head contact.'}
+        definition={'animation':clip,'contacts':contacts,'audioEvents':audio,'voiceEvents':voices,'particles':particles,'sourceFrames':frames,'damagePolicy':'New bat action: 1.5 canonical weapon damage distributed using original 500/1500 victim weights.'if key=='bat'else'Preserve existing QTE-earned final damage aggregation.'if key in['rush','crate']else'Preserve total damage, distribute using original victim damage weights.'if damage else'No CMN damage nodes: retain verified frame-30 sole/head contact.'}
         record['definitions'].append(definition)
     main=record['definitions'][0];moves[key]={k:main[k]for k in['contacts','audioEvents','voiceEvents']}
     if ending:

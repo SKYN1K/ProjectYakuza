@@ -1,5 +1,5 @@
 {
-  "operation": "Numeric source-pose anchors through native B42 FK and in-memory PCM onset analysis of unchanged supplied clips. No assets generated, converted to files, edited or upscaled. All six built-in scenes use original CMN victim damage and independently timed sound, voice and particle-bone events. Bounded QTE repeats and endings retain their source frame maps. Existing supplied blood pixels are reused. Custom clips retain measured transient leads.",
+  "operation": "Numeric source-pose anchors through native B42 FK and in-memory PCM onset analysis of unchanged supplied clips. No assets generated, converted to files, edited or upscaled. All seven built-in scenes use original CMN victim damage and independently timed sound, voice and particle-bone events. Bounded QTE repeats and endings retain their source frame maps. Existing supplied blood pixels are reused. Custom clips retain measured transient leads.",
   "clips": [
     {
       "animation": "ProjectYakuza_DD_HeatRush",
@@ -1808,9 +1808,142 @@
           "feedback": "unarmed"
         }
       ]
+    },
+    {
+      "animation": "ProjectYakuza_DD_BatHeat",
+      "targetAnimation": "ProjectYakuza_DD_BatHeatVictim",
+      "actorSha256": "e14c393bfe70aa201679d920bf3c08fe02271f1786f338fd91e9291760269751",
+      "victimSha256": "bbcb0e2d701634c29025c2b09db5e60625b55dc98321cb339072e93e80370067",
+      "contacts": [
+        {
+          "atMs": 466.666666667,
+          "index": 1,
+          "cue": "punchImpact",
+          "base": false,
+          "point": [
+            4.79e-07,
+            0.54075247,
+            0.0108618
+          ],
+          "bone": "Bip01_Pelvis",
+          "layers": []
+        },
+        {
+          "atMs": 1666.66666667,
+          "index": 2,
+          "cue": "punchImpact",
+          "base": false,
+          "point": [
+            4.6e-07,
+            0.091701031,
+            0.010861968
+          ],
+          "bone": "Bip01_Pelvis",
+          "layers": []
+        }
+      ],
+      "effects": [
+        {
+          "atMs": 1466.6666666666665,
+          "index": 2,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.1585366576910019,
+            0.18787425756454468,
+            0.186630979180336
+          ],
+          "bloodOnly": true,
+          "feedback": "blunt"
+        },
+        {
+          "atMs": 1466.6666666666665,
+          "index": 2,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.15467508137226105,
+            0.2616795301437378,
+            0.1843349039554596
+          ],
+          "bloodOnly": true,
+          "feedback": "blunt"
+        },
+        {
+          "atMs": 1466.6666666666665,
+          "index": 2,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.1525489091873169,
+            0.2882649302482605,
+            0.18581147491931915
+          ],
+          "bloodOnly": true,
+          "feedback": "blunt"
+        },
+        {
+          "atMs": 1466.6666666666665,
+          "index": 2,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.15467508137226105,
+            0.2616795301437378,
+            0.1843349039554596
+          ],
+          "bloodOnly": true,
+          "feedback": "blunt"
+        },
+        {
+          "atMs": 1466.6666666666665,
+          "index": 2,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.15467508137226105,
+            0.2616795301437378,
+            0.1843349039554596
+          ],
+          "bloodOnly": true,
+          "feedback": "blunt"
+        },
+        {
+          "atMs": 1466.6666666666665,
+          "index": 2,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.15467508137226105,
+            0.2616795301437378,
+            0.1843349039554596
+          ],
+          "bloodOnly": true,
+          "feedback": "blunt"
+        }
+      ]
     }
   ],
   "sounds": [
+    {
+      "file": "media/sound/ProjectYakuza/HeatScene_bat_0.wav",
+      "sha256": "857080a54fd9e841f50896f09e011545d1b5ad8dfbdade67724a76bb9d9b8997",
+      "attackLeadMs": 120
+    },
+    {
+      "file": "media/sound/ProjectYakuza/HeatScene_bat_1.wav",
+      "sha256": "b1551c69f23547cf7afd4d497e971cb5206b62c8f3b51f38488e2deef88a6d78",
+      "attackLeadMs": 120
+    },
+    {
+      "file": "media/sound/ProjectYakuza/HeatScene_bat_2.wav",
+      "sha256": "c6f63eaeb006d7773b37009dc4238ff2693dfeb5feb90e917e96ed0ce7dc0f29",
+      "attackLeadMs": 120
+    },
+    {
+      "file": "media/sound/ProjectYakuza/HeatScene_bat_3.wav",
+      "sha256": "d3d2715ac6a4fe5fc6f68249536242fbc7fc6ef187a278d6bcd7a2235c5e1630",
+      "attackLeadMs": 120
+    },
+    {
+      "file": "media/sound/ProjectYakuza/HeatScene_bat_4.wav",
+      "sha256": "123271a68ad816fd70a4f6634c30247896d496b483b92ff1cad9bb11de382480",
+      "attackLeadMs": 120
+    },
     {
       "file": "media/sound/ProjectYakuza/HeatScene_bottle_0.wav",
       "sha256": "d61fea26014aa1b1f35b028d8afa262972b355b360b2bab894775f810929a463",

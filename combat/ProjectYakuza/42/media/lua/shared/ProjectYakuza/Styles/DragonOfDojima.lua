@@ -174,6 +174,8 @@ if ProjectYakuza.Weapons then
         },
         groundAttacks={{animation="ProjectYakuza_DD_BatGround",nodeValue="dd_bat_ground",duration=55/30/1.4,speed=1.4,impact=10/55,groundAttack=true,hitResponse=false}},
         actions={
+            heatAction=ProjectYakuza.HeatScenes.action("bat",{enabled=true,weaponHeat=true,weaponItems={"Base.BaseballBat","Base.BaseballBat_Crafted","Base.BaseballBat_Metal","Base.BaseballBat_Nails","Base.ShortBat","Base.ShortBat_Nails"},motionId="dod_bat",useExtremeFuel=true,heatStocks=1,noCombo=true,
+                animation="ProjectYakuza_DD_BatHeat",targetAnimation="ProjectYakuza_DD_BatHeatVictim",nodeValue="dd_bat_heat",requiresTarget=true,duration=102/30,speed=1,hitResponse=false}),
             finisher={enabled=true,variants={default={enabled=true,animation="ProjectYakuza_DD_BatHeavy",nodeValue="dd_bat_heavy",duration=53/30/1.4,speed=1.4,impact=14/53,damageMultiplier=1.25,hitResponse=false}}},
             block={enabled=true,animation="ProjectYakuza_DD_BatGuard",staminaPerHit=.08},
             quickstep=base.actions.quickstep,

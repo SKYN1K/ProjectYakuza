@@ -1287,6 +1287,80 @@
         "bloodOnly": true,
         "feedback": "blade"
       }
+    ],
+    "ProjectYakuza_DD_BatHeat": [
+      {
+        "atMs": 1466.6666666666665,
+        "index": 2,
+        "bone": "Bip01_Head",
+        "point": [
+          -0.1585366576910019,
+          0.18787425756454468,
+          0.186630979180336
+        ],
+        "bloodOnly": true,
+        "feedback": "blunt"
+      },
+      {
+        "atMs": 1466.6666666666665,
+        "index": 2,
+        "bone": "Bip01_Head",
+        "point": [
+          -0.15467508137226105,
+          0.2616795301437378,
+          0.1843349039554596
+        ],
+        "bloodOnly": true,
+        "feedback": "blunt"
+      },
+      {
+        "atMs": 1466.6666666666665,
+        "index": 2,
+        "bone": "Bip01_Head",
+        "point": [
+          -0.1525489091873169,
+          0.2882649302482605,
+          0.18581147491931915
+        ],
+        "bloodOnly": true,
+        "feedback": "blunt"
+      },
+      {
+        "atMs": 1466.6666666666665,
+        "index": 2,
+        "bone": "Bip01_Head",
+        "point": [
+          -0.15467508137226105,
+          0.2616795301437378,
+          0.1843349039554596
+        ],
+        "bloodOnly": true,
+        "feedback": "blunt"
+      },
+      {
+        "atMs": 1466.6666666666665,
+        "index": 2,
+        "bone": "Bip01_Head",
+        "point": [
+          -0.15467508137226105,
+          0.2616795301437378,
+          0.1843349039554596
+        ],
+        "bloodOnly": true,
+        "feedback": "blunt"
+      },
+      {
+        "atMs": 1466.6666666666665,
+        "index": 2,
+        "bone": "Bip01_Head",
+        "point": [
+          -0.15467508137226105,
+          0.2616795301437378,
+          0.1843349039554596
+        ],
+        "bloodOnly": true,
+        "feedback": "blunt"
+      }
     ]
   },
   "clips": [
@@ -2614,6 +2688,85 @@
           ],
           "bloodOnly": true,
           "feedback": "blade"
+        }
+      ]
+    },
+    {
+      "animation": "ProjectYakuza_DD_BatHeat",
+      "actorSha256": "e14c393bfe70aa201679d920bf3c08fe02271f1786f338fd91e9291760269751",
+      "victimSha256": "bbcb0e2d701634c29025c2b09db5e60625b55dc98321cb339072e93e80370067",
+      "events": [
+        {
+          "atMs": 1466.6666666666665,
+          "index": 2,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.1585366576910019,
+            0.18787425756454468,
+            0.186630979180336
+          ],
+          "bloodOnly": true,
+          "feedback": "blunt"
+        },
+        {
+          "atMs": 1466.6666666666665,
+          "index": 2,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.15467508137226105,
+            0.2616795301437378,
+            0.1843349039554596
+          ],
+          "bloodOnly": true,
+          "feedback": "blunt"
+        },
+        {
+          "atMs": 1466.6666666666665,
+          "index": 2,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.1525489091873169,
+            0.2882649302482605,
+            0.18581147491931915
+          ],
+          "bloodOnly": true,
+          "feedback": "blunt"
+        },
+        {
+          "atMs": 1466.6666666666665,
+          "index": 2,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.15467508137226105,
+            0.2616795301437378,
+            0.1843349039554596
+          ],
+          "bloodOnly": true,
+          "feedback": "blunt"
+        },
+        {
+          "atMs": 1466.6666666666665,
+          "index": 2,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.15467508137226105,
+            0.2616795301437378,
+            0.1843349039554596
+          ],
+          "bloodOnly": true,
+          "feedback": "blunt"
+        },
+        {
+          "atMs": 1466.6666666666665,
+          "index": 2,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.15467508137226105,
+            0.2616795301437378,
+            0.1843349039554596
+          ],
+          "bloodOnly": true,
+          "feedback": "blunt"
         }
       ]
     }

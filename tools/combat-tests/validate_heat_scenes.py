@@ -6,8 +6,8 @@ from cri_cue_table import cue_names
 root=Path(__file__).resolve().parents[2];mod=root/'combat/ProjectYakuza'
 data=json.loads((mod/'docs/heat-scenes.json').read_text())
 effects=json.loads((mod/'docs/heat-scene-effects.json').read_text())
-expected={'rush':[[56,68,80,92,114,126,146,158,170,182,204,216,246],[26]],'bottle':[[32,42,59,84]],'wall':[[12,48]],'ground':[[30]],'crate':[[14,44,54,74,84,104,114,142],[19]],'katana':[[24,44,64]]}
-original={'rush':[56,68,78,90,102,114,144],'bottle':[32,42,59,84],'wall':[12,48],'ground':[],'crate':[14,44,54,82],'katana':[24,44,64]}
+expected={'rush':[[56,68,80,92,114,126,146,158,170,182,204,216,246],[26]],'bottle':[[32,42,59,84]],'wall':[[12,48]],'ground':[[30]],'crate':[[14,44,54,74,84,104,114,142],[19]],'katana':[[24,44,64]],'bat':[[14,50]]}
+original={'rush':[56,68,78,90,102,114,144],'bottle':[32,42,59,84],'wall':[12,48],'ground':[],'crate':[14,44,54,82],'katana':[24,44,64],'bat':[14,50]}
 sha=lambda b:hashlib.sha256(b).hexdigest()
 banks={};count=0
 for record in data['scenes']:
@@ -32,7 +32,7 @@ for record in data['scenes']:
                 assert contacts[-1]['sumQTE']and all(not c.get('sumQTE')for c in contacts[:-1])
                 assert contacts[-1].get('baseDamageMultiplier',0)==(1.5 if key=='crate'else 0)
             else:
-                total=1.5 if key in ['katana','bottle']else 5
+                total=1.5 if key in ['katana','bottle','bat']else 5
                 assert math.isclose(sum(c['damageMultiplier']for c in contacts),total)
                 if victim:
                     weights=[n['damage']['damage']for n in victim]
@@ -51,7 +51,7 @@ for record in data['scenes']:
             assert any(banks[key][1][n['sound']['cueId']].startswith('Kiryu_')is False for n in matches)
         assert all(v['entry'].startswith('Combat')for v in definition['voiceEvents'])
         count+=len(native)
-assert count==106 and len(data['sounds'])==23
+assert count==112 and len(data['sounds'])==28
 with tempfile.TemporaryDirectory(prefix='project-yakuza-cmn-')as tmp:
     folder=Path(tmp)
     for record in data['sounds']:
@@ -66,4 +66,4 @@ with tempfile.TemporaryDirectory(prefix='project-yakuza-cmn-')as tmp:
 with zipfile.ZipFile(root/'dist/ProjectYakuza-B42-v0.94.0.zip')as archive:
     media=[n for n in archive.namelist()if '/42/media/'in n and '/lua/'not in n and not n.endswith('/')]
     for name in media:assert archive.read(name)==(mod/name.split('/',1)[1]).read_bytes(),name
-print('PASS 6 supplied CMN scenes, 8 timelines, 33 contacts, 106 blood anchors, 23 original PCM decodes, victim-only damage and',len(media),'unchanged prior media files')
+print('PASS 7 supplied CMN scenes, 9 timelines, 35 contacts, 112 blood anchors, 28 original PCM decodes, victim-only damage and',len(media),'unchanged prior media files')
