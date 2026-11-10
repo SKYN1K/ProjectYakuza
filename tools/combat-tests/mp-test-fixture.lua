@@ -919,7 +919,7 @@ do
  local lease=rush.leases[p];check(lease and lease.motion==ProjectYakuza.PairedMotions.dod_katana and not lease.definition,'MP katana uses original paired motion without eight-hit QTE proof')
  local hits=z1.hits;command('heatRushReady',{action=lease.action})
  check(p.ghost and p.invincible and z1.vars.ProjectYakuzaPairedVictimClip=='ProjectYakuza_DD_KatanaHeatVictim','server protects attacker and selects katana victim clip')
- command('heatRushHit',{action=lease.action,index=3});check(z1.hits==hits,'early final contact cannot bypass source timing')
+ command('heatRushHit',{action=lease.action,index=4});check(z1.hits==hits,'early final contact cannot bypass source timing')
  command('heatRushHit',{action=lease.action,index=4});check(z1.hits==hits,'removed fourth contact cannot apply MP damage')
  for i,contact in ipairs(lease.contacts)do
   clock=lease.started+contact.atMs+10;command('heatRushHit',{action=lease.action,index=i,damage=999})
@@ -970,7 +970,7 @@ do
  for i,contact in ipairs(lease.contacts)do
   clock=lease.started+contact.atMs+10;command('heatRushHit',{action=lease.action,index=i,damage=999})
   command('heatRushHit',{action=lease.action,index=i,damage=999})
-  check(z1.hits==hits and math.abs(z1.health-(i==3 and 8.8 or 10))<.000001,'server bottle contacts deduplicate without a native animation reset '..i)
+  check(z1.hits==hits and math.abs(z1.health-({9.82,9.64,9.46,8.8})[i])<.000001,'server bottle contacts use source damage weights and deduplicate without a native animation reset '..i)
  end
  check(math.abs(z1.health-8.8)<.000001,'server computes final bottle damage from actual weapon')
  clock=lease.started+lease.duration*1000-50;neutral({clip='ProjectYakuza_DD_BottleHeat',move='dd_bottle_heat'});command('heatRushEnd',{action=lease.action,completed=true})

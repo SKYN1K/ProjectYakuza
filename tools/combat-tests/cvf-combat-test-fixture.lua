@@ -143,17 +143,20 @@ for _,case in ipairs({{item='ProjectYakuza.IntactBeerBottle',profile='bottle'},{
   check(contact.voice and #p.calls==before+1 and last(contact.voice)or not contact.voice and #p.calls==before,'actual CVF playback receives the configured source contact voice '..case.profile..i)
  end
 end
+do local _="ProjectYakuzaFixture:SCENE_VOICES" end
 local context=ProjectYakuza.activeActions[p];context.action=ProjectYakuza.Weapons.views.dragon_of_dojima.bottle.actions.heatAction;clock=clock+6000;p.voiceBusy=true;before=#p.calls
-H.present(p,nil,context.action,1,false)
+local sourceVoice=context.action.voiceEvents[1]
+local function sceneContact()ProjectYakuza.HeatSceneVoiceProbe.authoredEvents(p,{move={voiceEvents={sourceVoice}},voices={},authored={}},sourceVoice.atMs)end
+sceneContact()
 check(#p.calls==before and V.states[p].contact~=nil,'busy actual provider queues Heat Action contact voice')
 clock=clock+300;p.voiceBusy=false;V.update(p)
-check(#p.calls==before+1 and last('CombatHeavyAttack')and not V.states[p].contact,'contact voice retries after the actual provider clears')
+check(#p.calls==before+1 and last(sourceVoice.entry)and not V.states[p].contact,'source-timed voice retries after the actual provider clears')
 clock=clock+100;V.update(p);check(#p.calls==before+1,'successful contact retry plays only once')
-clock=clock+6000;p.voiceBusy=true;H.present(p,nil,context.action,1,false);ProjectYakuza.emit('actionCancelled',context)
+clock=clock+6000;p.voiceBusy=true;sceneContact();ProjectYakuza.emit('actionCancelled',context)
 clock=clock+300;p.voiceBusy=false;before=#p.calls;V.update(p);check(#p.calls==before and not V.states[p].contact,'cancelled paired action discards pending contact voice')
-clock=clock+6000;p.voiceBusy=true;H.present(p,nil,context.action,1,false);clock=clock+700;p.voiceBusy=false;before=#p.calls;V.update(p)
+clock=clock+6000;p.voiceBusy=true;sceneContact();clock=clock+700;p.voiceBusy=false;before=#p.calls;V.update(p)
 check(#p.calls==before and not V.states[p].contact,'expired contact voice cannot speak long after its hit')
-clock=clock+6000;p.voiceBusy=true;H.present(p,nil,context.action,1,false);ProjectYakuza.activeActions[p]={player=p,kind='heatAction'};clock=clock+300;p.voiceBusy=false;before=#p.calls;V.update(p)
+clock=clock+6000;p.voiceBusy=true;sceneContact();ProjectYakuza.activeActions[p]={player=p,kind='heatAction'};clock=clock+300;p.voiceBusy=false;before=#p.calls;V.update(p)
 check(#p.calls==before and not V.states[p].contact,'replaced action cannot consume an old contact voice')
 p.held=nil;ProjectYakuza.activeActions[p]=nil
 return 'PASS '..tests..' checks against actual CVF registry/playback, Heat Action sound resolution and combat adapter'

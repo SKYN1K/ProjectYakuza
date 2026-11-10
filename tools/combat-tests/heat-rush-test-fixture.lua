@@ -287,7 +287,7 @@ local oldEffects,oldFeedback=PY.HitEffects,PY.Feedback;local visualHits,sounds=0
 PY.HitEffects={spawn=function(_,_,_,charged)visualHits=visualHits+1;if visualHits==13 then check(charged,'finishing kick uses supplied stronger sparks')end end}
 PY.Feedback={sound=function(_,cue)return cue end,play=function(_,cue)sounds[#sounds+1]=cue end}
 for i=1,13 do H.present(p,z,style.actions.heatAction,i)end
-check(visualHits==13 and #sounds==15 and sounds[13]=='kickImpact'and sounds[14]=='heavyImpact'and sounds[15]=='heatImpact','twelve punches and automatic kick carry timed effects and layered finishing sounds')
+check(visualHits==13 and #sounds==13 and sounds[13]=='kickImpact','twelve punches and automatic kick retain bounded fallback contacts without extra invented sound layers')
 PY.HitEffects=oldEffects;PY.Feedback=oldFeedback
 local responses=PY.HitResponses
 

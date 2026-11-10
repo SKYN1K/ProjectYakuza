@@ -1,4 +1,5 @@
 require "ProjectYakuza/Registry"
+require "ProjectYakuza/HeatScenes"
 require "ProjectYakuza/GrabMoves"
 require "ProjectYakuza/RushMove"
 require "ProjectYakuza/CrateHeatMove"
@@ -25,7 +26,7 @@ ProjectYakuza.registerStyle({
     ui={encounter="ProjectYakuza.y6Encounter"},
     encounterIntro={enabled=true,radius=12,durationMs=2300,quietMs=12000,pollMs=400,
         titles={{max=10,text="A bunch of brain eaters"},{max=39,text="Zombies"},{text="The Horde"}}},
-    sounds={
+    sounds=ProjectYakuza.HeatScenes.sounds({
         heatKatanaSwing="ProjectYakuza_KatanaSceneSwing",heatKatanaSlash="ProjectYakuza_KatanaSceneSlash",heatKatanaPunch="ProjectYakuza_KatanaScenePunch",heatKatanaThrust="ProjectYakuza_KatanaSceneThrust",heatKatanaBodyFall="ProjectYakuza_KatanaSceneBodyFall",
         lowHealth="ProjectYakuza_LowHealthHeartbeat",
         punchImpact="ProjectYakuza_Y6_PunchImpact",kickImpact="ProjectYakuza_Y6_KickImpact",heatImpact="ProjectYakuza_Y6_HeatImpact",
@@ -34,7 +35,7 @@ ProjectYakuza.registerStyle({
         grab="ProjectYakuza_Y6_Grab",throwImpact="ProjectYakuza_Y6_ThrowImpact",guardHit="ProjectYakuza_Y6_GuardImpact",doubleFinisher="ProjectYakuza_Y6_HeavyFinisher",guardBreak="ProjectYakuza_Y6_GuardBreak",
         heatGain="ProjectYakuza_Y6_HeatGain",heatFull="ProjectYakuza_Y6_HeatFull",heatStart="ProjectYakuza_Y6_ChargeStart",
         heatOnA="ProjectYakuza_Y6_HeatOnA",heatOnB="ProjectYakuza_Y6_HeatOnB",heatOff="ProjectYakuza_Y6_HeatOff",
-    },
+    }),
     music={
         {sound="ProjectYakuza_FunkGoesOn",title="Funk Goes On"},
         {sound="ProjectYakuza_BringItOn",title="Bring It On"},
@@ -118,8 +119,8 @@ ProjectYakuza.registerStyle({
             double_after_3={enabled=true,afterLight=3,animation="ProjectYakuza_DD_DoubleFinisher03",nodeValue="dd_double_03",damageMultiplier=1.25,duration=2.033333333333333/1.6,speed=1.6,impact=0.39344262295081966,reaction="enemy_03",fullBody=true,double=true},
             double_after_4={enabled=true,afterLight=4,animation="ProjectYakuza_DD_DoubleFinisher04",nodeValue="dd_double_04",damageMultiplier=1.25,duration=2.3666666666666667/1.6,speed=1.6,impact=0.36619718309859156,reaction="enemy_04",fullBody=true,double=true},
         } },
-        grabHeat=ProjectYakuza.WallHeatMove,
-        groundHeat=ProjectYakuza.GroundHeatMove,
+        grabHeat=ProjectYakuza.HeatScenes.action("wall",ProjectYakuza.WallHeatMove),
+        groundHeat=ProjectYakuza.HeatScenes.action("ground",ProjectYakuza.GroundHeatMove),
         grab = {enabled=true,releaseOnAimLoss=false,breakout={chance=.05,intervalMs=1000,firstCheckMs=1000,animation="ProjectYakuza_DD_GrabEscape",targetAnimation="ProjectYakuza_DD_GrabEscapeVictim",duration=70/30},throwContactMs=70/30*1000,throwDuration=77/30,throwCrowd={radius=1.1,forward=.45,maxTargets=4,force=.65},distance=.5,lateral=.019355,throwOffset={forward=.253831,right=.019526},strikes=ProjectYakuza.GrabMoves,requiresTarget=true,animation="ProjectYakuza_DD_Grab",targetAnimation="ProjectYakuza_DD_GrabVictimEnter"},
         parry = {enabled=true,animation="ProjectYakuza_DD_TigerDrop",nodeValue="dd_tiger_drop",duration=1.1,speed=1,requiresTarget=true,targetAnimation="Zombie_ShotBelly",cooldownMs=60000,windowMs=300},
         block = {enabled=true,animation="ProjectYakuza_DD_Guard",staminaPerHit=.08},
@@ -147,7 +148,7 @@ ProjectYakuza.registerStyle({
             knee={enabled=true,variant="knee",animation="ProjectYakuza_DD_RunningAttack03",nodeValue="dd_run_03",duration=1.6666666666666667/1.2,speed=1.2,impact=0.24,distance=1,reaction="enemy_03",fullBody=true,runningAttack=true},
             dropkick={enabled=true,variant="dropkick",animation="ProjectYakuza_DD_RunningAttack04",nodeValue="dd_run_04",duration=2.1333333333333333/1.6,speed=1.6,impact=0.21875,distance=1.2,reaction="enemy_04",fullBody=true,runningAttack=true},
         }},
-        heatAction=ProjectYakuza.RushMove,
+        heatAction=ProjectYakuza.HeatScenes.action("rush",ProjectYakuza.RushMove),
     },
 })
 
@@ -156,7 +157,7 @@ for i=5,8 do rushStyle.extremeLightAttacks[i]=rushStyle.extremeLightAttacks[(i-5
 
 if ProjectYakuza.Weapons then
     local base=ProjectYakuza.getStyle("dragon_of_dojima")
-    local sounds={};for k,v in pairs(base.sounds) do if k:match("^heat") then sounds[k]=v end end
+    local sounds=ProjectYakuza.HeatScenes.sounds({});for k,v in pairs(base.sounds) do if k:match("^heat") then sounds[k]=v end end
     sounds.guardHit=base.sounds.guardHit;sounds.guardBreak=base.sounds.guardBreak
     sounds.punchImpact=base.sounds.punchImpact;sounds.kickImpact=base.sounds.kickImpact
     sounds.heavyImpact=base.sounds.heavyImpact;sounds.groundImpact=base.sounds.heavyImpact
@@ -182,7 +183,7 @@ end
 
 if ProjectYakuza.Weapons then
     local base=ProjectYakuza.getStyle("dragon_of_dojima")
-    local sounds={};for k,v in pairs(base.sounds) do if k:match("^heat") then sounds[k]=v end end
+    local sounds=ProjectYakuza.HeatScenes.sounds({});for k,v in pairs(base.sounds) do if k:match("^heat") then sounds[k]=v end end
     sounds.guardHit=base.sounds.guardHit;sounds.guardBreak=base.sounds.guardBreak
     sounds.punchImpact=base.sounds.punchImpact;sounds.kickImpact=base.sounds.kickImpact
     sounds.heavyImpact=base.sounds.finisher;sounds.groundImpact=base.sounds.finisher
@@ -204,11 +205,11 @@ if ProjectYakuza.Weapons then
         lightAttacks={{animation="ProjectYakuza_DD_BladeLight01",nodeValue="dd_blade_light_01",duration=58/30/1.4,speed=1.4,impact=15/58,hitResponse=false,chainAt=31/58,quickstepCancelAt=16/58,damageMultiplier=1},{animation="ProjectYakuza_DD_BladeLight02",nodeValue="dd_blade_light_02",duration=48/30/1.4,speed=1.4,impact=22/48,hitResponse=false,chainAt=37/48,quickstepCancelAt=23/48,damageMultiplier=1},{animation="ProjectYakuza_DD_BladeLight03",nodeValue="dd_blade_light_03",duration=61/30/1.4,speed=1.4,impact=16/61,hitResponse=false,chainAt=32/61,quickstepCancelAt=17/61,damageMultiplier=1}},
         groundAttacks={{animation="ProjectYakuza_DD_BladeGround",nodeValue="dd_blade_ground",duration=58/30/1.4,speed=1.4,impact=13/58,hitResponse=false,groundAttack=true}},
         actions={
-            heatAction={enabled=true,weaponHeat=true,weaponItems={"Base.Katana"},motionId="dod_katana",useExtremeFuel=true,heatStocks=1,noCombo=true,
+            heatAction=ProjectYakuza.HeatScenes.action("katana",{enabled=true,weaponHeat=true,weaponItems={"Base.Katana"},motionId="dod_katana",useExtremeFuel=true,heatStocks=1,noCombo=true,
                 animation="ProjectYakuza_DD_KatanaHeat",targetAnimation="ProjectYakuza_DD_KatanaHeatVictim",nodeValue="dd_katana_heat",requiresTarget=true,duration=140/30,speed=1,hitResponse=false,
                 audioEvents={{atMs=8/30*1000,cue="heatKatanaSwing",target="actor"},{atMs=20/30*1000,cue="heatKatanaSlash",target="victim"},{atMs=28/30*1000,cue="heatKatanaPunch",target="actor"},{atMs=54/30*1000,cue="heatKatanaThrust",target="victim"},{atMs=97/30*1000,cue="heatKatanaBodyFall",target="victim"}},
                 voiceEvents={{atMs=6/30*1000,entry="CombatHeavyAttack"},{atMs=46/30*1000,entry="CombatSpecialMove"}},
-                contacts={{atMs=24/30*1000,damageMultiplier=.375,cue="heatKatanaSlash"},{atMs=44/30*1000,damageMultiplier=.375,cue="heatKatanaPunch"},{atMs=64/30*1000,damageMultiplier=.75,cue="heatKatanaThrust"}}},
+                contacts={{atMs=24/30*1000,damageMultiplier=.375,cue="heatKatanaSlash"},{atMs=44/30*1000,damageMultiplier=.375,cue="heatKatanaPunch"},{atMs=64/30*1000,damageMultiplier=.75,cue="heatKatanaThrust"}}}),
             finisher={enabled=true,variants={default={animation="ProjectYakuza_DD_BladeHeavy",nodeValue="dd_blade_heavy",duration=70/30/1.4,speed=1.4,impact=22/70,hitResponse=false,enabled=true,damageMultiplier=1.25}}},
             quickstep=base.actions.quickstep,
             block={enabled=true,animation="ProjectYakuza_DD_BladeGuard",staminaPerHit=.08},
@@ -225,9 +226,9 @@ if ProjectYakuza.Weapons then
         lightAttacks={{animation="ProjectYakuza_DD_BottleLight01",nodeValue="dd_bottle_light_01",duration=40/30/1.4,speed=1.4,impact=11/40,hitResponse=false,damageMultiplier=1,chainAt=26/40,quickstepCancelAt=12/40},{animation="ProjectYakuza_DD_BottleLight02",nodeValue="dd_bottle_light_02",duration=35/30/1.4,speed=1.4,impact=13/35,hitResponse=false,damageMultiplier=1,chainAt=23/35,quickstepCancelAt=14/35},{animation="ProjectYakuza_DD_BottleLight03",nodeValue="dd_bottle_light_03",duration=47/30/1.4,speed=1.4,impact=15/47,hitResponse=false,damageMultiplier=1,chainAt=31/47,quickstepCancelAt=16/47}},
         groundAttacks={{animation="ProjectYakuza_DD_BottleGround",nodeValue="dd_bottle_ground",duration=55/30/1.4,speed=1.4,impact=10/55,hitResponse=false,damageMultiplier=1,groundAttack=true}},
         actions={
-            heatAction={enabled=true,weaponHeat=true,weaponItems={"ProjectYakuza.IntactBeerBottle","ProjectYakuza.IntactWineBottle","ProjectYakuza.IntactWhiskeyBottle"},motionId="dod_bottle",useExtremeFuel=true,heatStocks=1,noCombo=true,
+            heatAction=ProjectYakuza.HeatScenes.action("bottle",{enabled=true,weaponHeat=true,weaponItems={"ProjectYakuza.IntactBeerBottle","ProjectYakuza.IntactWineBottle","ProjectYakuza.IntactWhiskeyBottle"},motionId="dod_bottle",useExtremeFuel=true,heatStocks=1,noCombo=true,
                 animation="ProjectYakuza_DD_BottleHeat",targetAnimation="ProjectYakuza_DD_BottleHeatVictim",nodeValue="dd_bottle_heat",requiresTarget=true,duration=5,speed=1,hitResponse=false,
-                contacts={{atMs=22/30*1000,damageMultiplier=0,cue="heavyImpact",voice="CombatHeavyAttack"},{atMs=73/30*1000,damageMultiplier=0,cue="heavyImpact",voice="CombatHeavyAttack"},{atMs=92/30*1000,damageMultiplier=1.5,cue="heavyImpact",voice="CombatHeavyAttack"}}},
+                contacts={{atMs=22/30*1000,damageMultiplier=0,cue="heavyImpact",voice="CombatHeavyAttack"},{atMs=73/30*1000,damageMultiplier=0,cue="heavyImpact",voice="CombatHeavyAttack"},{atMs=92/30*1000,damageMultiplier=1.5,cue="heavyImpact",voice="CombatHeavyAttack"}}}),
             finisher={enabled=true,variants={default={animation="ProjectYakuza_DD_BottleHeavy",nodeValue="dd_bottle_heavy",duration=53/30/1.4,speed=1.4,impact=14/53,hitResponse=false,damageMultiplier=1.25}}},
             quickstep=base.actions.quickstep,
             block={enabled=true,animation="ProjectYakuza_DD_BottleGuard",staminaPerHit=.08},
@@ -239,7 +240,7 @@ if ProjectYakuza.Weapons then
         lightAttacks={{animation="ProjectYakuza_DD_CrateLight01",nodeValue="dd_crate_light_01",duration=73/30/1.4,speed=1.4,impact=20/73,hitResponse=false,damageMultiplier=1,chainAt=47/73,quickstepCancelAt=21/73},{animation="ProjectYakuza_DD_CrateLight02",nodeValue="dd_crate_light_02",duration=60/30/1.4,speed=1.4,impact=15/60,hitResponse=false,damageMultiplier=1,chainAt=39/60,quickstepCancelAt=16/60},{animation="ProjectYakuza_DD_CrateLight03",nodeValue="dd_crate_light_03",duration=74/30/1.4,speed=1.4,impact=20/74,hitResponse=false,damageMultiplier=1,chainAt=48/74,quickstepCancelAt=21/74}},
         groundAttacks={{animation="ProjectYakuza_DD_CrateGround",nodeValue="dd_crate_ground",duration=65/30/1.4,speed=1.4,impact=29/65,hitResponse=false,damageMultiplier=1,groundAttack=true}},
         actions={
-            heatAction=ProjectYakuza.CrateHeatMove,
+            heatAction=ProjectYakuza.HeatScenes.action("crate",ProjectYakuza.CrateHeatMove),
             finisher={enabled=true,variants={default={animation="ProjectYakuza_DD_CrateHeavy",nodeValue="dd_crate_heavy",duration=66/30/1.4,speed=1.4,impact=22/66,hitResponse=false,damageMultiplier=1.25}}},
             quickstep=base.actions.quickstep,
             block={enabled=true,animation="ProjectYakuza_DD_CrateGuard",staminaPerHit=.08},

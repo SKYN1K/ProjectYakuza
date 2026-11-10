@@ -10,8 +10,8 @@ end
 local PY=ProjectYakuza;local base=PY.getStyle("dragon_of_dojima");local rows={}
 local function add(style,move)
  local motion=PY.HeatRushRules.motion(move)
- rows[#rows+1]={animation=move.animation,targetAnimation=move.targetAnimation,contacts=move.contacts,sounds=style.sounds,baseSounds=base.sounds,motion=motion,audioEvents=move.audioEvents}
- if move.qteFailure and move.qteFailure.paired then local f=move.qteFailure;local c={};for k,v in pairs(move.contacts[#move.contacts])do c[k]=v end;c.atMs=f.contactMs;c.index=#move.contacts;rows[#rows+1]={animation=f.animation,targetAnimation=f.targetAnimation,contacts={c},sounds=style.sounds,baseSounds=base.sounds,motion=PY.PairedMotions[f.motionId]}end
+rows[#rows+1]={animation=move.animation,targetAnimation=move.targetAnimation,contacts=move.contacts,sounds=style.sounds,baseSounds=base.sounds,motion=motion,audioEvents=move.audioEvents}
+ if move.qteFailure and move.qteFailure.paired then local f=move.qteFailure;local c={};for k,v in pairs(move.contacts[#move.contacts])do c[k]=v end;c.atMs=f.contactMs;c.index=#move.contacts;rows[#rows+1]={animation=f.animation,targetAnimation=f.targetAnimation,contacts={c},sounds=style.sounds,baseSounds=base.sounds,motion=PY.PairedMotions[f.motionId],audioEvents=f.audioEvents}end
 end
 add(base,base.actions.heatAction);add(base,base.actions.grabHeat);add(base,base.actions.groundHeat)
 for _,profile in ipairs({"blade","bottle","crate"})do local s=PY.Weapons.views[base.id][profile];add(s,s.actions.heatAction)end
@@ -24,7 +24,7 @@ r=subprocess.run([java,'-Xms16m','-Xmx256m','-XX:ActiveProcessorCount=2','-cp','
 names=sorted({r[k]for r in rows for k in ['animation','targetAnimation']});args=[java,'-Xms16m','-Xmx256m','-XX:ActiveProcessorCount=2','--enable-native-access=ALL-UNNAMED','-cp','.;'+str(game/'*'),'LimbTrailProbe']
 for n in names:args.extend([str(mod/f'42/media/anims_X/Bob/{n}.x'),str(folder/(n+'.json'))])
 r=subprocess.run(args,cwd=w,capture_output=True,text=True);assert r.returncode==0,r.stdout+r.stderr
-catalog=json.loads((mod/'docs/attack-trail-catalog.json').read_text());tracks={r['animation']:r for r in catalog['clips']};definitions={};records=[];sounds=set();katana=json.loads((mod/'docs/katana-heat-assets.json').read_text())
+catalog=json.loads((mod/'docs/attack-trail-catalog.json').read_text());tracks={r['animation']:r for r in catalog['clips']};definitions={};records=[];sounds=set();katana=json.loads((mod/'docs/katana-heat-assets.json').read_text());sceneEffects=json.loads((mod/'docs/heat-scene-effects.json').read_text())['moves']
 def path(v,f):return v[min(f,len(v)-1)]
 for row in rows:
  actor=json.loads((folder/(row['animation']+'.json')).read_text());victim=json.loads((folder/(row['targetAnimation']+'.json')).read_text());contacts=[]
@@ -49,7 +49,7 @@ for row in rows:
    source=katana['effectPoints'][i];point=source['point'];boneName=source['bone'];feedback='unarmed'if i==1 else'blade';extra={'bloodOnly':True}
   contacts.append({'atMs':c['atMs'],'index':c.get('index',i+1),'cue':cue,'base':base,'point':point,'bone':boneName,**extra,'layers':layers,**({'feedback':feedback}if feedback else{})})
  for event in row.get('audioEvents',[]):sounds.add(row['sounds'][event['cue']])
- definitions[row['animation']]={'contacts':contacts};records.append({'animation':row['animation'],'targetAnimation':row['targetAnimation'],'actorSha256':hashlib.sha256((mod/f'42/media/anims_X/Bob/{row["animation"]}.x').read_bytes()).hexdigest(),'victimSha256':hashlib.sha256((mod/f'42/media/anims_X/Bob/{row["targetAnimation"]}.x').read_bytes()).hexdigest(),'contacts':contacts})
+ definitions[row['animation']]={'contacts':contacts,'effects':sceneEffects[row['animation']]};records.append({'animation':row['animation'],'targetAnimation':row['targetAnimation'],'actorSha256':hashlib.sha256((mod/f'42/media/anims_X/Bob/{row["animation"]}.x').read_bytes()).hexdigest(),'victimSha256':hashlib.sha256((mod/f'42/media/anims_X/Bob/{row["targetAnimation"]}.x').read_bytes()).hexdigest(),'contacts':contacts,'effects':sceneEffects[row['animation']]})
 scripts='\n'.join(p.read_text()for p in (mod/'42/media/scripts').glob('*.txt'));files=set()
 for event in sounds:
  m=re.search(r'\bsound\s+'+re.escape(event)+r'\s*\{',scripts);assert m,event;pos=m.end();depth=1
@@ -64,7 +64,7 @@ def literal(v):
  if isinstance(v,(int,float)):return format(v,'.9g')
  if isinstance(v,list):return '{'+','.join(literal(x)for x in v)+'}'
  return '{'+','.join('['+json.dumps(k)+']='+literal(x)for k,x in sorted(v.items()))+'}'
-code='require "ProjectYakuza/Registry"\nProjectYakuza.HeatPresentationData='+literal({'moves':definitions,'leads':leads})+'\n';output=lua/'client/ProjectYakuza/HeatPresentationData.lua';report={'operation':'Numeric source-pose anchors through native B42 FK and in-memory PCM onset analysis of unchanged supplied clips. No assets generated, converted to files, edited or upscaled. Contact timing and victim pose select impact location. Katana contacts use original CMN damage nodes and particle-bone offsets, and its independently authored audioEvents retain the original bank cue starts. Generic clips use measured transient leads.','clips':records,'sounds':audio}
+code='require "ProjectYakuza/Registry"\nProjectYakuza.HeatPresentationData='+literal({'moves':definitions,'leads':leads})+'\n';output=lua/'client/ProjectYakuza/HeatPresentationData.lua';report={'operation':'Numeric source-pose anchors through native B42 FK and in-memory PCM onset analysis of unchanged supplied clips. No assets generated, converted to files, edited or upscaled. All six built-in scenes use original CMN victim damage and independently timed sound, voice and particle-bone events. Bounded QTE repeats and endings retain their source frame maps. Existing supplied blood pixels are reused. Custom clips retain measured transient leads.','clips':records,'sounds':audio}
 if '--write'in sys.argv:output.write_text(code);(mod/'docs/heat-presentation-data.json').write_text(json.dumps(report,indent=2)+'\n')
 else:assert output.read_text()==code and json.loads((mod/'docs/heat-presentation-data.json').read_text())==report
 print('PASS',len(records),'paired main/ending clips,',sum(len(r['contacts'])for r in records),'native victim contact anchors and',len(audio),'unchanged audio onset measurements')

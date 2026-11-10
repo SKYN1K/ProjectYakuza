@@ -1,5 +1,5 @@
 {
-  "operation": "Numeric source-pose anchors through native B42 FK and in-memory PCM onset analysis of unchanged supplied clips. No assets generated, converted to files, edited or upscaled. Contact timing and victim pose select impact location. Katana contacts use original CMN damage nodes and particle-bone offsets, and its independently authored audioEvents retain the original bank cue starts. Generic clips use measured transient leads.",
+  "operation": "Numeric source-pose anchors through native B42 FK and in-memory PCM onset analysis of unchanged supplied clips. No assets generated, converted to files, edited or upscaled. All six built-in scenes use original CMN victim damage and independently timed sound, voice and particle-bone events. Bounded QTE repeats and endings retain their source frame maps. Existing supplied blood pixels are reused. Custom clips retain measured transient leads.",
   "clips": [
     {
       "animation": "ProjectYakuza_DD_HeatRush",
@@ -8,7 +8,7 @@
       "victimSha256": "3dbad6f6994df8c3a44eeaffe85dc78994edabb299f80fe818db764a9631275d",
       "contacts": [
         {
-          "atMs": 1866.66667,
+          "atMs": 1866.66666667,
           "index": 1,
           "cue": "punchImpact",
           "base": true,
@@ -22,44 +22,44 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 2100,
+          "atMs": 2266.66666667,
           "index": 2,
           "cue": "punchImpact",
           "base": true,
           "point": [
-            0.147877693,
-            0.606248677,
-            0.122053787
+            0.075440057,
+            0.703289032,
+            -0.01529306
           ],
           "bone": "Bip01_Head",
           "layers": [],
           "feedback": "unarmed"
         },
         {
-          "atMs": 2633.33333,
+          "atMs": 2666.66666667,
           "index": 3,
           "cue": "punchImpact",
           "base": true,
           "point": [
-            -0.013299093,
-            0.566613615,
-            -0.029476034
+            -0.052889504,
+            0.708845198,
+            -0.072261661
           ],
-          "bone": "Bip01_Spine1",
+          "bone": "Bip01_Head",
           "layers": [],
           "feedback": "unarmed"
         },
         {
-          "atMs": 2900,
+          "atMs": 3066.66666667,
           "index": 4,
           "cue": "punchImpact",
           "base": true,
           "point": [
-            -0.006034378,
-            0.445771635,
-            -0.005004046
+            -0.102321774,
+            0.684923291,
+            0.075723685
           ],
-          "bone": "Bip01_Spine",
+          "bone": "Bip01_Head",
           "layers": [],
           "feedback": "unarmed"
         },
@@ -78,21 +78,21 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 4066.66667,
+          "atMs": 4200,
           "index": 6,
           "cue": "punchImpact",
           "base": true,
           "point": [
-            -0.000272282,
-            0.45789656,
-            0.003123435
+            -0.027056767,
+            0.694850743,
+            -0.019388013
           ],
-          "bone": "Bip01_Spine",
+          "bone": "Bip01_Head",
           "layers": [],
           "feedback": "unarmed"
         },
         {
-          "atMs": 4866.66667,
+          "atMs": 4866.66666667,
           "index": 7,
           "cue": "punchImpact",
           "base": true,
@@ -106,44 +106,44 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 5100,
+          "atMs": 5266.66666667,
           "index": 8,
           "cue": "punchImpact",
           "base": true,
           "point": [
-            0.147877693,
-            0.606248677,
-            0.122053787
+            0.075440057,
+            0.703289032,
+            -0.01529306
           ],
           "bone": "Bip01_Head",
           "layers": [],
           "feedback": "unarmed"
         },
         {
-          "atMs": 5633.33333,
+          "atMs": 5666.66666667,
           "index": 9,
           "cue": "punchImpact",
           "base": true,
           "point": [
-            -0.013299093,
-            0.566613615,
-            -0.029476034
+            -0.052889504,
+            0.708845198,
+            -0.072261661
           ],
-          "bone": "Bip01_Spine1",
+          "bone": "Bip01_Head",
           "layers": [],
           "feedback": "unarmed"
         },
         {
-          "atMs": 5900,
+          "atMs": 6066.66666667,
           "index": 10,
           "cue": "punchImpact",
           "base": true,
           "point": [
-            -0.006034378,
-            0.445771635,
-            -0.005004046
+            -0.102321774,
+            0.684923291,
+            0.075723685
           ],
-          "bone": "Bip01_Spine",
+          "bone": "Bip01_Head",
           "layers": [],
           "feedback": "unarmed"
         },
@@ -162,31 +162,741 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 7066.66667,
+          "atMs": 7200,
           "index": 12,
           "cue": "punchImpact",
           "base": true,
           "point": [
-            -0.000272282,
-            0.45789656,
-            0.003123435
+            -0.027056767,
+            0.694850743,
+            -0.019388013
           ],
-          "bone": "Bip01_Spine",
+          "bone": "Bip01_Head",
           "layers": [],
           "feedback": "unarmed"
         },
         {
-          "atMs": 8166.66667,
+          "atMs": 8200,
           "index": 13,
           "cue": "kickImpact",
           "base": true,
           "point": [
-            -0.001317216,
-            0.54656595,
-            -0.125306159
+            4.58e-07,
+            0.508112729,
+            0.010861819
           ],
-          "bone": "Bip01_Spine1",
+          "bone": "Bip01_Pelvis",
           "layers": [],
+          "feedback": "unarmed"
+        }
+      ],
+      "effects": [
+        {
+          "atMs": 1866.6666666666667,
+          "index": 1,
+          "bone": "Bip01_Head",
+          "point": [
+            0.12748417258262634,
+            0.6862541437149048,
+            0.04028088226914406
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 1866.6666666666667,
+          "index": 1,
+          "bone": "Bip01_Head",
+          "point": [
+            0.1293751299381256,
+            0.6739025712013245,
+            0.04144945740699768
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 1866.6666666666667,
+          "index": 1,
+          "bone": "Bip01_Head",
+          "point": [
+            0.14001204073429108,
+            0.6366650462150574,
+            0.036654286086559296
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 1866.6666666666667,
+          "index": 1,
+          "bone": "Bip01_Head",
+          "point": [
+            0.14001204073429108,
+            0.6366650462150574,
+            0.036654286086559296
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 1866.6666666666667,
+          "index": 1,
+          "bone": "Bip01_Head",
+          "point": [
+            0.13044607639312744,
+            0.6860136389732361,
+            0.03850741684436798
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 2133.3333333333335,
+          "index": 2,
+          "bone": "Bip01_Head",
+          "point": [
+            0.16453461349010468,
+            0.5719922780990601,
+            0.10948395729064941
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 2233.3333333333335,
+          "index": 2,
+          "bone": "Bip01_Head",
+          "point": [
+            0.07341673970222473,
+            0.7245636582374573,
+            0.036625273525714874
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 2233.3333333333335,
+          "index": 2,
+          "bone": "Bip01_Head",
+          "point": [
+            0.07341673970222473,
+            0.7245636582374573,
+            0.036625273525714874
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 2233.3333333333335,
+          "index": 2,
+          "bone": "Bip01_Head",
+          "point": [
+            0.026342367753386497,
+            0.7447720170021057,
+            0.03443415090441704
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 2233.3333333333335,
+          "index": 2,
+          "bone": "Bip01_Head",
+          "point": [
+            0.026342367753386497,
+            0.7447720170021057,
+            0.03443415090441704
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 2233.3333333333335,
+          "index": 2,
+          "bone": "Bip01_Head",
+          "point": [
+            0.07232394069433212,
+            0.7251135110855103,
+            0.03986244276165962
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 2333.3333333333335,
+          "index": 2,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.0015485237818211317,
+            0.7283646464347839,
+            0.005749252624809742
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 2633.3333333333335,
+          "index": 3,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.07690368592739105,
+            0.6836874485015869,
+            0.002973671304062009
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 2633.3333333333335,
+          "index": 3,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.07690368592739105,
+            0.6836874485015869,
+            0.002973671304062009
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 2633.3333333333335,
+          "index": 3,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.07559989392757416,
+            0.6836363673210144,
+            0.006178880576044321
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 2666.6666666666665,
+          "index": 3,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.03989601507782936,
+            0.7405679821968079,
+            -0.052797842770814896
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 2666.6666666666665,
+          "index": 3,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.0470278337597847,
+            0.7645308971405029,
+            -0.1392325460910797
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 2966.666666666667,
+          "index": 4,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.025668520480394363,
+            0.6968552470207214,
+            -0.042984478175640106
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 3000.0,
+          "index": 4,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.035240769386291504,
+            0.7248074412345886,
+            -0.03521568700671196
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 3066.666666666667,
+          "index": 4,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.09486448019742966,
+            0.6715279817581177,
+            0.11204107105731964
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 3766.6666666666665,
+          "index": 5,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.06768778711557388,
+            0.6482630372047424,
+            0.10295768827199936
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 3800.0,
+          "index": 5,
+          "bone": "Bip01_Head",
+          "point": [
+            0.06092733517289162,
+            0.7046489119529724,
+            0.019868845120072365
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 3800.0,
+          "index": 5,
+          "bone": "Bip01_Head",
+          "point": [
+            0.06323122978210449,
+            0.706450343132019,
+            0.018018808215856552
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 3800.0,
+          "index": 5,
+          "bone": "Bip01_Head",
+          "point": [
+            0.06092733517289162,
+            0.7046489119529724,
+            0.019868845120072365
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 4166.666666666667,
+          "index": 6,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.04009215533733368,
+            0.7047595381736755,
+            -0.06028832495212555
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 4166.666666666667,
+          "index": 6,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.0363883450627327,
+            0.7000862956047058,
+            -0.05571070313453674
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 4166.666666666667,
+          "index": 6,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.0363883450627327,
+            0.7000862956047058,
+            -0.05571070313453674
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 4166.666666666667,
+          "index": 6,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.0435037761926651,
+            0.7042006850242615,
+            -0.06044445559382439
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 4866.666666666666,
+          "index": 7,
+          "bone": "Bip01_Head",
+          "point": [
+            0.12748417258262634,
+            0.6862541437149048,
+            0.04028088226914406
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 4866.666666666666,
+          "index": 7,
+          "bone": "Bip01_Head",
+          "point": [
+            0.1293751299381256,
+            0.6739025712013245,
+            0.04144945740699768
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 4866.666666666666,
+          "index": 7,
+          "bone": "Bip01_Head",
+          "point": [
+            0.14001204073429108,
+            0.6366650462150574,
+            0.036654286086559296
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 4866.666666666666,
+          "index": 7,
+          "bone": "Bip01_Head",
+          "point": [
+            0.14001204073429108,
+            0.6366650462150574,
+            0.036654286086559296
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 4866.666666666666,
+          "index": 7,
+          "bone": "Bip01_Head",
+          "point": [
+            0.13044607639312744,
+            0.6860136389732361,
+            0.03850741684436798
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 5133.333333333334,
+          "index": 8,
+          "bone": "Bip01_Head",
+          "point": [
+            0.16453461349010468,
+            0.5719922780990601,
+            0.10948395729064941
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 5233.333333333333,
+          "index": 8,
+          "bone": "Bip01_Head",
+          "point": [
+            0.07341673970222473,
+            0.7245636582374573,
+            0.036625273525714874
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 5233.333333333333,
+          "index": 8,
+          "bone": "Bip01_Head",
+          "point": [
+            0.07341673970222473,
+            0.7245636582374573,
+            0.036625273525714874
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 5233.333333333333,
+          "index": 8,
+          "bone": "Bip01_Head",
+          "point": [
+            0.026342367753386497,
+            0.7447720170021057,
+            0.03443415090441704
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 5233.333333333333,
+          "index": 8,
+          "bone": "Bip01_Head",
+          "point": [
+            0.026342367753386497,
+            0.7447720170021057,
+            0.03443415090441704
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 5233.333333333333,
+          "index": 8,
+          "bone": "Bip01_Head",
+          "point": [
+            0.07232394069433212,
+            0.7251135110855103,
+            0.03986244276165962
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 5333.333333333333,
+          "index": 8,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.0015485237818211317,
+            0.7283646464347839,
+            0.005749252624809742
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 5633.333333333334,
+          "index": 9,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.07690368592739105,
+            0.6836874485015869,
+            0.002973671304062009
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 5633.333333333334,
+          "index": 9,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.07690368592739105,
+            0.6836874485015869,
+            0.002973671304062009
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 5633.333333333334,
+          "index": 9,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.07559989392757416,
+            0.6836363673210144,
+            0.006178880576044321
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 5666.666666666667,
+          "index": 9,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.03989601507782936,
+            0.7405679821968079,
+            -0.052797842770814896
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 5666.666666666667,
+          "index": 9,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.0470278337597847,
+            0.7645308971405029,
+            -0.1392325460910797
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 5966.666666666667,
+          "index": 10,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.025668520480394363,
+            0.6968552470207214,
+            -0.042984478175640106
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 6000.0,
+          "index": 10,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.035240769386291504,
+            0.7248074412345886,
+            -0.03521568700671196
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 6066.666666666666,
+          "index": 10,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.09486448019742966,
+            0.6715279817581177,
+            0.11204107105731964
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 6766.666666666667,
+          "index": 11,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.06768778711557388,
+            0.6482630372047424,
+            0.10295768827199936
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 6800.0,
+          "index": 11,
+          "bone": "Bip01_Head",
+          "point": [
+            0.06092733517289162,
+            0.7046489119529724,
+            0.019868845120072365
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 6800.0,
+          "index": 11,
+          "bone": "Bip01_Head",
+          "point": [
+            0.06323122978210449,
+            0.706450343132019,
+            0.018018808215856552
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 6800.0,
+          "index": 11,
+          "bone": "Bip01_Head",
+          "point": [
+            0.06092733517289162,
+            0.7046489119529724,
+            0.019868845120072365
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 7166.666666666667,
+          "index": 12,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.04009215533733368,
+            0.7047595381736755,
+            -0.06028832495212555
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 7166.666666666667,
+          "index": 12,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.0363883450627327,
+            0.7000862956047058,
+            -0.05571070313453674
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 7166.666666666667,
+          "index": 12,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.0363883450627327,
+            0.7000862956047058,
+            -0.05571070313453674
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 7166.666666666667,
+          "index": 12,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.0435037761926651,
+            0.7042006850242615,
+            -0.06044445559382439
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 8133.333333333333,
+          "index": 13,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.01332889311015606,
+            0.5712507367134094,
+            0.006695212330669165
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 8133.333333333333,
+          "index": 13,
+          "bone": "Bip01_Head",
+          "point": [
+            0.034668345004320145,
+            0.6095196604728699,
+            -0.02091803215444088
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 8133.333333333333,
+          "index": 13,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.05172812193632126,
+            0.5737601518630981,
+            0.10720352083444595
+          ],
+          "bloodOnly": true,
           "feedback": "unarmed"
         }
       ]
@@ -198,17 +908,55 @@
       "victimSha256": "5b8cf98e4c800adcf0183f5e550753398ebdffd0e0f192304077e1e8e7b21328",
       "contacts": [
         {
-          "atMs": 833.333333,
+          "atMs": 866.666666667,
           "index": 13,
           "cue": "kickImpact",
           "base": true,
           "point": [
-            -0.001317216,
-            0.54656595,
-            -0.125306159
+            4.58e-07,
+            0.508112729,
+            0.010861819
           ],
-          "bone": "Bip01_Spine1",
+          "bone": "Bip01_Pelvis",
           "layers": [],
+          "feedback": "unarmed"
+        }
+      ],
+      "effects": [
+        {
+          "atMs": 800.0,
+          "index": 13,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.01332889311015606,
+            0.5712507367134094,
+            0.006695212330669165
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 800.0,
+          "index": 13,
+          "bone": "Bip01_Head",
+          "point": [
+            0.034668345004320145,
+            0.6095196604728699,
+            -0.02091803215444088
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 800.0,
+          "index": 13,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.05172812193632126,
+            0.5737601518630981,
+            0.10720352083444595
+          ],
+          "bloodOnly": true,
           "feedback": "unarmed"
         }
       ]
@@ -220,46 +968,117 @@
       "victimSha256": "3e7419f915fba5a699d08afb705bebe21add79f9cbc3b21c19ef3eb7d4e82258",
       "contacts": [
         {
-          "atMs": 33.333333333333336,
+          "atMs": 400,
           "index": 1,
-          "cue": "throwImpact",
+          "cue": "punchImpact",
           "base": false,
           "point": [
-            0.048919886,
-            0.734281003,
-            -0.088828042
+            0.0173936,
+            0.75761503,
+            0.026112996
           ],
           "bone": "Bip01_Head",
-          "layers": [],
-          "feedback": "blunt"
+          "layers": []
         },
         {
-          "atMs": 933.3333333333334,
+          "atMs": 1600,
           "index": 2,
           "cue": "kickImpact",
           "base": true,
           "point": [
-            -0.009528523,
-            0.444467545,
-            0.042217791
+            -0.029103573,
+            0.432732642,
+            0.012061502
           ],
           "bone": "Bip01_Spine1",
           "layers": [],
           "feedback": "unarmed"
+        }
+      ],
+      "effects": [
+        {
+          "atMs": 433.33333333333337,
+          "index": 1,
+          "bone": "Bip01_Head",
+          "point": [
+            0.06004839390516281,
+            0.7625958919525146,
+            0.003046149853616953
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
         },
         {
-          "atMs": 2433.333333333333,
-          "index": 3,
-          "cue": "throwImpact",
-          "base": true,
+          "atMs": 433.33333333333337,
+          "index": 1,
+          "bone": "Bip01_Head",
           "point": [
-            -0.139608189,
-            0.419808686,
-            -0.015987933
+            0.061784062534570694,
+            0.7581677436828613,
+            -0.06033020839095116
           ],
-          "bone": "Bip01_Spine1",
-          "layers": [],
-          "feedback": "blunt"
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 433.33333333333337,
+          "index": 1,
+          "bone": "Bip01_Head",
+          "point": [
+            0.03259588032960892,
+            0.8468080759048462,
+            0.06863431632518768
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 1366.6666666666667,
+          "index": 2,
+          "bone": "Bip01_Head",
+          "point": [
+            0.028897471725940704,
+            0.5951820611953735,
+            -0.0675165131688118
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 1366.6666666666667,
+          "index": 2,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.005067161750048399,
+            0.5987544655799866,
+            -0.11351939290761948
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 1366.6666666666667,
+          "index": 2,
+          "bone": "Bip01_Head",
+          "point": [
+            0.009145771153271198,
+            0.6889902949333191,
+            0.016850806772708893
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 1700.0,
+          "index": 2,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.12598229944705963,
+            0.6098661422729492,
+            -0.061509422957897186
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
         }
       ]
     },
@@ -282,7 +1101,8 @@
           "bone": "Bip01_Head",
           "layers": []
         }
-      ]
+      ],
+      "effects": []
     },
     {
       "animation": "ProjectYakuza_DD_KatanaHeat",
@@ -306,7 +1126,7 @@
           "feedback": "blade"
         },
         {
-          "atMs": 1466.6666666666665,
+          "atMs": 1466.66666667,
           "index": 2,
           "cue": "heatKatanaPunch",
           "base": false,
@@ -321,7 +1141,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 2133.3333333333335,
+          "atMs": 2133.33333333,
           "index": 3,
           "cue": "heatKatanaThrust",
           "base": false,
@@ -335,6 +1155,200 @@
           "layers": [],
           "feedback": "blade"
         }
+      ],
+      "effects": [
+        {
+          "atMs": 666.6666666666666,
+          "index": 1,
+          "bone": "Bip01_Spine1",
+          "point": [
+            -0.015680521726608276,
+            0.5364689826965332,
+            0.07612018287181854
+          ],
+          "bloodOnly": true,
+          "feedback": "blade"
+        },
+        {
+          "atMs": 1100.0,
+          "index": 1,
+          "bone": "Bip01_Spine1",
+          "point": [
+            -0.011503174901008606,
+            0.5446017980575562,
+            0.07299058884382248
+          ],
+          "bloodOnly": true,
+          "feedback": "blade"
+        },
+        {
+          "atMs": 1433.3333333333333,
+          "index": 2,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.04843892157077789,
+            0.7790087461471558,
+            -0.054023053497076035
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 1433.3333333333333,
+          "index": 2,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.05563216656446457,
+            0.7692395448684692,
+            -0.05395139381289482
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 2066.666666666667,
+          "index": 3,
+          "bone": "Bip01_Spine",
+          "point": [
+            0.04809783771634102,
+            0.5028164386749268,
+            -0.00017387419939041138
+          ],
+          "bloodOnly": true,
+          "feedback": "blade"
+        },
+        {
+          "atMs": 2066.666666666667,
+          "index": 3,
+          "bone": "Bip01_Spine",
+          "point": [
+            0.004139552358537912,
+            0.4933210015296936,
+            -0.05183902010321617
+          ],
+          "bloodOnly": true,
+          "feedback": "blade"
+        },
+        {
+          "atMs": 2200.0,
+          "index": 3,
+          "bone": "Bip01_Spine",
+          "point": [
+            0.07484310120344162,
+            0.4938288927078247,
+            0.018837202340364456
+          ],
+          "bloodOnly": true,
+          "feedback": "blade"
+        },
+        {
+          "atMs": 2200.0,
+          "index": 3,
+          "bone": "Bip01_Spine",
+          "point": [
+            -0.016133148223161697,
+            0.5196817517280579,
+            -0.060369402170181274
+          ],
+          "bloodOnly": true,
+          "feedback": "blade"
+        },
+        {
+          "atMs": 2233.3333333333335,
+          "index": 3,
+          "bone": "Bip01_Spine",
+          "point": [
+            0.052035022526979446,
+            0.48647546768188477,
+            -0.008313160389661789
+          ],
+          "bloodOnly": true,
+          "feedback": "blade"
+        },
+        {
+          "atMs": 2233.3333333333335,
+          "index": 3,
+          "bone": "Bip01_Spine",
+          "point": [
+            0.023331180214881897,
+            0.5706343650817871,
+            0.009755045175552368
+          ],
+          "bloodOnly": true,
+          "feedback": "blade"
+        },
+        {
+          "atMs": 2566.666666666667,
+          "index": 3,
+          "bone": "Bip01_Spine",
+          "point": [
+            -0.004549412988126278,
+            0.5481614470481873,
+            -0.018523478880524635
+          ],
+          "bloodOnly": true,
+          "feedback": "blade"
+        },
+        {
+          "atMs": 2566.666666666667,
+          "index": 3,
+          "bone": "Bip01_Spine",
+          "point": [
+            0.03486844524741173,
+            0.48112934827804565,
+            -0.00858902744948864
+          ],
+          "bloodOnly": true,
+          "feedback": "blade"
+        },
+        {
+          "atMs": 2566.666666666667,
+          "index": 3,
+          "bone": "Bip01_Spine",
+          "point": [
+            0.01946973241865635,
+            0.5390068292617798,
+            -0.04915906488895416
+          ],
+          "bloodOnly": true,
+          "feedback": "blade"
+        },
+        {
+          "atMs": 2566.666666666667,
+          "index": 3,
+          "bone": "Bip01_Spine",
+          "point": [
+            0.07374660670757294,
+            0.4687773287296295,
+            0.012254105880856514
+          ],
+          "bloodOnly": true,
+          "feedback": "blade"
+        },
+        {
+          "atMs": 2566.666666666667,
+          "index": 3,
+          "bone": "Bip01_Spine",
+          "point": [
+            0.03113107942044735,
+            0.46882638335227966,
+            -0.04958076402544975
+          ],
+          "bloodOnly": true,
+          "feedback": "blade"
+        },
+        {
+          "atMs": 3333.3333333333335,
+          "index": 3,
+          "bone": "Bip01_Spine",
+          "point": [
+            0.0581442266702652,
+            0.061125993728637695,
+            -0.0199167188256979
+          ],
+          "bloodOnly": true,
+          "feedback": "blade"
+        }
       ]
     },
     {
@@ -344,44 +1358,179 @@
       "victimSha256": "5e8090abb34ff95da811837b23b0103b6992b8bcb5eab4f02a1f0c0de6e64b3c",
       "contacts": [
         {
-          "atMs": 733.3333333333333,
+          "atMs": 1066.66666667,
           "index": 1,
-          "cue": "heavyImpact",
+          "cue": "punchImpact",
           "base": false,
           "point": [
-            -0.022428289,
-            0.772897542,
-            0.008666141
+            -0.017103637,
+            0.775007963,
+            -0.013342399
           ],
           "bone": "Bip01_Head",
           "layers": []
         },
         {
-          "atMs": 2433.333333333333,
+          "atMs": 1400,
           "index": 2,
-          "cue": "heavyImpact",
+          "cue": "punchImpact",
           "base": false,
           "point": [
-            0.00088117,
-            0.532795429,
-            0.011324424
+            -0.003359631,
+            0.775437176,
+            0.002847061
           ],
-          "bone": "Bip01_Spine",
+          "bone": "Bip01_Head",
           "layers": []
         },
         {
-          "atMs": 3066.666666666667,
+          "atMs": 1966.66666667,
           "index": 3,
+          "cue": "punchImpact",
+          "base": false,
+          "point": [
+            0.008733746,
+            0.758577943,
+            -0.025428889
+          ],
+          "bone": "Bip01_Head",
+          "layers": []
+        },
+        {
+          "atMs": 2800,
+          "index": 4,
           "cue": "throwImpact",
           "base": true,
           "point": [
-            0.062939808,
-            0.49239707,
-            0.04587587
+            0.022327423,
+            0.618873417,
+            0.001489706
           ],
           "bone": "Bip01_Spine1",
           "layers": [],
           "feedback": "blunt"
+        }
+      ],
+      "effects": [
+        {
+          "atMs": 1033.3333333333335,
+          "index": 1,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.012864403426647186,
+            0.7592517733573914,
+            0.04574590548872948
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 1033.3333333333335,
+          "index": 1,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.009602135047316551,
+            0.7603944540023804,
+            0.03424714878201485
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 1033.3333333333335,
+          "index": 1,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.013359373435378075,
+            0.8110999464988708,
+            0.032003894448280334
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 1400.0,
+          "index": 2,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.013551762327551842,
+            0.7814449667930603,
+            0.05123399198055267
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 1400.0,
+          "index": 2,
+          "bone": "Bip01_Head",
+          "point": [
+            -8.173525566235185e-05,
+            0.7818127870559692,
+            0.016432061791419983
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 1933.3333333333333,
+          "index": 3,
+          "bone": "Bip01_Head",
+          "point": [
+            0.014279971830546856,
+            0.7585744261741638,
+            0.0643988698720932
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 1933.3333333333333,
+          "index": 3,
+          "bone": "Bip01_Head",
+          "point": [
+            0.0181545652449131,
+            0.7654906511306763,
+            0.027931014075875282
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 2833.3333333333335,
+          "index": 4,
+          "bone": "Bip01_Head",
+          "point": [
+            0.08486471325159073,
+            0.7584877610206604,
+            0.050468288362026215
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 2833.3333333333335,
+          "index": 4,
+          "bone": "Bip01_Head",
+          "point": [
+            0.07655687630176544,
+            0.7559542655944824,
+            0.04217788949608803
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 2833.3333333333335,
+          "index": 4,
+          "bone": "Bip01_Head",
+          "point": [
+            0.06124785915017128,
+            0.7679221630096436,
+            0.02315552346408367
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
         }
       ]
     },
@@ -392,20 +1541,20 @@
       "victimSha256": "1871a3024b1a9a5e826210a69d2ff36f9a6c88d9fe089e15882578faa1b943ee",
       "contacts": [
         {
-          "atMs": 433.333333,
+          "atMs": 466.666666667,
           "index": 1,
-          "cue": "heavyImpact",
+          "cue": "punchImpact",
           "base": false,
           "point": [
-            -0.009949419,
-            0.543693066,
-            -0.023725789
+            -0.005795617,
+            0.428702295,
+            -0.008319199
           ],
-          "bone": "Bip01_Spine1",
+          "bone": "Bip01_Spine",
           "layers": []
         },
         {
-          "atMs": 1466.66667,
+          "atMs": 1466.66666667,
           "index": 2,
           "cue": "punchImpact",
           "base": true,
@@ -419,21 +1568,21 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 2466.66667,
+          "atMs": 1800,
           "index": 3,
           "cue": "punchImpact",
           "base": true,
           "point": [
-            -0.004045297,
-            0.514700472,
-            -0.001886268
+            0.000794817,
+            0.508206308,
+            -0.004849726
           ],
           "bone": "Bip01_Spine",
           "layers": [],
           "feedback": "unarmed"
         },
         {
-          "atMs": 3466.66667,
+          "atMs": 2466.66666667,
           "index": 4,
           "cue": "punchImpact",
           "base": true,
@@ -447,8 +1596,50 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 4733.33333,
+          "atMs": 2800,
           "index": 5,
+          "cue": "punchImpact",
+          "base": true,
+          "point": [
+            0.000794817,
+            0.508206308,
+            -0.004849726
+          ],
+          "bone": "Bip01_Spine",
+          "layers": [],
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 3466.66666667,
+          "index": 6,
+          "cue": "punchImpact",
+          "base": true,
+          "point": [
+            -0.004045297,
+            0.514700472,
+            -0.001886268
+          ],
+          "bone": "Bip01_Spine",
+          "layers": [],
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 3800,
+          "index": 7,
+          "cue": "punchImpact",
+          "base": true,
+          "point": [
+            0.000794817,
+            0.508206308,
+            -0.004849726
+          ],
+          "bone": "Bip01_Spine",
+          "layers": [],
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 4733.33333333,
+          "index": 8,
           "cue": "heavyImpact",
           "base": false,
           "point": [
@@ -458,6 +1649,116 @@
           ],
           "bone": "Bip01_Head",
           "layers": []
+        }
+      ],
+      "effects": [
+        {
+          "atMs": 466.6666666666667,
+          "index": 1,
+          "bone": "Bip01_Head",
+          "point": [
+            0.010663427412509918,
+            0.6554425358772278,
+            0.021136345341801643
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 1466.6666666666665,
+          "index": 2,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.024951918050646782,
+            0.7591299414634705,
+            0.131241112947464
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 1800.0,
+          "index": 3,
+          "bone": "Bip01_Head",
+          "point": [
+            0.020407414063811302,
+            0.7259496450424194,
+            0.149971142411232
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 2466.666666666667,
+          "index": 4,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.024951918050646782,
+            0.7591299414634705,
+            0.131241112947464
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 2800.0,
+          "index": 5,
+          "bone": "Bip01_Head",
+          "point": [
+            0.020407414063811302,
+            0.7259496450424194,
+            0.149971142411232
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 3466.666666666667,
+          "index": 6,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.024951918050646782,
+            0.7591299414634705,
+            0.131241112947464
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 3800.0,
+          "index": 7,
+          "bone": "Bip01_Head",
+          "point": [
+            0.020407414063811302,
+            0.7259496450424194,
+            0.149971142411232
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 4733.333333333333,
+          "index": 8,
+          "bone": "Bip01_Head",
+          "point": [
+            0.020097417756915092,
+            0.726445734500885,
+            -0.06721431016921997
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 5233.333333333333,
+          "index": 8,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.2012190818786621,
+            0.38097143173217773,
+            -0.21753564476966858
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
         }
       ]
     },
@@ -468,8 +1769,8 @@
       "victimSha256": "376d1b76bb171389483ac08efc0344be249940f20056d87c05bfcff176641763",
       "contacts": [
         {
-          "atMs": 633.333333,
-          "index": 5,
+          "atMs": 633.333333333,
+          "index": 8,
           "cue": "heavyImpact",
           "base": false,
           "point": [
@@ -480,10 +1781,151 @@
           "bone": "Bip01_Head",
           "layers": []
         }
+      ],
+      "effects": [
+        {
+          "atMs": 633.3333333333333,
+          "index": 8,
+          "bone": "Bip01_Head",
+          "point": [
+            0.020097417756915092,
+            0.726445734500885,
+            -0.06721431016921997
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        },
+        {
+          "atMs": 1133.3333333333333,
+          "index": 8,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.2012190818786621,
+            0.38097143173217773,
+            -0.21753564476966858
+          ],
+          "bloodOnly": true,
+          "feedback": "unarmed"
+        }
       ]
     }
   ],
   "sounds": [
+    {
+      "file": "media/sound/ProjectYakuza/HeatScene_bottle_0.wav",
+      "sha256": "d61fea26014aa1b1f35b028d8afa262972b355b360b2bab894775f810929a463",
+      "attackLeadMs": 110
+    },
+    {
+      "file": "media/sound/ProjectYakuza/HeatScene_bottle_1.wav",
+      "sha256": "96d93ac2a8fc04592b8bca958654b47fb002cf049bcc98844ef547d59f23e173",
+      "attackLeadMs": 120
+    },
+    {
+      "file": "media/sound/ProjectYakuza/HeatScene_bottle_2.wav",
+      "sha256": "f8fc72a17eeea94cc6b2c0a57131146ad8800d0cc339d9e1f60ce338dc43e66e",
+      "attackLeadMs": 120
+    },
+    {
+      "file": "media/sound/ProjectYakuza/HeatScene_bottle_3.wav",
+      "sha256": "0eb406ab6f01fccf6a70d05b626f1f23572a9548fade14750fa2fbc0a0562229",
+      "attackLeadMs": 120
+    },
+    {
+      "file": "media/sound/ProjectYakuza/HeatScene_crate_0.wav",
+      "sha256": "2480c8e9fe3247e156fb90ef148f9e538e905995cc4e1651b71bbffab4c234d3",
+      "attackLeadMs": 5
+    },
+    {
+      "file": "media/sound/ProjectYakuza/HeatScene_crate_1.wav",
+      "sha256": "012b55dcdbf18ba579d0e2253199feb97b1220b505a67f0b43c3dee9a49f0869",
+      "attackLeadMs": 65
+    },
+    {
+      "file": "media/sound/ProjectYakuza/HeatScene_crate_10.wav",
+      "sha256": "22d8a4eb05c807b2669a05b8986e6530b73b2d46884b4e6a9f8ef4dee5b6a2c1",
+      "attackLeadMs": 55
+    },
+    {
+      "file": "media/sound/ProjectYakuza/HeatScene_crate_11.wav",
+      "sha256": "aa807d21826a8690680bf912e3e4eafaaed444af57836e7a6b7a95a4a5a53bfd",
+      "attackLeadMs": 55
+    },
+    {
+      "file": "media/sound/ProjectYakuza/HeatScene_crate_2.wav",
+      "sha256": "cd8ed70be8a62667050df4fc4ec68d27ab8b0f8d2c6176a6adaad8354c9dc3a4",
+      "attackLeadMs": 50
+    },
+    {
+      "file": "media/sound/ProjectYakuza/HeatScene_crate_3.wav",
+      "sha256": "3ec93ba1193dd0b8dd7c4f93561f5b036588e931d0490c33fb420f0210119928",
+      "attackLeadMs": 40
+    },
+    {
+      "file": "media/sound/ProjectYakuza/HeatScene_crate_6.wav",
+      "sha256": "c6ce74a333c6256fc14c4a3d2de82cae29fda3bd348874105a6e914b6546820e",
+      "attackLeadMs": 115
+    },
+    {
+      "file": "media/sound/ProjectYakuza/HeatScene_crate_7.wav",
+      "sha256": "48877e66970e5fbf022bd22a2af19430eafbf2d622ae67f349208231087ce6f2",
+      "attackLeadMs": 30
+    },
+    {
+      "file": "media/sound/ProjectYakuza/HeatScene_crate_8.wav",
+      "sha256": "483160ab5a88da64c292f87dd4801d6a02c58584f99e26737c8ffb2b3d7a4f73",
+      "attackLeadMs": 30
+    },
+    {
+      "file": "media/sound/ProjectYakuza/HeatScene_crate_9.wav",
+      "sha256": "b7289e6060cb40129e6637f3801b15cfe7045e22755628e61079d1b88e5ed4c1",
+      "attackLeadMs": 95
+    },
+    {
+      "file": "media/sound/ProjectYakuza/HeatScene_ground_0.wav",
+      "sha256": "a8dc7041eda1e966ebba9b483503984e06bf947df17f5f07cfb1ffa68d589eb6",
+      "attackLeadMs": 120
+    },
+    {
+      "file": "media/sound/ProjectYakuza/HeatScene_rush_0.wav",
+      "sha256": "4a86782a318457040abb9589ec0732b9971d3735935fdef03b85deefca22a286",
+      "attackLeadMs": 10
+    },
+    {
+      "file": "media/sound/ProjectYakuza/HeatScene_rush_1.wav",
+      "sha256": "ef369a176f5d295a4c814ec098980fe072c3fd403b7191c130692b8a0fff7f8f",
+      "attackLeadMs": 120
+    },
+    {
+      "file": "media/sound/ProjectYakuza/HeatScene_rush_4.wav",
+      "sha256": "75433a4ae2b49e38c16fcc66c3adefb8227fd901802ff0bb86753a07db1cb96b",
+      "attackLeadMs": 50
+    },
+    {
+      "file": "media/sound/ProjectYakuza/HeatScene_rush_5.wav",
+      "sha256": "dcfdebf769e7d929f36ca2fc6f20bb542d5257244eb4549d0b0dc15a0e689f48",
+      "attackLeadMs": 65
+    },
+    {
+      "file": "media/sound/ProjectYakuza/HeatScene_rush_6.wav",
+      "sha256": "3b966366a3e2ee2eba822d72158c1a3bb886dbaa352b0ae52b29b134a8f94c16",
+      "attackLeadMs": 15
+    },
+    {
+      "file": "media/sound/ProjectYakuza/HeatScene_wall_0.wav",
+      "sha256": "5f8691f380933b790f50836f5759548177aa154c00e9e9a68016a4521110e273",
+      "attackLeadMs": 35
+    },
+    {
+      "file": "media/sound/ProjectYakuza/HeatScene_wall_1.wav",
+      "sha256": "dd98fe8443fac780eb402c985c095db44063e601e8bd51171abf9fe389504459",
+      "attackLeadMs": 120
+    },
+    {
+      "file": "media/sound/ProjectYakuza/HeatScene_wall_2.wav",
+      "sha256": "6138415275c626f2d4f2921d7f1c7f4e9fb7637325155b748e6e548aef16e7e1",
+      "attackLeadMs": 120
+    },
     {
       "file": "media/sound/ProjectYakuza/KatanaSceneBodyFall.wav",
       "sha256": "a7a201603608b02817c8f53cf76e3169662426f6997c5b3d7903af281e9087fb",

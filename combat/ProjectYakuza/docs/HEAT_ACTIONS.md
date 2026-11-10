@@ -1,5 +1,7 @@
 # Heat Action lifecycle
 
+Version 0.95.0 applies the [original scene contracts](HEAT_SCENES.md) to all six built-in actions and both QTE failure endings. Damage, sound, voice and blood-family starts are independently mapped from the supplied cmn.bin files. Total damage, prices, inputs and character/prop motion are preserved.
+
 Version 0.94.0 restores the original katana prop track: the sword is released at source frame 44, caught with reversed grip at frame 54 and thrust sharp-end first at frame 64. Character poses and all three hit times remain unchanged. The attachment follows the supplied independent sword GMT instead of remaining rigidly pinned to the hand.
 
 As of 0.93.1, the normal player-update loop starts and advances built-in weapon, ground and grab Heat Actions directly. Their stock or Extreme fuel cost is paid once when native playback is first confirmed. A missing animation, failed startup or cancellation before playback does not spend the cost. Repeated updates cannot charge again; cancellation after visible playback retains the committed cost. Multiplayer readiness is sent at that same confirmed-playback point.
@@ -43,7 +45,7 @@ The eligibility popup requires the same equipped item, heat stock, physical RMB,
 
 ## Source-time audio (0.76.0)
 
-Contact cue keys resolve through the active style/equipment sound table, with heavyImpact/finisher as the optional-cue fallback. Katana and bottle contacts configure existing CombatLightAttack/CombatHeavyAttack entries, using the selected compatible CVF voice. Provider-busy/cooldown results can retry for 600 ms while that exact action remains active; stale requests are dropped. No voice recording or pack is created or modified.
+Contact cue keys resolve through the active style/equipment sound table, with heavyImpact/finisher as the optional-cue fallback. Built-in scenes configure independent voiceEvents using existing Combat entries and the selected compatible CVF voice. Provider-busy/cooldown results can retry for 600 ms while that exact action remains active; stale requests are dropped. No voice recording or pack is created or modified.
 
 MP owners present feedback from their source-animation contacts and suppress matching server echoes by session/action/index. Health remains authoritative on the server. Contact catch-up uses the existing 650 ms server grace; it does not widen the QTE input windows or auto-complete missed inputs. See [validation](VALIDATION_0.76.0.md).
 
@@ -51,11 +53,11 @@ MP owners present feedback from their source-animation contacts and suppress mat
 
 DoD's unarmed actions.groundHeat uses the shared groundHeat handler, original h1500 ground-trample pair and one heat stock. Hold RMB and press the configured Heat Action binding (MMB by default) near a living downed zombie, outside a combo. The usual game-art eligibility/input prompt is reused. Armed profiles do not inherit it. Invulnerability ends with the sequence; targeting grace lasts 0.5 seconds afterward. Interruption restores the downed victim.
 
-A groundHeat definition supplies enabled=true, groundHeat=true, requiresTarget=true, animation, targetAnimation, nodeValue, motionId, duration, heatStocks, contacts and optional useExtremeFuel. Register original paired paths in PairedMotions. The standard Heat Action UI provider channel can replace its prompt. Ground actions remain zombie-only, with shared server validation rather than client-directed health changes. Existing CombatHeavyAttack voice entries and hit cues provide timed feedback.
+A groundHeat definition supplies enabled=true, groundHeat=true, requiresTarget=true, animation, targetAnimation, nodeValue, motionId, duration, heatStocks, contacts and optional useExtremeFuel. Register original paired paths in PairedMotions. The standard Heat Action UI provider channel can replace its prompt. Ground actions remain zombie-only, with shared server validation rather than client-directed health changes. The original h1500 bank cue supplies source-timed feedback; this CMN contains no actor voice or blood-emitter nodes.
 
 HeatRushRules.placement(player,victim,action) returns a nearby paired pose or nil. Ordinary paired actions use up to nine bounded offsets, require a clear route for both participants, and check a 0.42-tile wall margin along both source paths. They do not cross walls to stage the pair. A blocked search refuses activation. Wall actions retain their own wall geometry; GrabRules.wallPresent checks the selected solid boundary after canonical staging. Source clips are not edited for these placement changes.
 
-Ground eligibility scans at most 25 squares and 96 objects, cached for 200 ms including empty results. It is local presentation/eligibility work; the server independently selects the allowed action and computes its canonical pose. See ground-heat-assets.json for original source provenance and the motion-derived contact frame.
+Ground eligibility scans nearby squares, cached for 200 ms including empty results. Crowded searches retain the nearest feasible staged target rather than truncating candidates by collection order. It is local presentation/eligibility work; the server independently selects the allowed action and computes its canonical pose. See ground-heat-assets.json for original source provenance and the motion-derived contact frame.
 
 Ground-trample head contact is calibrated for native Zomboid male/female geometry. PairedMotions.dod_ground.contactOffset supplies a constant victim-only forward/right translation. HeatRushRules.point rotates it with the action heading from frame zero, so placement, clearance, SP, server and observer positions agree without a mid-sequence snap. Other motions can optionally provide contactOffset for their own verified paired alignment. See ground-contact-alignment.json and calibrate_ground_contact.py; no animation body channels are modified.
 
@@ -67,7 +69,7 @@ The approved Yakuza 5 `H3270_kaburikasa` source supplies Kiryu, victim and objec
 
 The crate uses its supplied source object track after placement on the victim's head; it does not follow the punching hand. Retargeting retains source root height and uses PZ skeleton lengths. `crate-heat-assets.json` records archive and clip hashes, role verification, source frame maps, prop calibration and code-side paths. No artwork, audio, AI or invented body animation was added. Appearance still needs a live check after restart.
 
-Heat Action sound/visual presentation follows the native playing clip independently of authoritative contacts. See [Heat Action presentation](HEAT_ACTION_PRESENTATION.md) for sound preroll, shared victim contact anchors, custom cue/layer fallback, observer playback and cleanup. QTE and damage timing are unchanged.
+Heat Action sound/visual presentation follows the native playing clip independently of authoritative contacts. See [Heat Action presentation](HEAT_ACTION_PRESENTATION.md) for sound preroll, shared victim contact anchors, custom cue/layer fallback, observer playback and cleanup. QTE controls and damage totals are preserved; current source contact timings are listed in HEAT_SCENES.md.
 
 The shared [paired damage policy](HEAT_ACTION_DAMAGE.md) applies nonlethal damage on contact and holds lethal damage through full recovery. Presentation and three-contact katana trails remain tied to the playing source clip.
 

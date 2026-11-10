@@ -246,3 +246,9 @@
 
 !/tools/combat-tests/validate_katana_scene.py
 !/tools/combat-tests/katana_prop_motion.py
+
+!/tools/combat-tests/read_heat_scene.py
+!/tools/combat-tests/cri_cue_table.py
+!/tools/combat-tests/build_heat_scenes.py
+!/tools/combat-tests/build_heat_scene_anchors.py
+!/tools/combat-tests/validate_heat_scenes.py

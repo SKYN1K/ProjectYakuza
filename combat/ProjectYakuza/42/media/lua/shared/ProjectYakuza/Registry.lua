@@ -289,7 +289,7 @@ end
 
 local ProjectYakuza = ProjectYakuza
 ProjectYakuza.FEATURES={grab=true}
-ProjectYakuza.VERSION = "0.94.0"
+ProjectYakuza.VERSION = "0.95.0"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -354,19 +354,7 @@ function ProjectYakuza.validateStyle(style)
             if c.presentation~=nil and (not text(c.presentation) or #c.presentation>100) then problem("juggling.presentation must name an addon presentation") end
         end
     end
-    local function move(value,path,light)
-        if type(value)~="table" then problem(path.." must be a table");return end
-        if value.enduranceCost~=nil and (not number(value.enduranceCost)or value.enduranceCost<0 or value.enduranceCost>.1)then problem(path..".enduranceCost must be 0..0.1")end
-        if value.targetGraceMs~=nil and (not number(value.targetGraceMs)or value.targetGraceMs<0 or value.targetGraceMs>2000)then problem(path..".targetGraceMs must be 0..2000")end
-        if value.contacts~=nil then
-            local contacts=value.contacts;local last=0
-            if type(contacts)~="table"or #contacts<1 or #contacts>32 then problem(path..".contacts requires 1..32 contacts")
-            else for _,contact in ipairs(contacts)do
-                if type(contact)~="table"or not number(contact.atMs)or contact.atMs<=last or not number(value.duration)or contact.atMs>value.duration*1000 then problem(path..".contacts has invalid source timing")
-                else last=contact.atMs end
-                if type(contact)=="table"and contact.damageMultiplier~=nil and (not number(contact.damageMultiplier)or contact.damageMultiplier<0 or contact.damageMultiplier>10)then problem(path..".contacts has invalid damage multiplier")end
-            end end
-        end
+    local function events(value,path)
         for _,field in ipairs({"audioEvents","voiceEvents"})do
             local list=value[field]
             if list~=nil then
@@ -384,6 +372,21 @@ function ProjectYakuza.validateStyle(style)
                 end end
             end
         end
+    end
+    local function move(value,path,light)
+        if type(value)~="table" then problem(path.." must be a table");return end
+        if value.enduranceCost~=nil and (not number(value.enduranceCost)or value.enduranceCost<0 or value.enduranceCost>.1)then problem(path..".enduranceCost must be 0..0.1")end
+        if value.targetGraceMs~=nil and (not number(value.targetGraceMs)or value.targetGraceMs<0 or value.targetGraceMs>2000)then problem(path..".targetGraceMs must be 0..2000")end
+        if value.contacts~=nil then
+            local contacts=value.contacts;local last=0
+            if type(contacts)~="table"or #contacts<1 or #contacts>32 then problem(path..".contacts requires 1..32 contacts")
+            else for _,contact in ipairs(contacts)do
+                if type(contact)~="table"or not number(contact.atMs)or contact.atMs<=last or not number(value.duration)or contact.atMs>value.duration*1000 then problem(path..".contacts has invalid source timing")
+                else last=contact.atMs end
+                if type(contact)=="table"and contact.damageMultiplier~=nil and (not number(contact.damageMultiplier)or contact.damageMultiplier<0 or contact.damageMultiplier>10)then problem(path..".contacts has invalid damage multiplier")end
+            end end
+        end
+        events(value,path)
         if value.qte~=nil then local ok,reason=ProjectYakuza.QTE.valid(value.qte,type(value.duration)=="number"and value.duration*1000 or nil);if not ok then problem(path..".qte: "..reason)end end
         if value.qteStages~=nil and type(value.qteStages)~="boolean"then problem(path..".qteStages must be boolean")end
         if value.pacedAnimation~=nil and type(value.pacedAnimation)~="boolean"then problem(path..".pacedAnimation must be boolean")end
@@ -392,6 +395,7 @@ function ProjectYakuza.validateStyle(style)
         end
         if value.qteFailure~=nil then
             local f=value.qteFailure
+            if type(f)=="table"then events(f,path..".qteFailure")end
             if type(f)=="table"and f.paired~=nil and(type(f.paired)~="boolean"or f.paired and(not text(f.motionId)or not ProjectYakuza.PairedMotions or not ProjectYakuza.PairedMotions[f.motionId]or not text(f.targetAnimation)or not number(f.contactMs)or f.contactMs<0 or not number(f.duration)or f.contactMs>=f.duration*1000))then problem(path..".qteFailure paired ending requires targetAnimation and a contact inside its duration")end
             if type(f)~="table"or not text(f.animation)or not text(f.nodeValue)or not number(f.duration)or f.duration<=0 or f.duration>10 then problem(path..".qteFailure requires an authored recovery clip and duration")end
         end

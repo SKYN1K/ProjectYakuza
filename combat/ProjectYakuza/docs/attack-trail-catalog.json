@@ -1,7 +1,7 @@
 {
   "operation": "Code-side numeric FK only from existing supplied PZ clips, including current paired contacts/endings and linked native finisher variants. Contacts use native collision events, authored Heat Action contacts or the documented parry fallback. Clips use contact-local endpoint/relative motion with verified original left-light and right-high-kick pose overrides, independent of charge-up pose. The high kick has right-foot height 0.721 versus planted left foot 0.093 at source frame 24; recovering arms can be faster than the striking leg. Runtime resolves the actual playing clip within the committed move family. No visual/audio/animation/model assets are generated or modified.",
   "catalog": "42/media/lua/client/ProjectYakuza/AttackTrailCatalog.lua",
-  "sha256": "643b617fa4f65e9a14f829067d05dab901d1b0281dd42f7113b2b290852157d7",
+  "sha256": "7955b2b2adea782c268c14fbaf1c5658098cc3077c6395d5fbf27a7ae9ec35e8",
   "clips": [
     {
       "profile": "bat",
@@ -462,9 +462,10 @@
       "impact": -1.0,
       "kick": false,
       "qte": [
-        0.7333333333333333,
-        2.433333333333333,
-        3.066666666666667
+        1.06666666667,
+        1.4,
+        1.9666666666700001,
+        2.8
       ],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BottleHeat.x",
       "clipSha256": "5cac18683d2178238463f7d1d55e4f29ffa28a150ad34fce9a8db118d88d5c6a",
@@ -473,43 +474,57 @@
       "windows": [
         {
           "track": "dd_trail_bottleheat_1",
-          "from": 0.6133333333333333,
-          "to": 0.9333333333333333,
-          "contact": 0.7333333333333333,
+          "from": 0.94666666667,
+          "to": 1.233333333335,
+          "contact": 1.06666666667,
           "limb": "rightArm",
           "scores": [
-            0.11510924303243883,
-            0.39193166965310167,
-            0.08480797686426184,
-            0.06986910526187136
+            0.05958902839122225,
+            0.5729563798061692,
+            0.07007930485189988,
+            0.18058663133144523
           ],
           "selection": "contact-local relative motion"
         },
         {
           "track": "dd_trail_bottleheat_2",
-          "from": 2.313333333333333,
-          "to": 2.6333333333333333,
-          "contact": 2.433333333333333,
+          "from": 1.2799999999999998,
+          "to": 1.5999999999999999,
+          "contact": 1.4,
           "limb": "rightArm",
           "scores": [
-            0.1550054897369938,
-            0.19241086707395397,
-            0.12987291688880612,
-            0.0636852904813079
+            0.16445523316926447,
+            0.5538949440452271,
+            0.10585904899383256,
+            0.19312719336056736
           ],
           "selection": "contact-local relative motion"
         },
         {
           "track": "dd_trail_bottleheat_3",
-          "from": 2.9466666666666668,
-          "to": 3.266666666666667,
-          "contact": 3.066666666666667,
-          "limb": "leftArm",
+          "from": 1.84666666667,
+          "to": 2.1666666666700003,
+          "contact": 1.9666666666700001,
+          "limb": "rightArm",
           "scores": [
-            0.22943773870544115,
-            0.1825260102275934,
-            0.04811603525610948,
-            0.050120100568957826
+            0.1657432378967937,
+            0.6237960540410559,
+            0.06546504877061679,
+            0.17248622432389862
+          ],
+          "selection": "contact-local relative motion"
+        },
+        {
+          "track": "dd_trail_bottleheat_4",
+          "from": 2.6799999999999997,
+          "to": 3.0,
+          "contact": 2.8,
+          "limb": "rightArm",
+          "scores": [
+            0.6847758745399092,
+            1.2268042381175033,
+            0.11981210597185929,
+            0.4250602883052982
           ],
           "selection": "contact-local relative motion"
         }
@@ -824,11 +839,14 @@
       "impact": -1.0,
       "kick": false,
       "qte": [
-        0.433333333,
-        1.4666666700000002,
-        2.46666667,
-        3.46666667,
-        4.733333330000001
+        0.466666666667,
+        1.4666666666700001,
+        1.8,
+        2.4666666666699997,
+        2.8,
+        3.4666666666699997,
+        3.8,
+        4.73333333333
       ],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_CrateHeat.x",
       "clipSha256": "ae2805de9a568767c43ffab07b475af234d8a249bcce3afc71b4a93461a35193",
@@ -837,23 +855,23 @@
       "windows": [
         {
           "track": "dd_trail_crateheat_1",
-          "from": 0.313333333,
-          "to": 0.6333333329999999,
-          "contact": 0.433333333,
+          "from": 0.346666666667,
+          "to": 0.666666666667,
+          "contact": 0.466666666667,
           "limb": "rightArm",
           "scores": [
-            0.48393096043430034,
-            0.4909451374504035,
-            0.12314698580214718,
-            0.22740316907855496
+            0.4402646317527771,
+            0.4579720540672782,
+            0.10546302752549183,
+            0.17509658191874286
           ],
           "selection": "contact-local relative motion"
         },
         {
           "track": "dd_trail_crateheat_2",
-          "from": 1.3466666700000003,
-          "to": 1.6666666700000001,
-          "contact": 1.4666666700000002,
+          "from": 1.34666666667,
+          "to": 1.633333333335,
+          "contact": 1.4666666666700001,
           "limb": "rightArm",
           "scores": [
             0.28636484500245984,
@@ -865,23 +883,23 @@
         },
         {
           "track": "dd_trail_crateheat_3",
-          "from": 2.34666667,
-          "to": 2.66666667,
-          "contact": 2.46666667,
-          "limb": "rightArm",
+          "from": 1.6800000000000002,
+          "to": 2.0,
+          "contact": 1.8,
+          "limb": "leftArm",
           "scores": [
-            0.28636484500245984,
-            0.5558861276081095,
-            0.048836566398847245,
-            0.05152790202318102
+            0.5395240387005588,
+            0.2845521592764764,
+            0.0730418948287527,
+            0.059817904063819684
           ],
           "selection": "contact-local relative motion"
         },
         {
           "track": "dd_trail_crateheat_4",
-          "from": 3.34666667,
-          "to": 3.66666667,
-          "contact": 3.46666667,
+          "from": 2.3466666666699996,
+          "to": 2.633333333335,
+          "contact": 2.4666666666699997,
           "limb": "rightArm",
           "scores": [
             0.28636484500245984,
@@ -893,9 +911,51 @@
         },
         {
           "track": "dd_trail_crateheat_5",
-          "from": 4.613333330000001,
-          "to": 4.933333330000001,
-          "contact": 4.733333330000001,
+          "from": 2.6799999999999997,
+          "to": 3.0,
+          "contact": 2.8,
+          "limb": "leftArm",
+          "scores": [
+            0.5395240387005588,
+            0.2845521592764764,
+            0.0730418948287527,
+            0.059817904063819684
+          ],
+          "selection": "contact-local relative motion"
+        },
+        {
+          "track": "dd_trail_crateheat_6",
+          "from": 3.3466666666699996,
+          "to": 3.633333333335,
+          "contact": 3.4666666666699997,
+          "limb": "rightArm",
+          "scores": [
+            0.28636484500245984,
+            0.5558861276081095,
+            0.048836566398847245,
+            0.05152790202318102
+          ],
+          "selection": "contact-local relative motion"
+        },
+        {
+          "track": "dd_trail_crateheat_7",
+          "from": 3.6799999999999997,
+          "to": 4.0,
+          "contact": 3.8,
+          "limb": "leftArm",
+          "scores": [
+            0.5395240387005588,
+            0.2845521592764764,
+            0.0730418948287527,
+            0.059817904063819684
+          ],
+          "selection": "contact-local relative motion"
+        },
+        {
+          "track": "dd_trail_crateheat_8",
+          "from": 4.61333333333,
+          "to": 4.93333333333,
+          "contact": 4.73333333333,
           "limb": "rightArm",
           "scores": [
             0.3895427118892975,
@@ -916,7 +976,7 @@
       "impact": -1.0,
       "kick": false,
       "qte": [
-        0.633333333
+        0.633333333333
       ],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_CrateHeatFail.x",
       "clipSha256": "c343bea3e8b8cb6d2258868bc1a3a484d778d7fcbe0c0ce248d073a12b48245f",
@@ -925,9 +985,9 @@
       "windows": [
         {
           "track": "dd_trail_crateheatfail_1",
-          "from": 0.5133333330000001,
-          "to": 0.8333333330000001,
-          "contact": 0.633333333,
+          "from": 0.513333333333,
+          "to": 0.833333333333,
+          "contact": 0.633333333333,
           "limb": "rightArm",
           "scores": [
             0.3895427118892975,
@@ -1586,19 +1646,19 @@
       "impact": -1.0,
       "kick": false,
       "qte": [
-        1.86666667,
-        2.1,
-        2.63333333,
-        2.9,
+        1.86666666667,
+        2.26666666667,
+        2.66666666667,
+        3.0666666666699998,
         3.8,
-        4.06666667,
-        4.86666667,
-        5.1,
-        5.63333333,
-        5.9,
+        4.2,
+        4.8666666666700005,
+        5.26666666667,
+        5.66666666667,
+        6.066666666670001,
         6.8,
-        7.06666667,
-        8.16666667
+        7.2,
+        8.2
       ],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_HeatRush.x",
       "clipSha256": "41367c866dc56924a8e8fd293b14aa50bdef6337be6b706ea6587df58ae8b493",
@@ -1607,9 +1667,9 @@
       "windows": [
         {
           "track": "dd_trail_heatrush_1",
-          "from": 1.7466666700000002,
-          "to": 1.9833333350000002,
-          "contact": 1.86666667,
+          "from": 1.74666666667,
+          "to": 2.0666666666699998,
+          "contact": 1.86666666667,
           "limb": "rightArm",
           "scores": [
             0.417588185371234,
@@ -1621,50 +1681,50 @@
         },
         {
           "track": "dd_trail_heatrush_2",
-          "from": 1.9833333350000002,
-          "to": 2.3000000000000003,
-          "contact": 2.1,
-          "limb": "rightArm",
+          "from": 2.14666666667,
+          "to": 2.46666666667,
+          "contact": 2.26666666667,
+          "limb": "leftArm",
           "scores": [
-            0.2591079697065506,
-            0.702983872362452,
-            0.08279355280618339,
-            0.12926926157242583
+            1.1669222582035779,
+            0.4032142848303178,
+            0.09408136337686701,
+            0.13677391690448618
           ],
           "selection": "contact-local relative motion"
         },
         {
           "track": "dd_trail_heatrush_3",
-          "from": 2.51333333,
-          "to": 2.766666665,
-          "contact": 2.63333333,
+          "from": 2.5466666666699997,
+          "to": 2.8666666666699996,
+          "contact": 2.66666666667,
           "limb": "rightArm",
           "scores": [
-            0.40411932966825886,
-            0.9799353570885739,
-            0.10626719359519805,
-            0.07596340925642395
+            0.37222777140169844,
+            0.9971767900647097,
+            0.08335776901449952,
+            0.05858372474585243
           ],
           "selection": "contact-local relative motion"
         },
         {
           "track": "dd_trail_heatrush_4",
-          "from": 2.78,
-          "to": 3.1,
-          "contact": 2.9,
-          "limb": "rightArm",
+          "from": 2.9466666666699997,
+          "to": 3.26666666667,
+          "contact": 3.0666666666699998,
+          "limb": "leftArm",
           "scores": [
-            0.26959812953649703,
-            0.40292314380466293,
-            0.06260630219145127,
-            0.05961104898597638
+            1.2293305359181923,
+            0.25934798806268256,
+            0.1494212224980959,
+            0.13579419453804104
           ],
           "selection": "contact-local relative motion"
         },
         {
           "track": "dd_trail_heatrush_5",
           "from": 3.6799999999999997,
-          "to": 3.933333335,
+          "to": 4.0,
           "contact": 3.8,
           "limb": "rightArm",
           "scores": [
@@ -1677,23 +1737,23 @@
         },
         {
           "track": "dd_trail_heatrush_6",
-          "from": 3.94666667,
-          "to": 4.26666667,
-          "contact": 4.06666667,
+          "from": 4.08,
+          "to": 4.4,
+          "contact": 4.2,
           "limb": "leftArm",
           "scores": [
-            0.5901831360086756,
-            0.4652524117299157,
-            0.09785265913571536,
-            0.13416191339777306
+            1.2858537050046197,
+            0.36290576888397386,
+            0.1048485691676781,
+            0.09666497885723535
           ],
           "selection": "contact-local relative motion"
         },
         {
           "track": "dd_trail_heatrush_7",
-          "from": 4.74666667,
-          "to": 4.983333334999999,
-          "contact": 4.86666667,
+          "from": 4.74666666667,
+          "to": 5.066666666670001,
+          "contact": 4.8666666666700005,
           "limb": "rightArm",
           "scores": [
             0.417588185371234,
@@ -1705,50 +1765,50 @@
         },
         {
           "track": "dd_trail_heatrush_8",
-          "from": 4.983333334999999,
-          "to": 5.3,
-          "contact": 5.1,
-          "limb": "rightArm",
+          "from": 5.14666666667,
+          "to": 5.46666666667,
+          "contact": 5.26666666667,
+          "limb": "leftArm",
           "scores": [
-            0.2591079697065506,
-            0.702983872362452,
-            0.08279355280618339,
-            0.12926926157242583
+            1.1669222582035779,
+            0.4032142848303178,
+            0.09408136337686701,
+            0.13677391690448618
           ],
           "selection": "contact-local relative motion"
         },
         {
           "track": "dd_trail_heatrush_9",
-          "from": 5.51333333,
-          "to": 5.766666665000001,
-          "contact": 5.63333333,
+          "from": 5.54666666667,
+          "to": 5.8666666666700005,
+          "contact": 5.66666666667,
           "limb": "rightArm",
           "scores": [
-            0.40411932966825886,
-            0.9799353570885739,
-            0.10626719359519805,
-            0.07596340925642395
+            0.37222777140169844,
+            0.9971767900647097,
+            0.08335776901449952,
+            0.05858372474585243
           ],
           "selection": "contact-local relative motion"
         },
         {
           "track": "dd_trail_heatrush_10",
-          "from": 5.78,
-          "to": 6.1000000000000005,
-          "contact": 5.9,
-          "limb": "rightArm",
+          "from": 5.9466666666700005,
+          "to": 6.266666666670001,
+          "contact": 6.066666666670001,
+          "limb": "leftArm",
           "scores": [
-            0.26959812953649703,
-            0.40292314380466293,
-            0.06260630219145127,
-            0.05961104898597638
+            1.2293305359181923,
+            0.25934798806268256,
+            0.1494212224980959,
+            0.13579419453804104
           ],
           "selection": "contact-local relative motion"
         },
         {
           "track": "dd_trail_heatrush_11",
           "from": 6.68,
-          "to": 6.933333335,
+          "to": 7.0,
           "contact": 6.8,
           "limb": "rightArm",
           "scores": [
@@ -1761,29 +1821,29 @@
         },
         {
           "track": "dd_trail_heatrush_12",
-          "from": 6.94666667,
-          "to": 7.26666667,
-          "contact": 7.06666667,
+          "from": 7.08,
+          "to": 7.4,
+          "contact": 7.2,
           "limb": "leftArm",
           "scores": [
-            0.5901831360086756,
-            0.4652524117299157,
-            0.09785265913571536,
-            0.13416191339777306
+            1.2858537050046197,
+            0.36290576888397386,
+            0.1048485691676781,
+            0.09666497885723535
           ],
           "selection": "contact-local relative motion"
         },
         {
           "track": "dd_trail_heatrush_13",
-          "from": 8.04666667,
-          "to": 8.366666669999999,
-          "contact": 8.16666667,
+          "from": 8.08,
+          "to": 8.399999999999999,
+          "contact": 8.2,
           "limb": "rightLeg",
           "scores": [
-            0.37127900875616665,
-            0.5079294148705608,
-            0.1335734897654299,
-            0.662436949717542
+            0.30607790168634663,
+            0.4494553149106775,
+            0.09537295851580432,
+            0.6327985812339911
           ],
           "selection": "contact-local relative motion"
         }
@@ -1798,7 +1858,7 @@
       "impact": -1.0,
       "kick": false,
       "qte": [
-        0.833333333
+        0.866666666667
       ],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_HeatRushFail.x",
       "clipSha256": "db5daca0c8fa1987f50973a3ff5b98479fd03f2e70a628d2d63d2945558ac127",
@@ -1807,15 +1867,15 @@
       "windows": [
         {
           "track": "dd_trail_heatrushfail_1",
-          "from": 0.713333333,
-          "to": 1.033333333,
-          "contact": 0.833333333,
+          "from": 0.746666666667,
+          "to": 1.066666666667,
+          "contact": 0.866666666667,
           "limb": "rightLeg",
           "scores": [
-            0.37127900875616665,
-            0.5079294148705608,
-            0.1335734897654299,
-            0.662436949717542
+            0.30607790168634663,
+            0.4494553149106775,
+            0.09537295851580432,
+            0.6327985812339911
           ],
           "selection": "contact-local relative motion"
         }
@@ -1861,8 +1921,8 @@
       "kick": false,
       "qte": [
         0.8,
-        1.4666666666666666,
-        2.1333333333333333
+        1.4666666666700001,
+        2.13333333333
       ],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_KatanaHeat.x",
       "clipSha256": "c29da89230e812f55200c9d7204f45b4391d5f0294eeadb1a8ae1f4e462d2b91",
@@ -1885,9 +1945,9 @@
         },
         {
           "track": "dd_trail_katanaheat_2",
-          "from": 1.3466666666666667,
-          "to": 1.6666666666666665,
-          "contact": 1.4666666666666666,
+          "from": 1.34666666667,
+          "to": 1.66666666667,
+          "contact": 1.4666666666700001,
           "limb": "rightArm",
           "scores": [
             0.308287634363707,
@@ -1899,9 +1959,9 @@
         },
         {
           "track": "dd_trail_katanaheat_3",
-          "from": 2.013333333333333,
-          "to": 2.3333333333333335,
-          "contact": 2.1333333333333333,
+          "from": 2.01333333333,
+          "to": 2.33333333333,
+          "contact": 2.13333333333,
           "limb": "rightArm",
           "scores": [
             0.3619099790242301,

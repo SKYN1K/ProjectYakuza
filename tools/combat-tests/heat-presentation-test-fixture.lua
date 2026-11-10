@@ -1,4 +1,7 @@
 local C=PY.HeatActionPresentation;local D=PY.HeatPresentationData
+local builtin=PY.getStyle('dragon_of_dojima')
+local sourceMoves={builtin.actions.heatAction,builtin.actions.grabHeat,builtin.actions.groundHeat}
+for _,profile in ipairs({'bottle','crate','blade'})do sourceMoves[#sourceMoves+1]=PY.Weapons.views.dragon_of_dojima[profile].actions.heatAction end
 Events.OnPostRender=event()
 local activeStyle={id='presentation',sounds={heavyImpact='impact',punchImpact='punch',kickImpact='kick',throwImpact='fall'}}
 PY.getPlayerStyle=function()return activeStyle end;PY.getStyle=function()return activeStyle end
@@ -22,25 +25,32 @@ PY.emit=function(name)if name=='heatRushHit'then emitted=emitted+1 end end
 function p:getAnimAngleRadians()return self.angle or 0 end
 p.dead=false;p.equipped=true;z.dead=false;paused=false;weight=1
 local function step(ms)phase=(ms+.00001)/1000;clock=clock+16;C.tick()end
-local total=0;local move,source
+local total,effectTotal=0,0;local move,source
 for animation,data in pairs(D.moves)do
- move={animation=animation,contacts={}}
+ move={animation=animation,contacts={},audioEvents={}}
  for i,meta in ipairs(data.contacts)do move.contacts[meta.index]={atMs=meta.atMs,cue=meta.cue,layers={'heavyImpact'}}end
+ C.clearAll();plays={};fx={};source={};phase=0;C.start(p,z,move,source);C.tick()
+ local times={};for _,effect in ipairs(data.effects)do times[effect.atMs]=true end
+ local sorted={};for at in pairs(times)do sorted[#sorted+1]=at end;table.sort(sorted)
+ for _,at in ipairs(sorted)do
+  local expected=0;for _,effect in ipairs(data.effects)do if effect.atMs==at then expected=expected+1 end end
+  local before=#fx;step(at);check(#fx==before+expected,'all source emitters start at their own frame '..animation)
+  for i=before+1,#fx do check(fx[i].blood and fx[i].anchor~=nil,'source emitter uses supplied blood and sampled bone attachment')end
+  step(at);check(#fx==before+expected,'source emitters cannot duplicate on repeated render')
+ end
+ check(#fx==#data.effects and #plays==0,'source effect count is exact and generic sounds are suppressed')
+ effectTotal=effectTotal+#fx
  for _,meta in ipairs(data.contacts)do
   C.clearAll();plays={};fx={};source={};phase=0;C.start(p,z,move,source);C.tick()
   C.start(p,z,move,source);check(C.states[p].source==source,'MP snapshots preserve presentation session')
   local at=meta.atMs
-  step(math.max(0,at-160))
-  step(math.max(0,at-lead));local matched=false;for _,play in ipairs(plays)do if math.abs(play.time-math.max(0,at-lead))<.001 then matched=true end end
-  check(matched,'source transient preroll '..animation..' '..meta.atMs..' lead '..lead..' plays '..#plays)
-  local fbefore=#fx;step(at);check(#fx==fbefore+1,'one effect at physical contact')
-  check(fx[#fx].anchor~=nil,'all built-in contacts have a sampled native victim anchor')
+  local before=emitted;step(at);check(emitted==before+1,'canonical contact emits once independently of source particles')
   local count=#fx;step(at+1);check(#fx==count,'contact cannot duplicate on next render')
   H.present(p,z,move,meta.index,true);check(#fx==count,'damage/network echo cannot replay presentation')
   total=total+1
  end
 end
-check(total==30,'all enabled main and failure-ending physical impacts covered')
+check(total==33 and effectTotal==106,'all main and failure-ending contacts and source emitter starts covered')
 C.clearAll();move={animation='Custom',contacts={{atMs=500,cue='punchImpact',layers={'kickImpact'}}}};source={};plays={};fx={};phase=0;C.start(p,z,move,source);step(500-lead)
 check(#plays==2 and plays[1].gain==.55 and plays[2].gain==.3,'custom styles retain primary and layered sound gains')
 step(500);check(#fx==1 and fx[1].anchor==nil,'custom action without numeric sample retains legacy placement')
@@ -81,10 +91,11 @@ phase=0;source={};C.start(p,z,katana,source);step(0)
 local events={};for _,event in ipairs(katana.audioEvents)do events[#events+1]={at=event.atMs,audio=true}end
 for _,event in ipairs(katana.voiceEvents)do events[#events+1]={at=event.atMs}end
 for _,event in ipairs(katana.contacts)do events[#events+1]={at=event.atMs}end
+for _,event in ipairs(D.moves[katana.animation].effects)do events[#events+1]={at=event.atMs}end
 table.sort(events,function(a,b)return a.at<b.at end)
-for _,event in ipairs(events)do step(math.max(0,event.at-1));local before=#plays;step(event.at);step(event.at);if event.audio then check(#plays==before+1,'source cue fires exactly at authored start once, without generic preroll')end end
-check(#plays==5 and #fx==3 and #voices==2,'five original cues, three blood contacts and two original voice events remain independent')
-for i,effect in ipairs(fx)do check(effect.blood==true and math.abs(effect.time-katana.contacts[i].atMs)<.001,'katana blood follows the real damage frame without generic sparks')end
+local seen={};for _,event in ipairs(events)do if not seen[event.at]then seen[event.at]=true;step(math.max(0,event.at-1));local before=#plays;step(event.at);step(event.at);local expected=0;for _,audio in ipairs(katana.audioEvents)do if audio.atMs==event.at then expected=expected+1 end end;check(#plays==before+expected,'source cues fire exactly at authored starts once, without generic preroll')end end
+check(#plays==5 and #fx==16 and #voices==2,'five original cues, sixteen source emitters and two original voice events remain independent')
+for i,effect in ipairs(fx)do check(effect.blood==true and math.abs(effect.time-D.moves[katana.animation].effects[i].atMs)<.001,'katana blood follows original emitter frames without generic sparks')end
 check(voices[1].entry=='CombatHeavyAttack'and voices[2].entry=='CombatSpecialMove','original source voice roles use existing CVF combat entries')
 C.clearAll()
 local style=PY.Weapons.views.dragon_of_dojima.blade;local audio,voice=katana.audioEvents,katana.voiceEvents
@@ -92,4 +103,34 @@ check(PY.validateStyle(style),'authored source sound and voice event arrays vali
 for _,bad in ipairs({{atMs=-1,cue='punchImpact'},{atMs=1,cue='punchImpact',gain=2},{atMs=1,cue='punchImpact',target='other'},{atMs=katana.duration*1000+1,cue='punchImpact'}})do katana.audioEvents={bad};check(not PY.validateStyle(style),'invalid authored audio event rejected')end
 katana.audioEvents=audio;katana.voiceEvents={{atMs=1,entry='UnrelatedVoice'}};check(not PY.validateStyle(style),'authored voice must use Combat prefix')
 katana.voiceEvents=voice
-return true,'PASS '..checks..' paired Heat Action timing, 30 native contact anchors, three damaging katana strikes, clip lead-ins, custom layers, replay suppression, rotation and lifecycle checks'
+for key,value in pairs(PY.HeatSceneData.sounds)do activeStyle.sounds[key]=value end
+local function runSource(action,failed)
+ local definition=failed and action.qteFailure or action
+ local animation=definition.animation;local samples=D.moves[animation]
+ C.clearAll();plays={};fx={};voices={};source={failed=failed};phase=0;C.start(p,z,action,source)
+ local at={};for _,event in ipairs(definition.audioEvents)do at[event.atMs]=true end
+ for _,event in ipairs(definition.voiceEvents)do at[event.atMs]=true end
+ for _,event in ipairs(samples.effects)do at[event.atMs]=true end
+ for _,event in ipairs(samples.contacts)do at[event.atMs]=true end
+ local ordered={};for time in pairs(at)do ordered[#ordered+1]=time end;table.sort(ordered)
+ for _,time in ipairs(ordered)do step(time);local a,b,c=#plays,#fx,#voices;step(time);check(#plays==a and #fx==b and #voices==c,'source event cannot duplicate '..animation)end
+ check(#plays==#definition.audioEvents and #voices==#definition.voiceEvents and #fx==#samples.effects,'complete original scene audio, voice and effect timeline '..animation)
+ for i,event in ipairs(definition.audioEvents)do check(math.abs(plays[i].time-event.atMs)<.001,'each original sound uses its source start '..animation)end
+ for i,event in ipairs(definition.voiceEvents)do check(voices[i].entry==event.entry and math.abs(voices[i].at-event.atMs)<.001,'actor voice source starts remain independent '..animation)end
+ C.clearAll();plays={};fx={};voices={};source={failed=failed};phase=0;C.start(p,z,action,source);step(definition.duration*1000+200)
+ check(#plays==0 and #fx==0 and #voices==0,'late scene cannot burst old sounds, emitters or voices '..animation)
+end
+for _,action in ipairs(sourceMoves)do
+ runSource(action,false)
+ if action.qteFailure and action.qteFailure.paired then
+  runSource(action,true)
+  C.clearAll();plays={};fx={};voices={};source={};phase=0;C.start(p,z,action,source);step(500)
+  local first=#plays;source.failed=true;phase=0;step(0)
+  check(C.states[p].clip==action.qteFailure.animation and #plays>=first,'failure switches event clocks without a rewind cancellation')
+  local failure=action.qteFailure;local old=failure.audioEvents;failure.audioEvents={{atMs=failure.duration*1000+1,cue='punchImpact'}}
+  local owner=action==builtin.actions.heatAction and builtin or PY.Weapons.views.dragon_of_dojima.crate
+  check(not PY.validateStyle(owner),'invalid failure-ending source event rejected');failure.audioEvents=old;check(PY.validateStyle(owner),'restored source ending validates')
+ end
+end
+C.clearAll()
+return true,'PASS '..checks..' paired Heat Action timing, 33 native contacts, 106 source emitters, independent cues and voices, custom layers, replay suppression, rotation and lifecycle checks'

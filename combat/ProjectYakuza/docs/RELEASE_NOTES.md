@@ -1,8 +1,10 @@
-# Project Yakuza 0.94.0
+# Project Yakuza 0.95.0
 
-- Restored the katana Heat Action's original independent sword animation. It now leaves the hand, turns in midair and is caught in the reversed grip before the final sharp-end thrust.
-- Converted all 141 samples from the supplied h23720_000_7.gmt sword track into the existing native right-prop attachment. The source release is at frame 44, the catch at frame 54 and the final thrust at frame 64.
-- Replaced the previous fixed-grip check with source-derived animated attachment checks, native importer/FK validation and a regression that rejects the old rigid grip at the release frame. Verified that the native katana sharp axis faces the victim at the final thrust.
-- Preserved all character/finger/left-prop bytes, the complete victim clip, hit timing, damage, audio and textures. Only the actor's right-prop animation block changes; dependent provenance hashes are refreshed.
+- Read all six supplied Heat Action cmn.bin scenes, including the crate's big-endian Yakuza 5 format. Separate victim damage from prop damage, sound starts and particle starts.
+- Correct bottle contacts to frames 32/42/59/84 and wall contacts to 12/48. Restore both punches in each repeated crate section, and correct Rush punches, final kick and failure-ending timing against the retained source frame maps.
+- Preserve total damage, stock/fuel prices, eligibility, QTE controls and earned final-damage rules. Ground trample has no CMN damage markers and retains its verified frame-30 contact.
+- Play 23 original non-voice bank streams at their CMN starts, alongside five existing katana cues. Actor voice roles use existing Combat entries; the separate voice pack is untouched.
+- Schedule 106 source blood-family starts at native bone attachments across six main clips and two failure endings, using existing supplied blood pixels. Source cameras and non-blood engine effects are not recreated. Suppress generic contact layers for these scenes.
+- Preserve the katana's airborne grip reversal and every prior animation, texture and model byte. All 30 rebuilt Kahlua suites pass; source/PCM provenance, native sound parsing, deterministic scene/FK catalogs, Lua compilation and source-comment checks pass offline. Project Zomboid was not launched.
 
-This is a conversion of the supplied original sword motion, without invented motion or generated artwork/audio. Offline validation only; PZ was not launched. See [validation](VALIDATION_0.94.0.md). Restart PZ after updating, with matching server/client versions.
+See [validation](VALIDATION_0.95.0.md), [scene contracts](HEAT_SCENES.md) and [source manifest](heat-scenes.json).
