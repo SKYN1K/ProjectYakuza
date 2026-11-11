@@ -326,15 +326,15 @@ for index,case in ipairs({{item=bat,profile='bat',clip='Bat',family='blunt'},{it
 end
 ProjectYakuza.HitEffects=previousEffects
 
-for index,case in ipairs({{id='bottle',item='ProjectYakuza.IntactBeerBottle',prefix='Bottle'},{id='crate',item='ProjectYakuza.BeerCrate',prefix='Crate'}})do
+for index,case in ipairs({{id='bottle',item='ProjectYakuza.IntactBeerBottle',prefix='Bottle'},{id='crate',item='ProjectYakuza.BeerCrate',prefix='Crate'},{id='bicycle',item='ProjectYakuza.Bicycle',prefix='Bicycle'}})do
  clock=clock+2000;local held=realWeapon(800+index,case.item);p.inventoryItems[#p.inventoryItems+1]=held;p:setPrimaryHandItem(held)
  server.command(P.module,'equip',p,{style='dragon_of_dojima',weaponProfile=case.id,item=800+index,request=200+index})
  snapshot(p,{weaponProfile=case.id,clip='ProjectYakuza_DD_'..case.prefix..'Light01',move='dd_'..case.id..'_light_01',swing=7000+index})
  check(state.packet.weaponProfile==case.id and state.packet.move=='dd_'..case.id..'_light_01','server authorizes original object combat '..case.id)
  local before=state.seq;snapshot(p,{weaponProfile=case.id,clip='ProjectYakuza_DD_BatLight01',move='dd_bat_light_01',swing=8000+index})
  check(state.seq==before,'object cannot borrow bat moves '..case.id)
- snapshot(p,{weaponProfile=case.id,clip='ProjectYakuza_DD_'..case.prefix..'GuardLoop',move='dd_'..case.id..'_light_01',phase='hold'})
- check(state.packet.clip=='ProjectYakuza_DD_'..case.prefix..'GuardLoop','MP object guard accepted '..case.id)
+ if case.id~='bicycle'then snapshot(p,{weaponProfile=case.id,clip='ProjectYakuza_DD_'..case.prefix..'GuardLoop',move='dd_'..case.id..'_light_01',phase='hold'})
+ check(state.packet.clip=='ProjectYakuza_DD_'..case.prefix..'GuardLoop','MP object guard accepted '..case.id)end
 end
 
 return true,'PASS '..count..' weapon MP, boost authorization, duplicates, caps, walls, damage authority and depletion checks'

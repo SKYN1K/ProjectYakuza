@@ -1,6 +1,6 @@
 # Original Heat Action scene contracts
 
-Version 0.96.0 adds the [bat action](BAT_HEAT_ACTION.md) to the six original scene contracts introduced in 0.95.0. All seven built-in Dragon of Dojima Heat Actions read their supplied original cmn.bin. HeatSceneData and HeatScenes apply source events before style and equipment registration, so playback, authoritative contacts and multiplayer presentation share the same definitions. Prices and eligibility are unchanged. Startup pays once only after native playback is confirmed.
+Version 0.97.0 adds the [bicycle action](BICYCLE.md) after the bat action from 0.96.0 and six scene contracts from 0.95.0. All eight built-in Dragon of Dojima Heat Actions read their supplied original cmn.bin. HeatSceneData and HeatScenes apply source events before style and equipment registration, so playback, authoritative contacts and multiplayer presentation share the same definitions. Prices and eligibility are unchanged. Startup pays once only after native playback is confirmed.
 
 | Action | Original victim damage frames at 30 fps | Current main-clip contact frames |
 | --- | --- | --- |
@@ -11,6 +11,7 @@ Version 0.96.0 adds the [bat action](BAT_HEAT_ACTION.md) to the six original sce
 | Beer crate | 14, 44, 54, 82 | 14, 44, 54, 74, 84, 104, 114, 142 |
 | Katana | 24, 44, 64 | Same |
 | Bat | 14, 50 | Same |
+| Bicycle | 131, 158 | 6, 33 |
 
 Rush retains its bounded two-pass sections. Source events belong to the logical section, preventing overlapping copied pose frames from replaying the preceding section's hit. Its closing kick maps to failure-ending frame 26. Crate retains three repeats of source frames 34–63; both punches map into each repeat. Its failure contact maps to frame 19. The crate's frame-13 damage belongs to the prop and is excluded from victim damage.
 
@@ -23,3 +24,5 @@ The source manifest records blood-family emitter starts, bone-local offsets and 
 The controller reads the playing native clip and switches failure endings to their own clock. Event identities reset only on clip changes. Repeated renders and MP echoes cannot repeat events. Pause freezes emission; events over 100 ms late are dropped. Ending audio/voice lists use the same bounds and registry validation as main lists. Custom styles retain contact/layer fallback.
 
 Reproduce source contracts and bank decodes with tools/combat-tests/build_heat_scenes.py --write; default mode verifies deterministic outputs. build_heat_scene_anchors.py reproduces numeric attachments from retained native victim clips. build_heat_presentation.py and build_attack_trails.py rebuild dependent numeric catalogs. validate_heat_scenes.py checks expected contacts, totals, victim filtering, source attachments, fresh PCM decodes and unchanged prior media. heat-scenes.json records source/bank hashes; heat-scene-effects.json records clip hashes and anchors. Earlier per-action conversion manifests describe retained motion builds; this contract supersedes their historical contact-timing claims.
+
+The bicycle retains source frames 125..308. Its CMN10 source prop-damage event at 174 is excluded from victim damage. Both 100-point victim markers become 0.75 canonical weapon damage. Source audio uses its independent fractional-frame starts without rounding.

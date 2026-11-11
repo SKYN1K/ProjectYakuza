@@ -1361,6 +1361,44 @@
         "bloodOnly": true,
         "feedback": "blunt"
       }
+    ],
+    "ProjectYakuza_DD_BicycleHeat": [
+      {
+        "atMs": 233.33333333333334,
+        "index": 1,
+        "bone": "Bip01_Head",
+        "point": [
+          -3.94730022890144e-06,
+          0.7195587158203125,
+          -0.006778119597584009
+        ],
+        "bloodOnly": true,
+        "feedback": "blunt"
+      },
+      {
+        "atMs": 1100.0,
+        "index": 2,
+        "bone": "Bip01_Head",
+        "point": [
+          0.14349855482578278,
+          0.11082290858030319,
+          -0.2241869419813156
+        ],
+        "bloodOnly": true,
+        "feedback": "blunt"
+      },
+      {
+        "atMs": 1600.0,
+        "index": 2,
+        "bone": "Bip01_Head",
+        "point": [
+          0.14349855482578278,
+          0.11082290858030319,
+          -0.2241869419813156
+        ],
+        "bloodOnly": true,
+        "feedback": "blunt"
+      }
     ]
   },
   "clips": [
@@ -2494,7 +2532,7 @@
     },
     {
       "animation": "ProjectYakuza_DD_KatanaHeat",
-      "actorSha256": "c29da89230e812f55200c9d7204f45b4391d5f0294eeadb1a8ae1f4e462d2b91",
+      "actorSha256": "9a84a992d060198efcc0a18c074dfaddb45ee8bcd702b979618c5e80825bbcff",
       "victimSha256": "47d20dc05f192103f56771b7c454ed741b97810588aa0e805e96e96e481a78e6",
       "events": [
         {
@@ -2764,6 +2802,49 @@
             -0.15467508137226105,
             0.2616795301437378,
             0.1843349039554596
+          ],
+          "bloodOnly": true,
+          "feedback": "blunt"
+        }
+      ]
+    },
+    {
+      "animation": "ProjectYakuza_DD_BicycleHeat",
+      "actorSha256": "7d66dfa3fd4ba3b1d937baf6b4bbb29870a6196a3078fc8b77a0765835b85db4",
+      "victimSha256": "d4c42d5a1a280fdf4d6b8e22726731155fbe7c2ad6e94ee850c2d6c29334b6ab",
+      "events": [
+        {
+          "atMs": 233.33333333333334,
+          "index": 1,
+          "bone": "Bip01_Head",
+          "point": [
+            -3.94730022890144e-06,
+            0.7195587158203125,
+            -0.006778119597584009
+          ],
+          "bloodOnly": true,
+          "feedback": "blunt"
+        },
+        {
+          "atMs": 1100.0,
+          "index": 2,
+          "bone": "Bip01_Head",
+          "point": [
+            0.14349855482578278,
+            0.11082290858030319,
+            -0.2241869419813156
+          ],
+          "bloodOnly": true,
+          "feedback": "blunt"
+        },
+        {
+          "atMs": 1600.0,
+          "index": 2,
+          "bone": "Bip01_Head",
+          "point": [
+            0.14349855482578278,
+            0.11082290858030319,
+            -0.2241869419813156
           ],
           "bloodOnly": true,
           "feedback": "blunt"

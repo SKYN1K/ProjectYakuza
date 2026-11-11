@@ -4,7 +4,7 @@ from read_heat_scene import read_scene
 from cri_cue_table import cue_names
 
 root=Path(__file__).resolve().parents[2];mod=root/'combat/ProjectYakuza';work=root/'extracted/all-heat-scene-095';work.mkdir(exist_ok=True);write='--write'in sys.argv
-scenes={'rush':('rush-reference-072','hact_h24010_100punchi.acb','ProjectYakuza_DD_HeatRush'),'bottle':('bottle-heat-071','hact_h23760_buki_n.acb','ProjectYakuza_DD_BottleHeat'),'wall':('grab-wall-080/wall-knock','hact_h2000_knock_wall_l.acb','ProjectYakuza_DD_WallHeat'),'ground':('ground-heat-081','hact_h1500.acb','ProjectYakuza_DD_GroundHeat'),'crate':('crate-heat-086','27d7.acb','ProjectYakuza_DD_CrateHeat'),'katana':('katana-heat-070','hact_h23720_buki_e.acb','ProjectYakuza_DD_KatanaHeat'),'bat':('bat-heat-096/h23710_buki_d','hact_h23710_buki_d.acb','ProjectYakuza_DD_BatHeat')}
+scenes={'rush':('rush-reference-072','hact_h24010_100punchi.acb','ProjectYakuza_DD_HeatRush'),'bottle':('bottle-heat-071','hact_h23760_buki_n.acb','ProjectYakuza_DD_BottleHeat'),'wall':('grab-wall-080/wall-knock','hact_h2000_knock_wall_l.acb','ProjectYakuza_DD_WallHeat'),'ground':('ground-heat-081','hact_h1500.acb','ProjectYakuza_DD_GroundHeat'),'crate':('crate-heat-086','27d7.acb','ProjectYakuza_DD_CrateHeat'),'katana':('katana-heat-070','hact_h23720_buki_e.acb','ProjectYakuza_DD_KatanaHeat'),'bat':('bat-heat-096/h23710_buki_d','hact_h23710_buki_d.acb','ProjectYakuza_DD_BatHeat'),'bicycle':('bicycle-heat-097/h11010_jitensha','28af.acb','ProjectYakuza_DD_BicycleHeat')}
 sha=lambda b:hashlib.sha256(b).hexdigest()
 vgm=str(root/'tools/vgmstream/vgmstream-cli.exe');sounds={};audioRecords=[];sourceRecords=[];moves={};scripts=[];archiveCache={}
 def extract_bank(game,name):
@@ -56,6 +56,8 @@ for key,(folder,bankName,animation)in scenes.items():
         ending=next(r['sourceFrames']for r in sections['clips']if r['ending'])
     elif key=='crate':
         sections=json.loads((mod/'docs/crate-heat-assets.json').read_text());mapping=next(r['sourceFrames']for r in sections['clips']if r['role']==0 and not r['ending']);ending=next(r['sourceFrames']for r in sections['clips']if r['role']==0 and r['ending']);segments=None
+    elif key=='bicycle':
+        mapping=json.loads((mod/'docs/bicycle-heat-assets.json').read_text())['sourceFrames'];ending=None;segments=None
     else:
         length=int(max(n['motion']['end']for n in scene['nodes']if'motion'in n));mapping=list(range(length+1));ending=None;segments=None
     damage=[n for n in scene['nodes']if'damage'in n and n['role']=='victim'];soundNodes=[n for n in scene['nodes']if'sound'in n];particleNodes=[n for n in scene['nodes']if'particle'in n and n['role']=='victim'and n['name'].startswith(('YNb','YAb'))and n.get('bone')]
@@ -65,7 +67,7 @@ for key,(folder,bankName,animation)in scenes.items():
         clip=animation.replace('HeatRush','HeatRushFail').replace('CrateHeat','CrateHeatFail')if failure else animation
         events=mapped_events(damage,frames,None if failure else segments);contacts=[]
         for i,(frame,node)in enumerate(events):
-            multiplier=0 if key in['rush','crate']else (1.5 if key in['bottle','katana','bat']else 5)*node['damage']['damage']/sum(n['damage']['damage']for n in damage)
+            multiplier=0 if key in['rush','crate']else (1.5 if key in['bottle','katana','bat','bicycle']else 5)*node['damage']['damage']/sum(n['damage']['damage']for n in damage)
             contacts.append({'atMs':frame/30*1000,'damageMultiplier':multiplier,'cue':'punchImpact','strong':i==len(events)-1,'charged':key=='rush'and i==len(events)-1})
         if key=='ground':contacts=[{'atMs':1000,'damageMultiplier':5,'cue':'heavyImpact','strong':True}]
         if key in['rush','crate']:
@@ -80,7 +82,7 @@ for key,(folder,bankName,animation)in scenes.items():
             sound=node['sound'];at=frame/30*1000
             if sound['fighter']:
                 if node['role']=='actor':
-                    label=node['name'];entry='CombatSpecialMove'if'THROW'in label else'CombatHeavyAttack'if any(s in label for s in['ATTACK_L','ATTACK_XL'])or sound.get('name')=='Kiryu_Attack07'else'CombatLightAttack'
+                    label=node['name'].upper();entry='CombatSpecialMove'if'THROW'in label else'CombatHeavyAttack'if any(s in label for s in['ATTACK_L','ATTACK_XL'])or sound.get('name')=='Kiryu_Attack07'else'CombatLightAttack'
                     voices.append({'atMs':at,'entry':entry})
                 continue
             cueName=sound['name'];assert cueName in streams,(key,cueName)
@@ -102,7 +104,7 @@ for key,(folder,bankName,animation)in scenes.items():
             if frame>=len(frames)-1:continue
             index=min(range(len(contacts)),key=lambda i:abs(contacts[i]['atMs']-frame/30*1000))+1
             particles.append({'frame':frame,'sourceFrame':node['element']['start'],'sourceOffset':node['offset'],'name':node['name'],'id':node['particle']['id'],'bone':node['bone'],'localPoint':node['particle']['matrix'][12:15],'contact':index})
-        definition={'animation':clip,'contacts':contacts,'audioEvents':audio,'voiceEvents':voices,'particles':particles,'sourceFrames':frames,'damagePolicy':'New bat action: 1.5 canonical weapon damage distributed using original 500/1500 victim weights.'if key=='bat'else'Preserve existing QTE-earned final damage aggregation.'if key in['rush','crate']else'Preserve total damage, distribute using original victim damage weights.'if damage else'No CMN damage nodes: retain verified frame-30 sole/head contact.'}
+        definition={'animation':clip,'contacts':contacts,'audioEvents':audio,'voiceEvents':voices,'particles':particles,'sourceFrames':frames,'damagePolicy':'New weapon action: 1.5 canonical damage distributed using original victim damage weights.'if key in['bat','bicycle']else'Preserve existing QTE-earned final damage aggregation.'if key in['rush','crate']else'Preserve total damage, distribute using original victim damage weights.'if damage else'No CMN damage nodes: retain verified frame-30 sole/head contact.'}
         record['definitions'].append(definition)
     main=record['definitions'][0];moves[key]={k:main[k]for k in['contacts','audioEvents','voiceEvents']}
     if ending:

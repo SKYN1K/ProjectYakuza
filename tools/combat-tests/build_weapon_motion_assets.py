@@ -122,3 +122,6 @@ report={'authorization':'User approved original bottle/crate, bat/katana convers
 
 from vanilla_pose_fallback import apply
 apply()
+
+import runpy
+runpy.run_path(str(root/'tools/combat-tests/build_y5_object_attacks.py'),run_name='__main__')

@@ -2,7 +2,7 @@
 
 Project Yakuza is a Build 42 combat mod and a framework for independent fighting-style addons. Dragon of Dojima uses supplied Yakuza/Kiwami animations, textures and sounds. Other styles register their own moves, assets and controllers without copying the framework.
 
-**Version 0.96.0 · Lua API 3 · MP protocol 2.** API 1 style registrations remain supported. Internal namespace/mod dependency: `ProjectYakuza`. Display name: Project Yakuza.
+**Version 0.97.0 · Lua API 3 · MP protocol 2.** API 1 style registrations remain supported. Internal namespace/mod dependency: `ProjectYakuza`. Display name: Project Yakuza.
 
 ## Install and play
 
@@ -76,3 +76,5 @@ As of 0.92.0, weapon holds and ordinary armed movement use vanilla Zomboid poses
 Beer-crate Essence of Crushing uses the rebound Heat Action button: two fresh presses per one-second stage, capped at three stages. Held zombies can escape at a 5% chance per second using the original paired separation. See docs/HEAT_ACTIONS.md, docs/GRABS.md and docs/QTE.md for controls and framework authoring.
 
 Dragon of Dojima low-health feedback starts at 30% health, becomes critical at 15%, and clears after healing to 35%. The original health-bar frame pulses gently; an existing PZ heartbeat plays privately during combat and follows Sounds volume. See docs/LOW_HEALTH_FEEDBACK.md for framework configuration.
+
+Version 0.97.0 adds the [Yakuza 5 bicycle weapon and Heat Action](docs/BICYCLE.md), reduces crate size, converts ordinary crate attacks to Yakuza 5, and corrects katana palm/grip and victim alignment. See [validation](docs/VALIDATION_0.97.0.md).

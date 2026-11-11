@@ -712,4 +712,53 @@ do
  end
  PY.MultiHit.targets=savedTargets;p.held=nil;z.health=10;z.knock=false;PY.HeatActions.clear()
 end
+do
+ local savedTargets=PY.MultiHit.targets
+ local function bicycleItem(id)
+  local item={data={},condition=10}
+  function item:getFullType()return id end;function item:getCondition()return self.condition end
+  function item:getMinDamage()return 1 end;function item:getMaxDamage()return 1 end;function item:getModData()return self.data end
+  function item:setMinDamage()end;function item:setMaxDamage()end
+  return item
+ end
+ for _,id in ipairs({'ProjectYakuza.Bicycle'})do
+  PY.resetPlayer(p,'bicycle_heat');p.held=bicycleItem(id);p.x=0;p.y=0;p.attacking=false;z.x=1.1;z.y=0;z.health=10;z.useless=false;z.knock=false;mouse[1]=true;phase=nil;PY.setHeat(p,100)
+  PY.MultiHit.targets=function()return {{victim=z}}end
+  PY.Weapons.sync(p);local view=PY.getPlayerStyle(p);local move=view.actions.heatAction
+  check(view.weaponProfile=='bicycle'and move.motionId=='dod_bicycle'and not move.qte,'real bicycle selects its own automatic original scene '..id)
+  check(#move.contacts==2 and math.abs(move.contacts[1].atMs-6/30*1000)<.00001 and math.abs(move.contacts[2].atMs-33/30*1000)<.00001,'bicycle uses both original CMN damage frames')
+  check(move.contacts[1].damageMultiplier==.75 and move.contacts[2].damageMultiplier==.75,'bicycle preserves original 1:1 victim damage weights')
+  check(move.heatStocks==1 and move.useExtremeFuel and move.noCombo,'bicycle uses existing stock/fuel and neutral-combo rules')
+  check(H.weaponInput(p,PY.stateFor(p),view,true),'bicycle action starts through normal weapon input '..id)
+  local context=PY.activeActions[p];local action=context.timedAction;local hits=z.hits
+  fire('OnPlayerUpdate',p);check(action.started and not action.seen and PY.getHeat(p)==100,'bicycle startup without a native track cannot consume Heat')
+  phase=.01;fire('OnPlayerUpdate',p);local paid=PY.getHeat(p)
+  check(action.seen and math.abs(100-paid-PY.Heat.stockSize(p))<.000001,'confirmed bicycle playback pays one stock')
+  fire('OnPlayerUpdate',p);check(PY.getHeat(p)==paid,'bicycle payment cannot repeat')
+  check(z.vars.ProjectYakuzaPairedVictimClip=='ProjectYakuza_DD_BicycleHeatVictim'and p.invincible,'bicycle uses isolated victim motion and shared protection')
+  for i,contact in ipairs(move.contacts)do
+   phase=(contact.atMs+.001)/1000;fire('OnPlayerUpdate',p);fire('OnPlayerUpdate',p)
+   check(z.hits==hits and math.abs(z.health-({9.25,8.5})[i])<.000001,'bicycle contacts apply canonical damage once without native Hit '..i)
+  end
+  phase=move.duration;fire('OnPlayerUpdate',p)
+  check(action.cleaned and not PY.activeActions[p]and not p.invincible and p.ghost,'bicycle retains full original recovery and restores control')
+  clock=clock+500;PY.HeatActions.tick();check(not p.ghost,'bicycle targeting grace expires')
+  p.held.condition=0;check(not R.weaponAllowed(p,view,move),'broken bicycle cannot start a Heat Action')
+ end
+ for _,id in ipairs({'Base.MetalPipe','Base.Nightstick','Base.MetalBar','Base.Katana'})do
+  p.held=bicycleItem(id);local view=PY.getPlayerStyle(p)
+  check(not R.weaponAllowed(p,view,PY.Weapons.views.dragon_of_dojima.bicycle.actions.heatAction),'other weapon cannot borrow the bicycle scene '..id)
+ end
+ for _,complete in ipairs({false,true})do
+  PY.resetPlayer(p,'bicycle_lethal');p.held=bicycleItem('ProjectYakuza.Bicycle');p.x=0;p.y=0;z.x=1.1;z.y=0;z.health=.2;z.useless=false;z.knock=false;phase=0;PY.setHeat(p,100)
+  PY.Weapons.sync(p);check(H.weaponInput(p,PY.stateFor(p),PY.getPlayerStyle(p),true),'low-health victim accepts bicycle scene')
+  local context=PY.activeActions[p];local action=context.timedAction;fire('OnPlayerUpdate',p)
+  for _,contact in ipairs(context.action.contacts)do phase=(contact.atMs+.001)/1000;fire('OnPlayerUpdate',p)end
+  check(z.health==.2 and math.abs(action.pendingDamage-1.5)<.000001,'both lethal bicycle hits are reserved through recovery')
+  if complete then phase=context.action.duration;fire('OnPlayerUpdate',p);check(z:isDead(),'full bicycle ending settles earned lethal damage')
+  else PY.cancelAction(p,'bicycle_interrupt');check(z.health==.2,'interrupted bicycle scene discards reserved lethal damage')end
+  clock=clock+500;PY.HeatActions.tick()
+ end
+ PY.MultiHit.targets=savedTargets;p.held=nil;z.health=10;z.knock=false;PY.HeatActions.clear()
+end
 return true,'PASS '..checks..' generic QTE validation, custom bindings, fresh presses, replay safety, native-phase contacts, canonical damage, paired cleanup and interruption checks'

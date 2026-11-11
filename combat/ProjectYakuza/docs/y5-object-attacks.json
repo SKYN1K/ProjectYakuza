@@ -1,0 +1,352 @@
+{
+  "operation": "Original Y5 large-object combo and heavy source clips, all frames retained at 30 fps before existing x1.4 combat playback. Native arm lengths and source limb directions retained. Source overhead heavy is reused for ground attacks. No invented body poses, images or audio. Crate model linear scale is reduced to 0.5.",
+  "archiveEntries": [
+    {
+      "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 5\\main\\data\\motion\\BattlePlayerKiryu.par",
+      "name": "P_WPC_CMB_01.gmt",
+      "offset": 2740224,
+      "size": 7198,
+      "plain": 10240,
+      "flags": 2147483648,
+      "packedSha256": "70786db9bf6c3f85c10336a3f60cc73292d930c764b6e6689e8484e7518ff9ee",
+      "sha256": "ee5ea03d171e8de9a6fa4770fa6eca79802b78f0062e2cf6bc531a2eb3e23c51"
+    },
+    {
+      "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 5\\main\\data\\motion\\BattlePlayerKiryu.par",
+      "name": "P_WPC_CMB_02.gmt",
+      "offset": 2748416,
+      "size": 8058,
+      "plain": 12288,
+      "flags": 2147483648,
+      "packedSha256": "3c24c2fbe3f387d1124e7eeba2be74ab556175f01f5a58c6215943174cb601db",
+      "sha256": "642068039bf51174cafcb33938844a5a39b1e54b397dd8d7edce18b0b841a106"
+    },
+    {
+      "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 5\\main\\data\\motion\\BattlePlayerKiryu.par",
+      "name": "P_WPC_CMB_03.gmt",
+      "offset": 2756608,
+      "size": 10202,
+      "plain": 14336,
+      "flags": 2147483648,
+      "packedSha256": "1ab27d60990130ad579f173abe79a2835c75353b3063d506f8d411806e39d00a",
+      "sha256": "bc61f1c777227c9ced6fdd60087bbf9150a0d4fcd3a32f951414f4a280525e89"
+    },
+    {
+      "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 5\\main\\data\\motion\\BattlePlayerKiryu.par",
+      "name": "P_WPC_ATK_heavy.gmt",
+      "offset": 2674688,
+      "size": 7874,
+      "plain": 12288,
+      "flags": 2147483648,
+      "packedSha256": "64ead44ac55118d0d96b82c68d68b8dc2c993bd377abdd482e0ea542e1d88f1a",
+      "sha256": "2342038d6f1c29d4916d004ff393de52a70ff3437665a3b128ecb83bb14e313f"
+    },
+    {
+      "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 5\\main\\data\\motion\\BattlePlayerKiryu.par",
+      "name": "P_WPC_guard_lp.gmt",
+      "offset": 2785280,
+      "size": 2863,
+      "plain": 6144,
+      "flags": 2147483648,
+      "packedSha256": "fe0ba1cfcc51b0894d928aba5bc30175bb92ce95386bd35b13f4ec9738823a01",
+      "sha256": "277fc82e670c7cd63fc8c4a4f732c68b677e104e47a9eed60d4facfc20434f6b"
+    }
+  ],
+  "clips": [
+    {
+      "family": "crate",
+      "label": "Light01",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\crate-normal-097\\P_WPC_CMB_01.gmt",
+      "sourceSha256": "ee5ea03d171e8de9a6fa4770fa6eca79802b78f0062e2cf6bc531a2eb3e23c51",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_CrateLight01.x",
+      "sha256": "72953b25122592b0fd7c979b0fbfa0f4b2f43052358ecfcc4ab1430bf08fcfd3",
+      "retarget": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\y5-097-retarget\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_CrateLight01.x",
+      "retargetSha256": "e5218221e478b63025a1770cab60e89ff15b1882bbdd8cdfa5a41f225e2b962d",
+      "frames": 46,
+      "fps": 30,
+      "contactFrame": 15,
+      "chainFrame": 31,
+      "contactCalibration": "Maximum original converted two-hand sweep speed in the committed attack portion, frames 5 through 65 percent. This is a native geometry contact calibration, not a claim of a CMN damage marker.",
+      "sourceGroundPolicy": null
+    },
+    {
+      "family": "crate",
+      "label": "Light02",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\crate-normal-097\\P_WPC_CMB_02.gmt",
+      "sourceSha256": "642068039bf51174cafcb33938844a5a39b1e54b397dd8d7edce18b0b841a106",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_CrateLight02.x",
+      "sha256": "129ebc1809eb612b32e61d0ca54bbdac5c3e5d2aa8b2e4ff0c34af9ec7bd34db",
+      "retarget": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\y5-097-retarget\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_CrateLight02.x",
+      "retargetSha256": "0848dd34692f42b9a5b468f61e67dff1cd47e415e949c042fe120f565e86b34a",
+      "frames": 51,
+      "fps": 30,
+      "contactFrame": 20,
+      "chainFrame": 34,
+      "contactCalibration": "Maximum original converted two-hand sweep speed in the committed attack portion, frames 5 through 65 percent. This is a native geometry contact calibration, not a claim of a CMN damage marker.",
+      "sourceGroundPolicy": null
+    },
+    {
+      "family": "crate",
+      "label": "Light03",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\crate-normal-097\\P_WPC_CMB_03.gmt",
+      "sourceSha256": "bc61f1c777227c9ced6fdd60087bbf9150a0d4fcd3a32f951414f4a280525e89",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_CrateLight03.x",
+      "sha256": "f1f20cc373cac61b52948463acf9ab64e9d6bbed831a19e4ed272391ea1045fb",
+      "retarget": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\y5-097-retarget\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_CrateLight03.x",
+      "retargetSha256": "513451c036fa093d3061bc7aeec8c80328d5cff5824d517b7496e3aef82b24bc",
+      "frames": 66,
+      "fps": 30,
+      "contactFrame": 21,
+      "chainFrame": 44,
+      "contactCalibration": "Maximum original converted two-hand sweep speed in the committed attack portion, frames 5 through 65 percent. This is a native geometry contact calibration, not a claim of a CMN damage marker.",
+      "sourceGroundPolicy": null
+    },
+    {
+      "family": "crate",
+      "label": "Heavy",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\crate-normal-097\\P_WPC_ATK_heavy.gmt",
+      "sourceSha256": "2342038d6f1c29d4916d004ff393de52a70ff3437665a3b128ecb83bb14e313f",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_CrateHeavy.x",
+      "sha256": "79b4894dc5e8ad24ece4172a55813253ab65676ce04d3e5133d2069bd0fc1c50",
+      "retarget": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\y5-097-retarget\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_CrateHeavy.x",
+      "retargetSha256": "d8d59e76033de08608918e18dedcc34c5ff08953d424c6ba8b1f9af2ee0ddbeb",
+      "frames": 53,
+      "fps": 30,
+      "contactFrame": 19,
+      "chainFrame": 35,
+      "contactCalibration": "Maximum original converted two-hand sweep speed in the committed attack portion, frames 5 through 65 percent. This is a native geometry contact calibration, not a claim of a CMN damage marker.",
+      "sourceGroundPolicy": null
+    },
+    {
+      "family": "crate",
+      "label": "Ground",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\crate-normal-097\\P_WPC_ATK_heavy.gmt",
+      "sourceSha256": "2342038d6f1c29d4916d004ff393de52a70ff3437665a3b128ecb83bb14e313f",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_CrateGround.x",
+      "sha256": "20827291e0b6ea4f46f2de03bdedaed0f286a0b76217d049f459d4cf5fa8b18a",
+      "retarget": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\y5-097-retarget\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_CrateGround.x",
+      "retargetSha256": "b3ceb3d26e7289f7d2983f29f0c348afd78e3378c08def108dfac5b7a3380af1",
+      "frames": 53,
+      "fps": 30,
+      "contactFrame": 19,
+      "chainFrame": 35,
+      "contactCalibration": "Maximum original converted two-hand sweep speed in the committed attack portion, frames 5 through 65 percent. This is a native geometry contact calibration, not a claim of a CMN damage marker.",
+      "sourceGroundPolicy": "Original Y5 large-object overhead heavy reused for floor-target attacks."
+    },
+    {
+      "family": "bicycle",
+      "label": "Light01",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\crate-normal-097\\P_WPC_CMB_01.gmt",
+      "sourceSha256": "ee5ea03d171e8de9a6fa4770fa6eca79802b78f0062e2cf6bc531a2eb3e23c51",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_BicycleLight01.x",
+      "sha256": "6fd1f4eab0860bfbcdb71f65328ee5bb8bff897b03ad1b40dbacdf2d3d4e9226",
+      "retarget": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\y5-097-retarget\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BicycleLight01.x",
+      "retargetSha256": "bd64c92edd4f8c18be1ae7e155d08295cba707afb52150305f090d11deb6864d",
+      "frames": 46,
+      "fps": 30,
+      "contactFrame": 15,
+      "chainFrame": 31,
+      "contactCalibration": "Maximum original converted two-hand sweep speed in the committed attack portion, frames 5 through 65 percent. This is a native geometry contact calibration, not a claim of a CMN damage marker.",
+      "sourceGroundPolicy": null
+    },
+    {
+      "family": "bicycle",
+      "label": "Light02",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\crate-normal-097\\P_WPC_CMB_02.gmt",
+      "sourceSha256": "642068039bf51174cafcb33938844a5a39b1e54b397dd8d7edce18b0b841a106",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_BicycleLight02.x",
+      "sha256": "c692705f03910b6daefaf9da92c0944a66255e914eda1ca5931cfdf8a243e57a",
+      "retarget": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\y5-097-retarget\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BicycleLight02.x",
+      "retargetSha256": "eaa586ec404a98d3a4dbd157858f7a154bb1380ee6a10cac245b85a9a311ef6b",
+      "frames": 51,
+      "fps": 30,
+      "contactFrame": 20,
+      "chainFrame": 34,
+      "contactCalibration": "Maximum original converted two-hand sweep speed in the committed attack portion, frames 5 through 65 percent. This is a native geometry contact calibration, not a claim of a CMN damage marker.",
+      "sourceGroundPolicy": null
+    },
+    {
+      "family": "bicycle",
+      "label": "Light03",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\crate-normal-097\\P_WPC_CMB_03.gmt",
+      "sourceSha256": "bc61f1c777227c9ced6fdd60087bbf9150a0d4fcd3a32f951414f4a280525e89",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_BicycleLight03.x",
+      "sha256": "524e11077c970f03255a49c02e023b8915aa13b29ea48a8627fc5b7e7819d4a9",
+      "retarget": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\y5-097-retarget\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BicycleLight03.x",
+      "retargetSha256": "cb0222bb8a0627ccb91e0a70180fc61c0ae84d300ac06cc5ce93334501a0608b",
+      "frames": 66,
+      "fps": 30,
+      "contactFrame": 21,
+      "chainFrame": 44,
+      "contactCalibration": "Maximum original converted two-hand sweep speed in the committed attack portion, frames 5 through 65 percent. This is a native geometry contact calibration, not a claim of a CMN damage marker.",
+      "sourceGroundPolicy": null
+    },
+    {
+      "family": "bicycle",
+      "label": "Heavy",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\crate-normal-097\\P_WPC_ATK_heavy.gmt",
+      "sourceSha256": "2342038d6f1c29d4916d004ff393de52a70ff3437665a3b128ecb83bb14e313f",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_BicycleHeavy.x",
+      "sha256": "568b0a0d12fab3056cc20291fc35c412be589bd38bca22b1085cb2ef7adf1851",
+      "retarget": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\y5-097-retarget\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BicycleHeavy.x",
+      "retargetSha256": "6fa15cf3a8dba3430a1e88c5b355f18284e01645347e946dca8619c440272d1c",
+      "frames": 53,
+      "fps": 30,
+      "contactFrame": 19,
+      "chainFrame": 35,
+      "contactCalibration": "Maximum original converted two-hand sweep speed in the committed attack portion, frames 5 through 65 percent. This is a native geometry contact calibration, not a claim of a CMN damage marker.",
+      "sourceGroundPolicy": null
+    },
+    {
+      "family": "bicycle",
+      "label": "Ground",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\crate-normal-097\\P_WPC_ATK_heavy.gmt",
+      "sourceSha256": "2342038d6f1c29d4916d004ff393de52a70ff3437665a3b128ecb83bb14e313f",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_BicycleGround.x",
+      "sha256": "02d1164d5ac6f3d71d4ce0eccd8ae9b67ea4ea77611267e4a03187fbb66684c9",
+      "retarget": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\y5-097-retarget\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BicycleGround.x",
+      "retargetSha256": "012b96d642c9b2acaeec82b4be96658aa5a839dc8b1eeb59276124c2bd103730",
+      "frames": 53,
+      "fps": 30,
+      "contactFrame": 19,
+      "chainFrame": 35,
+      "contactCalibration": "Maximum original converted two-hand sweep speed in the committed attack portion, frames 5 through 65 percent. This is a native geometry contact calibration, not a claim of a CMN damage marker.",
+      "sourceGroundPolicy": "Original Y5 large-object overhead heavy reused for floor-target attacks."
+    }
+  ],
+  "nativeGrip": {
+    "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_AttackBat01_Hit.x",
+    "sha256": "d6ed4e304cce1ccce3e355cfe958cf304c494c850ae0790d669068b861e7075c",
+    "authoredOffsets": {
+      "Bip01_Prop1": [
+        [
+          -0.043478310108184814,
+          -0.030916661024093628,
+          -0.998575747013092,
+          0.06845201551914215
+        ],
+        [
+          0.26906272768974304,
+          0.9622275233268738,
+          -0.04150630533695221,
+          -0.04706887528300285
+        ],
+        [
+          0.9621403813362122,
+          -0.27048417925834656,
+          -0.033517494797706604,
+          0.038814280182123184
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "Bip01_Prop2": [
+        [
+          0.04858189821243286,
+          0.8911296129226685,
+          0.451140433549881,
+          1.1213123798370361e-06
+        ],
+        [
+          0.7025991678237915,
+          0.29054421186447144,
+          -0.6495674252510071,
+          3.855675458908081e-07
+        ],
+        [
+          -0.7099249958992004,
+          0.3485282361507416,
+          -0.6119918823242188,
+          4.209578037261963e-07
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    "nativeOffsets": {
+      "Bip01_Prop1": [
+        [
+          -0.043479062616825104,
+          -0.030914172530174255,
+          -0.9985739588737488,
+          0.06845194101333618
+        ],
+        [
+          0.26905950903892517,
+          0.9622287750244141,
+          -0.04150472581386566,
+          -0.04706816002726555
+        ],
+        [
+          0.9621405601501465,
+          -0.2704819440841675,
+          -0.03351520001888275,
+          0.03881397470831871
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "Bip01_Prop2": [
+        [
+          0.048583902418613434,
+          0.8911311030387878,
+          0.45114317536354065,
+          1.560896635055542e-06
+        ],
+        [
+          0.702595055103302,
+          0.2905443608760834,
+          -0.6495702266693115,
+          3.594905138015747e-07
+        ],
+        [
+          -0.7099281549453735,
+          0.34852519631385803,
+          -0.6119855046272278,
+          3.3527612686157227e-07
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    }
+  },
+  "crateScale": 0.5,
+  "retargetProvenance": [
+    {
+      "path": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\combat-tests\\y5_retarget.py",
+      "sha256": "bdf573a5581ebce4e397114b3e5c0c18a796b3e2aec7c76f1a13f3caf5255805"
+    },
+    {
+      "path": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\combat-tests\\retarget_locomotion.py",
+      "sha256": "00f64d571a350f795aa49b81876c4e010313e9f6a44b88b72b163611b3fbab42"
+    },
+    {
+      "path": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\combat-tests\\weapon_hold_geometry.py",
+      "sha256": "e843459e1cd180860610b5d84b2e686f8648854ed8b8cd2ca040d995375821ef"
+    },
+    {
+      "path": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\combat-tests\\locomotion_math.py",
+      "sha256": "27b395c349b1120133b35188e3bd76a505d8e546fc173d8b8bd07b62ae68fa6c"
+    },
+    {
+      "path": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\bicycle-heat-097\\c_cm_bone.gmd",
+      "sha256": "05e66f39357a99c04693840027c24401e0cb0f5cda11196815deb0cf476d785f"
+    }
+  ]
+}

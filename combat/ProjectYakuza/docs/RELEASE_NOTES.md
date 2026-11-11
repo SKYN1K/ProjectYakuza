@@ -1,10 +1,10 @@
-# Project Yakuza 0.96.0
+# Project Yakuza 0.97.0
 
-- Added the original Yakuza 6 held-bat Heat Action from h23710_buki_d, using supplied CMN damage/audio/voice/blood timings and all 103 actor/victim motion samples at original speed.
-- Available to Dragon of Dojima with the six registered bat items: hold physical RMB and press the Heat Action binding (default MMB) near an eligible standing target outside a combo. Costs one stock or equivalent Extreme Heat fuel, paid only after confirmed playback. Other blunt items do not borrow it.
-- Retained the source animated right-weapon bone instead of using a rigid grip. Native owner, zombie/PvP victim and both MP observer cycles use isolated event-free selectors.
-- Two automatic source damage contacts at frames 14/50 use original 1:3 weights, totaling 1.5 canonical weapon damage. Existing protection, lethal deferral, interruption and multiplayer authority/replay rules apply.
-- Added five directly decoded original non-voice sound cues and six original blood-family emitter starts. Existing combat voice entries are reused; the separate voice pack is untouched. No images, textures or models are created or modified.
-- All 30 Kahlua suites, 78 production Lua compilations, original motion/PCM provenance, native importer/FK/selectors, 426 MP observer selectors and source-comment checks pass offline. Prior media bytes are preserved apart from the extended scene sound declarations. Project Zomboid was not launched.
+- Added the supplied Yakuza 5 bicycle model and original h11010_jitensha Heat Action. Equip ProjectYakuza.Bicycle with Dragon of Dojima, hold physical RMB and press the Heat Action binding (default MMB) near an eligible standing target outside a combo. One stock or equivalent Extreme Heat fuel is paid only after confirmed playback.
+- Retained original strike/recovery frames 125..308 at 30 fps, including both victim hits, source object-root motion, original sound/voice starts and blood attachments. The long riding approach is excluded for nearby-target gameplay. This is an inventory weapon; individual wheel/pedal animation and physics fragments are not recreated.
+- Used the original low-detail bicycle mesh (397 vertices, 250 triangles), with original UVs/normals and its supplied 256x256 diffuse reduced to 128x128 using nearest source texels. No generated art, upscaling or audio.
+- Halved the beer crate's linear model size and corrected its world-model reference. Replaced its three ordinary combo attacks, heavy and ground strike with supplied Yakuza 5 large-object motions. The ground strike reuses the original overhead heavy; the existing Yakuza 5 H3270 Heat Action and guard are retained.
+- Corrected the katana's hilt pivot and native right-wrist fit through the original grip change. Preserved source airborne motion, release/catch, sharp-end thrust and all original hit times. Adjusted paired victim staging against native anatomy for slash, punch and thrust, with a shared thrust offset to avoid following the moving blade.
+- All 30 Kahlua suites pass, including bicycle confirmed-playback payment, canonical contacts, interruption/lethal recovery and authoritative MP replay checks. Native source/importer, exact reduced pixels, PCM decode, selector and comment checks pass offline. Project Zomboid was not launched.
 
-See [controls and source contract](BAT_HEAT_ACTION.md), [validation](VALIDATION_0.96.0.md) and [motion provenance](bat-heat-assets.json).
+See [bicycle controls and source contract](BICYCLE.md), [crate](BEER_CRATE.md) and [validation](VALIDATION_0.97.0.md).

@@ -66,12 +66,12 @@
   </m_Events>
   <m_Events>
     <m_EventName>SetVariable</m_EventName>
-    <m_TimePc>0.2702702702702703</m_TimePc>
+    <m_TimePc>0.3230769230769231</m_TimePc>
     <m_ParameterValue>ProjectYakuzaHitMarker=dd_crate_light_03</m_ParameterValue>
   </m_Events>
   <m_Events>
     <m_EventName>AttackCollisionCheck</m_EventName>
-    <m_TimePc>0.2702702702702703</m_TimePc>
+    <m_TimePc>0.3230769230769231</m_TimePc>
     <m_ParameterValue>MeleeSwing</m_ParameterValue>
   </m_Events>
   <m_Events>
@@ -86,12 +86,12 @@
   </m_Events>
   <m_Events>
     <m_EventName>SetVariable</m_EventName>
-    <m_TimePc>0.6486486486486487</m_TimePc>
+    <m_TimePc>0.676923076923077</m_TimePc>
     <m_ParameterValue>ProjectYakuzaChainReady=dd_crate_light_03</m_ParameterValue>
   </m_Events>
   <m_Events>
     <m_EventName>SetVariable</m_EventName>
-    <m_TimePc>0.28378378378378377</m_TimePc>
+    <m_TimePc>0.3384615384615385</m_TimePc>
     <m_ParameterValue>ProjectYakuzaQuickstepCancelReady=dd_crate_light_03</m_ParameterValue>
   </m_Events>
 </animNode>

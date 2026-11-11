@@ -258,3 +258,16 @@
 !/tools/combat-tests/build_bat_heat_assets.py
 !/tools/combat-tests/validate_bat_heat_assets.py
 !/tools/combat-tests/BatHeatProbe.java
+
+!/tools/combat-tests/y5_source_assets.py
+!/tools/combat-tests/extract_y5_bicycle_crate.py
+!/tools/combat-tests/y5_retarget.py
+!/tools/combat-tests/build_bicycle_model.py
+!/tools/combat-tests/build_bicycle_texture.py
+!/tools/combat-tests/build_y5_object_attacks.py
+!/tools/combat-tests/build_bicycle_heat_assets.py
+!/tools/combat-tests/native_body_geometry.py
+!/tools/combat-tests/katana_contact_alignment.py
+!/tools/combat-tests/validate_y5_object_assets.py
+!/tools/combat-tests/BicycleAssetProbe.java
+!/tools/combat-tests/BicycleHeatProbe.java

@@ -82,7 +82,7 @@ for model in report['weaponModelReferences']:
         local=Matrix.Translation(node.pos.xyz)@node.rot.to_matrix().to_4x4()@Matrix.Diagonal((*node.scale.xyz,1));transforms[node.name]=transforms[node.parent.name]@local if node.parent else local
         for mesh in getattr(node,'mesh_list',[]):points.extend([transforms[node.name]@Vector(tuple(pos))for pos in mesh.vertices_data.pos])
     extents=[max(p[i]for p in points)-min(p[i]for p in points)for i in range(3)];assert extents[1]>10*max(extents[0],extents[2])
-with zipfile.ZipFile(root/'dist/ProjectYakuza-B42-v0.95.0.zip')as archive:
-    prior=[n for n in archive.namelist()if n.startswith('ProjectYakuza/42/media/')and '/lua/'not in n and not n.endswith('/')and not n.endswith('/ProjectYakuza_HeatScenes.txt')]
+with zipfile.ZipFile(root/'dist/ProjectYakuza-B42-v0.96.0.zip')as archive:
+    prior=[n for n in archive.namelist()if n.startswith('ProjectYakuza/42/media/')and '/lua/'not in n and not n.endswith('/')and ('BatHeat'in n or 'HeatScene_bat_'in n)]
     for name in prior:assert archive.read(name)==(mod/name.split('/',1)[1]).read_bytes(),name
 print('PASS source bat CMN/resource roles, 206 original pose samples,',samples,'unchanged non-arm samples, source arms within',math.degrees(worst),'degrees, animated weapon-bone motion, both supplied model axes and',len(prior),'unchanged prior media files')

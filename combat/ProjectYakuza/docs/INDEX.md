@@ -8,7 +8,8 @@ Current manual: Project Yakuza 0.74.0, Lua API 3, MP protocol 2.
 | Controls and volume settings | [Controls](CONTROLS.md) |
 | Build an independent addon | [Style authoring](STYLE_AUTHORING.md) |
 | Look up fields/functions/events | [API reference](API_REFERENCE.md) |
-| Original Y6 beer crate weapon | [Beer crate](BEER_CRATE.md) |
+| Original beer crate weapon | [Beer crate](BEER_CRATE.md) |
+| Yakuza 5 bicycle weapon and Heat Action | [Bicycle](BICYCLE.md) |
 | Spawnable bottle weapons and Heat Action | [Bottle weapons](BOTTLE_WEAPONS.md) |
 | Add style-specific weapon moves and impact feedback | [Weapons](WEAPONS.md) |
 | Heat Actions, protection and katana motion | [Heat Actions](HEAT_ACTIONS.md) |

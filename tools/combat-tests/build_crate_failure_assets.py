@@ -21,6 +21,8 @@ report={'source':str(src),'sourceSha256':sha(src),'output':out.relative_to(m).as
 if validate:
  expected=json.loads((m/'docs/beer-crate-assets.json').read_text());actual=json.loads(json.dumps(report,default=lambda v:v.item()));assert all(expected[k]==v for k,v in actual.items())
 else:(m/'docs/beer-crate-assets.json').write_text(json.dumps(report,indent=2,default=lambda v:v.item())+'\n')
+if validate and '--model-only'in sys.argv:
+ print('PASS source crate topology, normals, UVs and grip unchanged');raise SystemExit(0)
 converter=(r/'tools/combat-tests/retarget_locomotion.py').read_text().replace("OUT=DEST/'tools/locomotion-build'","OUT=DEST/'tools/rush-failure-build'");name='ProjectYakuza_DD_HeatRushFail';source='E:/Blender/Yakuza Rips/yakuza6/motion.par.unpack/gmt/P_KRU_BTL_SUD_bct_std_en.gmt';sys.argv=['convert','--',name,source];ns={'FINGER_SOURCE':'Bob_AttackPunch01_Hit.x'};exec(compile(converter,'retarget_failure','exec'),ns)
 sys.path.insert(0,str(r/'tools/combat-tests'));from locomotion_math import read,locals_at,blocks,write
 raw=r/('tools/rush-failure-build/ProjectYakuza/42/media/anims_X/Bob/'+name+'.x');text,frames,anim,spans=read(raw);times=[i*160 for i in range(ns['a'].end_frame+1)];values=[locals_at(frames,anim,t)for t in times];grip=json.loads((m/'docs/prop-attachment-repair.json').read_text())['nativeGrips']['bat'];dest=m/('42/media/anims_X/Bob/'+name+'.x');generated=r/'tools/rush-failure-validation.x'if validate else dest;write(generated,text,spans,blocks(frames,values,times,grip),name)

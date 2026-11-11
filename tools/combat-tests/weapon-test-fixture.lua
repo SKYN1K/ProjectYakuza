@@ -227,7 +227,7 @@ customView=W.register(impactBase.id,customProfile)
 check(customView.impactFeedback=='unarmed','omitted family inherits base style feedback')
 
 
-for _,case in ipairs({{id='bottle',item='ProjectYakuza.IntactBeerBottle',prefix='Bottle'},{id='crate',item='ProjectYakuza.BeerCrate',prefix='Crate'}})do
+for _,case in ipairs({{id='bottle',item='ProjectYakuza.IntactBeerBottle',prefix='Bottle'},{id='crate',item='ProjectYakuza.BeerCrate',prefix='Crate'},{id='bicycle',item='ProjectYakuza.Bicycle',prefix='Bicycle'}})do
  PY.resetPlayer(p,'profile_test');clock=clock+2000;p.attacking=false;p.held=weapon(case.item);p.data.ProjectYakuzaStyle=original.id;W.sync(p)
  local view=PY.getPlayerStyle(p)
  check(view.weaponProfile==case.id and W.profile(original.id,p.held)==case.id,'separate supplied object profile '..case.id)
@@ -236,8 +236,8 @@ for _,case in ipairs({{id='bottle',item='ProjectYakuza.IntactBeerBottle',prefix=
  finish();PY.resetPlayer(p,'heavy_test');p.attacking=false;clock=clock+1000
  check(PY.queueFinisher(p) and PY.stateFor(p).finisherMove.nodeValue=='dd_'..case.id..'_heavy','object heavy uses its own source motion '..case.id)
  finish();PY.resetPlayer(p,'profile_test')
- check(view.actions.block.animation=='ProjectYakuza_DD_'..case.prefix..'Guard','object-specific walking guard '..case.id)
- check((view.actions.heatAction~=nil)==(case.id=='bottle'or case.id=='crate'),'bottle and crate use separate original weapon Heat Actions')
+ if case.id~='bicycle'then check(view.actions.block.animation=='ProjectYakuza_DD_'..case.prefix..'Guard','object-specific walking guard '..case.id)end
+ check((view.actions.heatAction~=nil)==(case.id=='bottle'or case.id=='crate'or case.id=='bicycle'),'bottle and crate use separate original weapon Heat Actions')
  check(view.actions.styleEntry==original.actions.styleEntry and view.actions.quickstep==original.actions.quickstep,'shared style systems retained '..case.id)
 end
 

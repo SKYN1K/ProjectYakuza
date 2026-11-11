@@ -1,0 +1,64 @@
+module ProjectYakuza
+{
+    item Bicycle
+    {
+        DisplayName = Bicycle (Yakuza 5),
+        DisplayCategory = Weapon,
+        ItemType = base:weapon,
+        Weight = 7.0,
+        Icon = CarTire,
+        WeaponSprite = ProjectYakuza_Bicycle,
+        StaticModel = ProjectYakuza_Bicycle,
+        WorldStaticModel = ProjectYakuza_Bicycle,
+        Categories = base:improvised;base:bigblunt,
+        SubCategory = Swinging,
+        TwoHandWeapon = true,
+        ConditionMax = 8,
+        ConditionLowerChanceOneIn = 8,
+        MinDamage = 0.8,
+        MaxDamage = 1.3,
+        CriticalChance = 5,
+        CritDmgMultiplier = 2,
+        MaxHitCount = 2,
+        MinRange = 0.0,
+        MaxRange = 1.4,
+        MinAngle = 0.72,
+        BaseSpeed = 1.0,
+        SwingAnim = Bat,
+        IdleAnim = Idle_Weapon2,
+        RunAnim = Run_Weapon2,
+        SwingTime = 2.0,
+        MinimumSwingTime = 2.0,
+        SwingAmountBeforeImpact = 0.02,
+        WeaponLength = 0.4,
+        KnockBackOnNoDeath = false,
+        KnockdownMod = 0,
+        PushBackMod = 0.2,
+        EnduranceMod = 1.0,
+        DoorDamage = 0,
+        TreeDamage = 0,
+        SplatBloodOnNoDeath = false,
+        HitSound = NightstickHit,
+        HitFloorSound = NightstickHit,
+        DoorHitSound = NightstickHit,
+        SwingSound = NightstickSwing,
+        BreakSound = BreakObject,
+    }
+}
+
+module Base
+{
+    model ProjectYakuza_Bicycle
+    {
+        mesh = Static/ProjectYakuza_Bicycle,
+        texture = ProjectYakuza_Bicycle,
+        shader = basicEffect,
+        static = true,
+        scale = 0.44308598137428024,
+        attachment world
+        {
+            offset = 0.0005133002996444702 -0.8299474716186523 -0.3901141434907913,
+            rotate = 0.0 0.0 0.0,
+        }
+    }
+}

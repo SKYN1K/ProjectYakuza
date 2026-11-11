@@ -2,14 +2,14 @@ from pathlib import Path
 import xml.etree.ElementTree as E,copy,json,sys
 w=Path(__file__).parent;m=w.parent/'combat/ProjectYakuza';root=m/'42/media'
 records=[]
-only=sys.argv[sys.argv.index('--only-clip')+1]if '--only-clip'in sys.argv else None
+only=set(sys.argv[sys.argv.index('--only-clip')+1].split(','))if '--only-clip'in sys.argv else None
 for group in ['melee','stomp','actions']:
  for p in sorted((root/'AnimSets/player'/group).glob('ProjectYakuza_DD_*.xml')):
   n=E.parse(p).getroot();conds=[{'name':c.findtext('m_Name'),'value':c.findtext('m_Value')} for c in n.findall('m_Conditions')]
   priority=int(n.findtext('m_ConditionPriority') or 0)
   entry={'id':n.findtext('m_Name'),'animation':n.findtext('m_AnimName'),'loop':n.findtext('m_Looped')=='true','conditions':conds,'priority':priority,'group':group}
   records.append(entry)
-  if only and entry['animation']!=only:continue
+  if only and entry['animation']not in only:continue
   observer=copy.deepcopy(n)
   for tag in ['m_Conditions','m_Events','m_2DBlends']:
    for child in list(observer.findall(tag)):observer.remove(child)
@@ -32,7 +32,7 @@ for group in ['melee','stomp','actions']:
 for p in (root/'AnimSets/player').rglob('ProjectYakuza_MP_*.xml'):
  if '_Cycle1' in p.stem:continue
  node=E.parse(p).getroot()
- if only and node.findtext('m_AnimName')!=only:continue
+ if only and node.findtext('m_AnimName')not in only:continue
  for condition in list(node.findall('m_Conditions')):
   if condition.findtext('m_Name')=='ProjectYakuzaRemoteCycle':node.remove(condition)
  c=E.SubElement(node,'m_Conditions')

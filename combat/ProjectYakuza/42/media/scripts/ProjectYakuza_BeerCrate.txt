@@ -9,7 +9,7 @@ module ProjectYakuza
         Icon = TrapCrate,
         WeaponSprite = ProjectYakuza_BeerCrate,
         StaticModel = ProjectYakuza_BeerCrate,
-        WorldStaticModel = ProjectYakuza_BeerCrateGround,
+        WorldStaticModel = ProjectYakuza_BeerCrate,
         Categories = base:improvised;base:smallblunt,
         SubCategory = Swinging,
         TwoHandWeapon = false,

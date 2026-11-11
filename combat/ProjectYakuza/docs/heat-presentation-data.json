@@ -1,5 +1,5 @@
 {
-  "operation": "Numeric source-pose anchors through native B42 FK and in-memory PCM onset analysis of unchanged supplied clips. No assets generated, converted to files, edited or upscaled. All seven built-in scenes use original CMN victim damage and independently timed sound, voice and particle-bone events. Bounded QTE repeats and endings retain their source frame maps. Existing supplied blood pixels are reused. Custom clips retain measured transient leads.",
+  "operation": "Numeric source-pose anchors through native B42 FK and in-memory PCM onset analysis of unchanged supplied clips. No assets generated, converted to files, edited or upscaled. All eight built-in scenes use original CMN victim damage and independently timed sound, voice and particle-bone events. Bounded QTE repeats and endings retain their source frame maps. Existing supplied blood pixels are reused. Custom clips retain measured transient leads.",
   "clips": [
     {
       "animation": "ProjectYakuza_DD_HeatRush",
@@ -1107,7 +1107,7 @@
     {
       "animation": "ProjectYakuza_DD_KatanaHeat",
       "targetAnimation": "ProjectYakuza_DD_KatanaHeatVictim",
-      "actorSha256": "c29da89230e812f55200c9d7204f45b4391d5f0294eeadb1a8ae1f4e462d2b91",
+      "actorSha256": "9a84a992d060198efcc0a18c074dfaddb45ee8bcd702b979618c5e80825bbcff",
       "victimSha256": "47d20dc05f192103f56771b7c454ed741b97810588aa0e805e96e96e481a78e6",
       "contacts": [
         {
@@ -1916,6 +1916,78 @@
           "feedback": "blunt"
         }
       ]
+    },
+    {
+      "animation": "ProjectYakuza_DD_BicycleHeat",
+      "targetAnimation": "ProjectYakuza_DD_BicycleHeatVictim",
+      "actorSha256": "7d66dfa3fd4ba3b1d937baf6b4bbb29870a6196a3078fc8b77a0765835b85db4",
+      "victimSha256": "d4c42d5a1a280fdf4d6b8e22726731155fbe7c2ad6e94ee850c2d6c29334b6ab",
+      "contacts": [
+        {
+          "atMs": 200,
+          "index": 1,
+          "cue": "punchImpact",
+          "base": false,
+          "point": [
+            0.000833072,
+            0.686481595,
+            0.008356754
+          ],
+          "bone": "Bip01_Head",
+          "layers": []
+        },
+        {
+          "atMs": 1100,
+          "index": 2,
+          "cue": "punchImpact",
+          "base": false,
+          "point": [
+            4.63e-07,
+            0.09128236,
+            0.010861965
+          ],
+          "bone": "Bip01_Pelvis",
+          "layers": []
+        }
+      ],
+      "effects": [
+        {
+          "atMs": 233.33333333333334,
+          "index": 1,
+          "bone": "Bip01_Head",
+          "point": [
+            -3.94730022890144e-06,
+            0.7195587158203125,
+            -0.006778119597584009
+          ],
+          "bloodOnly": true,
+          "feedback": "blunt"
+        },
+        {
+          "atMs": 1100.0,
+          "index": 2,
+          "bone": "Bip01_Head",
+          "point": [
+            0.14349855482578278,
+            0.11082290858030319,
+            -0.2241869419813156
+          ],
+          "bloodOnly": true,
+          "feedback": "blunt"
+        },
+        {
+          "atMs": 1600.0,
+          "index": 2,
+          "bone": "Bip01_Head",
+          "point": [
+            0.14349855482578278,
+            0.11082290858030319,
+            -0.2241869419813156
+          ],
+          "bloodOnly": true,
+          "feedback": "blunt"
+        }
+      ]
     }
   ],
   "sounds": [
@@ -1943,6 +2015,26 @@
       "file": "media/sound/ProjectYakuza/HeatScene_bat_4.wav",
       "sha256": "123271a68ad816fd70a4f6634c30247896d496b483b92ff1cad9bb11de382480",
       "attackLeadMs": 120
+    },
+    {
+      "file": "media/sound/ProjectYakuza/HeatScene_bicycle_4.wav",
+      "sha256": "b89cea7494c5c0775cf3041e51798d4426e9a14497ab149a8172d8de4f7425b8",
+      "attackLeadMs": 120
+    },
+    {
+      "file": "media/sound/ProjectYakuza/HeatScene_bicycle_5.wav",
+      "sha256": "635fb1e8641b67d74a0bdfbbf81dee959caabdd5e11e7e7bb9c1804d76f87352",
+      "attackLeadMs": 50
+    },
+    {
+      "file": "media/sound/ProjectYakuza/HeatScene_bicycle_6.wav",
+      "sha256": "744b4452807cb475d8759accd5abdd06fada690899fca45d70646caa7406eea2",
+      "attackLeadMs": 70
+    },
+    {
+      "file": "media/sound/ProjectYakuza/HeatScene_bicycle_7.wav",
+      "sha256": "018b31639a9763ba3c15feaa69e04038652ca26d0a705e13d11835fb8dfd5f74",
+      "attackLeadMs": 45
     },
     {
       "file": "media/sound/ProjectYakuza/HeatScene_bottle_0.wav",

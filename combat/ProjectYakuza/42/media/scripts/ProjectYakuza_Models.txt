@@ -14,7 +14,7 @@ module Base
         texture = ProjectYakuza_BeerCrate,
         shader = basicEffect,
         static = true,
-        scale = 1.0,
+        scale = 0.5,
         attachment Bip01_Prop2
         {
             offset = 0.0 0.0 0.0,

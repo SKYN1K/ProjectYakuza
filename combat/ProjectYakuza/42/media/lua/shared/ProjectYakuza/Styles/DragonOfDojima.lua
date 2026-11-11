@@ -1,5 +1,6 @@
 require "ProjectYakuza/Registry"
 require "ProjectYakuza/HeatScenes"
+require "ProjectYakuza/Y5ObjectMoves"
 require "ProjectYakuza/GrabMoves"
 require "ProjectYakuza/RushMove"
 require "ProjectYakuza/CrateHeatMove"
@@ -239,13 +240,27 @@ if ProjectYakuza.Weapons then
     ProjectYakuza.Weapons.register(base.id,{
         id="crate",impactFeedback="blunt",attackSpeed=1.4,standaloneHeavy=true,quickstepCancelLights=true,
         items={"ProjectYakuza.BeerCrate"},sounds=sounds,
-        lightAttacks={{animation="ProjectYakuza_DD_CrateLight01",nodeValue="dd_crate_light_01",duration=73/30/1.4,speed=1.4,impact=20/73,hitResponse=false,damageMultiplier=1,chainAt=47/73,quickstepCancelAt=21/73},{animation="ProjectYakuza_DD_CrateLight02",nodeValue="dd_crate_light_02",duration=60/30/1.4,speed=1.4,impact=15/60,hitResponse=false,damageMultiplier=1,chainAt=39/60,quickstepCancelAt=16/60},{animation="ProjectYakuza_DD_CrateLight03",nodeValue="dd_crate_light_03",duration=74/30/1.4,speed=1.4,impact=20/74,hitResponse=false,damageMultiplier=1,chainAt=48/74,quickstepCancelAt=21/74}},
-        groundAttacks={{animation="ProjectYakuza_DD_CrateGround",nodeValue="dd_crate_ground",duration=65/30/1.4,speed=1.4,impact=29/65,hitResponse=false,damageMultiplier=1,groundAttack=true}},
+        lightAttacks=ProjectYakuza.Y5ObjectMoves.crate.lightAttacks,
+        groundAttacks=ProjectYakuza.Y5ObjectMoves.crate.groundAttacks,
         actions={
             heatAction=ProjectYakuza.HeatScenes.action("crate",ProjectYakuza.CrateHeatMove),
-            finisher={enabled=true,variants={default={animation="ProjectYakuza_DD_CrateHeavy",nodeValue="dd_crate_heavy",duration=66/30/1.4,speed=1.4,impact=22/66,hitResponse=false,damageMultiplier=1.25}}},
+            finisher=ProjectYakuza.Y5ObjectMoves.crate.finisher,
             quickstep=base.actions.quickstep,
             block={enabled=true,animation="ProjectYakuza_DD_CrateGuard",staminaPerHit=.08},
+        },
+    })
+end
+
+if ProjectYakuza.Weapons then
+    local base=ProjectYakuza.getStyle("dragon_of_dojima")
+    local moves=ProjectYakuza.Y5ObjectMoves.bicycle
+    ProjectYakuza.Weapons.register(base.id,{
+        id="bicycle",impactFeedback="blunt",attackSpeed=1.4,standaloneHeavy=true,quickstepCancelLights=true,
+        items={"ProjectYakuza.Bicycle"},sounds=ProjectYakuza.Weapons.views[base.id].crate.sounds,
+        lightAttacks=moves.lightAttacks,groundAttacks=moves.groundAttacks,
+        actions={finisher=moves.finisher,quickstep=base.actions.quickstep,
+            heatAction=ProjectYakuza.HeatScenes.action("bicycle",{enabled=true,weaponHeat=true,weaponItems={"ProjectYakuza.Bicycle"},motionId="dod_bicycle",useExtremeFuel=true,heatStocks=1,noCombo=true,
+                animation="ProjectYakuza_DD_BicycleHeat",targetAnimation="ProjectYakuza_DD_BicycleHeatVictim",nodeValue="dd_bicycle_heat",requiresTarget=true,duration=183/30,speed=1,hitResponse=false}),
         },
     })
 end

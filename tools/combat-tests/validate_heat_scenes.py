@@ -6,14 +6,14 @@ from cri_cue_table import cue_names
 root=Path(__file__).resolve().parents[2];mod=root/'combat/ProjectYakuza'
 data=json.loads((mod/'docs/heat-scenes.json').read_text())
 effects=json.loads((mod/'docs/heat-scene-effects.json').read_text())
-expected={'rush':[[56,68,80,92,114,126,146,158,170,182,204,216,246],[26]],'bottle':[[32,42,59,84]],'wall':[[12,48]],'ground':[[30]],'crate':[[14,44,54,74,84,104,114,142],[19]],'katana':[[24,44,64]],'bat':[[14,50]]}
-original={'rush':[56,68,78,90,102,114,144],'bottle':[32,42,59,84],'wall':[12,48],'ground':[],'crate':[14,44,54,82],'katana':[24,44,64],'bat':[14,50]}
+expected={'rush':[[56,68,80,92,114,126,146,158,170,182,204,216,246],[26]],'bottle':[[32,42,59,84]],'wall':[[12,48]],'ground':[[30]],'crate':[[14,44,54,74,84,104,114,142],[19]],'katana':[[24,44,64]],'bat':[[14,50]],'bicycle':[[6,33]]}
+original={'rush':[56,68,78,90,102,114,144],'bottle':[32,42,59,84],'wall':[12,48],'ground':[],'crate':[14,44,54,82],'katana':[24,44,64],'bat':[14,50],'bicycle':[131,158]}
 sha=lambda b:hashlib.sha256(b).hexdigest()
 banks={};count=0
 for record in data['scenes']:
     key=record['id'];scene=read_scene(record['source'])
     assert scene['sha256']==record['sourceSha256']
-    assert scene['version']==(10 if key=='crate'else 18)
+    assert scene['version']==(10 if key in ['crate','bicycle']else 18)
     victim=sorted((n for n in scene['nodes']if 'damage'in n and n['role']=='victim'),key=lambda n:n['element']['start'])
     assert [n['element']['start']for n in victim]==original[key]
     bank=record['bank']
@@ -32,7 +32,7 @@ for record in data['scenes']:
                 assert contacts[-1]['sumQTE']and all(not c.get('sumQTE')for c in contacts[:-1])
                 assert contacts[-1].get('baseDamageMultiplier',0)==(1.5 if key=='crate'else 0)
             else:
-                total=1.5 if key in ['katana','bottle','bat']else 5
+                total=1.5 if key in ['katana','bottle','bat','bicycle']else 5
                 assert math.isclose(sum(c['damageMultiplier']for c in contacts),total)
                 if victim:
                     weights=[n['damage']['damage']for n in victim]
@@ -45,25 +45,31 @@ for record in data['scenes']:
             assert math.isclose(event['atMs'],particle['frame']/30*1000)
             assert all(math.isfinite(v)and abs(v)<5 for v in event['point'])
         for event in definition['audioEvents']:
-            sourceFrame=frames[round(event['atMs']*.03)]
-            matches=[n for n in scene['nodes']if n.get('element',{}).get('start')==sourceFrame and 'sound'in n and not n['sound']['fighter']]
+            mappedFrame=event['atMs']*.03;index=math.floor(mappedFrame+1e-8);sourceFrame=frames[index]+mappedFrame-index
+            matches=[n for n in scene['nodes']if math.isclose(n.get('element',{}).get('start',-1000),sourceFrame,abs_tol=1e-6)and 'sound'in n and not n['sound']['fighter']]
             assert matches,(key,event)
             assert any(banks[key][1][n['sound']['cueId']].startswith('Kiryu_')is False for n in matches)
         assert all(v['entry'].startswith('Combat')for v in definition['voiceEvents'])
         count+=len(native)
-assert count==112 and len(data['sounds'])==28
+assert count==115 and len(data['sounds'])==32
 with tempfile.TemporaryDirectory(prefix='project-yakuza-cmn-')as tmp:
     folder=Path(tmp)
     for record in data['sounds']:
         key=record['cue'].removeprefix('heatScene').rstrip('0123456789').lower()
         raw,names=banks[key];assert names[record['cueId']]==record['stream']and not record['stream'].startswith('Kiryu_')
-        assert record['soundIndex']==record['cueId']+(0 if key=='crate'else 1)
+        assert record['soundIndex']==record['cueId']+(0 if key in ['crate','bicycle']else 1)
         bank=folder/(key+'.acb');bank.write_bytes(raw);out=folder/'decoded.wav'
         subprocess.run([str(root/'tools/vgmstream/vgmstream-cli.exe'),'-s',str(record['streamIndex']),'-i','-o',str(out),str(bank)],check=True,capture_output=True)
         shipped=mod/record['output'];assert out.read_bytes()==shipped.read_bytes()
         assert sha(shipped.read_bytes())==record['sha256']
         with wave.open(str(shipped))as audio:assert (audio.getframerate(),audio.getnchannels(),audio.getsampwidth(),audio.getnframes())==(record['sampleRate'],record['channels'],2,record['samples'])
-with zipfile.ZipFile(root/'dist/ProjectYakuza-B42-v0.94.0.zip')as archive:
+with zipfile.ZipFile(root/'dist/ProjectYakuza-B42-v0.96.0.zip')as archive:
     media=[n for n in archive.namelist()if '/42/media/'in n and '/lua/'not in n and not n.endswith('/')]
-    for name in media:assert archive.read(name)==(mod/name.split('/',1)[1]).read_bytes(),name
-print('PASS 7 supplied CMN scenes, 9 timelines, 35 contacts, 112 blood anchors, 28 original PCM decodes, victim-only damage and',len(media),'unchanged prior media files')
+    changed=[]
+    for name in media:
+        if archive.read(name)!=(mod/name.split('/',1)[1]).read_bytes():changed.append(name.split('/',1)[1])
+    allowed=set(r['output']for r in json.loads((mod/'docs/y5-object-attacks.json').read_text())['clips']if r['family']=='crate')
+    allowed.update(['42/media/anims_X/Bob/ProjectYakuza_DD_KatanaHeat.x','42/media/scripts/ProjectYakuza_HeatScenes.txt','42/media/scripts/ProjectYakuza_Models.txt','42/media/scripts/ProjectYakuza_BeerCrate.txt'])
+    allowed.update(name for name in changed if name.startswith('42/media/AnimSets/')and 'Crate'in name)
+    assert set(changed).issubset(allowed),set(changed)-allowed
+print('PASS 8 supplied CMN scenes, 10 timelines, 37 contacts, 115 blood anchors, 32 original PCM decodes and scoped media changes')

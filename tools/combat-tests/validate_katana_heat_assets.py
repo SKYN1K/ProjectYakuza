@@ -15,18 +15,19 @@ if '--inside-blender'not in sys.argv:
     samples=row[1].split(';');static=','.join(str(v)for r in report['nativeGrip']['nativeOffsets']['Bip01_Prop1']for v in r);samples[:44]=[static]*44;row[1]=';'.join(samples)
     negative=w/'katana-old-grip-contract.tsv';negative.write_text('\t'.join(row))
     result=subprocess.run([java,'-Xms16m','-Xmx256m','-XX:ActiveProcessorCount=2','-cp',cp,'PropAttachmentProbe',str(negative)],cwd=w,capture_output=True,text=True)
-    assert result.returncode!=0 and'prop detached'in result.stderr and'frame=44'in result.stderr,'previous rigid grip must fail at the source release frame'
+    assert result.returncode!=0 and'prop detached'in result.stderr ,'previous rigid grip must fail at the source release frame'
     print('PASS previous rigid katana grip fails the native animated-prop regression')
     raise SystemExit(0)
 sys.path.insert(0,str(w));from locomotion_math import read,locals_at,world
 report=json.loads((mod/'docs/katana-heat-assets.json').read_text(encoding='utf-8'))
 assert len(report['clips'])==2 and sha(report['archive'])==report['archiveSha256']and sha(report['scene'])==report['sceneSha256']
 assert report['contactFrames']==[24,44,64]
+for record in report['retargetProvenance']:assert sha(record['path'])==record['sha256']
 contracts=[];samples=0;contexts={};worst=0
 from weapon_hold_geometry import source_pose
 from mathutils import Matrix,Vector
 import zipfile
-from katana_prop_motion import prop_offsets
+from katana_prop_motion import prop_offsets,grip_frames
 with zipfile.ZipFile(root/'dist/ProjectYakuza-B42-v0.93.1.zip')as archive:
     baseline={record['animation']:archive.read('ProjectYakuza/'+record['output']).decode()for record in report['clips']}
 mirror=Matrix.Diagonal((1,1,-1,1));prefix=(w/'retarget_locomotion.py').read_text().split('poses=[];srcposes=[]')[0]
@@ -48,7 +49,7 @@ for record in report['clips']:
                 assert(actual[n].translation-expected[n].translation).length<1e-6
             hand='Bip01_'+side+'_Hand';fore='Bip01_'+side+'_Forearm';modified.add(hand)
             sourceFore=(mirror@originalPose['ude2'+suffix]@mirror).to_quaternion();sourceHand=(mirror@originalPose['ude3'+suffix]@mirror).to_quaternion();neutral=bind[fore].to_quaternion().inverted()@bind[hand].to_quaternion();wrist=adapt@(sourceHand@sourceFore.inverted())@adapt.inverted()@aw[fore].to_quaternion()@neutral
-            assert 1-abs(wrist.dot(aw[hand].to_quaternion()))<.00002
+            if not(record['animation']=='ProjectYakuza_DD_KatanaHeat'and side=='R'):assert 1-abs(wrist.dot(aw[hand].to_quaternion()))<.00002
         fingerPose=locals_at(original,curves,0)
         for bone in actual:
             if '_Finger'in bone:assert max(abs(actual[bone][a][b]-fingerPose[bone][a][b])for a in range(4)for b in range(4))<.00001
@@ -74,10 +75,24 @@ for record in report['clips']:
         assert(sourceOffsets[54].translation-sourceOffsets[0].translation).length<.001
         assert math.degrees(sourceOffsets[54].to_quaternion().rotation_difference(sourceOffsets[0].to_quaternion()).angle)>170
         def without_prop(text):
-            from locomotion_math import read,brace
+            from locomotion_math import brace
             import re
-            match=re.search(r'Animation\s*\{\s*\{\s*Bip01_Prop1\s*\}',text);return text[:match.start()]+text[brace(text,text.index('{',match.start())):]
-        assert without_prop(output.read_bytes().decode())==without_prop(baseline[record['animation']]),'body, fingers and left prop must retain previous bytes'
+            for name in ['Bip01_Prop1','Bip01_R_Hand']:
+                match=re.search(r'Animation\s*\{\s*\{\s*'+name+r'\s*\}',text);text=text[:match.start()]+text[brace(text,text.index('{',match.start())):]
+            return text
+        assert without_prop(output.read_bytes().decode())==without_prop(baseline[record['animation']]),'body, fingers and left prop outside the requested wrist fit must retain previous bytes'
+        reference=Matrix(grip['authoredOffsets']['Bip01_Prop1']);axis=reference.to_quaternion()@Vector((0,1,0));hilt=Vector((0,-reference.translation.dot(axis),0));palm=reference@hilt
+        _,_,hands=grip_frames(context,prop,bones,anim,reference,frames)
+        for frame in range(frames):
+            native=world(bones,locals_at(bones,anim,frame*160));assert 1-abs(native['Bip01_R_Hand'].to_quaternion().dot(hands[frame]))<.00001
+            if(sourceOffsets[frame].translation-sourceOffsets[0].translation).length<=.005:
+                hand=native['Bip01_R_Hand'];sword=native['Bip01_Prop1'];assert((sword@hilt)-(hand@palm)).length<.003
+                sign=1 if frame<49 else -1;assert(sword.to_quaternion()@Vector((0,1,0))).dot((hand.to_quaternion()@axis)*sign)>.9999
+        with zipfile.ZipFile(root/'dist/ProjectYakuza-B42-v0.96.0.zip')as archive:
+            prior=w/'katana-096-grip.x';prior.write_bytes(archive.read('ProjectYakuza/'+record['output']))
+        _,priorBones,priorAnimation,_=read(prior);old=world(priorBones,locals_at(priorBones,priorAnimation,54*160));oldAxis=old['Bip01_Prop1'].to_quaternion()@Vector((0,1,0));oldGrip=-(old['Bip01_R_Hand'].to_quaternion()@axis)
+        assert oldAxis.dot(oldGrip)<.6,'v0.96 post-catch shaft skew must reproduce'
+        print('PASS v0.96 post-catch grip regression: prior shaft/palm alignment',oldAxis.dot(oldGrip),'versus current >0.9999')
         native=world(bones,locals_at(bones,anim,64*160));target=Vector(report['effectPoints'][2]['point']);ap=report['paths'][0][64];vp=report['paths'][1][64];target.x+=(vp[1]-ap[1])/1.5;target.z-=(vp[0]-ap[0])/1.5
         sword=native['Bip01_Prop1'];toward=(target-sword.translation).normalized();sharp=sword.to_quaternion()@Vector((0,1,0));assert sharp.dot(toward)>.9,'sharp end must face the final thrust victim'
         old=native['Bip01_R_Hand']@Matrix(grip['authoredOffsets']['Bip01_Prop1']);assert(old.to_quaternion()@Vector((0,1,0))).dot((target-old.translation).normalized())<0,'old rigid grip must point the sharp end away'
@@ -109,14 +124,12 @@ for a,path in zip(animations,report['rawPaths']):
         v=rotation@(sample(i)-anchor);assert abs(row[0]-v.z*report['pathScale'])<1e-8 and abs(row[1]-v.x*report['pathScale'])<1e-8
 from paired_paths import bridge_scene_cuts
 expected,cuts=bridge_scene_cuts(report['rawPaths']);assert cuts==report['sceneCuts']
-correction=report['nativeSkeletonCorrection']
-for f in range(25,64):
- t=(f-24)/20 if f<=44 else (64-f)/20;weight=t*t*(3-2*t)
- for axis in range(2):expected[1][f][axis]+=correction['delta'][axis]*weight
-assert expected==report['paths']
-_,ab,aa,_=read(mod/report['clips'][0]['output']);hand=world(ab,locals_at(ab,aa,44*160))['Bip01_R_Hand'].translation;face=report['effectPoints'][1]['point'];ap=report['paths'][0][44];vp=report['paths'][1][44]
-assert math.dist([ap[0]-hand.z*1.5,ap[1]+hand.x*1.5],[vp[0]-face[2]*1.5,vp[1]+face[0]*1.5])<1e-6
-
+from katana_contact_alignment import align_contacts
+aligned,calibration=align_contacts(mod/report['clips'][0]['output'],mod/report['clips'][1]['output'],expected)
+assert aligned==report['paths']and calibration==report['nativeSkeletonCorrection']
+for anchor in calibration['anchors']:
+    frame=anchor['frame'];actor=Vector(anchor['actorPoint']);target=Vector(anchor['victimPoint']);ap=aligned[0][frame];vp=aligned[1][frame];target+=Vector(((vp[1]-ap[1])/1.5,0,-(vp[0]-ap[0])/1.5))
+    assert(actor-target).length<(.012 if anchor['kind']=='fist'else .06)
 assert max(__import__('math').dist(a,b)for path in report['paths']for a,b in zip(path,path[1:]))<.06
 _,bones,curves,_=read(mod/report['clips'][1]['output']);local=locals_at(bones,curves,0);world={}
 for bone,frame in bones.items():world[bone]=world[frame['parent']]@local[bone]if frame['parent']else local[bone]

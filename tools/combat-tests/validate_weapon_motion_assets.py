@@ -6,7 +6,7 @@ if '--inside-blender'not in sys.argv:
     if r.returncode or'PASS weapon source composites'not in r.stdout:raise SystemExit(r.stderr or'source validation failed')
     java='F:/SteamLibrary/steamapps/common/ProjectZomboid/jre64/bin/java.exe';cp='.;F:/SteamLibrary/steamapps/common/ProjectZomboid/*'
     for args in [['AnimationProbe',*[str(mod/c['output'])for name in ['weapon-motion-assets','style-travel-assets']for c in json.loads((mod/'docs'/(name+'.json')).read_text())['clips']]],['PropAttachmentProbe',str(w/'weapon-motion-prop-contract.tsv')],['WeaponMotionProbe',str(mod/'42/media')]]:
-        result=subprocess.run([java,'-cp',cp,*args],cwd=w,capture_output=True,text=True,encoding='utf-8',errors='replace')
+        result=subprocess.run([java,'-Xms16m','-Xmx256m','-XX:ActiveProcessorCount=2','-cp',cp,*args],cwd=w,capture_output=True,text=True,encoding='utf-8',errors='replace')
         if result.returncode:print(result.stdout);raise SystemExit(result.stderr)
         print(result.stdout.splitlines()[-1])
     raise SystemExit(0)
@@ -23,7 +23,10 @@ def distance(p,a,b):
     v=b-a;t=max(0,min(1,(p-a).dot(v)/v.length_squared))if v.length_squared else 0
     return(p-(a+v*t)).length
 
+superseded={c['output']for c in json.loads((mod/'docs/y5-object-attacks.json').read_text())['clips']if c['family']=='crate'}
+assert len(superseded)==5
 for record in d['clips']:
+    if record['output']in superseded:continue
     assert sha(record['source'])==record['sourceSha256']and sha(record['retarget'])==record['retargetSha256']and sha(mod/record['output'])==record['sha256']and sha(record['fingerSource'])==record['fingerSha256']
     if record['kind']in['sourceAttack','sourceGuard']:assert record['sha256']==record['beforeSha256'],'attacks/guards must remain unchanged'
     _,f,a,_=read(mod/record['output']);_,sf,sa,_=read(record['retarget']);end=(record['frames']-1)*160;grip=d['grips'][record['grip']];assert sha(grip['source'])==grip['sha256'];assert all(all(math.isfinite(v)for v in values)for c in a.values()for keys in c.values()for t,values in keys)
@@ -97,6 +100,7 @@ for record in travel['clips']:
             target=expected[bone]if bone in expected and bone not in['Body','Translation_Data']else native[bone];assert max(abs(actual[bone][x][y]-target[x][y])for x in range(4)for y in range(4))<.00002,(record['name'],i,bone);samples+=1
     assert(locals_at(f,a,end)['Translation_Data'].translation-locals_at(f,a,0)['Translation_Data'].translation).length>.1
 for record in d['selectors']+travel['selectors']:
+    if Path(record['path']).stem+'.x'in {Path(p).name for p in superseded}:continue
     p=mod/record['path'];assert sha(p)==record['sha256'];n=E.parse(p).getroot();c={e.findtext('m_Name'):e.findtext('m_Value')for e in n.findall('m_Conditions')};assert c['ProjectYakuzaStyle']=='dragon_of_dojima'
     if '/aim'in record['path']:assert float(n.findtext('m_maxTorsoTwist'))==0
 print('PASS weapon source composites',samples,'source/native samples; worst error',worst,'source segment angle',math.degrees(segmentError),'degrees; previous broken hold error',math.degrees(oldError),'degrees; katana clearance',clearance,'blend clearance',blendClearance,'native units; source attack contacts and retimed travel verified')
