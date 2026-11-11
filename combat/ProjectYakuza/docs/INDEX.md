@@ -53,3 +53,8 @@ The JSON records identify original supplied files, conversions and hashes for re
 - [Current validation](VALIDATION_0.74.0.md)
 
 [Grabs, grab strikes and wall Heat Actions](GRABS.md) documents per-style paired definitions, controls and multiplayer ownership.
+
+| Additional feature | Documentation |
+| --- | --- |
+| Yakuza 6 knife Heat Action | [Knife Heat Action](KNIFE_HEAT_ACTION.md) |
+| Kiwami style-switch and Y6 mod-menu audio | [Interface audio](INTERFACE_AUDIO.md) |

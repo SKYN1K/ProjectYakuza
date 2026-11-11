@@ -1,6 +1,128 @@
 {
   "operation": "Original CMN blood-emitter starts and bone-local positions transformed through unchanged supplied native victim poses. Existing supplied blood pixels and renderer are reused; no images, motion or audio generated. Engine-specific non-blood particle systems are recorded by the CMN audit rather than invented.",
   "moves": {
+    "ProjectYakuza_DD_KnifeHeat": [
+      {
+        "atMs": 1233.3333333333335,
+        "index": 1,
+        "bone": "Bip01_Spine",
+        "point": [
+          -0.016601772978901863,
+          0.5324005484580994,
+          0.04889855533838272
+        ],
+        "bloodOnly": true,
+        "feedback": "blade"
+      },
+      {
+        "atMs": 1233.3333333333335,
+        "index": 1,
+        "bone": "Bip01_Spine",
+        "point": [
+          -0.0027366536669433117,
+          0.5331399440765381,
+          0.0501728430390358
+        ],
+        "bloodOnly": true,
+        "feedback": "blade"
+      },
+      {
+        "atMs": 1300.0,
+        "index": 1,
+        "bone": "Bip01_Spine",
+        "point": [
+          -0.007794525474309921,
+          0.5832673907279968,
+          0.0442315898835659
+        ],
+        "bloodOnly": true,
+        "feedback": "blade"
+      },
+      {
+        "atMs": 2833.3333333333335,
+        "index": 2,
+        "bone": "Bip01_Spine",
+        "point": [
+          -0.002505007665604353,
+          0.6001278162002563,
+          -0.009136965498328209
+        ],
+        "bloodOnly": true,
+        "feedback": "blade"
+      },
+      {
+        "atMs": 2833.3333333333335,
+        "index": 2,
+        "bone": "Bip01_Spine",
+        "point": [
+          0.011451679281890392,
+          0.5923900604248047,
+          0.008563539013266563
+        ],
+        "bloodOnly": true,
+        "feedback": "blade"
+      },
+      {
+        "atMs": 2866.6666666666665,
+        "index": 2,
+        "bone": "Bip01_Spine",
+        "point": [
+          0.012496267445385456,
+          0.6181974411010742,
+          0.019780950620770454
+        ],
+        "bloodOnly": true,
+        "feedback": "blade"
+      },
+      {
+        "atMs": 2866.6666666666665,
+        "index": 2,
+        "bone": "Bip01_Spine",
+        "point": [
+          0.006263162009418011,
+          0.6209129691123962,
+          0.01856386289000511
+        ],
+        "bloodOnly": true,
+        "feedback": "blade"
+      },
+      {
+        "atMs": 2866.6666666666665,
+        "index": 2,
+        "bone": "Bip01_Spine",
+        "point": [
+          0.014562103897333145,
+          0.6262567639350891,
+          0.016697818413376808
+        ],
+        "bloodOnly": true,
+        "feedback": "blade"
+      },
+      {
+        "atMs": 2866.6666666666665,
+        "index": 2,
+        "bone": "Bip01_Spine",
+        "point": [
+          0.0029107548762112856,
+          0.6428278088569641,
+          0.006232814863324165
+        ],
+        "bloodOnly": true,
+        "feedback": "blade"
+      },
+      {
+        "atMs": 2900.0,
+        "index": 2,
+        "bone": "Bip01_Spine",
+        "point": [
+          0.003782762447372079,
+          0.6078381538391113,
+          0.01041686162352562
+        ],
+        "bloodOnly": true,
+        "feedback": "blade"
+      }
+    ],
     "ProjectYakuza_DD_HeatRush": [
       {
         "atMs": 1866.6666666666667,
@@ -1402,6 +1524,133 @@
     ]
   },
   "clips": [
+    {
+      "animation": "ProjectYakuza_DD_KnifeHeat",
+      "actorSha256": "33f0da1e2460c1e7a5429b20521066723a524836821b180866aa21fb8cdd5ef4",
+      "victimSha256": "4028cdcb81a51ec1132863a2b9392986c3fe34001e5cbd0e9b585f7aef31222d",
+      "events": [
+        {
+          "atMs": 1233.3333333333335,
+          "index": 1,
+          "bone": "Bip01_Spine",
+          "point": [
+            -0.016601772978901863,
+            0.5324005484580994,
+            0.04889855533838272
+          ],
+          "bloodOnly": true,
+          "feedback": "blade"
+        },
+        {
+          "atMs": 1233.3333333333335,
+          "index": 1,
+          "bone": "Bip01_Spine",
+          "point": [
+            -0.0027366536669433117,
+            0.5331399440765381,
+            0.0501728430390358
+          ],
+          "bloodOnly": true,
+          "feedback": "blade"
+        },
+        {
+          "atMs": 1300.0,
+          "index": 1,
+          "bone": "Bip01_Spine",
+          "point": [
+            -0.007794525474309921,
+            0.5832673907279968,
+            0.0442315898835659
+          ],
+          "bloodOnly": true,
+          "feedback": "blade"
+        },
+        {
+          "atMs": 2833.3333333333335,
+          "index": 2,
+          "bone": "Bip01_Spine",
+          "point": [
+            -0.002505007665604353,
+            0.6001278162002563,
+            -0.009136965498328209
+          ],
+          "bloodOnly": true,
+          "feedback": "blade"
+        },
+        {
+          "atMs": 2833.3333333333335,
+          "index": 2,
+          "bone": "Bip01_Spine",
+          "point": [
+            0.011451679281890392,
+            0.5923900604248047,
+            0.008563539013266563
+          ],
+          "bloodOnly": true,
+          "feedback": "blade"
+        },
+        {
+          "atMs": 2866.6666666666665,
+          "index": 2,
+          "bone": "Bip01_Spine",
+          "point": [
+            0.012496267445385456,
+            0.6181974411010742,
+            0.019780950620770454
+          ],
+          "bloodOnly": true,
+          "feedback": "blade"
+        },
+        {
+          "atMs": 2866.6666666666665,
+          "index": 2,
+          "bone": "Bip01_Spine",
+          "point": [
+            0.006263162009418011,
+            0.6209129691123962,
+            0.01856386289000511
+          ],
+          "bloodOnly": true,
+          "feedback": "blade"
+        },
+        {
+          "atMs": 2866.6666666666665,
+          "index": 2,
+          "bone": "Bip01_Spine",
+          "point": [
+            0.014562103897333145,
+            0.6262567639350891,
+            0.016697818413376808
+          ],
+          "bloodOnly": true,
+          "feedback": "blade"
+        },
+        {
+          "atMs": 2866.6666666666665,
+          "index": 2,
+          "bone": "Bip01_Spine",
+          "point": [
+            0.0029107548762112856,
+            0.6428278088569641,
+            0.006232814863324165
+          ],
+          "bloodOnly": true,
+          "feedback": "blade"
+        },
+        {
+          "atMs": 2900.0,
+          "index": 2,
+          "bone": "Bip01_Spine",
+          "point": [
+            0.003782762447372079,
+            0.6078381538391113,
+            0.01041686162352562
+          ],
+          "bloodOnly": true,
+          "feedback": "blade"
+        }
+      ]
+    },
     {
       "animation": "ProjectYakuza_DD_HeatRush",
       "actorSha256": "41367c866dc56924a8e8fd293b14aa50bdef6337be6b706ea6587df58ae8b493",

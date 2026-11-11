@@ -190,13 +190,16 @@ if ProjectYakuza.Weapons then
     sounds.guardHit=base.sounds.guardHit;sounds.guardBreak=base.sounds.guardBreak
     sounds.punchImpact=base.sounds.punchImpact;sounds.kickImpact=base.sounds.kickImpact
     sounds.heavyImpact=base.sounds.finisher;sounds.groundImpact=base.sounds.finisher
+    local knifeItems={"Base.HuntingKnife","Base.HuntingKnifeForged","Base.KitchenKnife","Base.KitchenKnifeForged","Base.SteakKnife","Base.BreadKnife","Base.FightingKnife","Base.KnifeButterfly","Base.KnifeFillet","Base.KnifeParing","Base.KnifePocket","Base.KnifeShiv","Base.KnifeSushi","Base.LargeKnife","Base.LargeKnife_Scrap","Base.SmallKnife","Base.SwitchKnife","Base.CrudeKnife","Base.LongCrudeKnife","Base.MacheteKnife","Base.StoneKnifeLong","Base.FlintKnife","Base.RailroadSpikeKnife"}
     ProjectYakuza.Weapons.register(base.id,{
         id="knife",impactFeedback="blade",attackSpeed=1.5,standaloneHeavy=true,quickstepCancelLights=true,
-        items={"Base.HuntingKnife","Base.HuntingKnifeForged","Base.KitchenKnife","Base.KitchenKnifeForged","Base.SteakKnife","Base.BreadKnife","Base.FightingKnife","Base.KnifeButterfly","Base.KnifeFillet","Base.KnifeParing","Base.KnifePocket","Base.KnifeShiv","Base.KnifeSushi","Base.LargeKnife","Base.LargeKnife_Scrap","Base.SmallKnife","Base.SwitchKnife","Base.CrudeKnife","Base.LongCrudeKnife","Base.MacheteKnife","Base.StoneKnifeLong","Base.FlintKnife","Base.RailroadSpikeKnife"},
+        items=knifeItems,
         sounds=sounds,
         lightAttacks={{animation="ProjectYakuza_DD_KnifeLight01",nodeValue="dd_knife_light_01",duration=40/30/1.5,speed=1.5,impact=9/40,hitResponse=false,chainAt=23/40,quickstepCancelAt=10/40,damageMultiplier=1},{animation="ProjectYakuza_DD_KnifeLight02",nodeValue="dd_knife_light_02",duration=40/30/1.5,speed=1.5,impact=12/40,hitResponse=false,chainAt=26/40,quickstepCancelAt=13/40,damageMultiplier=1},{animation="ProjectYakuza_DD_KnifeLight03",nodeValue="dd_knife_light_03",duration=45/30/1.5,speed=1.5,impact=13/45,hitResponse=false,chainAt=23/45,quickstepCancelAt=14/45,damageMultiplier=1}},
         groundAttacks={{animation="ProjectYakuza_DD_KnifeGround",nodeValue="dd_knife_ground",duration=52/30/1.5,speed=1.5,impact=13/52,hitResponse=false,groundAttack=true}},
         actions={
+            heatAction=ProjectYakuza.HeatScenes.action("knife",{enabled=true,weaponHeat=true,weaponItems=knifeItems,motionId="dod_knife",useExtremeFuel=true,heatStocks=1,noCombo=true,
+                animation="ProjectYakuza_DD_KnifeHeat",targetAnimation="ProjectYakuza_DD_KnifeHeatVictim",nodeValue="dd_knife_heat",requiresTarget=true,duration=130/30,speed=1,hitResponse=false}),
             finisher={enabled=true,variants={default={animation="ProjectYakuza_DD_KnifeHeavy",nodeValue="dd_knife_heavy",duration=45/30/1.5,speed=1.5,impact=11/45,hitResponse=false,enabled=true,damageMultiplier=1.25}}},
             quickstep=base.actions.quickstep,
         },

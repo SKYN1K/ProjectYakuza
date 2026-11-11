@@ -271,3 +271,12 @@
 !/tools/combat-tests/validate_y5_object_assets.py
 !/tools/combat-tests/BicycleAssetProbe.java
 !/tools/combat-tests/BicycleHeatProbe.java
+
+!/tools/combat-tests/extract_knife_heat_assets.py
+!/tools/combat-tests/build_knife_heat_assets.py
+!/tools/combat-tests/knife_prop_motion.py
+!/tools/combat-tests/validate_knife_heat_assets.py
+!/tools/combat-tests/KnifeHeatProbe.java
+
+!/tools/combat-tests/build_interface_audio.py
+!/tools/combat-tests/InterfaceAudioProbe.java

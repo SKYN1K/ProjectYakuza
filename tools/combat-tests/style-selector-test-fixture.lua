@@ -6,6 +6,8 @@ local keys={};local paused,typing,busy=false,false,false
 Keyboard={KEY_Z=44,KEY_LEFT=203,KEY_RIGHT=205,KEY_UP=200,KEY_DOWN=208,KEY_ESCAPE=1}
 isKeyDown=function(key)return keys[key]==true end
 isGamePaused=function()return paused end
+local uiSounds={}
+getSoundManager=function()return {playUISound=function(_,name)uiSounds[#uiSounds+1]=name end}end
 local clock=1000
 getTimestampMs=function()return clock end
 getCore=function()return {isDoingTextEntry=function()return typing end}end
@@ -49,7 +51,10 @@ end
 function ISPanel:drawTextCentre(...)end
 function ISPanel:drawText(...)end
 ISComboBox=ISPanel:derive('combo')
-function ISComboBox:new(x,y,w,h)local o=ISPanel.new(self,x,y,w,h);o.options={};o.selected=1;return o end
+function ISComboBox:new(x,y,w,h,target,onChange)local o=ISPanel.new(self,x,y,w,h);o.options={};o.selected=1;o.target=target;o.onChange=onChange;o.onChangeArgs={};o.popup={setFont=function()end,setComboBox=function()end,addToUIManager=function()o.popup.visible=true end,removeFromUIManager=function()o.popup.visible=false end};return o end
+local baseComboShow=function()error('mod combo must use original Y6 toggle cue')end
+local baseComboHide=function()error('mod combo must avoid duplicate base toggle cue')end
+ISComboBox.showPopup=baseComboShow;ISComboBox.hidePopup=baseComboHide
 function ISComboBox:addOptionWithData(label,data)table.insert(self.options,{text=label,data=data})end
 function ISComboBox:getOptionData(index)return self.options[index].data end
 ISButton=ISPanel:derive('button')
@@ -157,8 +162,31 @@ check(selector.styleIcon(nil)==nil,'empty style has no invented icon')
 selector.openSetup(p);keys[Keyboard.KEY_ESCAPE]=true;selector.setup:update();keys[Keyboard.KEY_ESCAPE]=false
 check(selector.setup==nil,'escape closes settings without saving')
 local selected=0
-ProjectYakuza.StyleEntry={request=function(who,id)check(who==p and id=='dragon_of_dojima','same-slot entry gets selected style');selected=selected+1 end}
+ProjectYakuza.StyleEntry={request=function(who,id)check(who==p and id=='dragon_of_dojima','same-slot entry gets selected style');selected=selected+1;return true end}
 p.data.ProjectYakuzaStyle='dragon_of_dojima';p.equipped=true;keys[Keyboard.KEY_Z]=true
 selector.open(p);selector.wheel.side='left';keys[Keyboard.KEY_Z]=false;selector.finish()
 check(selected==1,'explicit reselect of the current style requests its entry')
+local A=ProjectYakuza.UIAudio
+check(ISComboBox.showPopup==baseComboShow and ISComboBox.hidePopup==baseComboHide,'native combo sounds are never globally overridden')
+clock=clock+1000;uiSounds={};selector.clear();keys[Keyboard.KEY_Z]=true
+check(selector.open(p)and uiSounds[1]=='ProjectYakuza_MenuOpen','mod wheel opens with Y6 menu sound')
+local before=#uiSounds;selector.tick();selector.tick();check(#uiSounds==before,'stationary wheel never repeats cursor audio')
+keys[Keyboard.KEY_RIGHT]=true;selector.tick();selector.tick();keys[Keyboard.KEY_RIGHT]=false
+check(#uiSounds==before+1 and uiSounds[#uiSounds]=='ProjectYakuza_MenuCursor','wheel emits one cursor cue per changed selection')
+selector.cancel();check(uiSounds[#uiSounds]=='ProjectYakuza_MenuCancel','wheel cancellation uses Y6 cancel')
+selector.openSetup(p);local panel=selector.setup;local combo=panel.left;before=#uiSounds;combo:showPopup();check(#uiSounds==before+1 and uiSounds[#uiSounds]=='ProjectYakuza_MenuToggle'and combo.popup.visible,'mod combo uses native popup with one Y6 toggle cue')
+combo:pointOnItem(1);clock=clock+100;combo:pointOnItem(2);combo:pointOnItem(2);check(uiSounds[#uiSounds]=='ProjectYakuza_MenuCursor'and #uiSounds==before+2,'combo highlight is change-driven')
+combo:hidePopup();check(not combo.popup.visible and #uiSounds==before+2,'combo close does not duplicate selection audio')
+combo.onChange(combo.target,combo);check(uiSounds[#uiSounds]=='ProjectYakuza_MenuConfirm','option selection uses Y6 confirm')
+before=#uiSounds;panel:save();check(#uiSounds==before+1 and uiSounds[#uiSounds]=='ProjectYakuza_MenuConfirm','save confirms once without adding cancel')
+selector.openSetup(p);panel=selector.setup;local cancel=panel.children[#panel.children];before=#uiSounds;getSoundManager():playUISound(cancel.sounds.activate);cancel.callback(cancel.target,cancel);check(#uiSounds==before+1 and uiSounds[#uiSounds]=='ProjectYakuza_MenuCancel','native button callback does not duplicate cancel')
+selector.openSetup(p);panel=selector.setup;local save=panel.children[#panel.children-1];before=#uiSounds;getSoundManager():playUISound(save.sounds.activate);save.callback(save.target,save);check(#uiSounds==before+1 and uiSounds[#uiSounds]=='ProjectYakuza_MenuConfirm','native save callback does not duplicate confirm')
+selector.openSetup(p);before=#uiSounds;selector.clear();check(#uiSounds==before,'world/save cleanup is silent')
+clock=clock+1000;uiSounds={};ProjectYakuza.selectStyle(p,'dragon_of_dojima');check(#uiSounds==1 and uiSounds[1]=='ProjectYakuza_StyleSwitch','committed style selection uses Kiwami switch waveform')
+ProjectYakuza.selectStyle(p,'dragon_of_dojima');check(#uiSounds==1,'duplicate style event is suppressed')
+clock=clock+151;ProjectYakuza.selectStyle(p,'dragon_of_dojima');check(#uiSounds==2,'later explicit style reselection can play again')
+local localPlayer=p.isLocalPlayer;p.isLocalPlayer=function()return false end;clock=clock+1000;ProjectYakuza.selectStyle(p,'dragon_of_dojima');check(#uiSounds==2,'remote style selection never plays local UI audio');p.isLocalPlayer=localPlayer
+p.dead=true;check(not A.play(p,'open')and #uiSounds==2,'dead-player UI audio is ignored');p.dead=false
+ProjectYakuza.selectStyle(p,'none');check(#uiSounds==2 and not A.play(p,'missing'),'unequip and unknown cues cannot leak style/audio events')
+clock=clock+1000;uiSounds={};check(A.play(p,'cursor')and not A.play(p,'cursor')and #uiSounds==1,'rapid cursor cues are debounced');clock=clock+65;check(A.play(p,'cursor')and #uiSounds==2,'cursor debounce expires at its bounded interval')
 return 'PASS '..count..' selector persistence, input, assignment, add-on and original-atlas checks'

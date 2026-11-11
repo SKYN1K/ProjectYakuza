@@ -1,5 +1,7 @@
 # Heat Action lifecycle
 
+Version 0.98.0 adds the [original Y6 knife Heat Action](KNIFE_HEAT_ACTION.md) for DoD's registered knife items, with the same physical RMB, neutral-combo, confirmed-payment and shared protection lifecycle.
+
 Version 0.97.0 adds the [Yakuza 5 bicycle action](BICYCLE.md) with the same stock/input/payment lifecycle. It fits the katana's native wrist and hilt pivot while preserving the original release/catch and source weapon orientation. Victim staging follows native anatomy through the slash, punch and thrust. Hit times remain 24/44/64; the physical slash passes the torso at source frame 23 before its existing damage event.
 
 Version 0.96.0 adds the [original Yakuza 6 bat Heat Action](BAT_HEAT_ACTION.md) for the six registered bat items. It uses the existing one-stock, neutral-combo, physical RMB plus Heat Action input, shared protection and confirmed-playback payment.

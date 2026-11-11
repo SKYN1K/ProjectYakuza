@@ -1,7 +1,7 @@
 {
   "operation": "Code-side numeric FK only from existing supplied PZ clips, including current paired contacts/endings and linked native finisher variants. Contacts use native collision events, authored Heat Action contacts or the documented parry fallback. Clips use contact-local endpoint/relative motion with verified original left-light and right-high-kick pose overrides, independent of charge-up pose. The high kick has right-foot height 0.721 versus planted left foot 0.093 at source frame 24; recovering arms can be faster than the striking leg. Runtime resolves the actual playing clip within the committed move family. No visual/audio/animation/model assets are generated or modified.",
   "catalog": "42/media/lua/client/ProjectYakuza/AttackTrailCatalog.lua",
-  "sha256": "cec073ca327e79e8edb5767c4f1951909dcfe2023623199f94f6342b70399b92",
+  "sha256": "0ccfdf1b67f89dd11d2029b0a75576e17bcd312ac4caed21a89ab351d5aba45c",
   "clips": [
     {
       "profile": "bat",
@@ -2242,6 +2242,53 @@
             0.6716901214634632,
             0.08678893698401327,
             0.11078107487022171
+          ],
+          "selection": "contact-local relative motion"
+        }
+      ]
+    },
+    {
+      "profile": "knife",
+      "kind": "heatAction",
+      "animation": "ProjectYakuza_DD_KnifeHeat",
+      "family": "ProjectYakuza_DD_KnifeHeat",
+      "node": "dd_knife_heat",
+      "impact": -1.0,
+      "kick": false,
+      "qte": [
+        1.33333333333,
+        3.0
+      ],
+      "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_KnifeHeat.x",
+      "clipSha256": "33f0da1e2460c1e7a5429b20521066723a524836821b180866aa21fb8cdd5ef4",
+      "samples": 131,
+      "duration": 4.333333333333333,
+      "windows": [
+        {
+          "track": "dd_trail_knifeheat_1",
+          "from": 1.21333333333,
+          "to": 1.5333333333299999,
+          "contact": 1.33333333333,
+          "limb": "rightArm",
+          "scores": [
+            0.104660732624471,
+            0.29939285883977484,
+            0.14418577202450822,
+            0.18773694509528877
+          ],
+          "selection": "contact-local relative motion"
+        },
+        {
+          "track": "dd_trail_knifeheat_2",
+          "from": 2.88,
+          "to": 3.2,
+          "contact": 3.0,
+          "limb": "rightArm",
+          "scores": [
+            0.16828537108308145,
+            0.2240918232750693,
+            0.09930769615358985,
+            0.09064247241415149
           ],
           "selection": "contact-local relative motion"
         }

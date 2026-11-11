@@ -1,6 +1,7 @@
 require "ProjectYakuza/Runtime"
 require "ProjectYakuza/StyleUI"
 require "ProjectYakuza/StyleSlots"
+require "ProjectYakuza/UIAudio"
 require "ISUI/ISPanel"
 require "ISUI/ISComboBox"
 require "ISUI/ISButton"
@@ -9,6 +10,26 @@ local S={icons={}}
 ProjectYakuza.StyleSelector=S
 local Wheel=ISPanel:derive("ProjectYakuzaStyleWheel")
 local Setup=ISPanel:derive("ProjectYakuzaStyleSetup")
+local Combo=ISComboBox:derive("ProjectYakuzaStyleCombo")
+S.Combo=Combo
+function Combo:showPopup()
+    ProjectYakuza.UIAudio.play(self.audioPlayer,"toggle")
+    self.audioHighlight=nil
+    self.popup:setFont(self.font,4);self.popup:setComboBox(self);self.popup:addToUIManager()
+end
+function Combo:hidePopup()
+    self.popup:removeFromUIManager()
+    if self.editor and self.editor:isVisible() then self.filterText=nil;self.editor:unfocus();self.editor:setVisible(false) end
+end
+function Combo:pointOnItem(index)
+    if self.audioHighlight~=index then
+        if self.audioHighlight then ProjectYakuza.UIAudio.play(self.audioPlayer,"cursor") end
+        self.audioHighlight=index
+    end
+end
+function S.optionChanged(panel,combo)
+    ProjectYakuza.UIAudio.play(panel.player,"confirm")
+end
 function Wheel:onMouseDown()return false end
 function Wheel:onMouseUp()return false end
 function Wheel:onMouseMove()return false end
@@ -91,28 +112,33 @@ function Wheel:prerender()
     self:drawTextCentre(label,170,352+10*(1-elapsed),1,1,1,elapsed,UIFont.Medium)
     self:drawTextCentre("Hold "..ProjectYakuza.Bindings.label("styles").."  /  mouse or arrow keys  /  release to select",170,385+10*(1-elapsed),.65,.72,.83,elapsed,UIFont.Small)
 end
-function S.cancel()
+function S.cancel(silent)
     local wheel=S.wheel;S.wheel=nil
-    if wheel then ProjectYakuza.StyleUI.releaseAll(wheel);wheel:removeFromUIManager() end
+    if wheel then
+        if silent~=true then ProjectYakuza.UIAudio.play(wheel.player,"cancel") end
+        ProjectYakuza.StyleUI.releaseAll(wheel);wheel:removeFromUIManager()
+    end
     Events.OnTick.Remove(S.tick)
 end
 function S.finish()
     local w=S.wheel;if not w then return end
     local p,side=w.player,w.side
-    S.cancel()
+    S.cancel(true)
     if not S.allowed(p) then return end
     if side=="bottom" then S.openSetup(p);return end
-    if side=="top" then ProjectYakuza.unequipStyle(p);return end
+    if side=="top" then ProjectYakuza.unequipStyle(p);ProjectYakuza.UIAudio.play(p,"confirm");return end
     local id=ProjectYakuza.StyleSlots.id(p,side)
     if id then
         if not ProjectYakuza.isEquipped(p) or ProjectYakuza.getPlayerStyle(p).id~=id then ProjectYakuza.equipStyle(p,id)
-        elseif ProjectYakuza.StyleEntry then ProjectYakuza.StyleEntry.request(p,id) end
-    end
+        elseif ProjectYakuza.StyleEntry then local ok=ProjectYakuza.StyleEntry.request(p,id);if ok then ProjectYakuza.UIAudio.style(p,id) end end
+    else ProjectYakuza.UIAudio.play(p,"cancel") end
 end
 function S.tick()
     local w=S.wheel;if not w then return end
-    if not S.allowed(w.player) or isKeyDown(Keyboard.KEY_ESCAPE) then S.cancel();return end
+    if not S.allowed(w.player) then S.cancel(true);return end
+    if isKeyDown(Keyboard.KEY_ESCAPE) then S.cancel();return end
     if not ProjectYakuza.Bindings.down("styles") then S.finish();return end
+    local oldSide=w.side
     if isKeyDown(Keyboard.KEY_LEFT) then w.side="left"
     elseif isKeyDown(Keyboard.KEY_RIGHT) then w.side="right"
     elseif isKeyDown(Keyboard.KEY_UP) then w.side="top"
@@ -124,6 +150,7 @@ function S.tick()
             w.mouseX,w.mouseY=x,y
         end
     end
+    if oldSide~=w.side then ProjectYakuza.UIAudio.play(w.player,"cursor") end
 end
 function S.open(p)
     if S.wheel or S.setup or not S.allowed(p) then return false end
@@ -135,7 +162,7 @@ function S.open(p)
     local active=ProjectYakuza.getPlayerStyle(p)
     panel.side=active and active.id==ProjectYakuza.StyleSlots.id(p,"right") and "right" or "left"
     panel:initialise();panel.background=false;panel:setWantMouseEvents(false);panel:addToUIManager()
-    S.wheel=panel;Events.OnTick.Add(S.tick)
+    S.wheel=panel;Events.OnTick.Add(S.tick);ProjectYakuza.UIAudio.play(p,"open")
     return true
 end
 local preferences={
@@ -181,16 +208,20 @@ function Setup:prerender()
     self:drawText(self.message or "Audio volumes and keybindings: Options > Mods > Project Yakuza",24,378,.65,.72,.83,alpha,UIFont.Small)
     self:drawText("Save applies changes. Cancel leaves your settings unchanged.",24,400,.65,.72,.83,alpha,UIFont.Small)
 end
-function Setup:close()
+function Setup:close(silent)
+    if self.closed then return end
+    self.closed=true
+    if not silent then ProjectYakuza.UIAudio.play(self.player,"cancel") end
     ProjectYakuza.StyleUI.releaseAll(self)
     self:removeFromUIManager()
     if S.setup==self then S.setup=nil end
 end
 function Setup:update()
     ISPanel.update(self)
-    if self.player:isDead() or self.player:getVehicle() or isKeyDown(Keyboard.KEY_ESCAPE) then self:close() end
+    if self.player:isDead() or self.player:getVehicle() then self:close(true)
+    elseif isKeyDown(Keyboard.KEY_ESCAPE) then self:close() end
 end
-function Setup:save()
+function Setup:save(button)
     if not S.allowed(self.player) then self.message="Finish your current action first.";return end
     for _,side in ipairs({"left","right"}) do
         local combo=self[side];local id=combo:getOptionData(combo.selected)
@@ -212,7 +243,8 @@ function Setup:save()
             if setting.key=="ProjectYakuzaDiagnostics" then print("[ProjectYakuza] "..ProjectYakuza.diagnosticLine(self.player)) end
         end
     end
-    self:close()
+    if not button then ProjectYakuza.UIAudio.play(self.player,"confirm") end
+    self:close(true)
 end
 function S.openSetup(p)
     if S.setup or not S.allowed(p) then return false end
@@ -221,7 +253,7 @@ function S.openSetup(p)
         getPlayerScreenTop(0)+(getPlayerScreenHeight(0)-490)/2,620,490)
     panel.player=p;panel.opened=getTimestampMs();panel:initialise();panel.background=false;panel.settings={}
     for index,side in ipairs({"left","right"}) do
-        local combo=ISComboBox:new(230,88+(index-1)*66,366,28)
+        local combo=Combo:new(230,88+(index-1)*66,366,28,panel,S.optionChanged);combo.audioPlayer=p
         combo:initialise();combo:addOptionWithData("Empty","none")
         local id=ProjectYakuza.StyleSlots.get(p)[side]
         for _,entry in ipairs(ProjectYakuza.listStyles()) do
@@ -232,16 +264,16 @@ function S.openSetup(p)
     end
     local data=p:getModData()
     for index,setting in ipairs(preferences) do
-        local combo=ISComboBox:new(430,224+(index-1)*48,166,28)
+        local combo=Combo:new(430,224+(index-1)*48,166,28,panel,S.optionChanged);combo.audioPlayer=p
         combo:initialise();combo:addOptionWithData("On",true);combo:addOptionWithData("Off",false)
         local enabled=data[setting.key]==true
         if setting.inverse then enabled=not enabled end
         combo.selected=enabled and 1 or 2
         panel.settings[index]=combo;panel:addChild(combo)
     end
-    local save=ISButton:new(380,440,100,28,"Save",panel,Setup.save);save:initialise();panel:addChild(save)
-    local cancel=ISButton:new(490,440,106,28,"Cancel",panel,Setup.close);cancel:initialise();panel:addChild(cancel)
-    panel:addToUIManager();S.setup=panel;return true
+    local save=ISButton:new(380,440,100,28,"Save",panel,Setup.save);save:initialise();save.sounds={activate="ProjectYakuza_MenuConfirm"};panel:addChild(save)
+    local cancel=ISButton:new(490,440,106,28,"Cancel",panel,Setup.close);cancel:initialise();cancel.sounds={activate="ProjectYakuza_MenuCancel"};panel:addChild(cancel)
+    panel:addToUIManager();S.setup=panel;ProjectYakuza.UIAudio.play(p,"open");return true
 end
 function S.keyStart(key)
     if ProjectYakuza.Bindings.matches("styles",key) then S.open(getSpecificPlayer(0)) end
@@ -252,7 +284,7 @@ function S.poll(p)
 end
 Events.OnPlayerUpdate.Add(S.poll)
 function S.clear()
-    S.cancel();if S.setup then S.setup:close() end
+    S.cancel(true);if S.setup then S.setup:close(true) end
 end
 function S.vehicleKeyGuard()
     if not ISVehicleMenu or S.vehicleHooked then return end

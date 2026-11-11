@@ -1,0 +1,11 @@
+# Yakuza 6 knife Heat Action
+
+Version 0.98.0 adds the original h23680_buki_b scene to Dragon of Dojima's registered knife profile. Equip a supported knife, hold physical RMB and press the Heat Action binding (MMB by default) near an eligible standing target outside a combo. The 23 existing profile items are the whitelist, including Hunting Knife, Kitchen Knife and their registered variants. Other styles, swords and blunt items cannot borrow the action.
+
+It costs one Heat stock or equivalent Extreme Heat fuel, committed once after native playback is confirmed. Missing animation/startup failure does not spend it. Shared paired clearance, invulnerability, targeting grace, interruption cleanup, canonical server damage and lethal deferral through full recovery apply. Existing ordinary knife combat remains available.
+
+The source is the user's installed Yakuza 6 h23680_buki_b.par and CMN18. Resource GUIDs bind h23680_000_3 to the player and h23680_000_5 to the victim. Both clips retain all 131 samples at 30 fps, lasting 130/30 seconds. Original vector translation/elevation/rotation and the animated buki1_r_n weapon track remain. Native arm lengths follow original limb directions; native knife fingers and a palm/hilt pivot fit the right wrist while held. The original later weapon departure is retained. The existing held item remains equipped after playback.
+
+Original victim damage at frames 40/90 is weighted 500/1500, mapped to 0.375/1.125 canonical held-weapon damage. The original six non-voice cues retain their independent CMN starts, including early slash sounds; audio starts are not damage times. Two actor voice labels reuse existing Combat entries. Ten victim blood-family emitter starts use the supplied existing pixels and source attachments. No new voice pack, knife model or texture is included.
+
+knife-heat-assets.json records archive/scene/GMT hashes, source resource roles, native grip/mesh and helper dependencies. validate_knife_heat_assets.py verifies source pose retention, native FK/imports/selectors, weapon flight/palm constraints and native HuntingKnife/victim geometry. See [validation](VALIDATION_0.98.0.md). Final rendered contact, alternate knife shapes, clothing and real multiplayer latency require gameplay verification after restarting matching versions.
