@@ -1,5 +1,7 @@
 # Mod interface audio
 
+Version 0.99.0 explicitly sets distanceMin=0 and distanceMax=0 for every interface clip, alongside is3D=false. The B42 file-sound allocation path tests distanceMax separately; the previous native default was 10 even though the sound declaration was 2D. At nonzero player coordinates, that left the shared UI emitter's WAV channel positional. A zero maximum distance explicitly chooses FMOD's 2D mode, so moving away does not leave menu audio behind. All original PCM bytes and volumes remain unchanged. InterfaceAudioProbe reproduces the old parsed distance and verifies both current limits are zero.
+
 Version 0.98.0 uses the supplied Kiwami dragon_change waveform when selecting or explicitly reselecting a combat style. Kiwami's dragon_change, sutegoro_change, rush_change and crusher_change cues reference this same original waveform, stream 60 of bank 466d.acb. It is decoded directly without synthesis, trimming, mixing, resampling or upscaling. Source-engine control, pitch and DSP graphs are not recreated.
 
 Project Yakuza's style selector and settings panel use Yakuza 6 menu_default.acb: dec02 opens the UI, cursor01 marks changed highlights, dec01 confirms selections/saves, cancel01 handles cancel/back, and tgl_dec opens combo choices. The supplied PCM retains original channels, rate and sample count. Native volume levels are set in ProjectYakuza_Interface.txt; the interface events appear in the game's advanced sound options under ProjectYakuza_Interface.

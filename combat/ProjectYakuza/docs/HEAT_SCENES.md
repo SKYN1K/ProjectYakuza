@@ -11,7 +11,7 @@ Version 0.97.0 adds the [bicycle action](BICYCLE.md) after the bat action from 0
 | Beer crate | 14, 44, 54, 82 | 14, 44, 54, 74, 84, 104, 114, 142 |
 | Katana | 24, 44, 64 | Same |
 | Bat | 14, 50 | Same |
-| Bicycle | 131, 158 | 6, 33 |
+| Bicycle | 58 | Same |
 | Knife | 40, 90 | Same |
 
 Rush retains its bounded two-pass sections. Source events belong to the logical section, preventing overlapping copied pose frames from replaying the preceding section's hit. Its closing kick maps to failure-ending frame 26. Crate retains three repeats of source frames 34–63; both punches map into each repeat. Its failure contact maps to frame 19. The crate's frame-13 damage belongs to the prop and is excluded from victim damage.
@@ -29,3 +29,5 @@ Reproduce source contracts and bank decodes with tools/combat-tests/build_heat_s
 The bicycle retains source frames 125..308. Its CMN10 source prop-damage event at 174 is excluded from victim damage. Both 100-point victim markers become 0.75 canonical weapon damage. Source audio uses its independent fractional-frame starts without rounding.
 
 Version 0.98.0 adds the original Y6 knife h23680_buki_b source contract, 500/1500 victim weights and six independent non-voice cues. See KNIFE_HEAT_ACTION.md.
+
+Version 0.99.0 replaces the bicycle source contract with Y6 h23701_buki_f: one frame-58 victim hit, three original non-voice cues and four blood starts. The old Y5 bicycle section/events are historical.

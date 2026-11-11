@@ -280,3 +280,13 @@
 
 !/tools/combat-tests/build_interface_audio.py
 !/tools/combat-tests/InterfaceAudioProbe.java
+
+!/tools/combat-tests/extract_kiwami_entry.py
+!/tools/combat-tests/build_kiwami_entry.py
+!/tools/combat-tests/validate_kiwami_entry.py
+!/tools/combat-tests/KiwamiEntryProbe.java
+!/tools/combat-tests/build_crate_head_alignment.py
+!/tools/combat-tests/validate_crate_head_alignment.py
+!/tools/combat-tests/build_bicycle_y6_heat_assets.py
+!/tools/combat-tests/validate_bicycle_y6_heat_assets.py
+!/tools/combat-tests/extract_bicycle_y6_assets.py

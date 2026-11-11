@@ -7,7 +7,7 @@ function G.candidate(p,force)
     if not p then return end
     local c=p and PY.activeActions[p];local a=c and c.kind=="grab"and c.timedAction
     local style=p and PY.getPlayerStyle(p);local move=style and style.actions.grabHeat
-    if not isMouseButtonDown(1)or not a or not a.started or a.cleaned or a.phaseName~="hold"or not a.paired or not move or not move.enabled or not PY.Defense.safe(p)or PY.actionHeat(p,move)<(move.heatStocks or 0)*PY.Heat.stockSize(p)then G.previews[p]=nil;return end
+    if not isMouseButtonDown(1)or not a or not a.started or a.cleaned or a.phaseName~="hold"or not a.paired or not move or not move.enabled or not PY.Defense.safe(p)or not PY.HeatRules.canAfford(PY.actionHeat(p,move),(move.heatStocks or 0)*PY.Heat.stockSize(p))then G.previews[p]=nil;return end
     local previous=G.previews[p]
     if not force and previous and previous.a==a and now()<previous.next then if previous.pose then return c.target,move,previous.pose end;return end
     local pose=R.wall(p,c.target,move);G.previews[p]={a=a,pose=pose,next=now()+200}

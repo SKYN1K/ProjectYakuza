@@ -120,9 +120,10 @@ function N.capture(p,force,onlyChanged)
         grabMoving=p:GetVariable("ProjectYakuzaGrabMoving")=="true",grabDirection=action and action.kind=="grab" and action.target:GetVariable("ProjectYakuzaGrabWalkDirection") or "forward"}
     if equipped and type(style.heatAttackSpeed)=="table"and (combo.active or action and action.timedAction and action.timedAction.started)then packet.attackHeatSpeed=ProjectYakuza.Heat.attackHeatMultiplier and ProjectYakuza.Heat.attackHeatMultiplier(p)or 1 end
     local stocks=ProjectYakuza.Heat.stocks(p)
-    if (force and not onlyChanged)or changed(s.lastPacket,packet)or stocks~=s.lastStocks or t>=(s.heartbeat or 0)then
+    local fuelStocks=math.floor((packet.fuel+0.000001)/ProjectYakuza.HeatRules.stockSize(style))
+    if (force and not onlyChanged)or changed(s.lastPacket,packet)or stocks~=s.lastStocks or fuelStocks~=s.lastFuelStocks or t>=(s.heartbeat or 0)then
         s.seq=s.seq+1;packet.seq=s.seq;sendClientCommand(p,P.module,"state",packet)
-        s.lastPacket=packet;s.lastStocks=stocks;s.heartbeat=t+(equipped and 1000 or 3000)
+        s.lastPacket=packet;s.lastStocks=stocks;s.lastFuelStocks=fuelStocks;s.heartbeat=t+(equipped and 1000 or 3000)
     end
     if not s.hello then sendClientCommand(p,P.module,"hello",{});s.hello=true end
 end

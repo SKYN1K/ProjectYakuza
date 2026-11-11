@@ -4,6 +4,9 @@ require "ProjectYakuza/WorldEffects"
 local ProjectYakuza=ProjectYakuza
 local A={states=setmetatable({}, {__mode="k"}),fadeInMs=350,flashMs=450,flashes=setmetatable({}, {__mode="k"})}
 ProjectYakuza.HeatAura=A
+function A.mapOpen()
+    return ISWorldMap_instance and ISWorldMap_instance:isVisible()or false
+end
 
 A.layout={
     {x=0,height=39.6,kind="a",speed=1.00,scale=0.25875},
@@ -155,6 +158,7 @@ function A.renderBody()
         A.smokeColor=A.extremeColor
     end
     local time=getTimestampMs()
+    local hidden=A.mapOpen()
     for p,s in pairs(A.states) do
         if not p:isDead() and s.fadeElapsed then
             local elapsed=math.max(0,time-s.fadeLast);s.fadeLast=time
@@ -171,12 +175,14 @@ function A.renderBody()
             if not s.flashing and not s.entryBurst and not s.extreme and ProjectYakuza.Heat.stocks(p)<1 then A.clear(p)
             else
                 if ProjectYakuza.HeatOutline then ProjectYakuza.HeatOutline.draw(p) end
+                if not hidden then
                 if s.extreme or ProjectYakuza.Heat.stocks(p)>=1 then A.draw(p,s) end
                 if s.activationBurst then A.drawFlash(p,s.activationBurst) end
                 if s.entryBurst then A.drawFlash(p,s.entryBurst)end
                 if flash then
                     A.drawTaunt(p,flash,s)
 
+                end
                 end
             end
         elseif p:isDead() then A.clear(p) end

@@ -7,12 +7,26 @@
   <m_Looped>false</m_Looped>
   <m_SpeedScale>1</m_SpeedScale>
   <m_BlendTime>0.14</m_BlendTime>
-  <m_BlendOutTime>0.24</m_BlendOutTime>
-  <m_EarlyTransitionOut>true</m_EarlyTransitionOut>
+  <m_BlendOutTime>0.3</m_BlendOutTime>
+  <m_EarlyTransitionOut>false</m_EarlyTransitionOut>
   <m_SyncTrackingEnabled>false</m_SyncTrackingEnabled>
   <m_Conditions>
     <m_Name>PerformingAction</m_Name>
     <m_Type>STRING</m_Type>
     <m_Value>ProjectYakuza_DD_StyleEntry</m_Value>
   </m_Conditions>
-  <m_Events><m_EventName>SetVariable</m_EventName><m_Time>Start</m_Time><m_ParameterValue>ProjectYakuzaStyleEntry=started</m_ParameterValue></m_Events><m_Events><m_EventName>SetVariable</m_EventName><m_Time>End</m_Time><m_ParameterValue>ProjectYakuzaStyleEntry=done</m_ParameterValue></m_Events><m_SubStateBoneWeights><boneName>Bip01</boneName><weight>1</weight></m_SubStateBoneWeights></animNode>
+  <m_Events>
+    <m_EventName>SetVariable</m_EventName>
+    <m_Time>Start</m_Time>
+    <m_ParameterValue>ProjectYakuzaStyleEntry=started</m_ParameterValue>
+  </m_Events>
+  <m_Events>
+    <m_EventName>SetVariable</m_EventName>
+    <m_Time>End</m_Time>
+    <m_ParameterValue>ProjectYakuzaStyleEntry=done</m_ParameterValue>
+  </m_Events>
+  <m_SubStateBoneWeights>
+    <boneName>Bip01</boneName>
+    <weight>1</weight>
+  </m_SubStateBoneWeights>
+</animNode>

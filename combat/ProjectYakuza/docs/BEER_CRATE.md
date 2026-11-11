@@ -1,5 +1,7 @@
 # Beer crate weapon
 
+Version 0.99.0 aligns the reduced crate with the native victim head in the Heat Action. Its transformed lowest vertex meets the head crown, and its footprint is centred on the skinned head bounds. The original placement smoothly reaches the head at source frame 13, then stays aligned through all punches and the original main/failure recovery. Original object rotations, actor/victim body channels, model/texture bytes, size, QTEs and damage are retained. See crate-head-alignment.json and validation.
+
 Version 0.97.0 halves the model's previous linear size (native model scale 0.5) and uses its registered held/world model for dropping it. Original crate mesh, UVs and textures remain unchanged. Ordinary attacks now use Yakuza 5 P_WPC_CMB_01/02/03 and P_WPC_ATK_heavy. All 46/51/66/53 source samples remain; the floor strike reuses the overhead heavy. Native contacts are calibrated at frames 15/20/21/19, with one canonical collision per ordinary attack. Existing 1.4x combat playback, original guard and Yakuza 5 H3270 Heat Action remain. The earlier Yakuza 6 ordinary-attack records in weapon-motion-assets.json are superseded by y5-object-attacks.json.
 
 Spawn ID: `ProjectYakuza.BeerCrate`. Display name: Beer Crate (Yakuza 6).

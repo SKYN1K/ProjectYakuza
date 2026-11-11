@@ -28,6 +28,7 @@ end
 function O.draw(p)
     local s=O.states[p];if not s or not s.owned then return end
     if p:getOutlineHighlightCol(s.index)~=s.color then s.owned=false;return end
+    if ProjectYakuza.HeatAura and ProjectYakuza.HeatAura.mapOpen and ProjectYakuza.HeatAura.mapOpen()then p:setOutlineHighlight(s.index,s.previousFlag);return end
     p:setOutlineHighlight(s.index,true)
 end
 function O.clearAll()

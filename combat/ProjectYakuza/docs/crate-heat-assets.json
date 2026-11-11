@@ -11,7 +11,7 @@
       "retarget": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\crate-heat-retarget\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_CrateHeat.x",
       "retargetSha256": "901283fadd7f7647e46e91e5140447a8886e6e34648a94ffad16941d861f5a32",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_CrateHeat.x",
-      "sha256": "ae2805de9a568767c43ffab07b475af234d8a249bcce3afc71b4a93461a35193",
+      "sha256": "a0879afa606a2554704f7c76acd480f4dba1e1d70d65cd2638f0e4fc89e976fa",
       "frames": 190,
       "sourceFrames": [
         0,
@@ -215,7 +215,7 @@
       "retarget": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\crate-heat-retarget\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_CrateHeat.x",
       "retargetSha256": "901283fadd7f7647e46e91e5140447a8886e6e34648a94ffad16941d861f5a32",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_CrateHeatFail.x",
-      "sha256": "c343bea3e8b8cb6d2258868bc1a3a484d778d7fcbe0c0ce248d073a12b48245f",
+      "sha256": "f638422b4b1db74135dab1d8418b8be67e066ac0e0a03a03a36c96cc7e7bab30",
       "frames": 67,
       "sourceFrames": [
         63,
@@ -3746,5 +3746,6 @@
     123
   ],
   "roles": "res.bin assigns h3270_000_1 to Kiryu, h3270_000_3 to the enemy and h3270_000_8 to the weapon object. Correct original c_cm_bone.gmd skeleton is used, retaining center_n root height.",
-  "archiveSha256": "5d5e7ae79e0a0a41fee35b4d3295321f3e01e8f3ff9a89bc79b3f95ae9e49c3e"
+  "archiveSha256": "5d5e7ae79e0a0a41fee35b4d3295321f3e01e8f3ff9a89bc79b3f95ae9e49c3e",
+  "headAlignment": "crate-head-alignment.json"
 }

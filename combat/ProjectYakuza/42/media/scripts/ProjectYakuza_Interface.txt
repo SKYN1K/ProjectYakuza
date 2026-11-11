@@ -8,6 +8,8 @@ module ProjectYakuza
         clip
         {
             file = media/sound/ProjectYakuza/StyleSwitch.wav,
+            distanceMin = 0,
+            distanceMax = 0,
             volume = 0.65,
         }
     }
@@ -19,6 +21,8 @@ module ProjectYakuza
         clip
         {
             file = media/sound/ProjectYakuza/MenuOpen.wav,
+            distanceMin = 0,
+            distanceMax = 0,
             volume = 0.45,
         }
     }
@@ -30,6 +34,8 @@ module ProjectYakuza
         clip
         {
             file = media/sound/ProjectYakuza/MenuCursor.wav,
+            distanceMin = 0,
+            distanceMax = 0,
             volume = 0.5,
         }
     }
@@ -41,6 +47,8 @@ module ProjectYakuza
         clip
         {
             file = media/sound/ProjectYakuza/MenuConfirm.wav,
+            distanceMin = 0,
+            distanceMax = 0,
             volume = 0.6,
         }
     }
@@ -52,6 +60,8 @@ module ProjectYakuza
         clip
         {
             file = media/sound/ProjectYakuza/MenuCancel.wav,
+            distanceMin = 0,
+            distanceMax = 0,
             volume = 0.6,
         }
     }
@@ -63,6 +73,8 @@ module ProjectYakuza
         clip
         {
             file = media/sound/ProjectYakuza/MenuToggle.wav,
+            distanceMin = 0,
+            distanceMax = 0,
             volume = 0.5,
         }
     }

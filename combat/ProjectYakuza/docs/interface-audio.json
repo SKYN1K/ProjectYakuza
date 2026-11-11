@@ -28,7 +28,9 @@
       "samples": 56648,
       "output": "42/media/sound/ProjectYakuza/StyleSwitch.wav",
       "sha256": "5d024456880b572ee10579d2ffd9b16364690774ae8fe18cd6fae30fbcf46943",
-      "volume": 0.65
+      "volume": 0.65,
+      "distanceMin": 0,
+      "distanceMax": 0
     },
     {
       "key": "MenuOpen",
@@ -54,7 +56,9 @@
       "samples": 85233,
       "output": "42/media/sound/ProjectYakuza/MenuOpen.wav",
       "sha256": "dd99433566117d49e9d3f333bf5f72af064db5250d4840476370df9d5edbef13",
-      "volume": 0.45
+      "volume": 0.45,
+      "distanceMin": 0,
+      "distanceMax": 0
     },
     {
       "key": "MenuCursor",
@@ -80,7 +84,9 @@
       "samples": 6192,
       "output": "42/media/sound/ProjectYakuza/MenuCursor.wav",
       "sha256": "f8096c898ea7bbea9b0e5a307a878437b6af4e3eb3e531ad045cc20ee45a2a06",
-      "volume": 0.5
+      "volume": 0.5,
+      "distanceMin": 0,
+      "distanceMax": 0
     },
     {
       "key": "MenuConfirm",
@@ -107,7 +113,9 @@
       "samples": 31189,
       "output": "42/media/sound/ProjectYakuza/MenuConfirm.wav",
       "sha256": "ff37dd78cbb1ee2dba69431ebf495a857ff2252e4cca0274f47e328de190caf3",
-      "volume": 0.6
+      "volume": 0.6,
+      "distanceMin": 0,
+      "distanceMax": 0
     },
     {
       "key": "MenuCancel",
@@ -134,7 +142,9 @@
       "samples": 15936,
       "output": "42/media/sound/ProjectYakuza/MenuCancel.wav",
       "sha256": "db28d569a1f3c28b43fc5e9cbcc154abf224774623e89e332673314c9bd7471b",
-      "volume": 0.6
+      "volume": 0.6,
+      "distanceMin": 0,
+      "distanceMax": 0
     },
     {
       "key": "MenuToggle",
@@ -160,9 +170,11 @@
       "samples": 18498,
       "output": "42/media/sound/ProjectYakuza/MenuToggle.wav",
       "sha256": "2fb873fab14315731a456ca5399e8745051d32b3be1faad04c49c97dff762a83",
-      "volume": 0.5
+      "volume": 0.5,
+      "distanceMin": 0,
+      "distanceMax": 0
     }
   ],
   "script": "42/media/scripts/ProjectYakuza_Interface.txt",
-  "scriptSha256": "9175fa8a5cec952b8eabbccfadc75087387ae4b2c76c03b2fb8c4a63d73f2365"
+  "scriptSha256": "e4d2428fbaa2b9f539638c3eb14a3e43d1e9a525a0a85f5f2640cf9c9f4d30bf"
 }

@@ -1,0 +1,169 @@
+{
+  "operation": "All 46 original Kiwami 1 Dragon P_KRL_style_st samples at 30 fps. Original full-body directions and native segment lengths; native finger pose and hand/prop offsets. Existing action anchor retains in-place gameplay. No baked idle, invented transition poses, images or sounds. Native action layer releases after full source completion and blends out over 0.3 seconds into the game-selected vanilla idle/aim state; dormant custom weapon poses remain gated off.",
+  "archiveEntries": [
+    {
+      "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza Kiwami\\media\\data\\motion\\BattlePlayerKiryu.par",
+      "name": "P_KRL_style_st.gmt",
+      "offset": 5621760,
+      "size": 16410,
+      "plain": 26624,
+      "flags": 2147483648,
+      "packedSha256": "55b16689edbb08da42dd05230b725952126eb68a6517ea51b6599f679c627313",
+      "sha256": "e0641b7dd08179ec4a54a3a0dd14b8bed54fa64ff625f6051f31551c6bf121d3"
+    },
+    {
+      "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza Kiwami\\media\\data\\chara_common\\bone.par",
+      "name": "c_cm_bone.gmd",
+      "offset": 83968,
+      "size": 7140,
+      "plain": 28672,
+      "flags": 2147483648,
+      "packedSha256": "e1e057661a19369da4385e63fe38512df05a00b8e81732205f78de95f838b1dc",
+      "sha256": "656eaf33646ca87ea2144528d9dac4616f0c8c93c34c289712395550d6277631"
+    }
+  ],
+  "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\kiwami-entry-099\\P_KRL_style_st.gmt",
+  "sourceSha256": "e0641b7dd08179ec4a54a3a0dd14b8bed54fa64ff625f6051f31551c6bf121d3",
+  "rig": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\kiwami-entry-099\\c_cm_bone.gmd",
+  "rigSha256": "656eaf33646ca87ea2144528d9dac4616f0c8c93c34c289712395550d6277631",
+  "retarget": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\kiwami-entry-build-099\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_StyleEntry.x",
+  "retargetSha256": "05d76d9a62b46beaa23f21c6490b619cd699bdbe55699291fd5b4ee9f1f42231",
+  "output": "42/media/anims_X/Bob/ProjectYakuza_DD_StyleEntry.x",
+  "sha256": "83a0d5616c496c76ba7307f85945f6a11ca3eb2b5b32c18b3512e3438c0522b9",
+  "frames": 46,
+  "fps": 30,
+  "duration": 1.5,
+  "blendOut": 0.3,
+  "selector": "42/media/AnimSets/player/actions/ProjectYakuza_DD_StyleEntry.xml",
+  "selectorSha256": "7c3dca23b1aef4bd5991337538f13939d35519a7f4bd683ed47831d76ddc1545",
+  "nativeGrip": {
+    "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_AttackBat01_Hit.x",
+    "sha256": "d6ed4e304cce1ccce3e355cfe958cf304c494c850ae0790d669068b861e7075c",
+    "authoredOffsets": {
+      "Bip01_Prop1": [
+        [
+          -0.043478310108184814,
+          -0.030916661024093628,
+          -0.998575747013092,
+          0.06845201551914215
+        ],
+        [
+          0.26906272768974304,
+          0.9622275233268738,
+          -0.04150630533695221,
+          -0.04706887528300285
+        ],
+        [
+          0.9621403813362122,
+          -0.27048417925834656,
+          -0.033517494797706604,
+          0.038814280182123184
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "Bip01_Prop2": [
+        [
+          0.04858189821243286,
+          0.8911296129226685,
+          0.451140433549881,
+          1.1213123798370361e-06
+        ],
+        [
+          0.7025991678237915,
+          0.29054421186447144,
+          -0.6495674252510071,
+          3.855675458908081e-07
+        ],
+        [
+          -0.7099249958992004,
+          0.3485282361507416,
+          -0.6119918823242188,
+          4.209578037261963e-07
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    "nativeOffsets": {
+      "Bip01_Prop1": [
+        [
+          -0.043479062616825104,
+          -0.030914172530174255,
+          -0.9985739588737488,
+          0.06845194101333618
+        ],
+        [
+          0.26905950903892517,
+          0.9622287750244141,
+          -0.04150472581386566,
+          -0.04706816002726555
+        ],
+        [
+          0.9621405601501465,
+          -0.2704819440841675,
+          -0.03351520001888275,
+          0.03881397470831871
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "Bip01_Prop2": [
+        [
+          0.048583902418613434,
+          0.8911311030387878,
+          0.45114317536354065,
+          1.560896635055542e-06
+        ],
+        [
+          0.702595055103302,
+          0.2905443608760834,
+          -0.6495702266693115,
+          3.594905138015747e-07
+        ],
+        [
+          -0.7099281549453735,
+          0.34852519631385803,
+          -0.6119855046272278,
+          3.3527612686157227e-07
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    }
+  },
+  "retargetProvenance": [
+    {
+      "path": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\combat-tests\\retarget_locomotion.py",
+      "sha256": "00f64d571a350f795aa49b81876c4e010313e9f6a44b88b72b163611b3fbab42"
+    },
+    {
+      "path": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\combat-tests\\weapon_hold_geometry.py",
+      "sha256": "e843459e1cd180860610b5d84b2e686f8648854ed8b8cd2ca040d995375821ef"
+    },
+    {
+      "path": "C:\\Users\\Nik\\Documents\\Codex\\2026-10-19\\wo\\work\\bind.json",
+      "sha256": "45a29a28b79f885ffaacecaf54af30657349e05fd6f587628b495326abc0117b"
+    },
+    {
+      "path": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleAim1Hand.x",
+      "sha256": "501721d1112990bb0550f45daf06799a6752ae510f66839262ff99369dd509a6"
+    }
+  ]
+}

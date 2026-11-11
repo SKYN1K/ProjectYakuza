@@ -105,7 +105,7 @@ check(p:GetVariable('ProjectYakuzaActive')==true and p:GetVariable('ProjectYakuz
 check(p.block and p.ignore and not p.deferred and a.handOverride,'entry locks movement, root travel and native weapon attacks')
 ProjectYakuza.Bindings.update(p);check(not p.authorize,'native attack authorization is gated while entry is active')
 check(not a.stopOnWalk and not a.stopOnRun and not a.stopOnAim,'movement and aim input cannot cancel entry')
-check(c.action.duration==50/30 and starts==1,'original fast entry timing and one start event')
+check(c.action.duration==45/30 and starts==1,'original Kiwami 1 Dragon entry timing and one start event')
 p.x=p.x+.5;p.y=p.y+.5;p.running=true;E.holdPositions()
 check(p.x==a.anchorX and p.y==a.anchorY and not p.running,'entry anchor prevents sliding')
 p.aim=true;mouse[0]=true;check(E.watch(p,c) and not a.cleaned,'attack input cannot interrupt entry')
@@ -135,5 +135,6 @@ p.hit='';E.request(p,'dragon_of_dojima');clock=clock+2001;E.retry()
 check(not E.pending[p] and not E.pendingHook,'failed equipment readiness cannot leave an input lock')
 p.ready=true
 local ending,endingContext=begin();p:setVariable('ProjectYakuzaStyleEntry','started');ending:update();clock=clock+math.ceil(endingContext.action.duration*1000)+1;ending:update()
-check(ending.completed and not p.block and not p.ignore,'native early blending cannot leave the source-duration action locked when its final marker is absent')
+check(ending.completed and p:GetVariable('PerformingAction')==''and not p.block and not p.ignore,'native early blending cannot leave the source-duration action locked when its final marker is absent')
+local nextAction,nextContext=begin();p:setVariable('ProjectYakuzaStyleEntry','started');nextAction:update();p:setVariable('PerformingAction','AnotherNativeAction');nextAction:cleanup(false);check(p:GetVariable('PerformingAction')=='AnotherNativeAction','entry cleanup cannot erase another native action')
 return 'PASS '..checks..' locked style entry, vulnerability, completion and cleanup checks'

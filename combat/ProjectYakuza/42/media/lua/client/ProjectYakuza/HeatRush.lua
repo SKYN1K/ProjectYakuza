@@ -48,10 +48,10 @@ function H.input(p,s,style)
     if not p:isAiming()or (ticket.weapon or ticket.ground)and not isMouseButtonDown(1)or not ticket.weapon and not ticket.ground and PY.Bindings.down("finisher")then H.discard(p,ticket);return false end
     local action=ticket.ground and style.actions.groundHeat or style.actions.heatAction
     if ticket.ground then
-        if not action or not action.enabled or not R.noCombo(s,style,now())or PY.actionHeat(p,action)<(action.heatStocks or 0)*PY.Heat.stockSize(p)then H.discard(p,ticket);return false end
+        if not action or not action.enabled or not R.noCombo(s,style,now())or not PY.HeatRules.canAfford(PY.actionHeat(p,action),(action.heatStocks or 0)*PY.Heat.stockSize(p))then H.discard(p,ticket);return false end
     elseif ticket.weapon then
         local cost=action and (action.heatStocks or 0)*PY.Heat.stockSize(p)or 0
-        if not R.weaponAllowed(p,style,action)or not R.noCombo(s,style,now())or PY.actionHeat(p,action)<cost then H.discard(p,ticket);return false end
+        if not R.weaponAllowed(p,style,action)or not R.noCombo(s,style,now())or not PY.HeatRules.canAfford(PY.actionHeat(p,action),cost) then H.discard(p,ticket);return false end
     elseif not style.heatRush or not PY.Heat.isExtreme(p)then H.discard(p,ticket);return false end
     if now()>ticket.expires+(ticket.sent and 1000 or 0)or not R.validFor(p,ticket.z,action)then H.discard(p,ticket);return false end
     local down=PY.Bindings.down("light")
@@ -89,13 +89,13 @@ H.previews=setmetatable({}, {__mode="k"});H.groundPreviews=setmetatable({}, {__m
 function H.weaponReady(p,s,style)
     if not p or not style or not PY.isEquipped(p)or not isMouseButtonDown(1)or not p:isAiming()or p:isDead()or p:isOnFloor()or p:isKnockedDown()or p:getVehicle()or p:isClimbing()or (p:getHitReaction()or"")~=""or PY.activeActions[p]or H.tickets[p]or not R.noCombo(s,style,now())then return end
     local action=style.actions.heatAction
-    if not R.weaponAllowed(p,style,action)or PY.actionHeat(p,action)<(action.heatStocks or 0)*PY.Heat.stockSize(p)then return end
+    if not R.weaponAllowed(p,style,action)or not PY.HeatRules.canAfford(PY.actionHeat(p,action),(action.heatStocks or 0)*PY.Heat.stockSize(p))then return end
     if p:hasTimedActions()or p:isAttackStarted()or p:isPerformingAttackAnimation()then return end
     return action
 end
 function H.groundCandidate(p,s,style,force)
     local move=style and style.actions.groundHeat
-    if not move or not move.enabled or not isMouseButtonDown(1)or not PY.Defense.safe(p)or PY.activeActions[p]or H.tickets[p]or not R.noCombo(s,style,now())or PY.actionHeat(p,move)<(move.heatStocks or 0)*PY.Heat.stockSize(p)then return end
+    if not move or not move.enabled or not isMouseButtonDown(1)or not PY.Defense.safe(p)or PY.activeActions[p]or H.tickets[p]or not R.noCombo(s,style,now())or not PY.HeatRules.canAfford(PY.actionHeat(p,move),(move.heatStocks or 0)*PY.Heat.stockSize(p))then return end
     local cached=H.groundPreviews[p]
     if not force and cached and cached.style==style and now()<cached.next then
         if cached.z and R.validFor(p,cached.z,move)then return cached.z,move end

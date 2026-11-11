@@ -726,8 +726,8 @@ do
   PY.MultiHit.targets=function()return {{victim=z}}end
   PY.Weapons.sync(p);local view=PY.getPlayerStyle(p);local move=view.actions.heatAction
   check(view.weaponProfile=='bicycle'and move.motionId=='dod_bicycle'and not move.qte,'real bicycle selects its own automatic original scene '..id)
-  check(#move.contacts==2 and math.abs(move.contacts[1].atMs-6/30*1000)<.00001 and math.abs(move.contacts[2].atMs-33/30*1000)<.00001,'bicycle uses both original CMN damage frames')
-  check(move.contacts[1].damageMultiplier==.75 and move.contacts[2].damageMultiplier==.75,'bicycle preserves original 1:1 victim damage weights')
+  check(#move.contacts==1 and math.abs(move.contacts[1].atMs-58/30*1000)<.00001,'bicycle uses both original CMN damage frames')
+  check(move.contacts[1].damageMultiplier==1.5,'bicycle preserves original full Y6 heavy-object damage')
   check(move.heatStocks==1 and move.useExtremeFuel and move.noCombo,'bicycle uses existing stock/fuel and neutral-combo rules')
   check(H.weaponInput(p,PY.stateFor(p),view,true),'bicycle action starts through normal weapon input '..id)
   local context=PY.activeActions[p];local action=context.timedAction;local hits=z.hits
@@ -738,7 +738,7 @@ do
   check(z.vars.ProjectYakuzaPairedVictimClip=='ProjectYakuza_DD_BicycleHeatVictim'and p.invincible,'bicycle uses isolated victim motion and shared protection')
   for i,contact in ipairs(move.contacts)do
    phase=(contact.atMs+.001)/1000;fire('OnPlayerUpdate',p);fire('OnPlayerUpdate',p)
-   check(z.hits==hits and math.abs(z.health-({9.25,8.5})[i])<.000001,'bicycle contacts apply canonical damage once without native Hit '..i)
+   check(z.hits==hits and math.abs(z.health-({8.5})[i])<.000001,'bicycle contacts apply canonical damage once without native Hit '..i)
   end
   phase=move.duration;fire('OnPlayerUpdate',p)
   check(action.cleaned and not PY.activeActions[p]and not p.invincible and p.ghost,'bicycle retains full original recovery and restores control')
@@ -754,7 +754,7 @@ do
   PY.Weapons.sync(p);check(H.weaponInput(p,PY.stateFor(p),PY.getPlayerStyle(p),true),'low-health victim accepts bicycle scene')
   local context=PY.activeActions[p];local action=context.timedAction;fire('OnPlayerUpdate',p)
   for _,contact in ipairs(context.action.contacts)do phase=(contact.atMs+.001)/1000;fire('OnPlayerUpdate',p)end
-  check(z.health==.2 and math.abs(action.pendingDamage-1.5)<.000001,'both lethal bicycle hits are reserved through recovery')
+  check(z.health==.2 and math.abs(action.pendingDamage-1.5)<.000001,'lethal bicycle hit are reserved through recovery')
   if complete then phase=context.action.duration;fire('OnPlayerUpdate',p);check(z:isDead(),'full bicycle ending settles earned lethal damage')
   else PY.cancelAction(p,'bicycle_interrupt');check(z.health==.2,'interrupted bicycle scene discards reserved lethal damage')end
   clock=clock+500;PY.HeatActions.tick()
@@ -809,5 +809,25 @@ do
   clock=clock+500;PY.HeatActions.tick()
  end
  PY.MultiHit.targets=savedTargets;p.held=nil;z.health=10;z.knock=false;PY.HeatActions.clear()
+end
+do
+ local savedTargets=PY.MultiHit.targets
+ local function held(id)
+  return {getFullType=function()return id end,getCondition=function()return 10 end,getMinDamage=function()return 1 end,getMaxDamage=function()return 1 end,getModData=function(self)self.data=self.data or {};return self.data end,setMinDamage=function()end,setMaxDamage=function()end}
+ end
+ for _,id in ipairs({'Base.Katana','Base.BaseballBat','Base.HuntingKnife','ProjectYakuza.IntactBeerBottle','ProjectYakuza.BeerCrate','ProjectYakuza.Bicycle'})do
+  for _,rounded in ipairs({100/6,16.666666030883789})do
+   PY.resetPlayer(p,'one_stock');clock=clock+1000;p.held=held(id);p.x=0;p.y=0;p.attacking=false;z.x=1.1;z.y=0;z.health=10;z.useless=false;z.knock=false;mouse[1]=true;phase=nil;PY.MultiHit.targets=function()return {{victim=z}}end;PY.Weapons.sync(p)
+   local view=PY.getPlayerStyle(p);PY.setHeat(p,100/6-.0001);check(not H.weaponCandidate(p,PY.stateFor(p),view),'genuinely underfilled stock cannot preview '..id)
+   PY.setHeat(p,rounded);check(PY.Heat.stocks(p)==1 and H.weaponCandidate(p,PY.stateFor(p),view)~=nil,'one full or native-rounded orb previews '..id)
+   check(H.weaponInput(p,PY.stateFor(p),view,true),'one full or native-rounded orb starts '..id)
+   local context=PY.activeActions[p];local action=context.timedAction;fire('OnPlayerUpdate',p);check(not context.heatPaid and PY.getHeat(p)==rounded,'one stock remains until visible playback '..id)
+   phase=.01;fire('OnPlayerUpdate',p);check(action.seen and context.heatPaid and PY.getHeat(p)==0,'one stock pays once and reaches zero without cancellation '..id)
+   fire('OnPlayerUpdate',p);check(PY.getHeat(p)==0 and not action.cleaned,'paid last-stock action continues '..id)
+   PY.cancelAction(p,'one_stock_done');clock=clock+500;PY.HeatActions.tick()
+  end
+ end
+ check(not PY.HeatRules.canAfford(0,100/6)and not PY.HeatRules.canAfford(0/0,100/6)and not PY.HeatRules.canAfford(100/6-.0001,100/6),'shared price tolerance rejects missing, invalid and underfilled resources')
+ PY.MultiHit.targets=savedTargets;p.held=nil;PY.Weapons.sync(p)
 end
 return true,'PASS '..checks..' generic QTE validation, custom bindings, fresh presses, replay safety, native-phase contacts, canonical damage, paired cleanup and interruption checks'

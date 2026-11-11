@@ -1,0 +1,7 @@
+# Kiwami 1 combat entry and vanilla idle
+
+Version 0.99.0 uses the supplied Kiwami 1 Dragon style-start clip P_KRL_style_st.gmt from BattlePlayerKiryu.par with that installation's c_cm_bone.gmd. All 46 samples are retained at 30 fps, lasting 1.5 seconds. Full source body poses are converted to native PZ proportions; source arm directions and native finger/prop grips are fitted without borrowing another game's lower-body animation.
+
+The action remains stationary, movement/attacks remain locked during playback and the character remains vulnerable. The native node retains the full source clip, then blends out over 0.3 seconds. Cleanup clears PerformingAction only if it still belongs to this entry, releases movement and leaves another native action intact. The two old custom unarmed idle/aim overrides are removed. The normal native state selects Bob_Idle when relaxed or Bob_IdleAim1Hand while aiming; armed profiles keep their normal vanilla selection. No custom idle pose is baked into the entry clip.
+
+kiwami-entry-assets.json records original archive entries/hashes, skeleton, native references, all frame counts, selector settings and output hashes. Native validation checks 46 samples, original limb directions, hand/prop FK, full playback/fade settings and actual Bob_Idle/Bob_IdleAim1Hand selector fallback, including inherited native XML. Existing gated custom weapon poses remain disabled. Live blending still needs gameplay assessment after restarting.

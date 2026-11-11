@@ -27,6 +27,9 @@ function C.forStyle(style)
     end
     return result
 end
+function C.canAfford(value,cost)
+    return type(value)=="number"and value==value and value>=0 and value<math.huge and type(cost)=="number"and cost==cost and cost>=0 and cost<math.huge and value+0.000001>=cost
+end
 function C.stockSize(style)return 100/C.forStyle(style).maxStocks end
 function C.invalidate(style)if type(style.heatConfig)=="table"then cache[style.heatConfig]=nil end end
 end
@@ -289,7 +292,7 @@ end
 
 local ProjectYakuza = ProjectYakuza
 ProjectYakuza.FEATURES={grab=true}
-ProjectYakuza.VERSION = "0.98.0"
+ProjectYakuza.VERSION = "0.99.0"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -769,7 +772,7 @@ function ProjectYakuza.payActionHeat(context)
     if ProjectYakuza.activeActions[player]~=context then return false end
     if cost<=0 then context.heatPaid=true;return true end
     local available,fuelPayment=ProjectYakuza.actionHeat(player,context.action)
-    if available<cost or fuelPayment~=context.heatFuel then return false end
+    if not ProjectYakuza.HeatRules.canAfford(available,cost) or fuelPayment~=context.heatFuel then return false end
     context.heatPaid=true
     if fuelPayment then
         local heat=ProjectYakuza.Heat;local state=heat.states[player];state.fuel=math.max(0,(state.fuel or 0)-cost)
@@ -795,7 +798,7 @@ function ProjectYakuza.requestAction(player, kind, variant, target)
     if not handler then return false, "missing_handler" end
     local cost = action.heatStocks and action.heatStocks*(ProjectYakuza.Heat and ProjectYakuza.Heat.stockSize(player) or ProjectYakuza.HeatRules.stockSize(style)) or action.heatCost or 0
     local available,fuelPayment=ProjectYakuza.actionHeat(player,action)
-    if available < cost then return false, "insufficient_heat" end
+    if not ProjectYakuza.HeatRules.canAfford(available,cost) then return false, "insufficient_heat" end
     local combo = ProjectYakuza.stateFor and ProjectYakuza.stateFor(player) or nil
     local comboStep = combo and combo.step or 0
     if action.afterLight and style.finisherBranches and comboStep>style.finisherBranches then comboStep=(comboStep-1)%style.finisherBranches+1 end

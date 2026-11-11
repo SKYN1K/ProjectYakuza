@@ -74,17 +74,17 @@ function H.command(p,command,a,s)
             local lease=s.grab
             local cost=move and (move.heatStocks or 0)*PY.HeatRules.stockSize(style)or 0
             local available=move and move.useExtremeFuel and s.packet.extreme and s.packet.fuel or s.packet.heat
-            ready=lease and not lease.breaking and lease.z==z and lease.weapon==p:getPrimaryHandItem()and move and move.enabled==true and move.grabHeat==true and s.packet.weaponProfile==""and s.packet.rightAim==true and available>=cost
+            ready=lease and not lease.breaking and lease.z==z and lease.weapon==p:getPrimaryHandItem()and move and move.enabled==true and move.grabHeat==true and s.packet.weaponProfile==""and s.packet.rightAim==true and PY.HeatRules.canAfford(available,cost)
             wallPose=ready and PY.GrabRules.wall(p,z,move)
             ready=ready and wallPose
         elseif groundHeat then
             local cost=move and (move.heatStocks or 0)*PY.HeatRules.stockSize(style)or 0
             local available=move and move.useExtremeFuel and s.packet.extreme and s.packet.fuel or s.packet.heat
-            ready=move and move.enabled and move.groundHeat and s.packet.weaponProfile==""and s.packet.rightAim==true and s.packet.comboBusy==false and available>=cost and R.validFor(p,z,move)
+            ready=move and move.enabled and move.groundHeat and s.packet.weaponProfile==""and s.packet.rightAim==true and s.packet.comboBusy==false and PY.HeatRules.canAfford(available,cost) and R.validFor(p,z,move)
         elseif weaponHeat then
             local cost=move and (move.heatStocks or 0)*PY.HeatRules.stockSize(style)or 0
             local available=move and move.useExtremeFuel and s.packet.extreme and s.packet.fuel or s.packet.heat
-            ready=s.packet.rightAim==true and s.packet.comboBusy==false and R.weaponAllowed(p,style,move)and available>=cost
+            ready=s.packet.rightAim==true and s.packet.comboBusy==false and R.weaponAllowed(p,style,move)and PY.HeatRules.canAfford(available,cost)
         else ready=cfg and s.packet.extreme and s.packet.weaponProfile==""and (s.rushCount or 0)>=cfg.hits and s.rushVictim==a.zombie and (a.targetKind or"zombie")== (s.rushTargetKind or"zombie")and t-(s.rushAt or 0)<=1200 end
         if not P.integer(a.request,1,1000000000)or job or not s.packet.equipped or not ready or H.held[p]or H.held[z]or H.leases[z]or not grabHeat and not R.validFor(p,z,move)then H.reply(p,"heatRushDenied",{request=a.request});return end
         local pose=wallPose or R.placement(p,z,move)

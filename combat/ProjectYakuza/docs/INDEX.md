@@ -58,3 +58,4 @@ The JSON records identify original supplied files, conversions and hashes for re
 | --- | --- |
 | Yakuza 6 knife Heat Action | [Knife Heat Action](KNIFE_HEAT_ACTION.md) |
 | Kiwami style-switch and Y6 mod-menu audio | [Interface audio](INTERFACE_AUDIO.md) |
+| Kiwami 1 entry and vanilla idle | [Combat entry](COMBAT_ENTRY.md) |

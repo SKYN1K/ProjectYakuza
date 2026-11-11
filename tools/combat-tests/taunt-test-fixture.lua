@@ -287,6 +287,7 @@ local oldCloudLog=drawLog;additive=true;drawLog={};A.render()
 local onlyAlpha=true;for _,draw in ipairs(drawLog)do if draw.additive then onlyAlpha=false end end
 check(additive and onlyAlpha,'aura and transient particles force alpha and restore foreign additive mode');additive=false;drawLog=oldCloudLog
 check(cloud and #cloud.emitters==6 and cloud.remaining==650,'activation uses six bounded particles for one second')
+local mapDraws=drawLog;drawLog={};ISWorldMap_instance={isVisible=function()return true end};A.render();check(#drawLog==0,'world map hides normal/extreme aura and transient particles');local mapClock=A.states[p].clock;paused=true;clock=clock+2000;A.render();check(A.states[p].clock==mapClock and #drawLog==0,'paused map preserves the aura clock without drawing');paused=false;ISWorldMap_instance.isVisible=function()return false end;A.render();check(A.states[p].clock==mapClock,'map close does not fast-forward paused aura time');check(#drawLog>0,'closing world map resumes aura without reinitializing effects');ISWorldMap_instance=nil;drawLog=mapDraws
 local beforeCloudFrames=cloud.emitters[1].instance.frames;paused=true;clock=clock+3000;A.render();paused=false
 check(cloud.remaining==650 and cloud.emitters[1].instance.frames==beforeCloudFrames,'pause freezes activation smoke age and animation')
 local savedHook=A.syncRenderHook;local scans=0

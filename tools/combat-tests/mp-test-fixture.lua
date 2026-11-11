@@ -226,6 +226,8 @@ check(#outgoing==wireCount+2 and outgoing[#outgoing].command=='auditProbe','comb
 p.vars.ProjectYakuzaMove='dd_light_02';p.combo.step=2;wireCount=#outgoing;client.send(p,'auditProbe',{})
 check(#outgoing==wireCount+2 and outgoing[#outgoing-1].command=='state','changed combat state is sent before its dependent command')
 p.vars.ProjectYakuzaMove='dd_light_01';p.combo.step=1
+do local oldDisplay=ProjectYakuza.Heat.display;local fuelBoundary=100/6+.01;ProjectYakuza.Heat.display=function()return fuelBoundary end;client.capture(p,true);wireCount=#outgoing;fuelBoundary=100/6-.01;client.send(p,'auditProbe',{});check(#outgoing==wireCount+2 and outgoing[#outgoing-1].command=='state','crossing an Extreme fuel stock inside one integer bucket sends current resources before the command');ProjectYakuza.Heat.display=oldDisplay end
+
 local z=zombie(22,1);client.requestGrab(p,z);check(client.pending[p]~=nil,'grab waits asynchronously for server')
 client.command(P.module,'grabDenied',{});check(client.pending[p]==nil,'denied grab releases pending request')
 client.clear();local remaining=0;for _ in pairs(client.remote)do remaining=remaining+1 end;for _ in pairs(client.locals)do remaining=remaining+1 end
@@ -1187,13 +1189,13 @@ do
  neutral({heat=0});command('heatRushBegin',{weaponHeat=true,zombie=z1.id,request=1701});check(not rush.leases[p],'MP bicycle requires a stock')
  item.id='Base.MetalPipe';neutral();command('heatRushBegin',{weaponHeat=true,zombie=z1.id,request=1702});check(not rush.leases[p],'MP rejects non-bicycle items in the shared blunt profile')
  item.id='ProjectYakuza.Bicycle';neutral();command('heatRushBegin',{weaponHeat=true,zombie=z1.id,request=1703})
- local lease=rush.leases[p];check(lease and lease.motion==ProjectYakuza.PairedMotions.dod_bicycle and #lease.contacts==2,'MP bicycle resolves registered source paths and two contacts')
+ local lease=rush.leases[p];check(lease and lease.motion==ProjectYakuza.PairedMotions.dod_bicycle and #lease.contacts==1,'MP bicycle resolves registered source paths and one contact')
  local hits=z1.hits;command('heatRushReady',{action=lease.action})
  check(z1.vars.ProjectYakuzaPairedVictimClip=='ProjectYakuza_DD_BicycleHeatVictim'and p.invincible,'MP bicycle selects protected original playback')
- command('heatRushHit',{action=lease.action,index=2});check(z1.health==10,'early bicycle finish cannot bypass source time')
+ command('heatRushHit',{action=lease.action,index=1});check(z1.health==10,'early bicycle finish cannot bypass source time')
  for i,contact in ipairs(lease.contacts)do
   clock=lease.started+contact.atMs+10;command('heatRushHit',{action=lease.action,index=i,damage=999});command('heatRushHit',{action=lease.action,index=i,damage=999})
-  check(z1.hits==hits and math.abs(z1.health-({9.25,8.5})[i])<.000001,'MP bicycle uses server weapon damage and original weights with replay rejection '..i)
+  check(z1.hits==hits and math.abs(z1.health-({8.5})[i])<.000001,'MP bicycle uses server weapon damage and original weights with replay rejection '..i)
  end
  clock=lease.started+lease.duration*1000-50;neutral({clip='ProjectYakuza_DD_BicycleHeat',move='dd_bicycle_heat'});command('heatRushEnd',{action=lease.action,completed=true})
  check(not rush.leases[p]and not p.invincible,'MP bicycle releases its lease after original recovery')
@@ -1223,6 +1225,32 @@ do
  end
  clock=lease.started+lease.duration*1000-50;neutral({clip='ProjectYakuza_DD_KnifeHeat',move='dd_knife_heat'});command('heatRushEnd',{action=lease.action,completed=true})
  check(not rush.leases[p]and not p.invincible,'MP knife releases its lease after original recovery')
+ clock=clock+500;ProjectYakuza.HeatActions.tick();p.hand=p.token
+end
+do
+ ProjectYakuza.HeatActions.clear();server.release(p);p.dead=false;p.equipped=true;z1.useless=false;z1.ignore=false;z1.deferred=true;z1.knock=false;z1.reaction='';wall=false;p.data.ProjectYakuzaStyle='dragon_of_dojima';p.x=0;p.y=0;z1.x=1.1;z1.y=0;z1.health=10;z1.floor=false;z1.knocked=false;clock=clock+3000
+ local item={data={},id='Base.BaseballBat',getCondition=function()return 10 end,getMinDamage=function()return 1 end,getMaxDamage=function()return 1 end}
+ function item:getFullType()return self.id end;function item:getModData()return self.data end
+ p.hand=item
+ local function neutral(extra)
+  local packet={weaponProfile='bat',move='dd_bat_light_01',clip='',swing=9300,heat=16.666666030883789,fuel=16.666666030883789,extreme=false,rightAim=true,comboBusy=false}
+  for key,value in pairs(extra or {})do packet[key]=value end
+  return snapshot(p,packet)
+ end
+ neutral({rightAim=false});command('heatRushBegin',{weaponHeat=true,zombie=z1.id,request=1900});check(not rush.leases[p],'MP bat requires physical RMB')
+ neutral({heat=100/6-.0001});command('heatRushBegin',{weaponHeat=true,zombie=z1.id,request=1901});check(not rush.leases[p],'MP bat requires a stock')
+ item.id='Base.MetalPipe';neutral();command('heatRushBegin',{weaponHeat=true,zombie=z1.id,request=1902});check(not rush.leases[p],'MP rejects non-bat items in the shared blunt profile')
+ item.id='Base.BaseballBat';neutral();command('heatRushBegin',{weaponHeat=true,zombie=z1.id,request=1903})
+ local lease=rush.leases[p];check(lease and lease.motion==ProjectYakuza.PairedMotions.dod_bat and #lease.contacts==2,'MP bat resolves registered source paths and two contacts')
+ local hits=z1.hits;command('heatRushReady',{action=lease.action})
+ check(z1.vars.ProjectYakuzaPairedVictimClip=='ProjectYakuza_DD_BatHeatVictim'and p.invincible,'MP bat selects protected original playback')
+ command('heatRushHit',{action=lease.action,index=2});check(z1.health==10,'early bat finish cannot bypass source time')
+ for i,contact in ipairs(lease.contacts)do
+  clock=lease.started+contact.atMs+10;command('heatRushHit',{action=lease.action,index=i,damage=999});command('heatRushHit',{action=lease.action,index=i,damage=999})
+  check(z1.hits==hits and math.abs(z1.health-({9.625,8.5})[i])<.000001,'MP bat uses server weapon damage and original weights with replay rejection '..i)
+ end
+ clock=lease.started+lease.duration*1000-50;neutral({clip='ProjectYakuza_DD_BatHeat',move='dd_bat_heat'});command('heatRushEnd',{action=lease.action,completed=true})
+ check(not rush.leases[p]and not p.invincible,'MP bat releases its lease after original recovery')
  clock=clock+500;ProjectYakuza.HeatActions.tick();p.hand=p.token
 end
 return 'PASS '..count..' MP authority, duplicate, range, lease, cooldown, observer and throttle checks'

@@ -1486,37 +1486,49 @@
     ],
     "ProjectYakuza_DD_BicycleHeat": [
       {
-        "atMs": 233.33333333333334,
+        "atMs": 1933.3333333333333,
         "index": 1,
         "bone": "Bip01_Head",
         "point": [
-          -3.94730022890144e-06,
-          0.7195587158203125,
-          -0.006778119597584009
+          -0.23635165393352509,
+          0.08657728135585785,
+          0.20853517949581146
         ],
         "bloodOnly": true,
         "feedback": "blunt"
       },
       {
-        "atMs": 1100.0,
-        "index": 2,
+        "atMs": 1933.3333333333333,
+        "index": 1,
         "bone": "Bip01_Head",
         "point": [
-          0.14349855482578278,
-          0.11082290858030319,
-          -0.2241869419813156
+          -0.23635165393352509,
+          0.08657728135585785,
+          0.20853517949581146
         ],
         "bloodOnly": true,
         "feedback": "blunt"
       },
       {
-        "atMs": 1600.0,
-        "index": 2,
+        "atMs": 1933.3333333333333,
+        "index": 1,
         "bone": "Bip01_Head",
         "point": [
-          0.14349855482578278,
-          0.11082290858030319,
-          -0.2241869419813156
+          -0.23426254093647003,
+          0.08374826610088348,
+          0.2076386660337448
+        ],
+        "bloodOnly": true,
+        "feedback": "blunt"
+      },
+      {
+        "atMs": 1933.3333333333333,
+        "index": 1,
+        "bone": "Bip01_Head",
+        "point": [
+          -0.23773254454135895,
+          0.09253092855215073,
+          0.20852744579315186
         ],
         "bloodOnly": true,
         "feedback": "blunt"
@@ -2635,7 +2647,7 @@
     },
     {
       "animation": "ProjectYakuza_DD_CrateHeat",
-      "actorSha256": "ae2805de9a568767c43ffab07b475af234d8a249bcce3afc71b4a93461a35193",
+      "actorSha256": "a0879afa606a2554704f7c76acd480f4dba1e1d70d65cd2638f0e4fc89e976fa",
       "victimSha256": "1871a3024b1a9a5e826210a69d2ff36f9a6c88d9fe089e15882578faa1b943ee",
       "events": [
         {
@@ -2750,7 +2762,7 @@
     },
     {
       "animation": "ProjectYakuza_DD_CrateHeatFail",
-      "actorSha256": "c343bea3e8b8cb6d2258868bc1a3a484d778d7fcbe0c0ce248d073a12b48245f",
+      "actorSha256": "f638422b4b1db74135dab1d8418b8be67e066ac0e0a03a03a36c96cc7e7bab30",
       "victimSha256": "376d1b76bb171389483ac08efc0344be249940f20056d87c05bfcff176641763",
       "events": [
         {
@@ -3059,41 +3071,53 @@
     },
     {
       "animation": "ProjectYakuza_DD_BicycleHeat",
-      "actorSha256": "7d66dfa3fd4ba3b1d937baf6b4bbb29870a6196a3078fc8b77a0765835b85db4",
-      "victimSha256": "d4c42d5a1a280fdf4d6b8e22726731155fbe7c2ad6e94ee850c2d6c29334b6ab",
+      "actorSha256": "e3b82ae52540310b40e2d80e0820a318250e37ec14c3d705883fb3994cf0a9cb",
+      "victimSha256": "36c908282970703820ba5b2190a27cc1d0f98a9399e25f653bba4e551345beb7",
       "events": [
         {
-          "atMs": 233.33333333333334,
+          "atMs": 1933.3333333333333,
           "index": 1,
           "bone": "Bip01_Head",
           "point": [
-            -3.94730022890144e-06,
-            0.7195587158203125,
-            -0.006778119597584009
+            -0.23635165393352509,
+            0.08657728135585785,
+            0.20853517949581146
           ],
           "bloodOnly": true,
           "feedback": "blunt"
         },
         {
-          "atMs": 1100.0,
-          "index": 2,
+          "atMs": 1933.3333333333333,
+          "index": 1,
           "bone": "Bip01_Head",
           "point": [
-            0.14349855482578278,
-            0.11082290858030319,
-            -0.2241869419813156
+            -0.23635165393352509,
+            0.08657728135585785,
+            0.20853517949581146
           ],
           "bloodOnly": true,
           "feedback": "blunt"
         },
         {
-          "atMs": 1600.0,
-          "index": 2,
+          "atMs": 1933.3333333333333,
+          "index": 1,
           "bone": "Bip01_Head",
           "point": [
-            0.14349855482578278,
-            0.11082290858030319,
-            -0.2241869419813156
+            -0.23426254093647003,
+            0.08374826610088348,
+            0.2076386660337448
+          ],
+          "bloodOnly": true,
+          "feedback": "blunt"
+        },
+        {
+          "atMs": 1933.3333333333333,
+          "index": 1,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.23773254454135895,
+            0.09253092855215073,
+            0.20852744579315186
           ],
           "bloodOnly": true,
           "feedback": "blunt"

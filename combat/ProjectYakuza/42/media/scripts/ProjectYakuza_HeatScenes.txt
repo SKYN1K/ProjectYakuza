@@ -442,53 +442,40 @@ module Base
             volume = 0.65,
         }
     }
-    sound ProjectYakuza_HeatScene_bicycle_4
+    sound ProjectYakuza_HeatScene_bicycle_2
     {
         category = ProjectYakuza_Effects,
         is3D = true,
         loop = false,
         clip
         {
-            file = media/sound/ProjectYakuza/HeatScene_bicycle_4.wav,
+            file = media/sound/ProjectYakuza/HeatScene_bicycle_2.wav,
             distanceMin = 1,
             distanceMax = 16,
             volume = 0.65,
         }
     }
-    sound ProjectYakuza_HeatScene_bicycle_5
+    sound ProjectYakuza_HeatScene_bicycle_1
     {
         category = ProjectYakuza_Effects,
         is3D = true,
         loop = false,
         clip
         {
-            file = media/sound/ProjectYakuza/HeatScene_bicycle_5.wav,
+            file = media/sound/ProjectYakuza/HeatScene_bicycle_1.wav,
             distanceMin = 1,
             distanceMax = 16,
             volume = 0.65,
         }
     }
-    sound ProjectYakuza_HeatScene_bicycle_6
+    sound ProjectYakuza_HeatScene_bicycle_0
     {
         category = ProjectYakuza_Effects,
         is3D = true,
         loop = false,
         clip
         {
-            file = media/sound/ProjectYakuza/HeatScene_bicycle_6.wav,
-            distanceMin = 1,
-            distanceMax = 16,
-            volume = 0.65,
-        }
-    }
-    sound ProjectYakuza_HeatScene_bicycle_7
-    {
-        category = ProjectYakuza_Effects,
-        is3D = true,
-        loop = false,
-        clip
-        {
-            file = media/sound/ProjectYakuza/HeatScene_bicycle_7.wav,
+            file = media/sound/ProjectYakuza/HeatScene_bicycle_0.wav,
             distanceMin = 1,
             distanceMax = 16,
             volume = 0.65,
