@@ -1,7 +1,7 @@
 {
   "operation": "Code-side numeric FK only from existing supplied PZ clips, including current paired contacts/endings and linked native finisher variants. Contacts use native collision events, authored Heat Action contacts or the documented parry fallback. Clips use contact-local endpoint/relative motion with verified original left-light and right-high-kick pose overrides, independent of charge-up pose. The high kick has right-foot height 0.721 versus planted left foot 0.093 at source frame 24; recovering arms can be faster than the striking leg. Runtime resolves the actual playing clip within the committed move family. No visual/audio/animation/model assets are generated or modified.",
   "catalog": "42/media/lua/client/ProjectYakuza/AttackTrailCatalog.lua",
-  "sha256": "5f7bda49fb8a862f8341ea1e6ab7dbc8f4bfceb5da6bd6e3f417412aefbac913",
+  "sha256": "7bccc8e01f2c1606641ade47cf38be12962fdd7ab934d9f2505e9280213f943f",
   "clips": [
     {
       "profile": "bat",
@@ -239,24 +239,24 @@
       "impact": -1.0,
       "kick": false,
       "qte": [
-        1.93333333333
+        1.66666666667
       ],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BicycleHeat.x",
-      "clipSha256": "e3b82ae52540310b40e2d80e0820a318250e37ec14c3d705883fb3994cf0a9cb",
-      "samples": 145,
-      "duration": 4.8,
+      "clipSha256": "370c1f4e1320473e6783c9eb9bdb57d5d78c8d65510122e3119b4a2f5b775440",
+      "samples": 121,
+      "duration": 4.0,
       "windows": [
         {
           "track": "dd_trail_bicycleheat_1",
-          "from": 1.8133333333300001,
-          "to": 2.13333333333,
-          "contact": 1.93333333333,
-          "limb": "leftArm",
+          "from": 1.5466666666700002,
+          "to": 1.86666666667,
+          "contact": 1.66666666667,
+          "limb": "rightArm",
           "scores": [
-            0.1968584319423001,
-            0.13287613215364952,
-            0.2226816364744918,
-            0.19409942512879458
+            0.1836796900290501,
+            0.3635445466027285,
+            0.050648784684359315,
+            0.06834896782039236
           ],
           "selection": "contact-local relative motion"
         }

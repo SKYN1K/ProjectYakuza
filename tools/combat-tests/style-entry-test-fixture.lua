@@ -105,7 +105,7 @@ check(p:GetVariable('ProjectYakuzaActive')==true and p:GetVariable('ProjectYakuz
 check(p.block and p.ignore and not p.deferred and a.handOverride,'entry locks movement, root travel and native weapon attacks')
 ProjectYakuza.Bindings.update(p);check(not p.authorize,'native attack authorization is gated while entry is active')
 check(not a.stopOnWalk and not a.stopOnRun and not a.stopOnAim,'movement and aim input cannot cancel entry')
-check(c.action.duration==45/30 and starts==1,'original Kiwami 1 Dragon entry timing and one start event')
+check(c.action.duration==150/60 and starts==1,'original Lost Judgment blue Dragon entry timing and one start event')
 p.x=p.x+.5;p.y=p.y+.5;p.running=true;E.holdPositions()
 check(p.x==a.anchorX and p.y==a.anchorY and not p.running,'entry anchor prevents sliding')
 p.aim=true;mouse[0]=true;check(E.watch(p,c) and not a.cleaned,'attack input cannot interrupt entry')

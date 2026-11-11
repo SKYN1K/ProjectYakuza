@@ -728,7 +728,7 @@ do
   PY.MultiHit.targets=function()return {{victim=z}}end
   PY.Weapons.sync(p);local view=PY.getPlayerStyle(p);local move=view.actions.heatAction
   check(view.weaponProfile=='bicycle'and move.motionId=='dod_bicycle'and not move.qte,'real bicycle selects its own automatic original scene '..id)
-  check(#move.contacts==1 and math.abs(move.contacts[1].atMs-58/30*1000)<.00001,'bicycle uses both original CMN damage frames')
+  check(#move.contacts==1 and math.abs(move.contacts[1].atMs-50/30*1000)<.00001,'held bicycle uses its original CMN damage frame')
   check(move.contacts[1].damageMultiplier==1.5,'bicycle preserves original full Y6 heavy-object damage')
   check(move.heatStocks==1 and move.useExtremeFuel and move.noCombo,'bicycle uses existing stock/fuel and neutral-combo rules')
   check(H.weaponInput(p,PY.stateFor(p),view,true),'bicycle action starts through normal weapon input '..id)

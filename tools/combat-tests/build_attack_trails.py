@@ -29,6 +29,7 @@ for profile,s in pairs(ProjectYakuza.Weapons.views.dragon_of_dojima)do scan(prof
 return table.concat(rows,"\\n")"""
 def digest(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def run(args):
+ if args[0]==JAVA:args=[args[0],'-Xms16m','-Xmx256m','-XX:ActiveProcessorCount=2',*args[1:]]
  r=subprocess.run(args,cwd=WORK,capture_output=True,text=True,encoding='utf-8',errors='replace')
  if r.returncode:raise RuntimeError(r.stdout+r.stderr)
  return r.stdout

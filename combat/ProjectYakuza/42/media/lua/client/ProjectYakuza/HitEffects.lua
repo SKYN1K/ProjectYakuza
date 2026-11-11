@@ -28,6 +28,10 @@ local guardParticles={
     {kind="guardCore",path="media/textures/ProjectYakuza/HitGlint.png",size=64,scale=.09,dx=0,dy=0},
 }
 for i=1,4 do local a=i*math.pi/2+.3;guardParticles[#guardParticles+1]={kind="guardSpark",path="media/textures/ProjectYakuza/ChargeSpark.png",size=32,scale=.16,dx=math.cos(a)*9,dy=math.sin(a)*7} end
+local function noise()
+    F.noiseState=((F.noiseState or (getTimestampMs()%2147483646+1))*48271)%2147483647
+    return F.noiseState/2147483647
+end
 local function detach(b)
     for _,e in ipairs(b.emitters) do
         e.instance:Dispose();IsoSpriteInstance.add(e.instance);e.slot.busy=false
@@ -108,13 +112,18 @@ function F.spawn(player,victim,strong,charged,guard,feedback,anchor)
         if length>.001 then b.gx,b.gy=dx/length*.28,dy/length*.28 else b.gx,b.gy=0,0 end
         b.victim=player
     end
-    for _,point in ipairs(points) do
+    local angle=noise()*math.pi*2;local cx,cy=(noise()-.5)*4,(noise()-.5)*4
+    for _,template in ipairs(points) do
+        local point={};for key,value in pairs(template)do point[key]=value end
+        local turn=angle+(noise()-.5)*.7;local speed=.7+noise()*.85
+        point.dx=(template.dx*math.cos(turn)-template.dy*math.sin(turn))*speed
+        point.dy=(template.dx*math.sin(turn)+template.dy*math.cos(turn))*speed
         local slot=acquire(point)
         if slot then
-            local scale=tile*point.scale*(strong and 1.15 or 1)
+            local scale=tile*point.scale*(strong and 1.15 or 1)*(.88+noise()*.24)
             local instance=ProjectYakuza.WorldEffects.detached(slot.sprite,scale,0)
             instance:SetAlpha(1);instance:SetTargetAlpha(1)
-            b.emitters[#b.emitters+1]={slot=slot,instance=instance,point=point,scale=scale}
+            b.emitters[#b.emitters+1]={slot=slot,instance=instance,point=point,scale=scale,cx=cx+(noise()-.5)*2,cy=cy+(noise()-.5)*2,life=.78+noise()*.22,curve=(noise()-.5)*12,gravity=8+noise()*13}
         end
     end
     if #b.emitters==0 then return end
@@ -149,14 +158,18 @@ function F.draw()
         local bx,by=(wx-wy)*32*tile,(wx+wy)*16*tile
         for _,e in ipairs(b.emitters) do
             local ring=e.point.kind=="shock"
+            local u=math.min(1,t/e.life);local spark=e.point.dx~=0 or e.point.dy~=0
+            local dx=e.cx+e.point.dx*u+(spark and e.curve*u*u or 0)
+            local dy=e.cy+e.point.dy*u+(spark and e.gravity*u*u or -2*u)
+            local opacity=alpha*math.max(0,1-u*u)
             local growth=ring and (.6+1.5*t) or (e.point.kind=="core"or e.point.kind=="bluntCore") and (.65+.6*math.sin(t*math.pi)) or (1-.6*t)
             local scale=e.scale*growth
             e.instance:setScale(scale,scale)
-            e.instance:SetAlpha(alpha*(ring and .20 or b.guard and .65 or 1));e.instance:SetTargetAlpha(alpha*(ring and .20 or b.guard and .65 or 1))
+            e.instance:SetAlpha(opacity*(ring and .20 or b.guard and .65 or 1));e.instance:SetTargetAlpha(opacity*(ring and .20 or b.guard and .65 or 1))
             if b.anchor then
-                e.instance:render(v,b.anchor.x,b.anchor.y,b.anchor.z,IsoDirections.N,-e.point.dx*t*tile,-e.point.dy*t*tile-e.point.size*scale/2,b.charged and F.chargeColor or b.family=="blunt"and F.bluntColor or b.family=="blade"and F.bladeColor or F.color)
+                e.instance:render(v,b.anchor.x,b.anchor.y,b.anchor.z,IsoDirections.N,-dx*tile,-dy*tile-e.point.size*scale/2,b.charged and F.chargeColor or b.family=="blunt"and F.bluntColor or b.family=="blade"and F.bladeColor or F.color)
             else ProjectYakuza.WorldEffects.renderCentered(v,e.instance,e.point.size,scale,
-                bx+e.point.dx*t*tile,by-height+e.point.dy*t*tile,b.guard and F.guardColor or b.charged and F.chargeColor or b.family=="blunt"and F.bluntColor or b.family=="blade"and F.bladeColor or F.color,wx,wy,height/(96*tile))
+                bx+dx*tile,by-height+dy*tile,b.guard and F.guardColor or b.charged and F.chargeColor or b.family=="blunt"and F.bluntColor or b.family=="blade"and F.bladeColor or F.color,wx,wy,height/(96*tile))
             end
         end
     end

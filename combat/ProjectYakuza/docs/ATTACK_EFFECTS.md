@@ -1,6 +1,6 @@
 # Attack limb coating and trails
 
-Dragon of Dojima uses the supplied Y6 flame, glint and spark textures as overlapping world sprites on the attacking arm or leg. Its numeric catalogue covers 83 current clips and 104 contact windows: lights, normal/linked/reverse/double/charged finishers, directional/running/quickstep/ground attacks, Tiger Drop, grab strikes and paired Heat Actions/endings, including weapon profiles. Other styles opt in with their own configuration. No visual, audio, motion, model or texture asset is generated or modified.
+Dragon of Dojima uses the supplied Y6 flame, glint and spark textures as overlapping world sprites on the attacking arm or leg. Its numeric catalogue covers 91 current clips and 117 contact windows: lights, normal/linked/reverse/double/charged finishers, directional/running/quickstep/ground attacks, Tiger Drop, grab strikes and paired Heat Actions/endings, including weapon profiles. Other styles opt in with their own configuration. No visual, audio, motion, model or texture asset is generated or modified.
 
 ## Current animation and limb selection
 
@@ -44,3 +44,10 @@ For alternate native clips, register an entry under `ProjectYakuza.AttackEffectC
 There are at most eight active actors and eight retired wakes. Each active actor has 30 detached sprites; each retired wake retains twelve, for a worst-case total of 336. Rings and sprite instances are allocated at activation, rather than per particle draw. Idle actors install no effect polling. Observers resolve their local native clip/frame and retain local history; no particle packets or extra server checks are added. A repeated action/swing/clip snapshot cannot restart the same visual state. Remote/world cleanup releases the same bounded state.
 
 Offline tests cover native source samples, continuous facings, limb endpoints, linked kick selection, turning history, lingering completion/next-attack trails, pause, teleport/interruption cleanup, provider contracts, budgets and duplicate MP snapshots. Native FK is checked against current unchanged clips. Live GPU appearance and a real multiplayer session remain untested; restart after updating matching client/server files.
+
+
+## Hit impact variation
+
+As of 0.100.0, confirmed-hit glints and sparks vary their initial direction, spread, scale, curvature, downward motion and fade from hit to hit. A small contact-centred offset prevents identical screen patterns. A separate local visual noise sequence leaves gameplay RNG untouched. Source textures, family tints, damage/contact timing, collision anchors and blood frames remain unchanged.
+
+Burst/particle caps and maximum lifetimes remain the same. Heat Action contacts retain their copied physical world anchor; ordinary hits and guard effects keep their existing target/defender attachment. Pause freezes each varied trajectory. Existing pooling, interruption, death, menu and render-failure cleanup still dispose every owned instance.

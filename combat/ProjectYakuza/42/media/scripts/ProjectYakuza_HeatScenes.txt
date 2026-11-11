@@ -442,19 +442,6 @@ module Base
             volume = 0.65,
         }
     }
-    sound ProjectYakuza_HeatScene_bicycle_2
-    {
-        category = ProjectYakuza_Effects,
-        is3D = true,
-        loop = false,
-        clip
-        {
-            file = media/sound/ProjectYakuza/HeatScene_bicycle_2.wav,
-            distanceMin = 1,
-            distanceMax = 16,
-            volume = 0.65,
-        }
-    }
     sound ProjectYakuza_HeatScene_bicycle_1
     {
         category = ProjectYakuza_Effects,
@@ -463,6 +450,19 @@ module Base
         clip
         {
             file = media/sound/ProjectYakuza/HeatScene_bicycle_1.wav,
+            distanceMin = 1,
+            distanceMax = 16,
+            volume = 0.65,
+        }
+    }
+    sound ProjectYakuza_HeatScene_bicycle_2
+    {
+        category = ProjectYakuza_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuza/HeatScene_bicycle_2.wav,
             distanceMin = 1,
             distanceMax = 16,
             volume = 0.65,

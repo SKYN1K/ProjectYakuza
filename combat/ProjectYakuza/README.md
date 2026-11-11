@@ -1,14 +1,14 @@
 # Project Yakuza
 
-Project Yakuza is a Build 42 combat mod and a framework for independent fighting-style addons. Dragon of Dojima uses supplied Yakuza/Kiwami animations, textures and sounds. Other styles register their own moves, assets and controllers without copying the framework.
+Project Yakuza is a Build 42 combat mod and a framework for independent fighting-style addons. Dragon of Dojima uses supplied Yakuza/Kiwami/Lost Judgment animations, textures and sounds. Other styles register their own moves, assets and controllers without copying the framework.
 
-**Version 0.99.1 · Lua API 3 · MP protocol 2.** API 1 style registrations remain supported. Internal namespace/mod dependency: `ProjectYakuza`. Display name: Project Yakuza.
+**Version 0.100.0 · Lua API 3 · MP protocol 2.** API 1 style registrations remain supported. Internal namespace/mod dependency: `ProjectYakuza`. Display name: Project Yakuza.
 
 ## Install and play
 
 Extract the ZIP so `Zomboid/mods/ProjectYakuza/42/mod.info` exists. Enable Project Yakuza for the save. The server and every MP client need the same framework and addons. Restart after updating files.
 
-Hold Z, choose Dragon of Dojima in the left slot, then release Z to equip the style token. Left defaults to DoD, right starts empty, bottom opens settings and style assignments, top unequips the style. Selecting/reselecting DoD plays its 1.5-second Kiwami 1 entry: movement and attacks are locked, but the player remains vulnerable.
+Hold Z, choose Dragon of Dojima in the left slot, then release Z to equip the style token. Left defaults to DoD, right starts empty, bottom opens settings and style assignments, top unequips the style. Selecting/reselecting DoD plays the 2.5-second blue Dragon entry from the installed Lost Judgment dod mod: movement and attacks are locked, but the player remains vulnerable.
 
 Ground-trample Heat Actions use RMB plus the rebindable Heat Action input near a downed zombie outside a combo, costing one heat stock. Ordinary paired actions move both actors to nearby clear space; wall actions face their selected wall. The compact red HUD bar shows native overall health.
 
@@ -77,4 +77,4 @@ Beer-crate Essence of Crushing uses the rebound Heat Action button: two fresh pr
 
 Dragon of Dojima low-health feedback starts at 30% health, becomes critical at 15%, and clears after healing to 35%. The original health-bar frame pulses gently; an existing PZ heartbeat plays privately during combat and follows Sounds volume. See docs/LOW_HEALTH_FEEDBACK.md for framework configuration.
 
-Version 0.99.1 fixes local menu audio, uses the [Kiwami 1 combat entry](docs/COMBAT_ENTRY.md) with vanilla idle, fixes full-orb Heat Action thresholds, seats the crate on the victim head, switches the bicycle Heat Action/audio to Yakuza 6 and hides aura overlays while the map is open. See [validation](docs/VALIDATION_0.99.1.md).
+Version 0.100.0 grounds the [Lost Judgment blue Dragon entry](docs/COMBAT_ENTRY.md), restores the previous unarmed RMB combat idle, uses the [Y6 held-heavy-weapon bicycle Heat Action](docs/BICYCLE.md) and adds bounded variation to hit sparks. See [validation](docs/VALIDATION_0.100.0.md).

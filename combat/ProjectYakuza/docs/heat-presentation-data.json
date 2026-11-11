@@ -1920,68 +1920,116 @@
     {
       "animation": "ProjectYakuza_DD_BicycleHeat",
       "targetAnimation": "ProjectYakuza_DD_BicycleHeatVictim",
-      "actorSha256": "e3b82ae52540310b40e2d80e0820a318250e37ec14c3d705883fb3994cf0a9cb",
-      "victimSha256": "36c908282970703820ba5b2190a27cc1d0f98a9399e25f653bba4e551345beb7",
+      "actorSha256": "370c1f4e1320473e6783c9eb9bdb57d5d78c8d65510122e3119b4a2f5b775440",
+      "victimSha256": "2db226f801c10ec329c5b0999195cf07395b8f8f6a70f94b5702be3a41f3ccd6",
       "contacts": [
         {
-          "atMs": 1933.33333333,
+          "atMs": 1666.66666667,
           "index": 1,
           "cue": "punchImpact",
           "base": false,
           "point": [
-            4.57e-07,
-            0.068655245,
-            0.010861975
+            -0.002833752,
+            0.146823585,
+            0.276040852
           ],
-          "bone": "Bip01_Pelvis",
+          "bone": "Bip01_Neck",
           "layers": []
         }
       ],
       "effects": [
         {
-          "atMs": 1933.3333333333333,
+          "atMs": 1533.3333333333335,
           "index": 1,
           "bone": "Bip01_Head",
           "point": [
-            -0.23635165393352509,
-            0.08657728135585785,
-            0.20853517949581146
+            0.021450918167829514,
+            0.7425036430358887,
+            0.17270539700984955
           ],
           "bloodOnly": true,
           "feedback": "blunt"
         },
         {
-          "atMs": 1933.3333333333333,
+          "atMs": 1533.3333333333335,
           "index": 1,
           "bone": "Bip01_Head",
           "point": [
-            -0.23635165393352509,
-            0.08657728135585785,
-            0.20853517949581146
+            0.021450918167829514,
+            0.7425036430358887,
+            0.17270539700984955
           ],
           "bloodOnly": true,
           "feedback": "blunt"
         },
         {
-          "atMs": 1933.3333333333333,
+          "atMs": 1533.3333333333335,
           "index": 1,
           "bone": "Bip01_Head",
           "point": [
-            -0.23426254093647003,
-            0.08374826610088348,
-            0.2076386660337448
+            0.018395235762000084,
+            0.7427711486816406,
+            0.13283906877040863
           ],
           "bloodOnly": true,
           "feedback": "blunt"
         },
         {
-          "atMs": 1933.3333333333333,
+          "atMs": 1533.3333333333335,
           "index": 1,
           "bone": "Bip01_Head",
           "point": [
-            -0.23773254454135895,
-            0.09253092855215073,
-            0.20852744579315186
+            0.020474182441830635,
+            0.7485827207565308,
+            0.161588653922081
+          ],
+          "bloodOnly": true,
+          "feedback": "blunt"
+        },
+        {
+          "atMs": 1533.3333333333335,
+          "index": 1,
+          "bone": "Bip01_Head",
+          "point": [
+            0.024058042094111443,
+            0.7351951003074646,
+            0.16354258358478546
+          ],
+          "bloodOnly": true,
+          "feedback": "blunt"
+        },
+        {
+          "atMs": 1733.3333333333335,
+          "index": 1,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.0008716384181752801,
+            0.11092763394117355,
+            0.30958256125450134
+          ],
+          "bloodOnly": true,
+          "feedback": "blunt"
+        },
+        {
+          "atMs": 1733.3333333333335,
+          "index": 1,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.05806006118655205,
+            0.11404363811016083,
+            0.30216848850250244
+          ],
+          "bloodOnly": true,
+          "feedback": "blunt"
+        },
+        {
+          "atMs": 1733.3333333333335,
+          "index": 1,
+          "bone": "Bip01_Head",
+          "point": [
+            -0.0010233650682494044,
+            0.0619712695479393,
+            0.31879204511642456
           ],
           "bloodOnly": true,
           "feedback": "blunt"
@@ -2173,17 +2221,17 @@
     },
     {
       "file": "media/sound/ProjectYakuza/HeatScene_bicycle_0.wav",
-      "sha256": "3908fa5e085264fa257148c8b43554f0bde9da75607fbaa990c81d8c04190d1c",
+      "sha256": "181860895750603325bbfe13738b7a594d0caa84a2dad50a657fb2aa0d535ebb",
       "attackLeadMs": 120
     },
     {
       "file": "media/sound/ProjectYakuza/HeatScene_bicycle_1.wav",
-      "sha256": "ab476a4bc0f5f274ec192f7c19218ab3f2fbb51678af2e00571c8932d6d1301b",
-      "attackLeadMs": 30
+      "sha256": "6a1c8a882a0c693afda6531a99ea8ff18dea8e6535772e09c7e4c8d82de1c589",
+      "attackLeadMs": 95
     },
     {
       "file": "media/sound/ProjectYakuza/HeatScene_bicycle_2.wav",
-      "sha256": "e453d906e52a12beaab273b555c9d6bf72133c50d3990dc6085f84e0276d8e1a",
+      "sha256": "a3377dfa718411bc89e4fb4e027e4178c2a00ee58ada5e9a60f734b6a47dc0cf",
       "attackLeadMs": 120
     },
     {

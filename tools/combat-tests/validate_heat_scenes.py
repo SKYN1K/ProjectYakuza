@@ -6,8 +6,8 @@ from cri_cue_table import cue_names
 root=Path(__file__).resolve().parents[2];mod=root/'combat/ProjectYakuza'
 data=json.loads((mod/'docs/heat-scenes.json').read_text())
 effects=json.loads((mod/'docs/heat-scene-effects.json').read_text())
-expected={'knife':[[40,90]],'rush':[[56,68,80,92,114,126,146,158,170,182,204,216,246],[26]],'bottle':[[32,42,59,84]],'wall':[[12,48]],'ground':[[30]],'crate':[[14,44,54,74,84,104,114,142],[19]],'katana':[[24,44,64]],'bat':[[14,50]],'bicycle':[[58]]}
-original={'knife':[40,90],'rush':[56,68,78,90,102,114,144],'bottle':[32,42,59,84],'wall':[12,48],'ground':[],'crate':[14,44,54,82],'katana':[24,44,64],'bat':[14,50],'bicycle':[58]}
+expected={'knife':[[40,90]],'rush':[[56,68,80,92,114,126,146,158,170,182,204,216,246],[26]],'bottle':[[32,42,59,84]],'wall':[[12,48]],'ground':[[30]],'crate':[[14,44,54,74,84,104,114,142],[19]],'katana':[[24,44,64]],'bat':[[14,50]],'bicycle':[[50]]}
+original={'knife':[40,90],'rush':[56,68,78,90,102,114,144],'bottle':[32,42,59,84],'wall':[12,48],'ground':[],'crate':[14,44,54,82],'katana':[24,44,64],'bat':[14,50],'bicycle':[50]}
 sha=lambda b:hashlib.sha256(b).hexdigest()
 banks={};count=0
 for record in data['scenes']:
@@ -51,7 +51,7 @@ for record in data['scenes']:
             assert any(banks[key][1][n['sound']['cueId']].startswith('Kiryu_')is False for n in matches)
         assert all(v['entry'].startswith('Combat')for v in definition['voiceEvents'])
         count+=len(native)
-assert count==126 and len(data['sounds'])==37
+assert count==130 and len(data['sounds'])==37
 with tempfile.TemporaryDirectory(prefix='project-yakuza-cmn-')as tmp:
     folder=Path(tmp)
     for record in data['sounds']:
@@ -63,4 +63,4 @@ with tempfile.TemporaryDirectory(prefix='project-yakuza-cmn-')as tmp:
         shipped=mod/record['output'];assert out.read_bytes()==shipped.read_bytes()
         assert sha(shipped.read_bytes())==record['sha256']
         with wave.open(str(shipped))as audio:assert (audio.getframerate(),audio.getnchannels(),audio.getsampwidth(),audio.getnframes())==(record['sampleRate'],record['channels'],2,record['samples'])
-print('PASS 9 supplied CMN scenes, 11 timelines, 38 contacts, 126 blood anchors and 37 original PCM decodes; scoped media checked by the release validators')
+print('PASS 9 supplied CMN scenes, 11 timelines, 38 contacts, 130 blood anchors and 37 original PCM decodes; scoped media checked by the release validators')

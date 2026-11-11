@@ -98,7 +98,7 @@ ProjectYakuza.registerStyle({
             after_3={animation="ProjectYakuza_DD_ChargedFinisher03",nodeValue="dd_charged_finisher_03",duration=1.833333333,speed=1,impact=0.163636364,damageMultiplier=2,minChargedDamageMultiplier=1.25,chargedHeavy=true,chargedFinisher=true,chargeBranch=3,fullBody=true,reaction="enemy_03"},
             after_4={animation="ProjectYakuza_DD_ChargedFinisher04",nodeValue="dd_charged_finisher_04",duration=1.833333333,speed=1,impact=0.236363636,damageMultiplier=2,minChargedDamageMultiplier=1.25,chargedHeavy=true,chargedFinisher=true,chargeBranch=4,fullBody=true,reaction="enemy_04"},
         }},
-        styleEntry = {enabled=true,animation="ProjectYakuza_DD_StyleEntry",duration=45/30},
+        styleEntry = {enabled=true,animation="ProjectYakuza_DD_StyleEntry",duration=150/60},
         taunt = {enabled=true,animation="ProjectYakuza_DD_Taunt01",duration=55/30},
         finisher = { enabled=true, variants={
             reverse_after_1={["enabled"]=true,["afterLight"]=1,["animation"]="ProjectYakuza_DD_ReverseFinisher01",["nodeValue"]="dd_reverse_finisher_1",["damageMultiplier"]=1.25,["duration"]=1.3958333333333333,["speed"]=1.6,["impact"]=0.22388059701492538,["fullBody"]=true,["reverseFinisher"]=true,["hitResponse"]="finisher",["doubleLinkFrame"]=27,["doubleLinkEndFrame"]=30},
@@ -263,7 +263,7 @@ if ProjectYakuza.Weapons then
         lightAttacks=moves.lightAttacks,groundAttacks=moves.groundAttacks,
         actions={finisher=moves.finisher,quickstep=base.actions.quickstep,
             heatAction=ProjectYakuza.HeatScenes.action("bicycle",{enabled=true,weaponHeat=true,weaponItems={"ProjectYakuza.Bicycle"},motionId="dod_bicycle",useExtremeFuel=true,heatStocks=1,noCombo=true,
-                animation="ProjectYakuza_DD_BicycleHeat",targetAnimation="ProjectYakuza_DD_BicycleHeatVictim",nodeValue="dd_bicycle_heat",requiresTarget=true,duration=144/30,speed=1,hitResponse=false}),
+                animation="ProjectYakuza_DD_BicycleHeat",targetAnimation="ProjectYakuza_DD_BicycleHeatVictim",nodeValue="dd_bicycle_heat",requiresTarget=true,duration=120/30,speed=1,hitResponse=false}),
         },
     })
 end

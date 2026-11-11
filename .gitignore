@@ -290,3 +290,7 @@
 !/tools/combat-tests/build_bicycle_y6_heat_assets.py
 !/tools/combat-tests/validate_bicycle_y6_heat_assets.py
 !/tools/combat-tests/extract_bicycle_y6_assets.py
+
+!/tools/combat-tests/build_lj_entry.py
+!/tools/combat-tests/validate_combat_entry.py
+!/tools/combat-tests/CombatEntryProbe.java

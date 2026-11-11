@@ -186,4 +186,21 @@ end
 check(allocated==disposed,'anchored instances release on interruption')
 
 
+do
+ p.style.impactFeedback='unarmed';local signatures={};local randomCalls=0;local previousRandom=ZombRand
+ ZombRand=function()randomCalls=randomCalls+1;error('visual variation must not consume gameplay randomness')end
+ for i=1,4 do
+  F.spawn(p,z,false,false);local burst=F.bursts[1];local particle=burst.emitters[2]
+  signatures[i]={particle.point.dx,particle.point.dy,particle.scale,particle.life}
+  check(math.abs(particle.point.dx)<30 and math.abs(particle.point.dy)<30 and particle.life>=.78 and particle.life<=1,'varied sparks keep bounded spread and lifetime')
+  clock=clock+60;renders={};F.render();local before={}
+  for j,r in ipairs(renders)do before[j]={r.dx,r.dy,r.alpha}end
+  paused=true;clock=clock+1000;renders={};F.render();paused=false
+  for j,r in ipairs(renders)do check(r.dx==before[j][1]and r.dy==before[j][2]and r.alpha==before[j][3],'varied trajectories freeze completely while paused')end
+  F.clear()
+ end
+ for i=2,#signatures do check(signatures[i][1]~=signatures[i-1][1]and signatures[i][3]~=signatures[i-1][3],'repeated same-place hits choose distinct trajectories and scale')end
+ check(randomCalls==0,'visual noise leaves gameplay RNG untouched');ZombRand=previousRandom
+ check(allocated==disposed and not F.ticking,'varied hit effects retain bounded cleanup')
+end
 return true,'PASS '..checks..' source-frame blood animation, confirmed hit, world anchor, MP budgets and cleanup checks'
