@@ -77,9 +77,11 @@ for family,sourceFamily,grip in [('Bat','WPA','bat'),('Blade','WPD','blade'),('B
             pos+=80+size
         assert contacts,(name,contacts)
         end=r['frames']-1;contact=contacts[0];chain=min(end-1,max(contact+5,round(end*.65)));node='dd_'+family.lower()+'_'+('light_'+label[-2:]if label.startswith('Light')else label.lower())
+        if family=='Bottle':chain=end-2
         moves[family].append({'animation':name,'nodeValue':node,'frames':end,'contact':contact,'chain':chain,'label':label})
         records.append({**r,'name':name,'output':out.relative_to(mod).as_posix(),'sha256':sha(out),'kind':'sourceAttack','grip':grip,'bep':str(bep),'bepSha256':sha(bep),'contactFrame':contact,'sourceContactFrames':contacts})
         template=media/'AnimSets/player/melee'/('ProjectYakuza_DD_Bat'+label+'.xml');n=E.parse(template).getroot();put(n,'m_Name',name);put(n,'m_AnimName',name)
+        if family=='Bottle':put(n,'m_EarlyTransitionOut',False)
         for c in n.findall('m_Conditions'):
             key=c.findtext('m_Name')
             if key=='ProjectYakuzaWeaponProfile':put(c,'m_Value',family.lower())

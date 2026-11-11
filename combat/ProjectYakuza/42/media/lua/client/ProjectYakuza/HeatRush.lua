@@ -1,3 +1,4 @@
+require "ProjectYakuza/ActionAnimation"
 require "ProjectYakuza/Runtime"
 require "TimedActions/ISTimedActionQueue"
 require "ProjectYakuza/NetworkProtocol"
@@ -304,8 +305,7 @@ function A:cleanup(done)
         local settled=done and(not self.failed or R.pairedFailure(self.context.action))and self.success[#R.contacts(self.context.action)]
         if settled then R.ground(z,R.endFacing(self.pose))end
         if not self.victimRestored then R.restore(z,self.victim);self.victimRestored=true end
-        local clip=p:GetVariable("PerformingAction")
-        if clip==self.context.action.animation or self.failed and clip==self.context.action.qteFailure.animation then p:setVariable("PerformingAction","");p:setVariable("IsPerformingAnAction",false);p:StopTimedActionAnim()end
+        PY.releaseActionAnimation(p,self,true)
         if not isClient()then PY.HeatActions.settle(self,p,z,self.held,done and(not self.failed or R.pairedFailure(self.context.action)))end
         if not isClient()and done and(not self.failed or R.pairedFailure(self.context.action))and self.success[#R.contacts(self.context.action)]and not z:isDead()then R.ground(z,R.endFacing(self.pose))end
     end

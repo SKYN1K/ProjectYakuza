@@ -304,4 +304,12 @@ do
  PY.AttackEffects.findTrack=oldTrack;ZombRand=oldRandom;wall=true
 end
 
+do
+ local originalTargets=PY.MultiHit.targets;local candidates={}
+ for i=1,8 do candidates[i]={victim={isAttacking=function()return true end,isUseless=function()return false end,getHitReaction=function()return ''end,getCurrentStateName=function()return 'idle'end}} end
+ candidates[9]={victim=z};z.state='idle';z.reaction='';z.useless=false;z.locked=false
+ PY.MultiHit.targets=function(_,_,_,_,limit)local selected={};for i=1,math.min(limit,#candidates)do selected[i]=candidates[i]end;return selected end
+ check(D.target(p)==z,'eight closer busy horde targets cannot hide the ninth eligible grab target')
+ PY.MultiHit.targets=originalTargets
+end
 return 'PASS '..checks..' reliable grab lifecycle, four source-timed strikes, following, cleanup, wall geometry, handoff and action protection checks'

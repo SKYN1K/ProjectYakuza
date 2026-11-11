@@ -219,5 +219,24 @@ dashAction=dash();trackPhase=.1;dashAction:update();trackPhase=nil;clock=clock+1
 check(not dashAction.cleaned and dashAction.animationRequests==1,'temporary track loss never re-arms an already visible dash')
 clock=clock+math.ceil(dashAction.context.action.duration*1000)+100;dashAction:update()
 check(dashAction.cleaned and not p.blocked,'lost terminal track has a bounded completion fallback')
+do
+ local queued
+ function p:getCharacterActions()return {size=function()return queued and 1 or 0 end,contains=function(_,v)return queued==v end}end
+ local priorBusy=p.hasTimedActions
+ function p:hasTimedActions()return queued~=nil or self.vars.IsPerformingAnAction==true end
+ dashAction=dash();queued=dashAction.action;p:setVariable('PerformingAction','')
+ check(p:hasTimedActions(),'blank selector still leaves the native busy flag active')
+ dashAction:perform();queued=nil
+ check(not p:hasTimedActions() and not PY.activeActions[p] and not p.blocked,'dash completion clears its stale busy flag after native selector reset')
+ dashAction=dash();p:setVariable('PerformingAction','');queued={};dashAction:perform()
+ check(p:hasTimedActions(),'cleanup preserves a real replacement native action')
+ queued=nil;p:setVariable('IsPerformingAnAction',false)
+ dashAction=dash();p:setVariable('PerformingAction','AnotherNativeAction');dashAction:perform()
+ check(p.vars.IsPerformingAnAction==true and p:GetVariable('PerformingAction')=='AnotherNativeAction','dash cannot erase a foreign animation or busy flag')
+ p:setVariable('PerformingAction','');p:setVariable('IsPerformingAnAction',false)
+ dashAction=dash();local replacement={};PY.activeActions[p]=replacement;dashAction:cleanup(false)
+ check(PY.activeActions[p]==replacement and p.vars.IsPerformingAnAction==true,'late dash cleanup preserves replacement context animation ownership')
+ PY.activeActions[p]=nil;p:setVariable('PerformingAction','');p:setVariable('IsPerformingAnAction',false);p.hasTimedActions=priorBusy
+end
 PY.AttackEffects=previousEffects;p.isAiming=previousAim;p.dbgGetAnimTrackName=nil;mouse[1]=false
 return 'PASS '..checks..' one-strike quickstep ownership, native gate, rapid taps, retries and asynchronous handoff checks'

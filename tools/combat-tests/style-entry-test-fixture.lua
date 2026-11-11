@@ -72,7 +72,7 @@ getSpecificPlayer=function()return p end
 local vanilla={0,0,0}
 ISEmoteRadialMenu={onKeyPressed=function()vanilla[1]=vanilla[1]+1 end,onKeyRepeat=function()vanilla[2]=vanilla[2]+1 end,onKeyReleased=function()vanilla[3]=vanilla[3]+1 end}
 
-function p:hasTimedActions()return self.nativeAction~=nil end
+function p:hasTimedActions()return self.nativeAction~=nil or self.vars.IsPerformingAnAction==true end
 function p:isWeaponReady()return self.ready~=false end
 function p:isAttackStarted()return false end
 function p:isPerformingAttackAnimation()return false end
@@ -136,5 +136,7 @@ check(not E.pending[p] and not E.pendingHook,'failed equipment readiness cannot 
 p.ready=true
 local ending,endingContext=begin();p:setVariable('ProjectYakuzaStyleEntry','started');ending:update();clock=clock+math.ceil(endingContext.action.duration*1000)+1;ending:update()
 check(ending.completed and p:GetVariable('PerformingAction')==''and not p.block and not p.ignore,'native early blending cannot leave the source-duration action locked when its final marker is absent')
+local blankEntry=begin();p:setVariable('PerformingAction','');p:setVariable('IsPerformingAnAction',true);blankEntry:perform()
+check(not p:hasTimedActions() and not p.block and not p.ignore,'entry releases native busy flag when the selector already ended')
 local nextAction,nextContext=begin();p:setVariable('ProjectYakuzaStyleEntry','started');nextAction:update();p:setVariable('PerformingAction','AnotherNativeAction');nextAction:cleanup(false);check(p:GetVariable('PerformingAction')=='AnotherNativeAction','entry cleanup cannot erase another native action')
 return 'PASS '..checks..' locked style entry, vulnerability, completion and cleanup checks'

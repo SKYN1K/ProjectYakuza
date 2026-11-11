@@ -1,3 +1,4 @@
+require "ProjectYakuza/ActionAnimation"
 require "ProjectYakuza/Runtime"
 require "ProjectYakuza/Defense"
 require "TimedActions/ISBaseTimedAction"
@@ -51,7 +52,7 @@ function A:cleanup(completed)
     if self.started then
         p:setBlockMovement(self.oldBlock==true);p:setIgnoreMovement(self.oldIgnore==true)
         p:setDeferredMovementEnabled(self.oldDeferred);p:setVariable("ProjectYakuzaStyleEntry","")
-        if p:GetVariable("PerformingAction")==self.context.action.animation then p:setVariable("PerformingAction","") end
+        PY.releaseActionAnimation(p,self,false)
     end
     local any=false;for _ in pairs(E.active) do any=true;break end
     if not any and E.hooked then Events.OnTick.Remove(E.holdPositions);E.hooked=false end

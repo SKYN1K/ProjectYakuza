@@ -47,7 +47,7 @@ function D.target(p)
     if not ProjectYakuza.MultiHit then return nil end
     local origin=ProjectYakuza.MultiHit.origin(p,1.05)
     if not origin then return nil end
-    for _,entry in ipairs(ProjectYakuza.MultiHit.targets(p,origin,false,{},8)) do
+    for _,entry in ipairs(ProjectYakuza.MultiHit.targets(p,origin,false,{},math.huge)) do
         local z=entry.victim
         if not D.held[z] and not ProjectYakuza.GrabRules.unavailable(z) and not z:isAttacking() and not z:isUseless() and (z:getHitReaction() or "")=="" then return z end
     end

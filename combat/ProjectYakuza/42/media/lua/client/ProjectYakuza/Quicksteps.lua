@@ -1,3 +1,4 @@
+require "ProjectYakuza/ActionAnimation"
 require "ProjectYakuza/Runtime"
 require "ProjectYakuza/AttackEffects"
 require "TimedActions/ISBaseTimedAction"
@@ -86,9 +87,7 @@ function A:cleanup(completed, reason)
         p:setVariable("ProjectYakuzaQuickstepProgress","")
         p:setVariable("ProjectYakuzaQuickstepStarted","")
         p:setVariable("ProjectYakuzaQuickstepDone","")
-        if p:GetVariable("PerformingAction")==self.context.action.animation then
-            p:setVariable("PerformingAction","");p:setVariable("IsPerformingAnAction",false);p:StopTimedActionAnim()
-        end
+        ProjectYakuza.releaseActionAnimation(p,self,true)
     end
     if self.started then Q.nextAllowed[p:getPlayerNum()]=now()+(self.context.style.actions.quickstep.cooldownMs or 180)end
     if ProjectYakuza.activeActions[p]==self.context then

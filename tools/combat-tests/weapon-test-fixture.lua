@@ -241,4 +241,22 @@ for _,case in ipairs({{id='bottle',item='ProjectYakuza.IntactBeerBottle',prefix=
  check(view.actions.styleEntry==original.actions.styleEntry and view.actions.quickstep==original.actions.quickstep,'shared style systems retained '..case.id)
 end
 
+do local _="ProjectYakuzaFixture:BOTTLE_TIMELINE" end
+do
+ PY.resetPlayer(p,'bottle_recovery');p.attacking=false;p.held=weapon('ProjectYakuza.IntactBeerBottle');W.sync(p)
+ local view=PY.getPlayerStyle(p)
+ for i,move in ipairs(view.lightAttacks)do
+  local timeline=bottleTimelines[i];local state=PY.stateFor(p)
+  PY.Combo.reset(state);state.active=true;state.step=i;state.activeLightMove=move;state.queuedWeaponHeavy=true
+  p.vars.ProjectYakuzaHitMarker=move.nodeValue;p.vars.ProjectYakuzaChainReady=''
+  if .67>=timeline.chain then p.vars.ProjectYakuzaChainReady=move.nodeValue end
+  check(not PY.tryRecoveryCancel(p,view,state)and not state.recoveryReleased,'bottle queued heavy cannot cut off the last third of light '..i)
+  check(timeline.chain==move.chainAt and timeline.chain>timeline.hit and timeline.chain>=.94,'bottle XML and runtime agree on late recovery '..i)
+  p.vars.ProjectYakuzaChainReady=move.nodeValue
+  check(PY.tryRecoveryCancel(p,view,state)and state.recoveryReleased,'bottle buffered followup releases after committed recovery '..i)
+  state.recoveryReleased=false;state.queuedWeaponHeavy=nil;state.queued=0
+  check(not PY.tryRecoveryCancel(p,view,state),'single bottle swing cannot auto-cancel recovery '..i)
+ end
+ PY.resetPlayer(p,'bottle_done')
+end
 return true,'PASS '..checks..' real-weapon style, sharp/blunt combo, heavy, reach, damage and isolation checks'

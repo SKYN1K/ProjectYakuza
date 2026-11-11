@@ -1725,23 +1725,23 @@
   "selectors": [
     {
       "path": "42/media/AnimSets/player/melee/ProjectYakuza_DD_BottleLight01.xml",
-      "sha256": "4e1a8a5d280fa0adaac352a5c6a3eb109d0959d78e5d9c63faf78c3ae0ec82f1"
+      "sha256": "a5ec6ba8c4b23542de878cd7981fd60f67371eefcac18b444d1f9529767a5962"
     },
     {
       "path": "42/media/AnimSets/player/melee/ProjectYakuza_DD_BottleLight02.xml",
-      "sha256": "237f8ddfb7769c8b0e7d5212501a6c60043dc4e53839dcfbb67b7e399d5102f4"
+      "sha256": "f5fa8c06018548f63870ca3ca6a536caa92a86e25ecb874ec17905f232e5521b"
     },
     {
       "path": "42/media/AnimSets/player/melee/ProjectYakuza_DD_BottleLight03.xml",
-      "sha256": "ddf145979e18b872f58b35d454861199ba222d13ce732d6fc0aa66c796ecebe2"
+      "sha256": "54e386fcb6d0b72fa119e8e56ea2514e79f844741894dfee0f14b2046e62b6c5"
     },
     {
       "path": "42/media/AnimSets/player/melee/ProjectYakuza_DD_BottleHeavy.xml",
-      "sha256": "e1979af5a302d0b463e0a0f9ef0c7523233d84287ee67039751c9da018b4aae5"
+      "sha256": "21351b97a85e4f5432e2641d6385722315c4aa3900ac80c8252e1b62054dba8f"
     },
     {
       "path": "42/media/AnimSets/player/melee/ProjectYakuza_DD_BottleGround.xml",
-      "sha256": "d90765c7bdc7987ed329e8ae58a0e2d8a6d9dd69fbe3bc12fe25fda24535b4ca"
+      "sha256": "cea156bd2e58f7c06c231fadadb634b488235c64b5b35cbcbd08ae445d7eac7a"
     },
     {
       "path": "42/media/AnimSets/player/actions/ProjectYakuza_DD_BottleGuardEnter.xml",

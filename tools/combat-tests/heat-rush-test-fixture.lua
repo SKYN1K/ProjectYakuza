@@ -205,7 +205,9 @@ end
 phase=(c.action.contacts[#c.action.contacts].atMs+1)/1000;a:update();a:update();check(z.hits==0 and not a.pendingDamage and math.abs(z.health-7.75)<.000001,'nonlethal final kick deals earned damage without resetting paired animation')
 check(committed==1,'QTE hit count does not publish repeated exertion commitments')
 check(z.total==0 and creates==1,'paired victim takes no native hit while its original animation is playing')
+p:setVariable('PerformingAction','');function p:getCharacterActions()return {size=function()return 0 end}end
 phase=R.duration;a:update()
+check(p.vars.IsPerformingAnAction==false,'completed heat action clears native busy flag after selector disappearance')
 check(z.hits==0 and math.abs(z.health-7.75)<.000001,'completion cannot duplicate damage already applied at its contact')
 check(a.cleaned and not p.blocked and not p.ignore and not z.useless and not z.ignore and z.deferred and z.target==p and z.knock,'full source recovery restores actor/victim state')
 check(not PY.activeActions[p]and not H.active[p],'completed paired action releases context')
@@ -829,5 +831,20 @@ do
  end
  check(not PY.HeatRules.canAfford(0,100/6)and not PY.HeatRules.canAfford(0/0,100/6)and not PY.HeatRules.canAfford(100/6-.0001,100/6),'shared price tolerance rejects missing, invalid and underfilled resources')
  PY.MultiHit.targets=savedTargets;p.held=nil;PY.Weapons.sync(p)
+end
+do
+ local priorBusy=p.hasTimedActions;local queued
+ function p:getCharacterActions()return {size=function()return queued and 1 or 0 end,contains=function(_,v)return queued==v end}end
+ function p:hasTimedActions()return queued~=nil or self.vars.IsPerformingAnAction==true end
+ local context={player=p,action=PY.getStyle('dragon_of_dojima').actions.heatAction,target={z=z}}
+ local owner=H.Action:new(context);PY.activeActions[p]=context
+ owner:setActionAnim(context.action.animation);p:setVariable('PerformingAction','')
+ check(p:hasTimedActions(),'heat action busy flag survives a native selector reset')
+ check(PY.releaseActionAnimation(p,owner,true)and not p:hasTimedActions(),'owned heat animation releases stale native busy state')
+ owner.animation=context.action.qteFailure.animation;p:setVariable('PerformingAction',owner.animation);p:setVariable('IsPerformingAnAction',true)
+ check(PY.releaseActionAnimation(p,owner,true)and not p:hasTimedActions(),'paired failure clip releases its own native action flag')
+ p:setVariable('IsPerformingAnAction',true);queued={}
+ check(not PY.releaseActionAnimation(p,owner,true)and p:hasTimedActions(),'heat cleanup preserves foreign queued work after the selector resets')
+ queued=nil;p:setVariable('IsPerformingAnAction',false);PY.activeActions[p]=nil;p.hasTimedActions=priorBusy
 end
 return true,'PASS '..checks..' generic QTE validation, custom bindings, fresh presses, replay safety, native-phase contacts, canonical damage, paired cleanup and interruption checks'
