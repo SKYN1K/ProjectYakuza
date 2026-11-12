@@ -1,0 +1,1556 @@
+{
+  "version": "0.101.0",
+  "baseline": "0.100.0",
+  "operation": "Remove only confirmed unreferenced/superseded runtime assets and permanently disabled selectors. No retained motion, model, texture or audio bytes are altered. Historical source provenance stays available; release validation rejects reintroduced retired outputs.",
+  "assets": [
+    {
+      "path": "42/media/AnimSets/player/aim-strafe/ProjectYakuza_DD_BatIdle.xml",
+      "bytes": 1551,
+      "sha256": "b1fb03f2739489ad0385d9a819ec48b1abed9857b20a5010da7861aa99932bee",
+      "reason": "Selectors gated by unproduced custom-pose variables; native pose fallback has been active since v0.78."
+    },
+    {
+      "path": "42/media/AnimSets/player/aim-strafe/ProjectYakuza_DD_BladeIdle.xml",
+      "bytes": 1557,
+      "sha256": "fc3dfb6a42771357f4864d19f62ff95ced0db7858952f9952c42cdd8299bdac9",
+      "reason": "Selectors gated by unproduced custom-pose variables; native pose fallback has been active since v0.78."
+    },
+    {
+      "path": "42/media/AnimSets/player/aim-strafe/ProjectYakuza_DD_BottleIdle.xml",
+      "bytes": 1560,
+      "sha256": "0d3f28d07a75d954608f09b913a7f2242c63b9c14b8d3d0fccee9a54c581f63b",
+      "reason": "Selectors gated by unproduced custom-pose variables; native pose fallback has been active since v0.78."
+    },
+    {
+      "path": "42/media/AnimSets/player/aim-strafe/ProjectYakuza_DD_CrateIdle.xml",
+      "bytes": 1557,
+      "sha256": "d51565c962fa4a3d48684fabbf1ab9af017efad6c7c808b0e62c366a2378e2cb",
+      "reason": "Selectors gated by unproduced custom-pose variables; native pose fallback has been active since v0.78."
+    },
+    {
+      "path": "42/media/AnimSets/player/aim-strafe/ProjectYakuza_DD_KnifeIdle.xml",
+      "bytes": 1547,
+      "sha256": "1a35c6e6906de684cf1261421c38ee3afc4cc26d045ee1a2438de670410cdbaa",
+      "reason": "Selectors gated by unproduced custom-pose variables; native pose fallback has been active since v0.78."
+    },
+    {
+      "path": "42/media/AnimSets/player/aim/ProjectYakuza_DD_BatIdle.xml",
+      "bytes": 1551,
+      "sha256": "b1fb03f2739489ad0385d9a819ec48b1abed9857b20a5010da7861aa99932bee",
+      "reason": "Selectors gated by unproduced custom-pose variables; native pose fallback has been active since v0.78."
+    },
+    {
+      "path": "42/media/AnimSets/player/aim/ProjectYakuza_DD_BladeIdle.xml",
+      "bytes": 1557,
+      "sha256": "fc3dfb6a42771357f4864d19f62ff95ced0db7858952f9952c42cdd8299bdac9",
+      "reason": "Selectors gated by unproduced custom-pose variables; native pose fallback has been active since v0.78."
+    },
+    {
+      "path": "42/media/AnimSets/player/aim/ProjectYakuza_DD_BottleIdle.xml",
+      "bytes": 1560,
+      "sha256": "0d3f28d07a75d954608f09b913a7f2242c63b9c14b8d3d0fccee9a54c581f63b",
+      "reason": "Selectors gated by unproduced custom-pose variables; native pose fallback has been active since v0.78."
+    },
+    {
+      "path": "42/media/AnimSets/player/aim/ProjectYakuza_DD_CrateIdle.xml",
+      "bytes": 1557,
+      "sha256": "d51565c962fa4a3d48684fabbf1ab9af017efad6c7c808b0e62c366a2378e2cb",
+      "reason": "Selectors gated by unproduced custom-pose variables; native pose fallback has been active since v0.78."
+    },
+    {
+      "path": "42/media/AnimSets/player/aim/ProjectYakuza_DD_KnifeIdle.xml",
+      "bytes": 1547,
+      "sha256": "1a35c6e6906de684cf1261421c38ee3afc4cc26d045ee1a2438de670410cdbaa",
+      "reason": "Selectors gated by unproduced custom-pose variables; native pose fallback has been active since v0.78."
+    },
+    {
+      "path": "42/media/AnimSets/player/idle/ProjectYakuza_DD_LocomotionBatCarry.xml",
+      "bytes": 8319,
+      "sha256": "cff13e19bba8f1f1c5f3a74bd3a0516e44754fef41e014a3c5015055d2c4c549",
+      "reason": "Selectors gated by unproduced custom-pose variables; native pose fallback has been active since v0.78."
+    },
+    {
+      "path": "42/media/AnimSets/player/idle/ProjectYakuza_DD_LocomotionBladeCarry.xml",
+      "bytes": 8325,
+      "sha256": "f0ef57c3586a23b1fb58d00f8a954156ec59e1fe0a5d26b3af8e9e7c66a3a6df",
+      "reason": "Selectors gated by unproduced custom-pose variables; native pose fallback has been active since v0.78."
+    },
+    {
+      "path": "42/media/AnimSets/player/idle/ProjectYakuza_DD_LocomotionBottleCarry.xml",
+      "bytes": 8328,
+      "sha256": "9f90bbd77217422aa43bb0cbe38c47f16f08b43df87153453199fae2246ae9cf",
+      "reason": "Selectors gated by unproduced custom-pose variables; native pose fallback has been active since v0.78."
+    },
+    {
+      "path": "42/media/AnimSets/player/idle/ProjectYakuza_DD_LocomotionCrateCarry.xml",
+      "bytes": 8325,
+      "sha256": "d7c99c23905fb5b6dd3943879c67cc37263c0dd72286da4c7a5c7d2c96722a6c",
+      "reason": "Selectors gated by unproduced custom-pose variables; native pose fallback has been active since v0.78."
+    },
+    {
+      "path": "42/media/AnimSets/player/idle/ProjectYakuza_DD_LocomotionKnifeCarry.xml",
+      "bytes": 8300,
+      "sha256": "768e0073b54ad922d0dad2df8689e2760b44d984f395f8a3c899c0db7ed42a68",
+      "reason": "Selectors gated by unproduced custom-pose variables; native pose fallback has been active since v0.78."
+    },
+    {
+      "path": "42/media/AnimSets/player/movement/ProjectYakuza_DD_LocomotionBatWalk.xml",
+      "bytes": 7776,
+      "sha256": "6ca9c650c25390f7823ee7905801f1601ab7d13e79c4692f952d80d07edbaea3",
+      "reason": "Selectors gated by unproduced custom-pose variables; native pose fallback has been active since v0.78."
+    },
+    {
+      "path": "42/media/AnimSets/player/movement/ProjectYakuza_DD_LocomotionBladeWalk.xml",
+      "bytes": 7786,
+      "sha256": "b5385e88fca4cc9d5be7ccc0bf93abd23af4940fc1d5d9c591c6a4738912c617",
+      "reason": "Selectors gated by unproduced custom-pose variables; native pose fallback has been active since v0.78."
+    },
+    {
+      "path": "42/media/AnimSets/player/movement/ProjectYakuza_DD_LocomotionBottleWalk.xml",
+      "bytes": 7791,
+      "sha256": "984df4b7c7339bd129eb289ae48dd30ffdaae4cb608211bcbfd81abe83e5acfd",
+      "reason": "Selectors gated by unproduced custom-pose variables; native pose fallback has been active since v0.78."
+    },
+    {
+      "path": "42/media/AnimSets/player/movement/ProjectYakuza_DD_LocomotionCrateWalk.xml",
+      "bytes": 7786,
+      "sha256": "546c630284a64edd0cad5c0b4e7811aceb71b7d23042aebea530f0dedd0a8fff",
+      "reason": "Selectors gated by unproduced custom-pose variables; native pose fallback has been active since v0.78."
+    },
+    {
+      "path": "42/media/AnimSets/player/movement/ProjectYakuza_DD_LocomotionKnifeWalk.xml",
+      "bytes": 7715,
+      "sha256": "a1202511023937a046f4ba46786c3ea4affff19c13af38a9c865a031e5f60a28",
+      "reason": "Selectors gated by unproduced custom-pose variables; native pose fallback has been active since v0.78."
+    },
+    {
+      "path": "42/media/AnimSets/player/movement/ProjectYakuza_DD_LocomotionWalk.xml",
+      "bytes": 5317,
+      "sha256": "cccc780c3a0db331cd156f806a13256fcc94bd2a8590bd4033603f84bc6a9e53",
+      "reason": "Selectors gated by unproduced custom-pose variables; native pose fallback has been active since v0.78."
+    },
+    {
+      "path": "42/media/AnimSets/player/run/ProjectYakuza_DD_LocomotionBatRun.xml",
+      "bytes": 8559,
+      "sha256": "f973305266d14ff324247b0b92c8b2530fd7d299e93d6c402500c13509fee769",
+      "reason": "Selectors gated by unproduced custom-pose variables; native pose fallback has been active since v0.78."
+    },
+    {
+      "path": "42/media/AnimSets/player/run/ProjectYakuza_DD_LocomotionBladeRun.xml",
+      "bytes": 8569,
+      "sha256": "b2c4ddbb1339097089a96f75fee7a76d362ce8c33254f5e22e7a922545f257f9",
+      "reason": "Selectors gated by unproduced custom-pose variables; native pose fallback has been active since v0.78."
+    },
+    {
+      "path": "42/media/AnimSets/player/run/ProjectYakuza_DD_LocomotionBottleRun.xml",
+      "bytes": 8574,
+      "sha256": "8efade369059a141e9af00fd558cc1bca4ced500a8aeb37537440f8a581445ce",
+      "reason": "Selectors gated by unproduced custom-pose variables; native pose fallback has been active since v0.78."
+    },
+    {
+      "path": "42/media/AnimSets/player/run/ProjectYakuza_DD_LocomotionCrateRun.xml",
+      "bytes": 8569,
+      "sha256": "8ab846c09dbf4c294c3db1b0e0c9eecc1ac7f6b0519a08116a9060c6dd179f34",
+      "reason": "Selectors gated by unproduced custom-pose variables; native pose fallback has been active since v0.78."
+    },
+    {
+      "path": "42/media/AnimSets/player/run/ProjectYakuza_DD_LocomotionKnifeRun.xml",
+      "bytes": 8472,
+      "sha256": "7462f8128e561467fd8341a5f6d8a4a99842f173773dbf1d2f3b1cb420eb21d2",
+      "reason": "Selectors gated by unproduced custom-pose variables; native pose fallback has been active since v0.78."
+    },
+    {
+      "path": "42/media/AnimSets/player/sprint/ProjectYakuza_DD_LocomotionBatSprint.xml",
+      "bytes": 5676,
+      "sha256": "06607e816fb35dd8b9bdf7373332dd5da9a33aecbe283f3fc9f88c18741e43a2",
+      "reason": "Selectors gated by unproduced custom-pose variables; native pose fallback has been active since v0.78."
+    },
+    {
+      "path": "42/media/AnimSets/player/sprint/ProjectYakuza_DD_LocomotionBladeSprint.xml",
+      "bytes": 5692,
+      "sha256": "0c745658f16dd360e1072524e0b1189486cd310c33b2338eb6b49731c58ca173",
+      "reason": "Selectors gated by unproduced custom-pose variables; native pose fallback has been active since v0.78."
+    },
+    {
+      "path": "42/media/AnimSets/player/sprint/ProjectYakuza_DD_LocomotionBottleSprint.xml",
+      "bytes": 5700,
+      "sha256": "f2298785b87c9f84566fe55620050a92dc6b6da7e7afbccd79f36f25d69339cd",
+      "reason": "Selectors gated by unproduced custom-pose variables; native pose fallback has been active since v0.78."
+    },
+    {
+      "path": "42/media/AnimSets/player/sprint/ProjectYakuza_DD_LocomotionCrateSprint.xml",
+      "bytes": 5692,
+      "sha256": "a4a2112372ca4f410aea77b52fa4e624fa58ca7b3abb33c7614c1a4673826145",
+      "reason": "Selectors gated by unproduced custom-pose variables; native pose fallback has been active since v0.78."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BatCarry.x",
+      "bytes": 254900,
+      "sha256": "ecb41fbf57ddf03be0257f74f846a8f116403aeba5b563ee3a53a565917f17c8",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BatCarrySlow.x",
+      "bytes": 291089,
+      "sha256": "383e630ad5a7f8e064014eeb7fc6bce9a7e16713a99b0f55a0e9eab918056e6b",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BatCarryWalk.x",
+      "bytes": 316125,
+      "sha256": "23b9e310781d051e4a1bfbcce897f4d3d4c46db476d388774aa2d74c17be74f2",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BatIdle.x",
+      "bytes": 351257,
+      "sha256": "bf96d6c411b7438240ea2551d758c329490358194122e34a753d497dd5f09219",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BatReady.x",
+      "bytes": 596641,
+      "sha256": "46754135f88d9fe0a7efe56ddb6f4bbbcec354024d9ecdac11013d1c71a5c677",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BatRelaxedIdle.x",
+      "bytes": 473604,
+      "sha256": "39703b2d7a13db9f5cf06f80ecd17bea5b691f6f0a8960744782f20d7099893e",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BatRelaxedRun.x",
+      "bytes": 401005,
+      "sha256": "f70eebff0533fe13957ae69fc776bea0a31a610c48518fba5d1288a701d61eb5",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BatRelaxedSlow.x",
+      "bytes": 291012,
+      "sha256": "25a6cf64e8993a2103a948cfb809292e7d92d8e4422cdd20bba402aaaebd9633",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BatRelaxedSprint.x",
+      "bytes": 291348,
+      "sha256": "43c4601d6dd5e994e764bc0a73041dabff79d4cf31a53f9be66a4cc3b92f4ae8",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BatRelaxedWalk.x",
+      "bytes": 316049,
+      "sha256": "a75b34fae65d9f80d639dfc7842ae801866d774891b98f86940e44438c30cc23",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BatRun.x",
+      "bytes": 400988,
+      "sha256": "b64c704d3c0bc29719d6e81aa030fb2a1b85b1f54623343b2a44b9dd679e31ba",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BladeCarry.x",
+      "bytes": 254902,
+      "sha256": "ab21d1130624d0c7ef0615dcf324b37430affa433041fef3b4e327839785eb73",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BladeCarrySlow.x",
+      "bytes": 291091,
+      "sha256": "ffec8b6ad23c3a394cde20befe9ef742c61be82b071550c617d099650894ce92",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BladeCarryWalk.x",
+      "bytes": 316127,
+      "sha256": "d6140448b4e37b8e69a8d874ff757dc2c83e5788596d7dd95afb3adca8f4f022",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BladeIdle.x",
+      "bytes": 351096,
+      "sha256": "e164b8a948c33c2726afe7606129ed404c33e9e1f8521c1598c18c218f01a48b",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BladeReady.x",
+      "bytes": 596513,
+      "sha256": "2fc4a5d8374ea7ceeb38464d5b55d3b56b2eb0ab84e0b86f958dda3fedbfcab3",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BladeRelaxedIdle.x",
+      "bytes": 473484,
+      "sha256": "3c399ec81ba9427d7b59d3ed8e04c5a9146ba942ef7ffba3830274b2f8b76ffc",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BladeRelaxedRun.x",
+      "bytes": 401034,
+      "sha256": "43fd3973495b8681593c77531ed88c333f6bd8586d4dceef913c3487d9652f6c",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BladeRelaxedSlow.x",
+      "bytes": 290923,
+      "sha256": "17b39a499d3580d6770102a7bf1b4c18913ad38b89988e1498067725a83e2d4c",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BladeRelaxedSprint.x",
+      "bytes": 291370,
+      "sha256": "23b2126af765801111a681aa9bdd8d1c024bd7aa56f407048bc2021f32f6b916",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BladeRelaxedWalk.x",
+      "bytes": 315979,
+      "sha256": "e295e608e2722f2510a2c5d416f29e9fd74ae2093ff2b02448ec8166b53d098b",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BladeRun.x",
+      "bytes": 400990,
+      "sha256": "916634f8196d04270d336c9f48a32eb0c163d05ef63d2cefb22f9f6c1246f17d",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BottleReady.x",
+      "bytes": 474008,
+      "sha256": "a85671769256dd018c59ac875ed682e68f9bce879189481038315cf3c5ccbc98",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BottleRelaxedIdle.x",
+      "bytes": 596271,
+      "sha256": "836c95561a7825ffa752defe265f56fec6939958e709522a9187a09df9c08270",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BottleRelaxedRun.x",
+      "bytes": 401021,
+      "sha256": "a588e061e21d8774e86816f96893c58d49cc914399a32047f8fd34b3c8b561b8",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BottleRelaxedSlow.x",
+      "bytes": 254958,
+      "sha256": "178b2705869620960b92777afc4bd0120bf77ab06292d27aba59e6191ecbdc3a",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BottleRelaxedSprint.x",
+      "bytes": 291356,
+      "sha256": "bfa234228f1d08c5b88887f2cd34ac1d6059bed252c874b9d4398aac8341054b",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BottleRelaxedWalk.x",
+      "bytes": 254963,
+      "sha256": "3d0eca35dac4361808f687782c5742e47b68caa78588307e1824dab1906fdd62",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_CrateReady.x",
+      "bytes": 596892,
+      "sha256": "4a2b7ed92a935a9a9b29ffdf504e4444e3006399e8b4fb51c0bd9bbce784afa2",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_CrateRelaxedIdle.x",
+      "bytes": 473487,
+      "sha256": "5cea6cb97cb36a273f56f8601bbce143c3e46d5577754b5f39797fd92997109c",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_CrateRelaxedRun.x",
+      "bytes": 401007,
+      "sha256": "1b7c7107536b624d533350910819b32f210c6f6462c2b756daa3a71f248052df",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_CrateRelaxedSlow.x",
+      "bytes": 290875,
+      "sha256": "ab6199b4514d318f5244e0a769ffab14f2073a801e76aaf126c5a851022195c3",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_CrateRelaxedSprint.x",
+      "bytes": 291350,
+      "sha256": "b3509449bccd714711296db089c56171515c5e923ae1f393b21078cbf4ff5362",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_CrateRelaxedWalk.x",
+      "bytes": 315976,
+      "sha256": "45bf42adcf07fd36e4bca0a5292ac2febb84fecd34a5332c6444629996184ec7",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Footwork01.x",
+      "bytes": 1991639,
+      "sha256": "6ec32da579a09a5f685e1f96d7503522e0b80a10023ca4247382c1910e3eecdf",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Footwork02.x",
+      "bytes": 269164,
+      "sha256": "6e20988ac8b28f40949df72f9e396d4284601ab230fb97e815418846ad31b7ac",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Footwork03.x",
+      "bytes": 269139,
+      "sha256": "8248cd5224d1ddacba29d0c7fe65cb61a89038df7cfc50578725978c2d89cac1",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Footwork04.x",
+      "bytes": 269210,
+      "sha256": "76c7e9e44deb23f79d10b3ccdd15e4f7070b0c6026040d0e4d408b1af4245e30",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Footwork05.x",
+      "bytes": 269099,
+      "sha256": "42a0bfc7da73c7ab4b57447baf965e4ffd89fb8638775819d5ce4430bcb9936c",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Footwork06.x",
+      "bytes": 269098,
+      "sha256": "602cdc4e4ca7b2265b97bc6c3547977f679a04279b7539bcf985f991f27ff7c9",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Footwork07.x",
+      "bytes": 269039,
+      "sha256": "70f487e5f5ea6600e79bd8d6dff433ba962ba59e78453ffb16525881ec542540",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Footwork08.x",
+      "bytes": 269293,
+      "sha256": "64e4b7e5355bfe3588e81429a500eda11ab2eda61ef4bdbd781dd0b149ce9831",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Footwork09.x",
+      "bytes": 269141,
+      "sha256": "bad0509758bead2927bce2fa4f277e2c1bc430d7c46e43e5c5a6ce12136d23f4",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Footwork10.x",
+      "bytes": 269139,
+      "sha256": "e3655c3488ecc3515808cb74cde1ce4fa58a7d03e116baad53f8aa7512555bba",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Footwork11.x",
+      "bytes": 269098,
+      "sha256": "6c1f72d8095217d49d64f9748f167223d137e6b69ef69fafb0c84a9a2a0e24e9",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Footwork12.x",
+      "bytes": 269039,
+      "sha256": "0a5e204aad8a0e08922b1b5a89ab4927b66e8eed286097cf13b0f9cb62f846e1",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_GrabVictimHold.x",
+      "bytes": 481282,
+      "sha256": "8ef5b0d6b8372dc0625bc092b067264854b15dc38f62f730855f4aa077ab0bf8",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_GrabVictimWalk.x",
+      "bytes": 182884,
+      "sha256": "e5906935db52e658c7e4a6a44bcd97e5f2192789dafff594b3d6f0f3bbbaef06",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_KnifeCarry.x",
+      "bytes": 315821,
+      "sha256": "0df4df66e2c1436b8173bdf52c87504edb8173f70c691b42719062f740e0db7a",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_KnifeCarrySlow.x",
+      "bytes": 255032,
+      "sha256": "6e3eeefca23fb8cc216ed612508be82146a6635d1fdfdbf96a300aef1140c338",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_KnifeCarryWalk.x",
+      "bytes": 255037,
+      "sha256": "7d7c69058c4aea4cd12c6778cc419764954204d3adb3239908baf55820fe5e20",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_KnifeIdle.x",
+      "bytes": 351345,
+      "sha256": "5625440f3ffb8fcae8713e7106be45e53ea6836ac73be02135e9fd6c44fdb8a1",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_KnifeRun.x",
+      "bytes": 401015,
+      "sha256": "251d65c443747804831f76020120bff07a1fb9166c2050807bf54715690e812b",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_MovingStance.x",
+      "bytes": 27339,
+      "sha256": "88c87492f81791d6a4c070453641415e8d50c058b74726c745a0b72920c29347",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Walk.x",
+      "bytes": 500744,
+      "sha256": "7eafb579dd773b918557cee5d76550a474c8e301140ee8cb7b45388a64dddeb9",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_WalkSlow.x",
+      "bytes": 500739,
+      "sha256": "9f4c59b6457da13101bc8100577eac23954ea9369eaf922c2fc6e4a3be66bec1",
+      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
+    },
+    {
+      "path": "42/media/sound/ProjectYakuza/Y6Combat/act_kiryu_003.ogg",
+      "bytes": 13239,
+      "sha256": "24a32df6abd64b367eabdeff7afee95819f51faa1ffd5ea9906f887a54f94d0e",
+      "reason": "Unreferenced ChargeEnd sound definition removed; active activation audio uses the current mixed charge/flare/layer cues."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/ExtremeHeat_wispL_0.png",
+      "bytes": 4785,
+      "sha256": "4ec24192cc37bd5e1223561eab26d1325a012a9ee8380109909066da7d4c5c8b",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/ExtremeHeat_wispR_0.png",
+      "bytes": 5055,
+      "sha256": "18e86ad3f7f614ebbd36f09635d24ffdafeb0e58b5684109f766eebd169b8e71",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_0.png",
+      "bytes": 1785,
+      "sha256": "81e286e84353d5d97a9803658366872ea85d5aa059e666c6675c8306e01bc595",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_1.png",
+      "bytes": 1940,
+      "sha256": "98f203ed87285057cb43d0c0fe3c807e15ef4bb68bb29ab6f64ff636963a58aa",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_10.png",
+      "bytes": 1917,
+      "sha256": "22dec3e871364b91ab1c4c70ca82b415f07720b9c8fe3b7da9ec7a03f39407df",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_11.png",
+      "bytes": 1969,
+      "sha256": "10612c75f9d31c9b691389cd7e1370c304178440503b19cb9b14f48571beb267",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_12.png",
+      "bytes": 1922,
+      "sha256": "47e394f67fa36417dc558a921076504962dc1ca224babe6311da2251c51c9aa7",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_13.png",
+      "bytes": 1930,
+      "sha256": "42cb6d6219981bc770c7b5340702436b5e7105039ea9650a74aac1ce708fb3e9",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_14.png",
+      "bytes": 1895,
+      "sha256": "3d3f45c63ada2db3cc81d8725f3ca393c0a2f00ee0ee7d743b4980b058dca08c",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_15.png",
+      "bytes": 2017,
+      "sha256": "1994bb2b56c592d52a1cc0a62de06a4984ec0e921f50e2919889dc1fb30818a7",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_16.png",
+      "bytes": 1902,
+      "sha256": "dc2e021c87ff3de48ff072c5dc3fbbf73f35adb9e836777a6b8cdc0ae7ae7d67",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_17.png",
+      "bytes": 1788,
+      "sha256": "60f7245dc087a510790d01718655a99a8644917e94bf80f820df1d12d59fb88d",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_18.png",
+      "bytes": 1835,
+      "sha256": "6ad13b15d25998e27bc3ada99f89c46a3cd1ef6176b116bbc900e2659e249476",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_19.png",
+      "bytes": 1837,
+      "sha256": "d7091f93c263eaa3bab95a1342d951aa0c1548234ddd53b53ae65ca4e229261c",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_2.png",
+      "bytes": 1955,
+      "sha256": "5251ece26ed1af5a54a885b74c18006cfd7db3f73edd5c7f33d9b3fab3df0949",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_20.png",
+      "bytes": 1769,
+      "sha256": "985457d2ad762e760c8aadfa6d449aeaa5052d7f61d9a894d2ecf3a012e81501",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_21.png",
+      "bytes": 1664,
+      "sha256": "c480781ab02618a5c0a2609c7c6397b2022ef21195ab35483bca9c65b3fe0818",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_22.png",
+      "bytes": 1675,
+      "sha256": "1e44984298a61e574c63bb46aaacb6e7219cef109ddafd611b677bf5ef6ae0de",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_23.png",
+      "bytes": 1659,
+      "sha256": "0cde116451a6b88fedb66e79924091e6dd646179ffe3cecc6b56375630fa1bb4",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_24.png",
+      "bytes": 1677,
+      "sha256": "dcf12a87114aa1d774a7e42106bc3d1f547ed42c8ced3b6c4f71f099fd141315",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_25.png",
+      "bytes": 1635,
+      "sha256": "c2aa299847790b90824ed915d52ff0f08fd9f0f1ec338f2da88c7e331b9e75c0",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_26.png",
+      "bytes": 1659,
+      "sha256": "98a23ac376df91638ee64f48fc352287abcec591b0f8bf54f6b3a44bc1077ded",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_27.png",
+      "bytes": 1595,
+      "sha256": "2dee2e5c83a244e6c55db1bc12fb8267be455816b3b2ac19948b54fd779d073d",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_28.png",
+      "bytes": 1624,
+      "sha256": "734ee11daa89b4c659c74019a1784c2d02333a143c5e555a6e2a4e06bb785900",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_29.png",
+      "bytes": 1678,
+      "sha256": "1be876da743e9d4cbc49aead7bef730e018e8253fcd50c34cec4b1ff4c737721",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_3.png",
+      "bytes": 1966,
+      "sha256": "4f3324794f63730ee3f46a0349abc9d7de054ed0475c8062aa11c766d19c2fe3",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_30.png",
+      "bytes": 1626,
+      "sha256": "6472c1af0fff982b141135b259dcb0ee43b87fa4196ff4fe427d540fc23017da",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_31.png",
+      "bytes": 1626,
+      "sha256": "3778d2779e9682ba5791a97a7094248b01328ba6b48d26afdf1e9d620d5a1d6d",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_4.png",
+      "bytes": 2012,
+      "sha256": "80cf7035b256eb24d1ab34fd6e9e61be68d7aac2c7ae7d25cdac99be8f7a3cd8",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_5.png",
+      "bytes": 1932,
+      "sha256": "863d9d0f212f56cff4b37ce63d2afa5ef98b92348ed4b2c7e065de04634e1be9",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_6.png",
+      "bytes": 1902,
+      "sha256": "fc3f9700e5ec13c0949bcfdbb0a9320a76562a70588bd556bb973e8a137dfa40",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_7.png",
+      "bytes": 1840,
+      "sha256": "d46289b1b50585ad9a383a6aa3d6eb5419614b792c1f90b7384dbda09348a991",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_8.png",
+      "bytes": 1864,
+      "sha256": "c07ff7242976b3a97623b283a083b41a881b5d87413ee29f9d51f7725909cf3a",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/HeatHUD/Bar_9.png",
+      "bytes": 1841,
+      "sha256": "d5a6490a516e878690c733d9c6d8beaaf985ddafdc80cc790143e2bd418abf6b",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/HeatRushQTEEffects.png",
+      "bytes": 75743,
+      "sha256": "ba5f12dd24bb1b89da2caa2e3475fd4aa901ef3ba35967a3dc4df42de72bf2f6",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/HitSparks.png",
+      "bytes": 10456,
+      "sha256": "115586a2e9dc94a95b069d9b1e45eff901b41c44a49427053c60a5c9b7229eb9",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/StyleFX/EntryWispA.png",
+      "bytes": 4785,
+      "sha256": "4ec24192cc37bd5e1223561eab26d1325a012a9ee8380109909066da7d4c5c8b",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/StyleFX/EntryWispB.png",
+      "bytes": 5055,
+      "sha256": "18e86ad3f7f614ebbd36f09635d24ffdafeb0e58b5684109f766eebd169b8e71",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/StyleFX/TauntSpiral.png",
+      "bytes": 9861,
+      "sha256": "eed0145fb829a2dfe1ee12d4bd527c49b81dbad533c0b6c58f787d610f45d18d",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/StyleFX/TauntStreak.png",
+      "bytes": 1250,
+      "sha256": "08bac823dea4be75f4761b61061e4dce96215719742b66a35638986df85c84a9",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_a_0.png",
+      "bytes": 8054,
+      "sha256": "d500caf33330ff1c3918a89c37bbf4fe5148092ab06499f5aef2d15fd8733c70",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_a_1.png",
+      "bytes": 7911,
+      "sha256": "d11a88c10f8872c26e3b40d795c1cac7509f6842c9c91dfc838df7e46c023811",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_a_10.png",
+      "bytes": 7503,
+      "sha256": "495460a07834836a69197d486b3a2f340f2272b2f336701957bac55467db583c",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_a_11.png",
+      "bytes": 7468,
+      "sha256": "07f8d6ce7c9c7148ae5de13f6e6f943e7b851973169ffc4fd10604de7d337657",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_a_12.png",
+      "bytes": 7345,
+      "sha256": "93f93c6298eba28971cac9aca97c7fc311fb9443a67e1f4058b86dbe5c9f71b4",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_a_13.png",
+      "bytes": 7388,
+      "sha256": "76946586d2d60a81f43a0c5db6876de6641df25c9a5e6412de030ebc31df4f81",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_a_14.png",
+      "bytes": 7419,
+      "sha256": "6e6a4f99bae873b222eefc681a80f06cc3eceedfcdf4b8368c8c4774fb4c5102",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_a_15.png",
+      "bytes": 7408,
+      "sha256": "ccc95293db497f92e2d974e06c35ea2c6b148430f208e84f173eb498d1acf069",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_a_16.png",
+      "bytes": 7374,
+      "sha256": "b46510095952e82ee0f6f954c660efe7c0c31ff9a145f4a00683c34e065a85b8",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_a_17.png",
+      "bytes": 7348,
+      "sha256": "1e667862555e179db2e9420ac3ee60afd7bd8d76de0053e27041e6cfb63bc285",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_a_18.png",
+      "bytes": 7343,
+      "sha256": "b84ed50adbf4bd91a76132d40fa00894dfb68e02c075a65f1e0df2be45b48f4a",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_a_19.png",
+      "bytes": 7346,
+      "sha256": "2c5f2c1f57a01b662cf7385731922fbd6ea7de0356fbc809a82741f531e04274",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_a_2.png",
+      "bytes": 7891,
+      "sha256": "93d21bce162b3f72166498e87420491e6ede4f1ca18c7f90b60a5e3c9c0243c5",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_a_20.png",
+      "bytes": 7350,
+      "sha256": "83e7932fd1f2593651f07ba33d5f5ec3db9ff7fe265ed35affddf8699b61e759",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_a_21.png",
+      "bytes": 7397,
+      "sha256": "825041521dfbdd7519266afba26290473b11356e92a91c2e997db538db982ab0",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_a_22.png",
+      "bytes": 7335,
+      "sha256": "b2b8a368d1c6f6cfb5d744279522df3b78fd9acdcc085d9c1d8dc9258947f546",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_a_23.png",
+      "bytes": 7357,
+      "sha256": "9f379e1f433f06fd320db0527a392869bdc096fe6e31dd46c53bef71909a3858",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_a_24.png",
+      "bytes": 7434,
+      "sha256": "b05033abaf66a816e0aae75b411133f21dd2ff705043489e05ef30bd725b3793",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_a_25.png",
+      "bytes": 7588,
+      "sha256": "490e21968429737e41404c24f92f2d9b83c0ff29f30418889d24f45c25149d39",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_a_26.png",
+      "bytes": 7690,
+      "sha256": "1a8e7f4dbb20e3e4dfbe9f0eb9cee9c639501db942fbb47b49910e7b5bafbcc2",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_a_27.png",
+      "bytes": 7671,
+      "sha256": "c467990d6bc2f552342176276ed5596f46c301e796f36e893ecc38aad1cda811",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_a_28.png",
+      "bytes": 7799,
+      "sha256": "4ff54bb8864fb05ed6da2c4ea475f71506a34b25962c840ed88fd38177654ce8",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_a_29.png",
+      "bytes": 7819,
+      "sha256": "8b758bd1e7cdeefaf9ee687df67a29367a99ba84b6d15e70100b31d160079afc",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_a_3.png",
+      "bytes": 7905,
+      "sha256": "4727b59c1fe351336f49611a188ca11c70bb9fa3463bfaa5f2ca81361def8c9c",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_a_30.png",
+      "bytes": 7991,
+      "sha256": "0f07aee8333791aea9ffaec391680abbcee9273c382442020f679c0611b85318",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_a_31.png",
+      "bytes": 8025,
+      "sha256": "a2462ebc79f3f362dda177f8f1a1b744a5726f34ba40b1f1cef58c89098d0cba",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_a_4.png",
+      "bytes": 7747,
+      "sha256": "fcee407aa782db5f7b73313ff8337ee28937021a123a3265bffd048dda055a92",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_a_5.png",
+      "bytes": 7730,
+      "sha256": "88790c63b10b840fd6a8c10813ebc8319e902ee1416f0d54c475892fb9b9c451",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_a_6.png",
+      "bytes": 7689,
+      "sha256": "85d847eb7fa1b43a32c8723ecd896416e46a8de814782d06937b7a980c51e444",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_a_7.png",
+      "bytes": 7625,
+      "sha256": "f0b5684e8e343b65c48e3b633d9ca7d474395c258aeb4cb03b8818b98dc30ad3",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_a_8.png",
+      "bytes": 7612,
+      "sha256": "f5daa99bc0f5502ca13c4d9d455513caa6e7f434cf6ec4d841344beb40585cb1",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_a_9.png",
+      "bytes": 7465,
+      "sha256": "8b11f47ad5f1b9a38802731414f7f3cc2da27282cff9e41040e806c8aeb006cc",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_b_0.png",
+      "bytes": 7468,
+      "sha256": "07f8d6ce7c9c7148ae5de13f6e6f943e7b851973169ffc4fd10604de7d337657",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_b_1.png",
+      "bytes": 7345,
+      "sha256": "93f93c6298eba28971cac9aca97c7fc311fb9443a67e1f4058b86dbe5c9f71b4",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_b_10.png",
+      "bytes": 7397,
+      "sha256": "825041521dfbdd7519266afba26290473b11356e92a91c2e997db538db982ab0",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_b_11.png",
+      "bytes": 7335,
+      "sha256": "b2b8a368d1c6f6cfb5d744279522df3b78fd9acdcc085d9c1d8dc9258947f546",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_b_12.png",
+      "bytes": 7357,
+      "sha256": "9f379e1f433f06fd320db0527a392869bdc096fe6e31dd46c53bef71909a3858",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_b_13.png",
+      "bytes": 7434,
+      "sha256": "b05033abaf66a816e0aae75b411133f21dd2ff705043489e05ef30bd725b3793",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_b_14.png",
+      "bytes": 7588,
+      "sha256": "490e21968429737e41404c24f92f2d9b83c0ff29f30418889d24f45c25149d39",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_b_15.png",
+      "bytes": 7690,
+      "sha256": "1a8e7f4dbb20e3e4dfbe9f0eb9cee9c639501db942fbb47b49910e7b5bafbcc2",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_b_16.png",
+      "bytes": 7671,
+      "sha256": "c467990d6bc2f552342176276ed5596f46c301e796f36e893ecc38aad1cda811",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_b_17.png",
+      "bytes": 7799,
+      "sha256": "4ff54bb8864fb05ed6da2c4ea475f71506a34b25962c840ed88fd38177654ce8",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_b_18.png",
+      "bytes": 7819,
+      "sha256": "8b758bd1e7cdeefaf9ee687df67a29367a99ba84b6d15e70100b31d160079afc",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_b_19.png",
+      "bytes": 7991,
+      "sha256": "0f07aee8333791aea9ffaec391680abbcee9273c382442020f679c0611b85318",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_b_2.png",
+      "bytes": 7388,
+      "sha256": "76946586d2d60a81f43a0c5db6876de6641df25c9a5e6412de030ebc31df4f81",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_b_20.png",
+      "bytes": 8025,
+      "sha256": "a2462ebc79f3f362dda177f8f1a1b744a5726f34ba40b1f1cef58c89098d0cba",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_b_21.png",
+      "bytes": 8054,
+      "sha256": "d500caf33330ff1c3918a89c37bbf4fe5148092ab06499f5aef2d15fd8733c70",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_b_22.png",
+      "bytes": 7911,
+      "sha256": "d11a88c10f8872c26e3b40d795c1cac7509f6842c9c91dfc838df7e46c023811",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_b_23.png",
+      "bytes": 7891,
+      "sha256": "93d21bce162b3f72166498e87420491e6ede4f1ca18c7f90b60a5e3c9c0243c5",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_b_24.png",
+      "bytes": 7905,
+      "sha256": "4727b59c1fe351336f49611a188ca11c70bb9fa3463bfaa5f2ca81361def8c9c",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_b_25.png",
+      "bytes": 7747,
+      "sha256": "fcee407aa782db5f7b73313ff8337ee28937021a123a3265bffd048dda055a92",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_b_26.png",
+      "bytes": 7730,
+      "sha256": "88790c63b10b840fd6a8c10813ebc8319e902ee1416f0d54c475892fb9b9c451",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_b_27.png",
+      "bytes": 7689,
+      "sha256": "85d847eb7fa1b43a32c8723ecd896416e46a8de814782d06937b7a980c51e444",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_b_28.png",
+      "bytes": 7625,
+      "sha256": "f0b5684e8e343b65c48e3b633d9ca7d474395c258aeb4cb03b8818b98dc30ad3",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_b_29.png",
+      "bytes": 7612,
+      "sha256": "f5daa99bc0f5502ca13c4d9d455513caa6e7f434cf6ec4d841344beb40585cb1",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_b_3.png",
+      "bytes": 7419,
+      "sha256": "6e6a4f99bae873b222eefc681a80f06cc3eceedfcdf4b8368c8c4774fb4c5102",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_b_30.png",
+      "bytes": 7465,
+      "sha256": "8b11f47ad5f1b9a38802731414f7f3cc2da27282cff9e41040e806c8aeb006cc",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_b_31.png",
+      "bytes": 7503,
+      "sha256": "495460a07834836a69197d486b3a2f340f2272b2f336701957bac55467db583c",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_b_4.png",
+      "bytes": 7408,
+      "sha256": "ccc95293db497f92e2d974e06c35ea2c6b148430f208e84f173eb498d1acf069",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_b_5.png",
+      "bytes": 7374,
+      "sha256": "b46510095952e82ee0f6f954c660efe7c0c31ff9a145f4a00683c34e065a85b8",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_b_6.png",
+      "bytes": 7348,
+      "sha256": "1e667862555e179db2e9420ac3ee60afd7bd8d76de0053e27041e6cfb63bc285",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_b_7.png",
+      "bytes": 7343,
+      "sha256": "b84ed50adbf4bd91a76132d40fa00894dfb68e02c075a65f1e0df2be45b48f4a",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_b_8.png",
+      "bytes": 7346,
+      "sha256": "2c5f2c1f57a01b662cf7385731922fbd6ea7de0356fbc809a82741f531e04274",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_b_9.png",
+      "bytes": 7350,
+      "sha256": "83e7932fd1f2593651f07ba33d5f5ec3db9ff7fe265ed35affddf8699b61e759",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_c_0.png",
+      "bytes": 7357,
+      "sha256": "9f379e1f433f06fd320db0527a392869bdc096fe6e31dd46c53bef71909a3858",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_c_1.png",
+      "bytes": 7434,
+      "sha256": "b05033abaf66a816e0aae75b411133f21dd2ff705043489e05ef30bd725b3793",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_c_10.png",
+      "bytes": 7911,
+      "sha256": "d11a88c10f8872c26e3b40d795c1cac7509f6842c9c91dfc838df7e46c023811",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_c_11.png",
+      "bytes": 7891,
+      "sha256": "93d21bce162b3f72166498e87420491e6ede4f1ca18c7f90b60a5e3c9c0243c5",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_c_12.png",
+      "bytes": 7905,
+      "sha256": "4727b59c1fe351336f49611a188ca11c70bb9fa3463bfaa5f2ca81361def8c9c",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_c_13.png",
+      "bytes": 7747,
+      "sha256": "fcee407aa782db5f7b73313ff8337ee28937021a123a3265bffd048dda055a92",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_c_14.png",
+      "bytes": 7730,
+      "sha256": "88790c63b10b840fd6a8c10813ebc8319e902ee1416f0d54c475892fb9b9c451",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_c_15.png",
+      "bytes": 7689,
+      "sha256": "85d847eb7fa1b43a32c8723ecd896416e46a8de814782d06937b7a980c51e444",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_c_16.png",
+      "bytes": 7625,
+      "sha256": "f0b5684e8e343b65c48e3b633d9ca7d474395c258aeb4cb03b8818b98dc30ad3",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_c_17.png",
+      "bytes": 7612,
+      "sha256": "f5daa99bc0f5502ca13c4d9d455513caa6e7f434cf6ec4d841344beb40585cb1",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_c_18.png",
+      "bytes": 7465,
+      "sha256": "8b11f47ad5f1b9a38802731414f7f3cc2da27282cff9e41040e806c8aeb006cc",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_c_19.png",
+      "bytes": 7503,
+      "sha256": "495460a07834836a69197d486b3a2f340f2272b2f336701957bac55467db583c",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_c_2.png",
+      "bytes": 7588,
+      "sha256": "490e21968429737e41404c24f92f2d9b83c0ff29f30418889d24f45c25149d39",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_c_20.png",
+      "bytes": 7468,
+      "sha256": "07f8d6ce7c9c7148ae5de13f6e6f943e7b851973169ffc4fd10604de7d337657",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_c_21.png",
+      "bytes": 7345,
+      "sha256": "93f93c6298eba28971cac9aca97c7fc311fb9443a67e1f4058b86dbe5c9f71b4",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_c_22.png",
+      "bytes": 7388,
+      "sha256": "76946586d2d60a81f43a0c5db6876de6641df25c9a5e6412de030ebc31df4f81",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_c_23.png",
+      "bytes": 7419,
+      "sha256": "6e6a4f99bae873b222eefc681a80f06cc3eceedfcdf4b8368c8c4774fb4c5102",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_c_24.png",
+      "bytes": 7408,
+      "sha256": "ccc95293db497f92e2d974e06c35ea2c6b148430f208e84f173eb498d1acf069",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_c_25.png",
+      "bytes": 7374,
+      "sha256": "b46510095952e82ee0f6f954c660efe7c0c31ff9a145f4a00683c34e065a85b8",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_c_26.png",
+      "bytes": 7348,
+      "sha256": "1e667862555e179db2e9420ac3ee60afd7bd8d76de0053e27041e6cfb63bc285",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_c_27.png",
+      "bytes": 7343,
+      "sha256": "b84ed50adbf4bd91a76132d40fa00894dfb68e02c075a65f1e0df2be45b48f4a",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_c_28.png",
+      "bytes": 7346,
+      "sha256": "2c5f2c1f57a01b662cf7385731922fbd6ea7de0356fbc809a82741f531e04274",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_c_29.png",
+      "bytes": 7350,
+      "sha256": "83e7932fd1f2593651f07ba33d5f5ec3db9ff7fe265ed35affddf8699b61e759",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_c_3.png",
+      "bytes": 7690,
+      "sha256": "1a8e7f4dbb20e3e4dfbe9f0eb9cee9c639501db942fbb47b49910e7b5bafbcc2",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_c_30.png",
+      "bytes": 7397,
+      "sha256": "825041521dfbdd7519266afba26290473b11356e92a91c2e997db538db982ab0",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_c_31.png",
+      "bytes": 7335,
+      "sha256": "b2b8a368d1c6f6cfb5d744279522df3b78fd9acdcc085d9c1d8dc9258947f546",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_c_4.png",
+      "bytes": 7671,
+      "sha256": "c467990d6bc2f552342176276ed5596f46c301e796f36e893ecc38aad1cda811",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_c_5.png",
+      "bytes": 7799,
+      "sha256": "4ff54bb8864fb05ed6da2c4ea475f71506a34b25962c840ed88fd38177654ce8",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_c_6.png",
+      "bytes": 7819,
+      "sha256": "8b758bd1e7cdeefaf9ee687df67a29367a99ba84b6d15e70100b31d160079afc",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_c_7.png",
+      "bytes": 7991,
+      "sha256": "0f07aee8333791aea9ffaec391680abbcee9273c382442020f679c0611b85318",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_c_8.png",
+      "bytes": 8025,
+      "sha256": "a2462ebc79f3f362dda177f8f1a1b744a5726f34ba40b1f1cef58c89098d0cba",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntAura_c_9.png",
+      "bytes": 8054,
+      "sha256": "d500caf33330ff1c3918a89c37bbf4fe5148092ab06499f5aef2d15fd8733c70",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntBurst_spark_0.png",
+      "bytes": 1250,
+      "sha256": "08bac823dea4be75f4761b61061e4dce96215719742b66a35638986df85c84a9",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntBurst_wispL_0.png",
+      "bytes": 4785,
+      "sha256": "4ec24192cc37bd5e1223561eab26d1325a012a9ee8380109909066da7d4c5c8b",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/TauntBurst_wispR_0.png",
+      "bytes": 5055,
+      "sha256": "18e86ad3f7f614ebbd36f09635d24ffdafeb0e58b5684109f766eebd169b8e71",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/WorldHit_normal_0.png",
+      "bytes": 1245,
+      "sha256": "e697ee8d0cb20c53eec4fefa95bdc7c31dd47566110fa2a8471ad60a780a84c9",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/WorldHit_normal_1.png",
+      "bytes": 1440,
+      "sha256": "f4083ea04772172f2a6d6a5ac80cef077b56120399f097c27fcaccaca83d91a6",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/WorldHit_normal_10.png",
+      "bytes": 573,
+      "sha256": "d0a4af1bc1ac592f5e45be7a109c4dfc44bfa62d4ed2c0491d5384961ceba918",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/WorldHit_normal_11.png",
+      "bytes": 563,
+      "sha256": "ec12f7ce0271319f4d4d504be7c6c65811dfc90d393bd60d9087d05e82a4d6f1",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/WorldHit_normal_12.png",
+      "bytes": 443,
+      "sha256": "ae415836a8d865ebcc96382617195f8bb6988af1d1606426a8ae2831c0f60c76",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/WorldHit_normal_13.png",
+      "bytes": 413,
+      "sha256": "4ed84408b851648e3411b58dec0d4e2016ec1acf0d0bed286e901cd9bff505c6",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/WorldHit_normal_14.png",
+      "bytes": 307,
+      "sha256": "4ae15c2e3d66145f777d628d4ef515bebfd0b4717b548968abb9adb62fb4c6cc",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/WorldHit_normal_15.png",
+      "bytes": 96,
+      "sha256": "052c48aa8b5e4f2c40bcd0d1bb7a4b93276276285dfa3e8a971b435dc88fdfee",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/WorldHit_normal_2.png",
+      "bytes": 1459,
+      "sha256": "78cdc9e6043dcee4c7a3b0c442d648bb5c396157f9cbfd6618d30f2bce1efd3a",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/WorldHit_normal_3.png",
+      "bytes": 1462,
+      "sha256": "4f1dda680671de146f24425646437c90caa86795a03ec42d6702b59ad3c68ddc",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/WorldHit_normal_4.png",
+      "bytes": 828,
+      "sha256": "5dae0bbef34403a1d0da16a1ad88de3e25d3e01b7201d0ce80420c04d6fe7c5c",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/WorldHit_normal_5.png",
+      "bytes": 791,
+      "sha256": "05cc8f35c0c847d42ed5e89c9d230d273bf7b3e36e04a7f22d5edecb1314df0e",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/WorldHit_normal_6.png",
+      "bytes": 756,
+      "sha256": "ee7c0fba6ece63a9539dc5529512ff76240ecbf2b55b62de7976f27d6ee1842f",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/WorldHit_normal_7.png",
+      "bytes": 740,
+      "sha256": "4dd13b8f9437a7821fc59fad0ca0885443cddd37d3b44b05bd07bb8bb36c20e3",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/WorldHit_normal_8.png",
+      "bytes": 651,
+      "sha256": "7694371145c497636aab5b63c3b02f3aed3d1510d5fbf2bb49ec996dddd104a4",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/WorldHit_normal_9.png",
+      "bytes": 631,
+      "sha256": "bd5dc96bf63a990d512b67f22197ecaa99af62e87761da5d47d53d37c7a990a3",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/WorldHit_strong_0.png",
+      "bytes": 2107,
+      "sha256": "df66ed6d473eb2eb14fe3f7fbc5ba1e1813ff5af4f790c08d62eeccff6f50af6",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/WorldHit_strong_1.png",
+      "bytes": 2247,
+      "sha256": "a6a18b5d04c328f4f3488833f3b1961f4747326d399fee0e1a72321f699e3075",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/WorldHit_strong_10.png",
+      "bytes": 868,
+      "sha256": "7afc589186137414140031ebcbfda56384a7b2f46e3f7ecf5cfe9df494ddd7fa",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/WorldHit_strong_11.png",
+      "bytes": 747,
+      "sha256": "68b913fbb44a1b3fb3cf5abc446ee8d60ff5987ec5a657b8a09d9846f725a894",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/WorldHit_strong_12.png",
+      "bytes": 643,
+      "sha256": "ec9e913994448200e511d817705ab1b5e41afe230f9721a229879fe4d53b0fd5",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/WorldHit_strong_13.png",
+      "bytes": 552,
+      "sha256": "32ef1f960412771ab1359b3a05974378f90bdacffc6a31a59f9565cfe988c5e5",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/WorldHit_strong_14.png",
+      "bytes": 422,
+      "sha256": "2455b05e335f80d6a9c987f2e75a0855f98e8e8f4af950e88fc5e4465a76d654",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/WorldHit_strong_15.png",
+      "bytes": 96,
+      "sha256": "052c48aa8b5e4f2c40bcd0d1bb7a4b93276276285dfa3e8a971b435dc88fdfee",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/WorldHit_strong_2.png",
+      "bytes": 2350,
+      "sha256": "5e089575c6cb4021706db3a3bf8bf5c986b1482a718cd88cf975bcfd2fcdfddb",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/WorldHit_strong_3.png",
+      "bytes": 2300,
+      "sha256": "b4ff514bc02c8dbd56e1a369a3390513f715c923b79396bdee73c22670cf38fd",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/WorldHit_strong_4.png",
+      "bytes": 1155,
+      "sha256": "08723b042256dbd44d9687e3fdfd602ad9247531f217b2b8e564042d640ea3c4",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/WorldHit_strong_5.png",
+      "bytes": 1097,
+      "sha256": "4bcff1ae26578dd94ae810f25247fc041ed0c01a43dc8300dff8b8506e36fec4",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/WorldHit_strong_6.png",
+      "bytes": 1132,
+      "sha256": "28b9fbb24715dd33c85c9b05db1ca7eaf60b9c21e374726077e985c57367eff0",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/WorldHit_strong_7.png",
+      "bytes": 1064,
+      "sha256": "72740a07b88a210588611d60cdaf65f14dcc1318e77af8fafbf5bc5e82744684",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/WorldHit_strong_8.png",
+      "bytes": 972,
+      "sha256": "372babe1877fc5fa635c792289b7ea5836e6bbe92d87a39987ecb3e917408f6f",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/WorldHit_strong_9.png",
+      "bytes": 929,
+      "sha256": "a3a7ddf6c2e6eba54ba8cfeae0d1b810afcef02f25b053e6ff26e03b18a2530c",
+      "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    }
+  ],
+  "removedBytes": 21959257
+}

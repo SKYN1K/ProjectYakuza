@@ -51,3 +51,6 @@ Offline tests cover native source samples, continuous facings, limb endpoints, l
 As of 0.100.0, confirmed-hit glints and sparks vary their initial direction, spread, scale, curvature, downward motion and fade from hit to hit. A small contact-centred offset prevents identical screen patterns. A separate local visual noise sequence leaves gameplay RNG untouched. Source textures, family tints, damage/contact timing, collision anchors and blood frames remain unchanged.
 
 Burst/particle caps and maximum lifetimes remain the same. Heat Action contacts retain their copied physical world anchor; ordinary hits and guard effects keep their existing target/defender attachment. Pause freezes each varied trajectory. Existing pooling, interruption, death, menu and render-failure cleanup still dispose every owned instance.
+
+
+The 0.101.0 cleanup removes the duplicated legacy first-light numeric dataset. AttackTracks remains the public numeric-track registry, populated by AttackTrailCatalog. The built-in first light uses dd_trail_light01_1, verified against the same original 31 native FK frames. Old unused WorldHit flipbooks and HitSparks are removed; the active glints, spark, flame, blood and contact variation are unchanged.

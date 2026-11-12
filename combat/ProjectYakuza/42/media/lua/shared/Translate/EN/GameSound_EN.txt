@@ -35,7 +35,6 @@ GameSound_EN = {
 
     GameSound_ProjectYakuza_Y6_ChargeStart = "Activation charge starts",
 
-    GameSound_ProjectYakuza_Y6_ChargeEnd = "Activation charge ends",
 
     GameSound_ProjectYakuza_FunkGoesOn = "Funk Goes On",
 

@@ -4,17 +4,17 @@ import json,subprocess
 w=Path(__file__).resolve().parent;root=w.parents[1];mod=root/'combat/ProjectYakuza'
 game=Path('F:/SteamLibrary/steamapps/common/ProjectZomboid')
 native=w/'punch-track-native.json'
-subprocess.run([str(game/'jre64/bin/java.exe'),'-cp',str(w)+';'+str(game/'*'),'PunchTrackProbe',str(mod/'42/media/anims_X/Bob/ProjectYakuza_DD_Light01.x'),str(native)],check=True)
+subprocess.run([str(game/'jre64/bin/java.exe'),'-Xms16m','-Xmx256m','-XX:ActiveProcessorCount=2','-cp',str(w)+';'+str(game/'*'),'PunchTrackProbe',str(mod/'42/media/anims_X/Bob/ProjectYakuza_DD_Light01.x'),str(native)],check=True)
 d=json.loads(native.read_text())
-code=(mod/'42/media/lua/client/ProjectYakuza/AttackTracks.lua').read_text(encoding='utf-8')
+code=(mod/'42/media/lua/client/ProjectYakuza/AttackTrailCatalog.lua').read_text(encoding='utf-8').split('T["dd_trail_light01_1"]=',1)[1].split('}}end)()',1)[0]
 import re,hashlib
-rows=[[float(x) for x in line.split(',')] for line in re.findall(r'^        \{([^{}]+)\},',code.split('upperFrames=')[0],re.M)]
+rows=[[float(x) for x in line.split(',')] for line in re.findall(r'^    \{([^{}]+)\},',code.split('upperFrames=')[0],re.M)]
 assert len(rows)==31
 for actual,frame in zip(rows,d['frames']):
  expected=sum(frame[:3],[])
  assert len(actual)==9 and all(abs(a-b)<1e-8 for a,b in zip(actual,expected)),(actual,expected)
 upper=code.split('upperFrames={',1)[1]
-upper_rows=[[float(x)for x in line.split(',')]for line in re.findall(r'^            \{([^{}]+)\},',upper,re.M)]
+upper_rows=[[float(x)for x in line.split(',')]for line in re.findall(r'^    \{([^{}]+)\},',upper,re.M)]
 assert len(upper_rows)==len(d['frames'])
 for actual,frame in zip(upper_rows,d['frames']):assert len(actual)==3 and all(abs(a-b)<1e-8 for a,b in zip(actual,frame[6]))
 report=json.loads((mod/'docs/punch-effect-assets.json').read_text(encoding='utf-8'))

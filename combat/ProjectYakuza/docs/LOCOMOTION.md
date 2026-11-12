@@ -2,13 +2,13 @@
 
 Weapon idle, aimed hold and ordinary movement now use vanilla Zomboid animation selection. Ordinary unarmed walking also uses vanilla selection, and the unarmed run blend references Bob_Walk. Unarmed running/sprinting and combat actions retain their existing motion. This fallback follows the user's report that the katana still clipped through the neck and walking looked too fast. No movement-speed multiplier or network loop is added.
 
-The custom weapon-pose and ordinary-walk selectors remain dormant behind animation gates with no Lua producer. They cannot override native poses on owners or observers. Source clips are retained for future repair. The weapon and walk sections below describe those retained conversions, not active weapon/walk behavior. See vanilla-pose-fallback.json and VALIDATION_0.78.0.md.
+As of 0.101.0, the permanently disabled custom weapon-pose/ordinary-walk selectors and unused converted clips are removed. Vanilla weapon poses and ordinary unarmed walking remain selected exactly as before. The sections below and their provenance describe historical conversions. Active unarmed run/sprint and the restored unarmed RMB combat idle remain. See ASSET_CLEANUP.md and VALIDATION_0.101.0.md; the source archive references are retained for reproducibility.
 
 ## Walking and sprinting
 
 Unarmed ordinary walking and slow walking use the first complete 65-frame gait cycle from P_KRU_MOV_wlk_ftl. All 66 boundary-inclusive samples are preserved and retimed to the corresponding native Bob_Walk/Bob_WalkSlow cycle. Sprint uses P_KRU_MOV_run_ftl_ex, a supplied run variant, retimed to Bob_Sprint. Native Translation_Data, distance per second, movement scalars and ordinary safety fallbacks remain. This is a supplied sprint candidate, not a claim to import the original game's locomotion controller.
 
-Ordinary running retains the previous complete P_KRU_MOV_run_ftl cycle, 1.0 healthy cadence and compensated native travel. Its healthy walking blend now uses the supplied walk cycle. The run body motion and travel have not been changed in this update.
+Ordinary running retains the previous complete P_KRU_MOV_run_ftl cycle, 1.0 healthy cadence and compensated native travel. Its healthy walking blend uses native Bob_Walk. The run body motion and travel have not been changed in this update.
 
 ## Weapons
 

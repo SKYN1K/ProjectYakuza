@@ -798,31 +798,7 @@ module Base
 
     }
 
-    sound ProjectYakuza_Y6_ChargeEnd
 
-    {
-
-        category = ProjectYakuza_Effects,
-
-        is3D = true,
-
-        loop = false,
-
-        clip
-
-        {
-
-            file = media/sound/ProjectYakuza/Y6Combat/act_kiryu_003.ogg,
-
-            volume = 0.70,
-
-            distanceMin = 1,
-
-            distanceMax = 16,
-
-        }
-
-    }
 
     sound ProjectYakuza_Y6_GuardImpact
     {

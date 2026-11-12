@@ -67,8 +67,9 @@ do local _="ProjectYakuzaFixture:TRACKS" end
 do local _="ProjectYakuzaFixture:CATALOG" end
 do local _="ProjectYakuzaFixture:EFFECTS" end
 local F=ProjectYakuza.AttackEffects
-local track=ProjectYakuza.AttackTracks.dd_light_01
-local move={animation=track.animation,duration=.625,impact=.2,attackEffects={track='dd_light_01',from=2/30,to=14/30,swingFrame=3,verticalOffset=2.5}}
+check(ProjectYakuza.AttackTracks.dd_light_01==nil,'obsolete duplicate first-light numeric track is not loaded')
+local track=ProjectYakuza.AttackTracks.dd_trail_light01_1
+local move={animation=track.animation,duration=.625,impact=.2,attackEffects={track='dd_trail_light01_1',from=2/30,to=14/30,swingFrame=3,verticalOffset=2.5}}
 style.lightAttacks={move}
 check(not F.hooked and not any(Events.OnTick.hooks),'idle has no tick/render effects')
 local nativeProjection="ProjectYakuzaFixture:PROJECTION"

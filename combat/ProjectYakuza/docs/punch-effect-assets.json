@@ -1,14 +1,14 @@
 {
-  "version": "0.65.0",
-  "operation": "Numeric attachment paths only, extracted from shipped original-source retargeted punch via B42 native Jassimp/ProcessedAiScene and HelperFunctions FK. No image, sound or animation files created or modified.",
+  "version": "0.101.0",
+  "operation": "The active generated attack catalogue owns first-light numeric FK data; the obsolete duplicated dd_light_01 dataset is removed. Original supplied punch, active source pixels, source whooshes and projection checks are retained.",
   "clip": {
     "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Light01.x",
     "sha256": "79294a1ff6a2589950696a3a8938337b8bc60d4e56537222945f1a34d1466d30",
     "source": "P_KRU_BTL_SUD_ath_01_md.gmt"
   },
   "track": {
-    "path": "42/media/lua/client/ProjectYakuza/AttackTracks.lua",
-    "sha256": "cce934a461d775e46fc0a92115f7b7ec4378336357ca8b371a66c7258f6f3c85",
+    "path": "42/media/lua/client/ProjectYakuza/AttackTrailCatalog.lua",
+    "sha256": "7bccc8e01f2c1606641ade47cf38be12962fdd7ab934d9f2505e9280213f943f",
     "fps": 30,
     "samples": 31,
     "bones": [
@@ -17,7 +17,8 @@
       "Bip01_L_Finger1"
     ],
     "upperArmBone": "Bip01_L_UpperArm",
-    "upperArmSamples": 31
+    "upperArmSamples": 31,
+    "key": "dd_trail_light01_1"
   },
   "reused_textures": [
     {

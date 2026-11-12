@@ -1,9 +1,9 @@
-# Project Yakuza 0.100.0
+# Project Yakuza 0.101.0
 
-- Replaced the sunken combat-entry conversion with the installed Lost Judgment dod mod's blue Crane/Dragon Engine entry. All 151 original samples play at 60 fps over 2.5 seconds. Native skinned sole checks ground the root throughout the entry, which keeps its full playback and 0.3-second blend.
-- Restored the previous unarmed RMB combat idle in both aim and aim-strafe. Relaxed idle stays vanilla and real weapons retain their native aim selection.
-- Replaced the bicycle Heat Action with Y6 h23740_buki_g for heavy weapons already in hand. Original player/victim motions, frame-50 hit, weapon-bone motion, source sounds, voice role and blood starts replace the nearby-object scene. The supplied low-detail Y5 bicycle, texture, ordinary attacks and one-stock cost remain.
-- Hit glints/sparks now vary direction, spread, scale, curved travel and fade within the existing particle/lifetime budgets. Existing source pixels, physical contact anchors and gameplay RNG are preserved.
-- All 30 Kahlua suites, 83 production Lua compilations, native source/sole/grip/selector checks, 450 MP observer selectors, original sound decodes and zero-comment checks pass offline. Project Zomboid was not launched.
+- Removed 258 confirmed obsolete files: 56 unused animations, 30 permanently disabled pose selectors, 171 unused textures and one unused sound file, saving about 20.94 MiB of uncompressed mod data.
+- Removed the unused ChargeEnd sound definition/label and duplicated legacy punch-tracking dataset. Current effects use the existing generated attack catalogue.
+- Preserved every retained motion/model/texture/audio byte, current gameplay, source references, public API and addon templates.
+- Added a publishing check for missing references, unreferenced assets, disabled pose selectors and reintroduced retired outputs. The audit includes dynamic texture sequences and engine-resolved item/model textures.
+- All 30 Kahlua suites and 83 production Lua compilations pass. All 167 remaining motions import natively; all 263 textures retain their original pixels. Native observers, source comments and installation/archive bytes are checked offline. Project Zomboid was not launched.
 
-See [validation](VALIDATION_0.100.0.md), [combat entry](COMBAT_ENTRY.md), [bicycle](BICYCLE.md) and [effects](ATTACK_EFFECTS.md).
+See [asset cleanup](ASSET_CLEANUP.md), [removal ledger](asset-cleanup.json) and [validation](VALIDATION_0.101.0.md).

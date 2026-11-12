@@ -294,3 +294,5 @@
 !/tools/combat-tests/build_lj_entry.py
 !/tools/combat-tests/validate_combat_entry.py
 !/tools/combat-tests/CombatEntryProbe.java
+
+!/tools/combat-tests/validate_asset_cleanup.py

@@ -20,7 +20,7 @@ while i<count:
 assert 'LoadFramesNoDirPageDirect' in strings
 assert '_\x01_' in strings and '\x01\x01\x01.png' in strings,'Native filename recipes changed; inspect loader before updating checker'
 mod=Path(__file__).resolve().parents[2]/'combat/ProjectYakuza';textures=mod/'42/media/textures/ProjectYakuza'
-sequences={'TauntAura':{'a':32,'b':32,'c':32},'HeatWisp':{'a':32,'b':32,'c':32},'ExtremeHeat':{'flame':64,'smoke':64,'wispL':1,'wispR':1},'TauntBurst':{'wispL':1,'wispR':1,'spark':1}}
+sequences={'HeatWisp':{'a':32,'b':32,'c':32},'ExtremeHeat':{'flame':64,'smoke':64}}
 total=0
 for prefix,kinds in sequences.items():
     for kind,frames in kinds.items():
@@ -34,15 +34,12 @@ print(f'PASS native IsoAnim filename recipes and all {total} aura/burst frame pa
 
 import hashlib,json
 from PIL import Image
-manifest=json.loads((mod/'docs/taunt-aura-assets.json').read_text(encoding='utf-8'))
-assert len(manifest['frames'])==96
-for item in manifest['frames']:
-    src=mod/item['source'];dst=mod/item['output']
-    assert hashlib.sha256(src.read_bytes()).hexdigest()==item['source_sha256']
-    assert hashlib.sha256(dst.read_bytes()).hexdigest()==item['sha256']
-    with Image.open(src) as a, Image.open(dst) as b:
-        assert a.size==b.size==tuple(item['size']) and a.mode==b.mode=='RGBA'
-        for original,copy in zip(a.getdata(),b.getdata()):
-            assert original[3]==copy[3], 'Taunt alpha changed'
-            assert tuple((3*c+257)//4 for c in original[:3])==copy[:3], 'Taunt colour-only mapping changed'
-print('PASS all 96 approved taunt copies: exact 25-percent-to-white RGB mapping, identical alpha/dimensions/order and unchanged original frame hashes')
+baseline=mod.parents[1]/'dist/ProjectYakuza-B42-v0.100.0.zip'
+with zipfile.ZipFile(baseline)as archive:
+    import io
+    count=0
+    for path in (mod/'42/media/textures').rglob('*.png'):
+        with Image.open(path)as actual,Image.open(io.BytesIO(archive.read('ProjectYakuza/'+path.relative_to(mod).as_posix())))as original:
+            assert actual.size==original.size and actual.mode==original.mode and actual.tobytes()==original.tobytes(),path
+        count+=1
+print('PASS',count,'retained textures preserve every baseline pixel, alpha and dimension; no obsolete taunt copies loaded')
