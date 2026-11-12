@@ -6,13 +6,24 @@ function R.config(style)
     if type(cfg)~="table"or not slot or slot.enabled~=true then return end
     if not PY.NetworkProtocol.number(slot.duration,.05,10)then return end
     if not PY.NetworkProtocol.number(cfg.radius,1,6)or not PY.NetworkProtocol.integer(cfg.maxTargets,1,8)then return end
+    if cfg.requireThreat~=nil and type(cfg.requireThreat)~="boolean"then return end
     return cfg
 end
 function R.valid(p,z,cfg)
     return z and instanceof(z,"IsoZombie")and not z:isDead()and not z:isOnFloor()and not z:isKnockedDown()and not z:isAttacking()and not z:isUseless()
         and PY.NetworkProtocol.near(p,z,cfg.radius)
 end
-function R.targets(p,cfg,filter)
+function R.threatValid(p,z,cfg)
+    return z and instanceof(z,"IsoZombie")and not z:isDead()and not z:isUseless()and z:getTarget()==p
+        and PY.NetworkProtocol.near(p,z,cfg.radius)
+end
+function R.canTaunt(p,style)
+    local requested=style and style.tauntReactions
+    if type(requested)~="table"or requested.requireThreat==nil or requested.requireThreat==false then return true end
+    local cfg=R.config(style)
+    return cfg~=nil and #R.targets(p,{radius=cfg.radius,maxTargets=1},nil,R.threatValid)>0 or false
+end
+function R.targets(p,cfg,filter,valid)
     local cell=getCell();if not cell then return {}end
     local radius=math.ceil(cfg.radius);local offsets=R.offsets[radius]
     if not offsets then
@@ -26,7 +37,7 @@ function R.targets(p,cfg,filter)
             local actor=list:get(i)
             if not seen[actor]then
                 seen[actor]=true;inspected=inspected+1
-                if R.valid(p,actor,cfg)and (not filter or filter[actor:getOnlineID()])then result[#result+1]=actor end
+                if (valid or R.valid)(p,actor,cfg)and (not filter or filter[actor:getOnlineID()])then result[#result+1]=actor end
                 if inspected>=256 then break end
             end
         end end

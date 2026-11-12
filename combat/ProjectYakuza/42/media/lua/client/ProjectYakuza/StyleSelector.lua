@@ -130,7 +130,7 @@ function S.finish()
     local id=ProjectYakuza.StyleSlots.id(p,side)
     if id then
         if not ProjectYakuza.isEquipped(p) or ProjectYakuza.getPlayerStyle(p).id~=id then ProjectYakuza.equipStyle(p,id)
-        elseif ProjectYakuza.StyleEntry then local ok=ProjectYakuza.StyleEntry.request(p,id);if ok then ProjectYakuza.UIAudio.style(p,id) end end
+        elseif ProjectYakuza.StyleEntry then local ok=ProjectYakuza.StyleEntry.request(p,id,true);if ok then ProjectYakuza.UIAudio.style(p,id) end end
     else ProjectYakuza.UIAudio.play(p,"cancel") end
 end
 function S.tick()

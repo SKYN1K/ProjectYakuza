@@ -17,9 +17,10 @@ end
 function N.localState(p)
     local s=N.locals[p];if not s then s={seq=0,event=0,swing=0};N.locals[p]=s end;return s
 end
-function N.equip(p,style,playEntry)
+function N.equip(p,style,playEntry,hadStyle)
     if not isClient() or not p:isLocalPlayer() then return end
     local s=N.localState(p)
+    if playEntry~=nil then s.entryHadStyle=hadStyle==true end
     s.entryWanted=playEntry==true or (playEntry==nil and s.equipWanted==style and s.entryWanted) or false
     s.equipWanted=style;s.equipReady=nil;s.equipReply=nil
     s.equipRequest=(s.equipRequest or 0)+1;s.nextEquip=now()+1000
@@ -39,21 +40,21 @@ function N.finishEquipment(p,s)
     local item=a.item~=-1 and p:getInventory():getItemWithID(a.item) or nil
     local armed=a.weaponProfile and a.weaponProfile~=""
     if armed and (s.equipTarget~=p:getPrimaryHandItem() or not item or item~=s.equipTarget) then
-        s.equipReply=nil;s.equipWanted=nil;s.equipTarget=nil;s.entryWanted=nil;s.nextEquip=0;return false
+        s.equipReply=nil;s.equipWanted=nil;s.equipTarget=nil;s.entryWanted=nil;s.entryHadStyle=nil;s.nextEquip=0;return false
     end
     if a.item~=-1 and (not item or (armed and (not ProjectYakuza.Weapons or ProjectYakuza.Weapons.profile(a.style,item)~=a.weaponProfile)) or (not armed and not ProjectYakuza.isStyleToken(item))) then return false end
     if item then ProjectYakuza.prepareToken(item) end
     local held=p:getPrimaryHandItem()
     if not armed and a.style~="none" and held~=s.equipSource and held~=item then
-        s.equipReply=nil;s.equipWanted=nil;s.entryWanted=nil;s.nextEquip=0;return false
+        s.equipReply=nil;s.equipWanted=nil;s.entryWanted=nil;s.entryHadStyle=nil;s.nextEquip=0;return false
     end
     if not armed and (a.style~="none" or ProjectYakuza.isStyleToken(held)) then p:setSecondaryHandItem(nil);p:setPrimaryHandItem(item) end
     p:resetModelNextFrame()
     p:updateHandEquips()
-    local entry=s.entryWanted;s.entryWanted=nil
+    local entry,hadStyle=s.entryWanted,s.entryHadStyle;s.entryWanted=nil;s.entryHadStyle=nil
     s.equipReady=item;s.equipStyle=a.style;s.equipReply=nil;s.equipWanted=nil
     if ProjectYakuza.StyleItem then ProjectYakuza.StyleItem.remember(p) end
-    if entry and item and ProjectYakuza.StyleEntry then ProjectYakuza.StyleEntry.request(p,a.style) end
+    if entry and item and ProjectYakuza.StyleEntry then ProjectYakuza.StyleEntry.request(p,a.style,hadStyle) end
     return true
 end
 function N.ensureEquipment(p,style)

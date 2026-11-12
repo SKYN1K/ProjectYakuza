@@ -4,8 +4,8 @@ require "TimedActions/ISTimedActionQueue"
 local ProjectYakuza=ProjectYakuza
 local P={tracked=setmetatable({}, {__mode="k"}),players=setmetatable({}, {__mode="k"}),flights={}}
 ProjectYakuza.TigerDrop=P
-P.windowMs=300
-P.cooldownMs=60000
+P.windowMs=ProjectYakuza.TigerDropRules.windowMs
+P.cooldownMs=ProjectYakuza.TigerDropRules.cooldownMs
 local function now()return getTimestampMs()end
 local function var(z,n)return z:GetVariable(n) or "" end
 local function bool(z,n)return var(z,n)=="true" end

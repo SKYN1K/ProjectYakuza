@@ -16,7 +16,11 @@ end
 function T.request(p)
     if not T.available(p) or not ProjectYakuza.Defense.ready(p) then return false,"not_ready" end
     if getCore():isDoingTextEntry() then return false,"text_entry" end
-    return ProjectYakuza.requestAction(p,"taunt")
+    local ok,reason=ProjectYakuza.requestAction(p,"taunt")
+    if not ok and reason=="nearby_threat_required"and ProjectYakuza.Feedback then
+        ProjectYakuza.Feedback.notice(p,getText("UI_ProjectYakuza_TauntThreatRequired"))
+    end
+    return ok,reason
 end
 function T.holdPositions()
     if isGamePaused() then return end
@@ -42,6 +46,7 @@ function A:holdPosition()
 end
 function A:start()
     local p=self.character
+    if not ProjectYakuza.TauntReactions.canTaunt(p,self.context.style)then self:forceStop();return end
     self.started=true;self.startedAt=now();self.lastAt=self.startedAt
     self.oldBlock=p:isBlockMovement();self.oldIgnore=p:getIgnoreMovement()
     self.oldDeferred=p:isDeferredMovementEnabled()
@@ -73,7 +78,7 @@ end
 function A:perform()
     if self.cleaned then return end
 
-    local complete=self.started and self.seenClip and self.character:GetVariable("ProjectYakuzaTaunt")=="done" and self:isValid()
+    local complete=self.started and self.seenClip and self.character:GetVariable("ProjectYakuzaTaunt")=="done" and self:isValid()and ProjectYakuza.TauntReactions.canTaunt(self.character,self.context.style)
     if complete and not ProjectYakuza.Heat.isExtreme(self.character) then
         ProjectYakuza.setHeat(self.character,ProjectYakuza.getHeat(self.character)+ProjectYakuza.Heat.stockSize(self.character))
     end
@@ -110,7 +115,8 @@ end
 ProjectYakuza.registerActionHandler("taunt",{
     canStart=function(c)
         if type(c.action.duration)~="number" or c.action.duration<=0 then return false,"animation_duration_required" end
-        return ProjectYakuza.Defense.ready(c.player),"not_ready"
+        if not ProjectYakuza.Defense.ready(c.player)then return false,"not_ready"end
+        return ProjectYakuza.TauntReactions.canTaunt(c.player,c.style),"nearby_threat_required"
     end,
     start=function(c)
         ProjectYakuza.resetPlayer(c.player,"taunt_started")

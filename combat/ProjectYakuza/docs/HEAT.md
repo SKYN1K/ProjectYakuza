@@ -4,14 +4,16 @@ heat=true opts into a shared player meter, modData.ProjectYakuzaHeat, 0-100, div
 
 | Rule | Current tuning |
 | --- | --- |
-| Confirmed-hit gain | min(damage,2) * 1.25 per eligible zombie/strike |
+| Confirmed-hit gain | min(damage,2) * 1.25 for the first eligible target per swing; 25% for additional targets |
 | Idle grace/partial decay | 3 seconds / 4 raw points per second |
 | Acute damage loss/new knockdown | damage * 0.5 / 8 points |
 | Completed stocks | Banked; ordinary losses remove unfinished charge only |
-| Completed taunt | +1 stock, capped; interrupted/mode-active gives none |
+| Completed taunt | +1 stock, capped; requires a pursuing threat within 5 tiles at request, start and completion; interrupted/mode-active gives none |
 | Extreme duration | 3.75 seconds per stock before attack/damage costs |
 | Swing fuel cost | 1.5 raw points |
 | Extreme damage/speed | x1.5 / additional x1.2 |
+
+The first eligible unique target in each swing receives full gain; every further unique target receives a quarter. Repeated callbacks for the same victim give no additional Heat. A new swing resets this order. This applies to Dragon of Dojima and its weapon views; addon styles keep the default multiplier of 1 unless they opt in.
 
 This is PZ-tuned Yakuza-style behavior, not an exact Dragon Engine simulation. Heat.config is global; changing it affects every heat-enabled style.
 
@@ -31,4 +33,4 @@ Addon styles can opt in with heatAttackSpeed={max=1.25,power=1,useExtremeFuel=fa
 
 ## Per-style Heat rules (0.64.0)
 
-Optional `heatConfig` sets per-style gain, normal/Extreme drain and 1..32 stock capacity. Weapon profiles inherit and merge field overrides. Taunt rewards, stock-priced actions, the built-in orb row, custom UI context and server activation protection use the effective capacity. Omitted configuration leaves DoD unchanged. See [Heat configuration](HEAT_CONFIGURATION.md) for bounds, defaults, APIs, stock retention and network requirements.
+Optional `heatConfig` sets per-style gain, normal/Extreme drain and 1..32 stock capacity. Weapon profiles inherit and merge field overrides. Taunt rewards, stock-priced actions, the built-in orb row, custom UI context and server activation protection use the effective capacity. Omitted configuration uses the framework defaults; DoD explicitly sets secondaryTargetGain=.25. See [Heat configuration](HEAT_CONFIGURATION.md) for bounds, defaults, APIs, stock retention and network requirements.

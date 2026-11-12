@@ -162,12 +162,12 @@ z1.health=1;clock=clock+1100;snapshot(p);command('grabRequest',{zombie=z1.id})
 check(s.grab~=nil,'can acquire another grab after release')
 clock=clock+9000;server.tick();check(s.grab==nil and not z1.useless,'lease timeout restores zombie AI')
 clock=clock+1100;snapshot(p);z1.attacking=true;z1.target=p
-command('counter',{zombie=z1.id,age=301});check(not z1.kills,'server rejects counter age outside 0.3 seconds')
-command('counter',{zombie=z1.id,age=0});check(z1.kills==1 and z1.force==12,'valid attacking target is killed on server with hit force')
+command('counter',{zombie=z1.id,age=161});check(not z1.kills,'server rejects counter age beyond 160 ms')
+command('counter',{zombie=z1.id,age=160});check(z1.kills==1 and z1.force==12,'valid attacking target is killed on server with hit force')
 command('counter',{zombie=z1.id,age=0});check(z1.kills==1,'counter victim deduplicated')
-z2.health=1;z2.attacking=true;z2.target=p;clock=clock+500;snapshot(p)
-command('counter',{zombie=z2.id,age=0});check(not z2.kills,'counter cannot reopen within 60 second server cooldown')
-clock=clock+61000;snapshot(p);command('counter',{zombie=z2.id,age=0});check(z2.kills==1,'counter ready after server cooldown')
+z2.health=1;z2.attacking=true;z2.target=p;local counterAt=clock;clock=counterAt+19939;snapshot(p)
+command('counter',{zombie=z2.id,age=0});check(not z2.kills,'counter cannot reopen before twenty-second server cooldown boundary')
+clock=counterAt+19940;snapshot(p);command('counter',{zombie=z2.id,age=0});check(z2.kills==1,'counter ready after server cooldown')
 z3.health=1;z3.target=p;snapshot(p,{clip='ProjectYakuza_DD_GuardLoop',phase='hold'})
 command('guard',{zombie=z3.id});check(z3.outcome=='fail','validated guard cancels bite outcome')
 clock=clock+1100;snapshot(p);z4.health=1;command('grabRequest',{zombie=z4.id});check(s.grab~=nil,'disconnect test owns lease')
@@ -270,13 +270,14 @@ check(not ProjectYakuza.isEquipped(owner) and owner:getPrimaryHandItem()~=issued
 owner.inventoryItems[#owner.inventoryItems+1]=issued
 check(ProjectYakuza.isEquipped(owner) and owner:getPrimaryHandItem()==issued and owner.equipSent==1,'combat unlocks only after both peers resolve the same item ID')
 check(owner.styleEntries==nil,'automatic equipment repair does not play entry')
-clock=clock+250;local adds=#nativeAdds;ProjectYakuza.StyleEntry={request=function(who,id)who.styleEntries=(who.styleEntries or 0)+1 end}
-client.equip(owner,'dragon_of_dojima',true)
+clock=clock+250;local adds=#nativeAdds;ProjectYakuza.StyleEntry={request=function(who,id,hadStyle)who.entryHadStyle=hadStyle;who.styleEntries=(who.styleEntries or 0)+1 end}
+client.equip(owner,'dragon_of_dojima',true,true)
+client.equip(owner,'dragon_of_dojima')
 check(owner.styleEntries==nil,'explicit selection waits for authoritative equip acknowledgement')
 server.command(P.module,'equip',serverActor,outgoing[#outgoing].args)
 check(#serverActor.inventoryItems==1 and #nativeAdds==adds,'reselecting a style reuses acknowledged item without duplicate inventory delivery')
 client.command(P.module,'equipReady',replies[#replies].args)
-check(owner.styleEntries==1,'explicit selection entry begins after equipment acknowledgement')
+check(owner.styleEntries==1 and owner.entryHadStyle==true,'equipped-style fast entry survives MP retries and acknowledgement')
 local hand=owner:getPrimaryHandItem()
 client.command(P.module,'equipReady',{player=3,request=1,style='dragon_of_dojima',item=101})
 check(owner:getPrimaryHandItem()==hand,'stale equip acknowledgements cannot restore old token')
@@ -613,21 +614,41 @@ for _,z in ipairs(zombies)do
  function z:addAggro(who,amount)self.aggro=(self.aggro or 0)+amount;self.aggroTarget=who end
 end
 p:setPrimaryHandItem(p.token);p.data.ProjectYakuzaStyle='dragon_of_dojima';server.players[p.id]=nil;clock=clock+2000
-z1.health=100;z1.aggro=0;z1.attacking=false;z1.x=.8;z1.y=0;z1.target=nil
+z1.health=100;z1.aggro=0;z1.attacking=false;z1.x=.8;z1.y=0;z1.target=p
 z2.health=100;z2.x=8;z3.health=100;z3.attacking=true;z4.health=100;z4.floor=true
 function z4:isOnFloor()return self.floor==true end
-snapshot(p,{clip='ProjectYakuza_DD_Taunt01',action=2000,taunt=0});local tauntState=server.players[p.id]
+do
+ local R=ProjectYakuza.TauntReactions;local cfg=ProjectYakuza.getStyle('dragon_of_dojima');local saved={}
+ for _,z in ipairs(zombies)do saved[z]=z.health;z.health=0 end
+ z1.health=100;z1.target=p;z1.x=.8;z1.y=0
+ check(R.canTaunt(p,cfg),'pursuing zombie in range is a taunt threat')
+ z1.target=nil;check(not R.canTaunt(p,cfg),'idle target cannot enable Heat farming');z1.target=p
+ z1.health=0;check(not R.canTaunt(p,cfg),'dead zombie is not a threat');z1.health=100
+ z1.x=5.01;check(not R.canTaunt(p,cfg),'threat beyond five tiles is rejected')
+ z1.x=1.1;wall=true;check(not R.canTaunt(p,cfg),'blocked path cannot enable safe taunting');wall=false;z1.x=.8
+ z1.attacking=true;check(R.canTaunt(p,cfg),'an actively attacking nearby zombie remains a threat');z1.attacking=false
+ check(R.canTaunt(p,{actions={}}),'styles without the explicit threat rule retain their behavior')
+ for _,z in ipairs(zombies)do z.health=saved[z]end
+end
+z1.target=nil;z3.target=nil;z4.target=nil
+snapshot(p,{clip='ProjectYakuza_DD_Taunt01',action=1998,taunt=0})
+check(not server.players[p.id].tauntLease,'server refuses taunt lease without a pursuing nearby threat')
+z1.target=p;snapshot(p,{clip='ProjectYakuza_DD_Taunt01',action=1999,taunt=0});clock=clock+1850;z1.target=nil
+snapshot(p,{clip='',action=1999,taunt=1})
+check(z1.aggro==0 and not server.players[p.id].tauntLease,'server rejects completed attention if threat disappears')
+z1.target=p
+snapshot(p,{clip='ProjectYakuza_DD_Taunt01',action=2000,taunt=1});local tauntState=server.players[p.id]
 check(tauntState.tauntLease and tauntState.tauntLease.action==2000,'server observes source taunt action before authorizing reactions')
-clock=clock+900;snapshot(p,{clip='',action=2000,taunt=1})
+clock=clock+900;snapshot(p,{clip='',action=2000,taunt=2})
 check(z1.aggro==0 and not tauntState.tauntLease,'too-early completion cannot draw zombie attention')
-snapshot(p,{clip='ProjectYakuza_DD_Taunt01',action=2001,taunt=1});clock=clock+1850;replies={};local nativeHits=z1.hits
-snapshot(p,{clip='',action=2001,taunt=2})
+snapshot(p,{clip='ProjectYakuza_DD_Taunt01',action=2001,taunt=2});clock=clock+1850;replies={};local nativeHits=z1.hits
+snapshot(p,{clip='',action=2001,taunt=3})
 check(z1.aggro==3 and z1.target==p and z1.hits==nativeHits,'completed taunt adds native aggro without dealing damage')
 check(not z2.aggro and not z3.aggro and not z4.aggro,'taunt skips distant, attacking and downed zombies')
 local tauntPacket
 for _,message in ipairs(replies)do if message.command=='taunt'then tauntPacket=message.args end end
 check(tauntPacket and #tauntPacket.zombies==1 and tauntPacket.zombies[1]==z1.id,'server chooses and bounds taunt victim IDs')
-snapshot(p,{clip='',action=2001,taunt=2});snapshot(p,{clip='',action=2001,taunt=3})
+snapshot(p,{clip='',action=2001,taunt=3});snapshot(p,{clip='',action=2001,taunt=4})
 check(z1.aggro==3,'heartbeat/replayed completion cannot repeat native aggro')
 client.command(P.module,'taunt',tauntPacket);client.command(P.module,'taunt',tauntPacket)
 check(z1.aggro==6,'zombie-owning client applies each authorized taunt once')

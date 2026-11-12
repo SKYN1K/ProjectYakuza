@@ -1,12 +1,13 @@
 # Per-style Heat configuration (0.64.0)
 
-Styles opt into the existing Heat system with `heat=true`. Optional `heatConfig` tunes gain, drain and stock capacity without changing other styles. Heat and Extreme fuel remain normalized from 0 to 100; capacity changes the number of stocks inside that gauge, not the saved resource format. Switching styles preserves the existing shared Heat percentage. Dragon of Dojima and its weapon profiles omit this configuration and retain their previous six-stock rules.
+Styles opt into the existing Heat system with `heat=true`. Optional `heatConfig` tunes gain, drain and stock capacity without changing other styles. Heat and Extreme fuel remain normalized from 0 to 100; capacity changes the number of stocks inside that gauge, not the saved resource format. Switching styles preserves the existing shared Heat percentage. Dragon of Dojima explicitly sets secondaryTargetGain=.25; its weapon profiles inherit that value. Other omitted fields retain the six-stock defaults.
 
 ```lua
 heat=true,
 heatConfig={
     maxStocks=4,
     gainPerDamage=2.5,
+    secondaryTargetGain=.25,
     lossPerDamage=.5,
     idleGraceMs=3000,
     idleLossPerSecond=3,
@@ -21,6 +22,7 @@ heatConfig={
 | --- | --- | --- |
 | maxStocks | 6 | Integer 1..32; one orb/bar stock is 100 divided by capacity |
 | gainPerDamage | 1.25 | 0..100 normalized Heat per confirmed damage point; existing per-victim deduplication and two-point damage cap apply |
+| secondaryTargetGain | 1 | 0..1 multiplier for every additional unique eligible victim in the same swing; DoD uses .25 and the first victim retains full gain |
 | lossPerDamage | .5 | 0..100 Heat loss per eligible incoming damage point; existing passive illness/bleeding exclusions remain |
 | idleGraceMs | 3000 | 0..600000 ms since the last combat/taunt activity before idle drain |
 | idleLossPerSecond | 4 | 0..100 normalized Heat points per second after grace |

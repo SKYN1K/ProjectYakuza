@@ -14,8 +14,8 @@ function z:getOnlineID()return 1 end
 getCell=function()return {getGridSquare=function(_,x,y)if x==0 and y==0 then return {getMovingObjects=function()return {size=function()return 1 end,get=function()return z end}end}end end}end
 P.track(p,true)
 check(P.validTarget(p,z),'already-attacking target is tracked without requiring replaced animation marker')
-local start=clock;clock=start+300;check(P.validTarget(p,z),'0.3-second window includes its boundary')
-clock=start+301;z.vars.ProjectYakuzaTigerWindow='true';check(not P.validTarget(p,z),'legacy marker cannot extend window beyond 0.3 seconds')
+local start=clock;clock=start+160;check(P.validTarget(p,z),'160 ms window includes its boundary')
+clock=start+161;z.vars.ProjectYakuzaTigerWindow='true';check(not P.validTarget(p,z),'legacy marker cannot extend window beyond 160 ms')
 z.attacking=false;clock=clock+60;P.track(p,true)
 check(not P.tracked[z].startedAt,'idle clears observed attack clock')
 z.attacking=true;clock=clock+60;P.track(p,true);z.damaged=true
@@ -34,7 +34,7 @@ end}
 mouse[2]=true;fire('OnPlayerUpdate',p)
 check(killed==1 and PY.activeActions[p] and PY.activeActions[p].kind=='parry','actual heavy input triggers Tiger Drop even with separate counter binding')
 check(cleared==1 and not PY.stateFor(p).finisherMove,'counter consumes heavy input and clears charge gesture')
-check(P.remaining(p)==60000 and not P.tryCounter(p),'existing one-minute cooldown retained')
+check(P.remaining(p)==20000 and not P.tryCounter(p),'successful counter starts its twenty-second cooldown')
 PY.cancelAction(p,'test');PY.ChargedHeavy=nil;PY.Bindings.options=nil;mouse[2]=false
 P.kill=realKill;isClient=function()return true end
 local sent

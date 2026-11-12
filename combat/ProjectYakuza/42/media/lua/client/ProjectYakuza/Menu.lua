@@ -17,15 +17,16 @@ require "ProjectYakuza/GrabCombat"
 require "ProjectYakuza/EncounterIntroY6"
 local ProjectYakuza = ProjectYakuza
 function ProjectYakuza.equipStyle(player, styleId,playEntry)
+    local hadStyle=ProjectYakuza.isEquipped(player)
     local ok, reason = ProjectYakuza.selectStyle(player, styleId)
     if not ok then player:Say("Cannot switch style: " .. tostring(reason)); return end
 
-    if isClient() then ProjectYakuza.Network.equip(player,styleId,playEntry~=false);return end
+    if isClient() then ProjectYakuza.Network.equip(player,styleId,playEntry~=false,hadStyle);return end
     local held=player:getPrimaryHandItem()
     if ProjectYakuza.Weapons and ProjectYakuza.Weapons.profile(styleId,held) then
         player:setVariable("ProjectYakuzaActive",true)
         if ProjectYakuza.StyleItem then ProjectYakuza.StyleItem.removeUnused(player,nil);ProjectYakuza.StyleItem.remember(player) end
-        if playEntry~=false then ProjectYakuza.StyleEntry.request(player,styleId) end
+        if playEntry~=false then ProjectYakuza.StyleEntry.request(player,styleId,hadStyle) end
         return
     end
     local items, token = player:getInventory():getItems(), nil
@@ -42,7 +43,7 @@ function ProjectYakuza.equipStyle(player, styleId,playEntry)
     player:setVariable("ProjectYakuzaActive", true)
     player:setVariable("ProjectYakuzaMove", ProjectYakuza.getPlayerStyle(player).lightAttacks[1].nodeValue)
     if ProjectYakuza.StyleItem then ProjectYakuza.StyleItem.removeUnused(player,token);ProjectYakuza.StyleItem.remember(player) end
-    if playEntry~=false then ProjectYakuza.StyleEntry.request(player,styleId) end
+    if playEntry~=false then ProjectYakuza.StyleEntry.request(player,styleId,hadStyle) end
     print("[ProjectYakuza] equipped " .. styleId)
 end
 function ProjectYakuza.unequipStyle(player)

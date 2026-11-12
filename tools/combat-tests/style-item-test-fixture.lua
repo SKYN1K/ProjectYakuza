@@ -29,7 +29,7 @@ function p:resetModelNextFrame()end
 function p:updateHandEquips()end
 function p:hasTimedActions()return self.timed==true end
 function p:Say(v)self.said=v end
-PY.StyleEntry={count=0,request=function()PY.StyleEntry.count=PY.StyleEntry.count+1 end}
+PY.StyleEntry={count=0,request=function(_,_,hadStyle)PY.StyleEntry.lastHadStyle=hadStyle;PY.StyleEntry.count=PY.StyleEntry.count+1 end}
 local dropped,favorites,transfers=0,0,0
 ISInventoryPaneContextMenu={dropItem=function()dropped=dropped+1;return true end,onFavorite=function(items,_,value)favorites=favorites+#items;for _,v in ipairs(items)do v:setFavorite(value)end end}
 ISInventoryTransferAction={isValid=function()transfers=transfers+1;return true end}
@@ -52,6 +52,9 @@ T.remember(p);p.hand=nil;T.update(p)
 check(p.data.ProjectYakuzaStyle=='none' and first.removed and not p.hand,'manual unequip disables style and deletes token')
 PY.equipStyle(p,'dragon_of_dojima')
 local second=p.hand
+check(PY.StyleEntry.lastHadStyle==false,'initial equip captures no prior style before selecting it')
+PY.equipStyle(p,'dragon_of_dojima')
+check(PY.StyleEntry.lastHadStyle==true,'already-equipped selection captures fast entry before changing equipment')
 check(second~=first and not second.removed and second.favorite,'reselect creates clean replacement token')
 local entries=PY.StyleEntry.count
 p.hand=nil;p.timed=true;T.update(p)

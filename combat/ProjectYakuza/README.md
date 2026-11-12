@@ -2,7 +2,7 @@
 
 Project Yakuza is a Build 42 combat mod and a framework for independent fighting-style addons. Dragon of Dojima uses supplied Yakuza/Kiwami/Lost Judgment animations, textures and sounds. Other styles register their own moves, assets and controllers without copying the framework.
 
-**Version 0.101.1 · Lua API 3 · MP protocol 2.** API 1 style registrations remain supported. Internal namespace/mod dependency: `ProjectYakuza`. Display name: Project Yakuza.
+**Version 0.102.0 · Lua API 3 · MP protocol 2.** API 1 style registrations remain supported. Internal namespace/mod dependency: `ProjectYakuza`. Display name: Project Yakuza.
 
 ## Install and play
 
@@ -32,8 +32,8 @@ All mod controls are rebindable under **Options > Mods > Project Yakuza**. Shift
 ## Included systems
 
 - Native melee collisions, short buffers, conditional recovery, pose-linked double finishers, multihit capped at three targets and ground/running/dash strikes. DoD lights use x0.75 damage and finishers x1.25 before heat modifiers.
-- Walking guard, Tiger Drop's 0.3-second observed-windup timing and 60-second cooldown, and Lua knockback approximating a launch.
-- Six heat stocks, damage-scaled gain, banked stocks, taunt reward, multiple activation clips and Extreme Heat. Gain stops during mode; fuel expires naturally. Activation temporarily protects the player; taunts and style entry do not.
+- Walking guard, Tiger Drop's 160 ms observed-windup timing and 20-second cooldown, and Lua knockback approximating a launch.
+- Six heat stocks, damage-scaled gain with 25% secondary-target gain per swing, banked stocks, threat-gated taunt reward, multiple activation clips and Extreme Heat. Gain stops during mode; fuel expires naturally. Activation temporarily protects the player; taunts and style entry do not.
 - Extreme Heat outline begins with activation, accompanied by a one-second foot smoke cloud; completed taunts use a short animated torso flare and sparks without a body-brightness pulse.
 - Supplied dragon/orb HUD, world-rendered aura/impacts, native-leg stance, combat feedback, optional selected-character CVF voices and a DoD-only 19-track non-repeating-shuffle playlist.
 - Animated limb coating and short sparks cover all current DoD attacks and finishers using supplied Y6 assets, source-sampled arm/leg paths and bounded world-space trails. See docs/ATTACK_EFFECTS.md.
@@ -77,4 +77,4 @@ Beer-crate Essence of Crushing uses the rebound Heat Action button: two fresh pr
 
 Dragon of Dojima low-health feedback starts at 30% health, becomes critical at 15%, and clears after healing to 35%. The original health-bar frame pulses gently; an existing PZ heartbeat plays privately during combat and follows Sounds volume. See docs/LOW_HEALTH_FEEDBACK.md for framework configuration.
 
-Version 0.101.1 corrects the first-light effects override after the 0.101.0 asset cleanup and validates explicit track references before publishing. Balance values are unchanged. See [patch validation](docs/VALIDATION_0.101.1.md) and [the asset audit](docs/ASSET_CLEANUP.md).
+Version 0.102.0 reduces crowd Heat farming, requires a pursuing threat for taunts, tightens Tiger Drop and uses the source control-window handoff for style switches. First equip keeps its original timing. See [validation](docs/VALIDATION_0.102.0.md) and [entry timing](docs/COMBAT_ENTRY.md).

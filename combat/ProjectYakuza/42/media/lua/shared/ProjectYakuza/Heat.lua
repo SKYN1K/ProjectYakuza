@@ -149,8 +149,10 @@ function H.onHit(p,victim,damage,combo)
     if s.extreme then return end
     combo.heatVictims=combo.heatVictims or setmetatable({}, {__mode="k"})
     if combo.heatVictims[victim] then return end
+    local rules=H.rules(p);local factor=1
+    for _ in pairs(combo.heatVictims)do factor=rules.secondaryTargetGain;break end
     combo.heatVictims[victim]=true
-    ProjectYakuza.setHeat(p,ProjectYakuza.getHeat(p)+math.min(damage,2)*H.rules(p).gainPerDamage)
+    ProjectYakuza.setHeat(p,ProjectYakuza.getHeat(p)+math.min(damage,2)*rules.gainPerDamage*factor)
 end
 function H.onDamage(p,kind,damage)
     if not p or not instanceof(p,"IsoPlayer") or not p:isLocalPlayer() or not ProjectYakuza.isEquipped(p) or not H.enabled(p) then return end

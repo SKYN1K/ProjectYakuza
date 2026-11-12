@@ -34,6 +34,16 @@ PY.Weapons.register(style.id,{id='fixture_bat',items={'Base.HeatSpeedFixtureBat'
 check(PY.Weapons.views[style.id].fixture_bat.heatAttackSpeed==false,'weapon profiles can explicitly opt out without mutating base')
 p.held=weapon('Base.HeatSpeedFixtureBat');PY.Weapons.sync(p);PY.setHeat(p,100);H.onSwing(p,PY.Weapons.views[style.id].fixture_bat.lightAttacks[1]);check(near(p.vars.ProjectYakuzaCombatSpeed,1.4),'opted-out weapon retains its authored native speed')
 local invalid={};for k,v in pairs(style)do invalid[k]=v end;invalid.heatAttackSpeed={max=3};check(not PY.validateStyle(invalid),'registration validates the optional curve')
+do
+ reset(baseStyle.id);PY.setHeat(p,0);local combo={active=true};local first,second,third={},{},{}
+ H.onHit(p,first,.4,combo);check(near(PY.getHeat(p),.5),'first eligible victim retains full Heat gain')
+ H.onHit(p,first,.4,combo);check(near(PY.getHeat(p),.5),'duplicate primary collision grants no additional Heat')
+ H.onHit(p,second,.4,combo);H.onHit(p,third,.4,combo);check(near(PY.getHeat(p),.75),'two secondary victims each grant one quarter Heat')
+ H.onHit(p,second,2,combo);check(near(PY.getHeat(p),.75),'secondary collision replay cannot gain twice')
+ combo={active=true};H.onHit(p,first,.4,combo);check(near(PY.getHeat(p),1.25),'new swing restores full primary gain')
+ for _,profile in pairs(PY.Weapons.views[baseStyle.id])do check(PY.HeatRules.forStyle(profile).secondaryTargetGain==.25,'DoD weapon profiles inherit crowd gain reduction')end
+ check(not PY.HeatRules.valid({secondaryTargetGain=-.01})and not PY.HeatRules.valid({secondaryTargetGain=1.01})and PY.HeatRules.valid({secondaryTargetGain=0}),'secondary-target factor is bounded and can be explicitly disabled')
+end
 reset(style.id);style.heatAttackSpeed={max=1.5,useExtremeFuel=true};PY.extremeViews[style]=nil;PY.setHeat(p,100);H.start(p);H.onSwing(p,style.lightAttacks[1])
 check(near(H.attackHeatMultiplier(p),1.5)and near(p.vars.ProjectYakuzaCombatSpeed,3.6),'Extreme fuel sampled before its attack cost, multiplying the existing mode boost once')
 H.states[p].fuel=25;H.playback(p,true);check(near(p.vars.ProjectYakuzaCombatSpeed,3.6),'fuel drain cannot accelerate/decelerate the current swing')
@@ -41,7 +51,7 @@ H.endSwing(p);H.onSwing(p,style.lightAttacks[1]);check(near(H.attackHeatMultipli
 PY.emit('styleChanged',p);check(H.attackHeatMultiplier(p)==1,'style changes clear captured speed')
 do
  local C=PY.HeatRules
- check(baseStyle.heatConfig==nil and H.rules(p).maxStocks==6,'DoD keeps its exact global heat defaults')
+ check(baseStyle.heatConfig.secondaryTargetGain==.25 and H.rules(p).maxStocks==6,'DoD limits secondary-target Heat while retaining stock capacity')
  for _,bad in ipairs({{maxStocks=0},{maxStocks=33},{maxStocks=1.5},{gainPerDamage=-1},{gainPerDamage=math.huge},{idleGraceMs=-1},{idleLossPerSecond=0/0},{secondsPerStock=0},{attackFuelCost=-1},{retainStocks=1},{typo=1}})do check(not C.valid(bad),'invalid capacity/gain/drain rules rejected')end
  local own={};for k,v in pairs(baseStyle)do own[k]=v end;own.id='test_heat_rules';own.name='Heat rules test'
  own.heatConfig={maxStocks=3,gainPerDamage=10,lossPerDamage=2,idleGraceMs=0,idleLossPerSecond=10,secondsPerStock=5,attackFuelCost=7,retainStocks=false}
@@ -63,7 +73,7 @@ do
  check(H.rules(p).gainPerDamage==12,'official same-table registration refreshes merged rules')
  local view=PY.Weapons.register(own.id,{id='rules_bat',items={'Base.HeatRulesTestBat'},lightAttacks=PY.Weapons.views.dragon_of_dojima.bat.lightAttacks,actions={},heatConfig={maxStocks=8}})
  check(C.forStyle(view).maxStocks==8 and C.forStyle(view).gainPerDamage==12,'weapon Heat overrides inherit the owning style gain')
- check(H.config.maxStocks==6 and H.config.gainPerDamage==1.25 and C.forStyle(baseStyle)==H.config,'custom rules never mutate DoD/global defaults')
+ check(H.config.maxStocks==6 and H.config.gainPerDamage==1.25 and C.forStyle(baseStyle).secondaryTargetGain==.25 and H.config.secondaryTargetGain==1,'custom rules never mutate DoD/global defaults')
  reset(style.id)
 end
 reset(style.id);style.heatAttackSpeed={max=1.5};PY.setHeat(p,50);H.onSwing(p,style.lightAttacks[1]);p.combo=nil

@@ -162,7 +162,7 @@ check(selector.styleIcon(nil)==nil,'empty style has no invented icon')
 selector.openSetup(p);keys[Keyboard.KEY_ESCAPE]=true;selector.setup:update();keys[Keyboard.KEY_ESCAPE]=false
 check(selector.setup==nil,'escape closes settings without saving')
 local selected=0
-ProjectYakuza.StyleEntry={request=function(who,id)check(who==p and id=='dragon_of_dojima','same-slot entry gets selected style');selected=selected+1;return true end}
+ProjectYakuza.StyleEntry={request=function(who,id,hadStyle)check(who==p and id=='dragon_of_dojima' and hadStyle==true,'same-slot entry gets selected style');selected=selected+1;return true end}
 p.data.ProjectYakuzaStyle='dragon_of_dojima';p.equipped=true;keys[Keyboard.KEY_Z]=true
 selector.open(p);selector.wheel.side='left';keys[Keyboard.KEY_Z]=false;selector.finish()
 check(selected==1,'explicit reselect of the current style requests its entry')

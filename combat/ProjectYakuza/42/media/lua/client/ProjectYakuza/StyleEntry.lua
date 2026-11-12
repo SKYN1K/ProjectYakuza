@@ -108,6 +108,10 @@ PY.registerActionHandler("styleEntry",{
             and (p:getHitReaction() or "")=="","not_ready"
     end,
     start=function(c)
+        if c.variant=="switch" and type(c.action.switchDuration)=="number" and c.action.switchDuration>0 then
+            local action={};for key,value in pairs(c.action)do action[key]=value end
+            action.duration=math.min(action.duration,action.switchDuration);c.action=action
+        end
         PY.resetPlayer(c.player,"style_entry_started")
         local a=A:new(c);c.timedAction=a;c.requestedAt=now()
         local ok,q=pcall(ISTimedActionQueue.add,a)
@@ -116,15 +120,15 @@ PY.registerActionHandler("styleEntry",{
     end,
     cancel=function(c)if c.timedAction then c.timedAction:cancel() end end,
 })
-function E.request(p,styleId)
+function E.request(p,styleId,hadStyle)
     local style=PY.getPlayerStyle(p)
     if not style or style.id~=styleId then return false,"style_changed" end
     if not style.actions.styleEntry or not style.actions.styleEntry.enabled then return false,"not_implemented" end
-    local ok,reason=PY.requestAction(p,"styleEntry")
+    local ok,reason=PY.requestAction(p,"styleEntry",hadStyle==true and "switch" or nil)
     if ok then return true end
     if reason~="not_ready" and reason~="style_not_equipped" then return false,reason end
     if reason=="not_ready" and not p:hasTimedActions() and (not p.isWeaponReady or p:isWeaponReady()) then return false,reason end
-    E.pending[p]={style=styleId,item=p:getPrimaryHandItem(),expires=now()+2000,nextTry=now()+50,last=now()}
+    E.pending[p]={style=styleId,hadStyle=hadStyle==true,item=p:getPrimaryHandItem(),expires=now()+2000,nextTry=now()+50,last=now()}
     if not E.pendingHook then Events.OnTick.Add(E.retry);E.pendingHook=true end
     if PY.Bindings then PY.Bindings.update(p) end
     return true,"pending_equipment"
@@ -142,7 +146,7 @@ function E.retry()
             E.pending[p]=nil;print("[ProjectYakuza] style entry timed out waiting for equipment/actions: "..job.style)
         elseif t>=job.nextTry then
             E.pending[p]=nil
-            local ok,reason=PY.requestAction(p,"styleEntry")
+            local ok,reason=PY.requestAction(p,"styleEntry",job.hadStyle and "switch" or nil)
             if not ok and (reason=="not_ready" or reason=="busy" or reason=="style_not_equipped") then job.nextTry=t+50;job.last=t;E.pending[p]=job end
         end
     end

@@ -1,8 +1,8 @@
 ProjectYakuza = ProjectYakuza or {}
 do
-local C={defaults={maxStocks=6,gainPerDamage=1.25,lossPerDamage=.5,idleGraceMs=3000,idleLossPerSecond=4,knockdownLoss=8,secondsPerStock=3.75,attackFuelCost=1.5,extremeDamage=1.5,extremeSpeed=1.2,retainStocks=true}}
+local C={defaults={maxStocks=6,gainPerDamage=1.25,secondaryTargetGain=1,lossPerDamage=.5,idleGraceMs=3000,idleLossPerSecond=4,knockdownLoss=8,secondsPerStock=3.75,attackFuelCost=1.5,extremeDamage=1.5,extremeSpeed=1.2,retainStocks=true}}
 ProjectYakuza.HeatRules=C
-local limits={maxStocks={1,32},gainPerDamage={0,100},lossPerDamage={0,100},idleGraceMs={0,600000},idleLossPerSecond={0,100},knockdownLoss={0,100},secondsPerStock={.1,600},attackFuelCost={0,100}}
+local limits={maxStocks={1,32},gainPerDamage={0,100},secondaryTargetGain={0,1},lossPerDamage={0,100},idleGraceMs={0,600000},idleLossPerSecond={0,100},knockdownLoss={0,100},secondsPerStock={.1,600},attackFuelCost={0,100}}
 local cache=setmetatable({}, {__mode="k"})
 function C.valid(cfg)
     if cfg==nil or cfg==false then return true end
@@ -292,7 +292,8 @@ end
 
 local ProjectYakuza = ProjectYakuza
 ProjectYakuza.FEATURES={grab=true}
-ProjectYakuza.VERSION = "0.101.1"
+ProjectYakuza.TigerDropRules={windowMs=160,cooldownMs=20000}
+ProjectYakuza.VERSION = "0.102.0"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}

@@ -3,6 +3,23 @@ import sys,json,subprocess,hashlib,math,zipfile
 
 root=Path(__file__).resolve().parents[2];w=root/'tools/combat-tests';mod=root/'combat/ProjectYakuza';report=json.loads((mod/'docs/combat-entry-assets.json').read_text());sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
 if '--inside-blender'not in sys.argv:
+    import struct
+    from y5_source_assets import entry
+    timing=json.loads((mod/'docs/style-switch-timing.json').read_text())
+    contract=timing['sourceEvent'];data,sourceRecord=entry(contract['archive'],contract['name'])
+    assert sourceRecord==contract and data[:4]==b'_PEB' and struct.unpack_from('<I',data,4)[0]==2
+    window=timing['controlWindow'];offset=window['nodeOffset'];category,kind,size=struct.unpack_from('<HHI',data,offset+64)
+    eventKind,start,end=struct.unpack_from('<Iff',data,offset+80)
+    assert category==window['category'] and kind==eventKind==window['kind'] and size==36
+    assert start==window['startFrame']==31 and end==window['endFrame']==50 and struct.unpack_from('<I',data,offset+112)[0]==window['releaseParameter']==0
+    assert timing['controlWindow']['handoffSeconds']==31/30
+    for row in [timing['sourceCommand'],timing['nodeMapping']]:assert sha(row['path'])==row['sha256']
+    retained=timing['unchangedEntry'];assert sha(mod/retained['path'])==retained['sha256']==report['sha256']
+    assert not (Path(contract['archive']).parent.parent/'mods/dod/motion/bep'/contract['name']).exists()
+    style=(mod/'42/media/lua/shared/ProjectYakuza/Styles/DragonOfDojima.lua').read_text()
+    assert 'duration=150/60,switchDuration=31/30' in style
+    print('PASS source LJ battle-control window 31..50 at 30 fps; original 151-frame / 60-fps motion and 1x playback unchanged')
+    if '--switch-only' in sys.argv:raise SystemExit(0)
     result=subprocess.run(['F:/SteamLibrary/steamapps/common/Blender/blender.exe','-b','--factory-startup','-t','1','--python',str(Path(__file__).resolve()),'--','--inside-blender'],capture_output=True,text=True);print(result.stdout);assert result.returncode==0 and 'PASS LJ'in result.stdout,result.stderr
     java='F:/SteamLibrary/steamapps/common/ProjectZomboid/jre64/bin/java.exe'
     for args in [['AnimationProbe',str(mod/report['output'])],['PropAttachmentProbe',str(w/'lj-entry-prop.tsv')],['CombatEntryProbe',str(mod/report['selector']),str(mod/'42/media')]]:

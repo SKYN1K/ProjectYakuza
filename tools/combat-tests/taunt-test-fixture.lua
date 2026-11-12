@@ -70,8 +70,10 @@ ProjectYakuza.Heat={stockSize=function()return 100/6 end,isExtreme=function()ret
 getSpecificPlayer=function()return p end
 local vanilla={0,0,0}
 ISEmoteRadialMenu={onKeyPressed=function()vanilla[1]=vanilla[1]+1 end,onKeyRepeat=function()vanilla[2]=vanilla[2]+1 end,onKeyReleased=function()vanilla[3]=vanilla[3]+1 end}
+local threatPresent=true
+getText=function(id)return id end
 local reactionCalls=0
-ProjectYakuza.TauntReactions={react=function()reactionCalls=reactionCalls+1 end}
+ProjectYakuza.TauntReactions={react=function()reactionCalls=reactionCalls+1 end,canTaunt=function()return threatPresent end}
 do local _="ProjectYakuzaFixture:TAUNTS" end
 local T=ProjectYakuza.Taunts
 local starts,ends=0,0
@@ -312,4 +314,12 @@ check(A.states[p].activating and #A.states[p].emitters==6 and A.states[p].activa
 p:setVariable('ProjectYakuzaRemoteClip','');A.update(p)
 check(not A.states[p].emitters[1].instance and not A.states[p].activationBurst and not p.outline,'remote activation clip ending clears zero-heat aura, cloud and outline')
 p.localPlayer=true
+do
+ T.clear();p.aim=true;p.dead=false;p.hit='';p.vehicle=nil;threatPresent=false
+ local ok,reason=T.request(p);check(not ok and reason=='nearby_threat_required'and not ProjectYakuza.activeActions[p],'taunt without a nearby threat is rejected before queueing')
+ threatPresent=true;local queued=begin();threatPresent=false;queued:stop();threatPresent=true
+ local rewardBefore=ProjectYakuza.getHeat(p);local noReward=begin();p:setVariable('ProjectYakuzaTaunt','started');noReward:update();threatPresent=false;p:setVariable('ProjectYakuzaTaunt','done');noReward:update()
+ check(noReward.cleaned and ProjectYakuza.getHeat(p)==rewardBefore and not p.block and not p.ignore,'threat disappearing during committed taunt grants no Heat and releases movement')
+ threatPresent=true
+end
 return 'PASS '..checks..' taunt lifecycle, input, heat, world aura and MP checks'

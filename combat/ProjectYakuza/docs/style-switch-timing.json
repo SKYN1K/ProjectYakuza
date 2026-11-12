@@ -1,0 +1,49 @@
+{
+  "operation": "Use the installed LJ dod mod entry at unchanged 1x speed. First equip uses its full 150/60 seconds. Subsequent selection releases into the existing native 0.3-second idle blend at the base BEP battle-control/cancel window start, 31/30 seconds. This adapts the source cancel handoff; it does not reproduce the entire LJ state controller or claim a source speed multiplier.",
+  "sourceCommand": {
+    "path": "F:\\SteamLibrary\\steamapps\\common\\Lost Judgment\\runtime\\media\\mods\\dod\\battle\\fighter_command.cfc",
+    "sha256": "5c59359ca1b5118743397dcebb07c62eb907f5c7dbfab50c21790d68918b07d7",
+    "commandSets": [
+      103,
+      105
+    ],
+    "move": "ChangeMai",
+    "animation": "P_YAG_BTL_SUD_styl_mai_st",
+    "parserReference": "https://github.com/HeartlessSeph/FighterCommander"
+  },
+  "sourceEvent": {
+    "archive": "F:\\SteamLibrary\\steamapps\\common\\Lost Judgment\\runtime\\media\\data\\motion.par",
+    "name": "p_yag_btl_sud_styl_mai_st.bep",
+    "offset": 23736320,
+    "size": 565,
+    "plain": 1584,
+    "flags": 2147483648,
+    "packedSha256": "390c5f58763a74f3d2cbeab01a204638839bacc0fc0653ccbab6bf022b1ce101",
+    "sha256": "fadab06c81361e1f3f07ea7c6e232140a8653314517783b020ebc2e76917cb40"
+  },
+  "controlWindow": {
+    "nodeOffset": 672,
+    "category": 12,
+    "kind": 72,
+    "startFrame": 31,
+    "endFrame": 50,
+    "fps": 30,
+    "handoffSeconds": 1.0333333333333334,
+    "releaseParameter": 0
+  },
+  "nodeMapping": {
+    "path": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\hactlib-inspect\\Types\\DE\\Enum\\LJNodeIDs.cs",
+    "sha256": "646a2e91b28986680e8a1ac76c4477b718362b31441f4c6c99f46aa40678a663",
+    "revision": "5e74c058c98acdebd06c97b536399eb6154afb1e",
+    "url": "https://github.com/Fronkln/HActLib/blob/5e74c058c98acdebd06c97b536399eb6154afb1e/Types/DE/Enum/LJNodeIDs.cs",
+    "name": "e_auth_element_battle_control_window"
+  },
+  "unchangedEntry": {
+    "path": "42/media/anims_X/Bob/ProjectYakuza_DD_StyleEntry.x",
+    "sha256": "12fd9639a93c46e45e78363e902bab9eef8f0ce864918f2a07d8dcd8694e141d",
+    "frames": 151,
+    "fps": 60,
+    "duration": 2.5,
+    "speed": 1
+  }
+}

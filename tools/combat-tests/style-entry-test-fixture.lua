@@ -93,9 +93,9 @@ local E=ProjectYakuza.StyleEntry
 local starts,stops=0,0
 ProjectYakuza.on('styleEntryStarted',function()starts=starts+1 end)
 ProjectYakuza.on('styleEntryStopped',function()stops=stops+1 end)
-local function begin()
+local function begin(hadStyle)
  p.aim=false;p.nativeAction=nil;p.hit='';p.dead=false;p.authorize=true
- check(E.request(p,'dragon_of_dojima'),'selection request accepted without aiming')
+ check(E.request(p,'dragon_of_dojima',hadStyle),'selection request accepted without aiming')
  local c=ProjectYakuza.activeActions[p];local a=c.timedAction
  a.action={setOverrideHandModelsObject=function()a.handOverride=true end}
  p.nativeAction=a.action;a:start();return a,c
@@ -113,6 +113,13 @@ local ok,reason=ProjectYakuza.requestAction(p,'finisher','after_1');check(not ok
 p:setVariable('ProjectYakuzaStyleEntry','started');a:update();p:setVariable('ProjectYakuzaStyleEntry','done');a:update();ProjectYakuza.Bindings.update(p)
 check(a.completed and not p.block and not p.ignore and p.deferred and p.authorize,'completion restores all movement and attack permissions')
 check(not ProjectYakuza.activeActions[p] and stops==1 and ProjectYakuza.getHeat(p)==heat,'entry has no heat or persistent action effects')
+a,c=begin(true);p:setVariable('ProjectYakuzaStyleEntry','started');a:update()
+check(c.action.duration==31/30 and ProjectYakuza.getPlayerStyle(p).actions.styleEntry.duration==2.5,'equipped-style selection uses source control-window handoff without mutating full entry')
+clock=clock+1033;a:update();check(not a.cleaned,'switch remains locked before source frame 31 at 30 fps')
+clock=clock+1;a:update();check(a.completed and not p.block and not p.ignore,'switch releases at source cancel window with normal animation cleanup')
+a,c=begin();p:setVariable('ProjectYakuzaStyleEntry','started');a:update();clock=clock+1034;a:update()
+check(not a.cleaned and c.action.duration==2.5,'equipping from none keeps original full playback after a fast selection')
+a:perform()
 a,c=begin();p:setVariable('ProjectYakuzaStyleEntry','started');a:update();p.hit='Bite';a:update();ProjectYakuza.Bindings.update(p)
 check(a.stopped and not p.block and not p.ignore and p.deferred and p.authorize,'zombie hit interrupts entry and restores controls')
 p.hit='';a,c=begin();clock=clock+601;a:update();check(a.stopped and not p.block,'missing clip fails closed')
@@ -123,11 +130,11 @@ a,c=begin();equipped=false;a:update();equipped=true;check(a.stopped and not p.bl
 queueFail=true;p.nativeAction=nil;check(not E.request(p,'dragon_of_dojima') and not ProjectYakuza.activeActions[p],'rejected queue has no lock or start cue');queueFail=false
 check(not E.request(p,'different_style'),'stale selected style cannot start entry')
 p.nativeAction=nil;p.hit='';p.ready=false
-check(E.request(p,'dragon_of_dojima') and E.pending[p] and not ProjectYakuza.activeActions[p],'entry waits for unsettled weapon model instead of being lost')
+check(E.request(p,'dragon_of_dojima',true) and E.pending[p] and not ProjectYakuza.activeActions[p],'entry waits for unsettled weapon model instead of being lost')
 check(ProjectYakuza.blocksNativeAttacks(p),'pending style selection discards attack input')
 clock=clock+60;E.retry();check(E.pending[p]~=nil,'model readiness is retried with a bounded deadline')
 p.ready=true;clock=clock+60;E.retry()
-check(not E.pending[p] and ProjectYakuza.activeActions[p] and not E.pendingHook,'ready equipment starts queued entry once and unhooks retry')
+check(not E.pending[p] and ProjectYakuza.activeActions[p] and ProjectYakuza.activeActions[p].action.duration==31/30 and not E.pendingHook,'ready equipment starts queued entry once and unhooks retry')
 E.clear()
 p.ready=false;E.request(p,'dragon_of_dojima');p.hit='Bite';clock=clock+60;E.retry()
 check(not E.pending[p],'getting hit cancels pending entry')

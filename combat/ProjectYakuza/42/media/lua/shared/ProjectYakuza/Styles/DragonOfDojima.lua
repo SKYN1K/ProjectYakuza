@@ -9,6 +9,7 @@ ProjectYakuza.registerStyle({
     name = "Dragon of Dojima",
     description = "Kiryu's four-hit chain with Extreme Heat boost attacks.",
     heat=true,
+    heatConfig={secondaryTargetGain=.25},
     lowHealthFeedback={},
     exertion={},
     finisherBranches=4,
@@ -59,7 +60,7 @@ ProjectYakuza.registerStyle({
         {sound="ProjectYakuza_KamuroAgain",title="KAMURO again"},
     },
     directionalAttacks={["minimumDegrees"]=65,["rearDegrees"]=145,["moves"]={["left"]={["animation"]="ProjectYakuza_DD_DirectionalLeft",["nodeValue"]="dd_directional_left",["duration"]=0.9375,["speed"]=1.6,["impact"]=0.2222222222222222,["quickstepCancelAt"]=0.24444444444444444,["damageMultiplier"]=0.75,["directional"]=true,["fullBody"]=true,["hitResponse"]="light",["kick"]=false},["right"]={["animation"]="ProjectYakuza_DD_DirectionalRight",["nodeValue"]="dd_directional_right",["duration"]=0.9375,["speed"]=1.6,["impact"]=0.2222222222222222,["quickstepCancelAt"]=0.24444444444444444,["damageMultiplier"]=0.75,["directional"]=true,["fullBody"]=true,["hitResponse"]="light",["kick"]=false},["rear"]={["animation"]="ProjectYakuza_DD_DirectionalRear",["nodeValue"]="dd_directional_rear",["duration"]=1.1874999999999998,["speed"]=1.6,["impact"]=0.19298245614035087,["quickstepCancelAt"]=0.21052631578947367,["damageMultiplier"]=0.75,["directional"]=true,["fullBody"]=true,["hitResponse"]="light",["kick"]=true}}},
-    tauntReactions={radius=5,maxTargets=8},
+    tauntReactions={radius=5,maxTargets=8,requireThreat=true},
     comboResetMs = 400,
 
     lightBufferLimit = 1,
@@ -98,7 +99,7 @@ ProjectYakuza.registerStyle({
             after_3={animation="ProjectYakuza_DD_ChargedFinisher03",nodeValue="dd_charged_finisher_03",duration=1.833333333,speed=1,impact=0.163636364,damageMultiplier=2,minChargedDamageMultiplier=1.25,chargedHeavy=true,chargedFinisher=true,chargeBranch=3,fullBody=true,reaction="enemy_03"},
             after_4={animation="ProjectYakuza_DD_ChargedFinisher04",nodeValue="dd_charged_finisher_04",duration=1.833333333,speed=1,impact=0.236363636,damageMultiplier=2,minChargedDamageMultiplier=1.25,chargedHeavy=true,chargedFinisher=true,chargeBranch=4,fullBody=true,reaction="enemy_04"},
         }},
-        styleEntry = {enabled=true,animation="ProjectYakuza_DD_StyleEntry",duration=150/60},
+        styleEntry = {enabled=true,animation="ProjectYakuza_DD_StyleEntry",duration=150/60,switchDuration=31/30},
         taunt = {enabled=true,animation="ProjectYakuza_DD_Taunt01",duration=55/30},
         finisher = { enabled=true, variants={
             reverse_after_1={["enabled"]=true,["afterLight"]=1,["animation"]="ProjectYakuza_DD_ReverseFinisher01",["nodeValue"]="dd_reverse_finisher_1",["damageMultiplier"]=1.25,["duration"]=1.3958333333333333,["speed"]=1.6,["impact"]=0.22388059701492538,["fullBody"]=true,["reverseFinisher"]=true,["hitResponse"]="finisher",["doubleLinkFrame"]=27,["doubleLinkEndFrame"]=30},

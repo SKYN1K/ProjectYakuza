@@ -121,11 +121,13 @@ function S.tauntUpdate(p,packet,s,style,kind,action,previous)
     if lease and (lease.style~=packet.style or lease.weapon~=held or t>lease.expires)then lease=nil;s.tauntLease=nil end
     if kind=="taunt"and packet.action>0 and packet.action>(s.lastTauntAction or 0)then
         s.lastTauntAction=packet.action
+        if not ProjectYakuza.TauntReactions.canTaunt(p,style)then s.tauntLease=nil;return end
         lease={action=packet.action,style=packet.style,weapon=held,started=t,duration=action.duration*1000,expires=t+action.duration*1000+1000};s.tauntLease=lease
     end
     if previous and packet.taunt>(previous.taunt or 0)then
         s.tauntLease=nil
         if not lease or packet.taunt~=(previous.taunt or 0)+1 or t-lease.started<lease.duration-250 then return end
+        if not ProjectYakuza.TauntReactions.canTaunt(p,style)then return end
         local targets=ProjectYakuza.TauntReactions.react(p,style);local ids={};local seen={}
         for _,z in ipairs(targets)do local id=z:getOnlineID();if P.integer(id,-32768,32767)and id~=-1 and not seen[id]then ids[#ids+1]=id;seen[id]=true end end
         if #ids>0 then s.tauntResult=(s.tauntResult or 0)+1;S.fanout(p,"taunt",{player=p:getOnlineID(),event=s.tauntResult,style=packet.style,zombies=ids})end
@@ -304,9 +306,9 @@ function S.command(module,command,p,a)
         local z=S.validVictim(p,a.zombie,1.6,.35)
         if not style.tigerDrop or not z or z:isOnFloor() or z:isKnockedDown() then return end
         if not s.counterUntil or t>s.counterUntil then
-            if not P.number(a.age,0,300) then return end
+            if not P.number(a.age,0,ProjectYakuza.TigerDropRules.windowMs) then return end
             if t<(s.counterReady or 0) or z:getTarget()~=p or not z:isAttacking() or z:getAttackDidDamage() then return end
-            s.counterReady=t+60000;s.counterUntil=t+400;s.counterSeen={};s.counterCount=0
+            s.counterReady=t+ProjectYakuza.TigerDropRules.cooldownMs;s.counterUntil=t+400;s.counterSeen={};s.counterCount=0
         end
         if s.counterSeen[a.zombie] or s.counterCount>=ProjectYakuza.MAX_HIT_COUNT then return end
         s.counterSeen[a.zombie]=true;s.counterCount=s.counterCount+1;S.damage(p,z,0,false,true,s);return
