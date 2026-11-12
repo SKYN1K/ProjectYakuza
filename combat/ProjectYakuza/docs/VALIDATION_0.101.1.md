@@ -1,0 +1,7 @@
+# Project Yakuza 0.101.1 validation
+
+The cleanup removed a duplicated numeric first-light track, but the built-in style's explicit effects override still selected its retired key. That override takes precedence over the generated default, so the first-light effect could fail to start. The style now references the identical generated dd_trail_light01_1 data while retaining its existing effect window. Node values, damage, hit timing, speed, endurance, Heat and target rules are unchanged.
+
+The release validator now resolves explicit attackEffects track references against the generated catalogue. The punch fixture builder reads the production style and checks the override before running the existing native 31-frame FK, texture/audio and renderer regression checks. A negative regression restores the stale key temporarily and confirms publication validation rejects it before restoring the fixed source. This addresses the original missing link between the isolated renderer fixture and the production style configuration.
+
+The targeted punch/effects suite passes 17593 checks, all 83 production Lua files compile and the asset-reference and zero-comment checks pass offline. All supplied media bytes remain unchanged. No balance tuning or Project Zomboid launch is included. Local installation backs up only changed existing files, verifies the complete new file set and publishes a fresh v0.101.1 release ZIP.

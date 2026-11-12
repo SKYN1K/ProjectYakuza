@@ -6,6 +6,10 @@ game=Path('F:/SteamLibrary/steamapps/common/ProjectZomboid')
 native=w/'punch-track-native.json'
 subprocess.run([str(game/'jre64/bin/java.exe'),'-Xms16m','-Xmx256m','-XX:ActiveProcessorCount=2','-cp',str(w)+';'+str(game/'*'),'PunchTrackProbe',str(mod/'42/media/anims_X/Bob/ProjectYakuza_DD_Light01.x'),str(native)],check=True)
 d=json.loads(native.read_text())
+import re
+style=(mod/'42/media/lua/shared/ProjectYakuza/Styles/DragonOfDojima.lua').read_text(encoding='utf-8')
+explicit=re.findall(r'attackEffects=\{track="([^"]+)"',style)
+assert explicit==['dd_trail_light01_1'],'built-in first-light override must use an existing generated track'
 code=(mod/'42/media/lua/client/ProjectYakuza/AttackTrailCatalog.lua').read_text(encoding='utf-8').split('T["dd_trail_light01_1"]=',1)[1].split('}}end)()',1)[0]
 import re,hashlib
 rows=[[float(x) for x in line.split(',')] for line in re.findall(r'^    \{([^{}]+)\},',code.split('upperFrames=')[0],re.M)]

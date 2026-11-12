@@ -45,6 +45,10 @@ assert 'ProjectYakuza_Y6_ChargeEnd'not in scriptText
 for name in re.findall(r'\bGameSound_(ProjectYakuza_\w+)\s*=',(media/'lua/shared/Translate/EN/GameSound_EN.txt').read_text(encoding='utf-8')):
     assert re.search(r'\bsound\s+'+re.escape(name)+r'\s*\{',scriptText),'unused sound label: '+name
 assert 'dd_light_01'not in (media/'lua/client/ProjectYakuza/AttackTracks.lua').read_text()
+trackText=(media/'lua/client/ProjectYakuza/AttackTrailCatalog.lua').read_text(encoding='utf-8')
+trackKeys=set(re.findall(r'T\["([^"\n]+)"\]\s*=',trackText))
+for name in re.findall(r'attackEffects\s*=\s*\{\s*track\s*=\s*"([^"\n]+)"',luaText):
+    assert name in trackKeys,'missing explicit attack effect track: '+name
 if args.baseline_audit:
     baseline=root/'dist/ProjectYakuza-B42-v0.100.0.zip'
     with zipfile.ZipFile(baseline)as archive:

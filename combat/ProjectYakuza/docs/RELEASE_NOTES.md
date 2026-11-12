@@ -1,9 +1,5 @@
-# Project Yakuza 0.101.0
+# Project Yakuza 0.101.1
 
-- Removed 258 confirmed obsolete files: 56 unused animations, 30 permanently disabled pose selectors, 171 unused textures and one unused sound file, saving about 20.94 MiB of uncompressed mod data.
-- Removed the unused ChargeEnd sound definition/label and duplicated legacy punch-tracking dataset. Current effects use the existing generated attack catalogue.
-- Preserved every retained motion/model/texture/audio byte, current gameplay, source references, public API and addon templates.
-- Added a publishing check for missing references, unreferenced assets, disabled pose selectors and reintroduced retired outputs. The audit includes dynamic texture sequences and engine-resolved item/model textures.
-- All 30 Kahlua suites and 83 production Lua compilations pass. All 167 remaining motions import natively; all 263 textures retain their original pixels. Native observers, source comments and installation/archive bytes are checked offline. Project Zomboid was not launched.
-
-See [asset cleanup](ASSET_CLEANUP.md), [removal ledger](asset-cleanup.json) and [validation](VALIDATION_0.101.0.md).
+- Fixed the built-in first-light effects override still pointing at the retired duplicate numeric track after cleanup. It now points at the identical generated dd_trail_light01_1 data, preserving its existing effect window.
+- Added explicit override-to-track reference checks to publication validation and the punch fixture builder, so a stale built-in override is detected before packaging.
+- No balance values, damage, costs, animation timing or supplied media bytes changed. Targeted native first-punch/effect tests, Lua compilation, asset-reference and zero-comment checks pass offline. Project Zomboid was not launched.
