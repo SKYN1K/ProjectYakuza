@@ -161,7 +161,7 @@ function S.open(p)
     panel.player=p;panel.opened=getTimestampMs();panel.focus={};panel.mouseX,panel.mouseY=getMouseX(),getMouseY()
     local active=ProjectYakuza.getPlayerStyle(p)
     panel.side=active and active.id==ProjectYakuza.StyleSlots.id(p,"right") and "right" or "left"
-    panel:initialise();panel.background=false;panel:setWantMouseEvents(false);panel:addToUIManager()
+    ProjectYakuza.StyleUI.renderOnly(panel);panel:initialise();panel.background=false;panel:setWantMouseEvents(false);panel:addToUIManager()
     S.wheel=panel;Events.OnTick.Add(S.tick);ProjectYakuza.UIAudio.play(p,"open")
     return true
 end

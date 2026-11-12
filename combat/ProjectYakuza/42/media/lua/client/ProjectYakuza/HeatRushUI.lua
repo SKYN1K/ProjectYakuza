@@ -79,7 +79,7 @@ function U.create()
     U.instances=U.instances or {}
     for i=0,getNumActivePlayers()-1 do
         if not U.instances[i]then
-            local panel=U:new(getPlayerScreenLeft(i),getPlayerScreenTop(i),getPlayerScreenWidth(i),getPlayerScreenHeight(i));panel.playerNum=i;panel.background=false;panel:initialise();panel:setWantMouseEvents(false);panel:addToUIManager();U.instances[i]=panel
+            local panel=U:new(getPlayerScreenLeft(i),getPlayerScreenTop(i),getPlayerScreenWidth(i),getPlayerScreenHeight(i));panel.playerNum=i;panel.background=false;PY.StyleUI.renderOnly(panel);panel:initialise();panel:setWantMouseEvents(false);panel:addToUIManager();U.instances[i]=panel
         end
     end
 end

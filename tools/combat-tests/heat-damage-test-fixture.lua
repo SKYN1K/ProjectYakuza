@@ -38,4 +38,10 @@ check(z.health==.25 and z.consequences==0 and not job.pendingDamage,'interruptio
 job={};z=victim(.1,'player');z.god=true;H.strike(job,p,z,item,5,1);H.settle(job,p,z,item,true);check(z.health==.1,'pre-existing protection is respected')
 job={};z=victim(10,'zombie');check(not H.strike(job,p,z,item,0/0,1)and not H.strike(job,p,z,item,-1,1)and not H.strike(job,p,z,item,.5,nil),'invalid contact damage and identity rejected')
 check(H.strike(job,p,z,item,0,1)and z.health==10 and not job.pendingDamage,'presentation-only contact never invents damage')
+local client,server=false,false
+isClient=function()return client end;isServer=function()return server end
+check(H.useGhostProtection(),'single player retains native ghost protection')
+client=true;check(not H.useGhostProtection(),'multiplayer client never enables ghost visibility hiding')
+client=false;server=true;check(not H.useGhostProtection(),'authoritative server never enables ghost visibility hiding')
+server=false
 return true,'PASS '..checks..' shared Heat Action nonlethal hits, lethal deferral, native terminal consequences, zombie/player, cancellation, protection and replay checks'

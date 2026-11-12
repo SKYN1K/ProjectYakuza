@@ -159,7 +159,7 @@ function H.create()
     if H.instance then return end
     H.loadAssets()
     local panel=H:new(16,12,348,176)
-    panel:initialise();panel:setWantMouseEvents(false);panel:addToUIManager()
+    ProjectYakuza.StyleUI.renderOnly(panel);panel:initialise();panel:setWantMouseEvents(false);panel:addToUIManager()
     H.instance=panel
 end
 function H.activate(player)

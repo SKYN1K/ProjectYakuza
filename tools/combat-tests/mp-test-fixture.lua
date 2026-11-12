@@ -174,7 +174,7 @@ clock=clock+1100;snapshot(p);z4.health=1;command('grabRequest',{zombie=z4.id});c
 actors[1]=nil;server.tick();check(server.players[1]==nil and not z4.useless,'disconnect restores AI and removes session')
 actors[1]=p
 snapshot(p,{clip='ProjectYakuza_DD_HeatActivate01',heat=40})
-check(p.ghost and p.invincible and server.players[1].packet.protected,'activation gets a bounded server protection lease')
+check(not p.ghost and p.invincible and server.players[1].packet.protected,'activation gets a bounded server protection lease')
 clock=clock+4000;server.tick();check(not p.ghost and not p.invincible,'expired activation restores original server flags')
 snapshot(p,{clip='ProjectYakuza_DD_HeatActivate01',heat=40});check(not p.invincible,'same held activation cannot renew invulnerability')
 snapshot(p,{clip='',heat=40});snapshot(p,{clip='ProjectYakuza_DD_HeatActivate01',heat=40})
@@ -941,7 +941,7 @@ do
  neutral();command('heatRushBegin',{weaponHeat=true,zombie=z1.id,request=1004})
  local lease=rush.leases[p];check(lease and lease.motion==ProjectYakuza.PairedMotions.dod_katana and not lease.definition,'MP katana uses original paired motion without eight-hit QTE proof')
  local hits=z1.hits;command('heatRushReady',{action=lease.action})
- check(p.ghost and p.invincible and z1.vars.ProjectYakuzaPairedVictimClip=='ProjectYakuza_DD_KatanaHeatVictim','server protects attacker and selects katana victim clip')
+ check(not p.ghost and p.invincible and z1.vars.ProjectYakuzaPairedVictimClip=='ProjectYakuza_DD_KatanaHeatVictim','server protects attacker and selects katana victim clip')
  command('heatRushHit',{action=lease.action,index=4});check(z1.hits==hits,'early final contact cannot bypass source timing')
  command('heatRushHit',{action=lease.action,index=4});check(z1.hits==hits,'removed fourth contact cannot apply MP damage')
  for i,contact in ipairs(lease.contacts)do
@@ -951,7 +951,7 @@ do
  end
  check(math.abs(z1.health-8.5)<.000001,'server computes final katana damage from actual weapon')
  clock=lease.started+lease.duration*1000-50;neutral({clip='ProjectYakuza_DD_KatanaHeat',move='dd_katana_heat'});command('heatRushEnd',{action=lease.action,completed=true})
- check(not rush.leases[p]and not p.invincible and p.ghost and not z1.ignore,'server ends invulnerability immediately and releases victim')
+ check(not rush.leases[p]and not p.invincible and not p.ghost and not z1.ignore,'server ends invulnerability immediately and releases victim')
  clock=clock+500;ProjectYakuza.HeatActions.tick();check(not p.ghost,'server targeting grace expires after half a second')
  z1.health=.75;z1.x=1.1;z1.y=0;z1.knock=false;z1.nativeFloor=false;z1.useless=false;z1.reaction='';p.x=0;p.y=0;clock=clock+1000;neutral()
  command('heatRushBegin',{weaponHeat=true,zombie=z1.id,request=1010});local low=rush.leases[p]
@@ -988,7 +988,7 @@ do
  neutral();command('heatRushBegin',{weaponHeat=true,zombie=z1.id,request=1004})
  local lease=rush.leases[p];check(lease and lease.motion==ProjectYakuza.PairedMotions.dod_bottle and not lease.definition,'MP bottle uses original paired motion without eight-hit QTE proof')
  local hits=z1.hits;command('heatRushReady',{action=lease.action})
- check(p.ghost and p.invincible and z1.vars.ProjectYakuzaPairedVictimClip=='ProjectYakuza_DD_BottleHeatVictim','server protects attacker and selects bottle victim clip')
+ check(not p.ghost and p.invincible and z1.vars.ProjectYakuzaPairedVictimClip=='ProjectYakuza_DD_BottleHeatVictim','server protects attacker and selects bottle victim clip')
  command('heatRushHit',{action=lease.action,index=3});check(z1.hits==hits,'early final contact cannot bypass source timing')
  for i,contact in ipairs(lease.contacts)do
   clock=lease.started+contact.atMs+10;command('heatRushHit',{action=lease.action,index=i,damage=999})
@@ -997,7 +997,7 @@ do
  end
  check(math.abs(z1.health-8.8)<.000001,'server computes final bottle damage from actual weapon')
  clock=lease.started+lease.duration*1000-50;neutral({clip='ProjectYakuza_DD_BottleHeat',move='dd_bottle_heat'});command('heatRushEnd',{action=lease.action,completed=true})
- check(not rush.leases[p]and not p.invincible and p.ghost and not z1.ignore,'server ends invulnerability immediately and releases victim')
+ check(not rush.leases[p]and not p.invincible and not p.ghost and not z1.ignore,'server ends invulnerability immediately and releases victim')
  clock=clock+500;ProjectYakuza.HeatActions.tick();check(not p.ghost,'server targeting grace expires after half a second')
  p.hand=p.token
 end
@@ -1079,7 +1079,7 @@ do
  check(not z1.stateLocked and not z1.useless,'old grab flags are restored before the new action captures them')
  p.x,p.y=job.x,job.y;z1.x,z1.y=ProjectYakuza.HeatRushRules.point(job,job.motion.victim,0)
  check(rules.wallPresent(p,job),'selected wall remains valid after the original pair staging moves the victim')
- command('heatRushReady',{action=job.action});check(job.started and p.invincible and p.ghost,'wall action gets native framework protection')
+ command('heatRushReady',{action=job.action});check(job.started and p.invincible and not p.ghost,'wall action gets native framework protection')
  for i,contact in ipairs(job.contacts)do clock=job.started+contact.atMs;command('heatRushHit',{action=job.action,index=i})end
  check(not job.pendingDamage and z1.health<10,'nonlethal wall damage preserves paired victim motion without native Hit')
  clock=job.started+job.duration*1000;snapshot(p,{clip='ProjectYakuza_DD_WallHeat',move='dd_wall_heat',action=job.action,rightAim=true,heat=80});command('heatRushEnd',{action=job.action,completed=true})
@@ -1210,13 +1210,13 @@ do
  neutral({heat=0});command('heatRushBegin',{weaponHeat=true,zombie=z1.id,request=1701});check(not rush.leases[p],'MP bicycle requires a stock')
  item.id='Base.MetalPipe';neutral();command('heatRushBegin',{weaponHeat=true,zombie=z1.id,request=1702});check(not rush.leases[p],'MP rejects non-bicycle items in the shared blunt profile')
  item.id='ProjectYakuza.Bicycle';neutral();command('heatRushBegin',{weaponHeat=true,zombie=z1.id,request=1703})
- local lease=rush.leases[p];check(lease and lease.motion==ProjectYakuza.PairedMotions.dod_bicycle and #lease.contacts==1,'MP bicycle resolves registered source paths and one contact')
+ local lease=rush.leases[p];check(lease and lease.motion==ProjectYakuza.PairedMotions.dod_bicycle and #lease.contacts==2,'MP bicycle resolves original two-contact overhead crash')
  local hits=z1.hits;command('heatRushReady',{action=lease.action})
  check(z1.vars.ProjectYakuzaPairedVictimClip=='ProjectYakuza_DD_BicycleHeatVictim'and p.invincible,'MP bicycle selects protected original playback')
  command('heatRushHit',{action=lease.action,index=1});check(z1.health==10,'early bicycle finish cannot bypass source time')
  for i,contact in ipairs(lease.contacts)do
   clock=lease.started+contact.atMs+10;command('heatRushHit',{action=lease.action,index=i,damage=999});command('heatRushHit',{action=lease.action,index=i,damage=999})
-  check(z1.hits==hits and math.abs(z1.health-({8.5})[i])<.000001,'MP bicycle uses server weapon damage and original weights with replay rejection '..i)
+  check(z1.hits==hits and math.abs(z1.health-({9.625,8.5})[i])<.000001,'MP bicycle uses server weapon damage and original weights with replay rejection '..i)
  end
  clock=lease.started+lease.duration*1000-50;neutral({clip='ProjectYakuza_DD_BicycleHeat',move='dd_bicycle_heat'});command('heatRushEnd',{action=lease.action,completed=true})
  check(not rush.leases[p]and not p.invincible,'MP bicycle releases its lease after original recovery')

@@ -50,7 +50,7 @@ for animation,data in pairs(D.moves)do
   total=total+1
  end
 end
-check(total==38 and effectTotal==130,'all main and failure-ending contacts and source emitter starts covered')
+check(total==39 and effectTotal==134,'all main and failure-ending contacts and source emitter starts covered')
 C.clearAll();move={animation='Custom',contacts={{atMs=500,cue='punchImpact',layers={'kickImpact'}}}};source={};plays={};fx={};phase=0;C.start(p,z,move,source);step(500-lead)
 check(#plays==2 and plays[1].gain==.55 and plays[2].gain==.3,'custom styles retain primary and layered sound gains')
 step(500);check(#fx==1 and fx[1].anchor==nil,'custom action without numeric sample retains legacy placement')
@@ -78,6 +78,21 @@ C.clearAll();move={animation='Custom',contacts={{atMs=500,cue='punchImpact'}}};s
 local localMethod=p.isLocalPlayer;p.isLocalPlayer=function()return false end;C.start(p,z,move,source);step(500-lead);step(500)
 check(#plays==1 and #fx==1,'observer reconstructs presentation without owner-only sound packets');p.isLocalPlayer=localMethod
 C.stop(p,source,true);check(not plays[1].stopped,'natural completion preserves current impact tail')
+C.clearAll();plays={};fx={};phase=-1
+p.isLocalPlayer=function()return false end
+move={animation='RemoteCustom',contacts={{atMs=500,cue='punchImpact',qteIndex=1}}}
+source={remote=true,age=.3,at=clock,confirmedContacts={}}
+C.start(p,z,move,source);C.tick();clock=clock+250;C.tick()
+check(#fx==0 and #plays==0,'observer cannot present a QTE contact without server confirmation')
+source.confirmedContacts[1]=true;clock=clock+100;C.tick()
+check(#fx==1 and #plays==1,'observer reconstructs source time from pose age even when its native animation phase is unavailable')
+C.tick();check(#fx==1 and #plays==1,'confirmed remote contact is replay safe')
+source.age=.1;source.at=clock;C.tick()
+check(C.states[p]~=nil and #fx==1,'jittered observer clock cannot reset and duplicate presentation')
+C.clearAll();plays={};fx={};phase=-1
+source={remote=true,age=.9,at=clock,confirmedContacts={[1]=true}}
+C.start(p,z,move,source);C.tick();check(#fx==0 and #plays==0,'observer suppresses stale contact effects beyond its bounded network grace')
+C.clearAll();p.isLocalPlayer=localMethod
 local katana=PY.Weapons.views.dragon_of_dojima.blade.actions.heatAction
 check(#katana.contacts==3 and katana.contacts[4]==nil,'katana has exactly three damaging contacts')
 for i=1,3 do check(katana.contacts[i].damageMultiplier==({.375,.375,.75})[i],'katana uses original 1:1:2 damage weighting with unchanged total')end
@@ -133,4 +148,4 @@ for _,action in ipairs(sourceMoves)do
  end
 end
 C.clearAll()
-return true,'PASS '..checks..' paired Heat Action timing, 38 native contacts, 130 source emitters, independent cues and voices, custom layers, replay suppression, rotation and lifecycle checks'
+return true,'PASS '..checks..' paired Heat Action timing, 39 native contacts, 134 source emitters, independent cues and voices, custom layers, replay suppression, rotation and lifecycle checks'

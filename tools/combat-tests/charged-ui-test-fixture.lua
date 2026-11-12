@@ -293,6 +293,8 @@ check(#PY.HitEffects.bursts==0 and disposed==before+10,'impact cleanup releases 
 local hudDraws={};ISPanel={}
 function ISPanel:derive()local c={};c.__index=c;setmetatable(c,{__index=self});return c end
 function ISPanel:new(x,y,width,height)return setmetatable({x=x,y=y,width=width,height=height},self)end
+function ISPanel:setWidth(width)self.width=width end
+function ISPanel:setHeight(height)self.height=height end
 function ISPanel:initialise()end;function ISPanel:setWantMouseEvents()end;function ISPanel:addToUIManager()end
 function ISPanel:drawSubTexture(texture,sx,sy,sw,sh,x,y,w,h,alpha,r,g,b)
  if self.failDraw then error('intentional native HUD draw failure') end

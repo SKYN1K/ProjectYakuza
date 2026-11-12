@@ -448,6 +448,8 @@ function H.receive(module,command,a)
         if previous and previous.action>a.action then return end
         if not previous or previous.action~=a.action then previous={action=a.action,seen={}};H.contacts[a.player]=previous end
         if previous.seen[a.index]then return end;previous.seen[a.index]=true;previous.at=now()
+        local observer=H.remote[a.player]
+        if observer and observer.action==a.action then observer.confirmedContacts=previous.seen end
         local style=PY.getPlayerStyle(p)
         local move=style and (a.node and PY.NetworkProtocol.move and PY.NetworkProtocol.move(style.id,a.node)or style.actions.heatAction)
         local z=R.target(p,a.zombie,a.targetKind)
@@ -461,7 +463,7 @@ function H.receive(module,command,a)
     if a.action<=(H.ended[a.player]or 0)or a.action<=(H.failedPackets[a.player]or 0)then return end
     local z=R.target(p,a.zombie,a.targetKind);if not z then return end
     local old=H.remote[a.player]
-    if old and (old.action>a.action or old.failed and old.action==a.action)then return end
+    if old and (old.action>a.action or old.failed and old.action==a.action or old.action==a.action and a.age<old.age)then return end
     if old and old.action~=a.action then H.remoteEnd(a.player,old.action);old=nil end
     if not old then
         local observer=PY.Network and PY.Network.remote and PY.Network.remote[a.player]
@@ -473,7 +475,9 @@ function H.receive(module,command,a)
     local style=a.node and PY.getStyle(p:getModData().ProjectYakuzaStyle or "")
     local move=style and PY.NetworkProtocol.move(style.id,a.node,p:GetVariable("ProjectYakuzaWeaponProfile"))or nil
     if a.node and(not move or move.motionId~=a.motionId)then return end
-    local job=old or {p=p,z=z,action=a.action};job.move=move
+    local job=old or {p=p,z=z,action=a.action,remote=true};job.move=move
+    local contacts=H.contacts and H.contacts[a.player]
+    if contacts and contacts.action==a.action then job.confirmedContacts=contacts.seen end
     job.motion=motion;job.duration=motion and motion.duration or R.duration
     job.x,job.y,job.fx,job.fy,job.age,job.at=a.x,a.y,a.fx,a.fy,a.age,now();H.remote[a.player]=job
     if not old then job.old=R.lock(z,motion and motion.targetAnimation);PY.HeatActions.begin(p,job,{duration=move and R.wallDuration(move)or job.duration})end

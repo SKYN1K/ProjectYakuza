@@ -28,6 +28,23 @@ public class PassiveUIProbe {
     checks++;
    }
   }
-  System.out.println("PASS "+checks+" native RMB routing checks: inherited nil handlers consume; all four passive overlays explicitly pass press/release through; no game/UI launch");
+  Object lower=uiType.getConstructor(tableType).newInstance(env),upperEnv=platformType.getMethod("newEnvironment").invoke(platform),upper=uiType.getConstructor(tableType).newInstance(upperEnv);
+  for(Object element:new Object[]{lower,upper}){
+   uiType.getMethod("setVisible",boolean.class).invoke(element,true);uiType.getMethod("setConsumeMouseEvents",boolean.class).invoke(element,false);
+   for(String method:new String[]{"setWidth","setHeight"})uiType.getMethod(method,double.class).invoke(element,100d);
+  }
+  var manager=Class.forName("zombie.ui.UIManager");var list=(List)manager.getMethod("getUI").invoke(null);list.clear();list.add(lower);list.add(upper);
+  var point=uiType.getMethod("isPointOver",double.class,double.class);
+  if(!Boolean.FALSE.equals(point.invoke(lower,20d,20d)))throw new AssertionError("native full-size passive overlay no longer reproduces inventory hit-test occlusion");
+  tableType.getMethod("rawset",Object.class,Object.class).invoke(env,"onMouseWheel",compiler.invoke(null,"return true","inventory accepts wheel",env));
+  tableType.getMethod("rawset",Object.class,Object.class).invoke(upperEnv,"onMouseWheel",compiler.invoke(null,"return false","overlay passes wheel",upperEnv));
+  if(!Boolean.FALSE.equals(uiType.getMethod("onMouseWheel",double.class).invoke(upper,1d)))throw new AssertionError("passive wheel callback");
+  uiType.getMethod("setWidth",double.class).invoke(upper,0d);uiType.getMethod("setHeight",double.class).invoke(upper,0d);
+  if(!Boolean.TRUE.equals(point.invoke(lower,20d,20d))||!Boolean.TRUE.equals(uiType.getMethod("onMouseWheel",double.class).invoke(lower,1d)))throw new AssertionError("zero-input-bounds overlay did not restore inventory scrolling");
+  tableType.getMethod("rawset",Object.class,Object.class).invoke(upperEnv,"render",compiler.invoke(null,"local self=...;self.rendered=true","zero-bounds still renders",upperEnv));
+  uiType.getMethod("render").invoke(upper);
+  if(!Boolean.TRUE.equals(tableType.getMethod("rawget",Object.class).invoke(upperEnv,"rendered")))throw new AssertionError("zero input bounds suppressed render callback");
+  list.clear();
+  System.out.println("PASS "+checks+" native RMB checks and inventory wheel regression: full-size passive root occludes inventory; zero input bounds restore hit testing and retain rendering; no game/UI launch");
  }
 }

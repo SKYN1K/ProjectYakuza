@@ -235,6 +235,11 @@ getPlayerByOnlineID=function(id)return id==2 and p end
 local pose={player=2,action=10,zombie=25,session=1,age=0,x=0,y=0,fx=1,fy=0}
 H.receive('ProjectYakuza','heatRushPose',pose);check(H.remote[2]and z.useless,'remote paired pose enters native victim state')
 pose.age=6.5;H.receive('ProjectYakuza','heatRushPose',pose);check(H.remote[2]and H.remote[2].age==6.5,'retail observer accepts poses after the old five-second cutoff')
+pose.age=6.2;H.receive('ProjectYakuza','heatRushPose',pose);check(H.remote[2].age==6.5 and H.remote[2].remote,'out-of-order pose cannot rewind observer presentation')
+local observerStyle=PY.getPlayerStyle;PY.getPlayerStyle=function()return nil end
+H.receive('ProjectYakuza','heatRushContact',{player=2,action=10,session=1,index=1,zombie=25,presentation=true})
+PY.getPlayerStyle=observerStyle
+check(H.remote[2].confirmedContacts and H.remote[2].confirmedContacts[1],'server contact confirmation reaches the active observer clock')
 pose.age=R.duration+1;H.receive('ProjectYakuza','heatRushPose',pose);check(H.remote[2].age==6.5,'observer rejects poses beyond registered source duration')
 pose.age=0
 
@@ -251,6 +256,7 @@ H.receive('ProjectYakuza','heatRushPose',pose);check(not H.remote[2],'end arrivi
 H.receive('ProjectYakuza','heatRushFailed',{player=2,action=21,index=1,session=2});pose.action=21;H.receive('ProjectYakuza','heatRushPose',pose)
 check(not H.remote[2]and not z.useless,'failure arriving before a late pose cannot re-lock the released victim')
 
+PY.StyleUI={renderOnly=function()end,render=function()return false end}
 local draws=0
 ISPanel={derive=function(self)local cls={};cls.__index=cls;setmetatable(cls,{__index=self});return cls end}
 function ISPanel:new(x,y,w,h)return setmetatable({x=x,y=y,width=w,height=h,background=true},{__index=self})end
@@ -728,8 +734,8 @@ do
   PY.MultiHit.targets=function()return {{victim=z}}end
   PY.Weapons.sync(p);local view=PY.getPlayerStyle(p);local move=view.actions.heatAction
   check(view.weaponProfile=='bicycle'and move.motionId=='dod_bicycle'and not move.qte,'real bicycle selects its own automatic original scene '..id)
-  check(#move.contacts==1 and math.abs(move.contacts[1].atMs-50/30*1000)<.00001,'held bicycle uses its original CMN damage frame')
-  check(move.contacts[1].damageMultiplier==1.5,'bicycle preserves original full Y6 heavy-object damage')
+  check(#move.contacts==2 and math.abs(move.contacts[1].atMs-30/30*1000)<.00001 and math.abs(move.contacts[2].atMs-84/30*1000)<.00001,'held bicycle uses both original CMN damage frames')
+  check(move.contacts[1].damageMultiplier==.375 and move.contacts[2].damageMultiplier==1.125,'bicycle preserves original Y6 damage weights')
   check(move.heatStocks==1 and move.useExtremeFuel and move.noCombo,'bicycle uses existing stock/fuel and neutral-combo rules')
   check(H.weaponInput(p,PY.stateFor(p),view,true),'bicycle action starts through normal weapon input '..id)
   local context=PY.activeActions[p];local action=context.timedAction;local hits=z.hits
@@ -740,7 +746,7 @@ do
   check(z.vars.ProjectYakuzaPairedVictimClip=='ProjectYakuza_DD_BicycleHeatVictim'and p.invincible,'bicycle uses isolated victim motion and shared protection')
   for i,contact in ipairs(move.contacts)do
    phase=(contact.atMs+.001)/1000;fire('OnPlayerUpdate',p);fire('OnPlayerUpdate',p)
-   check(z.hits==hits and math.abs(z.health-({8.5})[i])<.000001,'bicycle contacts apply canonical damage once without native Hit '..i)
+   check(z.hits==hits and math.abs(z.health-({9.625,8.5})[i])<.000001,'bicycle contacts apply canonical damage once without native Hit '..i)
   end
   phase=move.duration;fire('OnPlayerUpdate',p)
   check(action.cleaned and not PY.activeActions[p]and not p.invincible and p.ghost,'bicycle retains full original recovery and restores control')

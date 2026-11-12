@@ -2,7 +2,7 @@ require "ProjectYakuza/Registry"
 require "ProjectYakuza/AttackEffects"
 require "ProjectYakuza/HeatPresentationData"
 local PY=ProjectYakuza
-local C={states=setmetatable({}, {__mode="k"}),maxActors=8,lateMs=100,prepareMs=160}
+local C={states=setmetatable({}, {__mode="k"}),maxActors=8,lateMs=100,remoteLateMs=350,prepareMs=160}
 PY.HeatActionPresentation=C
 function C.sync()
     local any=false;for _ in pairs(C.states)do any=true;break end
@@ -51,6 +51,20 @@ function C.play(p,s,entry,anchor)
     local id=emitter:playClip(entry.clip,p)
     if type(id)=="number"and id~=0 then emitter:setVolume(id,entry.gain);s.handles[#s.handles+1]={emitter=emitter,id=id}end
 end
+function C.late(s)return s.source.remote and C.remoteLateMs or C.lateMs end
+function C.allowed(s,contact,index)
+    if not contact then return false end
+    if not contact.qteIndex then return true end
+    if s.source.remote then return s.source.confirmedContacts and s.source.confirmedContacts[index]==true or false end
+    return s.source.qte and s.source.qte.accepted[contact.qteIndex]or false
+end
+function C.track(p,s,clip)
+    if s.source.remote then
+        if s.source.failed then return math.max(0,(getTimestampMs()-s.source.failureAt)/1000),1 end
+        return PY.HeatRushRules.time(s.move,s.source.age)+math.max(0,getTimestampMs()-s.source.at)/1000,1
+    end
+    return PY.AttackEffects.findTrack(p,clip,s.location)
+end
 function C.authoredEvents(p,s,time,definition)
     local move=definition or s.move
     local style=PY.getPlayerStyle(p)
@@ -62,7 +76,7 @@ function C.authoredEvents(p,s,time,definition)
         end
         if audio and not audio.done and time>=event.atMs then
             audio.done=true
-            if time-event.atMs<=C.lateMs then
+            if time-event.atMs<=C.late(s) then
                 local target=event.target=="victim"and s.victim or p
                 C.play(p,s,audio,{x=target:getX(),y=target:getY(),z=target:getZ()})
             end
@@ -71,7 +85,7 @@ function C.authoredEvents(p,s,time,definition)
     if p:isLocalPlayer()and PY.CombatVoices then for i,event in ipairs(move.voiceEvents or {})do
         if not s.voices[i]and time>=event.atMs then
             s.voices[i]=true
-            if time-event.atMs<=C.lateMs then PY.CombatVoices.contact(p,event.entry)end
+            if time-event.atMs<=C.late(s) then PY.CombatVoices.contact(p,event.entry)end
         end
     end end
 end
@@ -84,9 +98,10 @@ function C.tick()
             local ending=s.source.failed and PY.HeatRushRules.pairedFailure(s.move)
             local clip,contacts,effects=C.definition(s,ending)
             if s.clip~=clip then s.clip=clip;s.audio={};s.voices={};s.authored={};s.effects={};s.sceneEffects={};s.location=nil;s.last=0;s.waitAt=getTimestampMs()end
-            local phase,weight,slot=PY.AttackEffects.findTrack(p,clip,s.location);s.location=slot
+            local phase,weight,slot=C.track(p,s,clip);s.location=slot
             if phase and weight>=.05 then
                 local time=s.move.pacedAnimation and not ending and PY.HeatRushRules.sourceTime(s.move,phase)*1000 or phase*1000
+                if s.source.remote then time=math.max(s.last,time)end
                 if time+20<s.last then C.stop(p,s.source)
                 else
                     s.last=time;s.waitAt=getTimestampMs()
@@ -94,20 +109,20 @@ function C.tick()
                     C.authoredEvents(p,s,time,definition)
                     for i,meta in ipairs(contacts)do
                         local index=meta.index or i;local contact=PY.HeatRushRules.contacts(s.move)[index]
-                        local allowed=contact and(not contact.qteIndex or s.source.qte and s.source.qte.accepted[contact.qteIndex])
+                        local allowed=C.allowed(s,contact,index)
                         if allowed then
                             if definition.audioEvents==nil and s.audio[i]==nil and time>=meta.atMs-C.prepareMs then s.audio[i]=C.prepare(p,s,contact,meta)end
                             local audio=s.audio[i]
                             if audio and not audio.done and time>=meta.atMs-audio.lead then
                                 audio.done=true
-                                if time-(meta.atMs-audio.lead)<=C.lateMs then C.play(p,s,audio,C.anchor(p,s.victim,meta.point))end
+                                if time-(meta.atMs-audio.lead)<=C.late(s) then C.play(p,s,audio,C.anchor(p,s.victim,meta.point))end
                             end
                             if audio then for _,layer in ipairs(audio.layers)do
-                                if not layer.done and time>=meta.atMs-layer.lead then layer.done=true;if time-(meta.atMs-layer.lead)<=C.lateMs then C.play(p,s,layer,C.anchor(p,s.victim,meta.point))end end
+                                if not layer.done and time>=meta.atMs-layer.lead then layer.done=true;if time-(meta.atMs-layer.lead)<=C.late(s) then C.play(p,s,layer,C.anchor(p,s.victim,meta.point))end end
                             end end
                             if not s.effects[i]and time>=meta.atMs then
                                 s.effects[i]=true
-                                if time-meta.atMs<=C.lateMs then
+                                if time-meta.atMs<=C.late(s) then
                                     if effects~=nil then PY.emit("heatRushHit",p,s.victim,index,contact)
                                     else PY.HeatRush.present(p,s.victim,s.move,index,true,true,C.anchor(p,s.victim,meta.point),meta.feedback,meta.bloodOnly)end
                                 end
@@ -115,10 +130,10 @@ function C.tick()
                         end
                     end
                     for i,event in ipairs(effects or {})do
-                        if not s.sceneEffects[i]and time>=event.atMs then
+                        local contact=PY.HeatRushRules.contacts(s.move)[event.index]
+                        if not s.sceneEffects[i]and time>=event.atMs and C.allowed(s,contact,event.index)then
                             s.sceneEffects[i]=true
-                            local contact=PY.HeatRushRules.contacts(s.move)[event.index]
-                            if contact and time-event.atMs<=C.lateMs and PY.BloodEffects then PY.BloodEffects.spawn(p,s.victim,contact.strong~=false,contact.charged==true,event.feedback,C.anchor(p,s.victim,event.point))end
+                            if time-event.atMs<=C.late(s) and PY.BloodEffects then PY.BloodEffects.spawn(p,s.victim,contact.strong~=false,contact.charged==true,event.feedback,C.anchor(p,s.victim,event.point))end
                         end
                     end
                 end

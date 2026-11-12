@@ -18,12 +18,12 @@ with zipfile.ZipFile(report['baseline'])as archive:
     for record in report['clips']:
         clip=next(c for c in scene['clips']if c['output']==record['output']);output=mod/clip['output'];assert sha(output)==record['sha256']==clip['sha256'];old=w/('crate-head-old-'+str(clip['ending'])+'.x');old.write_bytes(archive.read('ProjectYakuza/'+clip['output']));text,bones,animation,_=read(output);previous,ob,oa,_=read(old);assert without_prop(text)==without_prop(previous),'only right prop can change';victim=next(c for c in scene['clips']if c['role']==1 and c['ending']==clip['ending']);_,vb,va,_=read(mod/victim['output']);paths=scene['endingPaths']if clip['ending']else scene['paths'];offsets=[[],[]]
         for frame,sourceFrame in enumerate(clip['sourceFrames']):
-            native=world(bones,locals_at(bones,animation,frame*160));prior=world(ob,locals_at(ob,oa,frame*160));victimPose=world(vb,locals_at(vb,va,frame*160));ap,vp=paths[0][frame],paths[1][frame];shift=Vector(((vp[1]-ap[1])/1.5,0,-(vp[0]-ap[0])/1.5));head=[p+shift for p in skin_part(body,victimPose,['Bip01_Head'])];prop=native['Bip01_Prop1'];assert 1-abs(prop.to_quaternion().dot(prior['Bip01_Prop1'].to_quaternion()))<.00001
+            native=world(bones,locals_at(bones,animation,frame*160));prior=world(ob,locals_at(ob,oa,frame*160));victimPose=world(vb,locals_at(vb,va,frame*160));ap,vp=paths[0][frame],paths[1][frame];shift=Vector(((vp[1]-ap[1])/1.5,0,-(vp[0]-ap[0])/1.5));head=[p+shift for p in skin_part(body,victimPose,['Bip01_Head'])];prop=native['Bip01_Prop1'];calibrated=prior['Bip01_Prop1']@Matrix(report['calibration']);assert 1-abs(prop.to_quaternion().dot(calibrated.to_quaternion()))<.00001
             if sourceFrame>=13:
-                shape=[prop@p for p in vertices];assert abs(min(p.y for p in shape)-max(p.y for p in head))<.00002
-                for axis in [0,2]:assert abs((min(p[axis]for p in shape)+max(p[axis]for p in shape)-min(p[axis]for p in head)-max(p[axis]for p in head))/2)<.00002
+                localHead=[prop.inverted()@point for point in head];assert abs(min(point.y for point in localHead)-report['roofInteriorY'])<.00002
+                for axis in [0,2]:assert abs((min(point[axis]for point in localHead)+max(point[axis]for point in localHead))/2-report['modelCentre'][axis])<.00002
                 seated+=1
             for i,(hand,bone)in enumerate([('Bip01_R_Hand','Bip01_Prop1'),('Bip01_L_Hand','Bip01_Prop2')]):offsets[i].append(native[hand].inverted()@Matrix(record['frames'][frame]['propWorld'])if i==0 else prior[hand].inverted()@prior[bone])
         encoded=[';'.join(','.join(str(v)for row in matrix for v in row)for matrix in values)for values in offsets];contracts.append('\t'.join([str(output),*encoded,str(clip['frames'])]))
 (w/'crate-head-prop.tsv').write_text('\n'.join(contracts));assert seated==244
-print('PASS crate head alignment:',seated,'main/ending samples seated at native head crown, unchanged body/fingers/source rotations and two actor prop contracts')
+print('PASS crate head alignment:',seated,'main/ending samples centred inside correctly oriented crate, inner roof at head crown, unchanged body/fingers and calibrated source rotations and two actor prop contracts')

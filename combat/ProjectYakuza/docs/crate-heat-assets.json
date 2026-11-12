@@ -11,7 +11,7 @@
       "retarget": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\crate-heat-retarget\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_CrateHeat.x",
       "retargetSha256": "901283fadd7f7647e46e91e5140447a8886e6e34648a94ffad16941d861f5a32",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_CrateHeat.x",
-      "sha256": "a0879afa606a2554704f7c76acd480f4dba1e1d70d65cd2638f0e4fc89e976fa",
+      "sha256": "7c9668f2265da598e581ee755a355aee9d1d321a87f21ea3590e323b5b0d9ab8",
       "frames": 190,
       "sourceFrames": [
         0,
@@ -215,7 +215,7 @@
       "retarget": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\crate-heat-retarget\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_CrateHeat.x",
       "retargetSha256": "901283fadd7f7647e46e91e5140447a8886e6e34648a94ffad16941d861f5a32",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_CrateHeatFail.x",
-      "sha256": "f638422b4b1db74135dab1d8418b8be67e066ac0e0a03a03a36c96cc7e7bab30",
+      "sha256": "8a1703bf6ea3fd0baabe55bc541c31948ecf4faab1f1552d53ab73ffdfd67453",
       "frames": 67,
       "sourceFrames": [
         63,

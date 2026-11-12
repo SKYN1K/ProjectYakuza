@@ -146,7 +146,7 @@ end
 do local _="ProjectYakuzaFixture:SCENE_VOICES" end
 local context=ProjectYakuza.activeActions[p];context.action=ProjectYakuza.Weapons.views.dragon_of_dojima.bottle.actions.heatAction;clock=clock+6000;p.voiceBusy=true;before=#p.calls
 local sourceVoice=context.action.voiceEvents[1]
-local function sceneContact()ProjectYakuza.HeatSceneVoiceProbe.authoredEvents(p,{move={voiceEvents={sourceVoice}},voices={},authored={}},sourceVoice.atMs)end
+local function sceneContact()ProjectYakuza.HeatSceneVoiceProbe.authoredEvents(p,{move={voiceEvents={sourceVoice}},source={},voices={},authored={}},sourceVoice.atMs)end
 sceneContact()
 check(#p.calls==before and V.states[p].contact~=nil,'busy actual provider queues Heat Action contact voice')
 clock=clock+300;p.voiceBusy=false;V.update(p)

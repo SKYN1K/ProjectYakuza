@@ -1,5 +1,8 @@
 require "ProjectYakuza/Registry"
 local H={active=setmetatable({}, {__mode="k"})};ProjectYakuza.HeatActions=H
+function H.useGhostProtection()
+    return not((isClient and isClient())or(isServer and isServer()))
+end
 function H.strike(job,p,z,item,amount,index)
     if not job or job.damageSettled or not z or z:isDead()or type(index)~="number"and type(index)~="string"or type(amount)~="number"or amount~=amount or amount<0 or amount>1000000 then return false end
     job.damageContacts=job.damageContacts or {}
@@ -33,7 +36,7 @@ function H.begin(p,key,definition)
     job=job or {invincible=p:isInvincible(),ghost=p:isGhostMode()}
     job.key=key;job.playing=true;job.graceMs=grace
     job.expires=getTimestampMs()+(duration*1000)+1000
-    H.active[p]=job;p:setInvincible(true);p:setGhostMode(true)
+    H.active[p]=job;p:setInvincible(true);if H.useGhostProtection()then p:setGhostMode(true)end
     if not H.hooked then Events.OnTick.Add(H.tick);if Events.OnZombieUpdate then Events.OnZombieUpdate.Add(H.zombie)end;H.hooked=true;H.lastTick=getTimestampMs();H.paused=false end
     return true
 end
@@ -50,7 +53,7 @@ function H.tick()
     local any=false
     for p,job in pairs(H.active)do
         if p:isDead()or t>=job.expires then H.restore(p,job)
-        else any=true;p:setGhostMode(true);if job.playing then p:setInvincible(true)end end
+        else any=true;if H.useGhostProtection()then p:setGhostMode(true)end;if job.playing then p:setInvincible(true)end end
     end
     if not any and H.hooked then Events.OnTick.Remove(H.tick);if Events.OnZombieUpdate then Events.OnZombieUpdate.Remove(H.zombie)end;H.hooked=false end
 end

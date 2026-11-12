@@ -5,6 +5,7 @@ require "ProjectYakuza/Juggling"
 require "ProjectYakuza/TauntReactions"
 require "ProjectYakuza/SoundVariety"
 require "ProjectYakuza/GrabRules"
+require "ProjectYakuza/HeatActions"
 local ProjectYakuza=ProjectYakuza;local P=ProjectYakuza.NetworkProtocol
 local S={players={},grabs={},nextTick=0,reactions={},nextSession=0,grabSerial=0}
 ProjectYakuza.NetworkServer=S
@@ -85,7 +86,7 @@ function S.snapshot(p,a,s)
         if grace and not grace.playing then protection.restore(p,grace)end
         if a.heat>=ProjectYakuza.HeatRules.stockSize(style) and activation then
             s.protection={ghost=p:isGhostMode(),invincible=p:isInvincible(),expires=now()+math.min(3500,(activation.duration or 2)*1000+500)}
-            p:setGhostMode(true);p:setInvincible(true)
+            if ProjectYakuza.HeatActions.useGhostProtection()then p:setGhostMode(true)end;p:setInvincible(true)
         end
     end
     local packet={player=p:getOnlineID(),session=s.session,seq=a.seq,style=a.style,weaponProfile=profile or "",equipped=equipped,

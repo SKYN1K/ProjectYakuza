@@ -189,4 +189,17 @@ local localPlayer=p.isLocalPlayer;p.isLocalPlayer=function()return false end;clo
 p.dead=true;check(not A.play(p,'open')and #uiSounds==2,'dead-player UI audio is ignored');p.dead=false
 ProjectYakuza.selectStyle(p,'none');check(#uiSounds==2 and not A.play(p,'missing'),'unequip and unknown cues cannot leak style/audio events')
 clock=clock+1000;uiSounds={};check(A.play(p,'cursor')and not A.play(p,'cursor')and #uiSounds==1,'rapid cursor cues are debounced');clock=clock+65;check(A.play(p,'cursor')and #uiSounds==2,'cursor debounce expires at its bounded interval')
+local nativeBounds={}
+local passive={width=400,height=250}
+function nativeBounds:setWidth(value)self.width=value end
+function nativeBounds:setHeight(value)self.height=value end
+function passive:instantiate()self.javaObject=nativeBounds;self.javaObject:setWidth(self.width);self.javaObject:setHeight(self.height)end
+function passive:setWidth(value)self.width=value;if self.javaObject then self.javaObject:setWidth(value)end end
+function passive:setHeight(value)self.height=value;if self.javaObject then self.javaObject:setHeight(value)end end
+ProjectYakuza.StyleUI.renderOnly(passive);passive:instantiate()
+check(nativeBounds.width==0 and nativeBounds.height==0 and passive:getWidth()==400 and passive:getHeight()==250,'render-only UI keeps drawing dimensions without occluding native inventory hit testing')
+passive:setWidth(900);passive:setHeight(600)
+check(nativeBounds.width==0 and nativeBounds.height==0 and passive:getWidth()==900 and passive:getHeight()==600,'resizing cannot restore an invisible full-screen input rectangle')
+local instantiate=passive.instantiate;ProjectYakuza.StyleUI.renderOnly(passive)
+check(passive.instantiate==instantiate,'render-only wrapper is idempotent')
 return 'PASS '..count..' selector persistence, input, assignment, add-on and original-atlas checks'

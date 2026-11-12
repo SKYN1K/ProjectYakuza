@@ -8,6 +8,6 @@ s=s.replace('do local _="ProjectYakuzaFixture:CVF_PROJECT" end',blocks([m/'share
 s=s.replace('do local _="ProjectYakuzaFixture:CVF_UPSTREAM" end',blocks([cvf/'shared/CustomVoiceFramework/CVF_Core.lua',cvf/'shared/CustomVoiceFramework/CVF_Suffixes.lua',cvf/'shared/CustomVoiceFramework/CVF_Lines.lua',cvf/'client/CustomVoiceFramework/CVF_Playback.lua']))
 present=(m/'client/ProjectYakuza/HeatRush.lua').read_text(encoding='utf-8');present=present[present.index('function H.present('):present.index('function A:contact(')]
 s=s.replace('do local _="ProjectYakuzaFixture:HEAT_FEEDBACK" end',blocks([m/'shared/ProjectYakuza/SoundVariety.lua',m/'client/ProjectYakuza/Feedback.lua',m/'shared/ProjectYakuza/HeatRushRules.lua'])+'\ndo local PY=ProjectYakuza;local R=PY.HeatRushRules;local H={};PY.HeatRush=H\n'+present+'\nend\n')
-scene=(m/'client/ProjectYakuza/HeatActionPresentation.lua').read_text();scene=scene[scene.index('function C.authoredEvents('):scene.index('function C.tick(')]
+scene=(m/'client/ProjectYakuza/HeatActionPresentation.lua').read_text();scene=scene[scene.index('function C.late('):scene.index('function C.tick(')]
 s=s.replace('do local _="ProjectYakuzaFixture:SCENE_VOICES" end','do local PY=ProjectYakuza;local C={lateMs=100};PY.HeatSceneVoiceProbe=C\n'+scene+'\nend\n')
 (w/'cvf-combat-tests.lua').write_text(s,encoding='utf-8')

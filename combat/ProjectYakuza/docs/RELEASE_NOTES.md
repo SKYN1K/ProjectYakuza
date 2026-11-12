@@ -1,7 +1,8 @@
-# Project Yakuza 0.102.0
+# Project Yakuza 0.103.0
 
-- Dragon of Dojima gains normal Heat from the first eligible target per swing and 25% from further unique targets. Duplicate callbacks remain ignored; weapon views inherit this rule.
-- Taunts require a live, active zombie pursuing you within five tiles with a clear path. Request, queued start and reward completion recheck the threat; a lost threat grants no Heat.
-- Tiger Drop accepts the first 160 ms of observed frontal attack windup and has a 20-second cooldown, enforced by client and server.
-- Selecting an already-equipped style uses the original LJ source control-window handoff at about 1.033 seconds. Equipping from no style keeps the full 2.5-second entry. SP equipment delays and MP retries preserve the choice.
-- Original motion, textures, models, audio, native idle selectors, damage and Heat drain remain unchanged. Offline Kahlua, source timing, native imports/selectors, Lua compilation, runtime-reference and zero-comment checks pass. Project Zomboid was not launched.
+- Inventory wheel input reaches the item list again. Passive combat overlays keep their visible layout while using zero native mouse-input bounds, preventing world zoom from taking the wheel.
+- Multiplayer Heat Action and activation protection no longer enables native ghost mode, which hides actors from ordinary observers. Invulnerability, zombie attack suppression and restoration of pre-existing protection remain active.
+- Observer Heat Action effects use the synchronized action clock and server-confirmed QTE contacts. Out-of-order poses cannot rewind presentation; duplicate contacts remain ignored and delayed effects have a bounded 350 ms grace.
+- Bicycle uses Yakuza 6 h23750_buki_h: a held-object overhead crash with original weapon release, both original damage contacts, full recovery and matching original sound events. The existing bicycle model and pixels remain unchanged.
+- Beer crate main and failure scenes turn the opening down and seat the victim's head inside the crate against its inner roof. Body, finger and victim animations remain unchanged.
+- Offline Kahlua, native imports/selectors, source motion/CMN/PCM, texture pixels, runtime references and comment checks pass. Project Zomboid was not launched. This release was not installed locally, as requested. Live MP and visual playback still need an in-game check.

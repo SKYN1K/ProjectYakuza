@@ -86,7 +86,7 @@ function ISPanel:drawSubTexture()end;function ISPanel:drawRect()end;function ISP
 getSpecificPlayer=function()return owner end;getPlayerScreenWidth=function()return 1280 end
 getTexture=function(name)return name end;UIFont={Small=1}
 SpriteRenderer={instance={getDoAdditive=function()return false end,setDoAdditive=function()end}}
-PY.StyleUI={releaseAll=function()end,render=function()return false end}
+PY.StyleUI={renderOnly=function()end,releaseAll=function()end,render=function()return false end}
 PY.Heat={display=function()return 50 end,isExtreme=function()return false end,stocks=function()return 3 end,enabled=function()return true end,config={maxStocks=6}}
 PY.Bindings={label=function()return 'N'end};PY.TigerDrop=nil
 do local _="ProjectYakuzaFixture:HUD" end

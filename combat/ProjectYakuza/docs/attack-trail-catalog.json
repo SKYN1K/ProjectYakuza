@@ -1,7 +1,7 @@
 {
   "operation": "Code-side numeric FK only from existing supplied PZ clips, including current paired contacts/endings and linked native finisher variants. Contacts use native collision events, authored Heat Action contacts or the documented parry fallback. Clips use contact-local endpoint/relative motion with verified original left-light and right-high-kick pose overrides, independent of charge-up pose. The high kick has right-foot height 0.721 versus planted left foot 0.093 at source frame 24; recovering arms can be faster than the striking leg. Runtime resolves the actual playing clip within the committed move family. No visual/audio/animation/model assets are generated or modified.",
   "catalog": "42/media/lua/client/ProjectYakuza/AttackTrailCatalog.lua",
-  "sha256": "7bccc8e01f2c1606641ade47cf38be12962fdd7ab934d9f2505e9280213f943f",
+  "sha256": "84732d0c999abb49eb24c88282df0661ed1ca33f325cbbf49f9a561261037ed5",
   "clips": [
     {
       "profile": "bat",
@@ -239,24 +239,39 @@
       "impact": -1.0,
       "kick": false,
       "qte": [
-        1.66666666667
+        1.0,
+        2.8
       ],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BicycleHeat.x",
-      "clipSha256": "370c1f4e1320473e6783c9eb9bdb57d5d78c8d65510122e3119b4a2f5b775440",
-      "samples": 121,
-      "duration": 4.0,
+      "clipSha256": "cc95dd63056a73b36974321deb44cab459ed27daaf3478121a3f67c4f777e0b6",
+      "samples": 166,
+      "duration": 5.5,
       "windows": [
         {
           "track": "dd_trail_bicycleheat_1",
-          "from": 1.5466666666700002,
-          "to": 1.86666666667,
-          "contact": 1.66666666667,
+          "from": 0.88,
+          "to": 1.2,
+          "contact": 1.0,
           "limb": "rightArm",
           "scores": [
-            0.1836796900290501,
-            0.3635445466027285,
-            0.050648784684359315,
-            0.06834896782039236
+            0.21103746484810137,
+            0.4378002502940468,
+            0.05954787752315109,
+            0.03713134121903791
+          ],
+          "selection": "contact-local relative motion"
+        },
+        {
+          "track": "dd_trail_bicycleheat_2",
+          "from": 2.6799999999999997,
+          "to": 3.0,
+          "contact": 2.8,
+          "limb": "rightArm",
+          "scores": [
+            0.5149464039171644,
+            0.7680532861978754,
+            0.0988640187347028,
+            0.4137495882888211
           ],
           "selection": "contact-local relative motion"
         }
@@ -1078,7 +1093,7 @@
         4.73333333333
       ],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_CrateHeat.x",
-      "clipSha256": "a0879afa606a2554704f7c76acd480f4dba1e1d70d65cd2638f0e4fc89e976fa",
+      "clipSha256": "7c9668f2265da598e581ee755a355aee9d1d321a87f21ea3590e323b5b0d9ab8",
       "samples": 190,
       "duration": 6.3,
       "windows": [
@@ -1208,7 +1223,7 @@
         0.633333333333
       ],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_CrateHeatFail.x",
-      "clipSha256": "f638422b4b1db74135dab1d8418b8be67e066ac0e0a03a03a36c96cc7e7bab30",
+      "clipSha256": "8a1703bf6ea3fd0baabe55bc541c31948ecf4faab1f1552d53ab73ffdfd67453",
       "samples": 67,
       "duration": 2.2,
       "windows": [

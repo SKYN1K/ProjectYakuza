@@ -147,7 +147,7 @@ function E.show(p,count,capped)
     s.rejectUntil=nil;s.age=0;s.last=now()
     s.context={title=E.title(config,count),count=count,capped=capped==true,reason=s.reason,radius=config.radius or 12,target=s.target}
     local panel=Panel:new(0,0,getPlayerScreenWidth(p:getPlayerNum()),getPlayerScreenHeight(p:getPlayerNum()))
-    panel.player=p;panel:initialise();panel:setWantMouseEvents(false);panel:addToUIManager();s.panel=panel
+    panel.player=p;PY.StyleUI.renderOnly(panel);panel:initialise();panel:setWantMouseEvents(false);panel:addToUIManager();s.panel=panel
     local name=config.soundKey and PY.Feedback and PY.Feedback.sound(p,config.soundKey)
     if name then PY.Feedback.play(p,name,config.soundVolume or 1) end
     PY.emit("encounterIntroStarted",p,s.style,s.context)

@@ -1,12 +1,14 @@
 from pathlib import Path
 import sys,json,struct,hashlib,subprocess,wave,copy
 from read_heat_scene import read_scene
-from cri_cue_table import cue_names
+from cri_cue_table import cue_names,sheet_names
 
 root=Path(__file__).resolve().parents[2];mod=root/'combat/ProjectYakuza';work=root/'extracted/all-heat-scene-095';work.mkdir(exist_ok=True);write='--write'in sys.argv
-scenes={'knife':('knife-heat-098/h23680_buki_b','hact_h23680_buki_b.acb','ProjectYakuza_DD_KnifeHeat'),'rush':('rush-reference-072','hact_h24010_100punchi.acb','ProjectYakuza_DD_HeatRush'),'bottle':('bottle-heat-071','hact_h23760_buki_n.acb','ProjectYakuza_DD_BottleHeat'),'wall':('grab-wall-080/wall-knock','hact_h2000_knock_wall_l.acb','ProjectYakuza_DD_WallHeat'),'ground':('ground-heat-081','hact_h1500.acb','ProjectYakuza_DD_GroundHeat'),'crate':('crate-heat-086','27d7.acb','ProjectYakuza_DD_CrateHeat'),'katana':('katana-heat-070','hact_h23720_buki_e.acb','ProjectYakuza_DD_KatanaHeat'),'bat':('bat-heat-096/h23710_buki_d','hact_h23710_buki_d.acb','ProjectYakuza_DD_BatHeat'),'bicycle':('bicycle-held-0100/h23740_buki_g','hact_h23740_buki_g.acb','ProjectYakuza_DD_BicycleHeat')}
+scenes={'knife':('knife-heat-098/h23680_buki_b','hact_h23680_buki_b.acb','ProjectYakuza_DD_KnifeHeat'),'rush':('rush-reference-072','hact_h24010_100punchi.acb','ProjectYakuza_DD_HeatRush'),'bottle':('bottle-heat-071','hact_h23760_buki_n.acb','ProjectYakuza_DD_BottleHeat'),'wall':('grab-wall-080/wall-knock','hact_h2000_knock_wall_l.acb','ProjectYakuza_DD_WallHeat'),'ground':('ground-heat-081','hact_h1500.acb','ProjectYakuza_DD_GroundHeat'),'crate':('crate-heat-086','27d7.acb','ProjectYakuza_DD_CrateHeat'),'katana':('katana-heat-070','hact_h23720_buki_e.acb','ProjectYakuza_DD_KatanaHeat'),'bat':('bat-heat-096/h23710_buki_d','hact_h23710_buki_d.acb','ProjectYakuza_DD_BatHeat'),'bicycle':('bicycle-overhead-0103/h23750_buki_h','hact_h23750_buki_h.acb','ProjectYakuza_DD_BicycleHeat')}
 sha=lambda b:hashlib.sha256(b).hexdigest()
-vgm=str(root/'tools/vgmstream/vgmstream-cli.exe');sounds={};audioRecords=[];sourceRecords=[];moves={};scripts=[];archiveCache={}
+vgm=str(root/'tools/vgmstream/vgmstream-cli.exe');sounds={};audioRecords=[];sourceRecords=[];moves={};scripts=[];archiveCache={};bankCache={}
+sheetPath=Path("F:/SteamLibrary/steamapps/common/Yakuza 6 - The Song of Life/data/puid/sound_cuesheet.bin")
+sheets=sheet_names(sheetPath.read_bytes())
 def extract_bank(game,name):
     archive=Path('F:/SteamLibrary/steamapps/common/Yakuza 5/main/data/soundpar/sound.par')if game=='y5'else Path('F:/SteamLibrary/steamapps/common/Yakuza 6 - The Song of Life/data/sound.par')
     if game not in archiveCache:
@@ -18,6 +20,16 @@ def extract_bank(game,name):
         stream.seek(entries+index*32);flags,plain,size,offset=struct.unpack('>4I',stream.read(16));assert flags==0 and plain==size;stream.seek(offset);data=stream.read(size)
     path=work/(game+'-'+name);path.write_bytes(data)
     return path,{'archive':str(archive),'entry':name,'entryOffset':offset,'entrySize':size,'entrySha256':sha(data)}
+
+def load_bank(game,name):
+    key=(game,name)
+    if key not in bankCache:
+        bank,metadata=extract_bank(game,name);names=cue_names(bank.read_bytes())
+        info=json.loads(subprocess.check_output([vgm,'-I','-m',str(bank)],text=True));streams={}
+        for index in range(1,info.get('streamInfo',{}).get('total',1)+1):
+            row=json.loads(subprocess.check_output([vgm,'-I','-m','-s',str(index),str(bank)],text=True));streams.setdefault(row.get('streamInfo',{}).get('name',''),[]).append((index,row))
+        bankCache[key]=(bank,metadata,names,streams)
+    return bankCache[key]
 
 def mapped_events(events,mapping,segments=None):
     result=[]
@@ -39,16 +51,16 @@ def literal(value):
     return '{'+','.join('['+json.dumps(k)+']='+literal(v)for k,v in sorted(value.items()))+'}'
 
 for key,(folder,bankName,animation)in scenes.items():
-    scene=read_scene(root/'extracted'/folder/'cmn.par/cmn.bin');game='y5'if scene['version']==10 else'y6';bank,bankMeta=extract_bank(game,bankName);names=cue_names(bank.read_bytes())
-    meta=json.loads(subprocess.check_output([vgm,'-I','-m',str(bank)],text=True));total=meta.get('streamInfo',{}).get('total',1);streams={}
-    for index in range(1,total+1):
-        info=json.loads(subprocess.check_output([vgm,'-I','-m','-s',str(index),str(bank)],text=True));streams.setdefault(info.get('streamInfo',{}).get('name',''),[]).append((index,info))
+    scene=read_scene(root/'extracted'/folder/'cmn.par/cmn.bin');game='y5'if scene['version']==10 else'y6';bank,bankMeta,names,streams=load_bank(game,bankName)
     for node in scene['nodes']:
         if 'sound'in node:
             sound=node['sound']
             if not sound['fighter']:
-                assert sound['cueId']in names,(key,sound)
-                sound['name']=names[sound['cueId']]
+                sourceBank=sheets[sound['cueSheet']]+'.acb'if key=='bicycle'and sound['cueSheet']==379 else bankName
+                if key=='bicycle':assert sheets[sound['cueSheet']]+'.acb'==sourceBank,(key,sound)
+                _,_,sourceNames,_=load_bank(game,sourceBank)
+                assert sound['cueId']in sourceNames,(key,sound,sourceBank)
+                sound['bankName']=sourceBank;sound['name']=sourceNames[sound['cueId']]
                 if sound['name'].startswith('Kiryu_'):sound['fighter']=True
     if key=='rush':
         sections=json.loads((mod/'docs/rush-twohit-sections.json').read_text());mapping=sections['clips'][0]['sourceFrames'];segments=[]
@@ -85,18 +97,20 @@ for key,(folder,bankName,animation)in scenes.items():
                     label=node['name'].upper();entry='CombatSpecialMove'if'THROW'in label else'CombatHeavyAttack'if any(s in label for s in['ATTACK_L','ATTACK_XL'])or sound.get('name')=='Kiryu_Attack07'else'CombatLightAttack'
                     voices.append({'atMs':at,'entry':entry})
                 continue
-            cueName=sound['name'];assert cueName in streams,(key,cueName)
-            index,info=streams[cueName][0];assert len(streams[cueName])==1,(key,cueName)
-            cue='heatScene'+key.title()+str(sound['cueId']);soundName='ProjectYakuza_HeatScene_'+key+'_'+str(sound['cueId'])
+            audioBank,audioBankMeta,_,audioStreams=load_bank(game,sound['bankName'])
+            cueName=sound['name'];assert cueName in audioStreams,(key,cueName)
+            index,info=audioStreams[cueName][0];assert len(audioStreams[cueName])==1,(key,cueName)
+            suffix=str(sound['cueId'])if sound['bankName']==bankName else str(sound['cueSheet'])+'_'+str(sound['cueId'])
+            cue='heatScene'+key.title()+suffix;soundName='ProjectYakuza_HeatScene_'+key+'_'+suffix
             if key=='katana':
                 cue={'bodyfall':'heatKatanaBodyFall','katana_swing':'heatKatanaSwing','punch':'heatKatanaPunch','slash':'heatKatanaSlash','tuki':'heatKatanaThrust'}[cueName]
             elif cue not in sounds:
-                rel='42/media/sound/ProjectYakuza/HeatScene_'+key+'_'+str(sound['cueId'])+'.wav';output=mod/rel
-                if write:subprocess.run([vgm,'-s',str(index),'-i','-o',str(output),str(bank)],check=True,capture_output=True)
+                rel='42/media/sound/ProjectYakuza/HeatScene_'+key+'_'+suffix+'.wav';output=mod/rel
+                if write:subprocess.run([vgm,'-s',str(index),'-i','-o',str(output),str(audioBank)],check=True,capture_output=True)
                 assert output.exists(),rel
                 with wave.open(str(output))as wav:rate,channels,width,samples=wav.getframerate(),wav.getnchannels(),wav.getsampwidth(),wav.getnframes()
                 assert(rate,channels,width,samples)==(info['sampleRate'],info['channels'],2,info['numberOfSamples'])
-                sounds[cue]=soundName;audioRecords.append({**bankMeta,'cue':cue,'sound':soundName,'cueId':sound['cueId'],'soundIndex':sound['soundIndex'],'streamIndex':index,'stream':cueName,'output':rel,'sha256':sha(output.read_bytes()),'sampleRate':rate,'channels':channels,'samples':samples})
+                sounds[cue]=soundName;audioRecords.append({**audioBankMeta,'cueSheet':sound['cueSheet'],'cue':cue,'sound':soundName,'cueId':sound['cueId'],'soundIndex':sound['soundIndex'],'streamIndex':index,'stream':cueName,'output':rel,'sha256':sha(output.read_bytes()),'sampleRate':rate,'channels':channels,'samples':samples})
                 scripts.append('    sound '+soundName+'\n    {\n        category = ProjectYakuza_Effects,\n        is3D = true,\n        loop = false,\n        clip\n        {\n            file = media/sound/ProjectYakuza/'+output.name+',\n            distanceMin = 1,\n            distanceMax = 16,\n            volume = 0.65,\n        }\n    }')
             audio.append({'atMs':at,'cue':cue,'target':'victim'if node['role']=='victim'else'actor'})
         particles=[]
@@ -111,7 +125,7 @@ for key,(folder,bankName,animation)in scenes.items():
         fail=record['definitions'][1];moves[key]['ending']={k:fail[k]for k in['audioEvents','voiceEvents']};moves[key]['ending']['contactMs']=fail['contacts'][-1]['atMs']
     sourceRecords.append(record)
 data={'moves':moves,'sounds':sounds};code='require "ProjectYakuza/Registry"\nProjectYakuza.HeatSceneData='+literal(data)+'\n'
-report={'operation':'Parsed supplied CMN18 and big-endian CMN10 victim damage, SE cue indices, actor voice labels and source blood attachments. Original 30 FPS frame mappings preserve authored bounded QTE repeats/endings. Original non-voice bank streams decoded without synthesis or mixing; no separate voice pack changed.','formatReferences':['https://github.com/Fronkln/HActLib','https://github.com/vgmstream/vgmstream/blob/master/src/util/cri_utf.c'],'scenes':sourceRecords,'sounds':audioRecords}
+report={'operation':'Parsed supplied CMN18 and big-endian CMN10 victim damage, SE cue indices, actor voice labels and source blood attachments. Original 30 FPS frame mappings preserve authored bounded QTE repeats/endings. Original non-voice bank streams decoded without synthesis or mixing; no separate voice pack changed.','sheetIndex':{'path':str(sheetPath),'sha256':sha(sheetPath.read_bytes())},'formatReferences':['https://github.com/Fronkln/HActLib','https://github.com/vgmstream/vgmstream/blob/master/src/util/cri_utf.c'],'scenes':sourceRecords,'sounds':audioRecords}
 outputs={mod/'42/media/lua/shared/ProjectYakuza/HeatSceneData.lua':code,mod/'docs/heat-scenes.json':json.dumps(report,indent=2,ensure_ascii=True)+'\n',mod/'42/media/scripts/ProjectYakuza_HeatScenes.txt':'module Base\n{\n'+'\n'.join(scripts)+'\n}\n'}
 for path,text in outputs.items():
     if write:path.write_bytes(text.encode('utf-8'))

@@ -55,7 +55,7 @@ function A:start()
     p:setDeferredMovementEnabled(false)
     self:holdPosition()
 
-    p:setGhostMode(true);p:setInvincible(true)
+    if ProjectYakuza.HeatActions.useGhostProtection()then p:setGhostMode(true)end;p:setInvincible(true)
     E.active[p]=self
     if not E.hooked then Events.OnZombieUpdate.Add(E.protect);Events.OnTick.Add(E.holdPositions);E.hooked=true end
     E.scan(p)

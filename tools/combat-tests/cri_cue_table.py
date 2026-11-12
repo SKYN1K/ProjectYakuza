@@ -1,5 +1,19 @@
 import struct
 
+def sheet_names(data):
+    assert data[:4]==b'armp'and struct.unpack_from('<HH',data,8)==(12,1)
+    main=struct.unpack_from('<I',data,16)[0]
+    count,columns=struct.unpack_from('<II',data,main)
+    assert columns==0 and count<100000 and struct.unpack_from('<I',data,main+48)[0]==0
+    table=struct.unpack_from('<I',data,main+16)[0]
+    assert table and table+count*4<=len(data)
+    names={}
+    for index in range(count):
+        start=struct.unpack_from('<I',data,table+index*4)[0]
+        end=data.index(b'\0',start)
+        names[index]=data[start:end].decode('ascii')
+    return names
+
 def read_utf(data):
     assert data[:4]==b'@UTF'
     size,version,rowsOffset,stringsOffset,blobOffset,nameOffset,columns,width,count=struct.unpack_from('>IHHIIIHHI',data,4)

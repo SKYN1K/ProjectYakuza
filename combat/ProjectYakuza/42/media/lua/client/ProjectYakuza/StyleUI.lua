@@ -5,6 +5,20 @@ local U={providers={},sessions=setmetatable({}, {__mode="k"}),textures={}}
 PY.StyleUI=U
 local channels={heat=true,status=true,selector=true,selectorSlot=true,setup=true,encounter=true,heatAction=true}
 
+function U.renderOnly(panel)
+    if panel.renderOnly then return end
+    panel.renderOnly=true
+    local instantiate,setWidth,setHeight=panel.instantiate,panel.setWidth,panel.setHeight
+    local function bounds(self)
+        if self.javaObject then self.javaObject:setWidth(0);self.javaObject:setHeight(0)end
+    end
+    panel.instantiate=function(self)instantiate(self);bounds(self)end
+    panel.setWidth=function(self,width)setWidth(self,width);bounds(self)end
+    panel.setHeight=function(self,height)setHeight(self,height);bounds(self)end
+    panel.getWidth=function(self)return self.width end
+    panel.getHeight=function(self)return self.height end
+end
+
 function PY.registerStyleUI(id,provider)
     assert(type(id)=="string" and string.match(id,"^[%w_.-]+$"),"namespaced UI provider ID required")
     assert(type(provider)=="table" and type(provider.render)=="function","UI render callback required")
