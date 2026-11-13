@@ -1,10 +1,10 @@
 require "ProjectYakuzaEmotes/EmoteSpears"
 require "ISUI/ISEmoteRadialMenu"
 local PY=ProjectYakuzaEmotes
-local E={id="ProjectYakuza_MajimaBatPoint",spearId="ProjectYakuza_LauSpearGround",kiryuId="ProjectYakuza_KiryuBadLuck",category="ProjectYakuzaEmotes"}
+local E={id="ProjectYakuza_MajimaBatPoint",spearId="ProjectYakuza_LauSpearGround",kiryuId="ProjectYakuza_KiryuBadLuck",stepUpId="ProjectYakuza_KiryuStepUp",category="ProjectYakuzaEmotes"}
 PY.Emotes=E
 local bats={['Base.BaseballBat']=true,['Base.BaseballBat_Crafted']=true,['Base.BaseballBat_Metal']=true,['Base.BaseballBat_Nails']=true,['Base.ShortBat']=true,['Base.ShortBat_Nails']=true}
-local definitions={[E.id]={label="IGUI_ProjectYakuzaEmotes_Emote_MajimaBatPoint",items=bats,icon="comefront"},[E.spearId]={label="IGUI_ProjectYakuzaEmotes_Emote_LauSpearGround",spear=true,icon="stop"},[E.kiryuId]={label="IGUI_ProjectYakuzaEmotes_Emote_KiryuBadLuck",unarmed=true,icon="shrug"}}
+local definitions={[E.id]={label="IGUI_ProjectYakuzaEmotes_Emote_MajimaBatPoint",items=bats,icon="comefront"},[E.spearId]={label="IGUI_ProjectYakuzaEmotes_Emote_LauSpearGround",spear=true,icon="stop"},[E.kiryuId]={label="IGUI_ProjectYakuzaEmotes_Emote_KiryuBadLuck",unarmed=true,icon="shrug"},[E.stepUpId]={label="IGUI_ProjectYakuzaEmotes_Emote_KiryuStepUp",unarmed=true,icon="comefront"}}
 function E.canPlay(p,id)
     local definition=definitions[id or E.id];if not definition then return false end
     if not p or not p:isLocalPlayer()or isGamePaused()or p:isDead()or p:isAsleep()or p:getVehicle()or p:isSitOnGround()or p:isPlayerMoving()or p:isAiming()or p:isCurrentlyBusy()or p:getVariableBoolean("EmotePlaying")then return false end

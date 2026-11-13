@@ -37,7 +37,7 @@ function p:playEmote(id)self.calls[#self.calls+1]=id;self.emoting=true end
 function p:setJoypadIgnoreAimUntilCentered(value)self.joypadCentered=value end
 "ProjectYakuzaFixture:EMOTES"
 local E=ProjectYakuzaEmotes.Emotes
-check(ProjectYakuza==nil and ProjectYakuzaEmotes.VERSION=="0.1.0","standalone module loads without combat globals")
+check(ProjectYakuza==nil and ProjectYakuzaEmotes.VERSION=="ProjectYakuzaFixture:VERSION","standalone module loads without combat globals and shares metadata version")
 ProjectYakuza={activeActions={}}
 local menu=setmetatable({character=p},{__index=ISEmoteRadialMenu})
 for _=1,3 do
@@ -83,4 +83,10 @@ p.primary=nil;p.secondary=item;check(not E.play(p,E.kiryuId),'off-hand item reje
 local before=#p.calls;check(menu:emote(E.kiryuId)and #p.calls==before+1 and p.calls[#p.calls]==E.kiryuId,'Kiryu dispatches native emote once with empty hands');check(not menu:emote(E.kiryuId)and #p.calls==before+1,'Kiryu cannot restart');check(p.primary==nil and p.secondary==nil and not ProjectYakuza.activeActions[p]and not ISTimedActionQueue.queues[p],'Kiryu leaves equipment, combat and timed-action state untouched')
 menu:init();check(ISEmoteRadialMenu.menu[E.category].subMenu[E.kiryuId]and ISEmoteRadialMenu.icons[E.kiryuId]=='native-shrug-icon','Kiryu label and original native icon survive menu reconstruction')
 p.emoting=false;ProjectYakuza=nil;check(E.canPlay(p,E.kiryuId),"standalone unarmed readiness needs no combat global");check(E.play(p,E.kiryuId),"standalone dispatch needs no combat global")
+p.emoting=false;paused=true;check(not E.play(p,E.stepUpId),'Step Up respects pause');paused=false
+for _,state in ipairs({'remote','dead','asleep','vehicle','sitting','moving','aiming','busy','emoting'})do p[state]=true;check(not E.play(p,E.stepUpId),'Step Up shares native safety guard '..state);p[state]=nil end
+ProjectYakuza={activeActions={[p]={}}};check(not E.play(p,E.stepUpId),'Step Up cannot interrupt optional combat');ProjectYakuza.activeActions[p]=nil
+ISTimedActionQueue.queues[p]={queue={true}};check(not E.play(p,E.stepUpId),'Step Up cannot interrupt timed action');ISTimedActionQueue.queues[p]=nil
+p.primary=item;check(not E.play(p,E.stepUpId),'Step Up rejects occupied primary hand');p.primary=nil;p.secondary=item;check(not E.play(p,E.stepUpId),'Step Up rejects occupied off-hand');p.secondary=nil
+ProjectYakuza=nil;before=#p.calls;check(menu:emote(E.stepUpId)and #p.calls==before+1 and p.calls[#p.calls]==E.stepUpId,'Step Up dispatches once without combat or held items');check(not menu:emote(E.stepUpId)and #p.calls==before+1,'Step Up cannot restart');check(p.primary==nil and p.secondary==nil,'Step Up retains empty hands');menu:init();check(ISEmoteRadialMenu.menu[E.category].subMenu[E.stepUpId]and ISEmoteRadialMenu.icons[E.stepUpId]=='native-point-icon','Step Up label and original native icon registered')
 return true,'PASS '..checks..' standalone bat/spear/unarmed emote native/CVF menu coexistence, safety guards, equipment identity, native dispatch and replay checks'

@@ -318,3 +318,7 @@
 /emotes/ProjectYakuzaEmotes/**/__pycache__/
 !/tools/Publish-EmoteRelease.ps1
 !/tools/combat-tests/validate_emote_split.py
+
+!/tools/combat-tests/extract_kiryu_step_up_emote.py
+!/tools/combat-tests/build_kiryu_step_up_emote.py
+!/tools/combat-tests/validate_kiryu_step_up_emote.py
