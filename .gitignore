@@ -308,3 +308,6 @@
 !/tools/combat-tests/extract_lau_spear_emote.py
 !/tools/combat-tests/build_lau_spear_emote.py
 !/tools/combat-tests/validate_lau_spear_emote.py
+!/tools/combat-tests/extract_kiryu_bad_luck_emote.py
+!/tools/combat-tests/build_kiryu_bad_luck_emote.py
+!/tools/combat-tests/validate_kiryu_bad_luck_emote.py

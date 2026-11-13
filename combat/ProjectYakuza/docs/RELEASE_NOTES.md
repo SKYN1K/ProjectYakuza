@@ -1,7 +1,7 @@
-# Project Yakuza 0.105.0
+# Project Yakuza 0.106.0
 
-- Added Lau Ka Long: Spear Ground Strike alongside Majima: Bat Point in the native Project Yakuza emote category. Hold a usable crafted spear, stop moving/aiming, then select the new gesture.
-- Uses the original Kiwami 1 cutscene actor and independent spear motion: 79 original samples at 30 fps over 2.6 seconds. Source shaft slides, native palm calibration and grounded soles keep the spear attached and its strike on the floor.
-- Supports eight verified native wooden-shaft spear variants. Bat/spear gestures reject the wrong weapon, unsafe equipment states, active combat actions and queued timed actions. Native and CVF menus, cancellation and native multiplayer state parameters are retained.
-- No damage, Heat, invulnerability, sound, voice, new items, models or textures are added. All prior media remain unchanged.
-- Offline source/native geometry, masks, grip/floor contact, Kahlua, CVF load-order, reference and zero-comment checks pass. Installed locally as requested, including the intervening updates since v0.102.0. Project Zomboid was not launched; live visual/MP playback remains untested.
+- Added Kiryu: Bad Luck from Kiwami 1's puppy-rescue cutscene, alongside Majima's bat point and Lau Ka Long's spear strike. Empty both hands, stop moving/aiming, then select it in Emote wheel → Project Yakuza. No equipped combat style is required.
+- Retains the original neck/head gesture and closing lean from the dialogue shot: 355 original samples at 30 fps over 11.8 seconds. Native proportions, idle fingers and sole grounding adapt it to PZ's Human skeleton.
+- Uses native cancellable emote playback and multiplayer state parameters. Rejects occupied hands, unsafe native states, active combat and queued timed actions. Native and CVF entries remain available in both provider load orders.
+- No damage, Heat, invulnerability, voice, sounds, items, models or textures are added. All existing media remain unchanged.
+- Offline source/native importer, motion/grounding, 31 Kahlua suites, actual CVF menu integrations, Lua compilation, reference and zero-comment checks pass. Installed locally as requested. Project Zomboid was not launched; live visual/MP playback remains untested.

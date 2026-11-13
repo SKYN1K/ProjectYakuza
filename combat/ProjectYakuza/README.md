@@ -78,3 +78,5 @@ Beer-crate Essence of Crushing uses the rebound Heat Action button: two fresh pr
 Dragon of Dojima low-health feedback starts at 30% health, becomes critical at 15%, and clears after healing to 35%. The original health-bar frame pulses gently; an existing PZ heartbeat plays privately during combat and follows Sounds volume. See docs/LOW_HEALTH_FEEDBACK.md for framework configuration.
 
 Version 0.105.0 adds Lau Ka Long’s original Kiwami cutscene spear-ground strike alongside Majima’s bat point. Hold a supported crafted spear, then select Project Yakuza → Lau Ka Long: Spear Ground Strike in the native emote wheel. Both gestures work without an equipped combat style and coexist with Custom Voice Framework. See the [spear guide](docs/LAU_SPEAR_EMOTE.md) and [validation](docs/VALIDATION_0.105.0.md).
+
+Version 0.106.0 adds Kiryu: Bad Luck, using his original Kiwami puppy-rescue dialogue gesture. Empty both hands and select it in the native Project Yakuza emote category. See the [Kiryu guide](docs/KIRYU_BAD_LUCK_EMOTE.md) and [validation](docs/VALIDATION_0.106.0.md).

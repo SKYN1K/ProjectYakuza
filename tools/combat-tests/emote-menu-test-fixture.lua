@@ -26,8 +26,8 @@ function p:isPlayerMoving()return false end
 function p:isAiming()return false end
 function p:isCurrentlyBusy()return false end
 function p:getVariableBoolean()return self.emoting end
-function p:getPrimaryHandItem()return item end
-function p:getSecondaryHandItem()return item end
+function p:getPrimaryHandItem()if not self.empty then return item end end
+function p:getSecondaryHandItem()if not self.empty then return item end end
 function p:isHideWeaponModel()return false end
 function p:isHideEquippedHandR()return false end
 function p:playEmote(id)self.calls[#self.calls+1]=id;self.emoting=true end
@@ -43,4 +43,5 @@ p.emoting=false;check(menu:emote('cvf_y0_point')and p.calls[2]=='cvf_y0_point','
 p.emoting=false;menu:emote('wavehi');check(p.calls[3]=='wavehi','actual vanilla variant selection delegates')
 p.emoting=false;menu:emote('shout');check(p.calls[4]=='shout'and p.shouts==1,'actual vanilla shout still dispatches its callout once')
 p.emoting=false;item.id='Base.SpearCrafted';check(menu:emote(ProjectYakuza.Emotes.spearId)and p.calls[5]==ProjectYakuza.Emotes.spearId,'Lau spear gesture works with either actual provider order');check(not menu:emote(ProjectYakuza.Emotes.spearId)and #p.calls==5,'Lau gesture cannot restart')
+p.emoting=false;check(not menu:emote(ProjectYakuza.Emotes.kiryuId)and #p.calls==5,'Kiryu rejects held weapons in either provider order');p.empty=true;check(menu:emote(ProjectYakuza.Emotes.kiryuId)and p.calls[6]==ProjectYakuza.Emotes.kiryuId,'Kiryu dispatches with empty hands in either provider order');check(not menu:emote(ProjectYakuza.Emotes.kiryuId)and #p.calls==6,'Kiryu cannot restart');menu:init();check(ISEmoteRadialMenu.menu.ProjectYakuza_Emotes.subMenu.ProjectYakuza_KiryuBadLuck and ISEmoteRadialMenu.icons.ProjectYakuza_KiryuBadLuck==ISEmoteRadialMenu.icons.shrug,'Kiryu retains native icon and label after actual menu reconstruction')
 return true,'PASS '..checks..' actual installed B42 and pinned CVF emote hooks in Project Yakuza load order ProjectYakuzaFixture:ORDER'

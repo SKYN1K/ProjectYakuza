@@ -11,7 +11,7 @@ instanceof=function(value,kind)return value.kind==kind end
 ISEmoteRadialMenu={}
 local originalCalls=0
 function ISEmoteRadialMenu:init()
- ISEmoteRadialMenu.defaultMenu={friendly={subMenu={wavehi='Wave'}},cvf_yakuza0={subMenu={cvf_y0_point='CVF Point'}}};ISEmoteRadialMenu.menu=ISEmoteRadialMenu.defaultMenu;ISEmoteRadialMenu.icons={cvf_y0_point='cvf-icon',comefront='native-point-icon',stop='native-stop-icon'};ISEmoteRadialMenu.variants={wavehi={'wavehi','wavehi02'}}
+ ISEmoteRadialMenu.defaultMenu={friendly={subMenu={wavehi='Wave'}},cvf_yakuza0={subMenu={cvf_y0_point='CVF Point'}}};ISEmoteRadialMenu.menu=ISEmoteRadialMenu.defaultMenu;ISEmoteRadialMenu.icons={cvf_y0_point='cvf-icon',comefront='native-point-icon',stop='native-stop-icon',shrug='native-shrug-icon'};ISEmoteRadialMenu.variants={wavehi={'wavehi','wavehi02'}}
 end
 function ISEmoteRadialMenu:emote(id,argument)originalCalls=originalCalls+1;self.character:playEmote(id);return argument end
 local item={kind='HandWeapon',id='Base.BaseballBat',condition=6}
@@ -68,4 +68,14 @@ item.id='Base.SpearCrafted';p.emoting=false
 for _,state in ipairs({'remote','dead','asleep','vehicle','sitting','moving','aiming','busy','emoting','hidden','rightHidden'})do p[state]=true;check(not E.play(p,E.spearId),'spear shares native safety guard '..state);p[state]=nil end
 item.condition=0;check(not E.play(p,E.spearId),'broken spear rejected');item.condition=6
 menu:init();check(ISEmoteRadialMenu.menu[E.category].subMenu[E.spearId]and ISEmoteRadialMenu.icons[E.spearId]=='native-stop-icon','spear menu label and existing native icon registered')
-return true,'PASS '..checks..' bat/spear emote native/CVF menu coexistence, safety guards, held-item identity, native dispatch and replay checks'
+p.emoting=false;p.primary=nil;p.secondary=nil
+check(not E.play(p)and not E.play(p,E.spearId),'empty hands cannot dispatch held-weapon gestures')
+paused=true;check(not E.play(p,E.kiryuId),'Kiryu gesture respects pause');paused=false
+for _,state in ipairs({'remote','dead','asleep','vehicle','sitting','moving','aiming','busy','emoting'})do p[state]=true;check(not E.play(p,E.kiryuId),'Kiryu shares native safety guard '..state);p[state]=nil end
+ProjectYakuza.activeActions[p]={};check(not E.play(p,E.kiryuId),'Kiryu cannot interrupt combat');ProjectYakuza.activeActions[p]=nil
+ISTimedActionQueue.queues[p]={queue={true}};check(not E.play(p,E.kiryuId),'Kiryu cannot interrupt timed action');ISTimedActionQueue.queues[p]=nil
+for _,id in ipairs({'Base.BaseballBat','Base.SpearCrafted','Base.Katana','Base.HuntingKnife'})do item.id=id;p.primary=item;check(not E.play(p,E.kiryuId),'held weapon rejected for Kiryu '..id)end
+p.primary=nil;p.secondary=item;check(not E.play(p,E.kiryuId),'off-hand item rejected for Kiryu');p.secondary=nil
+local before=#p.calls;check(menu:emote(E.kiryuId)and #p.calls==before+1 and p.calls[#p.calls]==E.kiryuId,'Kiryu dispatches native emote once with empty hands');check(not menu:emote(E.kiryuId)and #p.calls==before+1,'Kiryu cannot restart');check(p.primary==nil and p.secondary==nil and not ProjectYakuza.activeActions[p]and not ISTimedActionQueue.queues[p],'Kiryu leaves equipment, combat and timed-action state untouched')
+menu:init();check(ISEmoteRadialMenu.menu[E.category].subMenu[E.kiryuId]and ISEmoteRadialMenu.icons[E.kiryuId]=='native-shrug-icon','Kiryu label and original native icon survive menu reconstruction')
+return true,'PASS '..checks..' bat/spear/unarmed emote native/CVF menu coexistence, safety guards, equipment identity, native dispatch and replay checks'
