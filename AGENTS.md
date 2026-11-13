@@ -9,6 +9,8 @@ User requirements:
 
 Source is combat/ProjectYakuza. Update 42/mod.info and shared/ProjectYakuza/Registry.lua consistently. Keep docs/RELEASE_NOTES.md current and document meaningful validation. Run appropriate tools/combat-tests Kahlua checks when available; source motion/texture changes also need provenance and native importer/pixel checks. Back up only files being changed during local installation and verify installed bytes.
 
+Standalone cutscene emotes are in emotes/ProjectYakuzaEmotes, with mod ID and Lua namespace ProjectYakuzaEmotes and display name Project Yakuza Emotes. They have no required combat/CVF dependency and are excluded from the combat install ZIP. Keep their mod.info and shared version consistent. Publish their separate versioned ZIP/release with tools/Publish-EmoteRelease.ps1 to the same private repository, using unique emotes-v tags. Preserve the original native animation identifiers as asset names. Do not restore bundled emote loaders or assets in combat.
+
 Publish using tools/Publish-CombatRelease.ps1 with a configured/authenticated gh CLI. Never reuse/overwrite a published version tag. Do not upload unrelated local files or credentials. Later explicit user instructions override this workflow.
 
 Naming: use ProjectYakuza for internal identifiers and Project Yakuza for display text. Do not retain old aliases or compatibility loaders. Do not modify the separate voice pack; it is maintained in another chat. Grabs follow the current per-style action definitions.

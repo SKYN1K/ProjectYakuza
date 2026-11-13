@@ -1,28 +1,30 @@
-require "ProjectYakuza/Registry"
-require "ProjectYakuza/EmoteSpears"
+require "ProjectYakuzaEmotes/EmoteSpears"
 require "ISUI/ISEmoteRadialMenu"
-local PY=ProjectYakuza
-local E={id="ProjectYakuza_MajimaBatPoint",spearId="ProjectYakuza_LauSpearGround",kiryuId="ProjectYakuza_KiryuBadLuck",category="ProjectYakuza_Emotes"}
+local PY=ProjectYakuzaEmotes
+local E={id="ProjectYakuza_MajimaBatPoint",spearId="ProjectYakuza_LauSpearGround",kiryuId="ProjectYakuza_KiryuBadLuck",category="ProjectYakuzaEmotes"}
 PY.Emotes=E
 local bats={['Base.BaseballBat']=true,['Base.BaseballBat_Crafted']=true,['Base.BaseballBat_Metal']=true,['Base.BaseballBat_Nails']=true,['Base.ShortBat']=true,['Base.ShortBat_Nails']=true}
-local definitions={[E.id]={label="IGUI_ProjectYakuza_Emote_MajimaBatPoint",items=bats,icon="comefront"},[E.spearId]={label="IGUI_ProjectYakuza_Emote_LauSpearGround",items=PY.EmoteSpears,icon="stop"},[E.kiryuId]={label="IGUI_ProjectYakuza_Emote_KiryuBadLuck",unarmed=true,icon="shrug"}}
+local definitions={[E.id]={label="IGUI_ProjectYakuzaEmotes_Emote_MajimaBatPoint",items=bats,icon="comefront"},[E.spearId]={label="IGUI_ProjectYakuzaEmotes_Emote_LauSpearGround",spear=true,icon="stop"},[E.kiryuId]={label="IGUI_ProjectYakuzaEmotes_Emote_KiryuBadLuck",unarmed=true,icon="shrug"}}
 function E.canPlay(p,id)
     local definition=definitions[id or E.id];if not definition then return false end
     if not p or not p:isLocalPlayer()or isGamePaused()or p:isDead()or p:isAsleep()or p:getVehicle()or p:isSitOnGround()or p:isPlayerMoving()or p:isAiming()or p:isCurrentlyBusy()or p:getVariableBoolean("EmotePlaying")then return false end
-    if PY.activeActions and PY.activeActions[p]then return false end
+    local combat=ProjectYakuza;if combat and combat.activeActions and combat.activeActions[p]then return false end
     local queue=ISTimedActionQueue.queues[p];if queue and #queue.queue>0 then return false end
     local item=p:getPrimaryHandItem();local secondary=p:getSecondaryHandItem()
     if definition.unarmed then return item==nil and secondary==nil end
-    return item~=nil and instanceof(item,"HandWeapon")and definition.items[item:getFullType()]==true and item:getCondition()>0 and(secondary==nil or secondary==item)and not p:isHideWeaponModel()and not p:isHideEquippedHandR()
+    if not item or not instanceof(item,"HandWeapon")or item:getCondition()<=0 or secondary~=nil and secondary~=item or p:isHideWeaponModel()or p:isHideEquippedHandR()then return false end
+    if definition.spear then return PY.EmoteSpears[item:getFullType()]==true or item:getSubCategory()=="Spear"or item:getSwingAnim()=="Spear"end
+    return definition.items[item:getFullType()]==true
 end
 function E.play(p,id)
     id=id or E.id;if not E.canPlay(p,id)then return false end
-    p:playEmote(id);return true
+    local clip=id;if id==E.spearId then clip=PY.SpearClips[p:getPrimaryHandItem():getFullType()]or id end
+    p:playEmote(clip);return true
 end
 local originalInit=ISEmoteRadialMenu.init
 function ISEmoteRadialMenu:init(...)
     originalInit(self,...)
-    local category={name=getText("IGUI_ProjectYakuza_Emotes"),subMenu={}}
+    local category={name=getText("IGUI_ProjectYakuzaEmotes_Category"),subMenu={}}
     for id,definition in pairs(definitions)do category.subMenu[id]=getText(definition.label);ISEmoteRadialMenu.icons[id]=ISEmoteRadialMenu.icons[definition.icon]end
     ISEmoteRadialMenu.defaultMenu[E.category]=category;ISEmoteRadialMenu.menu[E.category]=category
     ISEmoteRadialMenu.icons[E.category]=ISEmoteRadialMenu.icons.comefront

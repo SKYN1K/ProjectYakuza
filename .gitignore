@@ -311,3 +311,10 @@
 !/tools/combat-tests/extract_kiryu_bad_luck_emote.py
 !/tools/combat-tests/build_kiryu_bad_luck_emote.py
 !/tools/combat-tests/validate_kiryu_bad_luck_emote.py
+
+!/emotes/
+/emotes/*
+!/emotes/ProjectYakuzaEmotes/
+/emotes/ProjectYakuzaEmotes/**/__pycache__/
+!/tools/Publish-EmoteRelease.ps1
+!/tools/combat-tests/validate_emote_split.py

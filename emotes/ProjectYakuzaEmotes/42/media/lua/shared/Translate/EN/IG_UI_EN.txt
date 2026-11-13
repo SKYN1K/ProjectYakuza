@@ -1,0 +1,6 @@
+IGUI_EN = {
+    IGUI_ProjectYakuzaEmotes_Category = "Project Yakuza Emotes",
+    IGUI_ProjectYakuzaEmotes_Emote_MajimaBatPoint = "Majima: Bat Point (hold a bat)",
+    IGUI_ProjectYakuzaEmotes_Emote_LauSpearGround = "Lau Ka Long: Spear Ground Strike (hold a spear)",
+    IGUI_ProjectYakuzaEmotes_Emote_KiryuBadLuck = "Kiryu: Bad Luck (empty hands)",
+}

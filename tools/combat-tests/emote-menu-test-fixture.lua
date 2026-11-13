@@ -1,4 +1,5 @@
 local checks=0
+local hasCVF="ProjectYakuzaFixture:HAS_CVF"
 local function check(value,message)checks=checks+1;assert(value,message)end
 require=function()end
 getText=function(key)return key end
@@ -10,12 +11,14 @@ Events={OnGameStart={Add=function()end}}
 ISBaseObject={}
 function ISBaseObject:derive()return setmetatable({},{__index=self})end
 function ISBaseObject:new()return setmetatable({},{__index=self})end
-ProjectYakuza={activeActions={}}
+ProjectYakuza=nil
 ISTimedActionQueue={queues={}}
-CustomVoice={getEmotes=function()return {{id='cvf_y0_point',clip='CVF_Y0_Point',key='Point',icon='comefromfront'}}end,getEmote=function(id)if id=='cvf_y0_point'then return {id=id}end end}
+if hasCVF then CustomVoice={getEmotes=function()return {{id='cvf_y0_point',clip='CVF_Y0_Point',key='Point',icon='comefromfront'}}end,getEmote=function(id)if id=='cvf_y0_point'then return {id=id}end end}end
 "ProjectYakuzaFixture:NATIVE_MENU"
 "ProjectYakuzaFixture:PROVIDERS"
 local item={kind='HandWeapon',id='Base.BaseballBat_Metal',getFullType=function(self)return self.id end,getCondition=function()return 10 end}
+function item:getSubCategory()return nil end
+function item:getSwingAnim()return nil end
 local p={calls={}}
 function p:isLocalPlayer()return true end
 function p:isDead()return false end
@@ -35,13 +38,13 @@ function p:setJoypadIgnoreAimUntilCentered(value)self.centered=value end
 function p:Callout()self.shouts=(self.shouts or 0)+1 end
 local menu=setmetatable({character=p},{__index=ISEmoteRadialMenu})
 for _=1,3 do
- menu:init();check(ISEmoteRadialMenu.menu.ProjectYakuza_Emotes.subMenu.ProjectYakuza_MajimaBatPoint~=nil,'Project Yakuza native category survives rebuild');check(ISEmoteRadialMenu.menu.cvf_yakuza0.subMenu.cvf_y0_point~=nil,'actual CVF category survives rebuild');check(ISEmoteRadialMenu.menu.friendly.subMenu.wavehi~=nil and #ISEmoteRadialMenu.variants.wavehi==3,'actual native categories and random variants survive')
+ menu:init();check(ISEmoteRadialMenu.menu.ProjectYakuzaEmotes.subMenu.ProjectYakuza_MajimaBatPoint~=nil,'standalone native category survives rebuild');check(hasCVF and ISEmoteRadialMenu.menu.cvf_yakuza0.subMenu.cvf_y0_point~=nil or not hasCVF and ISEmoteRadialMenu.menu.cvf_yakuza0==nil,'actual CVF presence remains optional');check(ISEmoteRadialMenu.menu.friendly.subMenu.wavehi~=nil and #ISEmoteRadialMenu.variants.wavehi==3,'actual native categories and random variants survive')
 end
-check(menu:emote(ProjectYakuza.Emotes.id)and p.calls[1]==ProjectYakuza.Emotes.id,'Majima dispatches through native wheel with both actual providers')
-check(not menu:emote(ProjectYakuza.Emotes.id)and #p.calls==1,'Majima cannot restart through either provider order')
-p.emoting=false;check(menu:emote('cvf_y0_point')and p.calls[2]=='cvf_y0_point','actual CVF guarded native dispatch remains available')
-p.emoting=false;menu:emote('wavehi');check(p.calls[3]=='wavehi','actual vanilla variant selection delegates')
-p.emoting=false;menu:emote('shout');check(p.calls[4]=='shout'and p.shouts==1,'actual vanilla shout still dispatches its callout once')
-p.emoting=false;item.id='Base.SpearCrafted';check(menu:emote(ProjectYakuza.Emotes.spearId)and p.calls[5]==ProjectYakuza.Emotes.spearId,'Lau spear gesture works with either actual provider order');check(not menu:emote(ProjectYakuza.Emotes.spearId)and #p.calls==5,'Lau gesture cannot restart')
-p.emoting=false;check(not menu:emote(ProjectYakuza.Emotes.kiryuId)and #p.calls==5,'Kiryu rejects held weapons in either provider order');p.empty=true;check(menu:emote(ProjectYakuza.Emotes.kiryuId)and p.calls[6]==ProjectYakuza.Emotes.kiryuId,'Kiryu dispatches with empty hands in either provider order');check(not menu:emote(ProjectYakuza.Emotes.kiryuId)and #p.calls==6,'Kiryu cannot restart');menu:init();check(ISEmoteRadialMenu.menu.ProjectYakuza_Emotes.subMenu.ProjectYakuza_KiryuBadLuck and ISEmoteRadialMenu.icons.ProjectYakuza_KiryuBadLuck==ISEmoteRadialMenu.icons.shrug,'Kiryu retains native icon and label after actual menu reconstruction')
+check(menu:emote(ProjectYakuzaEmotes.Emotes.id)and p.calls[1]==ProjectYakuzaEmotes.Emotes.id,'Majima dispatches through native wheel with both actual providers')
+check(not menu:emote(ProjectYakuzaEmotes.Emotes.id)and #p.calls==1,'Majima cannot restart through either provider order')
+p.emoting=false;if hasCVF then check(menu:emote('cvf_y0_point')and p.calls[#p.calls]=='cvf_y0_point','actual CVF guarded native dispatch remains available')else check(ProjectYakuza==nil and CustomVoice==nil,'standalone requires neither optional provider')end
+p.emoting=false;local before=#p.calls;menu:emote('wavehi');check(#p.calls==before+1 and p.calls[#p.calls]=='wavehi','actual vanilla variant selection delegates')
+p.emoting=false;before=#p.calls;menu:emote('shout');check(#p.calls==before+1 and p.calls[#p.calls]=='shout'and p.shouts==1,'actual vanilla shout still dispatches its callout once')
+p.emoting=false;before=#p.calls;item.id='Base.SpearCrafted';check(menu:emote(ProjectYakuzaEmotes.Emotes.spearId)and #p.calls==before+1 and p.calls[#p.calls]==ProjectYakuzaEmotes.Emotes.spearId,'Lau spear gesture works with optional CVF');check(not menu:emote(ProjectYakuzaEmotes.Emotes.spearId)and #p.calls==before+1,'Lau gesture cannot restart')
+p.emoting=false;before=#p.calls;check(not menu:emote(ProjectYakuzaEmotes.Emotes.kiryuId)and #p.calls==before,'Kiryu rejects held weapons with optional CVF');p.empty=true;check(menu:emote(ProjectYakuzaEmotes.Emotes.kiryuId)and #p.calls==before+1 and p.calls[#p.calls]==ProjectYakuzaEmotes.Emotes.kiryuId,'Kiryu dispatches with empty hands with optional CVF');check(not menu:emote(ProjectYakuzaEmotes.Emotes.kiryuId)and #p.calls==before+1,'Kiryu cannot restart');menu:init();check(ISEmoteRadialMenu.menu.ProjectYakuzaEmotes.subMenu.ProjectYakuza_KiryuBadLuck and ISEmoteRadialMenu.icons.ProjectYakuza_KiryuBadLuck==ISEmoteRadialMenu.icons.shrug,'Kiryu retains native icon and label after actual menu reconstruction')
 return true,'PASS '..checks..' actual installed B42 and pinned CVF emote hooks in Project Yakuza load order ProjectYakuzaFixture:ORDER'

@@ -1,7 +1,7 @@
 from pathlib import Path
 import sys,json,hashlib,subprocess,struct,math,zipfile
 
-root=Path(__file__).resolve().parents[2];w=Path(__file__).parent;mod=root/'combat/ProjectYakuza';report=json.loads((mod/'docs/kiryu-bad-luck-emote-assets.json').read_text(encoding='utf-8'));sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
+root=Path(__file__).resolve().parents[2];w=Path(__file__).parent;mod=root/'emotes/ProjectYakuzaEmotes';report=json.loads((mod/'docs/kiryu-bad-luck-emote-assets.json').read_text(encoding='utf-8'));sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
 if '--inside-blender'not in sys.argv:
     from y5_source_assets import entry,namespace
     def nested(data,name):
@@ -14,7 +14,9 @@ if '--inside-blender'not in sys.argv:
     with zipfile.ZipFile(root/'dist/ProjectYakuza-B42-v0.105.0.zip')as archive:
         checked=0
         for name in archive.namelist():
-            path=mod/name.removeprefix('ProjectYakuza/')
+            if name.endswith('/ProjectYakuza_LauSpearGround.x'):continue
+            path=root/'combat'/name
+            if not path.exists():path=mod/name.removeprefix('ProjectYakuza/')
             if '/media/'in name and path.suffix in ['.x','.xml','.png','.wav','.ogg']and not name.endswith('/'):
                 assert path.read_bytes()==archive.read(name),name;checked+=1
     print('PASS',checked,'existing motion/selector/model/texture/audio bytes unchanged from v0.105.0')

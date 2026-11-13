@@ -11,3 +11,5 @@ The supplied Kiwami archive is media/data/auth_w64_e/main08_s02.par. Its CMN16 t
 The selector plays ProjectYakuza_MajimaBatPoint in the native emote animation group with full-body and prop weights, a 0.25-second blend and one EmoteFinishing event. Native PlayerEmoteState carries the emote name and playing flag for multiplayer; no combat observer clip is substituted. Every peer needs the same animation and selector. Offline checks verify native state parameters and asset selection; an actual multiplayer session was not run.
 
 See majima-bat-emote-assets.json for source hashes, exact role/resource bindings, frame selection, source yaw, original bat orientations, native grip and grounding corrections. See VALIDATION_0.104.0.md for results. No textures, icons, models or audio were generated or replaced.
+
+This gesture is supplied by the standalone Project Yakuza Emotes mod from version 0.1.0. Project Yakuza combat is optional.

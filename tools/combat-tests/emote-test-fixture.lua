@@ -1,7 +1,7 @@
 local checks=0
 local function check(value,message)checks=checks+1;assert(value,message)end
 require=function()end
-ProjectYakuza={activeActions={}}
+ProjectYakuza=nil
 ISTimedActionQueue={queues={}}
 local paused=false
 isGamePaused=function()return paused end
@@ -17,6 +17,8 @@ function ISEmoteRadialMenu:emote(id,argument)originalCalls=originalCalls+1;self.
 local item={kind='HandWeapon',id='Base.BaseballBat',condition=6}
 function item:getFullType()return self.id end
 function item:getCondition()return self.condition end
+function item:getSubCategory()return self.subCategory end
+function item:getSwingAnim()return self.swingAnim end
 local p={primary=item,calls={}}
 function p:isLocalPlayer()return not self.remote end
 function p:isDead()return self.dead end
@@ -34,7 +36,9 @@ function p:isHideEquippedHandR()return self.rightHidden end
 function p:playEmote(id)self.calls[#self.calls+1]=id;self.emoting=true end
 function p:setJoypadIgnoreAimUntilCentered(value)self.joypadCentered=value end
 "ProjectYakuzaFixture:EMOTES"
-local E=ProjectYakuza.Emotes
+local E=ProjectYakuzaEmotes.Emotes
+check(ProjectYakuza==nil and ProjectYakuzaEmotes.VERSION=="0.1.0","standalone module loads without combat globals")
+ProjectYakuza={activeActions={}}
 local menu=setmetatable({character=p},{__index=ISEmoteRadialMenu})
 for _=1,3 do
  menu:init();check(ISEmoteRadialMenu.menu[E.category].subMenu[E.id]~=nil,'entry survives native menu reconstruction');check(ISEmoteRadialMenu.defaultMenu[E.category]==ISEmoteRadialMenu.menu[E.category],'configuration defaults include category')
@@ -60,10 +64,10 @@ check(not ProjectYakuza.activeActions[p]and not ISTimedActionQueue.queues[p],'em
 p.emoting=false;item.id='Base.SpearCrafted';check(not E.play(p),'spear cannot borrow bat gesture')
 item.id='Base.BaseballBat';check(not E.play(p,E.spearId),'bat cannot borrow spear gesture')
 check(not E.play(p,'other.emote'),'unknown custom gesture rejected')
-for id in pairs(ProjectYakuza.EmoteSpears)do
- item.id=id;p.emoting=false;local before=#p.calls;check(menu:emote(E.spearId),'compatible native spear accepted '..id);check(p.calls[#p.calls]==E.spearId and #p.calls==before+1 and p.primary==item,'source spear gesture dispatches once without replacing equipment');check(not menu:emote(E.spearId)and #p.calls==before+1,'spear gesture cannot restart')
+for id in pairs(ProjectYakuzaEmotes.EmoteSpears)do
+ item.id=id;p.emoting=false;local before=#p.calls;check(menu:emote(E.spearId),'every native spear accepted '..id);check(p.calls[#p.calls]==ProjectYakuzaEmotes.SpearClips[id]and #p.calls==before+1 and p.primary==item,'calibrated source spear gesture dispatches once without replacing equipment');check(not menu:emote(E.spearId)and #p.calls==before+1,'spear gesture cannot restart')
 end
-for _,id in ipairs({'Base.SpearShort','Base.SpearLong','Base.SpearBone','Base.SpearStone'})do item.id=id;p.emoting=false;check(not E.play(p,E.spearId),'different native geometry cannot borrow floor-calibrated spear grip '..id)end
+item.id='Modded.LongSpear';item.subCategory='Spear';p.emoting=false;check(E.play(p,E.spearId)and p.calls[#p.calls]==E.spearId,'modded spear category uses native fallback without item substitution');item.subCategory=nil;item.swingAnim='Spear';p.emoting=false;check(E.play(p,E.spearId)and p.calls[#p.calls]==E.spearId,'modded spear swing animation uses native fallback');item.swingAnim=nil;p.emoting=false;check(not E.play(p,E.spearId),'unrelated modded weapon cannot borrow spear gesture')
 item.id='Base.SpearCrafted';p.emoting=false
 for _,state in ipairs({'remote','dead','asleep','vehicle','sitting','moving','aiming','busy','emoting','hidden','rightHidden'})do p[state]=true;check(not E.play(p,E.spearId),'spear shares native safety guard '..state);p[state]=nil end
 item.condition=0;check(not E.play(p,E.spearId),'broken spear rejected');item.condition=6
@@ -78,4 +82,5 @@ for _,id in ipairs({'Base.BaseballBat','Base.SpearCrafted','Base.Katana','Base.H
 p.primary=nil;p.secondary=item;check(not E.play(p,E.kiryuId),'off-hand item rejected for Kiryu');p.secondary=nil
 local before=#p.calls;check(menu:emote(E.kiryuId)and #p.calls==before+1 and p.calls[#p.calls]==E.kiryuId,'Kiryu dispatches native emote once with empty hands');check(not menu:emote(E.kiryuId)and #p.calls==before+1,'Kiryu cannot restart');check(p.primary==nil and p.secondary==nil and not ProjectYakuza.activeActions[p]and not ISTimedActionQueue.queues[p],'Kiryu leaves equipment, combat and timed-action state untouched')
 menu:init();check(ISEmoteRadialMenu.menu[E.category].subMenu[E.kiryuId]and ISEmoteRadialMenu.icons[E.kiryuId]=='native-shrug-icon','Kiryu label and original native icon survive menu reconstruction')
-return true,'PASS '..checks..' bat/spear/unarmed emote native/CVF menu coexistence, safety guards, equipment identity, native dispatch and replay checks'
+p.emoting=false;ProjectYakuza=nil;check(E.canPlay(p,E.kiryuId),"standalone unarmed readiness needs no combat global");check(E.play(p,E.kiryuId),"standalone dispatch needs no combat global")
+return true,'PASS '..checks..' standalone bat/spear/unarmed emote native/CVF menu coexistence, safety guards, equipment identity, native dispatch and replay checks'

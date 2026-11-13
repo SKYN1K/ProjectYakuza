@@ -1,7 +1,7 @@
 from pathlib import Path
 import sys,json,hashlib,subprocess,math,struct
 
-root=Path(__file__).resolve().parents[2];w=Path(__file__).parent;mod=root/'combat/ProjectYakuza';report=json.loads((mod/'docs/majima-bat-emote-assets.json').read_text());sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
+root=Path(__file__).resolve().parents[2];w=Path(__file__).parent;mod=root/'emotes/ProjectYakuzaEmotes';report=json.loads((mod/'docs/majima-bat-emote-assets.json').read_text());sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
 if '--inside-blender'not in sys.argv:
     from y5_source_assets import entry,namespace
     def nested(data,name):

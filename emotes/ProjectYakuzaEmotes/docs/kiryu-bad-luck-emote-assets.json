@@ -796,7 +796,7 @@
   "provenance": [
     {
       "path": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\combat-tests\\build_kiryu_bad_luck_emote.py",
-      "sha256": "66a0609754881d733383542743e9ee5846122162660a78a1514a1652808c47f5"
+      "sha256": "cc8ac82a65edd8f66939b19a813b53956eea772d9d0ec8343914871bfa5fc31c"
     },
     {
       "path": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\combat-tests\\extract_kiryu_bad_luck_emote.py",
@@ -831,7 +831,7 @@
       "sha256": "255303336122d5d8470366512e8ad948adf2e46bf61259cc51f201a3ed27d45e"
     },
     {
-      "path": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\emote\\ProjectYakuza_MajimaBatPoint.xml",
+      "path": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\emotes\\ProjectYakuzaEmotes\\42\\media\\AnimSets\\player\\emote\\ProjectYakuza_MajimaBatPoint.xml",
       "sha256": "5fc08cacdd74b7d959d7ff4a88bbd4255755fb817df96bda28834514bc639a70"
     }
   ]

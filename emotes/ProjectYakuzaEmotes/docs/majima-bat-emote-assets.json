@@ -1431,8 +1431,12 @@
   ],
   "provenance": [
     {
+      "path": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\emotes\\ProjectYakuzaEmotes\\docs\\native-bat-grip.json",
+      "sha256": "37f6d603a033985ff9d33b8ad2ac9a5287aa36262287e863668f4b8213494cf8"
+    },
+    {
       "path": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\combat-tests\\build_majima_bat_emote.py",
-      "sha256": "dfd181deba16337c4194e4728da34ae41661ff96137f396e82356d557b245b41"
+      "sha256": "63b0902472b2b56457a48fba08b5825aca3d728119c06950fd98a13fec7844c3"
     },
     {
       "path": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\combat-tests\\extract_majima_bat_emote.py",

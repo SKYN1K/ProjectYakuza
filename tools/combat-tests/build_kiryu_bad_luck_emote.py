@@ -2,7 +2,7 @@ from pathlib import Path
 import sys,json,hashlib,types,xml.etree.ElementTree as E
 from mathutils import Matrix,Vector,Quaternion
 
-root=Path(__file__).resolve().parents[2];w=Path(__file__).parent;sys.path.insert(0,str(w));mod=root/'combat/ProjectYakuza';name='ProjectYakuza_KiryuBadLuck';rig=root/'extracted/kiwami-entry-099/c_cm_bone.gmd';selection=json.loads((root/'extracted/kiryu-dog-emote/selection.json').read_text(encoding='utf-8'));source=Path(selection['source']);native=Path('F:/SteamLibrary/steamapps/common/ProjectZomboid/media');sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
+root=Path(__file__).resolve().parents[2];w=Path(__file__).parent;sys.path.insert(0,str(w));mod=root/'emotes/ProjectYakuzaEmotes';name='ProjectYakuza_KiryuBadLuck';rig=root/'extracted/kiwami-entry-099/c_cm_bone.gmd';selection=json.loads((root/'extracted/kiryu-dog-emote/selection.json').read_text(encoding='utf-8'));source=Path(selection['source']);native=Path('F:/SteamLibrary/steamapps/common/ProjectZomboid/media');sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
 package=types.ModuleType('yk');package.__path__=['C:/Users/Nik/Documents/Codex/2026-10-19/wo/work/addons/yakuza_gmt_blender'];sys.modules['yk']=package
 from yk.gmt_lib import read_gmt
 from yk.read_gmd import read_gmd_bones
