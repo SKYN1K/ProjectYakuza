@@ -304,3 +304,7 @@
 !/tools/combat-tests/build_emote_tests.py
 !/tools/combat-tests/emote-test-fixture.lua
 !/tools/combat-tests/emote-menu-test-fixture.lua
+
+!/tools/combat-tests/extract_lau_spear_emote.py
+!/tools/combat-tests/build_lau_spear_emote.py
+!/tools/combat-tests/validate_lau_spear_emote.py

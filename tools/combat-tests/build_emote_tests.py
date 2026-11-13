@@ -1,7 +1,7 @@
 from pathlib import Path
 from check_source_comments import clean
 root=Path(__file__).resolve().parents[2];w=Path(__file__).parent
-source=(root/'combat/ProjectYakuza/42/media/lua/client/ProjectYakuza/Emotes.lua').read_text(encoding='utf-8')
+source=(root/'combat/ProjectYakuza/42/media/lua/shared/ProjectYakuza/EmoteSpears.lua').read_text(encoding='utf-8')+'\n'+(root/'combat/ProjectYakuza/42/media/lua/client/ProjectYakuza/Emotes.lua').read_text(encoding='utf-8')
 fixture=(w/'emote-test-fixture.lua').read_text(encoding='utf-8');assert fixture.count('"ProjectYakuzaFixture:EMOTES"')==1
 (w/'emote-tests.lua').write_text(fixture.replace('"ProjectYakuzaFixture:EMOTES"',source),encoding='utf-8')
 native=Path('F:/SteamLibrary/steamapps/common/ProjectZomboid/media/lua/client/ISUI/ISEmoteRadialMenu.lua').read_text(encoding='utf-8')

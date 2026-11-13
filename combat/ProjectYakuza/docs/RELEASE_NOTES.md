@@ -1,7 +1,7 @@
-# Project Yakuza 0.104.0
+# Project Yakuza 0.105.0
 
-- Added Majima: Bat Point to the normal emote wheel under Project Yakuza, based on Custom Voice Framework's native-emote approach. Hold a usable baseball bat and stand still without aiming to select it. No combat style or voice pack is required.
-- Uses the original Kiwami 1 batting-center scene: Majima raises his bat toward Kiryu, holds the point and lowers it. All 152 contiguous source samples play at their original 30 fps over 5.033 seconds. The independent source bat track directs the grip; native body proportions and foot grounding keep the gesture in place.
-- Preserves native and CVF emote menus, variants, shout behavior and controller aim reset. Movement/action cancellation and completion use PZ's native emote state and replicated parameters. Both clients need this release to display the custom animation.
-- Requires an actual held bat; creates no items, voice recordings, Heat, damage, targeting or invulnerability. Busy, moving, aiming, seated, sleeping and unsafe equipment states are rejected.
-- Offline source extraction, motion directions, native Human import/masks, hand/prop grip, menu load orders, Kahlua compilation and regression checks pass. Project Zomboid was not launched, and no local installation was performed. Live playback and multiplayer remain gameplay checks.
+- Added Lau Ka Long: Spear Ground Strike alongside Majima: Bat Point in the native Project Yakuza emote category. Hold a usable crafted spear, stop moving/aiming, then select the new gesture.
+- Uses the original Kiwami 1 cutscene actor and independent spear motion: 79 original samples at 30 fps over 2.6 seconds. Source shaft slides, native palm calibration and grounded soles keep the spear attached and its strike on the floor.
+- Supports eight verified native wooden-shaft spear variants. Bat/spear gestures reject the wrong weapon, unsafe equipment states, active combat actions and queued timed actions. Native and CVF menus, cancellation and native multiplayer state parameters are retained.
+- No damage, Heat, invulnerability, sound, voice, new items, models or textures are added. All prior media remain unchanged.
+- Offline source/native geometry, masks, grip/floor contact, Kahlua, CVF load-order, reference and zero-comment checks pass. Installed locally as requested, including the intervening updates since v0.102.0. Project Zomboid was not launched; live visual/MP playback remains untested.

@@ -1,4 +1,5 @@
 IGUI_EN = {
     IGUI_ProjectYakuza_Emotes = "Project Yakuza",
     IGUI_ProjectYakuza_Emote_MajimaBatPoint = "Majima: Bat Point (hold a bat)",
+    IGUI_ProjectYakuza_Emote_LauSpearGround = "Lau Ka Long: Spear Ground Strike (hold a spear)",
 }

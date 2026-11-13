@@ -2,7 +2,7 @@
 
 Project Zomboid Build 42 combat framework with the Dragon of Dojima style.
 
-Current version: **0.104.0**. Source mod folder: [combat/ProjectYakuza](combat/ProjectYakuza). See its [README](combat/ProjectYakuza/README.md) and [release notes](combat/ProjectYakuza/docs/RELEASE_NOTES.md) for controls, features and validation.
+Current version: **0.105.0**. Source mod folder: [combat/ProjectYakuza](combat/ProjectYakuza). See its [README](combat/ProjectYakuza/README.md) and [release notes](combat/ProjectYakuza/docs/RELEASE_NOTES.md) for controls, features and validation.
 
 Download the ZIP from this repository's Releases page. Extract its `ProjectYakuza` folder into `Zomboid/mods`, enable the mod and restart PZ. Install the same version on server and clients. Custom Voice Framework and a compatible voice pack are optional; they are not bundled in the combat ZIP.
 

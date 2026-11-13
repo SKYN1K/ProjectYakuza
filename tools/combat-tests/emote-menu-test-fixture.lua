@@ -15,7 +15,7 @@ ISTimedActionQueue={queues={}}
 CustomVoice={getEmotes=function()return {{id='cvf_y0_point',clip='CVF_Y0_Point',key='Point',icon='comefromfront'}}end,getEmote=function(id)if id=='cvf_y0_point'then return {id=id}end end}
 "ProjectYakuzaFixture:NATIVE_MENU"
 "ProjectYakuzaFixture:PROVIDERS"
-local item={kind='HandWeapon',getFullType=function()return 'Base.BaseballBat_Metal'end,getCondition=function()return 10 end}
+local item={kind='HandWeapon',id='Base.BaseballBat_Metal',getFullType=function(self)return self.id end,getCondition=function()return 10 end}
 local p={calls={}}
 function p:isLocalPlayer()return true end
 function p:isDead()return false end
@@ -42,4 +42,5 @@ check(not menu:emote(ProjectYakuza.Emotes.id)and #p.calls==1,'Majima cannot rest
 p.emoting=false;check(menu:emote('cvf_y0_point')and p.calls[2]=='cvf_y0_point','actual CVF guarded native dispatch remains available')
 p.emoting=false;menu:emote('wavehi');check(p.calls[3]=='wavehi','actual vanilla variant selection delegates')
 p.emoting=false;menu:emote('shout');check(p.calls[4]=='shout'and p.shouts==1,'actual vanilla shout still dispatches its callout once')
+p.emoting=false;item.id='Base.SpearCrafted';check(menu:emote(ProjectYakuza.Emotes.spearId)and p.calls[5]==ProjectYakuza.Emotes.spearId,'Lau spear gesture works with either actual provider order');check(not menu:emote(ProjectYakuza.Emotes.spearId)and #p.calls==5,'Lau gesture cannot restart')
 return true,'PASS '..checks..' actual installed B42 and pinned CVF emote hooks in Project Yakuza load order ProjectYakuzaFixture:ORDER'
