@@ -296,3 +296,11 @@
 !/tools/combat-tests/CombatEntryProbe.java
 
 !/tools/combat-tests/validate_asset_cleanup.py
+
+!/tools/combat-tests/extract_majima_bat_emote.py
+!/tools/combat-tests/build_majima_bat_emote.py
+!/tools/combat-tests/validate_majima_bat_emote.py
+!/tools/combat-tests/MajimaEmoteProbe.java
+!/tools/combat-tests/build_emote_tests.py
+!/tools/combat-tests/emote-test-fixture.lua
+!/tools/combat-tests/emote-menu-test-fixture.lua

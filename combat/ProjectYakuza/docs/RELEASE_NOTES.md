@@ -1,8 +1,7 @@
-# Project Yakuza 0.103.0
+# Project Yakuza 0.104.0
 
-- Inventory wheel input reaches the item list again. Passive combat overlays keep their visible layout while using zero native mouse-input bounds, preventing world zoom from taking the wheel.
-- Multiplayer Heat Action and activation protection no longer enables native ghost mode, which hides actors from ordinary observers. Invulnerability, zombie attack suppression and restoration of pre-existing protection remain active.
-- Observer Heat Action effects use the synchronized action clock and server-confirmed QTE contacts. Out-of-order poses cannot rewind presentation; duplicate contacts remain ignored and delayed effects have a bounded 350 ms grace.
-- Bicycle uses Yakuza 6 h23750_buki_h: a held-object overhead crash with original weapon release, both original damage contacts, full recovery and matching original sound events. The existing bicycle model and pixels remain unchanged.
-- Beer crate main and failure scenes turn the opening down and seat the victim's head inside the crate against its inner roof. Body, finger and victim animations remain unchanged.
-- Offline Kahlua, native imports/selectors, source motion/CMN/PCM, texture pixels, runtime references and comment checks pass. Project Zomboid was not launched. This release was not installed locally, as requested. Live MP and visual playback still need an in-game check.
+- Added Majima: Bat Point to the normal emote wheel under Project Yakuza, based on Custom Voice Framework's native-emote approach. Hold a usable baseball bat and stand still without aiming to select it. No combat style or voice pack is required.
+- Uses the original Kiwami 1 batting-center scene: Majima raises his bat toward Kiryu, holds the point and lowers it. All 152 contiguous source samples play at their original 30 fps over 5.033 seconds. The independent source bat track directs the grip; native body proportions and foot grounding keep the gesture in place.
+- Preserves native and CVF emote menus, variants, shout behavior and controller aim reset. Movement/action cancellation and completion use PZ's native emote state and replicated parameters. Both clients need this release to display the custom animation.
+- Requires an actual held bat; creates no items, voice recordings, Heat, damage, targeting or invulnerability. Busy, moving, aiming, seated, sleeping and unsafe equipment states are rejected.
+- Offline source extraction, motion directions, native Human import/masks, hand/prop grip, menu load orders, Kahlua compilation and regression checks pass. Project Zomboid was not launched, and no local installation was performed. Live playback and multiplayer remain gameplay checks.
