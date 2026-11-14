@@ -1,6 +1,6 @@
-# Project Yakuza Emotes 0.2.2
+# Project Yakuza Emotes 0.2.3
 
-- Replaced Majima: Bat Point with the opening batting-center story encounter gesture during the Kiryu-chan greeting: bat behind the head, forward point and lowering. The earlier version selected a later gesture from the same cutscene.
-- Uses the original cut 002 Majima and independent metal-bat tracks, frames 70..160 at 30 fps over 3 seconds. Preserves the original native animation identifier, source body motion, grounded soles and calibrated native bat grip.
-- Retains Step Up’s original-footstep character movement from 0.2.1. Other emote animation/selector files and all combat files remain byte-identical.
-- Original-source/subtitle binding, native import, hand/bat alignment, grounding, Step Up movement, menu coexistence, standalone isolation and zero-comment checks pass offline. Installed locally without launching Project Zomboid. Live blending and multiplayer still need gameplay testing.
+- Fixed custom emotes silently refusing to play near zombies. PZ’s isCurrentlyBusy flag includes one very close zombie or three chasing zombies, which blocked both this addon and CVF while vanilla emotes remained available.
+- Playback now checks actual native actions, reading, Lua queues and active Project Yakuza combat actions. Existing movement, aiming, vehicle, sleep, death, equipment and replay guards remain in place.
+- The addon applies the same correction to optional CVF emotes after providers load. CVF framework and separate voice-pack files remain unchanged; vanilla emote dispatch remains delegated.
+- All animation, selector, model, texture and audio bytes remain unchanged. Native B42 reproduction, Kahlua playback/provider-order checks, compilation, isolation and zero-comment gates pass offline. Installed locally without launching Project Zomboid; live gameplay and multiplayer remain untested.

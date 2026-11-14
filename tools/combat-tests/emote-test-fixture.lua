@@ -1,6 +1,7 @@
 local checks=0
 local function check(value,message)checks=checks+1;assert(value,message)end
 require=function()end
+Events={OnGameStart={Add=function(callback)end}}
 ProjectYakuza=nil
 ISTimedActionQueue={queues={}}
 local paused=false
@@ -27,7 +28,9 @@ function p:getVehicle()return self.vehicle end
 function p:isSitOnGround()return self.sitting end
 function p:isPlayerMoving()return self.moving end
 function p:isAiming()return self.aiming end
-function p:isCurrentlyBusy()return self.busy end
+function p:isCurrentlyBusy()return self.busy or self.nearby end
+function p:hasTimedActions()return self.busy end
+function p:isReading()return self.reading end
 function p:getVariableBoolean(key)return key=='EmotePlaying'and self.emoting end
 function p:getPrimaryHandItem()return self.primary end
 function p:getSecondaryHandItem()return self.secondary end
@@ -89,4 +92,9 @@ ProjectYakuza={activeActions={[p]={}}};check(not E.play(p,E.stepUpId),'Step Up c
 ISTimedActionQueue.queues[p]={queue={true}};check(not E.play(p,E.stepUpId),'Step Up cannot interrupt timed action');ISTimedActionQueue.queues[p]=nil
 p.primary=item;check(not E.play(p,E.stepUpId),'Step Up rejects occupied primary hand');p.primary=nil;p.secondary=item;check(not E.play(p,E.stepUpId),'Step Up rejects occupied off-hand');p.secondary=nil
 ProjectYakuza=nil;before=#p.calls;check(menu:emote(E.stepUpId)and #p.calls==before+1 and p.calls[#p.calls]==E.stepUpId,'Step Up dispatches once without combat or held items');check(not menu:emote(E.stepUpId)and #p.calls==before+1,'Step Up cannot restart');check(p.primary==nil and p.secondary==nil,'Step Up retains empty hands');menu:init();check(ISEmoteRadialMenu.menu[E.category].subMenu[E.stepUpId]and ISEmoteRadialMenu.icons[E.stepUpId]=='native-point-icon','Step Up label and original native icon registered')
+p.emoting=false;p.nearby=true;check(p:isCurrentlyBusy()and E.canPlay(p,E.stepUpId),'nearby zombies do not masquerade as an actual action');check(E.play(p,E.stepUpId),'stationary custom emote dispatches despite native combat-proximity busy flag');p.emoting=false;p.nearby=nil
+p.reading=true;check(not E.canPlay(p,E.stepUpId),'native reading still blocks custom emotes');p.reading=nil
+CustomVoice={getEmote=function(id)if id=='cvf_test'then return {id=id}end end,canPlayEmote=function()return false end};E.bindCVF();local cvfGuard=CustomVoice.canPlayEmote;E.bindCVF();check(cvfGuard==CustomVoice.canPlayEmote,'optional CVF binding is idempotent');p.nearby=true;check(CustomVoice.canPlayEmote(p,'cvf_test'),'CVF ignores combat-proximity busy flag');check(not CustomVoice.canPlayEmote(p,'unknown'),'CVF unknown IDs remain rejected')
+for _,state in ipairs({'remote','dead','asleep','vehicle','sitting','moving','aiming','busy','reading','emoting'})do p[state]=true;check(not CustomVoice.canPlayEmote(p,'cvf_test'),'CVF retains actual native state guard '..state);p[state]=nil end
+ISTimedActionQueue.queues[p]={queue={true}};check(not CustomVoice.canPlayEmote(p,'cvf_test'),'CVF retains Lua action queue guard');ISTimedActionQueue.queues[p]=nil;ProjectYakuza={activeActions={[p]={}}};check(not CustomVoice.canPlayEmote(p,'cvf_test'),'CVF cannot interrupt active optional combat');ProjectYakuza=nil;p.nearby=nil;CustomVoice=nil
 return true,'PASS '..checks..' standalone bat/spear/unarmed emote native/CVF menu coexistence, safety guards, equipment identity, native dispatch and replay checks'

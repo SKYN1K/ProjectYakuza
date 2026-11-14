@@ -331,3 +331,5 @@
 !/tools/combat-tests/OpenGrabHeatProbe.java
 
 !/tools/combat-tests/StepUpMotionProbe.java
+
+!/tools/combat-tests/EmoteReadinessProbe.java
