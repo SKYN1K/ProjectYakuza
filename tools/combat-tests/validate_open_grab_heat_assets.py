@@ -1,5 +1,5 @@
 from pathlib import Path
-import sys,json,hashlib,subprocess,struct,uuid,math,wave,zipfile
+import sys,json,hashlib,subprocess,struct,uuid,math,wave,zipfile,xml.etree.ElementTree as E
 
 root=Path(__file__).resolve().parents[2];w=Path(__file__).parent;mod=root/'combat/ProjectYakuza';report=json.loads((mod/'docs/open-grab-heat-assets.json').read_text(encoding='utf-8'));selection=report['actorAssignment'];sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
 if '--inside-blender'not in sys.argv:
@@ -11,7 +11,7 @@ if '--inside-blender'not in sys.argv:
     for record in selection['selection']:assert nested(data,record['resource']+'.gmt')==Path(record['path']).read_bytes()
     result=subprocess.run(['F:/SteamLibrary/steamapps/common/Blender/blender.exe','-b','--factory-startup','-t','1','--python',str(Path(__file__).resolve()),'--','--inside-blender'],cwd=root,capture_output=True,text=True);print(result.stdout,flush=True);assert result.returncode==0 and'PASS original open grab'in result.stdout,result.stderr
     java='F:/SteamLibrary/steamapps/common/ProjectZomboid/jre64/bin/java.exe';prefix=[java,'-Xms16m','-Xmx256m','-XX:ActiveProcessorCount=2','--enable-native-access=ALL-UNNAMED','-cp','.;F:/SteamLibrary/steamapps/common/ProjectZomboid/*']
-    for args in [['AnimationProbe',*[str(mod/r['output'])for r in report['clips']]],['PropAttachmentProbe',str(w/'open-grab-props.tsv')],['OpenGrabHeatProbe','F:/SteamLibrary/steamapps/common/ProjectZomboid/media/models_X/Skinned/MaleBody.x',*[str(mod/r['output'])for r in report['clips']],str(mod/'42/media/AnimSets')]]:subprocess.run(prefix+args,cwd=w,check=True)
+    for args in [['AnimationProbe',*[str(mod/r['output'])for r in report['clips']]],['PropAttachmentProbe',str(w/'open-grab-props.tsv')],['OpenGrabHeatProbe','F:/SteamLibrary/steamapps/common/ProjectZomboid/media/models_X/Skinned/MaleBody.x',*[str(mod/r['output'])for r in report['clips']],str(mod/'42/media/AnimSets')],['PairedPlaybackClockProbe','F:/SteamLibrary/steamapps/common/ProjectZomboid/media/models_X/Skinned/MaleBody.x',str(mod/report['clips'][1]['output']),str(mod/'42/media/AnimSets/zombie/idle/ProjectYakuza_DD_OpenGrabHeatVictim.xml'),str(mod/'42/media/AnimSets')]]:subprocess.run(prefix+args,cwd=w,check=True)
     audio=json.loads((mod/'docs/open-grab-heat-scene.json').read_text(encoding='utf-8'));assert len(audio['sounds'])==9;folder=root/'tools/open-grab-audio-verify';folder.mkdir(exist_ok=True)
     for sound in audio['sounds']:
         bank,record=entry(sound['archive'],sound['entry']);assert hashlib.sha256(bank).hexdigest()==sound['entrySha256'];source=folder/sound['entry'];source.write_bytes(bank);decoded=folder/(str(sound['streamIndex'])+'.wav');subprocess.run([str(root/'tools/vgmstream/vgmstream-cli.exe'),'-s',str(sound['streamIndex']),'-i','-o',str(decoded),str(source)],check=True,capture_output=True);assert decoded.read_bytes()==(mod/sound['output']).read_bytes()and sha(mod/sound['output'])==sound['sha256']
@@ -20,12 +20,20 @@ if '--inside-blender'not in sys.argv:
     assert [d['frame']for d in audio['scenes'][0]['damage']]==[117,167]and abs(sum(c['damageMultiplier']for c in audio['scenes'][0]['definitions'][0]['contacts'])-5)<.000001
     presentation=json.loads((mod/'docs/open-grab-heat-presentation.json').read_text(encoding='utf-8'));assert sha(mod/presentation['output'])==presentation['sha256']and [round(c['atMs']*.03)for c in presentation['contacts']]==[117,167]
     for row in presentation['provenance']:assert sha(row['path'])==row['sha256']
-    with zipfile.ZipFile(root/'dist/ProjectYakuza-B42-v0.107.0.zip')as archive:
+    clockNodes=0
+    with zipfile.ZipFile(root/'dist/ProjectYakuza-B42-v0.108.0.zip')as archive:
         checked=0
         for name in archive.namelist():
             path=mod/name.removeprefix('ProjectYakuza/')
-            if not name.endswith('/')and path.suffix in ['.x','.xml','.png','.wav','.ogg']and '/media/'in name:assert path.read_bytes()==archive.read(name),name;checked+=1
-    print('PASS original scene contacts, nine freshly decoded supplied audio streams, native presentation anchors and',checked,'existing media bytes unchanged')
+            if not name.endswith('/')and path.suffix in ['.x','.xml','.png','.wav','.ogg']and '/media/'in name:
+                if path.name in ['ProjectYakuza_DD_BicycleHeat.x','ProjectYakuza_DD_BicycleHeatVictim.x']or path.name.startswith('HeatScene_bicycle_'):continue
+                current=path.read_bytes();prior=archive.read(name)
+                if path.suffix=='.xml'and'OpenGrabHeat'in path.name:
+                    tree=E.fromstring(current);clock=tree.find('m_TrackTimeToVariable');expected='ProjectYakuzaHeatVictimPhase'if'Victim'in path.name else'ProjectYakuzaHeatActorPhase';assert clock is not None and clock.text==expected;tree.remove(clock);assert E.canonicalize(E.tostring(tree,encoding='unicode'),strip_text=True)==E.canonicalize(prior,strip_text=True),name;clockNodes+=1
+                else:assert current==prior,name
+                checked+=1
+    assert clockNodes==6
+    print('PASS original scene contacts, nine freshly decoded supplied audio streams, native presentation anchors, six isolated paired-clock selectors and',checked,'existing media payloads unchanged')
     raise SystemExit(0)
 
 sys.path.insert(0,str(w))

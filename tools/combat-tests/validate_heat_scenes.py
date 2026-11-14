@@ -10,7 +10,7 @@ expected={'knife':[[40,90]],'rush':[[56,68,80,92,114,126,146,158,170,182,204,216
 original={'knife':[40,90],'rush':[56,68,78,90,102,114,144],'bottle':[32,42,59,84],'wall':[12,48],'ground':[],'crate':[14,44,54,82],'katana':[24,44,64],'bat':[14,50],'bicycle':[50]}
 sha=lambda b:hashlib.sha256(b).hexdigest()
 banks={};count=0
-expected['bicycle']=[[30,84]];original['bicycle']=[30,84]
+expected['bicycle']=[[29,70]];original['bicycle']=[29,70]
 sheet=data['sheetIndex'];assert sha(Path(sheet['path']).read_bytes())==sheet['sha256'];sheets=sheet_names(Path(sheet['path']).read_bytes())
 def bank_data(bank):
     identity=(bank['archive'],bank['entryOffset'],bank['entrySize'])
@@ -64,7 +64,7 @@ for record in data['scenes']:
                 if key=='bicycle':assert audio['entry']==sheets[audio['cueSheet']]+'.acb'
         assert all(v['entry'].startswith('Combat')for v in definition['voiceEvents'])
         count+=len(native)
-assert count==134 and len(data['sounds'])==41
+assert count==131 and len(data['sounds'])==39
 with tempfile.TemporaryDirectory(prefix='project-yakuza-cmn-')as tmp:
     folder=Path(tmp)
     for record in data['sounds']:
@@ -76,4 +76,4 @@ with tempfile.TemporaryDirectory(prefix='project-yakuza-cmn-')as tmp:
         shipped=mod/record['output'];assert out.read_bytes()==shipped.read_bytes()
         assert sha(shipped.read_bytes())==record['sha256']
         with wave.open(str(shipped))as audio:assert (audio.getframerate(),audio.getnchannels(),audio.getsampwidth(),audio.getnframes())==(record['sampleRate'],record['channels'],2,record['samples'])
-print('PASS 9 supplied CMN scenes, 11 timelines, 39 contacts, 134 blood anchors and 41 original PCM decodes; scoped media checked by the release validators')
+print('PASS 9 supplied CMN scenes, 11 timelines, 39 contacts, 131 blood anchors and 39 original PCM decodes; scoped media checked by the release validators')

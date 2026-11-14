@@ -4648,7 +4648,7 @@
   "provenance": [
     {
       "path": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\combat-tests\\build_open_grab_heat_assets.py",
-      "sha256": "c246602e1baf378924a2a4805c6c146e670b4008b277ab8490a09049d6402598"
+      "sha256": "8fa3364980124ed860b93267ce0be03fda5070c7a999d29c7f6778c7a9a242f1"
     },
     {
       "path": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\combat-tests\\extract_open_grab_heat_assets.py",

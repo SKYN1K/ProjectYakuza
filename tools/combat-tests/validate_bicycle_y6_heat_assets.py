@@ -21,18 +21,22 @@ from read_heat_scene import read_scene
 from paired_paths import bridge_scene_cuts
 
 assert sha(report['archive'])==report['archiveSha256']and sha(report['scene'])==report['sceneSha256']
+retired=report['retiredAudio'];assert sha(retired['baseline'])==retired['sha256']and len(retired['files'])==3
+with zipfile.ZipFile(retired['baseline'])as archive:
+    for row in retired['files']:
+        data=archive.read('ProjectYakuza/'+row['path']);assert len(data)==row['bytes']and hashlib.sha256(data).hexdigest()==row['sha256']and not(mod/row['path']).exists()
 for provenance in report['retargetProvenance']:assert sha(provenance['path'])==provenance['sha256']
 scene=read_scene(report['scene']);resources=(Path(report['scene']).parents[1]/'000.par/res.bin').read_bytes()
-bindings={str(uuid.UUID(bytes_le=resources[m.start()-28:m.start()-12])):m.group().decode()for m in re.finditer(rb'(?:h23750_000_\d|m_kiryu|c_ea_)[ -~]*',resources)}
+bindings={str(uuid.UUID(bytes_le=resources[m.start()-28:m.start()-12])):m.group().decode()for m in re.finditer(rb'(?:h24110_000_\d|m_kiryu|c_ea_)[ -~]*',resources)}
 for n in report['actorAssignment']['nodes']:assert bindings[n['guid']]==n['resource']and any(row['guid']==n['guid']and row['offset']==n['offset']for row in scene['nodes'])
-assert [c['source'].split('h23750_000_')[-1]for c in report['clips']]==['4.gmt','6.gmt']
-assert [(n['element']['start'],n['damage']['damage'])for n in scene['nodes']if 'damage'in n and n['role']=='victim']==[(30,500),(84,1500)]
+assert [c['source'].split('h24110_000_')[-1]for c in report['clips']]==['4.gmt','6.gmt']
+assert [(n['element']['start'],n['damage']['damage'])for n in scene['nodes']if 'damage'in n and n['role']=='victim']==[(29,500),(70,1500)]
 prefix=(w/'retarget_locomotion.py').read_text().split('poses=[];srcposes=[]')[0];contracts=[];vectors=[];worst=0;samples=0
 rotation=Quaternion(report['sceneRotation']);mirror=Matrix.Diagonal((1,1,-1,1))
 for c in report['clips']:
     output=mod/c['output'];raw=root/'tools/bicycle-heat-build/ProjectYakuza/42/media/anims_X/Bob'/output.name
     assert sha(output)==c['sha256']and sha(c['source'])==c['sourceSha256']and sha(raw)==c['retargetSha256']
-    text,bones,animation,_=read(output);_,original,curves,_=read(raw);count=c['frames'];assert count==166 and c['fps']==30
+    text,bones,animation,_=read(output);_,original,curves,_=read(raw);count=c['frames'];assert count==151 and c['fps']==30
     for channels in animation.values():
         for keys in channels.values():assert len(keys)==count and all(t==i*160 and all(math.isfinite(v)for v in values)for i,(t,values)in enumerate(keys))
     sys.argv=['validate','--','source',c['source']];context={'FINGER_SOURCE':'Bob_AttackBat01_Hit.x'};exec(compile(prefix,'supplied_bicycle_pose','exec'),context)
@@ -56,19 +60,28 @@ for c in report['clips']:
     if c['animation']=='ProjectYakuza_DD_BicycleHeat':
         from bat_prop_motion import prop_offsets
         expected,_=prop_offsets(context,bones,animation,count)
-        assert Matrix(report['propMotion']['calibration'])==Matrix.Identity(4)
+        calibration=Matrix(report['propMotion']['calibration']);reference=report['propMotion']['gripReference'];assert sha(reference['path'])==reference['sha256']
         for frame,offset in enumerate(expected):
             native=world(bones,locals_at(bones,animation,frame*160));actual=native['Bip01_R_Hand'].inverted()@native['Bip01_Prop1']
-            assert max(abs(actual[a][b]-offset[a][b])for a in range(4)for b in range(4))<.0001,(frame,'source held weapon grip')
-        offsets[0]=';'.join(','.join(str(v)for row in matrix for v in row)for matrix in expected)
+            assert max(abs(actual[a][b]-(offset@calibration)[a][b])for a in range(4)for b in range(4))<.0001,(frame,'source held weapon grip')
+        offsets[0]=';'.join(','.join(str(v)for row in matrix for v in row)for matrix in [offset@calibration for offset in expected])
     contracts.append('\t'.join([str(output),*offsets,str(count)]))
 (w/'bicycle-heat-prop-contract.tsv').write_text('\n'.join(contracts))
 anchor=vectors[0][0];raw=[[[float((rotation@(v-anchor)).z*report['pathScale']),float((rotation@(v-anchor)).x*report['pathScale'])]for v in values]for values in vectors]
-paths,cuts=bridge_scene_cuts(raw);assert paths==report['paths']and cuts==report['sceneCuts']and raw==report['rawPaths']
-assert all(len(p)==166 and max(math.dist(a,b)for a,b in zip(p,p[1:]))<.2 for p in paths)
+paths,cuts=bridge_scene_cuts(raw)
+assert [(r['actor'],r['frame'],r['blendFrames'])for r in report['individualSceneCuts']]==[(0,50,6)]
+for cut in report['individualSceneCuts']:
+    actor,frame=cut['actor'],cut['frame'];before=paths[actor][frame-1];after=paths[actor][frame];shift=[after[axis]-before[axis]for axis in range(2)];assert shift==cut['translation']
+    for age in range(cut['blendFrames']):
+        t=age/cut['blendFrames'];fade=1-t*t*(3-2*t);paths[actor][frame+age]=[paths[actor][frame+age][axis]-shift[axis]*fade for axis in range(2)]
+assert paths==report['paths']and cuts==report['sceneCuts']and raw==report['rawPaths']
+assert all(len(p)==151 and max(math.dist(a,b)for a,b in zip(p,p[1:]))<.23 for p in paths)
 assert report['actorAssignment']['weaponBone']=='buki1_r_n'and report['propMotion']['sourceBone']=='buki1_r_n'
 assert 'objectSource'not in report and len([n for n in scene['nodes']if n['category']==5])==2
-print('PASS source bicycle Y6 CMN/resource roles, 332 original samples,',samples,'unchanged non-arm samples, source arms within',math.degrees(worst),'degrees and original held heavy-weapon motion')
+print('PASS source bicycle Y6 CMN/resource roles, 302 original samples,',samples,'unchanged non-arm samples, source arms within',math.degrees(worst),'degrees and original held heavy-weapon motion')
 from native_body_geometry import load_body,skin_part
-model=json.loads((mod/'docs/bicycle-model-assets.json').read_text());mesh=[Vector(v)*report['propMotion']['modelScale']for v in model['vertices']];_,ab,aa,_=read(mod/report['clips'][0]['output']);_,vb,va,_=read(mod/report['clips'][1]['output']);frame=84;a=world(ab,locals_at(ab,aa,frame*160));v=world(vb,locals_at(vb,va,frame*160));ap,vp=paths[0][frame],paths[1][frame];shift=Vector(((vp[1]-ap[1])/1.5,0,-(vp[0]-ap[0])/1.5));body=load_body('F:/SteamLibrary/steamapps/common/ProjectZomboid/media/models_X/Skinned/MaleBody.x');points=[p+shift for p in skin_part(body,v,['Bip01'])];distance=min((a['Bip01_Prop1']@m-p).length for m in mesh for p in points);assert distance<.08,distance
-print('PASS native bicycle mesh / skinned victim contact at original heavy-object damage frame84:',distance)
+model=json.loads((mod/'docs/bicycle-model-assets.json').read_text());mesh=[Vector(v)*report['propMotion']['modelScale']for v in model['vertices']];_,ab,aa,_=read(mod/report['clips'][0]['output']);_,vb,va,_=read(mod/report['clips'][1]['output']);frame=70;a=world(ab,locals_at(ab,aa,frame*160));v=world(vb,locals_at(vb,va,frame*160));ap,vp=paths[0][frame],paths[1][frame];shift=Vector(((vp[1]-ap[1])/1.5,0,-(vp[0]-ap[0])/1.5));body=load_body('F:/SteamLibrary/steamapps/common/ProjectZomboid/media/models_X/Skinned/MaleBody.x');points=[p+shift for p in skin_part(body,v,['Bip01'])];distance=min((a['Bip01_Prop1']@m-p).length for m in mesh for p in points);assert distance<.08,distance
+feet=['Bip01_L_Foot','Bip01_R_Foot'];initial=world(ab,locals_at(ab,aa,0));airborne=world(ab,locals_at(ab,aa,67*160));rise=min(p.y for p in skin_part(body,airborne,feet))-min(p.y for p in skin_part(body,initial,feet));assert rise>.4,rise
+assert sha(mod/report['bicycleModel']['path'])==report['bicycleModel']['sha256']==model['sha256']
+print('PASS retained native airborne foot rise:',rise,'and frame-50 camera-stage cut bridged without flattening source flight')
+print('PASS native bicycle mesh / skinned victim contact at original heavy-object damage frame70:',distance)

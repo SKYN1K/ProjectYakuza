@@ -333,3 +333,4 @@
 !/tools/combat-tests/StepUpMotionProbe.java
 
 !/tools/combat-tests/EmoteReadinessProbe.java
+!/tools/combat-tests/PairedPlaybackClockProbe.java

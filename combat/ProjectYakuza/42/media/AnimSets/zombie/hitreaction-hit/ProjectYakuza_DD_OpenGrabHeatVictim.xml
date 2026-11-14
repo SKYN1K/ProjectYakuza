@@ -24,4 +24,5 @@
     <m_Type>STRING</m_Type>
     <m_Value>ProjectYakuza_DD_OpenGrabHeatVictim</m_Value>
   </m_Conditions>
+  <m_TrackTimeToVariable>ProjectYakuzaHeatVictimPhase</m_TrackTimeToVariable>
 </animNode>

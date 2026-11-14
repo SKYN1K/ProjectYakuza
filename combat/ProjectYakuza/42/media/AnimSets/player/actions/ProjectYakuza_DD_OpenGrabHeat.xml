@@ -44,4 +44,5 @@
     <weight>1</weight>
     <includeDescendants>true</includeDescendants>
   </m_SubStateBoneWeights>
+  <m_TrackTimeToVariable>ProjectYakuzaHeatActorPhase</m_TrackTimeToVariable>
 </animNode>

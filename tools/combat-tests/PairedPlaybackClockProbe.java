@@ -1,0 +1,23 @@
+import java.nio.file.*;
+import java.lang.reflect.*;
+import java.util.*;
+import jassimp.*;
+
+public class PairedPlaybackClockProbe {
+ public static void main(String[] args)throws Exception{
+  Jassimp.setLibraryLoader(new JassimpLibraryLoader(){public void loadLibrary(){System.load("F:/SteamLibrary/steamapps/common/ProjectZomboid/jassimp64.dll");}});
+  var body=MajimaEmoteProbe.process(args[0],null);var skin=Class.forName("zombie.core.skinnedmodel.model.SkinningData");Object rig=null;
+  for(var constructor:skin.getConstructors())if(constructor.getParameterCount()==6)rig=constructor.newInstance(MajimaEmoteProbe.field(body,"clips"),MajimaEmoteProbe.field(body,"bindPose"),MajimaEmoteProbe.field(body,"invBindPose"),MajimaEmoteProbe.field(body,"skinOffsetMatrices"),MajimaEmoteProbe.field(body,"skeletonHierarchy"),MajimaEmoteProbe.field(body,"boneIndices"));
+  var imported=MajimaEmoteProbe.process(args[1],rig);var clip=((Map<?,?>)MajimaEmoteProbe.field(imported,"clips")).values().iterator().next();var variables=Class.forName("zombie.core.skinnedmodel.advancedanimation.AnimationVariableSource");Object vars=variables.getConstructor().newInstance();var animatable=Class.forName("zombie.core.skinnedmodel.advancedanimation.IAnimatable");Object actor=Proxy.newProxyInstance(animatable.getClassLoader(),new Class<?>[]{animatable},(proxy,method,values)->variables.getMethod(method.getName(),method.getParameterTypes()).invoke(vars,values));
+  var unsafeType=Class.forName("sun.misc.Unsafe");var singleton=unsafeType.getDeclaredField("theUnsafe");singleton.setAccessible(true);Object unsafe=singleton.get(null);var layerType=Class.forName("zombie.core.skinnedmodel.advancedanimation.AnimLayer");Object layer=unsafeType.getMethod("allocateInstance",Class.class).invoke(unsafe,layerType);var character=layerType.getDeclaredField("character");character.setAccessible(true);character.set(layer,actor);
+  var nodeType=Class.forName("zombie.core.skinnedmodel.advancedanimation.AnimNode");var node=nodeType.getMethod("Parse",String.class).invoke(null,Path.of(args[2]).toAbsolutePath().toString());String variable=(String)nodeType.getField("trackTimeToVariable").get(node);if(!variable.equals("ProjectYakuzaHeatVictimPhase"))throw new AssertionError("victim clock selector");
+  var trackType=Class.forName("zombie.core.skinnedmodel.animation.AnimationTrack");Object track=trackType.getMethod("alloc").invoke(null);trackType.getMethod("startClip",clip.getClass(),boolean.class,float.class).invoke(track,clip,false,0f);trackType.getField("animLayer").set(track,layer);trackType.getField("trackTimeToVariable").set(track,variable);float duration=((Number)trackType.getMethod("getDuration").invoke(track)).floatValue();var update=trackType.getMethod("UpdateKeyframes",float.class);var time=trackType.getMethod("getCurrentTimeValue");var set=variables.getMethod("setVariable",String.class,float.class);
+  for(float phase:new float[]{0f,.08f,.23f,.23f,.46f,.72f,.95f}){
+   set.invoke(vars,variable,phase);update.invoke(track,.043f);if(Math.abs(((Number)time.invoke(track)).floatValue()-phase*duration)>.00001)throw new AssertionError("victim phase drift");
+   trackType.getMethod("setCurrentTimeValue",float.class).invoke(track,0f);trackType.getMethod("setPreviousTimeValue",float.class).invoke(track,0f);update.invoke(track,.09f);if(Math.abs(((Number)time.invoke(track)).floatValue()-phase*duration)>.00001)throw new AssertionError("state rebuild restarts victim motion");
+  }
+  trackType.getField("trackTimeToVariable").set(track,"ProjectYakuzaHeatActorPhase");trackType.getMethod("setCurrentTimeValue",float.class).invoke(track,0f);trackType.getMethod("setPreviousTimeValue",float.class).invoke(track,0f);update.invoke(track,.1f);if(Math.abs(((Number)time.invoke(track)).floatValue()-.1f)>.00001)throw new AssertionError("unset owner clock must preserve native free-running playback");
+  int checked=0;try(var files=Files.walk(Path.of(args[3]))){for(var p:files.filter(p->p.toString().endsWith(".xml")&&p.getFileName().toString().contains("OpenGrabHeat")).toList()){Object parsed=nodeType.getMethod("Parse",String.class).invoke(null,p.toAbsolutePath().toString());String expected=p.getFileName().toString().contains("Victim")?variable:"ProjectYakuzaHeatActorPhase";if(!expected.equals(nodeType.getField("trackTimeToVariable").get(parsed)))throw new AssertionError("unshared selector clock "+p);checked++;}}
+  if(checked!=6)throw new AssertionError("six source/observer/victim nodes");System.out.println("PASS actual native normalized victim clock, pause, seven state rebuilds, unset-clock native fallback and six isolated source/observer selectors; no game launch");
+ }
+}

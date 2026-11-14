@@ -47,6 +47,7 @@ function z:isDeferredMovementEnabled()return self.deferred end;function z:setDef
 function z:getTarget()return self.target end;function z:setTarget(v)self.target=v end
 function z:getHitReaction()return self.reaction or ''end;function z:setHitReaction(v)self.reaction=v end
 function z:setVariable(k,v)self.vars[k]=v end;function z:GetVariable(k)local v=self.vars[k];return type(v)=='boolean'and tostring(v)or v or''end
+function z:clearVariable(k)self.vars[k]=nil end
 function z:reportEvent(v)self.report=v;if not self.locked then self.state=v=="wasHit"and "ZombieHitReactionState"or "idle"end end;function z:setAttackOutcome(v)self.outcome=v end
 function z:isAttacking()return false end;function z:setTargetAndCurrentDirection()end;function z:setForwardDirection()end
 function z:moveUnmodded(x,y)self.x=self.x+x;self.y=self.y+y end

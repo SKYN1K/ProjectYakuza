@@ -64,6 +64,7 @@ print('OPEN_GRAB_ASSETS',len(records),'original paired clips,',count,'source fra
 media=mod/'42/media'
 for group in ['player/actions','zombie/idle','zombie/hitreaction','zombie/hitreaction-hit']:
     path=media/'AnimSets'/group/('ProjectYakuza_DD_WallHeat.xml'if group=='player/actions'else'ProjectYakuza_DD_WallHeatVictim.xml');destination=path.with_name(path.name.replace('WallHeat','OpenGrabHeat'));destination.write_text(path.read_text(encoding='utf-8').replace('WallHeat','OpenGrabHeat'),encoding='utf-8');tree=E.parse(destination)
+    E.SubElement(tree.getroot(),'m_TrackTimeToVariable').text='ProjectYakuzaHeatActorPhase'if group=='player/actions'else'ProjectYakuzaHeatVictimPhase'
     for weight in tree.getroot().findall('m_SubStateBoneWeights'):E.SubElement(weight,'includeDescendants').text='true'
     E.indent(tree,space='  ');tree.write(destination,encoding='utf-8',xml_declaration=True)
 report['provenance']=[{'path':str(p),'sha256':sha(p)}for p in [Path(__file__),root/'tools/combat-tests/extract_open_grab_heat_assets.py',root/'tools/combat-tests/retarget_locomotion.py',root/'tools/combat-tests/paired_paths.py',root/'tools/combat-tests/weapon_hold_geometry.py',root/'tools/combat-tests/native_body_geometry.py',native/'models_X/Skinned/MaleBody.x',native/'anims_X/Bob/Bob_Idle.x',Path('E:/Blender/Yakuza Rips/yakuza6/chara.par.unpack/bone/c_man_bone.gmd'),Path('C:/Users/Nik/Documents/Codex/2026-10-19/wo/work/bind.json')]]

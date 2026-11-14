@@ -5859,8 +5859,8 @@
     },
     {
       "id": "bicycle",
-      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\bicycle-overhead-0103\\h23750_buki_h\\cmn.par\\cmn.bin",
-      "sourceSha256": "546cfe66426475e362d30f2e94a7f29bfd4c358b28e613c5ad6be68c8b28b2ce",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\bicycle-momentum-0109\\h24110_c_german\\cmn.par\\cmn.bin",
+      "sourceSha256": "379bca993f367a76b97fdbe530e8f137d0f060c3669ab71e32baa60817403463",
       "version": 18,
       "byteOrder": "little",
       "animation": "ProjectYakuza_DD_BicycleHeat",
@@ -6015,49 +6015,34 @@
         147,
         148,
         149,
-        150,
-        151,
-        152,
-        153,
-        154,
-        155,
-        156,
-        157,
-        158,
-        159,
-        160,
-        161,
-        162,
-        163,
-        164,
-        165
+        150
       ],
       "endingFrames": null,
       "damage": [
         {
-          "frame": 30.0,
+          "frame": 29.0,
           "damage": 500,
           "forceDead": 0,
           "noDead": 1,
           "vanish": 0,
-          "offset": 20852
+          "offset": 21004
         },
         {
-          "frame": 84.0,
+          "frame": 70.0,
           "damage": 1500,
           "forceDead": 0,
           "noDead": 0,
           "vanish": 0,
-          "offset": 21172
+          "offset": 21132
         }
       ],
       "ignoredNonVictimDamage": [],
       "bank": {
         "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 6 - The Song of Life\\data\\sound.par",
-        "entry": "hact_h23750_buki_h.acb",
-        "entryOffset": 142395392,
-        "entrySize": 200544,
-        "entrySha256": "b81968335a01b8e1fd08eccb20e0e2261e0c2288621273a8e92a91603d78d6dc"
+        "entry": "hact_h24110_c_german.acb",
+        "entryOffset": 149426176,
+        "entrySize": 190880,
+        "entrySha256": "2504b9e7b8722920427426ef89146f55a5fd75629ccc995f91641fe80993c2c7"
       },
       "effectsPolicy": "Original blood particle starts and bone-local attachments; existing supplied blood pixels only. Non-blood engine-specific emitters and cinematic cameras are not substituted.",
       "segments": null,
@@ -6066,14 +6051,14 @@
           "animation": "ProjectYakuza_DD_BicycleHeat",
           "contacts": [
             {
-              "atMs": 1000.0,
+              "atMs": 966.6666666666666,
               "damageMultiplier": 0.375,
               "cue": "punchImpact",
               "strong": false,
               "charged": false
             },
             {
-              "atMs": 2800.0,
+              "atMs": 2333.3333333333335,
               "damageMultiplier": 1.125,
               "cue": "punchImpact",
               "strong": true,
@@ -6083,83 +6068,45 @@
           "audioEvents": [
             {
               "atMs": 100.0,
-              "cue": "heatSceneBicycle379_12",
+              "cue": "heatSceneBicycle3",
               "target": "actor"
             },
             {
-              "atMs": 200.0,
-              "cue": "heatSceneBicycle379_10",
-              "target": "actor"
-            },
-            {
-              "atMs": 500.0,
-              "cue": "heatSceneBicycle2",
-              "target": "victim"
-            },
-            {
-              "atMs": 900.0,
+              "atMs": 1133.3333333333333,
               "cue": "heatSceneBicycle0",
               "target": "victim"
             },
             {
-              "atMs": 1566.6666666666667,
+              "atMs": 1600.0,
               "cue": "heatSceneBicycle1",
               "target": "actor"
             },
             {
-              "atMs": 2166.6666666666665,
-              "cue": "heatSceneBicycle5",
+              "atMs": 2100.0,
+              "cue": "heatSceneBicycle4",
               "target": "actor"
             },
             {
-              "atMs": 2566.666666666667,
-              "cue": "heatSceneBicycle4",
-              "target": "victim"
+              "atMs": 3500.0,
+              "cue": "heatSceneBicycle2",
+              "target": "actor"
             }
           ],
           "voiceEvents": [
             {
-              "atMs": 200.0,
+              "atMs": 366.66666666666663,
               "entry": "CombatHeavyAttack"
             },
             {
-              "atMs": 1766.6666666666665,
-              "entry": "CombatSpecialMove"
+              "atMs": 1733.3333333333335,
+              "entry": "CombatHeavyAttack"
             }
           ],
           "particles": [
             {
-              "frame": 30.0,
-              "sourceFrame": 30.0,
-              "sourceOffset": 16012,
-              "name": "YNb0009 : \u8840\u3057\u3076\u304d(\u30e1\u30bf\u30dc\u542b\u3080)",
-              "id": 5634,
-              "bone": "face_c_n",
-              "localPoint": [
-                -0.005200000014156103,
-                0.018300000578165054,
-                0.11079999804496765
-              ],
-              "contact": 1
-            },
-            {
-              "frame": 30.0,
-              "sourceFrame": 30.0,
-              "sourceOffset": 16316,
-              "name": "YNb0027 : \u8840\u3057\u3076\u304d\u6c4e\u7528(\u30e1\u30bf\u30dc\u542b",
-              "id": 5652,
-              "bone": "face_c_n",
-              "localPoint": [
-                -0.005200000014156103,
-                0.018300000578165054,
-                0.11079999804496765
-              ],
-              "contact": 1
-            },
-            {
-              "frame": 30.0,
-              "sourceFrame": 30.0,
-              "sourceOffset": 16620,
+              "frame": 27.0,
+              "sourceFrame": 27.0,
+              "sourceOffset": 16916,
               "name": "YNb0007 : \u98db\u3073\u6563\u308b\u8089\u7247A(\u30e1\u30bf\u30dc\ufffd",
               "id": 5632,
               "bone": "face_c_n",
@@ -6171,37 +6118,37 @@
               "contact": 1
             },
             {
-              "frame": 30.0,
-              "sourceFrame": 30.0,
-              "sourceOffset": 16924,
+              "frame": 27.0,
+              "sourceFrame": 27.0,
+              "sourceOffset": 17220,
               "name": "YNb0029 : \u98db\u3073\u6563\u308b\u8089\u7247\u6c4e\u7528(\u30e1\u30bf",
               "id": 5654,
               "bone": "face_c_n",
               "localPoint": [
-                0.05889999866485596,
-                -0.06889999657869339,
-                0.03700000047683716
+                0.11490000039339066,
+                0.1687999963760376,
+                0.04490000009536743
               ],
               "contact": 1
             },
             {
-              "frame": 30.0,
-              "sourceFrame": 30.0,
-              "sourceOffset": 17228,
+              "frame": 27.0,
+              "sourceFrame": 27.0,
+              "sourceOffset": 17524,
               "name": "YNb0007 : \u98db\u3073\u6563\u308b\u8089\u7247A(\u30e1\u30bf\u30dc\ufffd",
               "id": 5632,
               "bone": "face_c_n",
               "localPoint": [
-                -0.005100000184029341,
-                0.0020000000949949026,
-                0.08879999816417694
+                0.10260000079870224,
+                0.030500000342726707,
+                0.01140000019222498
               ],
               "contact": 1
             },
             {
-              "frame": 30.0,
-              "sourceFrame": 30.0,
-              "sourceOffset": 17836,
+              "frame": 27.0,
+              "sourceFrame": 27.0,
+              "sourceOffset": 18132,
               "name": "YNb0003 : \u53e3\u8840C\u30e1\u30bf\u30dc",
               "id": 5628,
               "bone": "face_c_n",
@@ -6213,9 +6160,23 @@
               "contact": 1
             },
             {
-              "frame": 84.0,
-              "sourceFrame": 84.0,
-              "sourceOffset": 18444,
+              "frame": 28.0,
+              "sourceFrame": 28.0,
+              "sourceOffset": 16612,
+              "name": "YNb0027 : \u8840\u3057\u3076\u304d\u6c4e\u7528(\u30e1\u30bf\u30dc\u542b",
+              "id": 5652,
+              "bone": "face_c_n",
+              "localPoint": [
+                -0.005200000014156103,
+                0.018300000578165054,
+                0.11079999804496765
+              ],
+              "contact": 1
+            },
+            {
+              "frame": 71.0,
+              "sourceFrame": 71.0,
+              "sourceOffset": 18740,
               "name": "YNb0009 : \u8840\u3057\u3076\u304d(\u30e1\u30bf\u30dc\u542b\u3080)",
               "id": 5634,
               "bone": "face_c_n",
@@ -6227,9 +6188,9 @@
               "contact": 2
             },
             {
-              "frame": 84.0,
-              "sourceFrame": 84.0,
-              "sourceOffset": 18748,
+              "frame": 71.0,
+              "sourceFrame": 71.0,
+              "sourceOffset": 19044,
               "name": "YNb0027 : \u8840\u3057\u3076\u304d\u6c4e\u7528(\u30e1\u30bf\u30dc\u542b",
               "id": 5652,
               "bone": "face_c_n",
@@ -6241,58 +6202,30 @@
               "contact": 2
             },
             {
-              "frame": 84.0,
-              "sourceFrame": 84.0,
-              "sourceOffset": 19052,
+              "frame": 71.0,
+              "sourceFrame": 71.0,
+              "sourceOffset": 19348,
               "name": "YNb0007 : \u98db\u3073\u6563\u308b\u8089\u7247A(\u30e1\u30bf\u30dc\ufffd",
               "id": 5632,
               "bone": "face_c_n",
               "localPoint": [
-                -0.005100000184029341,
-                0.0020000000949949026,
-                0.08879999816417694
+                0.002199999988079071,
+                -0.09000000357627869,
+                0.1915999948978424
               ],
               "contact": 2
             },
             {
-              "frame": 84.0,
-              "sourceFrame": 84.0,
-              "sourceOffset": 19356,
+              "frame": 71.0,
+              "sourceFrame": 71.0,
+              "sourceOffset": 19652,
               "name": "YNb0029 : \u98db\u3073\u6563\u308b\u8089\u7247\u6c4e\u7528(\u30e1\u30bf",
               "id": 5654,
               "bone": "face_c_n",
               "localPoint": [
-                -0.04019999876618385,
-                0.015599999576807022,
-                0.22529999911785126
-              ],
-              "contact": 2
-            },
-            {
-              "frame": 84.0,
-              "sourceFrame": 84.0,
-              "sourceOffset": 19660,
-              "name": "YNb0029 : \u98db\u3073\u6563\u308b\u8089\u7247\u6c4e\u7528(\u30e1\u30bf",
-              "id": 5654,
-              "bone": "face_c_n",
-              "localPoint": [
-                0.05889999866485596,
-                -0.06889999657869339,
-                0.03700000047683716
-              ],
-              "contact": 2
-            },
-            {
-              "frame": 84.0,
-              "sourceFrame": 84.0,
-              "sourceOffset": 19964,
-              "name": "YNb0007 : \u98db\u3073\u6563\u308b\u8089\u7247A(\u30e1\u30bf\u30dc\ufffd",
-              "id": 5632,
-              "bone": "face_c_n",
-              "localPoint": [
-                -0.005100000184029341,
-                0.0020000000949949026,
-                0.08879999816417694
+                0.002199999988079071,
+                -0.09000000357627869,
+                0.1915999948978424
               ],
               "contact": 2
             }
@@ -6448,22 +6381,7 @@
             147,
             148,
             149,
-            150,
-            151,
-            152,
-            153,
-            154,
-            155,
-            156,
-            157,
-            158,
-            159,
-            160,
-            161,
-            162,
-            163,
-            164,
-            165
+            150
           ],
           "damagePolicy": "New weapon action: 1.5 canonical damage distributed using original victim damage weights."
         }
@@ -7119,68 +7037,30 @@
     },
     {
       "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 6 - The Song of Life\\data\\sound.par",
-      "entry": "act_kiryu.acb",
-      "entryOffset": 1669120,
-      "entrySize": 270752,
-      "entrySha256": "0efe58fbe2d58d91856ad5d0afa0655ebb924a72da9fb6c7c4c572959a3358ae",
-      "cueSheet": 379,
-      "cue": "heatSceneBicycle379_12",
-      "sound": "ProjectYakuza_HeatScene_bicycle_379_12",
-      "cueId": 12,
-      "soundIndex": 13,
-      "streamIndex": 20,
-      "stream": "swing_kick_01",
-      "output": "42/media/sound/ProjectYakuza/HeatScene_bicycle_379_12.wav",
-      "sha256": "8e6b7fbd79a168d991ce8085438edfcfa42a1cef14cf0b87aeaee1dba45803c0",
-      "sampleRate": 48000,
-      "channels": 2,
-      "samples": 18288
-    },
-    {
-      "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 6 - The Song of Life\\data\\sound.par",
-      "entry": "act_kiryu.acb",
-      "entryOffset": 1669120,
-      "entrySize": 270752,
-      "entrySha256": "0efe58fbe2d58d91856ad5d0afa0655ebb924a72da9fb6c7c4c572959a3358ae",
-      "cueSheet": 379,
-      "cue": "heatSceneBicycle379_10",
-      "sound": "ProjectYakuza_HeatScene_bicycle_379_10",
-      "cueId": 10,
-      "soundIndex": 11,
-      "streamIndex": 30,
-      "stream": "whoosh_long_02",
-      "output": "42/media/sound/ProjectYakuza/HeatScene_bicycle_379_10.wav",
-      "sha256": "889ff41f59c40a507bf3a267473434bdf5386003f02ef4511268dda5dbafe34a",
-      "sampleRate": 32000,
-      "channels": 1,
-      "samples": 38201
-    },
-    {
-      "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 6 - The Song of Life\\data\\sound.par",
-      "entry": "hact_h23750_buki_h.acb",
-      "entryOffset": 142395392,
-      "entrySize": 200544,
-      "entrySha256": "b81968335a01b8e1fd08eccb20e0e2261e0c2288621273a8e92a91603d78d6dc",
-      "cueSheet": 1916,
-      "cue": "heatSceneBicycle2",
-      "sound": "ProjectYakuza_HeatScene_bicycle_2",
-      "cueId": 2,
-      "soundIndex": 3,
-      "streamIndex": 3,
-      "stream": "hit1",
-      "output": "42/media/sound/ProjectYakuza/HeatScene_bicycle_2.wav",
-      "sha256": "94588c4e750699b3ab32c68d0c02e318b6813160630ae70b090e17d2a05f3fe9",
+      "entry": "hact_h24110_c_german.acb",
+      "entryOffset": 149426176,
+      "entrySize": 190880,
+      "entrySha256": "2504b9e7b8722920427426ef89146f55a5fd75629ccc995f91641fe80993c2c7",
+      "cueSheet": 1758,
+      "cue": "heatSceneBicycle3",
+      "sound": "ProjectYakuza_HeatScene_bicycle_3",
+      "cueId": 3,
+      "soundIndex": 4,
+      "streamIndex": 4,
+      "stream": "swing_hit",
+      "output": "42/media/sound/ProjectYakuza/HeatScene_bicycle_3.wav",
+      "sha256": "3dd57e5e5a00af9943b790a10df9eb7102183484f479be3d3b9ffa918289eb9e",
       "sampleRate": 44100,
       "channels": 2,
-      "samples": 62334
+      "samples": 88438
     },
     {
       "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 6 - The Song of Life\\data\\sound.par",
-      "entry": "hact_h23750_buki_h.acb",
-      "entryOffset": 142395392,
-      "entrySize": 200544,
-      "entrySha256": "b81968335a01b8e1fd08eccb20e0e2261e0c2288621273a8e92a91603d78d6dc",
-      "cueSheet": 1916,
+      "entry": "hact_h24110_c_german.acb",
+      "entryOffset": 149426176,
+      "entrySize": 190880,
+      "entrySha256": "2504b9e7b8722920427426ef89146f55a5fd75629ccc995f91641fe80993c2c7",
+      "cueSheet": 1758,
       "cue": "heatSceneBicycle0",
       "sound": "ProjectYakuza_HeatScene_bicycle_0",
       "cueId": 0,
@@ -7188,67 +7068,67 @@
       "streamIndex": 1,
       "stream": "down",
       "output": "42/media/sound/ProjectYakuza/HeatScene_bicycle_0.wav",
-      "sha256": "3de33a23d84cb2be727e1a5af31ccb02f91c682404b9cc2afd12b92c1971eed3",
+      "sha256": "9e00e411c1a24b28b97293aa5b6c463d9da10d2f4f2ba5ae3a3a349538690619",
       "sampleRate": 44100,
       "channels": 2,
-      "samples": 36515
+      "samples": 42178
     },
     {
       "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 6 - The Song of Life\\data\\sound.par",
-      "entry": "hact_h23750_buki_h.acb",
-      "entryOffset": 142395392,
-      "entrySize": 200544,
-      "entrySha256": "b81968335a01b8e1fd08eccb20e0e2261e0c2288621273a8e92a91603d78d6dc",
-      "cueSheet": 1916,
+      "entry": "hact_h24110_c_german.acb",
+      "entryOffset": 149426176,
+      "entrySize": 190880,
+      "entrySha256": "2504b9e7b8722920427426ef89146f55a5fd75629ccc995f91641fe80993c2c7",
+      "cueSheet": 1758,
       "cue": "heatSceneBicycle1",
       "sound": "ProjectYakuza_HeatScene_bicycle_1",
       "cueId": 1,
       "soundIndex": 2,
       "streamIndex": 2,
-      "stream": "furiage",
+      "stream": "jump",
       "output": "42/media/sound/ProjectYakuza/HeatScene_bicycle_1.wav",
-      "sha256": "03f0d2b77202b5494d718a50dfc92ebefefd467460b58ee17cd4350b3476ba52",
+      "sha256": "1c58a0dde58aef838e14a0288e05d32f1146ca3071015cd6d308767877c36229",
       "sampleRate": 44100,
       "channels": 2,
-      "samples": 17964
+      "samples": 55157
     },
     {
       "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 6 - The Song of Life\\data\\sound.par",
-      "entry": "hact_h23750_buki_h.acb",
-      "entryOffset": 142395392,
-      "entrySize": 200544,
-      "entrySha256": "b81968335a01b8e1fd08eccb20e0e2261e0c2288621273a8e92a91603d78d6dc",
-      "cueSheet": 1916,
-      "cue": "heatSceneBicycle5",
-      "sound": "ProjectYakuza_HeatScene_bicycle_5",
-      "cueId": 5,
-      "soundIndex": 6,
-      "streamIndex": 6,
-      "stream": "last_swing",
-      "output": "42/media/sound/ProjectYakuza/HeatScene_bicycle_5.wav",
-      "sha256": "d673d227a4868aa573567ca8131e910a7496a23891d33739fbc361b4db0cdad1",
-      "sampleRate": 44100,
-      "channels": 2,
-      "samples": 76403
-    },
-    {
-      "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 6 - The Song of Life\\data\\sound.par",
-      "entry": "hact_h23750_buki_h.acb",
-      "entryOffset": 142395392,
-      "entrySize": 200544,
-      "entrySha256": "b81968335a01b8e1fd08eccb20e0e2261e0c2288621273a8e92a91603d78d6dc",
-      "cueSheet": 1916,
+      "entry": "hact_h24110_c_german.acb",
+      "entryOffset": 149426176,
+      "entrySize": 190880,
+      "entrySha256": "2504b9e7b8722920427426ef89146f55a5fd75629ccc995f91641fe80993c2c7",
+      "cueSheet": 1758,
       "cue": "heatSceneBicycle4",
       "sound": "ProjectYakuza_HeatScene_bicycle_4",
       "cueId": 4,
       "soundIndex": 5,
       "streamIndex": 5,
-      "stream": "last_hit",
+      "stream": "tataki",
       "output": "42/media/sound/ProjectYakuza/HeatScene_bicycle_4.wav",
-      "sha256": "f6e6b3206736ad59c9c707b788a9e79b52fb65337ee1710981e86663a6c2bc65",
+      "sha256": "d3a3dac61e2ea21532535f517c352788d5bf7962eacd491d77850474b4c93db6",
       "sampleRate": 44100,
       "channels": 2,
-      "samples": 75852
+      "samples": 55759
+    },
+    {
+      "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 6 - The Song of Life\\data\\sound.par",
+      "entry": "hact_h24110_c_german.acb",
+      "entryOffset": 149426176,
+      "entrySize": 190880,
+      "entrySha256": "2504b9e7b8722920427426ef89146f55a5fd75629ccc995f91641fe80993c2c7",
+      "cueSheet": 1758,
+      "cue": "heatSceneBicycle2",
+      "sound": "ProjectYakuza_HeatScene_bicycle_2",
+      "cueId": 2,
+      "soundIndex": 3,
+      "streamIndex": 3,
+      "stream": "okiagari",
+      "output": "42/media/sound/ProjectYakuza/HeatScene_bicycle_2.wav",
+      "sha256": "f168758fbab277d4f1d47942f081efc309f412d05aa107fc2d45566e63dd9c20",
+      "sampleRate": 44100,
+      "channels": 2,
+      "samples": 35192
     }
   ]
 }

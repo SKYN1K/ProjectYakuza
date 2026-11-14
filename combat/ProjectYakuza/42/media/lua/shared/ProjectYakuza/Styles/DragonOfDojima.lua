@@ -264,7 +264,7 @@ if ProjectYakuza.Weapons then
         lightAttacks=moves.lightAttacks,groundAttacks=moves.groundAttacks,
         actions={finisher=moves.finisher,quickstep=base.actions.quickstep,
             heatAction=ProjectYakuza.HeatScenes.action("bicycle",{enabled=true,weaponHeat=true,weaponItems={"ProjectYakuza.Bicycle"},motionId="dod_bicycle",useExtremeFuel=true,heatStocks=1,noCombo=true,
-                animation="ProjectYakuza_DD_BicycleHeat",targetAnimation="ProjectYakuza_DD_BicycleHeatVictim",nodeValue="dd_bicycle_heat",requiresTarget=true,duration=165/30,speed=1,hitResponse=false}),
+                animation="ProjectYakuza_DD_BicycleHeat",targetAnimation="ProjectYakuza_DD_BicycleHeatVictim",nodeValue="dd_bicycle_heat",requiresTarget=true,duration=150/30,speed=1,hitResponse=false}),
         },
     })
 end

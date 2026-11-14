@@ -162,10 +162,21 @@ function A:isValid()
     local p=self.character;local z=self.context.target.z;local style=PY.getPlayerStyle(p)
     return style and style.id==self.context.style.id and PY.isEquipped(p)and p:getPrimaryHandItem()==self.held and not p:isDead()and not p:isOnFloor()and not p:isKnockedDown()and not p:getVehicle()and not p:isClimbing()and (p:getHitReaction()or"")==""and (self.failed or z and (not z:isDead()or self.finalRequested)and (R.targetKind(z)~="player"or R.playerAllowed(p,z)))
 end
+function H.syncPhase(job,time)
+    if not job or not job.move or not job.move.syncPaired then return end
+    local phase=math.max(0,math.min(1,time/R.durationFor(job.move)))
+    job.z:setVariable("ProjectYakuzaHeatVictimPhase",phase)
+    if job.remote then job.p:setVariable("ProjectYakuzaHeatActorPhase",phase)else job.p:clearVariable("ProjectYakuzaHeatActorPhase")end
+end
+function H.clearPhase(job)
+    if not job or not job.move or not job.move.syncPaired then return end
+    job.p:clearVariable("ProjectYakuzaHeatActorPhase");job.z:clearVariable("ProjectYakuzaHeatVictimPhase")
+end
 function H.align(job,time)
     local paths=job.motion or PY.HeatRushPaths;local p,z=job.p,job.z
     local x,y=R.point(job,paths.actor,time);local zx,zy=R.point(job,paths.victim,time)
     if not PY.NetworkProtocol.path(p,x,y)or not z:isDead()and not PY.NetworkProtocol.path(z,zx,zy)then return false end
+    H.syncPhase(job,time)
     PY.Defense.snapActor(p,x,y);p:setTargetAndCurrentDirection(job.fx,job.fy)
     if not z:isDead()then PY.Defense.snapActor(z,zx,zy);z:setTargetAndCurrentDirection(job.fx,job.fy)end
     p:getMovementLastFrame():set(0,0);p:setMoving(false);p:setRunning(false);p:setSprinting(false);return true
@@ -297,6 +308,7 @@ function A:update()
 end
 function A:cleanup(done)
     if self.cleaned then return end;self.cleaned=true;local p,z=self.character,self.context.target.z;H.active[p]=nil
+    H.clearPhase(self.pose)
     if PY.HeatActionPresentation then PY.HeatActionPresentation.stop(p,self,done)end
     if self.started then
         PY.HeatActions.finish(p,self)
@@ -377,7 +389,7 @@ Events.OnMainMenuEnter.Add(function()H.clear()end)
 H.remote={};H.ended={};H.remoteSessions={};H.failedPackets={}
 function H.remoteEnd(id,action,packet)
     if type(action)~="number"then return end;H.ended[id]=math.max(H.ended[id]or 0,action)
-    local job=H.remote[id];if not job or job.action~=action then return end;H.remote[id]=nil
+    local job=H.remote[id];if not job or job.action~=action then return end;H.remote[id]=nil;H.clearPhase(job)
     if PY.HeatActionPresentation then PY.HeatActionPresentation.stop(job.p,job,packet and packet.completed)end
     local z=job.z;local saved=R.targetKind(z)=="zombie"and packet or job.old
     if saved and saved~=job.old then saved={useless=saved.useless,ignore=saved.ignore,deferred=saved.deferred,locked=saved.locked,target=job.old.target,groundAction=job.old.groundAction,floor=job.old.floor,knocked=job.old.knocked}end

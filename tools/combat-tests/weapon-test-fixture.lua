@@ -43,6 +43,7 @@ function p:isDead()return false end
 function p:isAiming()return true end
 function p:getPrimaryHandItem()return self.held or token end
 function p:setVariable(k,v)self.vars[k]=v end
+function p:clearVariable(k)self.vars[k]=nil end
 function p:GetVariable(k)return self.vars[k]end
 function p:isWeaponReady()return true end
 function p:isAttackStarted()return self.attacking end

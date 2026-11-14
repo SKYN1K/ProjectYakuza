@@ -93,6 +93,7 @@ function z:isDeferredMovementEnabled()return self.deferred end;function z:setDef
 function z:getTarget()return self.target end;function z:setTarget(v)self.target=v end
 function z:GetVariable(k)local v=self.vars[k];return type(v)=="boolean"and tostring(v)or v or ""end
 function z:setVariable(k,v)self.vars[k]=v end;function z:setHitReaction(v)self.reaction=v end;function z:getHitReaction()return self.reaction or ''end
+function z:clearVariable(k)self.vars[k]=nil end
 function z:setAttackOutcome(v)self.outcome=v end
 function z:reportEvent(v)self.report=v end;function z:setTargetAndCurrentDirection(x,y)self.facingX=x;self.facingY=y end
 function z:Hit(item,who,amount)check(item==token and who==p,'paired source contact uses native item/actor');self.hits=self.hits+1;self.total=self.total+amount;self.health=self.health-amount end
@@ -734,7 +735,7 @@ do
   PY.MultiHit.targets=function()return {{victim=z}}end
   PY.Weapons.sync(p);local view=PY.getPlayerStyle(p);local move=view.actions.heatAction
   check(view.weaponProfile=='bicycle'and move.motionId=='dod_bicycle'and not move.qte,'real bicycle selects its own automatic original scene '..id)
-  check(#move.contacts==2 and math.abs(move.contacts[1].atMs-30/30*1000)<.00001 and math.abs(move.contacts[2].atMs-84/30*1000)<.00001,'held bicycle uses both original CMN damage frames')
+  check(#move.contacts==2 and math.abs(move.contacts[1].atMs-29/30*1000)<.00001 and math.abs(move.contacts[2].atMs-70/30*1000)<.00001,'held bicycle uses both original CMN damage frames')
   check(move.contacts[1].damageMultiplier==.375 and move.contacts[2].damageMultiplier==1.125,'bicycle preserves original Y6 damage weights')
   check(move.heatStocks==1 and move.useExtremeFuel and move.noCombo,'bicycle uses existing stock/fuel and neutral-combo rules')
   check(H.weaponInput(p,PY.stateFor(p),view,true),'bicycle action starts through normal weapon input '..id)
@@ -852,5 +853,25 @@ do
  p:setVariable('IsPerformingAnAction',true);queued={}
  check(not PY.releaseActionAnimation(p,owner,true)and p:hasTimedActions(),'heat cleanup preserves foreign queued work after the selector resets')
  queued=nil;p:setVariable('IsPerformingAnAction',false);PY.activeActions[p]=nil;p.hasTimedActions=priorBusy
+end
+do
+ local actor={vars={},setVariable=p.setVariable,clearVariable=p.clearVariable}
+ local target={vars={},setVariable=z.setVariable,clearVariable=z.clearVariable}
+ local move={syncPaired=true,duration=8}
+ local job={p=actor,z=target,move=move}
+ for _,time in ipairs({-1,0,2,2,6,10})do
+  H.syncPhase(job,time)
+  check(target.vars.ProjectYakuzaHeatVictimPhase==math.max(0,math.min(1,time/8)),'paired victim follows bounded owner phase including pauses')
+  check(actor.vars.ProjectYakuzaHeatActorPhase==nil,'owner native track remains the clock source')
+ end
+ job.remote=true;H.syncPhase(job,3)
+ check(actor.vars.ProjectYakuzaHeatActorPhase==.375 and target.vars.ProjectYakuzaHeatVictimPhase==.375,'observer actor and victim use the same received scene age')
+ target.vars.ProjectYakuzaHeatVictimPhase=0;H.syncPhase(job,5)
+ check(actor.vars.ProjectYakuzaHeatActorPhase==.625 and target.vars.ProjectYakuzaHeatVictimPhase==.625,'victim selector restart cannot rewind the pair')
+ H.clearPhase(job)
+ check(actor.vars.ProjectYakuzaHeatActorPhase==nil and target.vars.ProjectYakuzaHeatVictimPhase==nil,'completion clears both paired clocks')
+ job.move={duration=8};actor.vars.ProjectYakuzaHeatActorPhase=.2;target.vars.ProjectYakuzaHeatVictimPhase=.3
+ H.syncPhase(job,6);H.clearPhase(job)
+ check(actor.vars.ProjectYakuzaHeatActorPhase==.2 and target.vars.ProjectYakuzaHeatVictimPhase==.3,'unrelated scenes never modify paired clock slots')
 end
 return true,'PASS '..checks..' generic QTE validation, custom bindings, fresh presses, replay safety, native-phase contacts, canonical damage, paired cleanup and interruption checks'

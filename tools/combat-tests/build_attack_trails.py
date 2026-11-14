@@ -92,7 +92,9 @@ for animation,move in sorted(moves.items()):
 code=('\n'.join(output)+'\n').encode();target=LUA/'client/ProjectYakuza/AttackTrailCatalog.lua'
 report={'operation':'Code-side numeric FK only from existing supplied PZ clips, including current paired contacts/endings and linked native finisher variants. Contacts use native collision events, authored Heat Action contacts or the documented parry fallback. Clips use contact-local endpoint/relative motion with verified original left-light and right-high-kick pose overrides, independent of charge-up pose. The high kick has right-foot height 0.721 versus planted left foot 0.093 at source frame 24; recovering arms can be faster than the striking leg. Runtime resolves the actual playing clip within the committed move family. No visual/audio/animation/model assets are generated or modified.','catalog':target.relative_to(MOD).as_posix(),'sha256':hashlib.sha256(code).hexdigest(),'clips':records}
 manifest=(json.dumps(report,indent=2)+'\n').encode()
-if '--write'in sys.argv:target.write_bytes(code);(MOD/'docs/attack-trail-catalog.json').write_bytes(manifest)
+if '--write'in sys.argv:
+ target.write_bytes(code);(MOD/'docs/attack-trail-catalog.json').write_bytes(manifest)
+ punchPath=MOD/'docs/punch-effect-assets.json';punch=json.loads(punchPath.read_text());assert punch['track']['path']==target.relative_to(MOD).as_posix();punch['track']['sha256']=report['sha256'];punchPath.write_text(json.dumps(punch,indent=2)+'\n')
 else:assert target.read_bytes()==code and (MOD/'docs/attack-trail-catalog.json').read_bytes()==manifest,'numeric catalogue differs from native source'
 print('PASS',len(records),'active attack clips,',sum(len(r['windows'])for r in records),'contact windows, native limb FK and deterministic catalogue; no media generated')
 for row in records:print(row['animation'],','.join(w['limb']for w in row['windows']))

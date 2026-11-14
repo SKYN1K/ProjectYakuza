@@ -293,7 +293,7 @@ end
 local ProjectYakuza = ProjectYakuza
 ProjectYakuza.FEATURES={grab=true}
 ProjectYakuza.TigerDropRules={windowMs=160,cooldownMs=20000}
-ProjectYakuza.VERSION = "0.108.0"
+ProjectYakuza.VERSION = "0.109.0"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
