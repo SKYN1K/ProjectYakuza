@@ -20,7 +20,7 @@ def literal(value):
     if isinstance(value,list):return '{'+','.join(literal(v)for v in value)+'}'
     return '{'+','.join('['+json.dumps(k)+']='+literal(v)for k,v in sorted(value.items()))+'}'
 
-for family in ['Crate','Bicycle']:
+for family in ['Crate']:
     result={'lightAttacks':[],'groundAttacks':[]};profile=family.lower()
     for label,stem in [('Light01','P_WPC_CMB_01'),('Light02','P_WPC_CMB_02'),('Light03','P_WPC_CMB_03'),('Heavy','P_WPC_ATK_heavy'),('Ground','P_WPC_ATK_heavy')]:
         name='ProjectYakuza_DD_'+family+label;source=root/'extracted/crate-normal-097'/(stem+'.gmt');output=media/'anims_X/Bob'/(name+'.x');context,raw=convert(name,source,output)

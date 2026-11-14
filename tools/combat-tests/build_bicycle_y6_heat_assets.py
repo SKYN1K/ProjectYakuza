@@ -8,6 +8,8 @@ from paired_paths import bridge_scene_cuts
 from weapon_hold_geometry import fit_arms
 from bat_prop_motion import prop_offsets
 from read_heat_scene import read_scene
+from native_body_geometry import load_body
+from bicycle_grip import palm_offsets,grip_rail,fit_prop
 
 mod=root/'combat/ProjectYakuza';source=root/'extracted/bicycle-momentum-0109/h24110_c_german'
 scene=read_scene(source/'cmn.par/cmn.bin');resources=(source/'000.par/res.bin').read_bytes()
@@ -23,6 +25,7 @@ converter=converter.replace(' tg={}',' ab=a.bones.get("vector_c_n");vq=SCENE_ROT
 converter=converter.replace("world.y=sg['ketu_c_n'].translation.y*scale","world.y=(sg['ketu_c_n'].translation.y+sample(a.bones['vector_c_n'].location,f,Vector((0,0,0))).y)*scale")
 grip=json.loads((mod/'docs/prop-attachment-repair.json').read_text())['nativeGrips']['bat'];records=[];vectors=[];rotation=None;propRecord=None
 sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
+nativeBody=load_body('F:/SteamLibrary/steamapps/common/ProjectZomboid/media/models_X/Skinned/MaleBody.x');model=json.loads((mod/'docs/bicycle-model-assets.json').read_text());rail=grip_rail(model)
 for name,path in jobs:
     sys.argv=['convert','--',name,str(path)]
     if rotation is None:
@@ -37,12 +40,11 @@ for name,path in jobs:
     output=mod/('42/media/anims_X/Bob/'+name+'.x');write(output,text,spans,blocks(bones,values,times,grip),name)
     if name=='ProjectYakuza_DD_BicycleHeat':
         current,bones,animation,spans=read(output);offsets,sourceOffsets=prop_offsets(context,bones,animation,count);dynamic=[]
-        reference=mod/'42/media/anims_X/Bob/ProjectYakuza_DD_BicycleLight01.x';_,rb,ra,_=read(reference);rp=world(rb,locals_at(rb,ra,0));calibration=offsets[0].inverted()@rp['Bip01_R_Hand'].inverted()@rp['Bip01_Prop1']
-        palm=(offsets[0]@calibration).inverted().translation;calibration=calibration@Matrix.Translation(palm)@Matrix.Rotation(math.pi/2,4,'Y')@Matrix.Translation(-palm)
+        calibration=Matrix.Rotation(math.pi/2,4,'Y');palms=palm_offsets(nativeBody,world(bones,locals_at(bones,animation,0)));front=context['bind']['Bip01_Spine1'].to_quaternion().inverted()@Vector((0,0,1));gripRows=[]
         for frame,offset in enumerate(offsets):
-            value=locals_at(bones,animation,times[frame]);pose=world(bones,value);value['Bip01_Prop1']=pose[bones['Bip01_Prop1']['parent']].inverted()@pose['Bip01_R_Hand']@offset@calibration;dynamic.append(value)
+            value=locals_at(bones,animation,times[frame]);pose=world(bones,value);seed=pose['Bip01_R_Hand']@offset@calibration;prop,row=fit_prop(pose,seed,palm_offsets(nativeBody,pose),rail,context['scale'],normal=pose['Bip01_Spine1'].to_quaternion()@front);value['Bip01_Prop1']=pose[bones['Bip01_Prop1']['parent']].inverted()@prop;dynamic.append(value);gripRows.append({'right':list(row['modelRight']),'left':list(row['modelLeft'])})
         write(output,current,{'Bip01_Prop1':spans['Bip01_Prop1']},{'Bip01_Prop1':blocks(bones,dynamic,times,None)['Bip01_Prop1']},name)
-        propRecord={'source':str(path),'sourceSha256':sha(path),'calibration':[list(row)for row in calibration],'modelSha256':json.loads((mod/'docs/bicycle-model-assets.json').read_text())['sha256'],'modelScale':.44308598137428024,'sourceBone':'buki1_r_n','sourceHand':'ude3_r_n','targetProp':'Bip01_Prop1','frames':count,'gripReference':{'path':str(reference),'sha256':sha(reference),'frame':0},'reference':'Original Y6 held-object hit and forward jump-crush weapon bone; supplied bicycle mesh retains its right-grip origin and native scale.','operation':'Original h24110 animated buki1_r_n world rotation and hand-relative position reflected into native coordinates through the source-to-native chest/arm adaptation; the original source weapon rotation and hand-relative translation are retained with a fixed bicycle calibration derived from the supplied Y5 bicycle grip and a quarter-turn about the right palm so its long frame spans the two hands. No nearby world-object track is used.'}
+        propRecord={'source':str(path),'sourceSha256':sha(path),'calibration':[list(row)for row in calibration],'modelSha256':model['sha256'],'modelScale':context['scale'],'sourceBone':'buki1_r_n','sourceHand':'ude3_r_n','targetProp':'Bip01_Prop1','frames':count,'palmOffsets':{k:list(v)for k,v in palms.items()},'palmSampling':'Actual skinned palm centroid resampled at every source frame','railVertexIndices':rail['indices'],'gripPoints':gripRows,'reference':'Original Y6 held-object hit and forward jump-crush body and weapon track, adapted to the supplied bicycle surface.','operation':'Fit the supplied bicycle frame to actual native skinned palm centres. The right palm grips the original mesh vertex and the left palm follows the mesh-surface frame rail. The model plane follows the original posed chest normal, including the flat jump-crush landing. The original weapon bone seeds the orientation when the hand/chest geometry is degenerate. All body, root, timing and recovery channels are retained.'}
     records.append({'animation':name,'source':str(path),'sourceSha256':sha(path),'output':output.relative_to(mod).as_posix(),'sha256':sha(output),'retargetSha256':sha(raw),'frames':count,'fps':30})
     vector=context['a'].bones['vector_c_n'];vectors.append([context['sample'](vector.location,f,Vector((0,0,0)))for f in range(count)])
 cutFrame=97;victimOutput=mod/records[1]['output'];_,vb,va,_=read(victimOutput);before=world(vb,locals_at(vb,va,(cutFrame-1)*160))['Bip01'].to_quaternion();after=world(vb,locals_at(vb,va,cutFrame*160))['Bip01'].to_quaternion();delta=(after@before.inverted()).to_matrix();stageYaw=math.atan2(delta[0][2],delta[2][2]);assert 32<math.degrees(stageYaw)<35
@@ -82,7 +84,7 @@ with zipfile.ZipFile(baseline)as archive:
         retired.append({'path':relative,'bytes':len(original),'sha256':hashlib.sha256(original).hexdigest()})
 report['retiredAudio']={'baseline':str(baseline),'sha256':sha(baseline),'files':retired}
 report['retargetProvenance']=[{'path':str(p),'sha256':sha(p)}for p in [Path('E:/Blender/Yakuza Rips/yakuza6/chara.par.unpack/bone/c_man_bone.gmd'),Path('C:/Users/Nik/Documents/Codex/2026-10-19/wo/work/bind.json'),Path('F:/SteamLibrary/steamapps/common/ProjectZomboid/media/models_X/Skinned/MaleBody.x'),root/'tools/combat-tests/retarget_locomotion.py',root/'tools/combat-tests/weapon_hold_geometry.py',root/'tools/combat-tests/bat_prop_motion.py']]
-report['retargetProvenance'].extend({'path':str(p),'sha256':sha(p)}for p in [Path(__file__),root/'tools/combat-tests/extract_bicycle_y6_assets.py'])
+report['retargetProvenance'].extend({'path':str(p),'sha256':sha(p)}for p in [Path(__file__),root/'tools/combat-tests/extract_bicycle_y6_assets.py',root/'tools/combat-tests/bicycle_grip.py'])
 def literal(v):return '{'+','.join(literal(x)for x in v)+'}'if isinstance(v,list)else format(v,'.9f')
 code='require "ProjectYakuza/Registry"\nProjectYakuza.PairedMotions=ProjectYakuza.PairedMotions or {}\nProjectYakuza.PairedMotions.dod_bicycle={fps=30,duration=150/30,actorAnimation="ProjectYakuza_DD_BicycleHeat",targetAnimation="ProjectYakuza_DD_BicycleHeatVictim",actor='+literal(paths[0])+',victim='+literal(paths[1])+'}\n'
 (mod/'42/media/lua/shared/ProjectYakuza/BicycleHeatPaths.lua').write_bytes(code.encode())

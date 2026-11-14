@@ -11,10 +11,11 @@ if '--inside-blender'not in sys.argv:
     for args in [['AnimationProbe',*[str(mod/c['output'])for c in report['clips']]],['PropAttachmentProbe',str(w/'bicycle-heat-prop-contract.tsv')],['BicycleHeatProbe',str(mod/'42/media/AnimSets')]]:
         subprocess.run([java,'-Xms16m','-Xmx256m','-XX:ActiveProcessorCount=2','--enable-native-access=ALL-UNNAMED','-cp','.;F:/SteamLibrary/steamapps/common/ProjectZomboid/*',*args],cwd=w,check=True)
     preserved=0
-    with zipfile.ZipFile(root/'dist/ProjectYakuza-B42-v0.109.0.zip')as archive:
+    with zipfile.ZipFile(root/'dist/ProjectYakuza-B42-v0.110.0.zip')as archive:
         for name in archive.namelist():
             path=mod/name.removeprefix('ProjectYakuza/')
-            if not name.endswith('/')and'/media/'in name and path.suffix in ['.x','.xml','.png','.wav','.ogg']and path.name not in ['ProjectYakuza_DD_BicycleHeat.x','ProjectYakuza_DD_BicycleHeatVictim.x']:
+            bicycleMotion='Bicycle'in path.name and('/media/anims_X/'in name or'/media/AnimSets/player/'in name)
+            if not name.endswith('/')and'/media/'in name and path.suffix in ['.x','.xml','.png','.wav','.ogg']and not bicycleMotion:
                 assert path.read_bytes()==archive.read(name),name;preserved+=1
     print('PASS',preserved,'other published media payloads remain byte-identical, including all models, pixels, sounds and selectors')
     raise SystemExit(0)
@@ -23,6 +24,9 @@ sys.path.insert(0,str(w))
 from mathutils import Matrix,Vector,Quaternion
 from locomotion_math import read,locals_at,world
 from weapon_hold_geometry import source_pose
+from native_body_geometry import load_body,skin_part
+from mathutils.geometry import closest_point_on_tri
+nativeBody=load_body('F:/SteamLibrary/steamapps/common/ProjectZomboid/media/models_X/Skinned/MaleBody.x');bicycleModel=json.loads((mod/'docs/bicycle-model-assets.json').read_text());meshVertices=[Vector(v)*report['propMotion']['modelScale']for v in bicycleModel['vertices']];triangles=[tuple(meshVertices[i]for i in face)for face in bicycleModel['faces']]
 
 from read_heat_scene import read_scene
 from paired_paths import bridge_scene_cuts
@@ -69,13 +73,16 @@ for role,c in enumerate(report['clips']):
             if '_Finger'in name:assert max(abs(actual[name][a][b]-locals_at(original,curves,0)[name][a][b])for a in range(4)for b in range(4))<1e-5
     grip=report['nativeGrip'];offsets=[','.join(str(v)for row in grip['nativeOffsets'][prop]for v in row)for prop in ['Bip01_Prop1','Bip01_Prop2']]
     if c['animation']=='ProjectYakuza_DD_BicycleHeat':
-        from bat_prop_motion import prop_offsets
-        expected,_=prop_offsets(context,bones,animation,count)
-        calibration=Matrix(report['propMotion']['calibration']);reference=report['propMotion']['gripReference'];assert sha(reference['path'])==reference['sha256']
-        for frame,offset in enumerate(expected):
+        front=context['bind']['Bip01_Spine1'].to_quaternion().inverted()@Vector((0,0,1));fitted=[];gaps={'R':0,'L':0}
+        for frame in range(count):
             native=world(bones,locals_at(bones,animation,frame*160));actual=native['Bip01_R_Hand'].inverted()@native['Bip01_Prop1']
-            assert max(abs(actual[a][b]-(offset@calibration)[a][b])for a in range(4)for b in range(4))<.0001,(frame,'source held weapon grip')
-        offsets[0]=';'.join(','.join(str(v)for row in matrix for v in row)for matrix in [offset@calibration for offset in expected])
+            fitted.append(actual);hands={}
+            for side in ['R','L']:
+                points=skin_part(nativeBody,native,['Bip01_'+side+'_Hand']);palm=sum(points,Vector())/len(points);point=native['Bip01_Prop1'].inverted()@palm;gap=min((point-closest_point_on_tri(point,*tri)).length for tri in triangles);gaps[side]=max(gaps[side],gap);assert gap<.00001,(frame,side,gap);hands[side]=palm;gripPoint=Vector(report['propMotion']['gripPoints'][frame]['right'if side=='R'else'left'])*report['propMotion']['modelScale'];assert (point-gripPoint).length<.00001,(frame,side,'authored surface grip')
+            axis=(hands['L']-hands['R']).normalized();normal=native['Bip01_Spine1'].to_quaternion()@front;normal-=axis*normal.dot(axis)
+            plane=native['Bip01_Prop1'].to_quaternion()@Vector((1,0,0));plane-=axis*plane.dot(axis)
+            if normal.length>.05 and plane.length>.05:assert plane.normalized().dot(normal.normalized())>.9999,(frame,'bicycle plane')
+        offsets[0]=';'.join(','.join(str(v)for row in matrix for v in row)for matrix in fitted);print('PASS actual bicycle heat palm/surface gaps',gaps)
     contracts.append('\t'.join([str(output),*offsets,str(count)]))
 (w/'bicycle-heat-prop-contract.tsv').write_text('\n'.join(contracts))
 anchor=vectors[0][0];raw=[[[float((rotation@(v-anchor)).z*report['pathScale']),float((rotation@(v-anchor)).x*report['pathScale'])]for v in values]for values in vectors]
@@ -101,16 +108,24 @@ with zipfile.ZipFile(root/'dist/ProjectYakuza-B42-v0.109.0.zip')as archive:
         previous=w/('bicycle-recovery-before-'+str(role)+'.x');previous.write_bytes(archive.read('ProjectYakuza/'+clip['output']));_,pb,pa,_=read(previous);_,nb,na,_=read(mod/clip['output']);turns=[];yawTurns=[]
         for name in pa:
             if name=='Bip01':assert pa[name][0][:97]==na[name][0][:97]and pa[name][1]==na[name][1]and pa[name][2]==na[name][2]
-            else:assert pa[name]==na[name],(role,name,'original channel values changed')
+            elif not(role==0 and name=='Bip01_Prop1'):assert pa[name]==na[name],(role,name,'original channel values changed')
         if role==0:assert pa['Bip01'][0][-1]==na['Bip01'][0][-1]
         assert all(sum(x*y for x,y in zip(a[1],b[1]))>0 for a,b in zip(na['Bip01'][0],na['Bip01'][0][1:])),(role,'root quaternion hemisphere continuity')
         for frame in range(151):
             old=locals_at(pb,pa,frame*160);new=locals_at(nb,na,frame*160)
             for name in old:
                 if name=='Bip01'and frame>=97:assert (old[name].translation-new[name].translation).length<.000001
-                else:assert max(abs(old[name][a][b]-new[name][a][b])for a in range(4)for b in range(4))<.00001,(role,frame,name)
+                elif not(role==0 and name=='Bip01_Prop1'):assert max(abs(old[name][a][b]-new[name][a][b])for a in range(4)for b in range(4))<.00001,(role,frame,name)
             if frame>=97:
                 prior=world(nb,locals_at(nb,na,(frame-1)*160))['Bip01'].to_quaternion().normalized();current=world(nb,new)['Bip01'].to_quaternion().normalized();turns.append(math.degrees(2*math.acos(min(1,abs(prior.dot(current))))));delta=(current@prior.inverted()).to_matrix();yawTurns.append(abs(math.degrees(math.atan2(delta[0][2],delta[2][2]))))
         assert yawTurns[0]<(2 if role==0 else .01)and max(turns)<(8 if role==0 else .35),(role,yawTurns[0],max(turns))
         if role==0:assert max(abs(old['Bip01'][a][b]-new['Bip01'][a][b])for a in range(4)for b in range(4))<.000001
         print('PASS recovery rotation role',role,'frame-97 yaw',yawTurns[0],'degrees, maximum recovery turn',max(turns),'degrees; original child-local channels and pre-cut samples retained')
+
+with zipfile.ZipFile(root/'dist/ProjectYakuza-B42-v0.110.0.zip')as archive:
+    for role,clip in enumerate(report['clips']):
+        previous=w/('bicycle-grip-before-'+str(role)+'.x');previous.write_bytes(archive.read('ProjectYakuza/'+clip['output']));_,_,old,_=read(previous);_,_,current,_=read(mod/clip['output'])
+        for name in old:
+            if role==0 and name=='Bip01_Prop1':continue
+            assert old[name]==current[name],(role,name,'0.110 body or recovery regression')
+print('PASS exact 0.110 body, recovery, victim and timing channels; only attacker bicycle attachment changed')

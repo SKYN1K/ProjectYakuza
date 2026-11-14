@@ -334,3 +334,8 @@
 
 !/tools/combat-tests/EmoteReadinessProbe.java
 !/tools/combat-tests/PairedPlaybackClockProbe.java
+!/tools/combat-tests/extract_bicycle_k2_assets.py
+!/tools/combat-tests/build_bicycle_k2_assets.py
+!/tools/combat-tests/bicycle_grip.py
+!/tools/combat-tests/validate_bicycle_k2_assets.py
+!/tools/combat-tests/BicycleK2Probe.java

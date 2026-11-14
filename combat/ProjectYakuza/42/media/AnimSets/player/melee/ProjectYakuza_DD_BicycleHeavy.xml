@@ -66,12 +66,12 @@
   </m_Events>
   <m_Events>
     <m_EventName>SetVariable</m_EventName>
-    <m_TimePc>0.36538461538461536</m_TimePc>
+    <m_TimePc>0.3333333333333333</m_TimePc>
     <m_ParameterValue>ProjectYakuzaHitMarker=dd_bicycle_heavy</m_ParameterValue>
   </m_Events>
   <m_Events>
     <m_EventName>AttackCollisionCheck</m_EventName>
-    <m_TimePc>0.36538461538461536</m_TimePc>
+    <m_TimePc>0.3333333333333333</m_TimePc>
     <m_ParameterValue>MeleeSwing</m_ParameterValue>
   </m_Events>
   <m_Events>

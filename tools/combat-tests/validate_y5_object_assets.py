@@ -6,7 +6,7 @@ attacks=json.loads((mod/'docs/y5-object-attacks.json').read_text())
 java='F:/SteamLibrary/steamapps/common/ProjectZomboid/jre64/bin/java.exe'
 if '--inside-blender'not in sys.argv:
     for script in ['build_bicycle_texture.py','validate_y5_object_assets.py']:
-        command=[sys.executable,str(w/script),'--validate']if script=='build_bicycle_texture.py'else ['F:/SteamLibrary/steamapps/common/Blender/blender.exe','-b','--factory-startup','-t','1','--python',str(w/script),'--','--inside-blender']
+        command=[sys.executable,str(w/script),'--validate']if script=='build_bicycle_texture.py'else ['F:/SteamLibrary/steamapps/common/Blender/blender.exe','-b','--factory-startup','-t','1','--python-exit-code','1','--python',str(w/script),'--','--inside-blender']
         result=subprocess.run(command,cwd=root,capture_output=True,text=True);print(result.stdout);assert result.returncode==0 and 'PASS'in result.stdout,result.stderr
     for args in [['AnimationProbe',*[str(mod/c['output'])for c in attacks['clips']]],['PropAttachmentProbe',str(w/'y5-object-prop-contract.tsv')],['BicycleAssetProbe',str(media)]]:
         subprocess.run([java,'-Xms16m','-Xmx256m','-XX:ActiveProcessorCount=2','--enable-native-access=ALL-UNNAMED','-cp','.;F:/SteamLibrary/steamapps/common/ProjectZomboid/*',*args],cwd=w,check=True)
@@ -45,7 +45,7 @@ for c in attacks['clips']:
     offsets=[','.join(str(v)for row in attacks['nativeGrip']['nativeOffsets'][prop]for v in row)for prop in ['Bip01_Prop1','Bip01_Prop2']]
     end=c['frames']-1;node=E.parse(media/'AnimSets/player/melee'/Path(c['output']).with_suffix('.xml').name).getroot();events=[e for e in node.findall('m_Events')if e.findtext('m_EventName')=='AttackCollisionCheck'];assert len(events)==1 and abs(float(events[0].findtext('m_TimePc'))*end-c['contactFrame'])<1e-8
     contracts.append('\t'.join([str(mod/c['output']),*offsets,str(c['frames'])]))
-assert [c['contactFrame']for c in attacks['clips']]==[15,20,21,19,19]*2
-assert [c['frames']for c in attacks['clips']]==[46,51,66,53,53]*2
+assert [c['contactFrame']for c in attacks['clips']]==[15,20,21,19,19]
+assert [c['frames']for c in attacks['clips']]==[46,51,66,53,53]
 (w/'y5-object-prop-contract.tsv').write_text('\n'.join(contracts))
-print('PASS Y5 archive provenance, 10 original ordinary attack assets,',samples,'unchanged body/finger samples, original arm directions within',math.degrees(worst),'degrees, original Y5 ordinary attacks and native model/pixel retention')
+print('PASS Y5 archive provenance, 5 original crate attack assets,',samples,'unchanged body/finger samples, original arm directions within',math.degrees(worst),'degrees, original Y5 ordinary attacks and native model/pixel retention')

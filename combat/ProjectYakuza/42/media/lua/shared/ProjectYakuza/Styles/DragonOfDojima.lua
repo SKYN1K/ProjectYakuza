@@ -1,6 +1,7 @@
 require "ProjectYakuza/Registry"
 require "ProjectYakuza/HeatScenes"
 require "ProjectYakuza/Y5ObjectMoves"
+require "ProjectYakuza/BicycleMoves"
 require "ProjectYakuza/GrabMoves"
 require "ProjectYakuza/RushMove"
 require "ProjectYakuza/CrateHeatMove"
@@ -257,9 +258,9 @@ end
 
 if ProjectYakuza.Weapons then
     local base=ProjectYakuza.getStyle("dragon_of_dojima")
-    local moves=ProjectYakuza.Y5ObjectMoves.bicycle
+    local moves=ProjectYakuza.BicycleMoves
     ProjectYakuza.Weapons.register(base.id,{
-        id="bicycle",impactFeedback="blunt",attackSpeed=1.4,standaloneHeavy=true,quickstepCancelLights=true,
+        id="bicycle",impactFeedback="blunt",attackSpeed=1,standaloneHeavy=true,quickstepCancelLights=true,
         items={"ProjectYakuza.Bicycle"},sounds=ProjectYakuza.Weapons.views[base.id].crate.sounds,
         lightAttacks=moves.lightAttacks,groundAttacks=moves.groundAttacks,
         actions={finisher=moves.finisher,quickstep=base.actions.quickstep,

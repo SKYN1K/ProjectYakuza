@@ -1,7 +1,7 @@
 {
   "operation": "Code-side numeric FK only from existing supplied PZ clips, including current paired contacts/endings and linked native finisher variants. Contacts use native collision events, authored Heat Action contacts or the documented parry fallback. Clips use contact-local endpoint/relative motion with verified original left-light and right-high-kick pose overrides, independent of charge-up pose. The high kick has right-foot height 0.721 versus planted left foot 0.093 at source frame 24; recovering arms can be faster than the striking leg. Runtime resolves the actual playing clip within the committed move family. No visual/audio/animation/model assets are generated or modified.",
   "catalog": "42/media/lua/client/ProjectYakuza/AttackTrailCatalog.lua",
-  "sha256": "eda0683c70ccdc776b51101418aa1a7f36d6440daa0cc7ef06be865ecc0a5588",
+  "sha256": "60e8a25e739f6b98390e1c21c5c6f20ec5f69814b8890a9372e022ce6bf45898",
   "clips": [
     {
       "profile": "bat",
@@ -206,25 +206,25 @@
       "animation": "ProjectYakuza_DD_BicycleGround",
       "family": "ProjectYakuza_DD_BicycleGround",
       "node": "dd_bicycle_ground",
-      "impact": 0.365384615385,
+      "impact": 0.446153846154,
       "kick": false,
       "qte": [],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BicycleGround.x",
-      "clipSha256": "02d1164d5ac6f3d71d4ce0eccd8ae9b67ea4ea77611267e4a03187fbb66684c9",
-      "samples": 53,
-      "duration": 1.7333333333333334,
+      "clipSha256": "421489dce5189fe7441fc82735dcf384c45b5693f38b1be6a0ba501b924a2300",
+      "samples": 66,
+      "duration": 2.1666666666666665,
       "windows": [
         {
           "track": "dd_trail_bicycleground_1",
-          "from": 0.5133333333333333,
-          "to": 0.8333333333333333,
-          "contact": 0.6333333333333333,
-          "limb": "leftArm",
+          "from": 0.8466666666666667,
+          "to": 1.1666666666666667,
+          "contact": 0.9666666666666667,
+          "limb": "rightArm",
           "scores": [
-            1.211934319683372,
-            1.116612014363962,
-            0.2869595123632785,
-            0.23401422940789113
+            0.5323574787737074,
+            0.7488571012744568,
+            0.1062489111943527,
+            0.19968031740361478
           ],
           "selection": "contact-local relative motion"
         }
@@ -243,7 +243,7 @@
         2.33333333333
       ],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BicycleHeat.x",
-      "clipSha256": "da46307bf20d70ec2e697de77d153eace532283f47134a2910bc12b9439912a6",
+      "clipSha256": "1270df3ee10357b43a45541956dcd3d2605bb4198660889b3fcb299e500e2e0a",
       "samples": 151,
       "duration": 5.0,
       "windows": [
@@ -283,25 +283,25 @@
       "animation": "ProjectYakuza_DD_BicycleHeavy",
       "family": "ProjectYakuza_DD_BicycleHeavy",
       "node": "dd_bicycle_heavy",
-      "impact": 0.365384615385,
+      "impact": 0.333333333333,
       "kick": false,
       "qte": [],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BicycleHeavy.x",
-      "clipSha256": "568b0a0d12fab3056cc20291fc35c412be589bd38bca22b1085cb2ef7adf1851",
-      "samples": 53,
-      "duration": 1.7333333333333334,
+      "clipSha256": "111b15ec19c4066d5020660faa9cec877475357c367e63ab9969d7410b98a7c7",
+      "samples": 67,
+      "duration": 2.2,
       "windows": [
         {
           "track": "dd_trail_bicycleheavy_1",
-          "from": 0.5133333333333333,
-          "to": 0.8333333333333333,
-          "contact": 0.6333333333333333,
-          "limb": "leftArm",
+          "from": 0.6133333333333333,
+          "to": 0.9333333333333333,
+          "contact": 0.7333333333333333,
+          "limb": "rightArm",
           "scores": [
-            1.211934319683372,
-            1.116612014363962,
-            0.2869595123632785,
-            0.23401422940789113
+            0.3839101547103502,
+            0.4212166610720189,
+            0.30574768286376675,
+            0.460122138641514
           ],
           "selection": "contact-local relative motion"
         }
@@ -313,25 +313,25 @@
       "animation": "ProjectYakuza_DD_BicycleLight01",
       "family": "ProjectYakuza_DD_BicycleLight01",
       "node": "dd_bicycle_light_01",
-      "impact": 0.333333333333,
+      "impact": 0.27397260274,
       "kick": false,
       "qte": [],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BicycleLight01.x",
-      "clipSha256": "6fd1f4eab0860bfbcdb71f65328ee5bb8bff897b03ad1b40dbacdf2d3d4e9226",
-      "samples": 46,
-      "duration": 1.5,
+      "clipSha256": "f4188ea76c080867645903f239660b6dc3c53d2c0dd12558acb763e403a14577",
+      "samples": 74,
+      "duration": 2.433333333333333,
       "windows": [
         {
           "track": "dd_trail_bicyclelight01_1",
-          "from": 0.38,
-          "to": 0.7,
-          "contact": 0.5,
+          "from": 0.5466666666666666,
+          "to": 0.8666666666666667,
+          "contact": 0.6666666666666666,
           "limb": "leftArm",
           "scores": [
-            1.1492372061441833,
-            1.0116063975178848,
-            0.2056765358200238,
-            0.2378665410666127
+            0.6192192550763451,
+            0.5938842512184437,
+            0.16483618849450968,
+            0.18837453191210726
           ],
           "selection": "contact-local relative motion"
         }
@@ -343,25 +343,25 @@
       "animation": "ProjectYakuza_DD_BicycleLight02",
       "family": "ProjectYakuza_DD_BicycleLight02",
       "node": "dd_bicycle_light_02",
-      "impact": 0.4,
+      "impact": 0.25,
       "kick": false,
       "qte": [],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BicycleLight02.x",
-      "clipSha256": "c692705f03910b6daefaf9da92c0944a66255e914eda1ca5931cfdf8a243e57a",
-      "samples": 51,
-      "duration": 1.6666666666666667,
+      "clipSha256": "8143f3b35f5daa295d3b4d9b2d8d9ed064f58b492d763a26515efeae594f3e9c",
+      "samples": 61,
+      "duration": 2.0,
       "windows": [
         {
           "track": "dd_trail_bicyclelight02_1",
-          "from": 0.5466666666666666,
-          "to": 0.8666666666666667,
-          "contact": 0.6666666666666666,
+          "from": 0.38,
+          "to": 0.7,
+          "contact": 0.5,
           "limb": "leftArm",
           "scores": [
-            1.103931089867725,
-            1.0609737540929944,
-            0.2453324540329434,
-            0.20603543424804116
+            0.6589767074604405,
+            0.6353991524555036,
+            0.2213542303803294,
+            0.19890815023318734
           ],
           "selection": "contact-local relative motion"
         }
@@ -373,25 +373,25 @@
       "animation": "ProjectYakuza_DD_BicycleLight03",
       "family": "ProjectYakuza_DD_BicycleLight03",
       "node": "dd_bicycle_light_03",
-      "impact": 0.323076923077,
+      "impact": 0.27027027027,
       "kick": false,
       "qte": [],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BicycleLight03.x",
-      "clipSha256": "524e11077c970f03255a49c02e023b8915aa13b29ea48a8627fc5b7e7819d4a9",
-      "samples": 66,
-      "duration": 2.1666666666666665,
+      "clipSha256": "0c69b801fa15e8594aad6651c2cec7dd04e504fb611bb9223dd5a4a5a6a6d944",
+      "samples": 75,
+      "duration": 2.466666666666667,
       "windows": [
         {
           "track": "dd_trail_bicyclelight03_1",
-          "from": 0.58,
-          "to": 0.8999999999999999,
-          "contact": 0.7,
+          "from": 0.5466666666666666,
+          "to": 0.8666666666666667,
+          "contact": 0.6666666666666666,
           "limb": "leftArm",
           "scores": [
-            1.3126640959745046,
-            1.3122234661164327,
-            0.36865873951931966,
-            0.4397909370265699
+            0.4666629138966799,
+            0.4094270952406991,
+            0.27637270815463466,
+            0.20168848890816468
           ],
           "selection": "contact-local relative motion"
         }
