@@ -10,7 +10,8 @@ if '--inside-blender'not in sys.argv:
     print('PASS freshly extracted supplied final-chapter crowd challenge scene, resource table, original Kiryu motion and Kiwami skeleton bytes',flush=True)
     result=subprocess.run(['F:/SteamLibrary/steamapps/common/Blender/blender.exe','-b','--factory-startup','-t','1','--python',str(Path(__file__).resolve()),'--','--inside-blender'],cwd=root,capture_output=True,text=True);print(result.stdout);assert result.returncode==0 and'PASS original Kiryu'in result.stdout,result.stderr
     java='F:/SteamLibrary/steamapps/common/ProjectZomboid/jre64/bin/java.exe'
-    for args in [['AnimationProbe',str(mod/report['output'])],['MajimaEmoteProbe','F:/SteamLibrary/steamapps/common/ProjectZomboid/media/models_X/Skinned/MaleBody.x',str(mod/report['output']),str(mod/report['selector']),str(report['frames']),'ProjectYakuza_KiryuStepUp']]:subprocess.run([java,'-Xms16m','-Xmx256m','-XX:ActiveProcessorCount=2','--enable-native-access=ALL-UNNAMED','-cp','.;F:/SteamLibrary/steamapps/common/ProjectZomboid/*',*args],cwd=w,check=True)
+    movementFile=root/'tools/step-up-native-path.csv';movementFile.write_text('\n'.join(str(x)+','+str(-z)for x,y,z in report['movement']['nativePath'])+'\n',encoding='utf-8')
+    for args in [['AnimationProbe',str(mod/report['output'])],['MajimaEmoteProbe','F:/SteamLibrary/steamapps/common/ProjectZomboid/media/models_X/Skinned/MaleBody.x',str(mod/report['output']),str(mod/report['selector']),str(report['frames']),'ProjectYakuza_KiryuStepUp'],['StepUpMotionProbe','F:/SteamLibrary/steamapps/common/ProjectZomboid/media/models_X/Skinned/MaleBody.x',str(mod/report['output']),str(mod/report['selector']),str(movementFile)]]:subprocess.run([java,'-Xms16m','-Xmx256m','-XX:ActiveProcessorCount=2','--enable-native-access=ALL-UNNAMED','-cp','.;F:/SteamLibrary/steamapps/common/ProjectZomboid/*',*args],cwd=w,check=True)
     with zipfile.ZipFile(root/'dist/ProjectYakuza-B42-v0.105.0.zip')as archive:
         checked=0
         for name in archive.namelist():
@@ -29,7 +30,7 @@ from weapon_hold_geometry import source_pose
 from native_body_geometry import load_body,skin_part
 from extract_majima_bat_emote import read_scene,resource
 from extract_kiryu_step_up_emote import subtitles
-from build_kiryu_step_up_emote import context_for
+from build_kiryu_step_up_emote import context_for,source_root
 from yk.gmt_lib import read_gmt
 for key in ['source','rig','retarget']:assert sha(report[key])==report[key+'Sha256']
 assert sha(mod/report['output'])==report['sha256']and sha(mod/report['selector'])==report['selectorSha256']
@@ -39,6 +40,12 @@ assert selection['dialogue']==[r for r in dialogue if r['firstFrame']>=2640]
 cutStart=sum(read_gmt(r['path']).animation.end_frame for r in selection['timeline'][:-1]);assert all(sha(r['path'])==r['sha256']for r in selection['timeline']);assert cutStart==selection['sceneCutStartFrame']==2609 and selection['dialogue'][-1]['lastFrame']==2820 and cutStart+219==2828
 assert report['sourceFrames']==list(range(0,220))and report['frames']==220 and report['fps']==30 and report['duration']==7.3
 _,bones,animation,_=read(mod/report['output']);_,rawBones,raw,_=read(report['retarget']);context=context_for(True);mirror=Matrix.Diagonal((1,1,-1,1));body=load_body('F:/SteamLibrary/steamapps/common/ProjectZomboid/media/models_X/Skinned/MaleBody.x');worst=0;headError=0;samples=0;headRotations=[];hands=[]
+movement=report['movement'];assert movement['bone']=='Translation_Data'and movement['axis']=='Y'and movement['sourceIncludesCenter']and not movement['deferredRotation'];assert len(movement['nativePath'])==220 and movement['nativePath'][0]==[0,0,0];assert abs(movement['scale']-context['scale'])<.0000001
+with zipfile.ZipFile(root/'dist/ProjectYakuzaEmotes-B42-v0.2.0.zip')as archive:
+    oldPath=root/'tools/step-up-020-baseline.x';oldPath.write_bytes(archive.read('ProjectYakuzaEmotes/'+report['output']));_,oldBones,oldAnimation,_=read(oldPath)
+    for bone,channels in animation.items():
+        if bone=='Translation_Data':assert channels[0]==oldAnimation[bone][0]and channels[1]==oldAnimation[bone][1]
+        else:assert channels==oldAnimation[bone],bone
 for channels in animation.values():
     for keys in channels.values():assert len(keys)==220 and all(t==i*160 and all(math.isfinite(v)for v in values)for i,(t,values)in enumerate(keys))
 for i,frame in enumerate(report['sourceFrames']):
@@ -48,10 +55,11 @@ for i,frame in enumerate(report['sourceFrames']):
             name='Bip01_'+side+'_'+bone;childName='Bip01_'+side+'_'+child;suffix='_'+side.lower()+'_n';expected=(adapt@(mirror@(source[sc+suffix].translation-source[sb+suffix].translation))).normalized();actual=(pose[childName].translation-pose[name].translation).normalized();error=math.acos(max(-1,min(1,expected.dot(actual))));worst=max(worst,error);assert error<.001;changed.add(name)
         changed.add('Bip01_'+side+'_Hand')
     for name in local:
-        if name in changed:continue
+        if name in changed or name=='Translation_Data':continue
         assert max(abs(local[name][a][b]-original[name][a][b])for a in range(4)for b in range(4))<.00001;samples+=1
     for name,sb in [('Bip01_Head','face_c_n'),('Bip01_Neck','kubi_c_n')]:
         expected=(mirror@source[sb]@mirror).to_quaternion()@context['bind'][name].to_quaternion();error=1-abs(expected.dot(pose[name].to_quaternion()));headError=max(headError,error);assert error<.00001
+    delta=(source_root(context,frame)-source_root(context,0))*context['scale'];expected=Vector((delta.x,0,-delta.z));actual=local['Translation_Data'].translation-original['Translation_Data'].translation;assert (actual-expected).length<.000002 and (Vector(movement['nativePath'][i])-expected).length<.000002
     headRotations.append((pose['Bip01_Spine1'].inverted()@pose['Bip01_Head']).to_quaternion());hands.append((pose['Bip01_Spine1'].inverted()@pose['Bip01_L_Hand']).translation);assert abs(min(p.y for p in skin_part(body,pose,report['ground']['feet']))-report['ground']['floor'])<.00002;originalWorld=world(rawBones,original);assert abs(pose['Bip01'].translation.x-originalWorld['Bip01'].translation.x)<.00001 and abs(pose['Bip01'].translation.z-originalWorld['Bip01'].translation.z)<.00001
 assert (hands[-1]-hands[0]).length>.04
-print('PASS original Kiryu subtitle/cut binding, 220 contiguous samples,',samples,'preserved body/finger samples; head/neck quaternion error',headError,'; source arm error',math.degrees(worst),'degrees; every native sole grounded, in-place root and original arm/hand challenge movement')
+print('PASS original Kiryu subtitle/cut binding, 220 contiguous samples,',samples,'preserved body/finger samples; head/neck quaternion error',headError,'; source arm error',math.degrees(worst),'degrees; every native sole grounded, original full-hierarchy deferred path, all 34 body channels unchanged from 0.2.0')

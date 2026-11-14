@@ -16,7 +16,7 @@ for path in (main/'42/media/lua').rglob('*'):
 for path in (media/'lua').rglob('*.lua'):
     text=path.read_text(encoding='utf-8');assert 'require "ProjectYakuza/'not in text and 'PY.activeActions'not in text
     for module in re.findall(r'require\s+"(ProjectYakuzaEmotes/[^"\n]+)"',text):assert any((media/'lua'/side/(module+'.lua')).is_file()for side in ['shared','client','server'])
-info=(addon/'42/mod.info').read_text(encoding='utf-8');assert 'id=ProjectYakuzaEmotes'in info and 'version=0.2.0'in info and not re.search(r'^require\s*=',info,re.M)
+info=(addon/'42/mod.info').read_text(encoding='utf-8');version=re.search(r'^version=(\d+\.\d+\.\d+)$',info,re.M).group(1);assert 'id=ProjectYakuzaEmotes'in info and version and not re.search(r'^require\s*=',info,re.M)
 assert 'id=ProjectYakuza\n'in(main/'42/mod.info').read_text()and re.search(r'^version=\d+\.\d+\.\d+$',(main/'42/mod.info').read_text(),re.M)
 assert not list(media.rglob('*.png'))and not list(media.rglob('*.ogg'))and not list(media.rglob('*.wav'))and not(media/'models_X').exists()
 with zipfile.ZipFile(root/'dist/ProjectYakuza-B42-v0.106.0.zip')as archive:
@@ -31,5 +31,5 @@ with zipfile.ZipFile(root/'dist/ProjectYakuzaEmotes-B42-v0.1.0.zip')as archive:
     for name in archive.namelist():
         if name.endswith('/')or Path(name).suffix not in ['.x','.xml']:continue
         path=addon/name.removeprefix('ProjectYakuzaEmotes/');assert path.read_bytes()==archive.read(name),name;checked+=1
-assert 'ProjectYakuzaEmotes.VERSION="0.2.0"'in(media/'lua/shared/ProjectYakuzaEmotes/EmoteSpears.lua').read_text(encoding='utf-8')
+assert ('ProjectYakuzaEmotes.VERSION="'+version+'"')in(media/'lua/shared/ProjectYakuzaEmotes/EmoteSpears.lua').read_text(encoding='utf-8')
 print('PASS standalone isolation: 25 clips/selectors;',checked,'existing emote media byte-identical;',retained,'combat media unchanged; separate IDs, standalone require graph and no new textures/models/audio')

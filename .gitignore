@@ -329,3 +329,5 @@
 !/tools/combat-tests/build_open_grab_heat_presentation.py
 !/tools/combat-tests/validate_open_grab_heat_assets.py
 !/tools/combat-tests/OpenGrabHeatProbe.java
+
+!/tools/combat-tests/StepUpMotionProbe.java

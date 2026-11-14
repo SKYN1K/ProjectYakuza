@@ -1,6 +1,6 @@
-# Project Yakuza Emotes 0.2.0
+# Project Yakuza Emotes 0.2.1
 
-- Added Kiryu: Step Up from Kiwami 1's final-chapter crowd challenge with Haruka. Empty both hands and choose it from the Project Yakuza Emotes category in the native emote wheel.
-- Preserves the complete original 7.3-second shot at 30 fps, with native Human proportions, supplied idle fingers and grounded feet. Uses native cancellable emote playback and replicated parameters.
-- Existing Majima, Lau and Kiryu Bad Luck animation/selector bytes remain unchanged. Combat stays at 0.107.0; the addon still requires neither combat nor Custom Voice Framework.
-- Offline original-source/native import, geometry, 191 emote assertions, three actual menu provider configurations, Lua compilation, isolation and zero-comment checks pass. Installed locally without launching Project Zomboid. Visual blending/live multiplayer still need gameplay testing.
+- Kiryu: Step Up now moves the character along the original Kiwami 1 footsteps instead of playing in place. Its complete 7.3-second timing and all 34 body/finger channels remain unchanged.
+- The original planar displacement drives PZ’s native Translation_Data track. Normal native movement, collision handling, cancellation and multiplayer state remain in control; no Lua teleporting or Java bridge is added.
+- Other emotes and all combat files remain unchanged. No new textures, models, voices or sounds are added.
+- Original-source, native movement/import, menu, standalone-isolation and zero-comment checks pass. Installed locally without launching Project Zomboid. Live movement blending, obstacle contacts and multiplayer still need gameplay testing.
