@@ -1,6 +1,6 @@
-# Project Yakuza Emotes 0.2.1
+# Project Yakuza Emotes 0.2.2
 
-- Kiryu: Step Up now moves the character along the original Kiwami 1 footsteps instead of playing in place. Its complete 7.3-second timing and all 34 body/finger channels remain unchanged.
-- The original planar displacement drives PZ’s native Translation_Data track. Normal native movement, collision handling, cancellation and multiplayer state remain in control; no Lua teleporting or Java bridge is added.
-- Other emotes and all combat files remain unchanged. No new textures, models, voices or sounds are added.
-- Original-source, native movement/import, menu, standalone-isolation and zero-comment checks pass. Installed locally without launching Project Zomboid. Live movement blending, obstacle contacts and multiplayer still need gameplay testing.
+- Replaced Majima: Bat Point with the opening batting-center story encounter gesture during the Kiryu-chan greeting: bat behind the head, forward point and lowering. The earlier version selected a later gesture from the same cutscene.
+- Uses the original cut 002 Majima and independent metal-bat tracks, frames 70..160 at 30 fps over 3 seconds. Preserves the original native animation identifier, source body motion, grounded soles and calibrated native bat grip.
+- Retains Step Up’s original-footstep character movement from 0.2.1. Other emote animation/selector files and all combat files remain byte-identical.
+- Original-source/subtitle binding, native import, hand/bat alignment, grounding, Step Up movement, menu coexistence, standalone isolation and zero-comment checks pass offline. Installed locally without launching Project Zomboid. Live blending and multiplayer still need gameplay testing.

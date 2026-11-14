@@ -15,7 +15,7 @@ if '--inside-blender'not in sys.argv:
     with zipfile.ZipFile(root/'dist/ProjectYakuza-B42-v0.105.0.zip')as archive:
         checked=0
         for name in archive.namelist():
-            if name.endswith('/ProjectYakuza_LauSpearGround.x'):continue
+            if name.endswith('/ProjectYakuza_LauSpearGround.x')or name.endswith('/ProjectYakuza_MajimaBatPoint.x'):continue
             path=root/'combat'/name
             if not path.exists():path=mod/name.removeprefix('ProjectYakuza/')
             if '/media/'in name and path.suffix in ['.x','.xml','.png','.wav','.ogg']and not name.endswith('/'):
