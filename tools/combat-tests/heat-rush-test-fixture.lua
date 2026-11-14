@@ -660,8 +660,8 @@ do
  for _,kind in ipairs({'groundHeat','grabHeat'})do
   PY.resetPlayer(p,'runtime_alias');p.x=0;p.y=0;z.x=1.1;z.y=0;z.health=10;z.useless=false;z.knock=false;phase=nil;PY.setHeat(p,before)
   z.isOnFloor=kind=='groundHeat'and function()return true end or oldFloor
-  local move=style.actions[kind];local pose=R.placement(p,z,move)
-  check(PY.requestAction(p,kind,nil,{z=z,fromGrab=kind=='grabHeat',pose=pose}),'native '..kind..' accepts its own action definition')
+  local variant=kind=='grabHeat'and 'open'or nil;local move=style.actions[kind];if move.variants then move=move.variants[variant or 'default']end;local pose=R.placement(p,z,move)
+  check(PY.requestAction(p,kind,variant,{z=z,fromGrab=kind=='grabHeat',pose=pose}),'native '..kind..' accepts its own action definition')
   context=PY.activeActions[p];action=context.timedAction
   check(action:isValid()and R.validFor(p,z,move),'pending '..kind..' remains eligible before Runtime startup: '..tostring(action:isValid())..'/'..tostring(R.validFor(p,z,move)))
   fire('OnPlayerUpdate',p);phase=.01;fire('OnPlayerUpdate',p)

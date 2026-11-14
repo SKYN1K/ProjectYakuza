@@ -121,7 +121,7 @@ ProjectYakuza.registerStyle({
             double_after_3={enabled=true,afterLight=3,animation="ProjectYakuza_DD_DoubleFinisher03",nodeValue="dd_double_03",damageMultiplier=1.25,duration=2.033333333333333/1.6,speed=1.6,impact=0.39344262295081966,reaction="enemy_03",fullBody=true,double=true},
             double_after_4={enabled=true,afterLight=4,animation="ProjectYakuza_DD_DoubleFinisher04",nodeValue="dd_double_04",damageMultiplier=1.25,duration=2.3666666666666667/1.6,speed=1.6,impact=0.36619718309859156,reaction="enemy_04",fullBody=true,double=true},
         } },
-        grabHeat=ProjectYakuza.HeatScenes.action("wall",ProjectYakuza.WallHeatMove),
+        grabHeat={enabled=true,variants={default=ProjectYakuza.HeatScenes.action("wall",ProjectYakuza.WallHeatMove),open=ProjectYakuza.HeatScenes.action("openGrab",ProjectYakuza.OpenGrabHeatMove)}},
         groundHeat=ProjectYakuza.HeatScenes.action("ground",ProjectYakuza.GroundHeatMove),
         grab = {enabled=true,releaseOnAimLoss=false,breakout={chance=.05,intervalMs=1000,firstCheckMs=1000,animation="ProjectYakuza_DD_GrabEscape",targetAnimation="ProjectYakuza_DD_GrabEscapeVictim",duration=70/30},throwContactMs=70/30*1000,throwDuration=77/30,throwCrowd={radius=1.1,forward=.45,maxTargets=4,force=.65},distance=.5,lateral=.019355,throwOffset={forward=.253831,right=.019526},strikes=ProjectYakuza.GrabMoves,requiresTarget=true,animation="ProjectYakuza_DD_Grab",targetAnimation="ProjectYakuza_DD_GrabVictimEnter"},
         parry = {enabled=true,animation="ProjectYakuza_DD_TigerDrop",nodeValue="dd_tiger_drop",duration=1.1,speed=1,requiresTarget=true,targetAnimation="Zombie_ShotBelly",cooldownMs=60000,windowMs=300},

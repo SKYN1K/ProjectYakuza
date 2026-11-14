@@ -1,6 +1,7 @@
 require "ProjectYakuza/Registry"
 require "ProjectYakuza/AttackEffects"
 require "ProjectYakuza/HeatPresentationData"
+require "ProjectYakuza/OpenGrabHeatPresentation"
 local PY=ProjectYakuza
 local C={states=setmetatable({}, {__mode="k"}),maxActors=8,lateMs=100,remoteLateMs=350,prepareMs=160}
 PY.HeatActionPresentation=C

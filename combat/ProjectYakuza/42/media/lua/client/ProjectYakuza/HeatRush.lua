@@ -346,7 +346,7 @@ PY.registerStyleActionHandler("dragon_of_dojima","heatAction",{
         local pose=ticket.granted or ticket.pose
         if not pose and not c.action.grabHeat then pose=R.placement(p,ticket.z,c.action);ticket.pose=pose end
         if pose then pose.motion=R.motion(c.action);pose.duration=R.durationFor(c.action)end
-        return pose~=nil and R.space(p,pose)and (c.action.grabHeat or R.clearance(p,{x=pose.x,y=pose.y,fx=pose.fx,fy=pose.fy,motion=R.motion(c.action),duration=R.durationFor(c.action)})),"blocked_space"
+        return pose~=nil and R.space(p,pose)and (c.action.grabHeat and c.action.requiresWall~=false and PY.GrabRules.wallPresent(p,ticket.pose or pose)or (not c.action.grabHeat or c.action.requiresWall==false)and R.clearance(p,{x=pose.x,y=pose.y,fx=pose.fx,fy=pose.fy,motion=R.motion(c.action),duration=R.durationFor(c.action)})),"blocked_space"
     end,
     start=function(c)
         PY.resetPlayer(c.player,"heat_rush_started");c.timedAction=A:new(c);c.requestedAt=now();return true

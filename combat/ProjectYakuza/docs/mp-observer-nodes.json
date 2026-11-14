@@ -862,6 +862,31 @@
     "group": "actions"
   },
   {
+    "id": "ProjectYakuza_DD_OpenGrabHeat",
+    "animation": "ProjectYakuza_DD_OpenGrabHeat",
+    "loop": false,
+    "conditions": [
+      {
+        "name": "ProjectYakuzaActive",
+        "value": "true"
+      },
+      {
+        "name": "ProjectYakuzaStyle",
+        "value": "dragon_of_dojima"
+      },
+      {
+        "name": "ProjectYakuzaWeaponProfile",
+        "value": ""
+      },
+      {
+        "name": "PerformingAction",
+        "value": "ProjectYakuza_DD_OpenGrabHeat"
+      }
+    ],
+    "priority": 180,
+    "group": "actions"
+  },
+  {
     "id": "ProjectYakuza_DD_Throw",
     "animation": "ProjectYakuza_DD_Throw",
     "loop": false,

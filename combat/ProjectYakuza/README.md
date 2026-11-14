@@ -2,7 +2,7 @@
 
 Project Yakuza is a Build 42 combat mod and a framework for independent fighting-style addons. Dragon of Dojima uses supplied Yakuza/Kiwami/Lost Judgment animations, textures and sounds. Other styles register their own moves, assets and controllers without copying the framework.
 
-**Version 0.107.0 · Lua API 3 · MP protocol 2.** API 1 style registrations remain supported. Internal namespace/mod dependency: `ProjectYakuza`. Display name: Project Yakuza.
+**Version 0.108.0 · Lua API 3 · MP protocol 2.** API 1 style registrations remain supported. Internal namespace/mod dependency: `ProjectYakuza`. Display name: Project Yakuza.
 
 ## Install and play
 
@@ -27,7 +27,7 @@ Katana Heat Actions use a separate rebindable control (default RMB + MMB), only 
 | RMB + N | Extreme Heat activation; no manual off toggle |
 | Hold Z | Style selector |
 
-All mod controls are rebindable under **Options > Mods > Project Yakuza**. Shift only uses native running. RMB + G grabs, a fresh G press throws the held zombie, and LMB strikes while holding. Releasing RMB keeps the grab active; there is no manual let-go input. MMB performs an eligible wall Heat Action. Throws can knock down up to four nearby standing zombies. See [Grabs](docs/GRABS.md). Normal ground attacks use the supplied stomps.
+All mod controls are rebindable under **Options > Mods > Project Yakuza**. Shift only uses native running. RMB + G grabs, a fresh G press throws the held zombie, and LMB strikes while holding. Releasing RMB keeps the grab active; there is no manual let-go input. With RMB held, MMB performs a Heat Action on the grabbed zombie: the wall action takes priority beside a suitable wall, otherwise the original Yakuza 6 shoulder throw and follow-up is available in clear open space. Both cost one full heat stock. Throws can knock down up to four nearby standing zombies. See [Grabs](docs/GRABS.md). Normal ground attacks use the supplied stomps.
 
 ## Included systems
 

@@ -111,13 +111,13 @@ for i=1,4 do
 end
 PY.cancelAction(p,'released');check(not z.locked and not z.useless and not z.ignore and z.deferred and not p.blocked and p.deferred,'release restores every owned native flag')
 local saved=R.capture(z);z.locked=true;R.keep(z);R.restore(z,saved);check(z.locked,'cleanup preserves a pre-existing state-machine lock');z.locked=false
-local pose=R.wall(p,z,style.actions.grabHeat);check(pose and pose.fx==0 and pose.fy==1,'wall action faces its solid wall along the original forward motion')
+local pose=R.wall(p,z,style.actions.grabHeat.variants.default);check(pose and pose.fx==0 and pose.fy==1,'wall action faces its solid wall along the original forward motion')
 do
  local originalCell=getCell;local oldX,oldY,oldZX,oldZY=p.x,p.y,z.x,z.y
  for _,v in ipairs({{0,1,.5,.2,.5,.9},{0,-1,.5,1.8,.5,1.1},{1,0,.2,.5,.9,.5},{-1,0,1.8,.5,1.1,.5}})do
   local nx,ny=v[1],v[2];p.x,p.y,z.x,z.y=v[3],v[4],v[5],v[6]
   getCell=function()return {getGridSquare=function(_,x,y)return {x=x,y=y,isWallTo=function(a,b)return nx==0 and a.y==1 and b.y==0 or ny==0 and a.x==1 and b.x==0 end,isWindowTo=function()return false end,isDoorTo=function()return false end}end}end
-  local aligned=R.wall(p,z,style.actions.grabHeat)
+  local aligned=R.wall(p,z,style.actions.grabHeat.variants.default)
   check(aligned and aligned.fx==nx and aligned.fy==ny,'wall facing follows the selected wall normal in every direction')
   local motion=PY.PairedMotions.dod_wall
   for _,path in ipairs({motion.actor,motion.victim})do
@@ -129,11 +129,11 @@ do
  end
  getCell=originalCell;p.x,p.y,z.x,z.y=oldX,oldY,oldZX,oldZY
 end
-window=true;check(not R.wall(p,z,style.actions.grabHeat),'windows never count as solid heat-action walls');window=false
-door=true;check(not R.wall(p,z,style.actions.grabHeat),'doors never count as solid heat-action walls');door=false
-blocked=true;check(not R.wall(p,z,style.actions.grabHeat),'blocked source pair paths reject the heat action');blocked=false
-wall=false;check(not R.wall(p,z,style.actions.grabHeat),'no wall means no heat action');wall=true
-p.data.ProjectYakuzaHeat=100;a=startGrab();local target,move=G.candidate(p,true);check(target==z and move==style.actions.grabHeat,'eligible held target exposes the heat-action prompt')
+window=true;check(not R.wall(p,z,style.actions.grabHeat.variants.default),'windows never count as solid heat-action walls');window=false
+door=true;check(not R.wall(p,z,style.actions.grabHeat.variants.default),'doors never count as solid heat-action walls');door=false
+blocked=true;check(not R.wall(p,z,style.actions.grabHeat.variants.default),'blocked source pair paths reject the heat action');blocked=false
+wall=false;check(not R.wall(p,z,style.actions.grabHeat.variants.default),'no wall means no wall-specific heat action');wall=true
+p.data.ProjectYakuzaHeat=100;a=startGrab();local target,move=G.candidate(p,true);check(target==z and move==style.actions.grabHeat.variants.default,'eligible held target exposes the heat-action prompt')
 check(G.input(p,a,false,true),'heat-action input takes priority near a wall')
 check(G.updatePending(p),'wall action consumes the held-target ticket')
 local c=PY.activeActions[p];check(c and c.kind=='grabHeat'and c.target.fromGrab,'grab transfers into the paired heat-action framework')
@@ -141,6 +141,27 @@ check(a.cleaned and not z.locked,'handoff releases the old grab lock before the 
 local action=c.timedAction;action:start();check(p.invincible and p.ghost and p.blocked,'wall action uses full-duration protection and movement lock')
 action:cleanup(false);check(not p.invincible and p.ghost,'ending restores invulnerability immediately while target grace remains')
 clock=clock+600;PY.HeatActions.tick();check(not p.ghost and not z.locked,'target grace and victim lock clean up')
+
+do
+ wall=false;window=false;door=false;blocked=false;stamina=1;p.x=.5;p.y=.2;z.x=.5;z.y=.9;z.floor=false;z.knock=false;z.useless=false;z.reaction='';z.health=1
+ local cost=PY.Heat.stockSize(p);p.data.ProjectYakuzaHeat=cost;local held=startGrab();local target,move,pose,variant=G.candidate(p,true)
+ check(target==z and variant=='open'and move==style.actions.grabHeat.variants.open and pose.motion==PY.PairedMotions.dod_grab_open,'open space selects the single held target and original shoulder throw')
+ p.data.ProjectYakuzaHeat=cost-.01;check(not G.candidate(p,true),'open grab Heat Action rejects less than one full stock');p.data.ProjectYakuzaHeat=cost
+ blocked=true;check(not G.candidate(p,true),'blocked paths never expose an open grab action');blocked=false
+ check(G.input(p,held,false,true),'Heat Action input selects open-space variant')
+ local pending=G.pending[p];check(G.input(p,held,true,true)and G.pending[p]==pending and held.phaseName=='hold','pending handoff cannot be replaced by repeated Heat input or a grab strike')
+ blocked=true;check(not G.updatePending(p)and PY.activeActions[p].timedAction==held and not held.cleaned and p.data.ProjectYakuzaHeat==cost,'new obstruction preserves the old grab and Heat before handoff');blocked=false
+ check(G.input(p,held,false,true),'clear-space retry uses the same held victim')
+ local request=G.pending[p].request;check(G.receive('heatRushGranted',p,{request=request,grabHeat=true,grabVariant='default',action=23}),'mismatched server variant is rejected');check(not G.pending[p]and not held.cleaned and p.data.ProjectYakuzaHeat==cost,'mismatched grant cannot consume Heat or release the grab')
+ check(G.input(p,held,false,true)and G.updatePending(p),'one full stock accepts open-space handoff')
+ local context=PY.activeActions[p];local heat=context.timedAction;check(context.kind=='grabHeat'and context.variant=='open'and context.target.z==z and held.cleaned,'native variant handoff retains the exact grabbed target')
+ z.health=1;heat:start();track=.01;clock=clock+10;heat:update();check(context.heatPaid and p.data.ProjectYakuzaHeat==0,'confirmed open-space playback spends exactly one stock');heat:update();check(p.data.ProjectYakuzaHeat==0,'repeated native update cannot spend twice')
+ for i in ipairs(context.action.contacts)do heat.success[i]=true;heat:contact(i);heat:contact(i)end
+ check(not z:isDead()and heat.pendingDamage and heat.pendingDamage>0,'lethal throw damage waits for the complete paired animation')
+ heat:cleanup(true);check(z:isDead()and not z.locked and not z.useless and not p.invincible,'completion settles lethal damage once and restores owned state')
+ clock=clock+600;PY.HeatActions.tick();check(not p.ghost,'open action protection grace expires');z.health=10;z.floor=false;z.knock=false;z.reaction='';wall=true;p.data.ProjectYakuzaHeat=100
+end
+
 a=startGrab();stamina=.01;clock=clock+20;a:update();check(a.cleaned and not z.locked,'exhaustion releases the hold and AI lock')
 a=startGrab();z.floor=true;clock=clock+20;a:update();check(a.cleaned and not z.locked,'invalid victim state releases the hold');z.floor=false
 local originalMoves=style.actions.grab.strikes

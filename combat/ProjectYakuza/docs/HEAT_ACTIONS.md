@@ -1,5 +1,7 @@
 # Heat Action lifecycle
 
+Version 0.108.0 adds a one-stock [open-space grab Heat Action](OPEN_GRAB_HEAT_ACTION.md). With a zombie held, RMB plus the Heat Action binding chooses the original wall scene beside a valid wall or a Yakuza 6 shoulder throw/follow-up in clear space. Native-confirmed payment and server-authoritative held-target ownership apply to both.
+
 Version 0.98.0 adds the [original Y6 knife Heat Action](KNIFE_HEAT_ACTION.md) for DoD's registered knife items, with the same physical RMB, neutral-combo, confirmed-payment and shared protection lifecycle.
 
 Version 0.97.0 adds the [Yakuza 5 bicycle action](BICYCLE.md) with the same stock/input/payment lifecycle. It fits the katana's native wrist and hilt pivot while preserving the original release/catch and source weapon orientation. Victim staging follows native anatomy through the slash, punch and thrust. Hit times remain 24/44/64; the physical slash passes the torso at source frame 23 before its existing damage event.

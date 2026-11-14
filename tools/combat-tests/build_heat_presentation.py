@@ -13,7 +13,7 @@ local function add(style,move)
 rows[#rows+1]={animation=move.animation,targetAnimation=move.targetAnimation,contacts=move.contacts,sounds=style.sounds,baseSounds=base.sounds,motion=motion,audioEvents=move.audioEvents}
  if move.qteFailure and move.qteFailure.paired then local f=move.qteFailure;local c={};for k,v in pairs(move.contacts[#move.contacts])do c[k]=v end;c.atMs=f.contactMs;c.index=#move.contacts;rows[#rows+1]={animation=f.animation,targetAnimation=f.targetAnimation,contacts={c},sounds=style.sounds,baseSounds=base.sounds,motion=PY.PairedMotions[f.motionId],audioEvents=f.audioEvents}end
 end
-add(base,base.actions.heatAction);add(base,base.actions.grabHeat);add(base,base.actions.groundHeat)
+add(base,base.actions.heatAction);add(base,base.actions.grabHeat.variants.default);add(base,base.actions.groundHeat)
 for _,profile in ipairs({"blade","bottle","crate","bat","bicycle","knife"})do local s=PY.Weapons.views[base.id][profile];add(s,s.actions.heatAction)end
 return enc(rows)'''
 parts=['require=function()end']

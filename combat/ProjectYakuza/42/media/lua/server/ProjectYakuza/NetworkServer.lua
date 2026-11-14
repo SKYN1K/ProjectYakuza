@@ -32,7 +32,7 @@ function S.restoreProtection(p,s)
     local protection=s.protection;if not protection then return end
     p:setGhostMode(protection.ghost);p:setInvincible(protection.invincible);s.protection=nil
 end
-function S.release(p)
+function S.release(p,heatRequest)
     local s=S.players[p:getOnlineID()];local lease=s and s.grab
     if not lease then return end
     local z=lease.z;S.grabs[z]=nil;s.grab=nil
@@ -41,7 +41,7 @@ function S.release(p)
     if lease.thrown then ProjectYakuza.GrabRules.land(z)
     elseif z:getHitReaction()=="ProjectYakuzaGrabbed"then z:setHitReaction("");z:reportEvent("ActiveAnimFinishing")end
     if not z:isDead() and z:getTarget()==nil and lease.target then z:setTarget(lease.target) end
-    S.fanout(p,"grabEnd",{player=p:getOnlineID(),zombie=z:getOnlineID(),useless=lease.useless,ignore=lease.ignore,deferred=lease.deferred,locked=lease.locked,grabId=lease.id,landed=lease.thrown==true})
+    S.fanout(p,"grabEnd",{player=p:getOnlineID(),zombie=z:getOnlineID(),useless=lease.useless,ignore=lease.ignore,deferred=lease.deferred,locked=lease.locked,grabId=lease.id,landed=lease.thrown==true,heatRequest=heatRequest})
 end
 function S.extremeMoveAllowed(s,style,move,swing,active)
     if not move or not move.extremeHeat or active then return true end

@@ -71,11 +71,15 @@ function H.command(p,command,a,s)
         local ready
         local wallPose
         if grabHeat then
+            move=PY.GrabRules.heatDefinition(style and style.actions.grabHeat,a.grabVariant)
             local lease=s.grab
             local cost=move and (move.heatStocks or 0)*PY.HeatRules.stockSize(style)or 0
             local available=move and move.useExtremeFuel and s.packet.extreme and s.packet.fuel or s.packet.heat
             ready=lease and not lease.breaking and lease.z==z and lease.weapon==p:getPrimaryHandItem()and move and move.enabled==true and move.grabHeat==true and s.packet.weaponProfile==""and s.packet.rightAim==true and PY.HeatRules.canAfford(available,cost)
-            wallPose=ready and PY.GrabRules.wall(p,z,move)
+            if ready then
+                local selected,pose,variant=PY.GrabRules.heatSelection(p,z,style.actions.grabHeat)
+                if selected==move and variant==(a.grabVariant or "default")then wallPose=pose end
+            end
             ready=ready and wallPose
         elseif groundHeat then
             local cost=move and (move.heatStocks or 0)*PY.HeatRules.stockSize(style)or 0
@@ -90,17 +94,17 @@ function H.command(p,command,a,s)
         local pose=wallPose or R.placement(p,z,move)
         if not pose then H.reply(p,"heatRushDenied",{request=a.request});return end
         if not P.path(p,z:getX(),z:getY())or not R.space(p,pose)then H.reply(p,"heatRushDenied",{request=a.request});return end
-        if grabHeat then S.release(p)end
+        if grabHeat then S.release(p,a.request)end
         H.serial=H.serial+1;pose.action=H.serial;pose.p=p;pose.z=z;pose.weapon=p:getPrimaryHandItem();pose.style=style.id;pose.expires=t+7000;pose.presses={};pose.hits={};pose.move=move;pose.definition=R.qte(move);if move.qteStages then pose.hits.qte=pose.presses end;pose.contacts=R.contacts(move);pose.old=R.capture(z)
         H.leases[p]=pose;H.held[z]=pose;s.rushCount=0
-        H.reply(p,"heatRushGranted",{request=a.request,action=pose.action,zombie=z:getOnlineID(),targetKind=R.targetKind(z),x=pose.x,y=pose.y,fx=pose.fx,fy=pose.fy,grabHeat=grabHeat});return
+        H.reply(p,"heatRushGranted",{request=a.request,action=pose.action,zombie=z:getOnlineID(),targetKind=R.targetKind(z),x=pose.x,y=pose.y,fx=pose.fx,fy=pose.fy,grabHeat=grabHeat,grabVariant=grabHeat and(a.grabVariant or "default")or nil});return
     end
     if not job or job.action~=a.action then return end
     if job.weapon~=p:getPrimaryHandItem()or job.style~=s.packet.style or t>job.expires then H.finish(p,false);return end
     if command=="heatRushReady"then
         if job.started then return end
         if job.move.groundFacing=="up"and job.z:isFallOnFront()then H.finish(p,false);return end
-        if job.move.grabHeat and not PY.GrabRules.wallPresent(p,job)or not job.move.grabHeat and not R.clearance(p,job)then H.finish(p,false);return end
+        if job.move.grabHeat and job.move.requiresWall~=false and not PY.GrabRules.wallPresent(p,job)or (not job.move.grabHeat or job.move.requiresWall==false)and not R.clearance(p,job)or not R.space(p,job)then H.finish(p,false);return end
         job.started=t;job.expires=t+R.wallDuration(job.move)*1000+1000
         job.old=R.lock(job.z,job.move.targetAnimation);PY.HeatActions.begin(p,job,R.protection(job.move))
         S.fanout(p,"heatRushPose",{player=p:getOnlineID(),action=job.action,zombie=job.z:getOnlineID(),targetKind=R.targetKind(job.z),x=job.x,y=job.y,fx=job.fx,fy=job.fy,motionId=job.move.motionId,node=job.move.nodeValue,age=0});return

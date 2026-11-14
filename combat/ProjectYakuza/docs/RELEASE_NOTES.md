@@ -1,6 +1,7 @@
-# Project Yakuza 0.107.0
+# Project Yakuza 0.108.0
 
-- Removed the bundled Majima, Lau Ka Long and Kiryu cutscene emotes from combat. Their Lua hooks, selectors, animation assets and dedicated documents now belong to the standalone Project Yakuza Emotes 0.1.0 mod.
-- Install and enable the separate addon if you want the gestures. It works without Project Yakuza combat or Custom Voice Framework and remains compatible with either.
-- Combat gameplay and all retained combat media are unchanged. The addon preserves Majima/Kiryu and extends Lau by 2.5 seconds using original continuation frames, with support for all native spears and modded spear-class fallback. Native cancellable playback is retained.
-- All 31 offline Kahlua suites, independent Lua compilation, native motion checks, split/reference validation, CVF load-order integrations and zero-comment checks pass. Local migration backs up changed/removed files and verifies both installed mod trees. Project Zomboid was not launched; live visual/MP testing remains outstanding.
+- Added a grabbed-target Heat Action in open space using the original Yakuza 6 shoulder throw and follow-up. Hold a zombie, keep RMB held and press the configured Heat Action binding, MMB by default. Costs one full stock, or the existing Extreme Heat fuel equivalent.
+- The original wall action keeps priority beside a valid wall. The open variant checks space for both complete paths and uses only the zombie already held. No weapon, nearby object or second enemy is needed.
+- Retains 225 original source samples at 30 fps over about 7.47 seconds, the original two contact timings, nine original non-voice sound streams and source voice-label timing. Native body proportions and floor clearance keep the paired actors grounded. Existing combat damage balance and deferred lethal settlement are retained.
+- Revalidates ownership, placement and Heat before handoff. Server-selected variants and a matched handoff token keep multiplayer grab release/grant ordering safe; invalid starts do not spend Heat. Native owner/victim/observer masks, synced effects and visible multiplayer protection use the shared controller.
+- All 31 Kahlua suites and original-source/native import, PCM, motion, observer, compile, asset-reference and zero-comment checks pass. Installed locally with changed-file backups and byte verification. Project Zomboid was not launched; live visual/MP playback remains untested.

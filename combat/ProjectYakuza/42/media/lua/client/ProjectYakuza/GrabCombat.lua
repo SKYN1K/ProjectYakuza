@@ -3,15 +3,23 @@ require "ProjectYakuza/GrabRules"
 local PY=ProjectYakuza;local R=PY.GrabRules
 local G={pending=setmetatable({}, {__mode="k"}),previews=setmetatable({}, {__mode="k"})};PY.GrabCombat=G
 local function now()return getTimestampMs()end
+function G.discard(p,job)
+    if G.pending[p]~=job then return end;G.pending[p]=nil
+    if job.granted and PY.Network then PY.Network.send(p,"heatRushEnd",{action=job.granted.action})end
+    local c=PY.activeActions[p]
+    if job.serverReleased and c and c.kind=="grab"and c.timedAction==job.grab then PY.cancelAction(p,"grab_heat_cancelled")end
+end
 function G.candidate(p,force)
     if not p then return end
     local c=p and PY.activeActions[p];local a=c and c.kind=="grab"and c.timedAction
-    local style=p and PY.getPlayerStyle(p);local move=style and style.actions.grabHeat
-    if not isMouseButtonDown(1)or not a or not a.started or a.cleaned or a.phaseName~="hold"or not a.paired or not move or not move.enabled or not PY.Defense.safe(p)or not PY.HeatRules.canAfford(PY.actionHeat(p,move),(move.heatStocks or 0)*PY.Heat.stockSize(p))then G.previews[p]=nil;return end
+    local style=p and PY.getPlayerStyle(p);local slot=style and style.actions.grabHeat
+    if not isMouseButtonDown(1)or not a or not a.started or a.cleaned or a.phaseName~="hold"or not a.paired or not slot or not slot.enabled or not PY.Defense.safe(p)then G.previews[p]=nil;return end
     local previous=G.previews[p]
-    if not force and previous and previous.a==a and now()<previous.next then if previous.pose then return c.target,move,previous.pose end;return end
-    local pose=R.wall(p,c.target,move);G.previews[p]={a=a,pose=pose,next=now()+200}
-    if pose then return c.target,move,pose end
+    if not force and previous and previous.a==a and previous.slot==slot and now()<previous.next then
+        if previous.pose and PY.HeatRules.canAfford(PY.actionHeat(p,previous.move),(previous.move.heatStocks or 0)*PY.Heat.stockSize(p))then return c.target,previous.move,previous.pose,previous.variant end;return
+    end
+    local move,pose,variant=R.heatSelection(p,c.target,slot);G.previews[p]={a=a,slot=slot,move=move,pose=pose,variant=variant,next=now()+200}
+    if pose and PY.HeatRules.canAfford(PY.actionHeat(p,move),(move.heatStocks or 0)*PY.Heat.stockSize(p))then return c.target,move,pose,variant end
 end
 function G.present(p,z)
     local move={contacts={{cue="punchImpact",voice="CombatLightAttack",strong=false}}}
@@ -31,14 +39,15 @@ function G.hit(a)
 end
 function G.input(p,a,lightPressed,heatPressed)
     if a.phaseName~="hold"or not a.paired then return false end
+    if G.pending[p]then return true end
     if heatPressed then
-        local z,move,pose=G.candidate(p,true)
+        local z,move,pose,variant=G.candidate(p,true)
         if z then
             PY.HeatRush.requestSerial=(PY.HeatRush.requestSerial or 0)+1
             G.serial=PY.HeatRush.requestSerial
-            local job={z=z,move=move,pose=pose,request=G.serial,expires=now()+1500,fromGrab=true}
+            local job={z=z,move=move,pose=pose,variant=variant,grab=a,request=G.serial,expires=now()+1500,fromGrab=true}
             G.pending[p]=job
-            if isClient()then PY.Network.capture(p,true);PY.Network.send(p,"heatRushBegin",{request=job.request,zombie=z:getOnlineID(),targetKind="zombie",grabHeat=true})end
+            if isClient()then PY.Network.capture(p,true);PY.Network.send(p,"heatRushBegin",{request=job.request,zombie=z:getOnlineID(),targetKind="zombie",grabHeat=true,grabVariant=variant})end
             return true
         end
     end
@@ -56,35 +65,43 @@ function G.updatePending(p)
     local job=G.pending[p];if not job then return false end
     if isGamePaused()then return true end
     if not isMouseButtonDown(1)or not PY.Defense.safe(p)or job.z:isDead()or now()>job.expires then
-        if job.granted and PY.Network then PY.Network.send(p,"heatRushEnd",{action=job.granted.action})end
-        G.pending[p]=nil;return false
+        G.discard(p,job);return false
     end
     if isClient()and not job.granted then return true end
     if not job.released then
         local c=PY.activeActions[p]
-        if c and c.kind=="grab"then PY.cancelAction(p,"grab_heat_handoff")elseif c then if job.granted and PY.Network then PY.Network.send(p,"heatRushEnd",{action=job.granted.action})end;G.pending[p]=nil;return false end
+        local R=PY.HeatRushRules;local origin=job.granted or job.pose
+        local pose=origin and{x=origin.x,y=origin.y,fx=origin.fx,fy=origin.fy,motion=R.motion(job.move),duration=R.durationFor(job.move)}
+        local clear=pose and R.space(p,pose)and(job.move.requiresWall~=false and PY.GrabRules.wallPresent(p,job.pose or origin)or job.move.requiresWall==false and R.clearance(p,pose))
+        if not c or c.kind~="grab"or c.timedAction~=job.grab or c.target~=job.z or not job.grab.started or job.grab.cleaned or job.grab.phaseName~="hold"or not job.grab.paired or not clear or not PY.HeatRules.canAfford(PY.actionHeat(p,job.move),(job.move.heatStocks or 0)*PY.Heat.stockSize(p))then
+            G.discard(p,job);return false
+        end
+        PY.cancelAction(p,"grab_heat_handoff")
         job.released=true
     end
-    local ok,reason=PY.requestAction(p,"grabHeat",nil,job)
+    local ok,reason=PY.requestAction(p,"grabHeat",job.variant,job)
     if ok then G.pending[p]=nil;return true end
     if reason=="busy"or reason=="native_attack_busy"then return true end
-    if job.granted and PY.Network then PY.Network.send(p,"heatRushEnd",{action=job.granted.action})end
-    G.pending[p]=nil;return false
+    G.discard(p,job);return false
 end
 function G.receive(command,p,packet)
     local job=G.pending[p]
     if not p:isLocalPlayer()or not job then return false end
-    if command=="heatRushEnd"and job.granted and packet.action==job.granted.action then G.pending[p]=nil;return true end
+    if command=="heatRushEnd"and job.granted and packet.action==job.granted.action then G.discard(p,job);return true end
     if packet.request~=job.request then return false end
-    if command=="heatRushDenied"then G.pending[p]=nil;return true end
+    if command=="heatRushDenied"then G.discard(p,job);return true end
     if command~="heatRushGranted"then return false end
     local P=PY.NetworkProtocol
     if packet.grabHeat~=true then return false end
-    if packet.zombie~=job.z:getOnlineID()or not P.integer(packet.action,1,1000000000)or not P.number(packet.x,p:getX()-1.5,p:getX()+1.5)or not P.number(packet.y,p:getY()-1.5,p:getY()+1.5)or not P.number(packet.fx,-1,1)or not P.number(packet.fy,-1,1)then G.pending[p]=nil;return true end
+    if(packet.grabVariant or "default")~=(job.variant or "default")then
+        if P.integer(packet.action,1,1000000000)and PY.Network then PY.Network.send(p,"heatRushEnd",{action=packet.action})end
+        G.discard(p,job);return true
+    end
+    if packet.zombie~=job.z:getOnlineID()or not P.integer(packet.action,1,1000000000)or not P.number(packet.x,p:getX()-1.5,p:getX()+1.5)or not P.number(packet.y,p:getY()-1.5,p:getY()+1.5)or not P.number(packet.fx,-1,1)or not P.number(packet.fy,-1,1)then G.discard(p,job);return true end
     job.granted=packet;job.expires=now()+1500;return true
 end
 function G.clear()
-    for p,job in pairs(G.pending)do if job.granted and PY.Network then PY.Network.send(p,"heatRushEnd",{action=job.granted.action})end end
+    for p,job in pairs(G.pending)do G.discard(p,job)end
     G.pending=setmetatable({}, {__mode="k"});G.previews=setmetatable({}, {__mode="k"})
 end
 Events.OnSave.Add(G.clear);Events.OnMainMenuEnter.Add(G.clear)

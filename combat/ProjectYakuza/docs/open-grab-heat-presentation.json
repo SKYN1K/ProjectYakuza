@@ -1,0 +1,94 @@
+{
+  "operation": "Actual native B42 imported victim head anchors at the two original damage frames. Original audio attack leads measured from decoded supplied PCM, without synthesis, mixing or new pixels. No authored blood emitters are present; existing native-contact effect/blood rendering is used.",
+  "actorSha256": "b0bfbbfab66d53fe2b9ac107c576e6f5727a73c29992bd1645a07f52ec00806d",
+  "victimSha256": "f6d5c1f885f6fc153b9386fef814d434c20159eacd473033737e8e34070c9246",
+  "output": "42/media/lua/client/ProjectYakuza/OpenGrabHeatPresentation.lua",
+  "sha256": "88255385664c8058e3be4e3439529a5e51a86326f0bbcddb22358497dabd5153",
+  "contacts": [
+    {
+      "atMs": 3900.0,
+      "index": 1,
+      "cue": "throwImpact",
+      "point": [
+        0.211507857,
+        0.198710829,
+        -0.183647186
+      ],
+      "bone": "Bip01_Head",
+      "feedback": "unarmed"
+    },
+    {
+      "atMs": 5566.666666666666,
+      "index": 2,
+      "cue": "punchImpact",
+      "point": [
+        0.249633253,
+        0.172016114,
+        0.11840374
+      ],
+      "bone": "Bip01_Head",
+      "feedback": "unarmed"
+    }
+  ],
+  "sounds": [
+    {
+      "file": "media/sound/ProjectYakuza/HeatScene_openGrab_3.wav",
+      "sha256": "d959d97457545f757c81fdde3a71e594d57bc02ff6e113df3e82a5c1828b3499",
+      "attackLeadMs": 120
+    },
+    {
+      "file": "media/sound/ProjectYakuza/HeatScene_openGrab_5.wav",
+      "sha256": "03381737c7e4c4e5f2f9845a8e2a28d4233624232ba042f42249b3cb17764cbb",
+      "attackLeadMs": 120
+    },
+    {
+      "file": "media/sound/ProjectYakuza/HeatScene_openGrab_8.wav",
+      "sha256": "8de61743faed7a6d21577d59c126e0b7a62b0f59e311236fad539e544a502a74",
+      "attackLeadMs": 120
+    },
+    {
+      "file": "media/sound/ProjectYakuza/HeatScene_openGrab_7.wav",
+      "sha256": "06167800fedd517452a82ed536151153171d092870d276a71eb292fdfbd39ecf",
+      "attackLeadMs": 120
+    },
+    {
+      "file": "media/sound/ProjectYakuza/HeatScene_openGrab_6.wav",
+      "sha256": "e28f937829ad55e1e47ed07ae9d5ac25eb774de5fbf30c579e3ac4fb764ad333",
+      "attackLeadMs": 100
+    },
+    {
+      "file": "media/sound/ProjectYakuza/HeatScene_openGrab_1.wav",
+      "sha256": "bbcac33f77383b336256f408e11871c7fb70167ae1d5b238ac0b9f24a2775be6",
+      "attackLeadMs": 45
+    },
+    {
+      "file": "media/sound/ProjectYakuza/HeatScene_openGrab_0.wav",
+      "sha256": "9dd6c1492fcf75e513f7b5a4d05bce4a31295f6b3d980c1de5522fe333c1f134",
+      "attackLeadMs": 120
+    },
+    {
+      "file": "media/sound/ProjectYakuza/HeatScene_openGrab_4.wav",
+      "sha256": "3834ccfb5b6eb48bbfeb2774eda06974a4b16c414098889c3628d2c09c9f1fd1",
+      "attackLeadMs": 120
+    },
+    {
+      "file": "media/sound/ProjectYakuza/HeatScene_openGrab_2.wav",
+      "sha256": "a5c4aad5064bf58fd87c75db197c6d4ae065eb499bcc8b04cc98817e4d8024d2",
+      "attackLeadMs": 90
+    }
+  ],
+  "provenance": [
+    {
+      "path": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\combat-tests\\build_open_grab_heat_presentation.py",
+      "sha256": "73912da904d6232619c5fdc4c381586032f1edd4ce14362d3d48de2dbddb0430"
+    },
+    {
+      "path": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\combat-tests\\LimbTrailProbe.java",
+      "sha256": "ef8718990090925ad411a49ce164e5ecaa556d89ad78885225d72d215ef60e6b"
+    },
+    {
+      "path": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\docs\\open-grab-heat-scene.json",
+      "sha256": "1cc91aab8f9084c0572e91d3bff9698c5102e70361df3225845b3827c2991f84"
+    }
+  ]
+}

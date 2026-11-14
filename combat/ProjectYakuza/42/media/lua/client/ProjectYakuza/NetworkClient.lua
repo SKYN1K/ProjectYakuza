@@ -405,6 +405,10 @@ function N.command(module,command,a)
             z:reportEvent("wasHit");ProjectYakuza.GrabRules.keep(z)
         end
     elseif command=="grabEnd" then
+        if p:isLocalPlayer()then
+            local pending=ProjectYakuza.GrabCombat and ProjectYakuza.GrabCombat.pending[p];local c=ProjectYakuza.activeActions[p]
+            if pending and pending.z==z and P.integer(a.heatRequest,1,1000000000)and pending.request==a.heatRequest and c and c.kind=="grab"and c.target==z and c.timedAction==pending.grab and pending.grab.grabId==a.grabId then pending.serverReleased=true;return end
+        end
         N.leases[p]=nil;N.grabStates[p]=nil
         if p:isLocalPlayer() then local c=ProjectYakuza.activeActions[p];if c and c.kind=="grab" then ProjectYakuza.cancelAction(p,"server_released") end end
         if not p:isLocalPlayer() then

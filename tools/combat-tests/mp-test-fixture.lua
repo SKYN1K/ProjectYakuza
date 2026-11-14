@@ -1085,8 +1085,36 @@ do
  clock=job.started+job.duration*1000;snapshot(p,{clip='ProjectYakuza_DD_WallHeat',move='dd_wall_heat',action=job.action,rightAim=true,heat=80});command('heatRushEnd',{action=job.action,completed=true})
  check(not rush.leases[p]and z1.health<10 and not z1.stateLocked and not p.invincible,'wall completion applies damage once and restores victim/player state')
  clock=clock+600;ProjectYakuza.HeatActions.tick();check(not p.ghost,'wall action target grace expires normally')
+ do (function()
+ local solid=true;local blockedOpen=false
+ getCell=function()return {getGridSquare=function(_,x,y,level)return {y=y,getMovingObjects=function()return list({z1})end,isWallTo=function(_,other)return solid and y==1 and other.y==0 end,isWindowTo=function()return false end,isDoorTo=function()return false end}end}end
+ P.path=function()return not blockedOpen end
+ local function heldOpen()
+  p.x=.5;p.y=.2;p.dead=false;p.vehicle=nil;p.hand=p.token;z1.x=.5;z1.y=.9;z1.health=10;z1.floor=false;z1.knock=false;z1.reaction='';z1.stateLocked=false;z1.state='idle';z1.useless=false
+  clock=clock+2000;snapshot(p,{clip='ProjectYakuza_DD_GrabHold',phase='hold',rightAim=true,heat=20,fuel=20,extreme=false});command('grabRequest',{zombie=z1.id});check(server.players[p.id].grab~=nil,'open-space case owns an actual server grab')
+ end
+ heldOpen();command('heatRushBegin',{zombie=z1.id,request=5100,grabHeat=true,grabVariant='open'});check(not rush.leases[p]and server.players[p.id].grab,'server preserves wall priority and rejects a forged open variant near a valid wall');command('grabRelease',{})
+ solid=false;heldOpen();command('heatRushBegin',{zombie=z1.id,request=5101,grabHeat=true,grabVariant='invalid'});check(not rush.leases[p]and server.players[p.id].grab,'unknown variant cannot release a server grab')
+ blockedOpen=true;command('heatRushBegin',{zombie=z1.id,request=5102,grabHeat=true,grabVariant='open'});check(not rush.leases[p]and server.players[p.id].grab,'blocked open scene preserves the grab before granting');blockedOpen=false
+ command('heatRushBegin',{zombie=z1.id,request=5103,grabHeat=true,grabVariant='open'});job=rush.leases[p];check(job and job.move.requiresWall==false and job.motion==ProjectYakuza.PairedMotions.dod_grab_open and not server.players[p.id].grab,'one full orb atomically transfers only the held victim to open-space playback')
+ blockedOpen=true;command('heatRushReady',{action=job.action});check(not rush.leases[p]and not z1.stateLocked and not p.invincible,'obstruction after grant cancels before protection or damage');blockedOpen=false
+ heldOpen();command('heatRushBegin',{zombie=z1.id,request=5104,grabHeat=true,grabVariant='open'});job=rush.leases[p];command('heatRushReady',{action=job.action});check(job.started and p.invincible and not p.ghost,'server starts open playback without requiring a wall and keeps the actor visible')
+ local health=z1.health;command('heatRushHit',{action=job.action,index=1});check(z1.health==health,'early open-space damage is rejected')
+ for i,contact in ipairs(job.contacts)do clock=job.started+contact.atMs;command('heatRushHit',{action=job.action,index=i});local after=z1.health;command('heatRushHit',{action=job.action,index=i});check(z1.health==after,'each open-space contact settles at most once')end
+ clock=job.started+job.duration*1000;snapshot(p,{clip='ProjectYakuza_DD_OpenGrabHeat',move='dd_grab_open_heat',action=job.action,rightAim=true,heat=0});command('heatRushEnd',{action=job.action,completed=true});check(not rush.leases[p]and not z1.stateLocked and not p.invincible,'server open completion cleans its lease and native state')
+ clock=clock+600;ProjectYakuza.HeatActions.tick()
+ end)()end
  getCell=oldCell;P.path=oldPath;p.getForwardDirection=oldForward
 end
+do (function()
+ local previousCombat,previousCancel,previousAction=ProjectYakuza.GrabCombat,ProjectYakuza.cancelAction,ProjectYakuza.activeActions[p];local session=100001;client.acceptSession(p.id,session);local grab={grabId=8800};local job={z=z1,grab=grab,request=8801};local context={kind='grab',target=z1,timedAction=grab};local cancelled=0
+ ProjectYakuza.GrabCombat={pending={[p]=job}};ProjectYakuza.activeActions[p]=context;client.leases[p]={};local lease=client.leases[p];ProjectYakuza.cancelAction=function(actor)cancelled=cancelled+1;ProjectYakuza.activeActions[actor]=nil end
+ client.command(P.module,'grabEnd',{player=p.id,session=session,zombie=z1.id,grabId=8800,heatRequest=8801,useless=false,ignore=false,deferred=true,locked=false})
+ check(job.serverReleased and client.leases[p]==lease and ProjectYakuza.activeActions[p]==context and cancelled==0,'matching server handoff retains the local grab and lease until its Heat Action grant arrives')
+ client.command(P.module,'grabEnd',{player=p.id,session=session,zombie=z1.id,grabId=8800,heatRequest=8802,useless=false,ignore=false,deferred=true,locked=false})
+ check(cancelled==1 and not client.leases[p],'unrelated handoff token cannot preserve an ended local grab')
+ ProjectYakuza.GrabCombat=previousCombat;ProjectYakuza.cancelAction=previousCancel;ProjectYakuza.activeActions[p]=previousAction
+end)()end
 do
  local session=100000;client.acceptSession(remote.id,session);remote.x=.5;remote.y=.2
  client.remote[remote.id]={packet={equipped=true},actor=remote,last=clock}

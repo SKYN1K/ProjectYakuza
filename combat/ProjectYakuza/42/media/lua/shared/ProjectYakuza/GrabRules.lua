@@ -74,6 +74,23 @@ function G.wallPresent(p,pose)
     return sq~=nil and other~=nil and sq:isWallTo(other)and not sq:isWindowTo(other)and not sq:isDoorTo(other)
 end
 
+function G.heatDefinition(slot,variant)
+    if not slot or not slot.enabled then return end
+    if slot.variants then return slot.variants[variant or "default"]end
+    if variant==nil or variant=="default"then return slot end
+end
+function G.heatSelection(p,z,slot)
+    local move=G.heatDefinition(slot)
+    if not move or not move.enabled or not move.grabHeat then return end
+    local pose=move.requiresWall~=false and G.wall(p,z,move)or move.requiresWall==false and ProjectYakuza.HeatRushRules.placement(p,z,move)
+    if pose then return move,pose,"default"end
+    move=G.heatDefinition(slot,"open")
+    if not move or not move.enabled or not move.grabHeat or move.requiresWall~=false then return end
+    if not p or not z or p:isDead()or p:isOnFloor()or p:isKnockedDown()or p:isClimbing()or(p:getHitReaction()or "")~=""or z:isDead()or z:isOnFloor()or z:isKnockedDown()or math.abs(p:getZ()-z:getZ())>.25 then return end
+    pose=ProjectYakuza.HeatRushRules.placement(p,z,move)
+    if pose then return move,pose,"open"end
+end
+
 function G.spacing(slot)return math.max(.25,math.min(1,slot and slot.distance or .7))end
 
 function G.offset(slot,phase)

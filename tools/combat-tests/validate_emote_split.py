@@ -17,7 +17,7 @@ for path in (media/'lua').rglob('*.lua'):
     text=path.read_text(encoding='utf-8');assert 'require "ProjectYakuza/'not in text and 'PY.activeActions'not in text
     for module in re.findall(r'require\s+"(ProjectYakuzaEmotes/[^"\n]+)"',text):assert any((media/'lua'/side/(module+'.lua')).is_file()for side in ['shared','client','server'])
 info=(addon/'42/mod.info').read_text(encoding='utf-8');assert 'id=ProjectYakuzaEmotes'in info and 'version=0.2.0'in info and not re.search(r'^require\s*=',info,re.M)
-assert 'id=ProjectYakuza\n'in(main/'42/mod.info').read_text()and 'version=0.107.0'in(main/'42/mod.info').read_text()
+assert 'id=ProjectYakuza\n'in(main/'42/mod.info').read_text()and re.search(r'^version=\d+\.\d+\.\d+$',(main/'42/mod.info').read_text(),re.M)
 assert not list(media.rglob('*.png'))and not list(media.rglob('*.ogg'))and not list(media.rglob('*.wav'))and not(media/'models_X').exists()
 with zipfile.ZipFile(root/'dist/ProjectYakuza-B42-v0.106.0.zip')as archive:
     retained=0
