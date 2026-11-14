@@ -1,7 +1,7 @@
 {
   "operation": "Code-side numeric FK only from existing supplied PZ clips, including current paired contacts/endings and linked native finisher variants. Contacts use native collision events, authored Heat Action contacts or the documented parry fallback. Clips use contact-local endpoint/relative motion with verified original left-light and right-high-kick pose overrides, independent of charge-up pose. The high kick has right-foot height 0.721 versus planted left foot 0.093 at source frame 24; recovering arms can be faster than the striking leg. Runtime resolves the actual playing clip within the committed move family. No visual/audio/animation/model assets are generated or modified.",
   "catalog": "42/media/lua/client/ProjectYakuza/AttackTrailCatalog.lua",
-  "sha256": "8c54d9256b438e740fccee3f521723bda0e8166d7dea5364fe147b20af4e640d",
+  "sha256": "eda0683c70ccdc776b51101418aa1a7f36d6440daa0cc7ef06be865ecc0a5588",
   "clips": [
     {
       "profile": "bat",
@@ -243,7 +243,7 @@
         2.33333333333
       ],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BicycleHeat.x",
-      "clipSha256": "d6106cf34938feba9b378e29535ca5bbe9c612b90bfdb34735c36812445a103f",
+      "clipSha256": "da46307bf20d70ec2e697de77d153eace532283f47134a2910bc12b9439912a6",
       "samples": 151,
       "duration": 5.0,
       "windows": [

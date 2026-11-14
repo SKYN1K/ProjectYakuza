@@ -45,6 +45,17 @@ for name,path in jobs:
         propRecord={'source':str(path),'sourceSha256':sha(path),'calibration':[list(row)for row in calibration],'modelSha256':json.loads((mod/'docs/bicycle-model-assets.json').read_text())['sha256'],'modelScale':.44308598137428024,'sourceBone':'buki1_r_n','sourceHand':'ude3_r_n','targetProp':'Bip01_Prop1','frames':count,'gripReference':{'path':str(reference),'sha256':sha(reference),'frame':0},'reference':'Original Y6 held-object hit and forward jump-crush weapon bone; supplied bicycle mesh retains its right-grip origin and native scale.','operation':'Original h24110 animated buki1_r_n world rotation and hand-relative position reflected into native coordinates through the source-to-native chest/arm adaptation; the original source weapon rotation and hand-relative translation are retained with a fixed bicycle calibration derived from the supplied Y5 bicycle grip and a quarter-turn about the right palm so its long frame spans the two hands. No nearby world-object track is used.'}
     records.append({'animation':name,'source':str(path),'sourceSha256':sha(path),'output':output.relative_to(mod).as_posix(),'sha256':sha(output),'retargetSha256':sha(raw),'frames':count,'fps':30})
     vector=context['a'].bones['vector_c_n'];vectors.append([context['sample'](vector.location,f,Vector((0,0,0)))for f in range(count)])
+cutFrame=97;victimOutput=mod/records[1]['output'];_,vb,va,_=read(victimOutput);before=world(vb,locals_at(vb,va,(cutFrame-1)*160))['Bip01'].to_quaternion();after=world(vb,locals_at(vb,va,cutFrame*160))['Bip01'].to_quaternion();delta=(after@before.inverted()).to_matrix();stageYaw=math.atan2(delta[0][2],delta[2][2]);assert 32<math.degrees(stageYaw)<35
+for role,record in enumerate(records):
+    output=mod/record['output'];text,bones,animation,spans=read(output);values=[]
+    for frame in range(count):
+        local=locals_at(bones,animation,frame*160)
+        if frame>=cutFrame:
+            phase=(frame-cutFrame)/(count-1-cutFrame);weight=1-phase*phase*(3-2*phase)if role==0 else 1;pose=world(bones,local);rootPose=pose['Bip01'];corrected=Matrix.Rotation(-stageYaw*weight,4,'Y')@rootPose;corrected.translation=rootPose.translation;parent=bones['Bip01']['parent'];local['Bip01']=pose[parent].inverted()@corrected if parent else corrected
+        values.append(local)
+    changes=blocks(bones,values,times,None);left,right=spans['Bip01'];originalRoot=text[left:right];pattern=r'(AnimationKey R\s*\{\s*0;\s*\d+;\s*\n)(.*?)(\n\s*\})';originalRotation=re.search(pattern,originalRoot,re.S);correctedRotation=re.search(pattern,changes['Bip01'],re.S);originalRows=originalRotation[2].splitlines();correctedRows=correctedRotation[2].splitlines();assert len(originalRows)==len(correctedRows)==count;rows=originalRows[:cutFrame]+correctedRows[cutFrame:]
+    if role==0:rows[-1]=originalRows[-1]
+    correctedRoot=originalRoot[:originalRotation.start(2)]+'\n'.join(rows)+originalRoot[originalRotation.end(2):];write(output,text,{'Bip01':spans['Bip01']},{'Bip01':correctedRoot},record['animation']);record['sha256']=sha(output)
 anchor=vectors[0][0];factor=float(context['scale'])*1.5
 rawPaths=[[[float((rotation@(v-anchor)).z*factor),float((rotation@(v-anchor)).x*factor)]for v in values]for values in vectors];paths,cuts=bridge_scene_cuts(rawPaths)
 individualCuts=[]
@@ -61,6 +72,7 @@ index=json.loads((source/'index.json').read_text());report['archive']=index['arc
 report['bicycleModel']={'path':'42/media/models_X/Static/ProjectYakuza_Bicycle.x','sha256':sha(mod/'42/media/models_X/Static/ProjectYakuza_Bicycle.x'),'origin':'Existing supplied Y5 low-detail held bicycle, unchanged model and texture.'}
 report['sourceFrames']=list(range(151))
 report['individualSceneCuts']=individualCuts
+report['recoveryStageRotation']={'frame':cutFrame,'radians':stageYaw,'degrees':math.degrees(stageYaw),'referenceAnimation':records[1]['animation'],'referenceFrames':[cutFrame-1,cutFrame],'actorEndFrame':count-1,'operation':'Compensate the shared camera-cut yaw about each native root at frame 97. Keep the grounded victim heading continuous. Smoothly return the attacker correction to zero through the original recovery using a smoothstep weight, retaining the original final facing and idle handoff. Only the root rotation changes; original root translations, child-local body and weapon channels, flight, paired paths and damage timings remain unchanged.'}
 retired=[];baseline=root/'dist/ProjectYakuza-B42-v0.108.0.zip'
 with zipfile.ZipFile(baseline)as archive:
     for name in ['HeatScene_bicycle_5.wav','HeatScene_bicycle_379_10.wav','HeatScene_bicycle_379_12.wav']:

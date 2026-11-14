@@ -2675,7 +2675,7 @@
       "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\bicycle-momentum-0109\\h24110_c_german\\000.par\\h24110_000_4.gmt",
       "sourceSha256": "3b7ffc32680d34f47a9f33e083bcbdf80a97327a084d7a705d727e0d51dc3510",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_BicycleHeat.x",
-      "sha256": "d6106cf34938feba9b378e29535ca5bbe9c612b90bfdb34735c36812445a103f",
+      "sha256": "da46307bf20d70ec2e697de77d153eace532283f47134a2910bc12b9439912a6",
       "retargetSha256": "9ff799cf361059bbaab8bc97fe78114a95bc684e448b26db5296f62e5506c0db",
       "frames": 151,
       "fps": 30
@@ -2685,7 +2685,7 @@
       "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\bicycle-momentum-0109\\h24110_c_german\\000.par\\h24110_000_6.gmt",
       "sourceSha256": "b108374accbba1f7d400d5822b0df6ef353a57cbf24e69939744479d0bc706ad",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_BicycleHeatVictim.x",
-      "sha256": "716567b6dbb91c06d9886d248003be92e65db40b3b90796c2b820d75a0553a29",
+      "sha256": "cf2178d634af69c3c53cf971a220699e090de352345a8b1339c65366265424e2",
       "retargetSha256": "3bd16e9efa8aa7a5ef287ccbdeea586d71a7babba7141bf3fdcde85b9501a914",
       "frames": 151,
       "fps": 30
@@ -2860,6 +2860,18 @@
       "blendFrames": 6
     }
   ],
+  "recoveryStageRotation": {
+    "frame": 97,
+    "radians": 0.5815420813020568,
+    "degrees": 33.31990686786164,
+    "referenceAnimation": "ProjectYakuza_DD_BicycleHeatVictim",
+    "referenceFrames": [
+      96,
+      97
+    ],
+    "actorEndFrame": 150,
+    "operation": "Compensate the shared camera-cut yaw about each native root at frame 97. Keep the grounded victim heading continuous. Smoothly return the attacker correction to zero through the original recovery using a smoothstep weight, retaining the original final facing and idle handoff. Only the root rotation changes; original root translations, child-local body and weapon channels, flight, paired paths and damage timings remain unchanged."
+  },
   "retiredAudio": {
     "baseline": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\dist\\ProjectYakuza-B42-v0.108.0.zip",
     "sha256": "5be1ca742e736ea3bbc6f1875960324a8f3de3d1a576663134636fd74198b7d8",
@@ -2908,7 +2920,7 @@
     },
     {
       "path": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\combat-tests\\build_bicycle_y6_heat_assets.py",
-      "sha256": "39b1d0fd05d77beb1c6b141293738622d8fab784ec710e79781a7a5dabea04d5"
+      "sha256": "e86a5ded2d37345c365cea3b5dcf685a5909d0f945790663898a08657a717678"
     },
     {
       "path": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\combat-tests\\extract_bicycle_y6_assets.py",

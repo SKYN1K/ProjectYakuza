@@ -1920,8 +1920,8 @@
     {
       "animation": "ProjectYakuza_DD_BicycleHeat",
       "targetAnimation": "ProjectYakuza_DD_BicycleHeatVictim",
-      "actorSha256": "d6106cf34938feba9b378e29535ca5bbe9c612b90bfdb34735c36812445a103f",
-      "victimSha256": "716567b6dbb91c06d9886d248003be92e65db40b3b90796c2b820d75a0553a29",
+      "actorSha256": "da46307bf20d70ec2e697de77d153eace532283f47134a2910bc12b9439912a6",
+      "victimSha256": "cf2178d634af69c3c53cf971a220699e090de352345a8b1339c65366265424e2",
       "contacts": [
         {
           "atMs": 966.666666667,
@@ -1942,11 +1942,11 @@
           "cue": "punchImpact",
           "base": false,
           "point": [
-            4.6e-07,
-            0.094547793,
-            0.010861968
+            0.154570177,
+            0.08343935,
+            0.034942292
           ],
-          "bone": "Bip01_Pelvis",
+          "bone": "Bip01_Spine1",
           "layers": []
         }
       ],
