@@ -383,3 +383,5 @@
 !tools/combat-tests/extract_shimano_emote.py
 !tools/combat-tests/build_shimano_emote.py
 !tools/combat-tests/validate_shimano_emote.py
+!tools/combat-tests/spear_uv_tiles.py
+!tools/combat-tests/validate_lau_spear_surface.py

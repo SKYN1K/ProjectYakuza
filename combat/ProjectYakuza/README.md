@@ -2,7 +2,7 @@
 
 Project Yakuza is a Build 42 combat mod and a framework for independent fighting-style addons. Dragon of Dojima uses supplied Yakuza/Kiwami/Lost Judgment animations, textures and sounds. Other styles register their own moves, assets and controllers without copying the framework.
 
-**Version 0.119.0 · Lua API 3 · MP protocol 2.** API 1 style registrations remain supported. Internal namespace/mod dependency: `ProjectYakuza`. Display name: Project Yakuza.
+**Version 0.120.0 · Lua API 3 · MP protocol 2.** API 1 style registrations remain supported. Internal namespace/mod dependency: `ProjectYakuza`. Display name: Project Yakuza.
 
 ## Install and play
 
@@ -81,4 +81,4 @@ Dragon of Dojima low-health feedback starts at 30% health, becomes critical at 1
 
 The three cutscene gestures are now in the separate **Project Yakuza Emotes** mod. Install and enable that addon if you want them; combat no longer includes their Lua hooks or animation assets. See [validation](docs/VALIDATION_0.107.0.md).
 
-Lau Ka Long’s Spear is available as ProjectYakuza.LauKaLongSpear, displayed as Lau Ka Long’s Spear in the native item list. It uses the original Kiwami model and reduced original diffuse, native two-handed spear attacks/carry/sounds, and the forged long spear’s damage, reach and durability. It does not select a custom Dragon weapon profile. With Project Yakuza Emotes enabled it qualifies for Lau’s spear gesture. Spawn it through the debug item list; this update adds no loot distribution or recipe.
+Lau Ka Long’s Spear is available as ProjectYakuza.LauKaLongSpear, displayed as Lau Ka Long’s Spear in the native item list. It uses the original Yakuza 3 model and original-detail diffuse adapted for PZ’s blood/tint textures, native two-handed spear attacks/carry/sounds, and the forged long spear’s damage, reach and durability. It does not select a custom Dragon weapon profile. With Project Yakuza Emotes enabled it qualifies for Lau’s spear gesture. Spawn it through the debug item list; this update adds no loot distribution or recipe.

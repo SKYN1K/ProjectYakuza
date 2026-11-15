@@ -25,7 +25,7 @@ with zipfile.ZipFile(root/'dist/ProjectYakuza-B42-v0.118.0.zip')as archive:
         if name.endswith('/')or '/media/'not in name:continue
         path=main/name.removeprefix('ProjectYakuza/')
         if path.suffix not in ['.x','.xml','.png','.wav','.ogg']or not path.exists():continue
-        intended=path.name=='ProjectYakuza_LauSpear.x'or 'Bicycle'in path.name and path.suffix in ['.x','.xml','.png']or'HeatRush'in path.name and path.suffix=='.xml'
+        intended=path.name in {'ProjectYakuza_LauSpear.x','ProjectYakuza_LauSpear.png'}or 'Bicycle'in path.name and path.suffix in ['.x','.xml','.png']or'HeatRush'in path.name and path.suffix=='.xml'
         if intended:continue
         assert path.read_bytes()==archive.read(name),name;retained+=1
 with zipfile.ZipFile(root/'dist/ProjectYakuzaEmotes-B42-v0.2.6.zip')as archive:

@@ -1,16 +1,22 @@
 {
-  "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\lau-spear-weapon\\o_ayam_spr_rhau_d.dds",
-  "sourceSha256": "1eab44beaf77482e160a2551a51ecad58840bbae3eae2e927e8f8478869b16d3",
+  "sourceGame": "Yakuza 3",
+  "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\lau-spear-weapon\\o_ay_spear_rhau_d.dds",
+  "sourceSha256": "b8afc02e99ce4e2005157ce95a05e5f0930e6bf5603bb26c93379c79e8964db7",
   "originalSize": [
     512,
     512
   ],
   "output": "42/media/textures/ProjectYakuza_LauSpear.png",
   "size": [
-    128,
-    128
+    512,
+    512
   ],
-  "filter": "Pillow NEAREST; supplied source texels and alpha only, no painting, synthesis or upscaling",
-  "rgbaSha256": "743c8ab0ae3ef4f8c481e16a1c736b869c7fff27d150575c7c3ed78b3c72718c",
-  "sha256": "88c433ce131ffd9c161fb9140bec8b44f50da899e8592823a8cb869ad7ce3398"
+  "interior": [
+    510,
+    510
+  ],
+  "border": 1,
+  "filter": "Pillow NEAREST downsamples the original 512 texels into a 510 interior; one-pixel wrapped source borders preserve periodic bilinear sampling under edge clamping. Every output texel is a supplied original texel; no painting, synthesis or upscaling.",
+  "rgbaSha256": "0e426c9ff1b1740a4b9e10363135d23d0a4a1d010cd1aae414543d831a2eb50f",
+  "sha256": "22066f2da36cec4bafaf7b18383e484b74c831d1a5b87571fc9ccb108aec5211"
 }
