@@ -1222,6 +1222,7 @@ do
  end
  clock=lease.started+lease.duration*1000-50;neutral({clip='ProjectYakuza_DD_BatHeat',move='dd_bat_heat'});command('heatRushEnd',{action=lease.action,completed=true})
  check(not rush.leases[p]and not p.invincible,'MP bat releases its lease after original recovery')
+ z1.health=10;z1.floor=false;z1.knocked=false;z1.useless=false;neutral({extreme=true,heat=0,fuel=100});command('heatRushBegin',{weaponHeat=true,zombie=z1.id,request=1904});local fuelLease=rush.leases[p];check(fuelLease and server.players[p.id].packet.extreme and fuelLease.move.weaponHeat,'server grants weapon Heat Action while Extreme Heat is active');command('heatRushReady',{action=fuelLease.action});check(fuelLease.started and rush.leases[p]==fuelLease,'server starts the same weapon scene during Extreme Heat');command('heatRushEnd',{action=fuelLease.action})
  clock=clock+500;ProjectYakuza.HeatActions.tick();p.hand=p.token
 end
 do
@@ -1300,6 +1301,16 @@ do
  end
  clock=lease.started+lease.duration*1000-50;neutral({clip='ProjectYakuza_DD_BatHeat',move='dd_bat_heat'});command('heatRushEnd',{action=lease.action,completed=true})
  check(not rush.leases[p]and not p.invincible,'MP bat releases its lease after original recovery')
+ z1.health=10;z1.floor=false;z1.knocked=false;z1.useless=false;neutral({extreme=true,heat=0,fuel=100});command('heatRushBegin',{weaponHeat=true,zombie=z1.id,request=1904});local fuelLease=rush.leases[p];check(fuelLease and server.players[p.id].packet.extreme and fuelLease.move.weaponHeat,'server grants weapon Heat Action while Extreme Heat is active');command('heatRushReady',{action=fuelLease.action});check(fuelLease.started and rush.leases[p]==fuelLease,'server starts the same weapon scene during Extreme Heat');command('heatRushEnd',{action=fuelLease.action})
  clock=clock+500;ProjectYakuza.HeatActions.tick();p.hand=p.token
+end
+do
+ local s=server.players[p.id];local saved=SandboxVars;SandboxVars={ProjectYakuza={ExtremeHeat=false}};local previous=s.seq;snapshot(p,{extreme=true});check(s.seq==previous,'server rejects Extreme Heat snapshots when disabled')
+ local boost=ProjectYakuza.getStyle('dragon_of_dojima').extremeLightAttacks[1];check(not server.extremeMoveAllowed(s,ProjectYakuza.getStyle('dragon_of_dojima'),boost,999,true),'server rejects boost moves even when client claims active mode')
+ SandboxVars={ProjectYakuza={DragonTigerDrop=false}};z1.health=10;z1.attacking=true;z1.target=p;local kills=z1.kills or 0;command('counter',{zombie=z1.id,age=0});check((z1.kills or 0)==kills,'server enforces disabled Dragon Tiger Drop')
+ SandboxVars={ProjectYakuza={Grabs=false}};snapshot(p);command('grabRequest',{zombie=z1.id});check(not s.grab,'server cannot grant disabled grab')
+ SandboxVars={ProjectYakuza={HeatActions=false}};local leases=ProjectYakuza.HeatRushServer;command('heatRushBegin',{request=99001,zombie=z1.id});check(not leases.leases[p],'server cannot grant disabled Heat Action')
+ local style=ProjectYakuza.getStyle('dragon_of_dojima');check(not P.supports(style,P.clip(style.id,'ProjectYakuza_DD_HeatRush')),'disabled cinematic clip cannot bypass snapshot support policy')
+ SandboxVars=saved
 end
 return 'PASS '..count..' MP authority, duplicate, range, lease, cooldown, observer and throttle checks'

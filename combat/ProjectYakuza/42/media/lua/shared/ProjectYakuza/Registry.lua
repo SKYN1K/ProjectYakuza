@@ -293,7 +293,44 @@ end
 local ProjectYakuza = ProjectYakuza
 ProjectYakuza.FEATURES={grab=true}
 ProjectYakuza.TigerDropRules={windowMs=160,cooldownMs=20000}
-ProjectYakuza.VERSION = "0.112.0"
+do
+local S={};ProjectYakuza.Sandbox=S
+local function value(key)
+    local vars=type(SandboxVars)=="table"and SandboxVars.ProjectYakuza
+    if type(vars)=="table"then return vars[key]end
+end
+function S.enabled(key)
+    local v=value(key)
+    return type(v)~="boolean"or v
+end
+local function number(key,default,low,high)
+    local v=value(key)
+    if type(v)~="number"or v~=v or v==math.huge or v==-math.huge then return default end
+    return math.max(low,math.min(high,v))
+end
+function S.tigerDrop(style)
+    return not style or style.id~="dragon_of_dojima"or S.enabled("DragonTigerDrop")
+end
+function S.tigerWindowMs(style)
+    if not style or style.id~="dragon_of_dojima"then return ProjectYakuza.TigerDropRules.windowMs end
+    return math.floor(number("DragonTigerDropWindowMs",160,10,1000)+.5)
+end
+function S.tigerCooldownMs(style)
+    if not style or style.id~="dragon_of_dojima"then return ProjectYakuza.TigerDropRules.cooldownMs end
+    return number("DragonTigerDropCooldownSeconds",20,0,600)*1000
+end
+function S.actionAllowed(style,kind,move)
+    if kind=="parry"then return S.tigerDrop(style)end
+    if kind=="heatActivation"then return S.enabled("ExtremeHeat")end
+    if kind=="grab"or kind=="grabHeat"then if not S.enabled("Grabs")then return false end end
+    if kind=="heatAction"or kind=="groundHeat"or kind=="grabHeat"then
+        local action=move or style and style.actions and style.actions.heatAction
+        return S.enabled("HeatActions")and(kind~="heatAction"or not action or not action.extremeHeat or S.enabled("ExtremeHeat"))
+    end
+    return true
+end
+end
+ProjectYakuza.VERSION = "0.113.0"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -782,6 +819,7 @@ function ProjectYakuza.payActionHeat(context)
     return true
 end
 function ProjectYakuza.requestAction(player, kind, variant, target)
+    if not ProjectYakuza.Sandbox.actionAllowed(ProjectYakuza.getPlayerStyle(player),kind)then return false,"sandbox_disabled"end
     if kind=="grab" and ProjectYakuza.FEATURES.grab==false then return false,"temporarily_disabled" end
     if not ProjectYakuza.actionKinds[kind] then return false, "unknown_action" end
     if not ProjectYakuza.isEquipped(player) then return false, "style_not_equipped" end

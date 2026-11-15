@@ -33,6 +33,7 @@ function R.noCombo(s,style,time)
     return (s.step or 0)==0 and not s.finisherBranch or ended~=nil and time-ended>style.comboResetMs
 end
 function R.weaponAllowed(p,style,action)
+    if not ProjectYakuza.Sandbox.actionAllowed(style,"heatAction")then return false end
     local held=p:getPrimaryHandItem()
     if not action or not action.weaponHeat or not held or not ProjectYakuza.Weapons.profile(style.id,held)then return false end
     for _,id in ipairs(action.weaponItems or {})do if held:getFullType()==id then return true end end

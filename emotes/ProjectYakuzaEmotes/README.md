@@ -1,6 +1,6 @@
 # Project Yakuza Emotes
 
-Version **0.2.4**, for Project Zomboid Build 42. Mod ID: `ProjectYakuzaEmotes`.
+Version **0.2.5**, for Project Zomboid Build 42. Mod ID: `ProjectYakuzaEmotes`.
 
 This standalone mod contains four original Kiwami 1 cutscene gestures. It works without Project Yakuza combat or Custom Voice Framework, and coexists with either. Enable Project Yakuza Emotes separately in your game or server mod list. Both peers need the same files for multiplayer playback.
 
@@ -16,3 +16,5 @@ The original source timing, native skeleton, grounded feet and cancellable nativ
 Extract the ZIP's `ProjectYakuzaEmotes` folder into your Zomboid `mods` folder, then enable it. Upgrade Project Yakuza combat to 0.107.0 or newer when using both mods; earlier combat versions bundled these gestures. The separate CVF voice pack is unchanged.
 
 See the individual gesture guides in docs for compatible weapons and source provenance. The 0.104.0–0.106.0 validation documents record their historical combat-mod integration; VALIDATION_0.1.0.md records the standalone split. VALIDATION_0.2.0.md covers the added final-chapter gesture; VALIDATION_0.2.1.md covers its restored character movement; VALIDATION_0.2.2.md covers the corrected opening Majima gesture; VALIDATION_0.2.3.md covers native/CVF readiness around zombies. VALIDATION_0.2.4.md covers the five-second spear extension and native character movement. Offline tests pass. Custom modded spear geometry uses the crafted-spear fallback and is not individually calibrated. Visual blending and live multiplayer still need in-game testing.
+
+Version 0.2.5 distributes only runtime game files. Developer notes and provenance stay in the source workspace. The original animations and selectors are unchanged.

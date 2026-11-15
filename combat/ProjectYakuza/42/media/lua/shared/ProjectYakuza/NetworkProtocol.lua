@@ -90,7 +90,8 @@ function P.supports(style,clip)
     if cached.direct[clip.animation]then return true end
     local anim=clip.animation
     for _,condition in ipairs(clip.conditions)do if condition.name=="PerformingAction"then anim=condition.value end end
-    return cached.enabled[anim]==true
+    local action=cached.actions[anim]
+    return cached.enabled[anim]==true and(not action or ProjectYakuza.Sandbox.actionAllowed(style,action.kind))
 end
 function P.near(a,b,range)
     return a and b and math.abs(a:getZ()-b:getZ())<.5 and (a:getX()-b:getX())^2+(a:getY()-b:getY())^2<=range*range

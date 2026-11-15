@@ -2,6 +2,7 @@
 
 SystemDisabler.setEnableAdvancedSoundOptions(true)
 require "PZAPI/ModOptions"
+require "ISUI/ISDuplicateKeybindDialog"
 require "ProjectYakuza/Registry"
 require "ProjectYakuza/Bindings"
 local options=PZAPI.ModOptions:create("ProjectYakuza",getText("UI_ProjectYakuza_OptionsTitle"))

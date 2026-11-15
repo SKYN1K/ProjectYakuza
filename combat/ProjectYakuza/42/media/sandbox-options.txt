@@ -1,0 +1,53 @@
+VERSION = 1,
+
+option ProjectYakuza.DragonTigerDrop
+{
+    type = boolean,
+    default = true,
+    page = ProjectYakuza,
+    translation = ProjectYakuza_DragonTigerDrop,
+}
+
+option ProjectYakuza.DragonTigerDropWindowMs
+{
+    type = integer,
+    min = 10,
+    max = 1000,
+    default = 160,
+    page = ProjectYakuza,
+    translation = ProjectYakuza_DragonTigerDropWindowMs,
+}
+
+option ProjectYakuza.DragonTigerDropCooldownSeconds
+{
+    type = double,
+    min = 0.0,
+    max = 600.0,
+    default = 20.0,
+    page = ProjectYakuza,
+    translation = ProjectYakuza_DragonTigerDropCooldownSeconds,
+}
+
+option ProjectYakuza.HeatActions
+{
+    type = boolean,
+    default = true,
+    page = ProjectYakuza,
+    translation = ProjectYakuza_HeatActions,
+}
+
+option ProjectYakuza.Grabs
+{
+    type = boolean,
+    default = true,
+    page = ProjectYakuza,
+    translation = ProjectYakuza_Grabs,
+}
+
+option ProjectYakuza.ExtremeHeat
+{
+    type = boolean,
+    default = true,
+    page = ProjectYakuza,
+    translation = ProjectYakuza_ExtremeHeat,
+}

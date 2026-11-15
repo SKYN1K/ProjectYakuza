@@ -67,6 +67,7 @@ function H.command(p,command,a,s)
         local style=PY.getStyle(s.packet.style)
         if a.weaponHeat==true and style then style=PY.Weapons.view(style,s.packet.weaponProfile)end
         local cfg=style and style.heatRush;local grabHeat=a.grabHeat==true;local groundHeat=a.groundHeat==true;local move=style and (grabHeat and style.actions.grabHeat or groundHeat and style.actions.groundHeat or style.actions.heatAction)
+        if not PY.Sandbox.actionAllowed(style,grabHeat and"grabHeat"or groundHeat and"groundHeat"or"heatAction")then H.reply(p,"heatRushDenied",{request=a.request});return end
         local weaponHeat=a.weaponHeat==true;local z=style and R.target(p,a.zombie,a.targetKind)
         local ready
         local wallPose
@@ -100,7 +101,7 @@ function H.command(p,command,a,s)
         H.reply(p,"heatRushGranted",{request=a.request,action=pose.action,zombie=z:getOnlineID(),targetKind=R.targetKind(z),x=pose.x,y=pose.y,fx=pose.fx,fy=pose.fy,grabHeat=grabHeat,grabVariant=grabHeat and(a.grabVariant or "default")or nil});return
     end
     if not job or job.action~=a.action then return end
-    if job.weapon~=p:getPrimaryHandItem()or job.style~=s.packet.style or t>job.expires then H.finish(p,false);return end
+    if not PY.Sandbox.actionAllowed(PY.getStyle(job.style),job.move.grabHeat and"grabHeat"or job.move.groundHeat and"groundHeat"or"heatAction",job.move)or job.weapon~=p:getPrimaryHandItem()or job.style~=s.packet.style or t>job.expires then H.finish(p,false);return end
     if command=="heatRushReady"then
         if job.started then return end
         if job.move.groundFacing=="up"and job.z:isFallOnFront()then H.finish(p,false);return end
@@ -158,7 +159,7 @@ end
 function H.tick(t,online)
     for p,job in pairs(H.leases)do
         local z=job.z;local peer=S.players[p:getOnlineID()]
-        if not online[p]or p:isDead()or not job.failed and z:isDead()and not job.hits[#job.contacts]or t>job.expires or not peer or not peer.packet or not peer.packet.equipped or peer.packet.style~=job.style or p:getPrimaryHandItem()~=job.weapon or not job.failed and R.targetKind(z)=="player"and not R.playerAllowed(p,z)or (p:getHitReaction()or"")~=""then H.finish(p,false)
+        if not PY.Sandbox.actionAllowed(PY.getStyle(job.style),job.move.grabHeat and"grabHeat"or job.move.groundHeat and"groundHeat"or"heatAction",job.move)or not online[p]or p:isDead()or not job.failed and z:isDead()and not job.hits[#job.contacts]or t>job.expires or not peer or not peer.packet or not peer.packet.equipped or peer.packet.style~=job.style or p:getPrimaryHandItem()~=job.weapon or not job.failed and R.targetKind(z)=="player"and not R.playerAllowed(p,z)or (p:getHitReaction()or"")~=""then H.finish(p,false)
         elseif job.started then
             local sourceAge=(t-job.started)/1000
             if not job.failed then H.results(job,sourceAge)end

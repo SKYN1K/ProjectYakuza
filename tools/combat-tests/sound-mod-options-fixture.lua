@@ -2,10 +2,13 @@ local count=0
 local function check(ok,msg)count=count+1;if not ok then error(msg)end end
 require=function()end
 local translations={UI_ProjectYakuza_OptionsTitle='Project Yakuza',UI_ProjectYakuza_AudioTitle='Audio',UI_ProjectYakuza_MusicVolume='Music',UI_ProjectYakuza_HitVolume='Sounds',UI_ProjectYakuza_VoiceVolume='Voices',UI_ProjectYakuza_AudioDescription='Zero mutes a group.'}
-getText=function(s)
+getText=function(s,...)
  check(not string.find(s,'%%'),'literal format strings must never be passed as translation keys')
- return translations[s] or s
+ local text=translations[s]or s;if select('#',...)>0 then return string.format(text,...)end;return text
 end
+getKeyName=function()return 'G'end
+ISDuplicateKeybindDialog={createChildren=function(self)self.label={name='native label'}end,nextDuplicate=function(self)self.label.name='native next'end}
+translations.UI_ProjectYakuza_Key_grab='Grab / throw key';translations.UI_optionscreen_keyAlreadyBinded='%s is already assigned to %s'
 local startup={};Events={OnGameStart={Add=function(fn)startup[#startup+1]=fn end}}
 SystemDisabler={setEnableAdvancedSoundOptions=function(v)SystemDisabler.enabled=v end}
 local levels={};local saved=0
@@ -37,4 +40,5 @@ ProjectYakuza.registerStyle({id='addon.volume',name='Volume Addon',lightAttacks=
 check(levels.AddonMusic==1 and ProjectYakuza.SoundSettings.musicLevel()==2 and levels.AddonImpact==0,'late registered styles join grouped controls')
 api:save();local text=table.concat(writes,'')
 check(string.find(text,'hitVolume|0',1,true)~=nil and saved>0,'native ModOptions persistence and GameSounds persistence used')
+local conflict={key=34,keybind2Name='UI_ProjectYakuza_Key_grab'};ISDuplicateKeybindDialog.createChildren(conflict);check(conflict.label.name=='G is already assigned to Grab / throw key','native mod-binding conflicts use readable translated labels');conflict.keybind2Name='Grab / throw key';ISDuplicateKeybindDialog.nextDuplicate(conflict);check(conflict.label.name=='G is already assigned to Grab / throw key','subsequent native conflicts resolve translated captions too');conflict.keybind2Name='Foreign action';ISDuplicateKeybindDialog.nextDuplicate(conflict);check(conflict.label.name=='native next','foreign binding conflicts remain delegated')
 return 'PASS '..count..' native Mods slider, persistence, grouping and late-style checks'

@@ -334,4 +334,10 @@ do
  check(D.target(p)==z,'eight closer busy horde targets cannot hide the ninth eligible grab target')
  PY.MultiHit.targets=originalTargets
 end
+do
+ local nativeCalls=0;local keyHook;local oldEquipped=ISEquippedItem;local oldGetPlayer=getPlayer;local oldEvent=Events.OnKeyPressed
+ ISEquippedItem={onKeyPressed=function()nativeCalls=nativeCalls+1 end};getPlayer=function()return p end;Events.OnKeyPressed={Remove=function()end,Add=function(fn)keyHook=fn end};D.safetyWrapped=false;D.bindSafetyInput()
+ local saved=SandboxVars;SandboxVars={ProjectYakuza={Grabs=false}};keyHook(PY.Bindings.key('grab'));check(nativeCalls==1,'disabled grabs restore the original native key handler');SandboxVars=saved
+ ISEquippedItem=oldEquipped;getPlayer=oldGetPlayer;Events.OnKeyPressed=oldEvent
+end
 return 'PASS '..checks..' reliable grab lifecycle, four source-timed strikes, following, cleanup, wall geometry, handoff and action protection checks'

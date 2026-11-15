@@ -1,5 +1,5 @@
-# Project Yakuza Emotes 0.2.4
+# Project Yakuza Emotes 0.2.5
 
-- Extended Lau Ka Long's spear ground-strike by five more seconds using the original cut-008 continuation, without looping or slowing the motion. Playback is now 304 source samples over 10.1 seconds at 30 fps.
-- The emote now moves the character along the original center-inclusive source path through native deferred movement. The cut boundary retains continuous position. Original body/prop timing, shaft calibration and spear floor clearance are retained for all 22 native spear meshes; modded spear-class weapons keep the crafted-spear fallback.
-- Fresh archive, native Human importer, per-sample source/shaft/sole checks and all 22 native movement tracks are validated offline, including pause, stopping, completion and zero deferred rotation. Existing unrelated emote media are byte-identical to 0.2.3. Native and optional CVF wheel behavior remains independent of the combat mod. Installed bytes and separate release ZIP are verified. Project Zomboid was not launched; live playback and multiplayer still need checking.
+- Install and Workshop packages now contain only runtime Build 42 files. Development documentation, provenance reports, templates, tools, backups and private source paths are excluded.
+- Existing animation and selector bytes match 0.2.4 exactly. Lau's 10.1-second source motion, native character movement and all 22 spear calibrations are retained. The native wheel and optional CVF integration are unchanged.
+- Package privacy tests, source/installed/archive comparisons, native Workshop content validation, production Lua compilation, standalone isolation and native/CVF fixtures pass offline. Only replaced or removed installed files are backed up. No game launch or Steam Workshop upload is performed.

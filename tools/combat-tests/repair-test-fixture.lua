@@ -24,6 +24,7 @@ z.damaged=false;z.vars.ZombieBiteDone='true';check(not P.validTarget(p,z),'compl
 z.vars.ZombieBiteDone='false';z.x=-.7;check(not P.validTarget(p,z),'counter requires frontal target')
 z.x=.7;z.outcome='fail';check(not P.validTarget(p,z),'failed attack cannot open counter')
 z.outcome='start';z.attacking=false;P.track(p,true);clock=clock+60;z.attacking=true;P.track(p,true)
+SandboxVars={ProjectYakuza={DragonTigerDropWindowMs=40,DragonTigerDropCooldownSeconds=2.5}};local observed=P.tracked[z].startedAt;clock=observed+40;check(P.validTarget(p,z),'configured Tiger Drop window includes boundary');clock=observed+41;check(not P.validTarget(p,z),'configured Tiger Drop window closes immediately after boundary');SandboxVars.ProjectYakuza.DragonTigerDrop=false;check(not P.ready(p),'disabled Dragon Tiger Drop never arms');SandboxVars=nil;clock=observed
 local killed=0;local realKill=P.kill
 P.kill=function(_,target)killed=killed+1;P.tracked[target]=nil end
 local cleared=0;PY.ChargedHeavy={clearPlayer=function()cleared=cleared+1 end,input=function()error('counter must take priority over charged heavy')end}
@@ -36,6 +37,7 @@ check(killed==1 and PY.activeActions[p] and PY.activeActions[p].kind=='parry','a
 check(cleared==1 and not PY.stateFor(p).finisherMove,'counter consumes heavy input and clears charge gesture')
 check(P.remaining(p)==20000 and not P.tryCounter(p),'successful counter starts its twenty-second cooldown')
 PY.cancelAction(p,'test');PY.ChargedHeavy=nil;PY.Bindings.options=nil;mouse[2]=false
+p.data.ProjectYakuzaTigerDropReadyAt=nil;SandboxVars={ProjectYakuza={DragonTigerDropWindowMs=60,DragonTigerDropCooldownSeconds=2.5}};P.tracked[z]={player=p,startedAt=clock};check(P.tryCounter(p)and P.remaining(p)==2500,'actual counter uses the configured fractional-second cooldown');PY.cancelAction(p,'sandbox_test');SandboxVars=nil
 P.kill=realKill;isClient=function()return true end
 local sent
 PY.Network={send=function(_,command,args)sent={command=command,args=args}end}

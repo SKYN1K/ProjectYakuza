@@ -20,6 +20,7 @@ function H.inputStarted(p,style,step,move)
     else H.chains[p]=nil end
 end
 function H.select(p,z,style,stamp)
+    if not PY.Sandbox.actionAllowed(style,"heatAction")then H.discard(p,H.tickets[p]);return end
     local ticket=H.tickets[p];local action=style.actions.heatAction
     local valid=R.validTarget(p,z)and R.placement(p,z,action)
     if ticket and ticket.stamp==stamp and now()<=ticket.expires and R.validFor(p,ticket.z,action)and R.placement(p,ticket.z,action)
@@ -46,6 +47,7 @@ function H.discard(p,ticket)
 end
 function H.input(p,s,style)
     local ticket=H.tickets[p];if not ticket then return false end
+    if not PY.Sandbox.actionAllowed(style,ticket.ground and"groundHeat"or"heatAction")then H.discard(p,ticket);return false end
     if not p:isAiming()or (ticket.weapon or ticket.ground)and not isMouseButtonDown(1)or not ticket.weapon and not ticket.ground and PY.Bindings.down("finisher")then H.discard(p,ticket);return false end
     local action=ticket.ground and style.actions.groundHeat or style.actions.heatAction
     if ticket.ground then
@@ -88,6 +90,7 @@ function H.input(p,s,style)
 end
 H.previews=setmetatable({}, {__mode="k"});H.groundPreviews=setmetatable({}, {__mode="k"})
 function H.weaponReady(p,s,style)
+    if not PY.Sandbox.actionAllowed(style,"heatAction")then return end
     if not p or not style or not PY.isEquipped(p)or not isMouseButtonDown(1)or not p:isAiming()or p:isDead()or p:isOnFloor()or p:isKnockedDown()or p:getVehicle()or p:isClimbing()or (p:getHitReaction()or"")~=""or PY.activeActions[p]or H.tickets[p]or not R.noCombo(s,style,now())then return end
     local action=style.actions.heatAction
     if not R.weaponAllowed(p,style,action)or not PY.HeatRules.canAfford(PY.actionHeat(p,action),(action.heatStocks or 0)*PY.Heat.stockSize(p))then return end
@@ -95,6 +98,7 @@ function H.weaponReady(p,s,style)
     return action
 end
 function H.groundCandidate(p,s,style,force)
+    if not PY.Sandbox.actionAllowed(style,"groundHeat")then H.groundPreviews[p]=nil;return end
     local move=style and style.actions.groundHeat
     if not move or not move.enabled or not isMouseButtonDown(1)or not PY.Defense.safe(p)or PY.activeActions[p]or H.tickets[p]or not R.noCombo(s,style,now())or not PY.HeatRules.canAfford(PY.actionHeat(p,move),(move.heatStocks or 0)*PY.Heat.stockSize(p))then return end
     local cached=H.groundPreviews[p]
@@ -159,6 +163,7 @@ end
 function A:forceStop()self:stop()end
 function A:forceComplete()self:perform()end
 function A:isValid()
+    if not PY.Sandbox.actionAllowed(self.context.style,self.context.kind)then return false end
     local p=self.character;local z=self.context.target.z;local style=PY.getPlayerStyle(p)
     return style and style.id==self.context.style.id and PY.isEquipped(p)and p:getPrimaryHandItem()==self.held and not p:isDead()and not p:isOnFloor()and not p:isKnockedDown()and not p:getVehicle()and not p:isClimbing()and (p:getHitReaction()or"")==""and (self.failed or z and (not z:isDead()or self.finalRequested)and (R.targetKind(z)~="player"or R.playerAllowed(p,z)))
 end

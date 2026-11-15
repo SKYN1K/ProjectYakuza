@@ -142,7 +142,7 @@ function H:drawGauge(p)
     self:drawOriginal(a.kanji,-34,-34,68,68,1,a.combat)
 
     self:drawOriginal(self.extreme and a.extremeHead or a.head,-27.6,-79.4,103.2,96.8)
-    if ProjectYakuza.TigerDrop then
+    if ProjectYakuza.TigerDrop and ProjectYakuza.Sandbox.tigerDrop(ProjectYakuza.getPlayerStyle(p))then
         local seconds=math.ceil(ProjectYakuza.TigerDrop.remaining(p)/1000)
         self:drawOriginal(a.stockGlass,-58,63,22,22,.8)
         if seconds==0 then self:drawOriginal(a.core,-55,66,16,16,.8) end

@@ -44,6 +44,7 @@ function S.release(p,heatRequest)
     S.fanout(p,"grabEnd",{player=p:getOnlineID(),zombie=z:getOnlineID(),useless=lease.useless,ignore=lease.ignore,deferred=lease.deferred,locked=lease.locked,grabId=lease.id,landed=lease.thrown==true,heatRequest=heatRequest})
 end
 function S.extremeMoveAllowed(s,style,move,swing,active)
+    if move and move.extremeHeat and not ProjectYakuza.Sandbox.enabled("ExtremeHeat")then return false end
     if not move or not move.extremeHeat or active then return true end
     local previous=s.packet
     if previous and previous.equipped and previous.style==style.id and previous.move==move.nodeValue and previous.swing==swing then return true end
@@ -53,6 +54,7 @@ function S.extremeMoveAllowed(s,style,move,swing,active)
     return move.double==true and first~=nil and first.style==style.id and first.branch==move.afterLight and now()<=first.expires
 end
 function S.snapshot(p,a,s)
+    if a.extreme==true and not ProjectYakuza.Sandbox.enabled("ExtremeHeat")then return end
     if not P.integer(a.seq,0,1000000000) or a.seq<=s.seq then return end
 
     local t=now()
@@ -256,7 +258,7 @@ function S.command(module,command,p,a)
         S.fanout(p,"sfx",{player=p:getOnlineID(),event=a.event,style=style.id,weaponProfile=profile or"",cue=a.cue,index=a.index,gain=a.gain});return
     end
     if command=="grabRequest" then
-        if ProjectYakuza.FEATURES.grab==false then S.release(p);reply(p,"grabDenied",{});return end
+        if ProjectYakuza.FEATURES.grab==false or not ProjectYakuza.Sandbox.enabled("Grabs")then S.release(p);reply(p,"grabDenied",{});return end
         local slot=ProjectYakuza.getStyle(s.packet.style).actions.grab
         local z=s.packet.weaponProfile==""and slot and slot.enabled and S.validVictim(p,a.zombie,1.3)
         if not z or S.grabs[z] or s.grab or ProjectYakuza.HeatRushServer and ProjectYakuza.HeatRushServer.held[z]or z and ProjectYakuza.GrabRules.unavailable(z)or z:isAttacking()or (z:getHitReaction()or "")~="" or z:isOnFloor() or z:isKnockedDown() then reply(p,"grabDenied",{});return end
@@ -266,6 +268,7 @@ function S.command(module,command,p,a)
         S.fanout(p,"grabStart",{player=p:getOnlineID(),zombie=z:getOnlineID(),useless=lease.useless,ignore=lease.ignore,deferred=lease.deferred,locked=lease.locked,grabId=lease.id});return
     end
     if command=="grabStrike"or command=="grabStrikeHit"then
+        if not ProjectYakuza.Sandbox.enabled("Grabs")then S.release(p);return end
         local lease=s.grab;if lease and lease.breaking then return end;local style=ProjectYakuza.getStyle(s.packet.style);local moves=style and style.actions.grab and style.actions.grab.strikes
         if not lease or not moves or a.grabId~=lease.id or lease.z:getOnlineID()~=a.zombie or lease.weapon~=p:getPrimaryHandItem()or not P.near(p,lease.z,1.5)or not P.integer(a.serial,1,1000000)then return end
         if command=="grabStrike"then
@@ -284,7 +287,7 @@ function S.command(module,command,p,a)
     end
     if command=="grabRelease" then S.release(p);return end
     if command=="throw" then
-        if ProjectYakuza.FEATURES.grab==false then S.release(p);return end
+        if ProjectYakuza.FEATURES.grab==false or not ProjectYakuza.Sandbox.enabled("Grabs")then S.release(p);return end
         local lease=s.grab
         if not lease or lease.breaking or a.grabId~=lease.id or lease.z:getOnlineID()~=a.zombie or lease.thrown or not S.validVictim(p,a.zombie,1.5) or s.packet.phase~="throw" then return end
         if lease.slot.throwContactMs and(not lease.throwStarted or t-lease.throwStarted<lease.slot.throwContactMs-250 or t-lease.throwStarted>lease.slot.throwDuration*1000+1000)then return end
@@ -305,11 +308,11 @@ function S.command(module,command,p,a)
         local style=ProjectYakuza.getStyle(s.packet.style)
         if ProjectYakuza.Weapons then style=ProjectYakuza.Weapons.view(style,s.packet.weaponProfile) end
         local z=S.validVictim(p,a.zombie,1.6,.35)
-        if not style.tigerDrop or not z or z:isOnFloor() or z:isKnockedDown() then return end
+        if not style.tigerDrop or not ProjectYakuza.Sandbox.tigerDrop(style)or not z or z:isOnFloor() or z:isKnockedDown() then return end
         if not s.counterUntil or t>s.counterUntil then
-            if not P.number(a.age,0,ProjectYakuza.TigerDropRules.windowMs) then return end
+            if not P.number(a.age,0,ProjectYakuza.Sandbox.tigerWindowMs(style)) then return end
             if t<(s.counterReady or 0) or z:getTarget()~=p or not z:isAttacking() or z:getAttackDidDamage() then return end
-            s.counterReady=t+ProjectYakuza.TigerDropRules.cooldownMs;s.counterUntil=t+400;s.counterSeen={};s.counterCount=0
+            s.counterReady=t+ProjectYakuza.Sandbox.tigerCooldownMs(style);s.counterUntil=t+400;s.counterSeen={};s.counterCount=0
         end
         if s.counterSeen[a.zombie] or s.counterCount>=ProjectYakuza.MAX_HIT_COUNT then return end
         s.counterSeen[a.zombie]=true;s.counterCount=s.counterCount+1;S.damage(p,z,0,false,true,s);return
@@ -383,7 +386,7 @@ function S.tick()
     if ProjectYakuza.HeatRushServer then ProjectYakuza.HeatRushServer.tick(t,online)end
     for id,s in pairs(S.players) do
         local p=s.player
-        if s.protection and (t>s.protection.expires or not online[p] or not alive(p)) then
+        if s.protection and (not ProjectYakuza.Sandbox.enabled("ExtremeHeat")or t>s.protection.expires or not online[p] or not alive(p)) then
             S.restoreProtection(p,s)
             if s.packet then s.packet.protected=false;S.fanout(p,"state",s.packet) end
         end
@@ -395,7 +398,7 @@ function S.tick()
             if not online[p] then S.players[id]=nil end
         elseif s.grab then
             local lease=s.grab;local z=lease.z
-            if lease.breaking and t-lease.escapeAt>lease.slot.breakout.duration*1000+500 or t>lease.expires or z:isDead()or p:isDead()or z:isOnFloor()or z:isKnockedDown()or lease.weapon~=p:getPrimaryHandItem()or lease.style~=s.packet.style or not P.near(p,z,2) then S.release(p)
+            if not ProjectYakuza.Sandbox.enabled("Grabs")or lease.breaking and t-lease.escapeAt>lease.slot.breakout.duration*1000+500 or t>lease.expires or z:isDead()or p:isDead()or z:isOnFloor()or z:isKnockedDown()or lease.weapon~=p:getPrimaryHandItem()or lease.style~=s.packet.style or not P.near(p,z,2) then S.release(p)
             else
                 if not lease.breaking and s.packet.phase=="hold"and ProjectYakuza.GrabRules.escapeDue(lease,lease.slot,t)then
                     lease.breaking=true;lease.escapeAt=t

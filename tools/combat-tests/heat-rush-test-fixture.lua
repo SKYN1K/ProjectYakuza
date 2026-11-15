@@ -847,6 +847,14 @@ do
    PY.cancelAction(p,'one_stock_done');clock=clock+500;PY.HeatActions.tick()
   end
  end
+ for _,id in ipairs({'Base.Katana','Base.BaseballBat','Base.HuntingKnife','ProjectYakuza.IntactBeerBottle','ProjectYakuza.BeerCrate','ProjectYakuza.Bicycle'})do
+  PY.resetPlayer(p,'extreme_weapon_heat');clock=clock+1000;p.held=held(id);p.x=0;p.y=0;p.attacking=false;z.x=1.1;z.y=0;z.health=10;z.useless=false;z.knock=false;mouse[1]=true;phase=nil;PY.MultiHit.targets=function()return {{victim=z}}end;PY.Weapons.sync(p);PY.setHeat(p,100)
+  check(PY.Heat.start(p),'Extreme Heat starts with supported weapon '..id);local view=PY.getPlayerStyle(p);local fuel=PY.Heat.display(p)
+  check(H.weaponCandidate(p,PY.stateFor(p),view)and H.weaponInput(p,PY.stateFor(p),view,true),'weapon Heat Action remains available during Extreme Heat '..id)
+  local context=PY.activeActions[p];fire('OnPlayerUpdate',p);phase=.01;fire('OnPlayerUpdate',p)
+  check(context.heatFuel and context.heatPaid and math.abs(fuel-PY.Heat.display(p)-PY.Heat.stockSize(p)-PY.Heat.rules(p).attackFuelCost)<.000001 and PY.Heat.isExtreme(p),'weapon Heat Action spends its stock and normal swing fuel while keeping Extreme Heat active '..id)
+  PY.cancelAction(p,'extreme_weapon_done');PY.Heat.stop(p,'test');clock=clock+500;PY.HeatActions.tick()
+ end
  check(not PY.HeatRules.canAfford(0,100/6)and not PY.HeatRules.canAfford(0/0,100/6)and not PY.HeatRules.canAfford(100/6-.0001,100/6),'shared price tolerance rejects missing, invalid and underfilled resources')
  PY.MultiHit.targets=savedTargets;p.held=nil;PY.Weapons.sync(p)
 end

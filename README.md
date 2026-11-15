@@ -2,7 +2,7 @@
 
 Project Zomboid Build 42 combat framework with the Dragon of Dojima style.
 
-Current combat version: **0.112.0**. Source mod folder: [combat/ProjectYakuza](combat/ProjectYakuza). See its [README](combat/ProjectYakuza/README.md) and [release notes](combat/ProjectYakuza/docs/RELEASE_NOTES.md) for controls, features and validation.
+Current combat version: **0.113.0**. Source mod folder: [combat/ProjectYakuza](combat/ProjectYakuza). See its [README](combat/ProjectYakuza/README.md) and [release notes](combat/ProjectYakuza/docs/RELEASE_NOTES.md) for controls, features and validation.
 
 Download the ZIP from this repository's Releases page. Extract its `ProjectYakuza` folder into `Zomboid/mods`, enable the mod and restart PZ. Install the same version on server and clients. Custom Voice Framework and a compatible voice pack are optional; they are not bundled in the combat ZIP.
 
@@ -16,4 +16,6 @@ The local workspace also contains a separate Kiryu CVF voice-pack project, previ
 
 Lua API 3 supports independent styles, custom action lifecycles, addon controls and registered multiplayer observers. Start with the [manual index](combat/ProjectYakuza/docs/INDEX.md) and [starter addon](combat/ProjectYakuza/templates/StyleSubmod/README.md). Unarmed grabs, four grab strikes and a wall Heat Action are enabled per style. The separate voice pack is untouched.
 
-[Project Yakuza Emotes](emotes/ProjectYakuzaEmotes/README.md) is a separate, optional Build 42 mod, version **0.2.4**, containing Majima, Lau Ka Long and Kiryu cutscene gestures. It works without the combat mod or Custom Voice Framework and has its own install ZIP and release.
+[Project Yakuza Emotes](emotes/ProjectYakuzaEmotes/README.md) is a separate, optional Build 42 mod, version **0.2.5**, containing Majima, Lau Ka Long and Kiryu cutscene gestures. It works without the combat mod or Custom Voice Framework and has its own install ZIP and release.
+
+Install and Workshop archives contain only runtime game files. See [Workshop publishing](docs/WORKSHOP.md) for the prepared folder, privacy checks and upload steps. Sandbox Options now includes Dragon Tiger Drop timing/cooldown and feature switches; local audio and controls use readable labels.

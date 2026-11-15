@@ -341,3 +341,17 @@
 !/tools/combat-tests/BicycleK2Probe.java
 
 !tools/combat-tests/extract_y6_bicycle_model.py
+
+!tools/combat-tests/build_sandbox_tests.py
+!tools/combat-tests/sandbox-test-fixture.lua
+!tools/combat-tests/SandboxOptionsProbe.java
+
+!tools/Build-GamePackage.py
+
+!tools/combat-tests/WorkshopPackageProbe.java
+!tools/combat-tests/test_game_package.py
+!docs/WORKSHOP.md
+
+!/docs/
+/docs/*
+!/docs/WORKSHOP.md

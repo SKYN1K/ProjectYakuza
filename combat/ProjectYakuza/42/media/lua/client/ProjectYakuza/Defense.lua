@@ -139,6 +139,7 @@ function A:start()
     self:phase("enter")
 end
 function A:isValid()
+    if not ProjectYakuza.Sandbox.actionAllowed(self.context.style,self.context.kind)then return false end
     if not D.safe(self.character,self.context.kind=="grab"and self.context.action.releaseOnAimLoss==false) then return false end
     if self.context.kind=="grab" then
         local z=self.context.target;local style=ProjectYakuza.getPlayerStyle(self.character)
@@ -357,7 +358,7 @@ function D.update(p)
     local block=style and style.actions.block
     local grab=style and style.actions.grab
     local canBlock=block and block.enabled==true
-    local canGrab=grab and grab.enabled==true
+    local canGrab=grab and grab.enabled==true and ProjectYakuza.Sandbox.enabled("Grabs")
     if (not canBlock and not canGrab) or not D.ready(p) then return false end
     if canBlock and x and not input.mustRelease and now()>=(input.brokenUntil or 0) then return ProjectYakuza.requestAction(p,"block") end
     if canGrab and grabPressed then
@@ -383,7 +384,7 @@ function D.bindSafetyInput()
     Events.OnKeyPressed.Remove(original)
     Events.OnKeyPressed.Add(function(key)
         local p=getPlayer();local c=p and ProjectYakuza.activeActions[p]
-        if ProjectYakuza.Bindings.matches("grab",key) and p and ProjectYakuza.isEquipped(p) and (p:isAiming()or c and c.kind=="grab") and not p:getVehicle() then return end
+        if ProjectYakuza.Sandbox.enabled("Grabs")and ProjectYakuza.Bindings.matches("grab",key) and p and ProjectYakuza.isEquipped(p) and (p:isAiming()or c and c.kind=="grab") and not p:getVehicle() then return end
         original(key)
     end)
 end

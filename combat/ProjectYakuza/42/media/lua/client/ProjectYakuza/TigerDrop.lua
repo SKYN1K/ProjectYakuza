@@ -4,15 +4,13 @@ require "TimedActions/ISTimedActionQueue"
 local ProjectYakuza=ProjectYakuza
 local P={tracked=setmetatable({}, {__mode="k"}),players=setmetatable({}, {__mode="k"}),flights={}}
 ProjectYakuza.TigerDrop=P
-P.windowMs=ProjectYakuza.TigerDropRules.windowMs
-P.cooldownMs=ProjectYakuza.TigerDropRules.cooldownMs
 local function now()return getTimestampMs()end
 local function var(z,n)return z:GetVariable(n) or "" end
 local function bool(z,n)return var(z,n)=="true" end
 function P.remaining(p)return math.max(0,(tonumber(p:getModData().ProjectYakuzaTigerDropReadyAt) or 0)-now())end
 function P.ready(p)
     local style=ProjectYakuza.getPlayerStyle(p)
-    if not style or style.tigerDrop~=true then return false end
+    if not style or style.tigerDrop~=true or not ProjectYakuza.Sandbox.tigerDrop(style)then return false end
     return p:isLocalPlayer() and ProjectYakuza.isEquipped(p) and p:isAiming() and not p:isDead() and not ProjectYakuza.isBusy(p)
         and not p:isOnFloor() and not p:isKnockedDown() and not p:isClimbing() and not p:getVehicle()
         and not p:hasTimedActions() and not p:isBlockMovement() and not p:getIgnoreMovement()
@@ -39,7 +37,7 @@ function P.validGuardTarget(p,z)
 end
 function P.validTarget(p,z)
     local s=P.tracked[z]
-    return activeAttack(p,z) and s.startedAt and now()-s.startedAt>=0 and now()-s.startedAt<=P.windowMs
+    return activeAttack(p,z) and s.startedAt and now()-s.startedAt>=0 and now()-s.startedAt<=ProjectYakuza.Sandbox.tigerWindowMs(ProjectYakuza.getPlayerStyle(p))
 end
 function P.track(p,force)
     local t=now();local ps=P.players[p]
@@ -139,7 +137,7 @@ local A=ISBaseTimedAction:derive("ProjectYakuzaTigerDropAction")
 P.Action=A
 function A:isValid()
     local p=self.character
-    return ProjectYakuza.isEquipped(p) and not p:isDead() and not p:isOnFloor() and not p:isKnockedDown()
+    return ProjectYakuza.Sandbox.tigerDrop(ProjectYakuza.getPlayerStyle(p))and ProjectYakuza.isEquipped(p) and not p:isDead() and not p:isOnFloor() and not p:isKnockedDown()
         and not p:isClimbing() and not p:getVehicle() and (p:getHitReaction() or "")==""
 end
 function A:adjustMaxTime(value)return value end
@@ -199,7 +197,7 @@ ProjectYakuza.registerActionHandler("parry",{
         P.kill(c.player,c.target)
         for _,entry in ipairs(extra) do if not entry.victim:isDead() then P.kill(c.player,entry.victim) end end
         ProjectYakuza.emit("attackCommitted",c.player,c.style,c.action,c,"parry")
-        c.player:getModData().ProjectYakuzaTigerDropReadyAt=now()+P.cooldownMs
+        c.player:getModData().ProjectYakuzaTigerDropReadyAt=now()+ProjectYakuza.Sandbox.tigerCooldownMs(c.style)
         return true
     end,
     cancel=function(c)if c.timedAction then c.timedAction:forceCancel()end end,

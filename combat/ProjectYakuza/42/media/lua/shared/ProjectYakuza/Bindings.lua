@@ -64,8 +64,24 @@ function B.register(definition)
 end
 function B.configure(options)
  B.options=options;options:addTitle("Controls")
- options:addDescription("Choose a mouse button or Keyboard, then set its key. Aim and movement use Project Zomboid's own bindings. Shift is no longer a quickstep shortcut.")
+ options:addDescription("Choose a mouse button, or select Keyboard and assign a key. Aiming and movement use your normal Project Zomboid controls.")
  for _,d in ipairs(B.definitions) do B.configureDefinition(d) end
+ if ISDuplicateKeybindDialog and not B.conflictLabels then
+  B.conflictLabels=true
+  for _,method in ipairs({"createChildren","nextDuplicate"})do
+   local original=ISDuplicateKeybindDialog[method]
+   ISDuplicateKeybindDialog[method]=function(dialog,...)
+    local result=original(dialog,...)
+    for _,d in ipairs(B.definitions)do
+     local key=d.custom and(d.name.." key")or"UI_ProjectYakuza_Key_"..d.id;local label=getText(key)
+     if dialog.label and(dialog.keybind2Name==key or dialog.keybind2Name==label)then
+      dialog.label.name=getText("UI_optionscreen_keyAlreadyBinded",getKeyName(dialog.key),label,label):gsub("\\n","\n"):gsub('\\"','"');break
+     end
+    end
+    return result
+   end
+  end
+ end
 end
 function B.restore(p)
  local old=B.attackGates[p];if old then p:setAuthorizeMeleeAction(old.allowed);B.attackGates[p]=nil end

@@ -55,4 +55,5 @@ check(not ok and token.push==1.2 and token.knockdown==2.4 and token.knockback an
 check(not PY.HitResponses.valid('stun',1),'in-place stun cannot request push force')
 local valid=PY.validateStyle({id='invalid_knockback',name='Invalid',lightAttacks={{animation='a',nodeValue='a',duration=1,noKnockback='bad'}},actions={}})
 check(not valid,'framework rejects nonboolean knockback overrides')
+reset();activate();SandboxVars={ProjectYakuza={ExtremeHeat=false}};fire('OnPlayerUpdate',p);check(not H.isExtreme(p)and not p.stagger,'turning off Extreme Heat restores the active mode safely');SandboxVars=nil;reset()
 return true,'PASS '..checks..' boost inputs, eight-link chain, depletion, normal combat and weapon isolation checks'

@@ -11,6 +11,7 @@ function G.discard(p,job)
 end
 function G.candidate(p,force)
     if not p then return end
+    if not PY.Sandbox.enabled("Grabs")or not PY.Sandbox.enabled("HeatActions")then G.previews[p]=nil;return end
     local c=p and PY.activeActions[p];local a=c and c.kind=="grab"and c.timedAction
     local style=p and PY.getPlayerStyle(p);local slot=style and style.actions.grabHeat
     if not isMouseButtonDown(1)or not a or not a.started or a.cleaned or a.phaseName~="hold"or not a.paired or not slot or not slot.enabled or not PY.Defense.safe(p)then G.previews[p]=nil;return end

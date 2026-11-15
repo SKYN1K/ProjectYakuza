@@ -12,7 +12,7 @@ function E.restore(p)
     if d.ProjectYakuzaActivationOldInvincible~=nil then p:setInvincible(d.ProjectYakuzaActivationOldInvincible);d.ProjectYakuzaActivationOldInvincible=nil end
 end
 function E.ready(p)
-    return ProjectYakuza.Defense.ready(p) and ProjectYakuza.Heat.enabled(p) and not ProjectYakuza.Heat.isExtreme(p) and ProjectYakuza.Heat.stocks(p)>=1
+    return ProjectYakuza.Sandbox.enabled("ExtremeHeat")and ProjectYakuza.Defense.ready(p) and ProjectYakuza.Heat.enabled(p) and not ProjectYakuza.Heat.isExtreme(p) and ProjectYakuza.Heat.stocks(p)>=1
 end
 function E.protect(z)
     if not z or not instanceof(z,"IsoZombie") or z:isDead() then return end
@@ -39,7 +39,7 @@ function A:adjustMaxTime(v)return v end
 function A:isUsingTimeout()return false end
 function A:isValid()
     local p=self.character
-    return ProjectYakuza.isEquipped(p) and not p:isDead() and not p:isOnFloor() and not p:isKnockedDown()
+    return ProjectYakuza.Sandbox.enabled("ExtremeHeat")and ProjectYakuza.isEquipped(p) and not p:isDead() and not p:isOnFloor() and not p:isKnockedDown()
         and not p:isClimbing() and not p:getVehicle() and (p:getHitReaction() or "")==""
 end
 function A:start()

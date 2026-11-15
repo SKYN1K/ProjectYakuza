@@ -26,11 +26,9 @@ try {
     $dist = Join-Path $root 'dist'
     New-Item -ItemType Directory -Path $dist -Force | Out-Null
     $archive = Join-Path $dist ('ProjectYakuzaEmotes-B42-v' + $Version + '.zip')
-    $temporaryArchive = Join-Path $dist ('emotes-' + [guid]::NewGuid().ToString() + '.zip')
-    Add-Type -AssemblyName System.IO.Compression.FileSystem
-    [IO.Compression.ZipFile]::CreateFromDirectory($mod, $temporaryArchive, [IO.Compression.CompressionLevel]::Optimal, $true)
-    Move-Item -LiteralPath $temporaryArchive -Destination $archive -Force
-    & git add -A -- .gitignore .gitattributes README.md AGENTS.md emotes tools/Publish-EmoteRelease.ps1 tools/combat-tests/validate_emote_split.py tools/combat-tests/build_emote_tests.py tools/combat-tests/emote-test-fixture.lua tools/combat-tests/emote-menu-test-fixture.lua tools/combat-tests/README.md tools/combat-tests/MajimaEmoteProbe.java tools/combat-tests/StepUpMotionProbe.java tools/combat-tests/EmoteReadinessProbe.java tools/combat-tests/build_majima_bat_emote.py tools/combat-tests/validate_majima_bat_emote.py tools/combat-tests/extract_majima_bat_emote.py tools/combat-tests/build_lau_spear_emote.py tools/combat-tests/validate_lau_spear_emote.py tools/combat-tests/extract_lau_spear_emote.py tools/combat-tests/build_kiryu_bad_luck_emote.py tools/combat-tests/validate_kiryu_bad_luck_emote.py tools/combat-tests/extract_kiryu_bad_luck_emote.py tools/combat-tests/extract_kiryu_step_up_emote.py tools/combat-tests/build_kiryu_step_up_emote.py tools/combat-tests/validate_kiryu_step_up_emote.py
+    & $PythonPath (Join-Path $root 'tools/Build-GamePackage.py') --project emotes --version $Version --workshop
+    if ($LASTEXITCODE -ne 0) { throw 'Runtime-only package or privacy validation failed.' }
+    & git add -A -- .gitignore .gitattributes README.md AGENTS.md emotes tools/Publish-EmoteRelease.ps1 tools/Build-GamePackage.py tools/combat-tests/validate_emote_split.py tools/combat-tests/build_emote_tests.py tools/combat-tests/emote-test-fixture.lua tools/combat-tests/emote-menu-test-fixture.lua tools/combat-tests/README.md tools/combat-tests/MajimaEmoteProbe.java tools/combat-tests/StepUpMotionProbe.java tools/combat-tests/EmoteReadinessProbe.java tools/combat-tests/build_majima_bat_emote.py tools/combat-tests/validate_majima_bat_emote.py tools/combat-tests/extract_majima_bat_emote.py tools/combat-tests/build_lau_spear_emote.py tools/combat-tests/validate_lau_spear_emote.py tools/combat-tests/extract_lau_spear_emote.py tools/combat-tests/build_kiryu_bad_luck_emote.py tools/combat-tests/validate_kiryu_bad_luck_emote.py tools/combat-tests/extract_kiryu_bad_luck_emote.py tools/combat-tests/extract_kiryu_step_up_emote.py tools/combat-tests/build_kiryu_step_up_emote.py tools/combat-tests/validate_kiryu_step_up_emote.py
     if ($LASTEXITCODE -ne 0) { throw 'Standalone git add failed.' }
     & git diff --cached --quiet
     if ($LASTEXITCODE -eq 1) {
@@ -40,7 +38,7 @@ try {
     & git push -u origin main
     if ($LASTEXITCODE -ne 0) { throw 'Standalone git push failed.' }
     $revision = (& git rev-parse HEAD).Trim()
-    & $GhPath release create $tag $archive --repo $Repo --target $revision --title ("Project Yakuza Emotes " + $Version) --notes-file $notes --latest=false
+    & $GhPath release create $tag $archive (Join-Path $dist ('ProjectYakuzaEmotes-Workshop-v' + $Version + '.zip')) --repo $Repo --target $revision --title ("Project Yakuza Emotes " + $Version) --notes-file $notes --latest=false
     if ($LASTEXITCODE -ne 0) { throw 'Standalone release creation failed; pushed commit and ZIP are preserved.' }
     & $GhPath release view $tag --repo $Repo --json url,tagName,assets
     if ($LASTEXITCODE -ne 0) { throw 'Cannot verify published standalone release.' }

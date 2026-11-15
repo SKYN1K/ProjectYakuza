@@ -94,6 +94,7 @@ function H.stop(p,reason)
     return true
 end
 function H.start(p,activation)
+    if not ProjectYakuza.Sandbox.enabled("ExtremeHeat")then return false,"sandbox_disabled"end
     if not H.enabled(p) then return false,"heat_not_supported" end
     local cinematic=activation and ProjectYakuza.activeActions[p]==activation and activation.kind=="heatActivation"
         and activation.timedAction and activation.timedAction.started and p:GetVariable("ProjectYakuzaHeatActivation")=="done"
@@ -163,6 +164,7 @@ function H.update(p)
     if not p or not instanceof(p,"IsoPlayer") or not p:isLocalPlayer() then return end
     local s=state(p);local t=time();local equipped=ProjectYakuza.isEquipped(p)
     initialize(p,s)
+    if s.extreme and not ProjectYakuza.Sandbox.enabled("ExtremeHeat")then H.stop(p,"sandbox_disabled")end
     local down=equipped and H.enabled(p) and p:isAiming() and (ProjectYakuza.Bindings and ProjectYakuza.Bindings.down("extremeHeat") or (not ProjectYakuza.Bindings and isKeyDown(Keyboard.KEY_N)))
     if down and not s.keyDown then H.toggle(p) end
     s.keyDown=down
