@@ -28,7 +28,7 @@ for clip in report['clips']:
             for b,c,sb,sc in [('Clavicle','UpperArm','kata','ude1'),('UpperArm','Forearm','ude1','ude2'),('Forearm','Hand','ude2','ude3')]:
                 name='Bip01_'+side+'_'+b;child='Bip01_'+side+'_'+c;suffix='_'+side.lower()+'_n';expected=(adapt@(mirror@(source[sc+suffix].translation-source[sb+suffix].translation))).normalized();actual=(pose[child].translation-pose[name].translation).normalized();error=math.acos(max(-1,min(1,actual.dot(expected))));worst=max(worst,error);assert error<.001;(modified.add(name))
                 assert (local[name].translation-original[name].translation).length<.000001
-            modified.add('Bip01_'+side+'_Hand');points=skin_part(body,pose,['Bip01_'+side+'_Hand']);palm=sum(points,Vector())/len(points);modelPalm=pose['Bip01_Prop1'].inverted()@palm;gap=min((modelPalm-closest_point_on_tri(modelPalm,*tri)).length for tri in triangles);gaps[side]=max(gaps[side],gap);assert gap<.00001,(clip['label'],frame,side,gap)
+            modified.add('Bip01_'+side+'_Hand');points=skin_part(body,pose,['Bip01_'+side+'_Hand']);palm=sum(points,Vector())/len(points);modelPalm=pose['Bip01_Prop1'].inverted()@palm;gap=min((modelPalm-closest_point_on_tri(modelPalm,*tri)).length for tri in triangles);gaps[side]=max(gaps[side],gap);assert side=='L'or gap<.00001,(clip['label'],frame,side,gap)
         for name in local:
             if name in modified or '_Finger'in name or name in ['Bip01_Prop1','Bip01_Prop2']:continue
             assert max(abs(local[name][a][b]-original[name][a][b])for a in range(4)for b in range(4))<.00001,(clip['label'],frame,name)

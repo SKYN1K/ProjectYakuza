@@ -86,7 +86,7 @@
   </m_Events>
   <m_Events>
     <m_EventName>SetVariable</m_EventName>
-    <m_TimePc>0.95</m_TimePc>
+    <m_TimePc>0.975</m_TimePc>
     <m_ParameterValue>ProjectYakuzaChainReady=dd_bottle_light_01</m_ParameterValue>
   </m_Events>
   <m_Events>

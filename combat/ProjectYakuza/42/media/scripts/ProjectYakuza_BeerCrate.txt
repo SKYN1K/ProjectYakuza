@@ -38,10 +38,10 @@ module ProjectYakuza
         DoorDamage = 0,
         TreeDamage = 0,
         SplatBloodOnNoDeath = false,
-        HitSound = NightstickHit,
-        HitFloorSound = NightstickHit,
-        DoorHitSound = NightstickHit,
-        SwingSound = NightstickSwing,
-        BreakSound = BreakObject,
+        HitSound = ProjectYakuza_CrateHit,
+        HitFloorSound = ProjectYakuza_CrateFloor,
+        DoorHitSound = ProjectYakuza_CrateFloor,
+        SwingSound = ProjectYakuza_CrateSwing,
+        BreakSound = ProjectYakuza_CrateBreak,
     }
 }

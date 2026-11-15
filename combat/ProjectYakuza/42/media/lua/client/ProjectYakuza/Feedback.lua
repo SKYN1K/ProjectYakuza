@@ -162,6 +162,7 @@ function F.hit(p,z,weapon,damage)
     local s=ProjectYakuza.stateFor(p);local move=s.groundMove or s.finisherMove
     local style=ProjectYakuza.getPlayerStyle(p)
     if style and style.weaponProfile then
+        if style.nativeWeaponSounds then return end
         if not s.active or not move then return end
         local stamp=s.multiHitToken or s.startedAt
         if s.feedbackStamp==stamp then return end

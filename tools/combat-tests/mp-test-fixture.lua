@@ -1175,17 +1175,17 @@ do
  function crate:getModData()return self.data end;p.hand=crate
  clock=clock+3000;snapshot(p,{weaponProfile='crate',clip='',move='dd_crate_light_01',heat=100,extreme=false,rightAim=true,comboBusy=false})
  command('heatRushBegin',{weaponHeat=true,zombie=z1.id,request=6500});local job=rush.leases[p]
- check(job and job.definition.prompts[1].presses==2,'MP crate starts the original action with server-authored mash requirements')
- command('heatRushReady',{action=job.action});local prompt=job.definition.prompts[1];local first=prompt.atMs-800
+ check(job and job.definition.prompts[1].presses==10,'MP crate starts the original action with server-authored mash requirements')
+ command('heatRushReady',{action=job.action});local prompt=job.definition.prompts[1];local first=prompt.atMs-prompt.windowMs+100
  clock=job.started+first;command('heatRushPress',{action=job.action,index=1});check(not job.presses[1],'one generic packet cannot complete a mash')
  command('heatRushPress',{action=job.action,index=1,tap=2,tapAt=first});check(not job.presses[1]and not job.tapCounts[1],'out-of-order mash packet is rejected')
  command('heatRushPress',{action=job.action,index=1,tap=1,tapAt=first});check(job.tapCounts[1]==1 and not job.presses[1],'first legitimate tap advances only one step')
  command('heatRushPress',{action=job.action,index=1,tap=1,tapAt=first});check(job.tapCounts[1]==1,'duplicate mash packet cannot add a press')
  clock=clock+50;command('heatRushPress',{action=job.action,index=1,tap=2,tapAt=first+50});check(not job.presses[1],'server rejects impossible fast taps')
- clock=job.started+first+500;command('heatRushPress',{action=job.action,index=1,tap=2,tapAt=first+500});check(job.presses[1],'second valid tap completes authoritative mash')
+ for tap=2,10 do local age=first+(tap-1)*150;clock=job.started+age;snapshot(p,{weaponProfile='crate',clip='ProjectYakuza_DD_CrateHeat',move='dd_crate_heat',rightAim=true});command('heatRushPress',{action=job.action,index=1,tap=tap,tapAt=age})end;check(job.presses[1],'ten valid taps complete authoritative mash')
  clock=job.started+prompt.atMs+1;rush.tick(clock,{[p]=true});check(not job.failed,'completed mash continues to the next original source repeat')
- clock=job.started+job.definition.prompts[2].atMs+200;rush.tick(clock,{[p]=true});check(job.failed and job.failedIndex==2 and job.failurePose,'missing next mash branches to original paired ending')
- clock=job.failedAt+job.move.qteFailure.contactMs+10;command('heatRushHit',{action=job.action,index=#job.contacts});check(not job.pendingDamage and z1.health<10,'failed mash applies nonlethal earned damage at its ending contact')
+ rush.finish(p,false);z1.health=10;z1.useless=false;z1.ignore=false;z1.knock=false;clock=clock+3000;snapshot(p,{weaponProfile='crate',clip='',move='dd_crate_light_01',heat=100,extreme=false,rightAim=true,comboBusy=false});command('heatRushBegin',{weaponHeat=true,zombie=z1.id,request=6501});job=rush.leases[p];check(job~=nil,'missed beercase mash starts a fresh authoritative lease');command('heatRushReady',{action=job.action});clock=job.started+job.definition.prompts[1].atMs+200;rush.tick(clock,{[p]=true});check(job.failed and job.failedIndex==1 and job.failurePose,'missing beercase mash branches to original paired ending')
+ clock=job.failedAt+job.move.qteFailure.contactMs+10;snapshot(p,{weaponProfile='crate',clip='ProjectYakuza_DD_CrateHeatFail',move='dd_crate_heat',rightAim=true});command('heatRushHit',{action=job.action,index=#job.contacts});check(not job.pendingDamage and z1.health<10,'failed mash applies nonlethal earned damage at its ending contact')
  clock=job.failedAt+job.move.qteFailure.duration*1000+10;snapshot(p,{weaponProfile='crate',clip='ProjectYakuza_DD_CrateHeatFail',move='dd_crate_heat',rightAim=true});command('heatRushEnd',{action=job.action,completed=true});check(not rush.leases[p]and not p.invincible,'finite original ending releases protection and lease')
  p.hand=p.token;z1.health=10;z1.x=.5;z1.y=0;z1.useless=false;z1.ignore=false;z1.deferred=true;z1.knock=false;z1.reaction='';z1.state='idle';clock=clock+3000
  snapshot(p,{weaponProfile='',clip='ProjectYakuza_DD_GrabHold',phase='hold',rightAim=true,heat=100,extreme=false,comboBusy=false});command('grabRequest',{zombie=z1.id});local lease=server.players[p.id].grab
@@ -1227,7 +1227,7 @@ do
 end
 do
  ProjectYakuza.HeatActions.clear();server.release(p);p.dead=false;p.equipped=true;z1.useless=false;z1.ignore=false;z1.deferred=true;z1.knock=false;z1.reaction='';wall=false;p.data.ProjectYakuzaStyle='dragon_of_dojima';p.x=0;p.y=0;z1.x=1.1;z1.y=0;z1.health=10;z1.floor=false;z1.knocked=false;clock=clock+3000
- local item={data={},id='ProjectYakuza.Bicycle',getCondition=function()return 10 end,getMinDamage=function()return 1 end,getMaxDamage=function()return 1 end}
+ local item={data={},condition=10,id='ProjectYakuza.Bicycle',setCondition=function(self,v)self.condition=v end,syncItemFields=function(self)self.synced=true end,getCondition=function(self)return self.condition end,getMinDamage=function()return 1 end,getMaxDamage=function()return 1 end}
  function item:getFullType()return self.id end;function item:getModData()return self.data end
  p.hand=item
  local function neutral(extra)
@@ -1248,7 +1248,7 @@ do
   check(z1.hits==hits and math.abs(z1.health-({9.625,8.5})[i])<.000001,'MP bicycle uses server weapon damage and original weights with replay rejection '..i)
  end
  clock=lease.started+lease.duration*1000-50;neutral({clip='ProjectYakuza_DD_BicycleHeat',move='dd_bicycle_heat'});command('heatRushEnd',{action=lease.action,completed=true})
- check(not rush.leases[p]and not p.invincible,'MP bicycle releases its lease after original recovery')
+ check(not rush.leases[p]and not p.invincible and item.condition==0 and item.synced,'MP bicycle completion breaks and syncs only its own weapon while releasing the lease')
  clock=clock+500;ProjectYakuza.HeatActions.tick();p.hand=p.token
 end
 do

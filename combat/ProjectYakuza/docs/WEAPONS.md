@@ -119,3 +119,5 @@ Base.Katana now supports the DoD-exclusive [katana Heat Action](HEAT_ACTIONS.md)
 
 
 Version 0.71.0 adds three separate [intact bottle weapons](BOTTLE_WEAPONS.md) and their DoD-exclusive original Heat Action. Use the same rebindable Heat Action input while physically holding RMB, outside combos. Ordinary drink bottles are unchanged.
+
+Version 0.114.0 uses dedicated Y6 WPN bottle and Kiwami 2 WPH bicycle motion families. The generic WPA/WPC mappings for these two objects are superseded. BottleMoves.lua owns bottle attack timing; native model aliases reference unchanged supplied meshes and grip the neck at the right palm. Native object hit sounds suppress the extra generic weapon-finisher overlay. See bottle-weapon-assets.json and object-weapon-sounds.json.

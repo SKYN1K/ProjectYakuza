@@ -11,8 +11,9 @@ function H.finish(p,completed)
     if completed and(not job.failed or R.pairedFailure(job.move))and job.hits[#job.contacts]then R.ground(z,R.endFacing(job))end
     if job.started then PY.HeatActions.finish(p,job);if not job.victimRestored then R.restore(z,job.old);job.victimRestored=true end end
     PY.HeatActions.settle(job,p,z,job.weapon,completed and(not job.failed or R.pairedFailure(job.move))and(R.targetKind(z)~="player"or R.playerAllowed(p,z)))
+    PY.HeatActions.breakWeapon(job,p,job.weapon,job.move,completed==true and not job.failed and job.hits[#job.contacts]==true)
     if completed and(not job.failed or R.pairedFailure(job.move))and job.hits[#job.contacts]and not z:isDead()then R.ground(z,R.endFacing(job))end
-    S.fanout(p,"heatRushEnd",{player=p:getOnlineID(),action=job.action,zombie=z:getOnlineID(),targetKind=R.targetKind(z),health=z:getHealth(),useless=job.old.useless,ignore=job.old.ignore,deferred=job.old.deferred,locked=job.old.locked,completed=completed==true})
+    S.fanout(p,"heatRushEnd",{player=p:getOnlineID(),action=job.action,zombie=z:getOnlineID(),targetKind=R.targetKind(z),health=z:getHealth(),useless=job.old.useless,ignore=job.old.ignore,deferred=job.old.deferred,locked=job.old.locked,completed=completed==true,weaponBroken=job.weaponBroken==true,weaponBrokenItem=job.weaponBroken and job.weapon.getID and job.weapon:getID()or nil})
 end
 function H.abort(job,index)
     if job.failed or not job.move.qteFailure then return end

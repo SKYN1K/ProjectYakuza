@@ -4,6 +4,7 @@ require "TimedActions/ISTimedActionQueue"
 require "ProjectYakuza/NetworkProtocol"
 require "ProjectYakuza/HeatRushRules"
 require "ProjectYakuza/HeatActions"
+require "ProjectYakuza/BicycleBreak"
 require "ProjectYakuza/AttackEffects"
 require "ProjectYakuza/Defense"
 require "ProjectYakuza/QTEFeedback"
@@ -323,7 +324,7 @@ function A:cleanup(done)
         if settled then R.ground(z,R.endFacing(self.pose))end
         if not self.victimRestored then R.restore(z,self.victim);self.victimRestored=true end
         PY.releaseActionAnimation(p,self,true)
-        if not isClient()then PY.HeatActions.settle(self,p,z,self.held,done and(not self.failed or R.pairedFailure(self.context.action)))end
+        if not isClient()then PY.HeatActions.settle(self,p,z,self.held,done and(not self.failed or R.pairedFailure(self.context.action)));if PY.HeatActions.breakWeapon(self,p,self.held,self.context.action,settled==true)and PY.BicycleBreak then PY.BicycleBreak.start(p,"local:"..now(),now(),p:getX(),p:getY(),p:getZ())end end
         if not isClient()and done and(not self.failed or R.pairedFailure(self.context.action))and self.success[#R.contacts(self.context.action)]and not z:isDead()then R.ground(z,R.endFacing(self.pose))end
     end
     local granted=self.context.target.granted;if granted then PY.Network.send(p,"heatRushEnd",{action=granted.action,completed=done==true and(not self.failed or R.pairedFailure(self.context.action))})end
@@ -436,6 +437,15 @@ function H.receive(module,command,a)
     if command=="heatRushEnd"then
         if not H.session(a.player,a.session)then return end
         H.syncHealth(p,a)
+        if a.weaponBroken then
+            local held=p:getPrimaryHandItem()
+            if held and held:getFullType()=="ProjectYakuza.Bicycle"and held.getID and held:getID()==a.weaponBrokenItem then
+                held:setCondition(0)
+                if p.getSecondaryHandItem and p:getSecondaryHandItem()==held then p:setSecondaryHandItem(nil)end
+                if p.setPrimaryHandItem then p:setPrimaryHandItem(nil)end
+            end
+            if PY.BicycleBreak then PY.BicycleBreak.remote(p,a)end
+        end
         local active=p:isLocalPlayer()and H.active[p];local grant=active and active.context.target.granted
         if grant and grant.action==a.action and a.completed~=true then active:cancel()end
         H.remoteEnd(a.player,a.action,a);return

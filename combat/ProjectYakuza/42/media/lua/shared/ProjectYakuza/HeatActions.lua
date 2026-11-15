@@ -22,6 +22,14 @@ function H.settle(job,p,z,item,completed)
     if z:isDead()then z:hitConsequences(item,p,true,0,false)end
     return true
 end
+function H.breakWeapon(job,p,item,move,completed)
+    if not completed or job.weaponBroken or not move or not move.breakWeapon or not item or item:getFullType()~="ProjectYakuza.Bicycle"or p:getPrimaryHandItem()~=item then return false end
+    job.weaponBroken=true;item:setCondition(0)
+    if p.getSecondaryHandItem and p:getSecondaryHandItem()==item then p:setSecondaryHandItem(nil)end
+    if p.setPrimaryHandItem then p:setPrimaryHandItem(nil)end
+    if item.syncItemFields then item:syncItemFields()end
+    return true
+end
 function H.restore(p,job)
     if H.active[p]~=job then return false end
     p:setInvincible(job.invincible);p:setGhostMode(job.ghost);H.active[p]=nil

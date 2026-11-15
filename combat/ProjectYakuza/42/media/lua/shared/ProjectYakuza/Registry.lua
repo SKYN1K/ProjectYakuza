@@ -104,7 +104,7 @@ function Q.valid(def,durationMs)
     if def.allowOverlap~=nil and type(def.allowOverlap)~="boolean"then return false,"invalid QTE overlap policy"end
     local last=0;local extra=0
     for _,v in ipairs(def.prompts)do
-        if type(v)~="table"or not finite(v.atMs)or v.atMs<=last or v.atMs>120000 or not finite(v.windowMs)or v.windowMs<50 or v.windowMs>2000 or not v.countdownMs and v.atMs-v.windowMs<(def.allowOverlap and 0 or last)or type(v.binding)~="string"or not v.binding:match("^[%w_.-]+$")or #v.binding>80 then return false,"invalid QTE prompt timing or binding"end
+        if type(v)~="table"or not finite(v.atMs)or v.atMs<=last or v.atMs>120000 or not finite(v.windowMs)or v.windowMs<50 or v.windowMs>(v.presses and 4000 or 2000) or not v.countdownMs and v.atMs-v.windowMs<(def.allowOverlap and 0 or last)or type(v.binding)~="string"or not v.binding:match("^[%w_.-]+$")or #v.binding>80 then return false,"invalid QTE prompt timing or binding"end
         if v.countdownMs~=nil then
             local first=v.sourceStartMs or math.max(last,v.atMs-v.windowMs)
             if not finite(v.countdownMs)or v.countdownMs<100 or v.countdownMs>2000 or not finite(first)or first<last or first>=v.atMs or (v.atMs-first)/v.countdownMs<.05 or (v.atMs-first)/v.countdownMs>4 then return false,"invalid paced QTE countdown"end
@@ -330,7 +330,7 @@ function S.actionAllowed(style,kind,move)
     return true
 end
 end
-ProjectYakuza.VERSION = "0.113.0"
+ProjectYakuza.VERSION = "0.114.0"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}

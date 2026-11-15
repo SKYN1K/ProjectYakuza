@@ -41,7 +41,7 @@ for row in rows:
   if 'HeatRush'in row['animation']:cue='kickImpact'if limb.endswith('Leg')else'punchImpact';layers=[];base=True
   if row['animation'].endswith(('BottleHeat','WallHeat'))and i==len(row['contacts'])-1:cue='throwImpact';base=True
   if row['animation'].endswith('WallHeat')and i==1:cue='kickImpact';base=True
-  if row['animation'].startswith('ProjectYakuza_DD_CrateHeat')and i>0 and i<len(row['contacts'])-1:cue='punchImpact';base=True
+  if row['animation'].startswith('ProjectYakuza_DD_CrateHeat'):cue='heavyImpact';base=False
   event=(row['baseSounds']if base else row['sounds']).get(cue)or row['sounds'].get('heavyImpact');sounds.add(event)
   feedback='unarmed'if base and cue in ['punchImpact','kickImpact']else'blunt'if cue=='throwImpact'else None
   point=victim['frames'][f][bone];boneName=victim['bones'][bone];extra={}

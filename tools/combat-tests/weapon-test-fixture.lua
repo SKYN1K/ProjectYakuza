@@ -252,7 +252,7 @@ do
   p.vars.ProjectYakuzaHitMarker=move.nodeValue;p.vars.ProjectYakuzaChainReady=''
   if .67>=timeline.chain then p.vars.ProjectYakuzaChainReady=move.nodeValue end
   check(not PY.tryRecoveryCancel(p,view,state)and not state.recoveryReleased,'bottle queued heavy cannot cut off the last third of light '..i)
-  check(timeline.chain==move.chainAt and timeline.chain>timeline.hit and timeline.chain>=.94,'bottle XML and runtime agree on late recovery '..i)
+  check(math.abs(timeline.chain-move.chainAt)<.000000001 and timeline.chain>timeline.hit and timeline.chain>=.94,'bottle XML and runtime agree on late recovery '..i)
   p.vars.ProjectYakuzaChainReady=move.nodeValue
   check(PY.tryRecoveryCancel(p,view,state)and state.recoveryReleased,'bottle buffered followup releases after committed recovery '..i)
   state.recoveryReleased=false;state.queuedWeaponHeavy=nil;state.queued=0

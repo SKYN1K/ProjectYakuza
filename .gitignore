@@ -355,3 +355,14 @@
 !/docs/
 /docs/*
 !/docs/WORKSHOP.md
+
+!tools/combat-tests/build_bottle_weapon_assets.py
+!tools/combat-tests/validate_bottle_weapon_assets.py
+!tools/combat-tests/validate_beercase_assets.py
+!tools/combat-tests/build_object_weapon_sounds.py
+!tools/combat-tests/extract_bottle_weapon_assets.py
+!tools/combat-tests/ObjectWeaponProbe.java
+
+!tools/combat-tests/build_bicycle_fragments.py
+!tools/combat-tests/build_bicycle_break_tests.py
+!tools/combat-tests/bicycle-break-test-fixture.lua

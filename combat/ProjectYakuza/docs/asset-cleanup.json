@@ -316,18 +316,6 @@
       "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
     },
     {
-      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BottleReady.x",
-      "bytes": 474008,
-      "sha256": "a85671769256dd018c59ac875ed682e68f9bce879189481038315cf3c5ccbc98",
-      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
-    },
-    {
-      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BottleRelaxedIdle.x",
-      "bytes": 596271,
-      "sha256": "836c95561a7825ffa752defe265f56fec6939958e709522a9187a09df9c08270",
-      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
-    },
-    {
       "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BottleRelaxedRun.x",
       "bytes": 401021,
       "sha256": "a588e061e21d8774e86816f96893c58d49cc914399a32047f8fd34b3c8b561b8",
@@ -1550,7 +1538,27 @@
       "bytes": 929,
       "sha256": "a3a7ddf6c2e6eba54ba8cfeae0d1b810afcef02f25b053e6ff26e03b18a2530c",
       "reason": "Superseded texture sequence/atlas; current renderers load original flame/smoke, glints, blood and current HUD atlases instead."
+    },
+    {
+      "path": "42/media/sound/ProjectYakuza/HeatScene_crate_7.wav",
+      "bytes": 55412,
+      "sha256": "48877e66970e5fbf022bd22a2af19430eafbf2d622ae67f349208231087ce6f2",
+      "reason": "Superseded H3270 crushing-scene sound; h3000 beercase has its own supplied CMN/bank timeline."
     }
   ],
-  "removedBytes": 21959257
+  "removedBytes": 21959257,
+  "reactivated": [
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BottleReady.x",
+      "bytes": 474008,
+      "sha256": "a85671769256dd018c59ac875ed682e68f9bce879189481038315cf3c5ccbc98",
+      "reason": "Replaced with dedicated Y6 WPN hold in 0.114.0, with newly scoped native selectors; not the obsolete generic WPA asset."
+    },
+    {
+      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BottleRelaxedIdle.x",
+      "bytes": 596271,
+      "sha256": "836c95561a7825ffa752defe265f56fec6939958e709522a9187a09df9c08270",
+      "reason": "Replaced with dedicated Y6 WPN hold in 0.114.0, with newly scoped native selectors; not the obsolete generic WPA asset."
+    }
+  ]
 }

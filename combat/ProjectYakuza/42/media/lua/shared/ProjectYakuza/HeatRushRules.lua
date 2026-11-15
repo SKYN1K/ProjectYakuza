@@ -99,15 +99,31 @@ function R.capture(z)
 end
 function R.hold(z)
     z:setIgnoreMovement(true);z:setDeferredMovementEnabled(false)
-    if R.targetKind(z)=="zombie"then z:setTarget(nil);z:setUseless(true);z:setAttackOutcome("fail");ProjectYakuza.GrabRules.latch(z,z:GetVariable("ProjectYakuzaHeatRushVictim")=="true")
+    if R.targetKind(z)=="zombie"then
+        z:setTarget(nil);z:setUseless(true);z:setAttackOutcome("fail")
+        if z:GetVariable("ProjectYakuzaHeatRushVictim")=="true"then
+            z:setKnockedDown(false);z:setOnFloor(false)
+            if z.setStaggerBack then z:setStaggerBack(false)end
+            if z.setHitForce then z:setHitForce(0)end
+            if z:getHitReaction()~="ProjectYakuzaHeatRushVictim"then z:setHitReaction("ProjectYakuzaHeatRushVictim");z:reportEvent("wasHit")end
+        end
+        ProjectYakuza.GrabRules.latch(z,z:GetVariable("ProjectYakuzaHeatRushVictim")=="true")
     else z:setBlockMovement(true);z:setAuthorizeMeleeAction(false)end
 end
 function R.lock(z,clip)
     if ProjectYakuza.Reactions then ProjectYakuza.Reactions.clear(z)end
     ProjectYakuza.HitResponses.releaseStun(z)
     local old=R.capture(z)
-    if R.targetKind(z)=="player"and z:isLocalPlayer()and ProjectYakuza.isEquipped(z)then ProjectYakuza.resetPlayer(z,"heat_rush_victim")end
     if clip=="ProjectYakuza_DD_GroundHeatVictim"then old.groundAction=true;old.floor=z:isOnFloor();old.knocked=z:isKnockedDown();z:setOnFloor(false);z:setKnockedDown(false)end
+    if R.targetKind(z)=="zombie"then
+        z:setKnockedDown(false);z:setOnFloor(false)
+        if z.setStaggerBack then z:setStaggerBack(false)end
+        if z.setHitForce then z:setHitForce(0)end
+        if ZombieIdleState and z.changeState then
+            z:setStateMachineLocked(false);ProjectYakuza.GrabRules.locks[z]=nil;z:changeState(ZombieIdleState.instance())
+        end
+    end
+    if R.targetKind(z)=="player"and z:isLocalPlayer()and ProjectYakuza.isEquipped(z)then ProjectYakuza.resetPlayer(z,"heat_rush_victim")end
     R.hold(z);z:setVariable("ProjectYakuzaPairedVictimClip",clip or "ProjectYakuza_DD_HeatRushVictim");z:setVariable("ProjectYakuzaHeatRushVictim",true)
     if R.targetKind(z)=="player"then z:setVariable("PerformingAction","ProjectYakuzaHeatRushVictim");z:setVariable("IsPerformingAnAction",true)end
     z:setHitReaction("ProjectYakuzaHeatRushVictim");z:reportEvent("wasHit")

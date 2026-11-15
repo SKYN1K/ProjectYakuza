@@ -1,0 +1,215 @@
+module Base
+{
+    sound ProjectYakuza_BicycleHit
+    {
+        category = ProjectYakuza_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuza/BicycleHit1.wav,
+            volume = 0.7,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+        clip
+        {
+            file = media/sound/ProjectYakuza/BicycleHit2.wav,
+            volume = 0.7,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+        clip
+        {
+            file = media/sound/ProjectYakuza/BicycleHit3.wav,
+            volume = 0.7,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+    }
+    sound ProjectYakuza_BicycleFloor
+    {
+        category = ProjectYakuza_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuza/BicycleFloor1.wav,
+            volume = 0.7,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+    }
+    sound ProjectYakuza_BicycleBreak
+    {
+        category = ProjectYakuza_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuza/BicycleBreak1.wav,
+            volume = 0.7,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+    }
+    sound ProjectYakuza_BicycleSwing
+    {
+        category = ProjectYakuza_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuza/BicycleSwing1.wav,
+            volume = 0.7,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+        clip
+        {
+            file = media/sound/ProjectYakuza/BicycleSwing2.wav,
+            volume = 0.7,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+    }
+    sound ProjectYakuza_BottleHit
+    {
+        category = ProjectYakuza_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuza/BottleHit1.wav,
+            volume = 0.7,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+        clip
+        {
+            file = media/sound/ProjectYakuza/BottleHit2.wav,
+            volume = 0.7,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+    }
+    sound ProjectYakuza_BottleFloor
+    {
+        category = ProjectYakuza_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuza/BottleFloor1.wav,
+            volume = 0.7,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+    }
+    sound ProjectYakuza_BottleBreak
+    {
+        category = ProjectYakuza_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuza/BottleBreak1.wav,
+            volume = 0.7,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+        clip
+        {
+            file = media/sound/ProjectYakuza/BottleBreak2.wav,
+            volume = 0.7,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+    }
+    sound ProjectYakuza_BottleSwing
+    {
+        category = ProjectYakuza_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuza/BottleSwing1.wav,
+            volume = 0.7,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+        clip
+        {
+            file = media/sound/ProjectYakuza/BottleSwing2.wav,
+            volume = 0.7,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+    }
+    sound ProjectYakuza_CrateHit
+    {
+        category = ProjectYakuza_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuza/CrateHit1.wav,
+            volume = 0.7,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+    }
+    sound ProjectYakuza_CrateFloor
+    {
+        category = ProjectYakuza_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuza/CrateFloor1.wav,
+            volume = 0.7,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+        clip
+        {
+            file = media/sound/ProjectYakuza/CrateFloor2.wav,
+            volume = 0.7,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+    }
+    sound ProjectYakuza_CrateBreak
+    {
+        category = ProjectYakuza_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuza/CrateBreak1.wav,
+            volume = 0.7,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+    }
+    sound ProjectYakuza_CrateSwing
+    {
+        category = ProjectYakuza_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuza/CrateSwing1.wav,
+            volume = 0.7,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+        clip
+        {
+            file = media/sound/ProjectYakuza/CrateSwing2.wav,
+            volume = 0.7,
+            distanceMin = 1,
+            distanceMax = 16,
+        }
+    }
+}

@@ -24,8 +24,8 @@ for name in ['grab-escape-assets.json','crate-heat-assets.json']:
     assert max(abs(actual[bone][r][c]-expected[bone][r][c])for r in range(4)for c in range(4))<.00001,(record['output'],i,bone);samples+=1
   if record['role']in [1,'victim']and not record.get('ending'):assert world(bones,locals_at(bones,curves,0))['Bip01'].translation.y>.3,'victim root height must not be underground'
 escape=reports['grab-escape-assets.json'];assert all(v['frames']==71 for v in escape['clips']);assert max(abs(x)for path in escape['paths']for row in path for x in row)<.00001
-crate=reports['crate-heat-assets.json'];assert sha(crate['archive'])==crate['archiveSha256']and sha(crate['objectSource'])==crate['objectSha256'];assert crate['qteFrames']==[63,93,123]and crate['contactFrames']==[13,44,74,104,142]
-assert all(len(path)==190 for path in crate['paths'])and all(len(path)==67 for path in crate['endingPaths'])
+crate=reports['crate-heat-assets.json'];assert sha(crate['archive'])==crate['archiveSha256']and sha(crate['objectSource'])==crate['objectSha256'];assert crate['qteFrames']==[183]and crate['contactFrames']==[51,134,231,307,404,555]
+assert all(len(path)==635 for path in crate['paths'])and all(len(path)==181 for path in crate['endingPaths'])
 for path in crate['paths']+crate['endingPaths']:assert max(math.dist(a,b)for a,b in zip(path,path[1:]))<.3
 actor=next(v for v in crate['clips']if v['role']==0 and not v['ending']);_,bones,curves,_=read(mod/actor['output']);dist=[]
 for i in [40,44,50,70,74,80,100,104,110]:

@@ -6,8 +6,8 @@ from cri_cue_table import cue_names,sheet_names
 root=Path(__file__).resolve().parents[2];mod=root/'combat/ProjectYakuza'
 data=json.loads((mod/'docs/heat-scenes.json').read_text())
 effects=json.loads((mod/'docs/heat-scene-effects.json').read_text())
-expected={'knife':[[40,90]],'rush':[[56,68,80,92,114,126,146,158,170,182,204,216,246],[26]],'bottle':[[32,42,59,84]],'wall':[[12,48]],'ground':[[30]],'crate':[[14,44,54,74,84,104,114,142],[19]],'katana':[[24,44,64]],'bat':[[14,50]],'bicycle':[[50]]}
-original={'knife':[40,90],'rush':[56,68,78,90,102,114,144],'bottle':[32,42,59,84],'wall':[12,48],'ground':[],'crate':[14,44,54,82],'katana':[24,44,64],'bat':[14,50],'bicycle':[50]}
+expected={'knife':[[40,90]],'rush':[[56,68,80,92,114,126,146,158,170,182,204,216,246],[26]],'bottle':[[32,42,59,84]],'wall':[[12,48]],'ground':[[30]],'crate':[[51,134,231,307,404,555],[101]],'katana':[[24,44,64]],'bat':[[14,50]],'bicycle':[[50]]}
+original={'knife':[40,90],'rush':[56,68,78,90,102,114,144],'bottle':[32,42,59,84],'wall':[12,48],'ground':[],'crate':[51,134,231,307,404,555],'katana':[24,44,64],'bat':[14,50],'bicycle':[50]}
 sha=lambda b:hashlib.sha256(b).hexdigest()
 banks={};count=0
 expected['bicycle']=[[29,70]];original['bicycle']=[29,70]
@@ -27,11 +27,11 @@ for record in data['scenes']:
     assert [n['element']['start']for n in victim]==original[key]
     bank=record['bank']
     raw,names=bank_data(bank)
-    if key=='crate':assert [(r['frame'],r['damage'],r['forceDead'])for r in record['ignoredNonVictimDamage']]==[(13,100,1)]
+    if key=='crate':assert [(r['frame'],r['damage'],r['forceDead'])for r in record['ignoredNonVictimDamage']]==[(555,100,1)]*5
     for i,definition in enumerate(record['definitions']):
         contacts=definition['contacts'];frames=definition['sourceFrames'];clip=definition['animation']
         assert [round(c['atMs']*.03,6)for c in contacts]==expected[key][i]
-        assert len(frames)==(327 if key=='rush'and not i else 190 if key=='crate'and not i else len(frames))
+        assert len(frames)==(327 if key=='rush'and not i else 635 if key=='crate'and not i else len(frames))
         for contact in contacts:assert 0<contact['atMs']<(len(frames)-1)/30*1000
         if not i:
             if key in ['rush','crate']:
@@ -64,7 +64,7 @@ for record in data['scenes']:
                 if key=='bicycle':assert audio['entry']==sheets[audio['cueSheet']]+'.acb'
         assert all(v['entry'].startswith('Combat')for v in definition['voiceEvents'])
         count+=len(native)
-assert count==131 and len(data['sounds'])==39
+assert count==130 and len(data['sounds'])==48
 with tempfile.TemporaryDirectory(prefix='project-yakuza-cmn-')as tmp:
     folder=Path(tmp)
     for record in data['sounds']:
@@ -76,4 +76,4 @@ with tempfile.TemporaryDirectory(prefix='project-yakuza-cmn-')as tmp:
         shipped=mod/record['output'];assert out.read_bytes()==shipped.read_bytes()
         assert sha(shipped.read_bytes())==record['sha256']
         with wave.open(str(shipped))as audio:assert (audio.getframerate(),audio.getnchannels(),audio.getsampwidth(),audio.getnframes())==(record['sampleRate'],record['channels'],2,record['samples'])
-print('PASS 9 supplied CMN scenes, 11 timelines, 39 contacts, 131 blood anchors and 39 original PCM decodes; scoped media checked by the release validators')
+print('PASS 9 supplied CMN scenes, 11 timelines, 37 contacts, 130 blood anchors and 48 original PCM decodes; scoped media checked by the release validators')

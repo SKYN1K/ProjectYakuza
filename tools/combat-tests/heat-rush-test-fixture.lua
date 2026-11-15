@@ -464,6 +464,18 @@ do
  check(action.cleaned and z:isDead()and z.deathFinalizations==deaths+1,'full completion finalizes death once through native consequences')
  clock=clock+500;PY.HeatActions.tick();z.health=10;z.knock=false;z.useless=false
 end
+do
+ local idle,change,report=ZombieIdleState,z.changeState,z.reportEvent
+ ZombieIdleState={instance=function()return 'idle'end};local reports=0
+ function z:changeState(state)self.nativeState=state;self.state=state;self.reaction=''end
+ function z:reportEvent(event)reports=reports+1;self.report=event;if event=='wasHit'then self.nativeState='ZombieHitReactionState';self.state='ZombieHitReactionState'end end
+ z.nativeState='staggerback';z.state='staggerback';z.stagger=true;z.force=1;z.reaction='Push'
+ local old=R.lock(z,'ProjectYakuza_DD_HeatRushVictim');R.hold(z)
+ check(z:getHitReaction()=='ProjectYakuzaHeatRushVictim'and not z.stagger and z.force==0 and z.stateLocked,'pushed victim enters and retains the dedicated QTE reaction')
+ local count=reports;R.hold(z);check(reports==count,'paired hold cannot restart an already-correct victim track')
+ z.reaction='Push';z.stagger=true;R.hold(z);check(z:getHitReaction()=='ProjectYakuzaHeatRushVictim'and not z.stagger,'late native push reaction cannot steal QTE playback')
+ R.restore(z,old);ZombieIdleState=idle;z.changeState=change;z.reportEvent=report;z.state='idle';z.nativeState='idle'
+end
 local protect=PY.HeatActions;local key={};p.ghost=true;p.invincible=true
 do
  local clips={'KatanaHeat','BottleHeat','HeatRush','WallHeat','GroundHeat','CrateHeat'};local native=z.nativeState
@@ -568,7 +580,7 @@ end
 
 do
  local move=PY.CrateHeatMove
- check(move and move.weaponHeat and move.qteStages and #move.qte.prompts==3 and move.qteFailure.paired,'crate uses a finite three-stage paired mash action')
+ check(move and move.weaponHeat and move.qteStages and #move.qte.prompts==1 and move.qteFailure.paired,'crate uses a original beercase paired mash action')
  check(Q.valid(move.qte,move.duration*1000),'crate mash definition fits original-speed animation')
  local button=false;local taps=0;local q=Q.create(move.qte,function()return button end)
  for i,prompt in ipairs(move.qte.prompts)do
@@ -578,11 +590,11 @@ do
   Q.update(q,start+300,function()return button end)
   check(q.pressCounts[i]==1 and not q.accepted[i],'holding does not spam mash or auto-pass')
   button=false;Q.update(q,start+350,function()return button end)
-  button=true;Q.update(q,start+600,function()return button end,function(kind)if kind=='tap'then taps=taps+1 end end)
-  check(q.accepted[i]and q.pressCounts[i]==2,'two fresh presses finish an easy mash window')
+  for tap=2,10 do button=false;Q.update(q,start+400+(tap-2)*150,function()return button end);button=true;Q.update(q,start+450+(tap-2)*150,function()return button end,function(kind)if kind=='tap'then taps=taps+1 end end)end
+  check(q.accepted[i]and q.pressCounts[i]==10,'ten fresh presses complete the original beercase mash window')
   button=false;Q.update(q,prompt.atMs,function()return button end)
  end
- check(q.successes==3 and q.closed and taps==6,'mash completes once after six total fresh presses')
+ check(q.successes==1 and q.closed and taps==10,'mash completes once after ten total fresh presses')
  local missed=Q.create(move.qte,function()return false end);Q.update(missed,move.qte.prompts[1].atMs,function()return false end)
  check(missed.failed and missed.failedIndex==1,'no mash immediately selects the authored finite ending')
  local bad={prompts={{atMs=1000,windowMs=1000,binding='heatAction',presses=10,minPressIntervalMs=120}}}
@@ -689,7 +701,7 @@ do
   local item={data={},condition=10}
   function item:getFullType()return id end;function item:getCondition()return self.condition end
   function item:getMinDamage()return 1 end;function item:getMaxDamage()return 1 end;function item:getModData()return self.data end
-  function item:setMinDamage()end;function item:setMaxDamage()end
+  function item:setMinDamage()end;function item:setMaxDamage()end;function item:setCondition(v)self.condition=v end;function item:syncItemFields()self.synced=true end
   return item
  end
  for _,id in ipairs({'Base.BaseballBat','Base.BaseballBat_Crafted','Base.BaseballBat_Metal','Base.BaseballBat_Nails','Base.ShortBat','Base.ShortBat_Nails'})do
@@ -738,7 +750,7 @@ do
   local item={data={},condition=10}
   function item:getFullType()return id end;function item:getCondition()return self.condition end
   function item:getMinDamage()return 1 end;function item:getMaxDamage()return 1 end;function item:getModData()return self.data end
-  function item:setMinDamage()end;function item:setMaxDamage()end
+  function item:setMinDamage()end;function item:setMaxDamage()end;function item:setCondition(v)self.condition=v end;function item:syncItemFields()self.synced=true end
   return item
  end
  for _,id in ipairs({'ProjectYakuza.Bicycle'})do
@@ -763,7 +775,14 @@ do
   phase=move.duration;fire('OnPlayerUpdate',p)
   check(action.cleaned and not PY.activeActions[p]and not p.invincible and p.ghost,'bicycle retains full original recovery and restores control')
   clock=clock+500;PY.HeatActions.tick();check(not p.ghost,'bicycle targeting grace expires')
-  p.held.condition=0;check(not R.weaponAllowed(p,view,move),'broken bicycle cannot start a Heat Action')
+  check(action.held.condition==0 and action.held.synced,'completed bicycle Heat Action breaks and syncs its held weapon');action.held.condition=0;check(not R.weaponAllowed(p,view,move),'broken bicycle cannot start a Heat Action')
+ end
+ do
+  local previous=p.held;local item=bicycleItem('ProjectYakuza.Bicycle');p.held=item;local job={};local move=PY.Weapons.views.dragon_of_dojima.bicycle.actions.heatAction
+  check(not PY.HeatActions.breakWeapon(job,p,item,move,false)and item.condition==10,'cancelled bicycle Heat Action keeps its weapon condition')
+  check(PY.HeatActions.breakWeapon(job,p,item,move,true)and item.condition==0 and item.synced,'confirmed completion breaks the held bicycle')
+  item.condition=9;check(not PY.HeatActions.breakWeapon(job,p,item,move,true)and item.condition==9,'duplicate completion cannot break a weapon twice')
+  p.held=previous
  end
  for _,id in ipairs({'Base.MetalPipe','Base.Nightstick','Base.MetalBar','Base.Katana'})do
   p.held=bicycleItem(id);local view=PY.getPlayerStyle(p)
@@ -787,7 +806,7 @@ do
   local item={data={},condition=10}
   function item:getFullType()return id end;function item:getCondition()return self.condition end
   function item:getMinDamage()return 1 end;function item:getMaxDamage()return 1 end;function item:getModData()return self.data end
-  function item:setMinDamage()end;function item:setMaxDamage()end
+  function item:setMinDamage()end;function item:setMaxDamage()end;function item:setCondition(v)self.condition=v end;function item:syncItemFields()self.synced=true end
   return item
  end
  for _,id in ipairs(PY.Weapons.profiles.dragon_of_dojima.knife.items)do

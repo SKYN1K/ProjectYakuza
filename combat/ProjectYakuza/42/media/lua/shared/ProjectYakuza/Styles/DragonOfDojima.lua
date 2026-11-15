@@ -1,6 +1,7 @@
 require "ProjectYakuza/Registry"
 require "ProjectYakuza/HeatScenes"
 require "ProjectYakuza/Y5ObjectMoves"
+require "ProjectYakuza/BottleMoves"
 require "ProjectYakuza/BicycleMoves"
 require "ProjectYakuza/GrabMoves"
 require "ProjectYakuza/RushMove"
@@ -227,24 +228,28 @@ end
 
 if ProjectYakuza.Weapons then
     local base=ProjectYakuza.getStyle("dragon_of_dojima")
-    local sounds=ProjectYakuza.Weapons.profiles[base.id].bat.sounds
+    local function objectSounds(family)
+        local sounds={};for key,value in pairs(ProjectYakuza.Weapons.profiles[base.id].bat.sounds)do sounds[key]=value end
+        sounds.heavyImpact="ProjectYakuza_"..family.."Hit";sounds.groundImpact="ProjectYakuza_"..family.."Floor";sounds.finisher=sounds.heavyImpact
+        return sounds
+    end
     ProjectYakuza.Weapons.register(base.id,{
-        id="bottle",impactFeedback="blunt",attackSpeed=1.4,standaloneHeavy=true,quickstepCancelLights=true,
-        items={"ProjectYakuza.IntactBeerBottle","ProjectYakuza.IntactWineBottle","ProjectYakuza.IntactWhiskeyBottle"},sounds=sounds,
-        lightAttacks={{animation="ProjectYakuza_DD_BottleLight01",nodeValue="dd_bottle_light_01",duration=40/30/1.4,speed=1.4,impact=11/40,hitResponse=false,damageMultiplier=1,chainAt=38/40,quickstepCancelAt=12/40},{animation="ProjectYakuza_DD_BottleLight02",nodeValue="dd_bottle_light_02",duration=35/30/1.4,speed=1.4,impact=13/35,hitResponse=false,damageMultiplier=1,chainAt=33/35,quickstepCancelAt=14/35},{animation="ProjectYakuza_DD_BottleLight03",nodeValue="dd_bottle_light_03",duration=47/30/1.4,speed=1.4,impact=15/47,hitResponse=false,damageMultiplier=1,chainAt=45/47,quickstepCancelAt=16/47}},
-        groundAttacks={{animation="ProjectYakuza_DD_BottleGround",nodeValue="dd_bottle_ground",duration=55/30/1.4,speed=1.4,impact=10/55,hitResponse=false,damageMultiplier=1,groundAttack=true}},
+        id="bottle",nativeWeaponSounds=true,impactFeedback="blunt",attackSpeed=1.4,standaloneHeavy=true,quickstepCancelLights=true,
+        items={"ProjectYakuza.IntactBeerBottle","ProjectYakuza.IntactWineBottle","ProjectYakuza.IntactWhiskeyBottle"},sounds=objectSounds("Bottle"),
+        lightAttacks=ProjectYakuza.BottleMoves.lightAttacks,
+        groundAttacks=ProjectYakuza.BottleMoves.groundAttacks,
         actions={
             heatAction=ProjectYakuza.HeatScenes.action("bottle",{enabled=true,weaponHeat=true,weaponItems={"ProjectYakuza.IntactBeerBottle","ProjectYakuza.IntactWineBottle","ProjectYakuza.IntactWhiskeyBottle"},motionId="dod_bottle",useExtremeFuel=true,heatStocks=1,noCombo=true,
                 animation="ProjectYakuza_DD_BottleHeat",targetAnimation="ProjectYakuza_DD_BottleHeatVictim",nodeValue="dd_bottle_heat",requiresTarget=true,duration=5,speed=1,hitResponse=false,
                 contacts={{atMs=22/30*1000,damageMultiplier=0,cue="heavyImpact",voice="CombatHeavyAttack"},{atMs=73/30*1000,damageMultiplier=0,cue="heavyImpact",voice="CombatHeavyAttack"},{atMs=92/30*1000,damageMultiplier=1.5,cue="heavyImpact",voice="CombatHeavyAttack"}}}),
-            finisher={enabled=true,variants={default={animation="ProjectYakuza_DD_BottleHeavy",nodeValue="dd_bottle_heavy",duration=53/30/1.4,speed=1.4,impact=14/53,hitResponse=false,damageMultiplier=1.25}}},
+            finisher=ProjectYakuza.BottleMoves.finisher,
             quickstep=base.actions.quickstep,
             block={enabled=true,animation="ProjectYakuza_DD_BottleGuard",staminaPerHit=.08},
         },
     })
     ProjectYakuza.Weapons.register(base.id,{
-        id="crate",impactFeedback="blunt",attackSpeed=1.4,standaloneHeavy=true,quickstepCancelLights=true,
-        items={"ProjectYakuza.BeerCrate"},sounds=sounds,
+        id="crate",nativeWeaponSounds=true,impactFeedback="blunt",attackSpeed=1.4,standaloneHeavy=true,quickstepCancelLights=true,
+        items={"ProjectYakuza.BeerCrate"},sounds=objectSounds("Crate"),
         lightAttacks=ProjectYakuza.Y5ObjectMoves.crate.lightAttacks,
         groundAttacks=ProjectYakuza.Y5ObjectMoves.crate.groundAttacks,
         actions={
@@ -260,12 +265,12 @@ if ProjectYakuza.Weapons then
     local base=ProjectYakuza.getStyle("dragon_of_dojima")
     local moves=ProjectYakuza.BicycleMoves
     ProjectYakuza.Weapons.register(base.id,{
-        id="bicycle",impactFeedback="blunt",attackSpeed=1,standaloneHeavy=true,quickstepCancelLights=true,
-        items={"ProjectYakuza.Bicycle"},sounds=ProjectYakuza.Weapons.views[base.id].crate.sounds,
+        id="bicycle",nativeWeaponSounds=true,impactFeedback="blunt",attackSpeed=1,standaloneHeavy=true,quickstepCancelLights=true,
+        items={"ProjectYakuza.Bicycle"},sounds=(function()local s={};for k,v in pairs(ProjectYakuza.Weapons.views[base.id].crate.sounds)do s[k]=v end;s.heavyImpact="ProjectYakuza_BicycleHit";s.groundImpact="ProjectYakuza_BicycleFloor";s.finisher=s.heavyImpact;return s end)(),
         lightAttacks=moves.lightAttacks,groundAttacks=moves.groundAttacks,
         actions={finisher=moves.finisher,quickstep=base.actions.quickstep,
             heatAction=ProjectYakuza.HeatScenes.action("bicycle",{enabled=true,weaponHeat=true,weaponItems={"ProjectYakuza.Bicycle"},motionId="dod_bicycle",useExtremeFuel=true,heatStocks=1,noCombo=true,
-                animation="ProjectYakuza_DD_BicycleHeat",targetAnimation="ProjectYakuza_DD_BicycleHeatVictim",nodeValue="dd_bicycle_heat",requiresTarget=true,duration=150/30,speed=1,hitResponse=false}),
+                animation="ProjectYakuza_DD_BicycleHeat",targetAnimation="ProjectYakuza_DD_BicycleHeatVictim",nodeValue="dd_bicycle_heat",requiresTarget=true,duration=150/30,speed=1,hitResponse=false,breakWeapon=true}),
         },
     })
 end

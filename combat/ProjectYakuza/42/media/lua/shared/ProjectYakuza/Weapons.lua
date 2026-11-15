@@ -18,6 +18,7 @@ function W.register(styleId,profile)
     end
     local view={};for key,value in pairs(base) do view[key]=value end
     view.weaponStandaloneHeavy=profile.standaloneHeavy==true
+    view.nativeWeaponSounds=profile.nativeWeaponSounds==true
     view.weaponProfile=profile.id;view.lightAttacks=profile.lightAttacks;view.groundAttacks=profile.groundAttacks
     view.actions={};for key,value in pairs(profile.actions or {}) do view.actions[key]=value end
     if view.actions.styleEntry==nil and base.actions then view.actions.styleEntry=base.actions.styleEntry end

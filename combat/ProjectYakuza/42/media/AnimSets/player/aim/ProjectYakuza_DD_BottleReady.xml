@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='utf-8'?>
+<animNode>
+  <m_Name>ProjectYakuza_DD_BottleReady</m_Name>
+  <m_AnimName>ProjectYakuza_DD_BottleReady</m_AnimName>
+  <m_Priority>4</m_Priority>
+  <m_ConditionPriority>180</m_ConditionPriority>
+  <m_BlendTime>0.16</m_BlendTime>
+  <m_BlendOutTime>0.18</m_BlendOutTime>
+  <m_SpeedScale>1</m_SpeedScale>
+  <m_Looped>true</m_Looped>
+  <m_SyncTrackingEnabled>false</m_SyncTrackingEnabled>
+  <m_maxTorsoTwist>0</m_maxTorsoTwist>
+  <m_SubStateBoneWeights>
+    <boneName>Bip01_Spine1</boneName>
+    <weight>1</weight>
+    <includeDescendants>true</includeDescendants>
+  </m_SubStateBoneWeights>
+  <m_SubStateBoneWeights>
+    <boneName>Bip01_Prop1</boneName>
+    <weight>1</weight>
+    <includeDescendants>true</includeDescendants>
+  </m_SubStateBoneWeights>
+  <m_SubStateBoneWeights>
+    <boneName>Bip01_Prop2</boneName>
+    <weight>1</weight>
+    <includeDescendants>true</includeDescendants>
+  </m_SubStateBoneWeights>
+  <m_Conditions>
+    <m_Name>ProjectYakuzaActive</m_Name>
+    <m_Type>BOOL</m_Type>
+    <m_Value>true</m_Value>
+  </m_Conditions>
+  <m_Conditions>
+    <m_Name>ProjectYakuzaStyle</m_Name>
+    <m_Type>STRING</m_Type>
+    <m_Value>dragon_of_dojima</m_Value>
+  </m_Conditions>
+  <m_Conditions>
+    <m_Name>ProjectYakuzaWeaponProfile</m_Name>
+    <m_Type>STRING</m_Type>
+    <m_Value>bottle</m_Value>
+  </m_Conditions>
+</animNode>

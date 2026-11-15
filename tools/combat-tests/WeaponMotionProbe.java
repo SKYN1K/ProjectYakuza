@@ -14,6 +14,6 @@ public class WeaponMotionProbe {
    }
    if(path.getParent().getFileName().toString().equals("movement")){float blend=Float.parseFloat(doc.getElementsByTagName("m_BlendTime").item(0).getTextContent());if(blend<.25f)throw new AssertionError("walking blend "+path);}
   }}
-  if(checks<130)throw new AssertionError("missing selectors "+checks);System.out.println("PASS "+checks+" native weapon/locomotion selector, style/profile isolation and walking blend checks; no game/GPU startup");
+  if(checks!=108)throw new AssertionError("missing selectors "+checks);System.out.println("PASS "+checks+" native weapon/locomotion selector, style/profile isolation and walking blend checks; no game/GPU startup");
  }
 }

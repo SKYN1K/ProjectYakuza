@@ -1,0 +1,51 @@
+module ProjectYakuza
+{
+    item BicycleFrontWheel
+    {
+        DisplayName = Bicycle FrontWheel,
+        ItemType = base:normal,
+        Weight = 0.0,
+        Icon = CarTire,
+        WorldStaticModel = ProjectYakuza_BicycleFrontWheel,
+    }
+    item BicycleRearWheel
+    {
+        DisplayName = Bicycle RearWheel,
+        ItemType = base:normal,
+        Weight = 0.0,
+        Icon = CarTire,
+        WorldStaticModel = ProjectYakuza_BicycleRearWheel,
+    }
+    item BicycleHandlebars
+    {
+        DisplayName = Bicycle Handlebars,
+        ItemType = base:normal,
+        Weight = 0.0,
+        Icon = CarTire,
+        WorldStaticModel = ProjectYakuza_BicycleHandlebars,
+    }
+}
+module Base
+{
+    model ProjectYakuza_BicycleFrontWheel
+    {
+        mesh = Static/ProjectYakuza_BicycleFrontWheel,
+        texture = ProjectYakuza_Bicycle,
+        static = true,
+        scale = 0.44308598137428024,
+    }
+    model ProjectYakuza_BicycleRearWheel
+    {
+        mesh = Static/ProjectYakuza_BicycleRearWheel,
+        texture = ProjectYakuza_Bicycle,
+        static = true,
+        scale = 0.44308598137428024,
+    }
+    model ProjectYakuza_BicycleHandlebars
+    {
+        mesh = Static/ProjectYakuza_BicycleHandlebars,
+        texture = ProjectYakuza_Bicycle,
+        static = true,
+        scale = 0.44308598137428024,
+    }
+}

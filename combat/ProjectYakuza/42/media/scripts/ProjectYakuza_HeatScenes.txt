@@ -247,40 +247,14 @@ module Base
             volume = 0.65,
         }
     }
-    sound ProjectYakuza_HeatScene_crate_3
+    sound ProjectYakuza_HeatScene_crate_14
     {
         category = ProjectYakuza_Effects,
         is3D = true,
         loop = false,
         clip
         {
-            file = media/sound/ProjectYakuza/HeatScene_crate_3.wav,
-            distanceMin = 1,
-            distanceMax = 16,
-            volume = 0.65,
-        }
-    }
-    sound ProjectYakuza_HeatScene_crate_2
-    {
-        category = ProjectYakuza_Effects,
-        is3D = true,
-        loop = false,
-        clip
-        {
-            file = media/sound/ProjectYakuza/HeatScene_crate_2.wav,
-            distanceMin = 1,
-            distanceMax = 16,
-            volume = 0.65,
-        }
-    }
-    sound ProjectYakuza_HeatScene_crate_9
-    {
-        category = ProjectYakuza_Effects,
-        is3D = true,
-        loop = false,
-        clip
-        {
-            file = media/sound/ProjectYakuza/HeatScene_crate_9.wav,
+            file = media/sound/ProjectYakuza/HeatScene_crate_14.wav,
             distanceMin = 1,
             distanceMax = 16,
             volume = 0.65,
@@ -299,40 +273,27 @@ module Base
             volume = 0.65,
         }
     }
-    sound ProjectYakuza_HeatScene_crate_10
+    sound ProjectYakuza_HeatScene_crate_0
     {
         category = ProjectYakuza_Effects,
         is3D = true,
         loop = false,
         clip
         {
-            file = media/sound/ProjectYakuza/HeatScene_crate_10.wav,
+            file = media/sound/ProjectYakuza/HeatScene_crate_0.wav,
             distanceMin = 1,
             distanceMax = 16,
             volume = 0.65,
         }
     }
-    sound ProjectYakuza_HeatScene_crate_7
+    sound ProjectYakuza_HeatScene_crate_9
     {
         category = ProjectYakuza_Effects,
         is3D = true,
         loop = false,
         clip
         {
-            file = media/sound/ProjectYakuza/HeatScene_crate_7.wav,
-            distanceMin = 1,
-            distanceMax = 16,
-            volume = 0.65,
-        }
-    }
-    sound ProjectYakuza_HeatScene_crate_11
-    {
-        category = ProjectYakuza_Effects,
-        is3D = true,
-        loop = false,
-        clip
-        {
-            file = media/sound/ProjectYakuza/HeatScene_crate_11.wav,
+            file = media/sound/ProjectYakuza/HeatScene_crate_9.wav,
             distanceMin = 1,
             distanceMax = 16,
             volume = 0.65,
@@ -351,19 +312,6 @@ module Base
             volume = 0.65,
         }
     }
-    sound ProjectYakuza_HeatScene_crate_0
-    {
-        category = ProjectYakuza_Effects,
-        is3D = true,
-        loop = false,
-        clip
-        {
-            file = media/sound/ProjectYakuza/HeatScene_crate_0.wav,
-            distanceMin = 1,
-            distanceMax = 16,
-            volume = 0.65,
-        }
-    }
     sound ProjectYakuza_HeatScene_crate_1
     {
         category = ProjectYakuza_Effects,
@@ -372,6 +320,175 @@ module Base
         clip
         {
             file = media/sound/ProjectYakuza/HeatScene_crate_1.wav,
+            distanceMin = 1,
+            distanceMax = 16,
+            volume = 0.65,
+        }
+    }
+    sound ProjectYakuza_HeatScene_crate_16
+    {
+        category = ProjectYakuza_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuza/HeatScene_crate_16.wav,
+            distanceMin = 1,
+            distanceMax = 16,
+            volume = 0.65,
+        }
+    }
+    sound ProjectYakuza_HeatScene_crate_10
+    {
+        category = ProjectYakuza_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuza/HeatScene_crate_10.wav,
+            distanceMin = 1,
+            distanceMax = 16,
+            volume = 0.65,
+        }
+    }
+    sound ProjectYakuza_HeatScene_crate_2
+    {
+        category = ProjectYakuza_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuza/HeatScene_crate_2.wav,
+            distanceMin = 1,
+            distanceMax = 16,
+            volume = 0.65,
+        }
+    }
+    sound ProjectYakuza_HeatScene_crate_17
+    {
+        category = ProjectYakuza_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuza/HeatScene_crate_17.wav,
+            distanceMin = 1,
+            distanceMax = 16,
+            volume = 0.65,
+        }
+    }
+    sound ProjectYakuza_HeatScene_crate_11
+    {
+        category = ProjectYakuza_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuza/HeatScene_crate_11.wav,
+            distanceMin = 1,
+            distanceMax = 16,
+            volume = 0.65,
+        }
+    }
+    sound ProjectYakuza_HeatScene_crate_3
+    {
+        category = ProjectYakuza_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuza/HeatScene_crate_3.wav,
+            distanceMin = 1,
+            distanceMax = 16,
+            volume = 0.65,
+        }
+    }
+    sound ProjectYakuza_HeatScene_crate_18
+    {
+        category = ProjectYakuza_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuza/HeatScene_crate_18.wav,
+            distanceMin = 1,
+            distanceMax = 16,
+            volume = 0.65,
+        }
+    }
+    sound ProjectYakuza_HeatScene_crate_12
+    {
+        category = ProjectYakuza_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuza/HeatScene_crate_12.wav,
+            distanceMin = 1,
+            distanceMax = 16,
+            volume = 0.65,
+        }
+    }
+    sound ProjectYakuza_HeatScene_crate_4
+    {
+        category = ProjectYakuza_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuza/HeatScene_crate_4.wav,
+            distanceMin = 1,
+            distanceMax = 16,
+            volume = 0.65,
+        }
+    }
+    sound ProjectYakuza_HeatScene_crate_19
+    {
+        category = ProjectYakuza_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuza/HeatScene_crate_19.wav,
+            distanceMin = 1,
+            distanceMax = 16,
+            volume = 0.65,
+        }
+    }
+    sound ProjectYakuza_HeatScene_crate_13
+    {
+        category = ProjectYakuza_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuza/HeatScene_crate_13.wav,
+            distanceMin = 1,
+            distanceMax = 16,
+            volume = 0.65,
+        }
+    }
+    sound ProjectYakuza_HeatScene_crate_20
+    {
+        category = ProjectYakuza_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuza/HeatScene_crate_20.wav,
+            distanceMin = 1,
+            distanceMax = 16,
+            volume = 0.65,
+        }
+    }
+    sound ProjectYakuza_HeatScene_crate_5
+    {
+        category = ProjectYakuza_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuza/HeatScene_crate_5.wav,
             distanceMin = 1,
             distanceMax = 16,
             volume = 0.65,
