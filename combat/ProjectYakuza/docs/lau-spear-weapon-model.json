@@ -1,5 +1,5 @@
 {
-  "operation": "Original Kiwami Lau Ka Long spear grip and blade, combined without topology changes. Source hierarchy transforms, normals and UVs retained. A single uniform scale and shaft translation match native SpearCrafted butt/tip coordinates, native two-hand grips and the standalone emote fallback. Original diffuse decoded separately. No generated geometry, animation or sounds.",
+  "operation": "Original Kiwami Lau Ka Long spear grip and blade, combined without topology changes. Source hierarchy transforms, normals and UVs retained. Original top-down V is written directly to DirectX; Assimp and native PZ conversions must yield the original GMD GPU UVs, including repeat coordinates. A single uniform scale and shaft translation match native SpearCrafted butt/tip coordinates, native two-hand grips and the standalone emote fallback. Original diffuse decoded separately. No generated geometry, animation or sounds.",
   "modelSource": {
     "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza Kiwami\\media\\data\\reactorpar\\reactor_w64.par",
     "name": "wecim7210_spr_rhau.gmd",
@@ -45,7 +45,7 @@
   "vertices": 605,
   "triangles": 621,
   "output": "42/media/models_X/Static/ProjectYakuza_LauSpear.x",
-  "sha256": "e8cbc09899fad06041c05828fd4f9b2c42dbb85f01223cbd721d4b11e2f330c1",
+  "sha256": "3763787f6479d742b543cb3c5729f106ab874fe5304ccf202686e9f0df214811",
   "sourceVertices": [
     [
       1.4901161415892261e-09,

@@ -20,12 +20,12 @@ assert sha(mod/report['output'])==report['sha256']and sha(mod/report['selector']
 for row in report['provenance']:assert sha(row['path'])==row['sha256']
 selection=report['selection'];assert sha(selection['archive'])==selection['archiveSha256']and sha(selection['scene'])==selection['sceneSha256']and sha(selection['resources'])==selection['resourcesSha256'];rows=read_scene(selection['scene']);assert selection['actor']in rows and selection['motion']in rows and selection['motion']['parent']==selection['actor']['offset']and resource(selection['resources'],selection['motion']['guid'])==selection['resource'];lines=dialogue(selection['scene'],rows)
 assert selection['dialogue']==[r for r in lines if r['text']=='Shut the fuck up!']
-data=Path(selection['scene']).read_bytes();pointer=struct.unpack_from('>I',data,28)[0];count=struct.unpack_from('>I',data,pointer)[0];cuts=list(struct.unpack_from('>'+str(count+1)+'f',data,pointer+12));assert cuts==selection['cutBoundaries']and cuts[9]==selection['sceneCutStartFrame']==1883
+data=Path(selection['scene']).read_bytes();pointer=struct.unpack_from('>I',data,28)[0];count=struct.unpack_from('>I',data,pointer)[0];cuts=list(struct.unpack_from('>'+str(count+1)+'f',data,pointer+12));assert cuts==selection['cutBoundaries']and cuts[7]==selection['sceneCutStartFrame']==1558 and selection['cut']==7 and selection['dialogueCut']==9
 assert selection['dialogue'][0]=={'firstFrame':1948.0,'lastFrame':2020.0,'text':'Shut the fuck up!'}
-assert report['sourceFrames']==list(range(167))and report['frames']==167 and report['fps']==30 and report['duration']==166/30
+assert report['sourceFrames']==list(range(60,170))and report['frames']==110 and report['fps']==30 and report['duration']==109/30
 _,bones,animation,_=read(mod/report['output']);_,rawBones,raw,_=read(report['retarget']);context=context_for(True);mirror=Matrix.Diagonal((1,1,-1,1));body=load_body('F:/SteamLibrary/steamapps/common/ProjectZomboid/media/models_X/Skinned/MaleBody.x');worst=0;headError=0;samples=0;headRotations=[]
 for channels in animation.values():
-    for keys in channels.values():assert len(keys)==167 and all(t==i*160 and all(math.isfinite(v)for v in values)for i,(t,values)in enumerate(keys))
+    for keys in channels.values():assert len(keys)==110 and all(t==i*160 and all(math.isfinite(v)for v in values)for i,(t,values)in enumerate(keys))
 for i,frame in enumerate(report['sourceFrames']):
     local=locals_at(bones,animation,i*160);original=locals_at(rawBones,raw,frame*160);pose=world(bones,local);source=source_pose(context,frame);source={n:Quaternion(report['sourceYaw']).to_matrix().to_4x4()@m for n,m in source.items()};chest=(mirror@source['mune_c_n']@mirror).to_quaternion()@context['bind']['Bip01_Spine1'].to_quaternion();adapt=pose['Bip01_Spine1'].to_quaternion()@chest.inverted();changed={'Bip01'}
     for side in ['L','R']:
@@ -38,4 +38,10 @@ for i,frame in enumerate(report['sourceFrames']):
     for name,sb in [('Bip01_Head','face_c_n'),('Bip01_Neck','kubi_c_n')]:
         expected=(mirror@source[sb]@mirror).to_quaternion()@context['bind'][name].to_quaternion();error=1-abs(expected.dot(pose[name].to_quaternion()));headError=max(headError,error);assert error<.00001
     headRotations.append((pose['Bip01_Spine1'].inverted()@pose['Bip01_Head']).to_quaternion());assert abs(min(p.y for p in skin_part(body,pose,report['ground']['feet']))-report['ground']['floor'])<.00002;originalWorld=world(rawBones,original);assert abs(pose['Bip01'].translation.x-originalWorld['Bip01'].translation.x)<.00001 and abs(pose['Bip01'].translation.z-originalWorld['Bip01'].translation.z)<.00001
-print('PASS original Shimano subtitle/cut/resource binding, 167 contiguous source samples,',samples,'preserved body/finger samples; original head/neck rotations and arm directions, native proportions, grounded soles and in-place root')
+print('PASS original Shimano subtitle/cut/resource binding, 110 contiguous strike/rise samples,',samples,'preserved body/finger samples; original head/neck rotations and arm directions, native proportions, grounded soles and in-place root')
+
+first=world(bones,locals_at(bones,animation,0));last=world(bones,locals_at(bones,animation,109*160));assert last['Bip01_Pelvis'].translation.y-first['Bip01_Pelvis'].translation.y>.12
+sourceFirst=source_pose(context,60);sourceLast=source_pose(context,169)
+def hip_height(p):return p['ketu_c_n'].translation.y-min(p[n].translation.y for n in ['asi3_l_n','asi3_r_n'])
+assert hip_height(sourceFirst)<.55 and hip_height(sourceLast)>1
+print('PASS genuine seated-to-standing source signature: original hip/foot rise exceeds 0.5m, native grounded pelvis rises with the action')
