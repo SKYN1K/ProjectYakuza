@@ -38,6 +38,7 @@ ProjectYakuza.registerStyle({
         heavyImpact="ProjectYakuza_Y6_HeavyFinisher",chargedImpact="ProjectYakuza_Y6_HeavyFinisher",parryImpact="ProjectYakuza_Y6_HeavyFinisher",
         grab="ProjectYakuza_Y6_Grab",throwImpact="ProjectYakuza_Y6_ThrowImpact",guardHit="ProjectYakuza_Y6_GuardImpact",doubleFinisher="ProjectYakuza_Y6_HeavyFinisher",guardBreak="ProjectYakuza_Y6_GuardBreak",
         heatGain="ProjectYakuza_Y6_HeatGain",heatFull="ProjectYakuza_Y6_HeatFull",heatStart="ProjectYakuza_Y6_ChargeStart",
+        heatStartLayer="ProjectYakuza_ExtremeHeatWindup",heatIgnition="ProjectYakuza_ExtremeHeatIgnition",heatSurge="ProjectYakuza_ExtremeHeatSurge",
         heatOnA="ProjectYakuza_Y6_HeatOnA",heatOnB="ProjectYakuza_Y6_HeatOnB",heatOff="ProjectYakuza_Y6_HeatOff",
     }),
     music={

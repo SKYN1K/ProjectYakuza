@@ -1,0 +1,42 @@
+module ProjectYakuza
+{
+    sound ProjectYakuza_ExtremeHeatWindup
+    {
+        category = ProjectYakuza_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuza/ExtremeHeatWindup.wav,
+            distanceMin = 1,
+            distanceMax = 16,
+            volume = 0.70,
+        }
+    }
+    sound ProjectYakuza_ExtremeHeatIgnition
+    {
+        category = ProjectYakuza_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuza/ExtremeHeatIgnition.wav,
+            distanceMin = 1,
+            distanceMax = 16,
+            volume = 0.70,
+        }
+    }
+    sound ProjectYakuza_ExtremeHeatSurge
+    {
+        category = ProjectYakuza_Effects,
+        is3D = true,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuza/ExtremeHeatSurge.wav,
+            distanceMin = 1,
+            distanceMax = 16,
+            volume = 0.70,
+        }
+    }
+}

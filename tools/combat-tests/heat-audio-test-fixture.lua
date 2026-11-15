@@ -22,8 +22,9 @@ function ProjectYakuza.on(name,fn)ProjectYakuza.listeners[name]=ProjectYakuza.li
 local function emit(name,...)for _,fn in ipairs(ProjectYakuza.listeners[name] or {})do fn(...)end end
 do local _="ProjectYakuzaFixture:FEEDBACK" end
 local F=ProjectYakuza.Feedback
-local function start()
+local function start(extra)
  F.clear();p.equipped=true;p.dead=false;p.localPlayer=true;style.id='test';style.sounds={heatStart='Charge',heatOnA='Flare',heatOnB='Layer',heatOff='End',punchSwing='Swing'}
+ if extra then style.sounds.heatStartLayer='Windup';style.sounds.heatIgnition='Ignition';style.sounds.heatSurge='Surge'end
  ProjectYakuza.HeatActivation.active[p]={};clock=clock+10000
  emit('heatActivationStarted',p);return #calls
 end
@@ -91,6 +92,33 @@ local allowed={Charge=true,Flare=true,Layer=true,End=true,Swing=true}
 local onlyEffects=true;for _,name in ipairs(calls)do if not allowed[name]then onlyEffects=false end end
 check(onlyEffects,'activation routes contain only supplied SFX, never character voice cues')
 check(#calls>0,'fixture exercised supplied cue routes without voice playback')
+
+local windup=start(true);charge=windup-1
+check(calls[charge]=='Charge'and calls[windup]=='Windup'and near(volumes[windup],.20),'Kiwami windup layers with existing Y6 charge')
+n=#calls;emit('heatActivationStarted',p);check(#calls==n,'layered activation still starts only once')
+clock=clock+500;emit('heatActivationFlare',p);local ignition=#calls;flare=ignition-1
+check(calls[flare]=='Flare'and calls[ignition]=='Ignition'and near(volumes[ignition],.24),'native flare adds the supplied Kiwami ignition once')
+emit('heatActivationFlare',p);check(#calls==ignition,'duplicate flare cannot stack ignition')
+clock=clock+70;F.tick();check(near(volumes[charge],.14)and near(volumes[windup],.10),'both charge layers fade together')
+clock=clock+70;F.tick();check(stopped[charge]==1 and stopped[windup]==1,'both windups stop once after fade')
+emit('heatActivationStopped',p,true)
+clock=clock+160;F.tick();check(calls[#calls]=='Layer','existing Y6 flare layer keeps its 300ms delay')
+clock=clock+349;F.tick();check(calls[#calls]=='Layer','surge waits through the end of the activation')
+clock=clock+1;F.tick();local surge=#calls;check(calls[surge]=='Surge'and near(volumes[surge],.18),'successful activation retains restrained 650ms Kiwami surge')
+F.tick();check(#calls==surge,'surge plays once')
+playing[flare]=false;playing[ignition]=false;playing[surge-1]=false;playing[surge]=false;F.tick()
+check(not F.activationSounds[p]and not tickHook,'layered activation releases all completed handles')
+windup=start(true);clock=clock+300;emit('heatActivationFlare',p);n=#calls
+paused=true;clock=clock+5000;F.tick();paused=false;clock=clock+300;F.tick()
+check(calls[#calls]=='Layer'and #calls==n+1,'pause preserves both scheduled layer delays')
+clock=clock+350;F.tick();check(calls[#calls]=='Surge','surge resumes after its remaining unpaused delay')
+windup=start(true);emit('heatActivationFlare',p);n=#calls;emit('heatActivationStopped',p,false);clock=clock+1000;F.tick()
+check(#calls==n and stopped[windup]and not F.activationSounds[p],'interruption cancels all added cues')
+start(true);emit('heatActivationFlare',p);n=#calls;clock=clock+1000;F.tick()
+check(#calls==n,'late frame drops delayed layers instead of stacking old sounds')
+start(true);emit('heatActivationFlare',p);n=#calls;emit('styleChanged',p);clock=clock+650;F.tick()
+check(#calls==n and not F.activationSounds[p],'style change cancels delayed Kiwami surge')
+start(true);F.clear();n=#calls;clock=clock+650;F.tick();check(#calls==n and not tickHook,'save/menu cleanup cancels every added cue')
 
 F.clear();style.weaponProfile='bat';style.impactFeedback='blunt';style.sounds={heavyImpact='BluntHeavy',groundImpact='BluntGround'}
 combo.active=true;combo.finisherMove={duration=1};combo.multiHitToken={};combo.feedbackStamp=nil

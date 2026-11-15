@@ -1,5 +1,5 @@
 from pathlib import Path
-import sys,json,struct,hashlib,subprocess,wave,copy
+import sys,json,struct,hashlib,subprocess,wave,copy,array,math
 from read_heat_scene import read_scene
 from cri_cue_table import cue_names,sheet_names
 
@@ -114,7 +114,15 @@ for key,(folder,bankName,animation)in scenes.items():
                 assert(rate,channels,width,samples)==(info['sampleRate'],info['channels'],2,info['numberOfSamples'])
                 sounds[cue]=soundName;audioRecords.append({**audioBankMeta,'cueSheet':sound['cueSheet'],'cue':cue,'sound':soundName,'cueId':sound['cueId'],'soundIndex':sound['soundIndex'],'streamIndex':index,'stream':cueName,'output':rel,'sha256':sha(output.read_bytes()),'sampleRate':rate,'channels':channels,'samples':samples})
                 scripts.append('    sound '+soundName+'\n    {\n        category = ProjectYakuza_Effects,\n        is3D = true,\n        loop = false,\n        clip\n        {\n            file = media/sound/ProjectYakuza/'+output.name+',\n            distanceMin = 1,\n            distanceMax = 16,\n            volume = 0.65,\n        }\n    }')
-            audio.append({'atMs':at,'cue':cue,'target':'victim'if node['role']=='victim'else'actor'})
+            alignment={}
+            if key=='ground':
+                with wave.open(str(output))as wav:
+                    block=wav.getframerate()//200*wav.getnchannels();samples=array.array('h',wav.readframes(wav.getnframes()))
+                rms=[math.sqrt(sum(v*v for v in samples[i:i+block])/len(samples[i:i+block]))for i in range(0,len(samples),block)]
+                onset=next(i for i,v in enumerate(rms)if v>=max(rms)*.65)*5
+                alignment={'sourceAtMs':at,'attackLeadMs':onset,'contactMs':contacts[0]['atMs']}
+                at=contacts[0]['atMs']-onset
+            audio.append({'atMs':at,'cue':cue,'target':'victim'if node['role']=='victim'else'actor',**alignment})
         particles=[]
         for frame,node in mapped_events(particleNodes,frames,None if failure else segments):
             if frame>=len(frames)-1:continue
@@ -127,7 +135,7 @@ for key,(folder,bankName,animation)in scenes.items():
         fail=record['definitions'][1];moves[key]['ending']={k:fail[k]for k in['audioEvents','voiceEvents']};moves[key]['ending']['contactMs']=fail['contacts'][-1]['atMs']
     sourceRecords.append(record)
 data={'moves':moves,'sounds':sounds};code='require "ProjectYakuza/Registry"\nProjectYakuza.HeatSceneData='+literal(data)+'\n'
-report={'operation':'Parsed supplied CMN18 and big-endian CMN10 victim damage, SE cue indices, actor voice labels and source blood attachments. Original 30 FPS frame mappings preserve authored bounded QTE repeats/endings. Original non-voice bank streams decoded without synthesis or mixing; no separate voice pack changed.','sheetIndex':{'path':str(sheetPath),'sha256':sha(sheetPath.read_bytes())},'formatReferences':['https://github.com/Fronkln/HActLib','https://github.com/vgmstream/vgmstream/blob/master/src/util/cri_utf.c'],'scenes':sourceRecords,'sounds':audioRecords}
+report={'operation':'Parsed supplied CMN18 and big-endian CMN10 victim damage, SE cue indices, actor voice labels and source blood attachments. Original 30 FPS frame mappings preserve authored bounded QTE repeats/endings. Original non-voice bank streams decoded without synthesis or mixing; no separate voice pack changed. Ground SE source frame zero is retained as sourceAtMs; runtime start compensates for the measured original PCM attack to meet the verified native frame-30 contact.','sheetIndex':{'path':str(sheetPath),'sha256':sha(sheetPath.read_bytes())},'formatReferences':['https://github.com/Fronkln/HActLib','https://github.com/vgmstream/vgmstream/blob/master/src/util/cri_utf.c'],'scenes':sourceRecords,'sounds':audioRecords}
 outputs={mod/'42/media/lua/shared/ProjectYakuza/HeatSceneData.lua':code,mod/'docs/heat-scenes.json':json.dumps(report,indent=2,ensure_ascii=True)+'\n',mod/'42/media/scripts/ProjectYakuza_HeatScenes.txt':'module Base\n{\n'+'\n'.join(scripts)+'\n}\n'}
 for path,text in outputs.items():
     if write:path.write_bytes(text.encode('utf-8'))

@@ -1,5 +1,5 @@
 {
-  "operation": "Parsed supplied CMN18 and big-endian CMN10 victim damage, SE cue indices, actor voice labels and source blood attachments. Original 30 FPS frame mappings preserve authored bounded QTE repeats/endings. Original non-voice bank streams decoded without synthesis or mixing; no separate voice pack changed.",
+  "operation": "Parsed supplied CMN18 and big-endian CMN10 victim damage, SE cue indices, actor voice labels and source blood attachments. Original 30 FPS frame mappings preserve authored bounded QTE repeats/endings. Original non-voice bank streams decoded without synthesis or mixing; no separate voice pack changed. Ground SE source frame zero is retained as sourceAtMs; runtime start compensates for the measured original PCM attack to meet the verified native frame-30 contact.",
   "sheetIndex": {
     "path": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 6 - The Song of Life\\data\\puid\\sound_cuesheet.bin",
     "sha256": "fdd87ca4b1e90d4425983688a9820e8327cf046eaf4920b58ed6e0bba623f0f6"
@@ -3628,9 +3628,12 @@
           ],
           "audioEvents": [
             {
-              "atMs": 0.0,
+              "atMs": 875,
               "cue": "heatSceneGround0",
-              "target": "actor"
+              "target": "actor",
+              "sourceAtMs": 0.0,
+              "attackLeadMs": 125,
+              "contactMs": 1000
             }
           ],
           "voiceEvents": [],

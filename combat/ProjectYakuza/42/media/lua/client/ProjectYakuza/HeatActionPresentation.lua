@@ -134,7 +134,11 @@ function C.tick()
                         local contact=PY.HeatRushRules.contacts(s.move)[event.index]
                         if not s.sceneEffects[i]and time>=event.atMs and C.allowed(s,contact,event.index)then
                             s.sceneEffects[i]=true
-                            if time-event.atMs<=C.late(s) and PY.BloodEffects then PY.BloodEffects.spawn(p,s.victim,contact.strong~=false,contact.charged==true,event.feedback,C.anchor(p,s.victim,event.point))end
+                            if time-event.atMs<=C.late(s)then
+                                local anchor=C.anchor(p,s.victim,event.point)
+                                if event.impact and PY.HitEffects then PY.HitEffects.spawn(p,s.victim,contact.strong~=false,contact.charged==true,false,event.feedback,anchor)
+                                elseif PY.BloodEffects then PY.BloodEffects.spawn(p,s.victim,contact.strong~=false,contact.charged==true,event.feedback,anchor)end
+                            end
                         end
                     end
                 end

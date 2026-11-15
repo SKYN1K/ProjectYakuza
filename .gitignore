@@ -374,3 +374,6 @@
 !tools/combat-tests/build_crate_holds.py
 !tools/combat-tests/repair_blade_alignment.py
 !tools/combat-tests/validate_contact_repairs.py
+!tools/combat-tests/build_activation_audio.py
+!tools/combat-tests/ActivationAudioProbe.java
+!tools/combat-tests/validate_stomp_timing.py

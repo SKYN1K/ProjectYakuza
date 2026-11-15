@@ -1,5 +1,5 @@
 {
-  "operation": "Numeric source-pose anchors through native B42 FK and in-memory PCM onset analysis of unchanged supplied clips. No assets generated, converted to files, edited or upscaled. All eight built-in scenes use original CMN victim damage and independently timed sound, voice and particle-bone events. Bounded QTE repeats and endings retain their source frame maps. Existing supplied blood pixels are reused. Custom clips retain measured transient leads.",
+  "operation": "Numeric source-pose anchors through native B42 FK and in-memory PCM onset analysis of unchanged supplied clips. No assets generated, converted to files, edited or upscaled. Built-in scenes use original CMN victim damage and independently timed sound, voice and particle-bone events where present. The ground scene has no CMN damage/blood node: its verified frame-30 contact reuses one existing impact effect at the native victim head. Its original PCM attack is aligned to that contact without modifying source samples. Bounded QTE repeats and endings retain their source frame maps. Existing supplied blood pixels are reused. Custom clips retain measured transient leads.",
   "clips": [
     {
       "animation": "ProjectYakuza_DD_HeatRush",
@@ -1078,7 +1078,19 @@
           "layers": []
         }
       ],
-      "effects": []
+      "effects": [
+        {
+          "atMs": 1000,
+          "index": 1,
+          "point": [
+            0.269116163,
+            0.021458909,
+            -0.151517376
+          ],
+          "feedback": "unarmed",
+          "impact": true
+        }
+      ]
     },
     {
       "animation": "ProjectYakuza_DD_KatanaHeat",

@@ -158,4 +158,7 @@ GameSound_EN = {
     GameSound_ProjectYakuza_HeatScene_crate_20 = "Beer crate Heat Action: sound 20",
     GameSound_ProjectYakuza_HeatScene_crate_4 = "Beer crate Heat Action: sound 4",
     GameSound_ProjectYakuza_HeatScene_crate_5 = "Beer crate Heat Action: sound 5",
+    GameSound_ProjectYakuza_ExtremeHeatWindup = "Extreme Heat: charge layer",
+    GameSound_ProjectYakuza_ExtremeHeatIgnition = "Extreme Heat: ignition",
+    GameSound_ProjectYakuza_ExtremeHeatSurge = "Extreme Heat: power surge",
 }

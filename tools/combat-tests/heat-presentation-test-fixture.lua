@@ -35,7 +35,7 @@ for animation,data in pairs(D.moves)do
  for _,at in ipairs(sorted)do
   local expected=0;for _,effect in ipairs(data.effects)do if effect.atMs==at then expected=expected+1 end end
   local before=#fx;step(at);check(#fx==before+expected,'all source emitters start at their own frame '..animation)
-  for i=before+1,#fx do check(fx[i].blood and fx[i].anchor~=nil,'source emitter uses supplied blood and sampled bone attachment')end
+  for i=before+1,#fx do check(fx[i].anchor~=nil and (fx[i].blood==true or animation=='ProjectYakuza_DD_GroundHeat'),'emitter uses existing supplied effects and sampled bone attachment')end
   step(at);check(#fx==before+expected,'source emitters cannot duplicate on repeated render')
  end
  check(#fx==#data.effects and #plays==0,'source effect count is exact and generic sounds are suppressed')
@@ -50,7 +50,7 @@ for animation,data in pairs(D.moves)do
   total=total+1
  end
 end
-check(total==38 and effectTotal==129,'all main and failure-ending contacts and source emitter starts covered')
+check(total==38 and effectTotal==130,'all main and failure-ending contacts, 129 source blood emitters and one stomp impact covered')
 C.clearAll();move={animation='Custom',contacts={{atMs=500,cue='punchImpact',layers={'kickImpact'}}}};source={};plays={};fx={};phase=0;C.start(p,z,move,source);step(500-lead)
 check(#plays==2 and plays[1].gain==.55 and plays[2].gain==.3,'custom styles retain primary and layered sound gains')
 step(500);check(#fx==1 and fx[1].anchor==nil,'custom action without numeric sample retains legacy placement')
@@ -147,5 +147,22 @@ for _,action in ipairs(sourceMoves)do
   check(not PY.validateStyle(owner),'invalid failure-ending source event rejected');failure.audioEvents=old;check(PY.validateStyle(owner),'restored source ending validates')
  end
 end
+local stomp=builtin.actions.groundHeat;local se=stomp.audioEvents[1]
+check(se.atMs==875 and se.atMs+se.attackLeadMs==stomp.contacts[1].atMs,'stomp PCM transient aligns with native frame-30 contact')
+for _,remote in ipairs({false,true})do
+ C.clearAll();plays={};fx={};phase=0;source={remote=remote,age=0,at=clock};local before=emitted
+ C.start(p,z,stomp,source)
+ local function advance(ms)
+  phase=ms/1000;clock=clock+16;source.age=phase;source.at=clock;C.tick()
+ end
+ advance(0);advance(874);check(#plays==0 and #fx==0,'stomp has no opening impact on owner or observer')
+ advance(875);check(#plays==1 and #fx==0,'stomp starts unchanged original PCM 125ms before foot contact')
+ advance(999);check(#plays==1 and #fx==0,'stomp does not show impact before landing')
+ advance(1000);check(#fx==1 and not fx[1].blood and fx[1].anchor~=nil and emitted==before+1,'landing shows one anchored existing impact on owner and observer')
+ advance(1000);advance(1016);check(#fx==1 and #plays==1 and emitted==before+1,'stomp landing cannot duplicate')
+ C.clearAll();plays={};fx={};source={remote=remote,age=0,at=clock};phase=0;C.start(p,z,stomp,source)
+ advance(0);paused=true;advance(1000);check(#plays==0 and #fx==0,'pause suppresses stomp cues');paused=false
+ C.stop(p,source);advance(1000);check(#plays==0 and #fx==0,'interruption cancels stomp sound and impact')
+end
 C.clearAll()
-return true,'PASS '..checks..' paired Heat Action timing, 41 native contacts, 133 source/contact effects, independent cues and voices, custom layers, replay suppression, rotation and lifecycle checks'
+return true,'PASS '..checks..' paired Heat Action timing, 38 native contacts, 129 source blood emitters and one stomp contact effect, independent cues and voices, replay suppression and lifecycle checks'

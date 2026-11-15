@@ -49,7 +49,11 @@ for row in rows:
    source=katana['effectPoints'][i];point=source['point'];boneName=source['bone'];feedback='unarmed'if i==1 else'blade';extra={'bloodOnly':True}
   contacts.append({'atMs':c['atMs'],'index':c.get('index',i+1),'cue':cue,'base':base,'point':point,'bone':boneName,**extra,'layers':layers,**({'feedback':feedback}if feedback else{})})
  for event in row.get('audioEvents',[]):sounds.add(row['sounds'][event['cue']])
- definitions[row['animation']]={'contacts':contacts,'effects':sceneEffects[row['animation']]};records.append({'animation':row['animation'],'targetAnimation':row['targetAnimation'],'actorSha256':hashlib.sha256((mod/f'42/media/anims_X/Bob/{row["animation"]}.x').read_bytes()).hexdigest(),'victimSha256':hashlib.sha256((mod/f'42/media/anims_X/Bob/{row["targetAnimation"]}.x').read_bytes()).hexdigest(),'contacts':contacts,'effects':sceneEffects[row['animation']]})
+ effects=list(sceneEffects[row['animation']])
+ if row['animation']=='ProjectYakuza_DD_GroundHeat':
+  assert not effects and len(contacts)==1
+  c=contacts[0];effects.append({'atMs':c['atMs'],'index':c['index'],'point':c['point'],'feedback':'unarmed','impact':True})
+ definitions[row['animation']]={'contacts':contacts,'effects':effects};records.append({'animation':row['animation'],'targetAnimation':row['targetAnimation'],'actorSha256':hashlib.sha256((mod/f'42/media/anims_X/Bob/{row["animation"]}.x').read_bytes()).hexdigest(),'victimSha256':hashlib.sha256((mod/f'42/media/anims_X/Bob/{row["targetAnimation"]}.x').read_bytes()).hexdigest(),'contacts':contacts,'effects':effects})
 scripts='\n'.join(p.read_text()for p in (mod/'42/media/scripts').glob('*.txt'));files=set()
 for event in sounds:
  m=re.search(r'\bsound\s+'+re.escape(event)+r'\s*\{',scripts);assert m,event;pos=m.end();depth=1
@@ -64,7 +68,7 @@ def literal(v):
  if isinstance(v,(int,float)):return format(v,'.9g')
  if isinstance(v,list):return '{'+','.join(literal(x)for x in v)+'}'
  return '{'+','.join('['+json.dumps(k)+']='+literal(x)for k,x in sorted(v.items()))+'}'
-code='require "ProjectYakuza/Registry"\nProjectYakuza.HeatPresentationData='+literal({'moves':definitions,'leads':leads})+'\n';output=lua/'client/ProjectYakuza/HeatPresentationData.lua';report={'operation':'Numeric source-pose anchors through native B42 FK and in-memory PCM onset analysis of unchanged supplied clips. No assets generated, converted to files, edited or upscaled. All eight built-in scenes use original CMN victim damage and independently timed sound, voice and particle-bone events. Bounded QTE repeats and endings retain their source frame maps. Existing supplied blood pixels are reused. Custom clips retain measured transient leads.','clips':records,'sounds':audio}
+code='require "ProjectYakuza/Registry"\nProjectYakuza.HeatPresentationData='+literal({'moves':definitions,'leads':leads})+'\n';output=lua/'client/ProjectYakuza/HeatPresentationData.lua';report={'operation':'Numeric source-pose anchors through native B42 FK and in-memory PCM onset analysis of unchanged supplied clips. No assets generated, converted to files, edited or upscaled. Built-in scenes use original CMN victim damage and independently timed sound, voice and particle-bone events where present. The ground scene has no CMN damage/blood node: its verified frame-30 contact reuses one existing impact effect at the native victim head. Its original PCM attack is aligned to that contact without modifying source samples. Bounded QTE repeats and endings retain their source frame maps. Existing supplied blood pixels are reused. Custom clips retain measured transient leads.','clips':records,'sounds':audio}
 if '--write'in sys.argv:output.write_text(code);(mod/'docs/heat-presentation-data.json').write_text(json.dumps(report,indent=2)+'\n')
 else:assert output.read_text()==code and json.loads((mod/'docs/heat-presentation-data.json').read_text())==report
 print('PASS',len(records),'paired main/ending clips,',sum(len(r['contacts'])for r in records),'native victim contact anchors and',len(audio),'unchanged audio onset measurements')

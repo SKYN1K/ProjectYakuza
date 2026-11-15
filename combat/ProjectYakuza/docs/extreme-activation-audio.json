@@ -1,0 +1,73 @@
+{
+  "operation": "Three complete original Kiwami 2 act_kiryu non-voice streams decoded directly to PCM without trimming, mixing, resampling or synthesis. Existing Yakuza 6 activation layers remain. Runtime gains and fades are applied by the native emitter.",
+  "sounds": [
+    {
+      "sound": "ProjectYakuza_ExtremeHeatWindup",
+      "label": "Extreme Heat: charge layer",
+      "bank": {
+        "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza Kiwami 2\\data\\sound.par",
+        "name": "act_kiryu.acb",
+        "offset": 1542144,
+        "size": 392352,
+        "plain": 392352,
+        "flags": 0,
+        "packedSha256": "e4f0f52196bebca64cdabe1e97e8ff5c2f6ff2162f8b50f96874c8d0686b2493",
+        "sha256": "e4f0f52196bebca64cdabe1e97e8ff5c2f6ff2162f8b50f96874c8d0686b2493"
+      },
+      "cue": "charge_st_lexus2",
+      "cueId": 45,
+      "streamIndex": 7,
+      "samples": 154638,
+      "sampleRate": 48000,
+      "channels": 2,
+      "output": "42/media/sound/ProjectYakuza/ExtremeHeatWindup.wav",
+      "sha256": "daf69db6edb6a5e9adc62034539f6a070b148d3354c4bbbb05c51c96ad53b22d"
+    },
+    {
+      "sound": "ProjectYakuza_ExtremeHeatIgnition",
+      "label": "Extreme Heat: ignition",
+      "bank": {
+        "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza Kiwami 2\\data\\sound.par",
+        "name": "act_kiryu.acb",
+        "offset": 1542144,
+        "size": 392352,
+        "plain": 392352,
+        "flags": 0,
+        "packedSha256": "e4f0f52196bebca64cdabe1e97e8ff5c2f6ff2162f8b50f96874c8d0686b2493",
+        "sha256": "e4f0f52196bebca64cdabe1e97e8ff5c2f6ff2162f8b50f96874c8d0686b2493"
+      },
+      "cue": "charge_en_lexus2_v2",
+      "cueId": 47,
+      "streamIndex": 9,
+      "samples": 56800,
+      "sampleRate": 48000,
+      "channels": 1,
+      "output": "42/media/sound/ProjectYakuza/ExtremeHeatIgnition.wav",
+      "sha256": "348e811fdb059c9a7345216c69764b81996d768f5681a5431c8e8d732149632e"
+    },
+    {
+      "sound": "ProjectYakuza_ExtremeHeatSurge",
+      "label": "Extreme Heat: power surge",
+      "bank": {
+        "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza Kiwami 2\\data\\sound.par",
+        "name": "act_kiryu.acb",
+        "offset": 1542144,
+        "size": 392352,
+        "plain": 392352,
+        "flags": 0,
+        "packedSha256": "e4f0f52196bebca64cdabe1e97e8ff5c2f6ff2162f8b50f96874c8d0686b2493",
+        "sha256": "e4f0f52196bebca64cdabe1e97e8ff5c2f6ff2162f8b50f96874c8d0686b2493"
+      },
+      "cue": "charge_en_lexus2_v3",
+      "cueId": 48,
+      "streamIndex": 10,
+      "samples": 66330,
+      "sampleRate": 48000,
+      "channels": 1,
+      "output": "42/media/sound/ProjectYakuza/ExtremeHeatSurge.wav",
+      "sha256": "b882f0919f34d898846a40fced393c9186234a083bf9179eac150b94b0d1ddbd"
+    }
+  ],
+  "script": "42/media/scripts/ProjectYakuza_ExtremeHeat.txt",
+  "scriptSha256": "2a72bde824c58ae07726b0d578e6cf474c2eb9c85917201a14a31f8b8523c3b2"
+}

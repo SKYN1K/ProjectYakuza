@@ -52,7 +52,10 @@ for record in data['scenes']:
             assert math.isclose(event['atMs'],particle['frame']/30*1000)
             assert all(math.isfinite(v)and abs(v)<5 for v in event['point'])
         for event in definition['audioEvents']:
-            mappedFrame=event['atMs']*.03;index=math.floor(mappedFrame+1e-8);sourceFrame=frames[index]+mappedFrame-index
+            if key=='ground':
+                assert event['sourceAtMs']==0 and event['attackLeadMs']==125 and event['contactMs']==1000
+                assert event['atMs']+event['attackLeadMs']==contacts[0]['atMs']
+            mappedFrame=event.get('sourceAtMs',event['atMs'])*.03;index=math.floor(mappedFrame+1e-8);sourceFrame=frames[index]+mappedFrame-index
             matches=[n for n in scene['nodes']if math.isclose(n.get('element',{}).get('start',-1000),sourceFrame,abs_tol=1e-6)and 'sound'in n and not n['sound']['fighter']]
             assert matches,(key,event)
             if key=='katana':

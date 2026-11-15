@@ -3,7 +3,7 @@ require "ProjectYakuza/SoundVariety"
 local ProjectYakuza=ProjectYakuza
 local F={states=setmetatable({}, {__mode="k"}),pending=setmetatable({}, {__mode="k"}),stocks=setmetatable({}, {__mode="k"}),activationSounds=setmetatable({}, {__mode="k"})}
 ProjectYakuza.Feedback=F
-F.heatMix={charge=.28,flare=.50,layer=.32,finish=.42,fadeMs=140,layerDelayMs=300,tailMs=2800}
+F.heatMix={charge=.28,windup=.20,flare=.50,ignition=.24,layer=.32,surge=.18,finish=.42,fadeMs=140,layerDelayMs=300,surgeDelayMs=650,lateMs=200,tailMs=2800}
 function F.sound(p,key)
     local style=p and ProjectYakuza.getPlayerStyle(p)
     return style and type(style.sounds)=="table" and style.sounds[key] or nil
@@ -55,9 +55,12 @@ function F.startActivation(p)
     if old and not old.completed and old.action==action then return end
     F.stopActivation(p)
     local time=getTimestampMs()
-    local session={action=action,style=ProjectYakuza.getPlayerStyle(p).id,handles={},last=time,deadline=time+6000}
+    local session={action=action,style=ProjectYakuza.getPlayerStyle(p).id,handles={},windups={},last=time,deadline=time+6000}
     F.activationSounds[p]=session
     session.charge=F.activationSound(p,F.sound(p,"heatStart"),F.heatMix.charge)
+    if session.charge then session.windups[session.charge]=F.heatMix.charge end
+    local windup=F.activationSound(p,F.sound(p,"heatStartLayer"),F.heatMix.windup)
+    if windup then session.windups[windup]=F.heatMix.windup end
     F.notice(p,"EXTREME HEAT");hook()
 end
 function F.flareActivation(p)
@@ -66,8 +69,11 @@ function F.flareActivation(p)
     session.flared=true;local time=getTimestampMs();session.last=time
     session.fadeAt=time
     F.activationSound(p,F.sound(p,"heatOnA"),F.heatMix.flare)
+    F.activationSound(p,F.sound(p,"heatIgnition"),F.heatMix.ignition)
     local second=F.sound(p,"heatOnB")
     if second then session.second=second;session.due=time+F.heatMix.layerDelayMs end
+    local surge=F.sound(p,"heatSurge")
+    if surge then session.surge=surge;session.surgeDue=time+F.heatMix.surgeDelayMs end
     hook()
 end
 function F.finishActivation(p,complete)
@@ -86,21 +92,29 @@ function F.updateActivation(p,session,time,paused)
     if paused then
         session.deadline=session.deadline+dt
         if session.due then session.due=session.due+dt end
+        if session.surgeDue then session.surgeDue=session.surgeDue+dt end
         if session.fadeAt then session.fadeAt=session.fadeAt+dt end
         return
     end
     local emitter=p:getEmitter()
-    if session.charge and session.fadeAt then
+    if session.fadeAt then
         local fraction=math.max(0,math.min(1,(time-session.fadeAt)/F.heatMix.fadeMs))
-        emitter:setVolume(session.charge,F.heatMix.charge*(1-fraction))
-        if fraction>=1 then
-            emitter:stopSound(session.charge);session.handles[session.charge]=nil;session.charge=nil
+        for id,gain in pairs(session.windups)do
+            emitter:setVolume(id,gain*(1-fraction))
+            if fraction>=1 then emitter:stopSound(id);session.handles[id]=nil end
         end
+        if fraction>=1 then session.windups={};session.charge=nil;session.fadeAt=nil end
     end
     if session.second and time>=session.due then
-        F.activationSound(p,session.second,F.heatMix.layer);session.second=nil;session.due=nil
+        if time-session.due<=F.heatMix.lateMs then F.activationSound(p,session.second,F.heatMix.layer)end
+        session.second=nil;session.due=nil
     end
-    if session.completed and not session.second and not session.charge then
+    if session.surge and time>=session.surgeDue then
+        if time-session.surgeDue<=F.heatMix.lateMs then F.activationSound(p,session.surge,F.heatMix.surge)end
+        session.surge=nil;session.surgeDue=nil
+    end
+    local winding=false;for _ in pairs(session.windups)do winding=true;break end
+    if session.completed and not session.second and not session.surge and not winding then
         local playing=false
         if emitter.isPlaying then for id in pairs(session.handles) do if emitter:isPlaying(id) then playing=true;break end end
         else playing=time<session.deadline end
