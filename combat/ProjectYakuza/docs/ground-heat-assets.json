@@ -1941,5 +1941,17 @@
       "frames": 111,
       "fps": 30
     }
-  ]
+  ],
+  "verifiedCmnContract": {
+    "motionFrames": [
+      0,
+      110
+    ],
+    "cueSheet": 512,
+    "cueId": 0,
+    "soundFrame": 0,
+    "nativeBodyContactFrame": 30,
+    "damageNodePresent": false,
+    "operation": "Original CMN binds actor/victim GMT resources and the single hact_h1500 cue at frame zero. It contains no damage or blood nodes, so the existing independently measured native sole/head contact remains frame 30; no nonexistent CMN impact is invented."
+  }
 }

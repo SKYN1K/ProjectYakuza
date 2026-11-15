@@ -723,7 +723,7 @@ for _,event in ipairs(events)do
  check(z1.hits==before,'both original punches are presentation-only before the automatic kick')
 end
 check(#events==18 and #lease.definition.prompts==6,'six fresh prompts cover twelve independent punch contacts')
-clock=lease.started+rules.time(lease.move,245/30)*1000+10;snapshot(p,{extreme=true,clip='ProjectYakuza_DD_HeatRush',move='dd_heat_rush',action=lease.action,swing=1800})
+clock=lease.started+rules.time(lease.move,lease.contacts[13].atMs/1000)*1000+10;snapshot(p,{extreme=true,clip='ProjectYakuza_DD_HeatRush',move='dd_heat_rush',action=lease.action,swing=1800})
 command('heatRushPress',{action=lease.action,index=7});check(not lease.presses[7],'automatic final kick is not a seventh QTE')
 command('heatRushHit',{action=lease.action,index=13,damage=999});command('heatRushHit',{action=lease.action,index=13})
 check(z1.hits==before and not lease.pendingDamage and math.abs(z1.health-7.75)<.000001,'nonlethal server kick damages at contact without restarting paired playback')

@@ -2,6 +2,8 @@ from pathlib import Path
 import sys,json,hashlib,math,subprocess
 root=Path(__file__).resolve().parents[2];w=root/'tools/combat-tests';mod=root/('tools/katana-scene-candidate-093/ProjectYakuza'if '--stage'in sys.argv else'combat/ProjectYakuza')
 sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
+if '--inside-blender'not in sys.argv and json.loads((mod/'docs/katana-heat-assets.json').read_text()).get('contactLock'):
+    subprocess.run([sys.executable,str(w/'validate_contact_repairs.py')],cwd=root,check=True);raise SystemExit(0)
 if '--inside-blender'not in sys.argv:
     r=subprocess.run(['F:/SteamLibrary/steamapps/common/Blender/blender.exe','-b','--factory-startup','-t','1','--python',str(Path(__file__).resolve()),'--','--inside-blender',*(['--stage']if '--stage'in sys.argv else[])],cwd=root,capture_output=True,text=True,encoding='utf-8',errors='replace');print(r.stdout)
     if r.returncode or 'PASS katana source'not in r.stdout:raise SystemExit(r.stderr or 'source checks failed')

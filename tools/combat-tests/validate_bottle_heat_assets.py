@@ -9,7 +9,10 @@ if '--inside-blender'not in sys.argv:
     report=json.loads((mod/'docs/bottle-heat-assets.json').read_text(encoding='utf-8'))
     for args in [['AnimationProbe',*[str(mod/c['output'])for c in report['clips']]],['PropAttachmentProbe',str(w/'bottle-heat-prop-contract.tsv')],['BottleHeatProbe',str(mod/'42/media/AnimSets')]]:subprocess.run([java,'-cp',cp,*args],cwd=w,check=True)
     raise SystemExit(0)
-sys.path.insert(0,str(w));from locomotion_math import read,locals_at
+sys.path.insert(0,str(w));from locomotion_math import read,locals_at,world as matrices_at
+from native_body_geometry import load_body,skin_part
+from mathutils import Vector
+body=load_body("F:/SteamLibrary/steamapps/common/ProjectZomboid/media/models_X/Skinned/MaleBody.x")
 report=json.loads((mod/'docs/bottle-heat-assets.json').read_text(encoding='utf-8'))
 assert len(report['clips'])==2 and sha(report['archive'])==report['archiveSha256']and sha(report['scene'])==report['sceneSha256']
 assert report['contactFrames']==[22,73,92]
@@ -25,7 +28,13 @@ for record in report['clips']:
         for bone in actual:
             if bone in ['Bip01_Prop1','Bip01_Prop2']:continue
             assert max(abs(actual[bone][a][b]-expected[bone][a][b])for a in range(4)for b in range(4))<.00001,(output,bone,i);samples+=1
-    grip=report['nativeGrip'];offsets=[','.join(str(v)for row in grip['nativeOffsets'][prop]for v in row)for prop in ['Bip01_Prop1','Bip01_Prop2']];contracts.append('\t'.join([str(output),*offsets,str(frames)]))
+    grip=report['nativeGrip'];offsets=[','.join(str(v)for row in grip['nativeOffsets'][prop]for v in row)for prop in ['Bip01_Prop1','Bip01_Prop2']]
+    if output.stem=='ProjectYakuza_DD_BottleHeat':
+        samplesRight=[]
+        for frame in range(frames):
+            pose=matrices_at(bones,locals_at(bones,anim,frame*160));palm=skin_part(body,pose,['Bip01_R_Hand']);assert(pose['Bip01_Prop1'].translation-sum(palm,Vector())/len(palm)).length<.00002;relative=pose['Bip01_R_Hand'].inverted()@pose['Bip01_Prop1'];samplesRight.append(','.join(str(v)for row in relative for v in row))
+        offsets[0]=';'.join(samplesRight)
+    contracts.append('\t'.join([str(output),*offsets,str(frames)]))
 (w/'bottle-heat-prop-contract.tsv').write_text('\n'.join(contracts),encoding='utf-8')
 assert all(len(path)==151 and all(math.isfinite(v)for row in path for v in row)for path in report['paths'])
 from types import ModuleType

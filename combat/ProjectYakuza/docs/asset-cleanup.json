@@ -22,12 +22,6 @@
       "reason": "Selectors gated by unproduced custom-pose variables; native pose fallback has been active since v0.78."
     },
     {
-      "path": "42/media/AnimSets/player/aim-strafe/ProjectYakuza_DD_CrateIdle.xml",
-      "bytes": 1557,
-      "sha256": "d51565c962fa4a3d48684fabbf1ab9af017efad6c7c808b0e62c366a2378e2cb",
-      "reason": "Selectors gated by unproduced custom-pose variables; native pose fallback has been active since v0.78."
-    },
-    {
       "path": "42/media/AnimSets/player/aim-strafe/ProjectYakuza_DD_KnifeIdle.xml",
       "bytes": 1547,
       "sha256": "1a35c6e6906de684cf1261421c38ee3afc4cc26d045ee1a2438de670410cdbaa",
@@ -49,12 +43,6 @@
       "path": "42/media/AnimSets/player/aim/ProjectYakuza_DD_BottleIdle.xml",
       "bytes": 1560,
       "sha256": "0d3f28d07a75d954608f09b913a7f2242c63b9c14b8d3d0fccee9a54c581f63b",
-      "reason": "Selectors gated by unproduced custom-pose variables; native pose fallback has been active since v0.78."
-    },
-    {
-      "path": "42/media/AnimSets/player/aim/ProjectYakuza_DD_CrateIdle.xml",
-      "bytes": 1557,
-      "sha256": "d51565c962fa4a3d48684fabbf1ab9af017efad6c7c808b0e62c366a2378e2cb",
       "reason": "Selectors gated by unproduced custom-pose variables; native pose fallback has been active since v0.78."
     },
     {
@@ -337,18 +325,6 @@
       "path": "42/media/anims_X/Bob/ProjectYakuza_DD_BottleRelaxedWalk.x",
       "bytes": 254963,
       "sha256": "3d0eca35dac4361808f687782c5742e47b68caa78588307e1824dab1906fdd62",
-      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
-    },
-    {
-      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_CrateReady.x",
-      "bytes": 596892,
-      "sha256": "4a2b7ed92a935a9a9b29ffdf504e4444e3006399e8b4fb51c0bd9bbce784afa2",
-      "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
-    },
-    {
-      "path": "42/media/anims_X/Bob/ProjectYakuza_DD_CrateRelaxedIdle.x",
-      "bytes": 473487,
-      "sha256": "5cea6cb97cb36a273f56f8601bbce143c3e46d5577754b5f39797fd92997109c",
       "reason": "No surviving animation selector or production Lua animation reference; superseded carry/idle/walk/footwork/grab motion."
     },
     {
@@ -1560,5 +1536,15 @@
       "sha256": "836c95561a7825ffa752defe265f56fec6939958e709522a9187a09df9c08270",
       "reason": "Replaced with dedicated Y6 WPN hold in 0.114.0, with newly scoped native selectors; not the obsolete generic WPA asset."
     }
-  ]
+  ],
+  "suppliedY5Replacements": {
+    "manifest": "docs/crate-hold-assets.json",
+    "paths": [
+      "42/media/AnimSets/player/aim-strafe/ProjectYakuza_DD_CrateIdle.xml",
+      "42/media/AnimSets/player/aim/ProjectYakuza_DD_CrateIdle.xml",
+      "42/media/anims_X/Bob/ProjectYakuza_DD_CrateReady.x",
+      "42/media/anims_X/Bob/ProjectYakuza_DD_CrateRelaxedIdle.x"
+    ],
+    "operation": "New active original Yakuza 5 carry/walk assets use these identifiers; old obsolete source bytes are not restored."
+  }
 }

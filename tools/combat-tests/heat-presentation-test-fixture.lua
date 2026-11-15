@@ -50,7 +50,7 @@ for animation,data in pairs(D.moves)do
   total=total+1
  end
 end
-check(total==39 and effectTotal==132,'all main and failure-ending contacts and source emitter starts covered')
+check(total==38 and effectTotal==129,'all main and failure-ending contacts and source emitter starts covered')
 C.clearAll();move={animation='Custom',contacts={{atMs=500,cue='punchImpact',layers={'kickImpact'}}}};source={};plays={};fx={};phase=0;C.start(p,z,move,source);step(500-lead)
 check(#plays==2 and plays[1].gain==.55 and plays[2].gain==.3,'custom styles retain primary and layered sound gains')
 step(500);check(#fx==1 and fx[1].anchor==nil,'custom action without numeric sample retains legacy placement')

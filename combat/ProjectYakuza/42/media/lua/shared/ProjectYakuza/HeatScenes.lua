@@ -5,9 +5,11 @@ function S.sounds(sounds)
     return sounds
 end
 function S.action(id,action)
+    action.syncPaired=true
     local data=assert(ProjectYakuza.HeatSceneData.moves[id],"Heat scene is not registered")
     for _,field in ipairs({"contacts","audioEvents","voiceEvents"})do action[field]=data[field]end
     if data.ending then
+        if action.qteFailure.paired then action.qteFailure.syncPaired=true end
         for key,value in pairs(data.ending)do action.qteFailure[key]=value end
     end
     return action

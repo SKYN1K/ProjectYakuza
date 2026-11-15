@@ -64,7 +64,9 @@ for key,(folder,bankName,animation)in scenes.items():
                 if sound['name'].startswith('Kiryu_'):sound['fighter']=True
     if key=='rush':
         sections=json.loads((mod/'docs/rush-twohit-sections.json').read_text());mapping=sections['clips'][0]['sourceFrames'];segments=[]
-        for i,(a,b)in enumerate(sections['pairs']):segments.append({'first':41+i*30,'last':70+i*30,'eventStart':[41,71,95][i%3],'eventEnd':[70,94,118][i%3]})
+        cursor=sections.get('prefixFrames',41)
+        for i,(a,b)in enumerate(sections['pairs']):
+            segments.append({'first':cursor,'last':cursor+b-a,'eventStart':a,'eventEnd':b});cursor+=b-a+1
         ending=next(r['sourceFrames']for r in sections['clips']if r['ending'])
     elif key=='crate':
         sections=json.loads((mod/'docs/crate-heat-assets.json').read_text());mapping=next(r['sourceFrames']for r in sections['clips']if r['role']==0 and not r['ending']);ending=next(r['sourceFrames']for r in sections['clips']if r['role']==0 and r['ending']);segments=None

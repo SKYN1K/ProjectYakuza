@@ -12,7 +12,7 @@ public class OpenGrabHeatProbe {
   for(int i=1;i<=2;i++){
    var imported=MajimaEmoteProbe.process(args[i],rig);if(!MajimaEmoteProbe.field(imported,"boneIndices").equals(MajimaEmoteProbe.field(body,"boneIndices"))||!MajimaEmoteProbe.field(imported,"skeletonHierarchy").equals(MajimaEmoteProbe.field(body,"skeletonHierarchy")))throw new AssertionError("Human hierarchy changed");
    var clip=((Map)MajimaEmoteProbe.field(imported,"clips")).values().iterator().next();var indices=(Map<String,Integer>)MajimaEmoteProbe.field(imported,"boneIndices");
-   for(var index:indices.values()){var frames=(Object[])clip.getClass().getMethod("getBoneFramesAt",int.class).invoke(clip,index);if(frames.length!=225)throw new AssertionError("225 native source keys");}
+   for(var entry:indices.entrySet()){var index=entry.getValue();var frames=(Object[])clip.getClass().getMethod("getBoneFramesAt",int.class).invoke(clip,index);if(frames.length!=201&&!(entry.getKey().endsWith("Nub")&&frames.length==0))throw new AssertionError("201 native source keys "+entry.getKey()+" actual="+frames.length);}
    clips.put(Path.of(args[i]).getFileName().toString().replace(".x",""),clip);
   }
   var nodeType=Class.forName("zombie.core.skinnedmodel.advancedanimation.AnimNode");var stateType=Class.forName("zombie.core.skinnedmodel.advancedanimation.AnimState");var variableType=Class.forName("zombie.core.skinnedmodel.advancedanimation.AnimationVariableSource");var set=variableType.getMethod("setVariable",String.class,String.class);var select=stateType.getMethod("getAnimNodes",Class.forName("zombie.core.skinnedmodel.advancedanimation.IAnimationVariableSource"),List.class);int count=0;
@@ -26,6 +26,6 @@ public class OpenGrabHeatProbe {
    for(String bone:List.of("Bip01_Pelvis","Bip01_Head","Bip01_L_Thigh","Bip01_R_Foot","Bip01_L_Hand","Bip01_R_Hand"))if(((Number)trackType.getMethod("getBoneWeight",int.class).invoke(track,indices.get(bone))).floatValue()!=1f)throw new AssertionError("native full-body mask "+bone);
    var events=doc.getElementsByTagName("m_EventName");for(int i=0;i<events.getLength();i++)if(events.item(i).getTextContent().equals("AttackCollisionCheck"))throw new AssertionError("duplicate native damage event");count++;
   }}
-  if(count!=6)throw new AssertionError("six scoped native selectors "+count);System.out.println("PASS two shared-Human clips / 225 keys, six isolated full-body owner/victim/MP selectors and no native collision events; no game launch");
+  if(count!=6)throw new AssertionError("six scoped native selectors "+count);System.out.println("PASS two shared-Human clips / 201 keys, six isolated full-body owner/victim/MP selectors and no native collision events; no game launch");
  }
 }

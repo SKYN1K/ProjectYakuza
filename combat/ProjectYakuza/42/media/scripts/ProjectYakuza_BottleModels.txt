@@ -8,7 +8,7 @@ module Base
         scale = 1.0,
         attachment Bip01_Prop1
         {
-            offset = 0.0110039999709 0.123579800129 -0.00333000021055,
+            offset = -0.0110039999709 -0.123579800129 0.00333000021055,
             rotate = 0.0 0.0 0.0,
         }
     }
@@ -20,7 +20,7 @@ module Base
         scale = 1.0,
         attachment Bip01_Prop1
         {
-            offset = 0.0102155003697 0.155510529876 7.25002028048e-05,
+            offset = -0.0102155003697 -0.155510529876 -7.25002028048e-05,
             rotate = 0.0 0.0 0.0,
         }
     }
@@ -32,7 +32,7 @@ module Base
         scale = 1.0,
         attachment Bip01_Prop1
         {
-            offset = 0 0.107287064195 0,
+            offset = -0 -0.107287064195 -0,
             rotate = 0.0 0.0 0.0,
         }
     }

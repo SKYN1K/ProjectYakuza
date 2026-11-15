@@ -2286,7 +2286,7 @@
       "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\knife-heat-098\\h23680_buki_b\\000.par\\h23680_000_3.gmt",
       "sourceSha256": "0e6d9dcdfe59306f9b03a71298f6527b7a8896686722872f71ddfb57233184e5",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_KnifeHeat.x",
-      "sha256": "33f0da1e2460c1e7a5429b20521066723a524836821b180866aa21fb8cdd5ef4",
+      "sha256": "0326d78d0c919d38b84142ebfe3805e6f985b320ac84f1d10ee7d18a277d1ad7",
       "retargetSha256": "eb4568f96cfaac6f9a2b287b68aa9097c77a1c358d4cd474c53344ef067e8d46",
       "frames": 131,
       "fps": 30
@@ -2358,5 +2358,40 @@
       "path": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\combat-tests\\knife_prop_motion.py",
       "sha256": "5de44c1b0df6564d35747864cab4858e65f0e1d28429978034cb4a03afd356ef"
     }
-  ]
+  ],
+  "contactLock": {
+    "first": 40,
+    "last": 130,
+    "blendFirst": 36,
+    "victimBone": "Bip01_Spine1",
+    "relativeTransform": [
+      [
+        -0.15924347937107086,
+        0.6989099383354187,
+        0.6972560882568359,
+        -0.13861028850078583
+      ],
+      [
+        -0.9871404767036438,
+        -0.12272109091281891,
+        -0.10243677347898483,
+        0.07115252315998077
+      ],
+      [
+        0.013974126428365707,
+        -0.704602062702179,
+        0.7094650268554688,
+        0.10759754478931427
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "original": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\blade-alignment-0116\\knife-original.x",
+    "originalSha256": "33f0da1e2460c1e7a5429b20521066723a524836821b180866aa21fb8cdd5ef4",
+    "maxGripReachError": 4.8836954849483076e-05
+  }
 }

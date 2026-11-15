@@ -129,13 +129,13 @@ do
  check(style.actions.heatAction.syncPaired and style.actions.heatAction.qteFailure.syncPaired,'both extreme QTE stages opt into shared victim clocks')
 end
 for i,binding in ipairs({'light','finisher','grab','light','finisher','grab'})do check(style.actions.heatAction.qte.prompts[i].binding==binding,'requested six-role QTE order')end
-check(#style.actions.heatAction.contacts==13 and R.duration==326/30,'retail source duration and finishing contact')
+check(#style.actions.heatAction.contacts==13 and R.duration==270/30,'retail source duration and finishing contact')
 check(R.amount(style.actions.heatAction,13,token,{qte={[1]=true,[6]=true}})==.75,'missed QTEs reduce final payoff without applying early damage')
 check(style.actions.grab.enabled==true,'ordinary grabs are enabled independently of the QTE grab binding')
 local playback=PY.QTEPlayback;local paced=R.qte(style.actions.heatAction)
 for i,prompt in ipairs(paced.prompts)do
- check(prompt.windowMs==1000 and style.actions.heatAction.qte.prompts[i].countdownMs==nil,'each two-hit section has one full original-speed one-second countdown')
- check(math.abs(prompt.atMs-(40+i*30)/30*1000)<.00001,'one QTE closes after each original-speed two-hit section')
+ check(prompt.windowMs==633 and style.actions.heatAction.qte.prompts[i].countdownMs==nil,'each two-hit section has one nineteen-frame countdown with unchanged animation playback')
+ check(math.abs(prompt.atMs-(50+i*19)/30*1000)<.00001,'one QTE closes after each original-speed two-hit section')
 end
 for source=0,7466,13 do check(math.abs(playback.source(style.actions.heatAction.qte,playback.time(style.actions.heatAction.qte,source))-source)<.000001,'paced source and wall clocks round trip throughout the original clip')end
 local authored={prompts={{atMs=500,windowMs=400,countdownMs=700,binding='light'},{atMs=900,windowMs=400,countdownMs=1200,binding='grab'}}}
@@ -149,7 +149,7 @@ end
 check(late.successes==6,'late valid presses pass without changing any original collision deadline')
 local legacy=def(2);check(playback.definition(legacy)==legacy and playback.time(legacy,900)==900 and playback.source(legacy,900)==900 and playback.speed(legacy,300)==1,'other unpaced moves keep their existing clocks and speed')
 for _,bad in ipairs({{atMs=500,windowMs=400,countdownMs=50,binding='light'},{atMs=500,windowMs=400,countdownMs=1000,sourceStartMs=500,binding='light'},{atMs=500,windowMs=400,sourceStartMs=100,binding='light'}})do check(not Q.valid({prompts={bad}}),'invalid paced timing is rejected')end
-for _,age in ipairs({1334,1800,2332})do
+for _,age in ipairs({1668,1800,2299})do
  local sample=Q.create(style.actions.heatAction.qte,function()return false end);Q.update(sample,age,function(binding)return binding=='light'end)
  check(sample.accepted[1]==true,'any fresh press from visible ring start until its last moment passes')
 end
@@ -287,10 +287,10 @@ local qte=Q.create(style.actions.heatAction.qte,down)
 getKeyName=function(k)return k==34 and 'G'or tostring(k)end
 local polygons={};getTexture=function(path)return {path=path}end
 SpriteRenderer={instance={renderPoly=function(_,texture,...)polygons[#polygons+1]={...}end}}
-H.active[p]={seen=true,qte=qte,elapsed=1.5};panel:render()
+H.active[p]={seen=true,qte=qte,elapsed=1.8};panel:render()
 check(draws==0 and panel.inputDraws==1 and panel.lastInputIcon:find('InputMouseLeft',1,true)and #polygons>4 and #polygons<=52,'QTE draws the Y6 left-mouse icon and a bounded radial countdown without extra cues')
 check(polygons[5][9]>=.15 and polygons[5][12]>0 and #polygons[5]==20,'radial sectors use native textured UV geometry and bounded blue RGBA')
-local firstCount=#polygons;polygons={};H.active[p].elapsed=1.55;panel:render();check(#polygons<firstCount,'blue radial timer loses arc coverage as the source time advances')
+local firstCount=#polygons;polygons={};H.active[p].elapsed=1.85;panel:render();check(#polygons<firstCount,'blue radial timer loses arc coverage as the source time advances')
 
 H.active[p].elapsed=0;panel:render();check(panel.inputDraws==2 and draws==0,'QTE overlay is empty outside cue lead-in');H.active[p]=nil
 H.chains[p]={count=7,at=clock};panel:render();check(panel.inputDraws==2 and draws==0,'punch transition adds no preparatory input cue')

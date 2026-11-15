@@ -2585,7 +2585,7 @@
       "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\bottle-heat-071\\000.par\\h23681_000_3.gmt",
       "sourceSha256": "6d9b486eef27d2bf91b440c057ff03d5141f5e0a959b911eab55aad43e7cd97b",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_BottleHeat.x",
-      "sha256": "5cac18683d2178238463f7d1d55e4f29ffa28a150ad34fce9a8db118d88d5c6a",
+      "sha256": "8fd29b96163ef793b0e78b9b5d15cdf8b484709c4cd17285a1938db9d64837ef",
       "retargetSha256": "57e866c2426979977818675079dfa7226845a7d4bb7761dc08cb6fe516cd2f34",
       "frames": 151,
       "fps": 30
@@ -2600,5 +2600,6 @@
       "frames": 151,
       "fps": 30
     }
-  ]
+  ],
+  "attachmentRepair": "Right-hand prop follows the skinned palm in every retained source frame. Native bottle model neck offsets use the actual additive B42 attachment convention."
 }

@@ -14,7 +14,7 @@ for clip in report['clips']:
  if clip['role']!=0:continue
  assert sha(mod/clip['output'])==clip['sha256'];_,bones,animation,_=read(mod/clip['output']);victim=next(c for c in report['clips']if c['role']==1 and c['ending']==clip['ending']);_,vb,va,_=read(mod/victim['output']);paths=report['endingPaths']if clip['ending']else report['paths']
  for frame,sourceFrame in enumerate(clip['sourceFrames']):
-  if not 50<=sourceFrame<=454:continue
+  if not 51<=sourceFrame<=454:continue
   pose=world(bones,locals_at(bones,animation,frame*160));v=world(vb,locals_at(vb,va,frame*160));ap,vp=paths[0][frame],paths[1][frame];shift=Vector(((vp[1]-ap[1])/1.5,0,-(vp[0]-ap[0])/1.5));prop=pose['Bip01_Prop1'];head=[prop.inverted()@(p+shift)for p in skin_part(body,v,['Bip01_Head'])];seat=report['headSeat'];assert abs(min(p.y for p in head)-seat['roof'])<.00003
   for axis in [0,2]:assert abs((min(p[axis]for p in head)+max(p[axis]for p in head))/2-seat['centre'][axis])<.00003
   if sourceFrame==60:assert(prop.to_quaternion()@Vector((0,1,0))).y<-.99

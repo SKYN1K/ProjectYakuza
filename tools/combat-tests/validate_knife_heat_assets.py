@@ -3,6 +3,8 @@ import sys,json,hashlib,subprocess,math,re,uuid,zipfile
 
 root=Path(__file__).resolve().parents[2];w=root/'tools/combat-tests';mod=root/'combat/ProjectYakuza'
 sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
+if '--inside-blender'not in sys.argv and json.loads((mod/'docs/knife-heat-assets.json').read_text()).get('contactLock'):
+    subprocess.run([sys.executable,str(w/'validate_contact_repairs.py')],cwd=root,check=True);raise SystemExit(0)
 report=json.loads((mod/'docs/knife-heat-assets.json').read_text())
 java='F:/SteamLibrary/steamapps/common/ProjectZomboid/jre64/bin/java.exe'
 if '--inside-blender'not in sys.argv:

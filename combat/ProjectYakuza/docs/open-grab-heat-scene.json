@@ -2,10 +2,10 @@
   "scenes": [
     {
       "id": "openGrab",
-      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\open-grab-heat-0108\\shoulder-throw\\cmn.par\\cmn.bin",
-      "sourceSha256": "7bf15cdde624259033d4c17d014db9a066a88a7bae0300c363c5f52847e7ef6d",
-      "version": 18,
-      "byteOrder": "little",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\grab-y5-0116\\cmn.par\\cmn.bin",
+      "sourceSha256": "0de0698329bd8dad1c47c0357fca98a4665b343b1ffcba7262d17ce494266946",
+      "version": 10,
+      "byteOrder": "big",
       "animation": "ProjectYakuza_DD_OpenGrabHeat",
       "sourceFrames": [
         0,
@@ -208,58 +208,26 @@
         197,
         198,
         199,
-        200,
-        201,
-        202,
-        203,
-        204,
-        205,
-        206,
-        207,
-        208,
-        209,
-        210,
-        211,
-        212,
-        213,
-        214,
-        215,
-        216,
-        217,
-        218,
-        219,
-        220,
-        221,
-        222,
-        223,
-        224
+        200
       ],
       "endingFrames": null,
       "damage": [
         {
-          "frame": 117.0,
-          "damage": 1500,
+          "frame": 78.0,
+          "damage": 200,
           "forceDead": 0,
-          "noDead": 0,
           "vanish": 0,
-          "offset": 19416
-        },
-        {
-          "frame": 167.0,
-          "damage": 250,
-          "forceDead": 0,
           "noDead": 0,
-          "vanish": 0,
-          "offset": 19544
+          "offset": 6352
         }
       ],
       "ignoredNonVictimDamage": [],
       "bank": {
-        "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 6 - The Song of Life\\data\\sound.par",
-        "entry": "hact_h23600.acb",
-        "entryOffset": 140177408,
-        "entrySize": 442528,
-        "entrySha256": "5a0a9e46ff264baa9c279e8564d6842c22e6149d4363afdcfb267778205a239f"
+        "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 5\\main\\data\\soundpar\\sound.par",
+        "entry": "28ca.acb",
+        "entryOffset": 309827584,
+        "entrySize": 250528,
+        "entrySha256": "c1d10e1a24bc6c0df66de73d3df08a7eabb9fd66d54c767364878c20ceb1bf33"
       },
       "effectsPolicy": "Original blood particle starts and bone-local attachments; existing supplied blood pixels only. Non-blood engine-specific emitters and cinematic cameras are not substituted.",
       "segments": null,
@@ -268,82 +236,71 @@
           "animation": "ProjectYakuza_DD_OpenGrabHeat",
           "contacts": [
             {
-              "atMs": 3900.0,
-              "damageMultiplier": 4.285714285714286,
+              "atMs": 2600.0,
+              "damageMultiplier": 5.0,
               "cue": "throwImpact",
               "strong": true,
-              "charged": false
-            },
-            {
-              "atMs": 5566.666666666666,
-              "damageMultiplier": 0.7142857142857143,
-              "cue": "punchImpact",
-              "strong": false,
               "charged": false
             }
           ],
           "audioEvents": [
             {
-              "atMs": 133.33333333333334,
+              "atMs": 1068.0000305175781,
+              "cue": "heatSceneOpengrab2",
+              "target": "actor"
+            },
+            {
+              "atMs": 1436.3333384195964,
               "cue": "heatSceneOpengrab3",
-              "target": "victim"
-            },
-            {
-              "atMs": 566.6666666666666,
-              "cue": "heatSceneOpengrab5",
               "target": "actor"
             },
             {
-              "atMs": 1400.0,
-              "cue": "heatSceneOpengrab8",
-              "target": "actor"
-            },
-            {
-              "atMs": 2433.333333333333,
-              "cue": "heatSceneOpengrab7",
-              "target": "actor"
-            },
-            {
-              "atMs": 3666.6666666666665,
-              "cue": "heatSceneOpengrab6",
-              "target": "victim"
-            },
-            {
-              "atMs": 4600.0,
-              "cue": "heatSceneOpengrab1",
-              "target": "victim"
-            },
-            {
-              "atMs": 4866.666666666666,
-              "cue": "heatSceneOpengrab0",
-              "target": "actor"
-            },
-            {
-              "atMs": 5200.0,
+              "atMs": 1827.6667277018228,
               "cue": "heatSceneOpengrab4",
               "target": "actor"
             },
             {
-              "atMs": 6066.666666666666,
-              "cue": "heatSceneOpengrab2",
+              "atMs": 2277.6667277018228,
+              "cue": "heatSceneOpengrab5",
               "target": "victim"
+            },
+            {
+              "atMs": 3573.666636149089,
+              "cue": "heatSceneOpengrab0",
+              "target": "actor"
+            },
+            {
+              "atMs": 4668.666585286458,
+              "cue": "heatSceneOpengrab1",
+              "target": "actor"
             }
           ],
           "voiceEvents": [
             {
-              "atMs": 1400.0,
+              "atMs": 1078.000005086263,
               "entry": "CombatLightAttack"
             },
             {
-              "atMs": 2633.3333333333335,
-              "entry": "CombatLightAttack"
-            },
-            {
-              "atMs": 5066.666666666666,
-              "entry": "CombatLightAttack"
+              "atMs": 1850.3332773844402,
+              "entry": "CombatHeavyAttack"
             }
           ],
-          "particles": [],
+          "particles": [
+            {
+              "frame": 78.0,
+              "sourceFrame": 78.0,
+              "sourceOffset": 5740,
+              "name": "YAb0039 : Devil",
+              "id": 162250039,
+              "bone": "face",
+              "localPoint": [
+                0.0,
+                0.0,
+                0.07000000029802322
+              ],
+              "contact": 1
+            }
+          ],
           "sourceFrames": [
             0,
             1,
@@ -545,31 +502,7 @@
             197,
             198,
             199,
-            200,
-            201,
-            202,
-            203,
-            204,
-            205,
-            206,
-            207,
-            208,
-            209,
-            210,
-            211,
-            212,
-            213,
-            214,
-            215,
-            216,
-            217,
-            218,
-            219,
-            220,
-            221,
-            222,
-            223,
-            224
+            200
           ],
           "damagePolicy": "Preserve total damage, distribute using original victim damage weights."
         }
@@ -578,185 +511,128 @@
   ],
   "sounds": [
     {
-      "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 6 - The Song of Life\\data\\sound.par",
-      "entry": "hact_h23600.acb",
-      "entryOffset": 140177408,
-      "entrySize": 442528,
-      "entrySha256": "5a0a9e46ff264baa9c279e8564d6842c22e6149d4363afdcfb267778205a239f",
-      "cueSheet": 668,
-      "cue": "heatSceneOpengrab3",
-      "sound": "ProjectYakuza_HeatScene_openGrab_3",
-      "cueId": 3,
-      "soundIndex": 4,
-      "streamIndex": 4,
-      "stream": "dosu_swing",
-      "output": "42/media/sound/ProjectYakuza/HeatScene_openGrab_3.wav",
-      "sha256": "d959d97457545f757c81fdde3a71e594d57bc02ff6e113df3e82a5c1828b3499",
-      "sampleRate": 48000,
-      "channels": 2,
-      "samples": 70165
-    },
-    {
-      "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 6 - The Song of Life\\data\\sound.par",
-      "entry": "hact_h23600.acb",
-      "entryOffset": 140177408,
-      "entrySize": 442528,
-      "entrySha256": "5a0a9e46ff264baa9c279e8564d6842c22e6149d4363afdcfb267778205a239f",
-      "cueSheet": 668,
-      "cue": "heatSceneOpengrab5",
-      "sound": "ProjectYakuza_HeatScene_openGrab_5",
-      "cueId": 5,
-      "soundIndex": 6,
-      "streamIndex": 6,
-      "stream": "kawashi",
-      "output": "42/media/sound/ProjectYakuza/HeatScene_openGrab_5.wav",
-      "sha256": "03381737c7e4c4e5f2f9845a8e2a28d4233624232ba042f42249b3cb17764cbb",
-      "sampleRate": 48000,
-      "channels": 2,
-      "samples": 44903
-    },
-    {
-      "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 6 - The Song of Life\\data\\sound.par",
-      "entry": "hact_h23600.acb",
-      "entryOffset": 140177408,
-      "entrySize": 442528,
-      "entrySha256": "5a0a9e46ff264baa9c279e8564d6842c22e6149d4363afdcfb267778205a239f",
-      "cueSheet": 668,
-      "cue": "heatSceneOpengrab8",
-      "sound": "ProjectYakuza_HeatScene_openGrab_8",
-      "cueId": 8,
-      "soundIndex": 9,
-      "streamIndex": 9,
-      "stream": "ude_grab",
-      "output": "42/media/sound/ProjectYakuza/HeatScene_openGrab_8.wav",
-      "sha256": "8de61743faed7a6d21577d59c126e0b7a62b0f59e311236fad539e544a502a74",
-      "sampleRate": 48000,
-      "channels": 2,
-      "samples": 57025
-    },
-    {
-      "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 6 - The Song of Life\\data\\sound.par",
-      "entry": "hact_h23600.acb",
-      "entryOffset": 140177408,
-      "entrySize": 442528,
-      "entrySha256": "5a0a9e46ff264baa9c279e8564d6842c22e6149d4363afdcfb267778205a239f",
-      "cueSheet": 668,
-      "cue": "heatSceneOpengrab7",
-      "sound": "ProjectYakuza_HeatScene_openGrab_7",
-      "cueId": 7,
-      "soundIndex": 8,
-      "streamIndex": 8,
-      "stream": "throw",
-      "output": "42/media/sound/ProjectYakuza/HeatScene_openGrab_7.wav",
-      "sha256": "06167800fedd517452a82ed536151153171d092870d276a71eb292fdfbd39ecf",
-      "sampleRate": 48000,
-      "channels": 2,
-      "samples": 123485
-    },
-    {
-      "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 6 - The Song of Life\\data\\sound.par",
-      "entry": "hact_h23600.acb",
-      "entryOffset": 140177408,
-      "entrySize": 442528,
-      "entrySha256": "5a0a9e46ff264baa9c279e8564d6842c22e6149d4363afdcfb267778205a239f",
-      "cueSheet": 668,
-      "cue": "heatSceneOpengrab6",
-      "sound": "ProjectYakuza_HeatScene_openGrab_6",
-      "cueId": 6,
-      "soundIndex": 7,
-      "streamIndex": 7,
-      "stream": "nage_down",
-      "output": "42/media/sound/ProjectYakuza/HeatScene_openGrab_6.wav",
-      "sha256": "e28f937829ad55e1e47ed07ae9d5ac25eb774de5fbf30c579e3ac4fb764ad333",
-      "sampleRate": 48000,
-      "channels": 2,
-      "samples": 49275
-    },
-    {
-      "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 6 - The Song of Life\\data\\sound.par",
-      "entry": "hact_h23600.acb",
-      "entryOffset": 140177408,
-      "entrySize": 442528,
-      "entrySha256": "5a0a9e46ff264baa9c279e8564d6842c22e6149d4363afdcfb267778205a239f",
-      "cueSheet": 668,
-      "cue": "heatSceneOpengrab1",
-      "sound": "ProjectYakuza_HeatScene_openGrab_1",
-      "cueId": 1,
-      "soundIndex": 2,
-      "streamIndex": 2,
-      "stream": "blood",
-      "output": "42/media/sound/ProjectYakuza/HeatScene_openGrab_1.wav",
-      "sha256": "bbcac33f77383b336256f408e11871c7fb70167ae1d5b238ac0b9f24a2775be6",
-      "sampleRate": 48000,
-      "channels": 2,
-      "samples": 48576
-    },
-    {
-      "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 6 - The Song of Life\\data\\sound.par",
-      "entry": "hact_h23600.acb",
-      "entryOffset": 140177408,
-      "entrySize": 442528,
-      "entrySha256": "5a0a9e46ff264baa9c279e8564d6842c22e6149d4363afdcfb267778205a239f",
-      "cueSheet": 668,
-      "cue": "heatSceneOpengrab0",
-      "sound": "ProjectYakuza_HeatScene_openGrab_0",
-      "cueId": 0,
-      "soundIndex": 1,
-      "streamIndex": 1,
-      "stream": "ashiage_whoosh",
-      "output": "42/media/sound/ProjectYakuza/HeatScene_openGrab_0.wav",
-      "sha256": "9dd6c1492fcf75e513f7b5a4d05bce4a31295f6b3d980c1de5522fe333c1f134",
-      "sampleRate": 48000,
-      "channels": 2,
-      "samples": 133973
-    },
-    {
-      "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 6 - The Song of Life\\data\\sound.par",
-      "entry": "hact_h23600.acb",
-      "entryOffset": 140177408,
-      "entrySize": 442528,
-      "entrySha256": "5a0a9e46ff264baa9c279e8564d6842c22e6149d4363afdcfb267778205a239f",
-      "cueSheet": 668,
-      "cue": "heatSceneOpengrab4",
-      "sound": "ProjectYakuza_HeatScene_openGrab_4",
-      "cueId": 4,
-      "soundIndex": 5,
-      "streamIndex": 5,
-      "stream": "fumituke",
-      "output": "42/media/sound/ProjectYakuza/HeatScene_openGrab_4.wav",
-      "sha256": "3834ccfb5b6eb48bbfeb2774eda06974a4b16c414098889c3628d2c09c9f1fd1",
-      "sampleRate": 48000,
-      "channels": 2,
-      "samples": 90840
-    },
-    {
-      "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 6 - The Song of Life\\data\\sound.par",
-      "entry": "hact_h23600.acb",
-      "entryOffset": 140177408,
-      "entrySize": 442528,
-      "entrySha256": "5a0a9e46ff264baa9c279e8564d6842c22e6149d4363afdcfb267778205a239f",
-      "cueSheet": 668,
+      "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 5\\main\\data\\soundpar\\sound.par",
+      "entry": "28ca.acb",
+      "entryOffset": 309827584,
+      "entrySize": 250528,
+      "entrySha256": "c1d10e1a24bc6c0df66de73d3df08a7eabb9fd66d54c767364878c20ceb1bf33",
+      "cueSheet": 10442,
       "cue": "heatSceneOpengrab2",
       "sound": "ProjectYakuza_HeatScene_openGrab_2",
       "cueId": 2,
-      "soundIndex": 3,
+      "soundIndex": 2,
       "streamIndex": 3,
-      "stream": "bodyfall",
+      "stream": "07_grab",
       "output": "42/media/sound/ProjectYakuza/HeatScene_openGrab_2.wav",
-      "sha256": "a5c4aad5064bf58fd87c75db197c6d4ae065eb499bcc8b04cc98817e4d8024d2",
+      "sha256": "03ef4222f9e05404bd713f685cde7de452986fdd594c5b260ac6c60735ccdc24",
+      "sampleRate": 48000,
+      "channels": 1,
+      "samples": 43153
+    },
+    {
+      "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 5\\main\\data\\soundpar\\sound.par",
+      "entry": "28ca.acb",
+      "entryOffset": 309827584,
+      "entrySize": 250528,
+      "entrySha256": "c1d10e1a24bc6c0df66de73d3df08a7eabb9fd66d54c767364878c20ceb1bf33",
+      "cueSheet": 10442,
+      "cue": "heatSceneOpengrab3",
+      "sound": "ProjectYakuza_HeatScene_openGrab_3",
+      "cueId": 3,
+      "soundIndex": 3,
+      "streamIndex": 4,
+      "stream": "08_effect",
+      "output": "42/media/sound/ProjectYakuza/HeatScene_openGrab_3.wav",
+      "sha256": "7cf0b8c78942f12f11af01b74b7b1f9e494841929a75e72518a348fc4e6a6b96",
       "sampleRate": 48000,
       "channels": 2,
-      "samples": 34630
+      "samples": 153455
+    },
+    {
+      "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 5\\main\\data\\soundpar\\sound.par",
+      "entry": "28ca.acb",
+      "entryOffset": 309827584,
+      "entrySize": 250528,
+      "entrySha256": "c1d10e1a24bc6c0df66de73d3df08a7eabb9fd66d54c767364878c20ceb1bf33",
+      "cueSheet": 10442,
+      "cue": "heatSceneOpengrab4",
+      "sound": "ProjectYakuza_HeatScene_openGrab_4",
+      "cueId": 4,
+      "soundIndex": 4,
+      "streamIndex": 5,
+      "stream": "09_tomoe",
+      "output": "42/media/sound/ProjectYakuza/HeatScene_openGrab_4.wav",
+      "sha256": "8f339e6b2f8b70334971758eafbecb0925187b0f48f2915211f8d9ffdc6d1f6a",
+      "sampleRate": 48000,
+      "channels": 2,
+      "samples": 99774
+    },
+    {
+      "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 5\\main\\data\\soundpar\\sound.par",
+      "entry": "28ca.acb",
+      "entryOffset": 309827584,
+      "entrySize": 250528,
+      "entrySha256": "c1d10e1a24bc6c0df66de73d3df08a7eabb9fd66d54c767364878c20ceb1bf33",
+      "cueSheet": 10442,
+      "cue": "heatSceneOpengrab5",
+      "sound": "ProjectYakuza_HeatScene_openGrab_5",
+      "cueId": 5,
+      "soundIndex": 5,
+      "streamIndex": 6,
+      "stream": "10_down",
+      "output": "42/media/sound/ProjectYakuza/HeatScene_openGrab_5.wav",
+      "sha256": "688090b0bc81a2affa5f72226d8d9eb95739cd2bf06bbd95e85272bc572f20ea",
+      "sampleRate": 48000,
+      "channels": 2,
+      "samples": 71131
+    },
+    {
+      "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 5\\main\\data\\soundpar\\sound.par",
+      "entry": "28ca.acb",
+      "entryOffset": 309827584,
+      "entrySize": 250528,
+      "entrySha256": "c1d10e1a24bc6c0df66de73d3df08a7eabb9fd66d54c767364878c20ceb1bf33",
+      "cueSheet": 10442,
+      "cue": "heatSceneOpengrab0",
+      "sound": "ProjectYakuza_HeatScene_openGrab_0",
+      "cueId": 0,
+      "soundIndex": 0,
+      "streamIndex": 1,
+      "stream": "05_okiagari1",
+      "output": "42/media/sound/ProjectYakuza/HeatScene_openGrab_0.wav",
+      "sha256": "f046fa8fc949d2f9925f432f1ce87c99ecb08772c162a1341f4d24016fa8333b",
+      "sampleRate": 48000,
+      "channels": 1,
+      "samples": 16028
+    },
+    {
+      "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 5\\main\\data\\soundpar\\sound.par",
+      "entry": "28ca.acb",
+      "entryOffset": 309827584,
+      "entrySize": 250528,
+      "entrySha256": "c1d10e1a24bc6c0df66de73d3df08a7eabb9fd66d54c767364878c20ceb1bf33",
+      "cueSheet": 10442,
+      "cue": "heatSceneOpengrab1",
+      "sound": "ProjectYakuza_HeatScene_openGrab_1",
+      "cueId": 1,
+      "soundIndex": 1,
+      "streamIndex": 2,
+      "stream": "06_okiagari2",
+      "output": "42/media/sound/ProjectYakuza/HeatScene_openGrab_1.wav",
+      "sha256": "bb6497db4885ea1002c49f84548d082fd26b335a6be8a68482bcee2f6c06092c",
+      "sampleRate": 48000,
+      "channels": 1,
+      "samples": 22762
     }
   ],
   "provenance": [
     {
       "path": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\combat-tests\\build_open_grab_heat_scene.py",
-      "sha256": "7dad0a5a678df229e0fb4a97538f411d1b9bb59007ffd8b93bf37b992af91d6d"
+      "sha256": "51565219dbf41ae83ce1a2529b8f3fd31cd7f640062b8d513c303254f4c813f6"
     },
     {
       "path": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\combat-tests\\build_heat_scenes.py",
-      "sha256": "b6cf1c5ff5d9acc1a5aac585718df605a9aa2373bfb4268220cd31d857a17f68"
+      "sha256": "66cdfff18a61ae444f513a4d6731b5d4bfcdc3aa4cd7574847ef017f9c45544c"
     },
     {
       "path": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\combat-tests\\read_heat_scene.py",
@@ -767,6 +643,6 @@
       "sha256": "04c69e216c79caf5442128b8b7a47bff639df84301199619eea1fa04514487b1"
     }
   ],
-  "bankResolution": "Original hact_h23600.acb is resolved from the original scene cue-sheet IDs and supplied PUID/sound.par; cue IDs and stream names are verified directly.",
-  "operation": "Original single-victim Y6 scene timing and non-voice bank streams decoded by the existing CRI/vgmstream pipeline. The original frame-117/167 damage timings is preserved with the existing five-times unarmed multiplier. Source actor voice labels use existing combat voice integration; the separate voice pack is untouched."
+  "bankResolution": "Original Yakuza 5 cue-sheet 10442 resolves to 28ca.acb in the supplied sound.par; cue IDs and streams are verified directly.",
+  "operation": "Original single-victim Y5 sacrifice-throw scene timing and non-voice bank streams decoded by the existing CRI/vgmstream pipeline. The original frame-78 damage timing is preserved with the existing five-times unarmed multiplier. Source actor voice labels use existing combat voice integration; the separate voice pack is untouched."
 }

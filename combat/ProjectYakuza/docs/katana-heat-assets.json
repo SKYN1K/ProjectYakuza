@@ -2722,7 +2722,7 @@
       "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\katana-heat-070\\000.par\\h23720_000_4.gmt",
       "sourceSha256": "235015995c03ff8f042c425fe4c18ad07ca44dc05aa3ab5df392f3ded91b2184",
       "output": "42/media/anims_X/Bob/ProjectYakuza_DD_KatanaHeat.x",
-      "sha256": "9a84a992d060198efcc0a18c074dfaddb45ee8bcd702b979618c5e80825bbcff",
+      "sha256": "7f024e2a87f6ee63bf6da3f58d90a467c29e491f25357f33e4b92e1ccfc71bc1",
       "retargetSha256": "02b21354af17b8c9fb396c884441ff20f23fa3618e8c607ed680a3f02691e19d",
       "frames": 141,
       "fps": 30
@@ -2795,5 +2795,40 @@
       "path": "C:\\Users\\Nik\\Documents\\Codex\\2026-10-19\\wo\\work\\bind.json",
       "sha256": "45a29a28b79f885ffaacecaf54af30657349e05fd6f587628b495326abc0117b"
     }
-  ]
+  ],
+  "contactLock": {
+    "first": 64,
+    "last": 140,
+    "blendFirst": 60,
+    "victimBone": "Bip01_Spine1",
+    "relativeTransform": [
+      [
+        0.8439676761627197,
+        0.13103756308555603,
+        -0.5201416611671448,
+        -0.12299150228500366
+      ],
+      [
+        0.45898982882499695,
+        0.32537609338760376,
+        0.8267155289649963,
+        -0.09365088492631912
+      ],
+      [
+        0.2775724530220032,
+        -0.9364608526229858,
+        0.21446193754673004,
+        0.19024613499641418
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "original": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\blade-alignment-0116\\katana-original.x",
+    "originalSha256": "9a84a992d060198efcc0a18c074dfaddb45ee8bcd702b979618c5e80825bbcff",
+    "maxGripReachError": 4.881179452608326e-05
+  }
 }

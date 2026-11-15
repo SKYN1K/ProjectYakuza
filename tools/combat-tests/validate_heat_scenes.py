@@ -4,10 +4,10 @@ from read_heat_scene import read_scene
 from cri_cue_table import cue_names,sheet_names
 
 root=Path(__file__).resolve().parents[2];mod=root/'combat/ProjectYakuza'
-data=json.loads((mod/'docs/heat-scenes.json').read_text())
+data=json.loads((mod/'docs/heat-scenes.json').read_text());extra=json.loads((mod/'docs/open-grab-heat-scene.json').read_text());data['scenes']+=extra['scenes'];data['sounds']+=extra['sounds']
 effects=json.loads((mod/'docs/heat-scene-effects.json').read_text())
-expected={'knife':[[40,90]],'rush':[[56,68,80,92,114,126,146,158,170,182,204,216,246],[26]],'bottle':[[32,42,59,84]],'wall':[[12,48]],'ground':[[30]],'crate':[[51,134,231,307,404,555],[101]],'katana':[[24,44,64]],'bat':[[14,50]],'bicycle':[[50]]}
-original={'knife':[40,90],'rush':[56,68,78,90,102,114,144],'bottle':[32,42,59,84],'wall':[12,48],'ground':[],'crate':[51,134,231,307,404,555],'katana':[24,44,64],'bat':[14,50],'bicycle':[50]}
+expected={'openGrab':[[78]],'knife':[[40,90]],'rush':[[56,68,74,86,93,105,113,125,131,143,150,162,190],[26]],'bottle':[[32,42,59,84]],'wall':[[12,48]],'ground':[[30]],'crate':[[51,134,231,307,404,555],[101]],'katana':[[24,44,64]],'bat':[[14,50]],'bicycle':[[50]]}
+original={'openGrab':[78],'knife':[40,90],'rush':[56,68,78,90,102,114,144],'bottle':[32,42,59,84],'wall':[12,48],'ground':[],'crate':[51,134,231,307,404,555],'katana':[24,44,64],'bat':[14,50],'bicycle':[50]}
 sha=lambda b:hashlib.sha256(b).hexdigest()
 banks={};count=0
 expected['bicycle']=[[29,70]];original['bicycle']=[29,70]
@@ -22,7 +22,7 @@ def bank_data(bank):
 for record in data['scenes']:
     key=record['id'];scene=read_scene(record['source'])
     assert scene['sha256']==record['sourceSha256']
-    assert scene['version']==(10 if key=='crate'else 18)
+    assert scene['version']==(10 if key in ['crate','openGrab']else 18)
     victim=sorted((n for n in scene['nodes']if 'damage'in n and n['role']=='victim'),key=lambda n:n['element']['start'])
     assert [n['element']['start']for n in victim]==original[key]
     bank=record['bank']
@@ -31,7 +31,7 @@ for record in data['scenes']:
     for i,definition in enumerate(record['definitions']):
         contacts=definition['contacts'];frames=definition['sourceFrames'];clip=definition['animation']
         assert [round(c['atMs']*.03,6)for c in contacts]==expected[key][i]
-        assert len(frames)==(327 if key=='rush'and not i else 635 if key=='crate'and not i else len(frames))
+        assert len(frames)==(271 if key=='rush'and not i else 635 if key=='crate'and not i else len(frames))
         for contact in contacts:assert 0<contact['atMs']<(len(frames)-1)/30*1000
         if not i:
             if key in ['rush','crate']:
@@ -64,16 +64,16 @@ for record in data['scenes']:
                 if key=='bicycle':assert audio['entry']==sheets[audio['cueSheet']]+'.acb'
         assert all(v['entry'].startswith('Combat')for v in definition['voiceEvents'])
         count+=len(native)
-assert count==130 and len(data['sounds'])==48
+assert count==129 and len(data['sounds'])==54
 with tempfile.TemporaryDirectory(prefix='project-yakuza-cmn-')as tmp:
     folder=Path(tmp)
     for record in data['sounds']:
         key=record['output'].split('HeatScene_')[1].split('_')[0]
         raw,names=bank_data(record);assert names[record['cueId']]==record['stream']and not record['stream'].startswith('Kiryu_')
-        assert record['soundIndex']==record['cueId']+(0 if key=='crate'else 1)
+        assert record['soundIndex']==record['cueId']+(0 if key in ['crate','openGrab']else 1)
         bank=folder/(key+'.acb');bank.write_bytes(raw);out=folder/'decoded.wav'
         subprocess.run([str(root/'tools/vgmstream/vgmstream-cli.exe'),'-s',str(record['streamIndex']),'-i','-o',str(out),str(bank)],check=True,capture_output=True)
         shipped=mod/record['output'];assert out.read_bytes()==shipped.read_bytes()
         assert sha(shipped.read_bytes())==record['sha256']
         with wave.open(str(shipped))as audio:assert (audio.getframerate(),audio.getnchannels(),audio.getsampwidth(),audio.getnframes())==(record['sampleRate'],record['channels'],2,record['samples'])
-print('PASS 9 supplied CMN scenes, 11 timelines, 37 contacts, 130 blood anchors and 48 original PCM decodes; scoped media checked by the release validators')
+print('PASS 10 supplied CMN scenes, 12 timelines, 38 contacts, 129 blood anchors and 54 original PCM decodes; scoped media checked by the release validators')

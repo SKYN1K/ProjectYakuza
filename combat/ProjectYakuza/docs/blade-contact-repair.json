@@ -1,0 +1,133 @@
+{
+  "operation": "Native anatomy/attachment calibration of supplied original motion. Embedded knife and final katana thrust follow the victim torso rigidly; held wrists use native arm lengths, source release/regrip before contact stays unchanged. Ordinary knife arms are fitted to the original source directions; a contact-derived torso yaw centres the retained original swing at its unchanged native hit frame. No new source frames, model geometry, pixels or sound.",
+  "baseline": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\dist\\ProjectYakuza-B42-v0.115.0.zip",
+  "baselineSha256": "01ca208e4b353167344b65c15f54f7be83fa1b05f4d88121dde7d5327f978959",
+  "clips": [
+    {
+      "kind": "knife",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_KnifeHeat.x",
+      "sha256": "0326d78d0c919d38b84142ebfe3805e6f985b320ac84f1d10ee7d18a277d1ad7",
+      "first": 40,
+      "last": 130,
+      "blendFirst": 36,
+      "victimBone": "Bip01_Spine1",
+      "relativeTransform": [
+        [
+          -0.15924347937107086,
+          0.6989099383354187,
+          0.6972560882568359,
+          -0.13861028850078583
+        ],
+        [
+          -0.9871404767036438,
+          -0.12272109091281891,
+          -0.10243677347898483,
+          0.07115252315998077
+        ],
+        [
+          0.013974126428365707,
+          -0.704602062702179,
+          0.7094650268554688,
+          0.10759754478931427
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "original": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\blade-alignment-0116\\knife-original.x",
+      "originalSha256": "33f0da1e2460c1e7a5429b20521066723a524836821b180866aa21fb8cdd5ef4",
+      "maxGripReachError": 4.8836954849483076e-05
+    },
+    {
+      "kind": "katana",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_KatanaHeat.x",
+      "sha256": "7f024e2a87f6ee63bf6da3f58d90a467c29e491f25357f33e4b92e1ccfc71bc1",
+      "first": 64,
+      "last": 140,
+      "blendFirst": 60,
+      "victimBone": "Bip01_Spine1",
+      "relativeTransform": [
+        [
+          0.8439676761627197,
+          0.13103756308555603,
+          -0.5201416611671448,
+          -0.12299150228500366
+        ],
+        [
+          0.45898982882499695,
+          0.32537609338760376,
+          0.8267155289649963,
+          -0.09365088492631912
+        ],
+        [
+          0.2775724530220032,
+          -0.9364608526229858,
+          0.21446193754673004,
+          0.19024613499641418
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "original": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\blade-alignment-0116\\katana-original.x",
+      "originalSha256": "9a84a992d060198efcc0a18c074dfaddb45ee8bcd702b979618c5e80825bbcff",
+      "maxGripReachError": 4.881179452608326e-05
+    },
+    {
+      "kind": "ordinaryKnife",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_KnifeLight01.x",
+      "sha256": "05685730b752dcfb3450f629db5642754258fed0845c8297c808911846d16b60",
+      "original": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\blade-alignment-0116\\ProjectYakuza_DD_KnifeLight01.x",
+      "originalSha256": "4db14f906e5fe320af7e2b18c0aa9716f1a0e2ebd639419c99c1ed82331c5139",
+      "contactFrame": 9,
+      "yawCalibration": -1.8056615242502148,
+      "lateralContactResidual": -6.984919309616089e-09
+    },
+    {
+      "kind": "ordinaryKnife",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_KnifeLight02.x",
+      "sha256": "ece14202ba13b72fe8b154db83f357d7779a79b9b31a67cb507c76e98c345d7c",
+      "original": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\blade-alignment-0116\\ProjectYakuza_DD_KnifeLight02.x",
+      "originalSha256": "041f31263d44e2663b6ef3b4d480354eb82ce7448d30c45f5073320e14ccd1fd",
+      "contactFrame": 12,
+      "yawCalibration": 0.3286419058616121,
+      "lateralContactResidual": 9.872019290924072e-08
+    },
+    {
+      "kind": "ordinaryKnife",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_KnifeLight03.x",
+      "sha256": "0b0b7433aecfa9335913b80d6e5d831ceed5f7fc45906e2e22f0f2065c20e65c",
+      "original": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\blade-alignment-0116\\ProjectYakuza_DD_KnifeLight03.x",
+      "originalSha256": "d44b958c69e7bbfc8aacc2c48a8bffd54228b426789bbf99dc4f1ab5d182ee1c",
+      "contactFrame": 13,
+      "yawCalibration": -1.9937358685209592,
+      "lateralContactResidual": 1.862645149230957e-08
+    },
+    {
+      "kind": "ordinaryKnife",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_KnifeHeavy.x",
+      "sha256": "3c418d1216399cbd51d727ecd4749a955caf7cf65bf8cc720b63ccd36ffffa69",
+      "original": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\blade-alignment-0116\\ProjectYakuza_DD_KnifeHeavy.x",
+      "originalSha256": "070f6133b2fb1a143ce26a41da706dc8ec4484af39d5884740e8e2f0b8de9e05",
+      "contactFrame": 11,
+      "yawCalibration": -1.1595042102527267,
+      "lateralContactResidual": -9.11823008209467e-08
+    },
+    {
+      "kind": "ordinaryKnife",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_KnifeGround.x",
+      "sha256": "8339963d5ad8141a72c467161c04da8de152a729338d4e1f41ea728d7663afd8",
+      "original": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\blade-alignment-0116\\ProjectYakuza_DD_KnifeGround.x",
+      "originalSha256": "5c0c65ba7201cb6e777df40085524960e7fd427373d3bf4656f57d3e890e3495",
+      "contactFrame": 13,
+      "yawCalibration": -1.2766833732782548,
+      "lateralContactResidual": 9.546056389808655e-08
+    }
+  ]
+}

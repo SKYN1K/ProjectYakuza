@@ -11,7 +11,8 @@ require "ProjectYakuza/OpenGrabHeatPaths"
 require "ProjectYakuza/GroundHeatPaths"
 require "ProjectYakuza/QTEPlayback"
 require "ProjectYakuza/RushEndingPaths"
-local R={duration=326/30,targetRange=2,contactGraceMs=650}
+require "ProjectYakuza/RushMove"
+local R={duration=ProjectYakuza.RushMove.duration,targetRange=2,contactGraceMs=650}
 ProjectYakuza.HeatRushRules=R
 function R.motion(action)
     return action and action.motionId and ProjectYakuza.PairedMotions[action.motionId] or ProjectYakuza.HeatRushPaths

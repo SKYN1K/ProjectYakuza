@@ -8,13 +8,13 @@ if '--inside-blender'not in sys.argv:
 sys.path.insert(0,str(Path(__file__).parent))
 from mathutils import Matrix,Vector
 from locomotion_math import read,locals_at,world
-data=json.loads((mod/'docs/heat-scenes.json').read_text());bind={n:Matrix(v['mat'])for n,v in json.loads(Path('C:/Users/Nik/Documents/Codex/2026-10-19/wo/work/bind.json').read_text()).items()};mirror=Matrix.Diagonal((1,1,-1,1))
+data=json.loads((mod/'docs/heat-scenes.json').read_text());data['scenes']+=json.loads((mod/'docs/open-grab-heat-scene.json').read_text())['scenes'];bind={n:Matrix(v['mat'])for n,v in json.loads(Path('C:/Users/Nik/Documents/Codex/2026-10-19/wo/work/bind.json').read_text()).items()};mirror=Matrix.Diagonal((1,1,-1,1))
 names={'face_c_n':'Bip01_Head','face':'Bip01_Head','kosi_c_n':'Bip01_Spine','kosi_n':'Bip01_Spine','mune_c_n':'Bip01_Spine1','mune_n':'Bip01_Spine1','ketu_c_n':'Bip01_Pelvis','ketu_n':'Bip01_Pelvis','center_n':'Bip01'}
 for side in ['r','l']:
     for source,target in [('ude3','Hand'),('ude2','Forearm'),('asi2','Calf'),('asi3','Foot')]:names[source+'_'+side+'_n']='Bip01_'+side.upper()+'_'+target
 definitions={};records=[]
 for scene in data['scenes']:
-    manifest=json.loads((mod/('docs/'+{'knife':'knife-heat-assets','rush':'heat-rush-assets','crate':'crate-heat-assets','katana':'katana-heat-assets','wall':'wall-heat-assets','ground':'ground-heat-assets','bottle':'bottle-heat-assets','bat':'bat-heat-assets','bicycle':'bicycle-heat-assets'}[scene['id']]+'.json')).read_text())
+    manifest=json.loads((mod/('docs/'+{'openGrab':'open-grab-heat-assets','knife':'knife-heat-assets','rush':'heat-rush-assets','crate':'crate-heat-assets','katana':'katana-heat-assets','wall':'wall-heat-assets','ground':'ground-heat-assets','bottle':'bottle-heat-assets','bat':'bat-heat-assets','bicycle':'bicycle-heat-assets'}[scene['id']]+'.json')).read_text())
     scale=manifest['pathScale']/1.5
     for definition in scene['definitions']:
         actor=mod/('42/media/anims_X/Bob/'+definition['animation']+'.x');victim=actor.with_name(actor.stem+'Victim.x');_,bones,animation,_=read(victim);events=[]

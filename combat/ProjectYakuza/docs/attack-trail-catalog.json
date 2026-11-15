@@ -1,7 +1,7 @@
 {
   "operation": "Code-side numeric FK only from existing supplied PZ clips, including current paired contacts/endings and linked native finisher variants. Contacts use native collision events, authored Heat Action contacts or the documented parry fallback. Clips use contact-local endpoint/relative motion with verified original left-light and right-high-kick pose overrides, independent of charge-up pose. The high kick has right-foot height 0.721 versus planted left foot 0.093 at source frame 24; recovering arms can be faster than the striking leg. Runtime resolves the actual playing clip within the committed move family. No visual/audio/animation/model assets are generated or modified.",
   "catalog": "42/media/lua/client/ProjectYakuza/AttackTrailCatalog.lua",
-  "sha256": "60e8a25e739f6b98390e1c21c5c6f20ec5f69814b8890a9372e022ce6bf45898",
+  "sha256": "53999b63d3bfaa3ecddad2e1d131ae0d8648dddfc84a7258b61d3f33d2765e26",
   "clips": [
     {
       "profile": "bat",
@@ -206,25 +206,25 @@
       "animation": "ProjectYakuza_DD_BicycleGround",
       "family": "ProjectYakuza_DD_BicycleGround",
       "node": "dd_bicycle_ground",
-      "impact": 0.446153846154,
+      "impact": 0.316666666667,
       "kick": false,
       "qte": [],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BicycleGround.x",
-      "clipSha256": "0cac31b7233a3c591bb7a9247beee952b83dfa20c334d5e88dbfd768c4e24ea9",
-      "samples": 66,
-      "duration": 2.1666666666666665,
+      "clipSha256": "0cebfa3285e05c24ef317f51b665b0b0a91046f084f96edc89537bb72d9bc6a9",
+      "samples": 61,
+      "duration": 2.0,
       "windows": [
         {
           "track": "dd_trail_bicycleground_1",
-          "from": 0.8466666666666667,
-          "to": 1.1666666666666667,
-          "contact": 0.9666666666666667,
+          "from": 0.5133333333333333,
+          "to": 0.8333333333333333,
+          "contact": 0.6333333333333333,
           "limb": "rightArm",
           "scores": [
-            0.5323574787737074,
-            0.7488571012744568,
-            0.1062489111943527,
-            0.19968031740361478
+            0.8462499584970661,
+            0.8706927323045552,
+            0.061612445509095136,
+            0.17707793302716549
           ],
           "selection": "contact-local relative motion"
         }
@@ -283,25 +283,25 @@
       "animation": "ProjectYakuza_DD_BicycleHeavy",
       "family": "ProjectYakuza_DD_BicycleHeavy",
       "node": "dd_bicycle_heavy",
-      "impact": 0.333333333333,
+      "impact": 0.3,
       "kick": false,
       "qte": [],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BicycleHeavy.x",
-      "clipSha256": "b22308b897964db9fba3065bdb3c500b78ad95aad6f134d6c80944c5c97b0add",
-      "samples": 67,
-      "duration": 2.2,
+      "clipSha256": "d558db9ccf333bb7b29617191470ebd477faadf568ca76353b02896320c502fc",
+      "samples": 71,
+      "duration": 2.3333333333333335,
       "windows": [
         {
           "track": "dd_trail_bicycleheavy_1",
-          "from": 0.6133333333333333,
-          "to": 0.9333333333333333,
-          "contact": 0.7333333333333333,
+          "from": 0.58,
+          "to": 0.8999999999999999,
+          "contact": 0.7,
           "limb": "rightArm",
           "scores": [
-            0.3839101547103502,
-            0.4212166610720189,
-            0.30574768286376675,
-            0.460122138641514
+            0.9102476546838357,
+            0.9200920253663446,
+            0.09900156156283679,
+            0.27036792184835756
           ],
           "selection": "contact-local relative motion"
         }
@@ -313,25 +313,25 @@
       "animation": "ProjectYakuza_DD_BicycleLight01",
       "family": "ProjectYakuza_DD_BicycleLight01",
       "node": "dd_bicycle_light_01",
-      "impact": 0.27397260274,
+      "impact": 0.342857142857,
       "kick": false,
       "qte": [],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BicycleLight01.x",
-      "clipSha256": "33b7e2189817ea3294f63d29e9dcf985e597f7d4f9498a671951b1b6be6f13cf",
-      "samples": 74,
-      "duration": 2.433333333333333,
+      "clipSha256": "a2f7204b02a31acca406fccc18d8d44f9875c310cfb14ad341dd960658c0df92",
+      "samples": 71,
+      "duration": 2.3333333333333335,
       "windows": [
         {
           "track": "dd_trail_bicyclelight01_1",
-          "from": 0.5466666666666666,
-          "to": 0.8666666666666667,
-          "contact": 0.6666666666666666,
-          "limb": "leftArm",
+          "from": 0.68,
+          "to": 1.0,
+          "contact": 0.8,
+          "limb": "rightArm",
           "scores": [
-            0.6192192550763451,
-            0.5938842512184437,
-            0.16483618849450968,
-            0.18837453191210726
+            0.40513690621715925,
+            1.1310396417396023,
+            0.1100058768304197,
+            0.29951129470729554
           ],
           "selection": "contact-local relative motion"
         }
@@ -343,25 +343,25 @@
       "animation": "ProjectYakuza_DD_BicycleLight02",
       "family": "ProjectYakuza_DD_BicycleLight02",
       "node": "dd_bicycle_light_02",
-      "impact": 0.25,
+      "impact": 0.381818181818,
       "kick": false,
       "qte": [],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BicycleLight02.x",
-      "clipSha256": "84a11568349d187f968a91115f80866d277c17cc6716825d4a76ee6a697d57c7",
-      "samples": 61,
-      "duration": 2.0,
+      "clipSha256": "9267516f37ab1494f90d3b2c45f1777f4b9cf967f817dfadb476662ce9f2594c",
+      "samples": 56,
+      "duration": 1.8333333333333333,
       "windows": [
         {
           "track": "dd_trail_bicyclelight02_1",
-          "from": 0.38,
-          "to": 0.7,
-          "contact": 0.5,
-          "limb": "leftArm",
+          "from": 0.58,
+          "to": 0.8999999999999999,
+          "contact": 0.7,
+          "limb": "rightArm",
           "scores": [
-            0.6589767074604405,
-            0.6353991524555036,
-            0.2213542303803294,
-            0.19890815023318734
+            0.30890673495718207,
+            0.5076829929061677,
+            0.15127412623512076,
+            0.14859034891193684
           ],
           "selection": "contact-local relative motion"
         }
@@ -373,25 +373,25 @@
       "animation": "ProjectYakuza_DD_BicycleLight03",
       "family": "ProjectYakuza_DD_BicycleLight03",
       "node": "dd_bicycle_light_03",
-      "impact": 0.27027027027,
+      "impact": 0.415384615385,
       "kick": false,
       "qte": [],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BicycleLight03.x",
-      "clipSha256": "743c85d6bbb2de5f55f557b8718ba944ab8d3ae60c89646b748708f045817cc6",
-      "samples": 75,
-      "duration": 2.466666666666667,
+      "clipSha256": "d8e401eed0a91f8db975f915d94e82247a300f0fcdffc742ceb721e11c155318",
+      "samples": 66,
+      "duration": 2.1666666666666665,
       "windows": [
         {
           "track": "dd_trail_bicyclelight03_1",
-          "from": 0.5466666666666666,
-          "to": 0.8666666666666667,
-          "contact": 0.6666666666666666,
-          "limb": "leftArm",
+          "from": 0.78,
+          "to": 1.1,
+          "contact": 0.9,
+          "limb": "rightArm",
           "scores": [
-            0.4666629138966799,
-            0.4094270952406991,
-            0.27637270815463466,
-            0.20168848890816468
+            0.2643942369145448,
+            1.0136283471888077,
+            0.4628764686481281,
+            0.09063985792156118
           ],
           "selection": "contact-local relative motion"
         }
@@ -673,11 +673,11 @@
       "animation": "ProjectYakuza_DD_BottleGround",
       "family": "ProjectYakuza_DD_BottleGround",
       "node": "dd_bottle_ground",
-      "impact": 0.18181818181818182,
+      "impact": 0.181818181818,
       "kick": false,
       "qte": [],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BottleGround.x",
-      "clipSha256": "1d93113031cce27d7c13a2825c82d81e5f9bbe404f2adcd0dd5225376ee9f051",
+      "clipSha256": "827477bb13b9c593379703cc355a64a14addf7cc83825d3855ab797d5a2a2773",
       "samples": 56,
       "duration": 1.8333333333333333,
       "windows": [
@@ -712,7 +712,7 @@
         2.8
       ],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BottleHeat.x",
-      "clipSha256": "5cac18683d2178238463f7d1d55e4f29ffa28a150ad34fce9a8db118d88d5c6a",
+      "clipSha256": "8fd29b96163ef793b0e78b9b5d15cdf8b484709c4cd17285a1938db9d64837ef",
       "samples": 151,
       "duration": 5.0,
       "windows": [
@@ -780,11 +780,11 @@
       "animation": "ProjectYakuza_DD_BottleHeavy",
       "family": "ProjectYakuza_DD_BottleHeavy",
       "node": "dd_bottle_heavy",
-      "impact": 0.2641509433962264,
+      "impact": 0.264150943396,
       "kick": false,
       "qte": [],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BottleHeavy.x",
-      "clipSha256": "64457c5ebc5a6cfbe1ad3415ea4936fe8c50b1256b01c138c97f73fa3ffa2cf0",
+      "clipSha256": "e8a34379a694edfebf9f93996c90dccfcb3a6d5184a4c2f88bd13c21d2a9ae21",
       "samples": 54,
       "duration": 1.7666666666666666,
       "windows": [
@@ -814,7 +814,7 @@
       "kick": false,
       "qte": [],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BottleLight01.x",
-      "clipSha256": "846aabf44ddf31b66790406da81e0e4ba624573049eaff12b069772b231c88b1",
+      "clipSha256": "b36580f580a3ebef6614a24ac75a061ed16ade6e61139f0e5dc53616f2367c2f",
       "samples": 41,
       "duration": 1.3333333333333333,
       "windows": [
@@ -825,8 +825,8 @@
           "contact": 0.36666666666666664,
           "limb": "rightArm",
           "scores": [
-            0.34262253218696687,
-            1.0686802133954671,
+            0.3410491947651822,
+            1.0698546604008952,
             0.1879070338274403,
             0.28140168842453417
           ],
@@ -840,11 +840,11 @@
       "animation": "ProjectYakuza_DD_BottleLight02",
       "family": "ProjectYakuza_DD_BottleLight02",
       "node": "dd_bottle_light_02",
-      "impact": 0.37142857142857144,
+      "impact": 0.371428571429,
       "kick": false,
       "qte": [],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BottleLight02.x",
-      "clipSha256": "7d2a334bcc43813d6a843aecb54fd45fc9b055e802b2ad2338f76c68ac91b2da",
+      "clipSha256": "72e1db017b13713f7709297dabbd3625cb6f2f66981300263be28816a59475a6",
       "samples": 36,
       "duration": 1.1666666666666667,
       "windows": [
@@ -870,11 +870,11 @@
       "animation": "ProjectYakuza_DD_BottleLight03",
       "family": "ProjectYakuza_DD_BottleLight03",
       "node": "dd_bottle_light_03",
-      "impact": 0.3191489361702128,
+      "impact": 0.31914893617,
       "kick": false,
       "qte": [],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BottleLight03.x",
-      "clipSha256": "b2fa88ffc6df23e9ae13df79df845519c0717e4522bfed7c7ba4ec032a97a1b1",
+      "clipSha256": "3bcd97566dca707a2f7d0a91f84006d245996e5ff60a81e56c92fd05785dd0e3",
       "samples": 48,
       "duration": 1.5666666666666667,
       "windows": [
@@ -1083,129 +1083,99 @@
       "impact": -1.0,
       "kick": false,
       "qte": [
-        0.466666666667,
-        1.4666666666700001,
-        1.8,
-        2.4666666666699997,
-        2.8,
-        3.4666666666699997,
-        3.8,
-        4.73333333333
+        1.7,
+        4.46666666667,
+        7.7,
+        10.2333333333,
+        13.4666666667,
+        18.5
       ],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_CrateHeat.x",
-      "clipSha256": "7c9668f2265da598e581ee755a355aee9d1d321a87f21ea3590e323b5b0d9ab8",
-      "samples": 190,
-      "duration": 6.3,
+      "clipSha256": "509a145563091ddddd9da4e73700aa961bfc2ab37615ebbaec018714fca5944a",
+      "samples": 635,
+      "duration": 21.133333333333333,
       "windows": [
         {
           "track": "dd_trail_crateheat_1",
-          "from": 0.346666666667,
-          "to": 0.666666666667,
-          "contact": 0.466666666667,
-          "limb": "rightArm",
+          "from": 1.58,
+          "to": 1.9,
+          "contact": 1.7,
+          "limb": "leftArm",
           "scores": [
-            0.4402646317527771,
-            0.4579720540672782,
-            0.10546302752549183,
-            0.17509658191874286
+            0.5868233069505755,
+            0.5426213749863835,
+            0.12212791118346603,
+            0.23480008016431708
           ],
           "selection": "contact-local relative motion"
         },
         {
           "track": "dd_trail_crateheat_2",
-          "from": 1.34666666667,
-          "to": 1.633333333335,
-          "contact": 1.4666666666700001,
-          "limb": "rightArm",
+          "from": 4.34666666667,
+          "to": 4.66666666667,
+          "contact": 4.46666666667,
+          "limb": "leftArm",
           "scores": [
-            0.28636484500245984,
-            0.5558861276081095,
-            0.048836566398847245,
-            0.05152790202318102
+            0.3085387576509079,
+            0.2562094625435109,
+            0.19108390034008563,
+            0.40165842063811813
           ],
           "selection": "contact-local relative motion"
         },
         {
           "track": "dd_trail_crateheat_3",
-          "from": 1.6800000000000002,
-          "to": 2.0,
-          "contact": 1.8,
+          "from": 7.58,
+          "to": 7.9,
+          "contact": 7.7,
           "limb": "leftArm",
           "scores": [
-            0.5395240387005588,
-            0.2845521592764764,
-            0.0730418948287527,
-            0.059817904063819684
+            0.4427297621893232,
+            0.3340455200799972,
+            0.4543291056796147,
+            0.1315387447496212
           ],
           "selection": "contact-local relative motion"
         },
         {
           "track": "dd_trail_crateheat_4",
-          "from": 2.3466666666699996,
-          "to": 2.633333333335,
-          "contact": 2.4666666666699997,
-          "limb": "rightArm",
+          "from": 10.1133333333,
+          "to": 10.433333333299998,
+          "contact": 10.2333333333,
+          "limb": "leftArm",
           "scores": [
-            0.28636484500245984,
-            0.5558861276081095,
-            0.048836566398847245,
-            0.05152790202318102
+            0.3085387576509079,
+            0.2562094625435109,
+            0.19108390034008563,
+            0.40165842063811813
           ],
           "selection": "contact-local relative motion"
         },
         {
           "track": "dd_trail_crateheat_5",
-          "from": 2.6799999999999997,
-          "to": 3.0,
-          "contact": 2.8,
+          "from": 13.346666666700001,
+          "to": 13.6666666667,
+          "contact": 13.4666666667,
           "limb": "leftArm",
           "scores": [
-            0.5395240387005588,
-            0.2845521592764764,
-            0.0730418948287527,
-            0.059817904063819684
+            0.4427297621893232,
+            0.3340455200799972,
+            0.4543291056796147,
+            0.1315387447496212
           ],
           "selection": "contact-local relative motion"
         },
         {
           "track": "dd_trail_crateheat_6",
-          "from": 3.3466666666699996,
-          "to": 3.633333333335,
-          "contact": 3.4666666666699997,
+          "from": 18.38,
+          "to": 18.7,
+          "contact": 18.5,
           "limb": "rightArm",
           "scores": [
-            0.28636484500245984,
-            0.5558861276081095,
-            0.048836566398847245,
-            0.05152790202318102
-          ],
-          "selection": "contact-local relative motion"
-        },
-        {
-          "track": "dd_trail_crateheat_7",
-          "from": 3.6799999999999997,
-          "to": 4.0,
-          "contact": 3.8,
-          "limb": "leftArm",
-          "scores": [
-            0.5395240387005588,
-            0.2845521592764764,
-            0.0730418948287527,
-            0.059817904063819684
-          ],
-          "selection": "contact-local relative motion"
-        },
-        {
-          "track": "dd_trail_crateheat_8",
-          "from": 4.61333333333,
-          "to": 4.93333333333,
-          "contact": 4.73333333333,
-          "limb": "rightArm",
-          "scores": [
-            0.3895427118892975,
-            0.931286029211861,
-            0.17977151367858177,
-            0.32020767492516344
+            0.3380630596230224,
+            1.0534288202537987,
+            0.2673484612445387,
+            0.5252959718984519
           ],
           "selection": "contact-local relative motion"
         }
@@ -1220,24 +1190,24 @@
       "impact": -1.0,
       "kick": false,
       "qte": [
-        0.633333333333
+        3.36666666667
       ],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_CrateHeatFail.x",
-      "clipSha256": "8a1703bf6ea3fd0baabe55bc541c31948ecf4faab1f1552d53ab73ffdfd67453",
-      "samples": 67,
-      "duration": 2.2,
+      "clipSha256": "3ea33523e348712ef40f84a7242113417416f986b99d6cf73035687e87493fa4",
+      "samples": 181,
+      "duration": 6.0,
       "windows": [
         {
           "track": "dd_trail_crateheatfail_1",
-          "from": 0.513333333333,
-          "to": 0.833333333333,
-          "contact": 0.633333333333,
+          "from": 3.24666666667,
+          "to": 3.56666666667,
+          "contact": 3.36666666667,
           "limb": "rightArm",
           "scores": [
-            0.3895427118892975,
-            0.931286029211861,
-            0.17977151367858177,
-            0.32020767492516344
+            0.3380630596230224,
+            1.0534288202537987,
+            0.2673484612445387,
+            0.5252959718984519
           ],
           "selection": "contact-local relative motion"
         }
@@ -1892,22 +1862,22 @@
       "qte": [
         1.86666666667,
         2.26666666667,
-        2.66666666667,
-        3.0666666666699998,
-        3.8,
-        4.2,
-        4.8666666666700005,
-        5.26666666667,
-        5.66666666667,
-        6.066666666670001,
-        6.8,
-        7.2,
-        8.2
+        2.4666666666699997,
+        2.86666666667,
+        3.1,
+        3.5,
+        3.76666666667,
+        4.16666666667,
+        4.3666666666700005,
+        4.76666666667,
+        5.0,
+        5.4,
+        6.33333333333
       ],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_HeatRush.x",
-      "clipSha256": "41367c866dc56924a8e8fd293b14aa50bdef6337be6b706ea6587df58ae8b493",
-      "samples": 327,
-      "duration": 10.866666666666667,
+      "clipSha256": "0049ab9a56119b95f2f3f8c381f0adfa40985434a3dafcf3ff6f1f95ef6120a0",
+      "samples": 271,
+      "duration": 9.0,
       "windows": [
         {
           "track": "dd_trail_heatrush_1",
@@ -1926,36 +1896,36 @@
         {
           "track": "dd_trail_heatrush_2",
           "from": 2.14666666667,
-          "to": 2.46666666667,
+          "to": 2.3666666666699996,
           "contact": 2.26666666667,
           "limb": "leftArm",
           "scores": [
-            1.1669222582035779,
-            0.4032142848303178,
-            0.09408136337686701,
-            0.13677391690448618
+            1.1440462476077475,
+            0.3731127688101244,
+            0.09201310732630093,
+            0.12633504579207402
           ],
           "selection": "contact-local relative motion"
         },
         {
           "track": "dd_trail_heatrush_3",
-          "from": 2.5466666666699997,
-          "to": 2.8666666666699996,
-          "contact": 2.66666666667,
+          "from": 2.3666666666699996,
+          "to": 2.66666666667,
+          "contact": 2.4666666666699997,
           "limb": "rightArm",
           "scores": [
-            0.37222777140169844,
-            0.9971767900647097,
-            0.08335776901449952,
-            0.05858372474585243
+            0.5082850321139522,
+            0.9320162138702142,
+            0.09078445068108683,
+            0.10337734753251704
           ],
           "selection": "contact-local relative motion"
         },
         {
           "track": "dd_trail_heatrush_4",
-          "from": 2.9466666666699997,
-          "to": 3.26666666667,
-          "contact": 3.0666666666699998,
+          "from": 2.74666666667,
+          "to": 2.983333333335,
+          "contact": 2.86666666667,
           "limb": "leftArm",
           "scores": [
             1.2293305359181923,
@@ -1967,23 +1937,23 @@
         },
         {
           "track": "dd_trail_heatrush_5",
-          "from": 3.6799999999999997,
-          "to": 4.0,
-          "contact": 3.8,
+          "from": 2.983333333335,
+          "to": 3.3,
+          "contact": 3.1,
           "limb": "rightArm",
           "scores": [
-            0.3277155830015473,
-            1.342118268203049,
-            0.0889243799156265,
-            0.12319011538826938
+            0.49115640472985644,
+            1.2888087694635153,
+            0.10548345875597251,
+            0.18570476887812326
           ],
           "selection": "contact-local relative motion"
         },
         {
           "track": "dd_trail_heatrush_6",
-          "from": 4.08,
-          "to": 4.4,
-          "contact": 4.2,
+          "from": 3.38,
+          "to": 3.633333333335,
+          "contact": 3.5,
           "limb": "leftArm",
           "scores": [
             1.2858537050046197,
@@ -1995,51 +1965,51 @@
         },
         {
           "track": "dd_trail_heatrush_7",
-          "from": 4.74666666667,
-          "to": 5.066666666670001,
-          "contact": 4.8666666666700005,
+          "from": 3.64666666667,
+          "to": 3.96666666667,
+          "contact": 3.76666666667,
           "limb": "rightArm",
           "scores": [
-            0.417588185371234,
-            1.122694333991875,
-            0.10884867062939632,
-            0.11690547023992749
+            0.48340901487776716,
+            1.1262326602531096,
+            0.11149998927174012,
+            0.13131379544400917
           ],
           "selection": "contact-local relative motion"
         },
         {
           "track": "dd_trail_heatrush_8",
-          "from": 5.14666666667,
-          "to": 5.46666666667,
-          "contact": 5.26666666667,
+          "from": 4.04666666667,
+          "to": 4.26666666667,
+          "contact": 4.16666666667,
           "limb": "leftArm",
           "scores": [
-            1.1669222582035779,
-            0.4032142848303178,
-            0.09408136337686701,
-            0.13677391690448618
+            1.1440462476077475,
+            0.3731127688101244,
+            0.09201310732630093,
+            0.12633504579207402
           ],
           "selection": "contact-local relative motion"
         },
         {
           "track": "dd_trail_heatrush_9",
-          "from": 5.54666666667,
-          "to": 5.8666666666700005,
-          "contact": 5.66666666667,
+          "from": 4.26666666667,
+          "to": 4.566666666670001,
+          "contact": 4.3666666666700005,
           "limb": "rightArm",
           "scores": [
-            0.37222777140169844,
-            0.9971767900647097,
-            0.08335776901449952,
-            0.05858372474585243
+            0.5082850321139522,
+            0.9320162138702142,
+            0.09078445068108683,
+            0.10337734753251704
           ],
           "selection": "contact-local relative motion"
         },
         {
           "track": "dd_trail_heatrush_10",
-          "from": 5.9466666666700005,
-          "to": 6.266666666670001,
-          "contact": 6.066666666670001,
+          "from": 4.64666666667,
+          "to": 4.883333333335,
+          "contact": 4.76666666667,
           "limb": "leftArm",
           "scores": [
             1.2293305359181923,
@@ -2051,23 +2021,23 @@
         },
         {
           "track": "dd_trail_heatrush_11",
-          "from": 6.68,
-          "to": 7.0,
-          "contact": 6.8,
+          "from": 4.883333333335,
+          "to": 5.2,
+          "contact": 5.0,
           "limb": "rightArm",
           "scores": [
-            0.3277155830015473,
-            1.342118268203049,
-            0.0889243799156265,
-            0.12319011538826938
+            0.49115640472985644,
+            1.2888087694635153,
+            0.10548345875597251,
+            0.18570476887812326
           ],
           "selection": "contact-local relative motion"
         },
         {
           "track": "dd_trail_heatrush_12",
-          "from": 7.08,
-          "to": 7.4,
-          "contact": 7.2,
+          "from": 5.28,
+          "to": 5.6000000000000005,
+          "contact": 5.4,
           "limb": "leftArm",
           "scores": [
             1.2858537050046197,
@@ -2079,9 +2049,9 @@
         },
         {
           "track": "dd_trail_heatrush_13",
-          "from": 8.08,
-          "to": 8.399999999999999,
-          "contact": 8.2,
+          "from": 6.21333333333,
+          "to": 6.53333333333,
+          "contact": 6.33333333333,
           "limb": "rightLeg",
           "scores": [
             0.30607790168634663,
@@ -2169,7 +2139,7 @@
         2.13333333333
       ],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_KatanaHeat.x",
-      "clipSha256": "9a84a992d060198efcc0a18c074dfaddb45ee8bcd702b979618c5e80825bbcff",
+      "clipSha256": "7f024e2a87f6ee63bf6da3f58d90a467c29e491f25357f33e4b92e1ccfc71bc1",
       "samples": 141,
       "duration": 4.666666666666667,
       "windows": [
@@ -2180,8 +2150,8 @@
           "contact": 0.8,
           "limb": "rightArm",
           "scores": [
-            0.4618509113386609,
-            0.7312782717188417,
+            0.4618509182932616,
+            0.7312782511846236,
             0.12379353386410402,
             0.05870799492309553
           ],
@@ -2194,8 +2164,8 @@
           "contact": 1.4666666666700001,
           "limb": "rightArm",
           "scores": [
-            0.308287634363707,
-            0.31055531320485713,
+            0.30828761422861783,
+            0.3105553941314194,
             0.08164456718473072,
             0.05498944523837798
           ],
@@ -2208,8 +2178,8 @@
           "contact": 2.13333333333,
           "limb": "rightArm",
           "scores": [
-            0.3619099790242301,
-            0.4766053383165518,
+            0.36190995704345447,
+            0.3822150138700738,
             0.14243742619710673,
             0.10855607929318048
           ],
@@ -2227,7 +2197,7 @@
       "kick": false,
       "qte": [],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_KnifeGround.x",
-      "clipSha256": "5c0c65ba7201cb6e777df40085524960e7fd427373d3bf4656f57d3e890e3495",
+      "clipSha256": "8339963d5ad8141a72c467161c04da8de152a729338d4e1f41ea728d7663afd8",
       "samples": 53,
       "duration": 1.7333333333333334,
       "windows": [
@@ -2238,10 +2208,10 @@
           "contact": 0.43333333333333335,
           "limb": "rightArm",
           "scores": [
-            0.546731013155827,
-            0.6716901214634632,
-            0.08678893698401327,
-            0.11078107487022171
+            0.6119219040277911,
+            0.7356765506931973,
+            0.08678893247134792,
+            0.1107810736628644
           ],
           "selection": "contact-local relative motion"
         }
@@ -2260,7 +2230,7 @@
         3.0
       ],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_KnifeHeat.x",
-      "clipSha256": "33f0da1e2460c1e7a5429b20521066723a524836821b180866aa21fb8cdd5ef4",
+      "clipSha256": "0326d78d0c919d38b84142ebfe3805e6f985b320ac84f1d10ee7d18a277d1ad7",
       "samples": 131,
       "duration": 4.333333333333333,
       "windows": [
@@ -2271,8 +2241,8 @@
           "contact": 1.33333333333,
           "limb": "rightArm",
           "scores": [
-            0.104660732624471,
-            0.29939285883977484,
+            0.10466071451046027,
+            0.26164085176335833,
             0.14418577202450822,
             0.18773694509528877
           ],
@@ -2285,8 +2255,8 @@
           "contact": 3.0,
           "limb": "rightArm",
           "scores": [
-            0.16828537108308145,
-            0.2240918232750693,
+            0.16828532717707773,
+            0.22409181944268672,
             0.09930769615358985,
             0.09064247241415149
           ],
@@ -2304,7 +2274,7 @@
       "kick": false,
       "qte": [],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_KnifeHeavy.x",
-      "clipSha256": "070f6133b2fb1a143ce26a41da706dc8ec4484af39d5884740e8e2f0b8de9e05",
+      "clipSha256": "3c418d1216399cbd51d727ecd4749a955caf7cf65bf8cc720b63ccd36ffffa69",
       "samples": 46,
       "duration": 1.5,
       "windows": [
@@ -2315,10 +2285,10 @@
           "contact": 0.36666666666666664,
           "limb": "rightArm",
           "scores": [
-            0.52866943514463,
-            0.6140282232012383,
-            0.27024859048711264,
-            0.4902892446247411
+            0.5882767938894212,
+            0.6804291451216216,
+            0.2702486227641674,
+            0.49028913445636424
           ],
           "selection": "contact-local relative motion"
         }
@@ -2334,7 +2304,7 @@
       "kick": false,
       "qte": [],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_KnifeLight01.x",
-      "clipSha256": "4db14f906e5fe320af7e2b18c0aa9716f1a0e2ebd639419c99c1ed82331c5139",
+      "clipSha256": "05685730b752dcfb3450f629db5642754258fed0845c8297c808911846d16b60",
       "samples": 41,
       "duration": 1.3333333333333333,
       "windows": [
@@ -2345,10 +2315,10 @@
           "contact": 0.3,
           "limb": "rightArm",
           "scores": [
-            0.21949312008126706,
-            0.8432718319149579,
-            0.2523015279906702,
-            0.4608370431078481
+            0.25492259436999665,
+            0.9920327155308082,
+            0.2523012356203546,
+            0.460837217552499
           ],
           "selection": "contact-local relative motion"
         }
@@ -2364,7 +2334,7 @@
       "kick": false,
       "qte": [],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_KnifeLight02.x",
-      "clipSha256": "041f31263d44e2663b6ef3b4d480354eb82ce7448d30c45f5073320e14ccd1fd",
+      "clipSha256": "ece14202ba13b72fe8b154db83f357d7779a79b9b31a67cb507c76e98c345d7c",
       "samples": 41,
       "duration": 1.3333333333333333,
       "windows": [
@@ -2375,10 +2345,10 @@
           "contact": 0.4,
           "limb": "rightArm",
           "scores": [
-            0.2363547962867563,
-            0.9286219990912372,
-            0.20922225154896135,
-            0.23761003428154004
+            0.270320315150204,
+            0.9843816116646619,
+            0.20922233001349205,
+            0.23760998320380272
           ],
           "selection": "contact-local relative motion"
         }
@@ -2394,7 +2364,7 @@
       "kick": false,
       "qte": [],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_KnifeLight03.x",
-      "clipSha256": "d44b958c69e7bbfc8aacc2c48a8bffd54228b426789bbf99dc4f1ab5d182ee1c",
+      "clipSha256": "0b0b7433aecfa9335913b80d6e5d831ceed5f7fc45906e2e22f0f2065c20e65c",
       "samples": 46,
       "duration": 1.5,
       "windows": [
@@ -2405,10 +2375,10 @@
           "contact": 0.43333333333333335,
           "limb": "rightArm",
           "scores": [
-            0.44355740756033146,
-            1.0713583280415362,
-            0.1289992526278093,
-            0.13884295361323687
+            0.5587694386949815,
+            1.0977437421436638,
+            0.12899951660489412,
+            0.1388430854856749
           ],
           "selection": "contact-local relative motion"
         }

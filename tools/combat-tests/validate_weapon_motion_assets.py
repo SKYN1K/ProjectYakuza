@@ -24,7 +24,7 @@ def distance(p,a,b):
     return(p-(a+v*t)).length
 
 superseded={c['output']for c in json.loads((mod/'docs/y5-object-attacks.json').read_text())['clips']if c['family']=='crate'}
-superseded.update(c['output']for c in json.loads((mod/'docs/bottle-weapon-assets.json').read_text())['clips']);assert len(superseded)>5
+superseded.update(c['output']for c in json.loads((mod/'docs/bottle-weapon-assets.json').read_text())['clips']);superseded.update(c['output']for c in json.loads((mod/'docs/crate-hold-assets.json').read_text())['clips']);assert len(superseded)>5
 for record in d['clips']:
     if record['output']in superseded:continue
     assert sha(record['source'])==record['sourceSha256']and sha(record['retarget'])==record['retargetSha256']and sha(mod/record['output'])==record['sha256']and sha(record['fingerSource'])==record['fingerSha256']

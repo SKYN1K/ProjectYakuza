@@ -369,3 +369,8 @@
 
 !tools/Install-CombatUpdate.py
 !tools/combat-tests/test_combat_install.py
+
+!tools/combat-tests/BottleGripProbe.java
+!tools/combat-tests/build_crate_holds.py
+!tools/combat-tests/repair_blade_alignment.py
+!tools/combat-tests/validate_contact_repairs.py

@@ -1,0 +1,198 @@
+{
+  "operation": "Supplied Yakuza 5 WPC ready/relaxed holds, walking arms and guards. Native PZ idle and walking leg/deferred-motion channels remain unchanged; source arms are phase-mapped to each complete native walking cycle. Five existing ordinary Y5 attacks remain unchanged. No new source poses, models, texture pixels or sounds.",
+  "archiveEntries": [
+    {
+      "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 5\\main\\data\\motion\\BattlePlayer.par",
+      "name": "P_WPC_stand_btl_lp.gmt",
+      "offset": 7987200,
+      "size": 2538,
+      "plain": 6144,
+      "flags": 2147483648,
+      "packedSha256": "38d997c75e67b8e4029a7704596218703ea28d463c1d688a0357f8318cd63286",
+      "sha256": "d02fbacbb219844a5c5af979462b835720b685fd10f999780b3c6148ca3a7d33"
+    },
+    {
+      "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 5\\main\\data\\motion\\BattlePlayer.par",
+      "name": "P_WPC_stand.gmt",
+      "offset": 7976960,
+      "size": 2550,
+      "plain": 6144,
+      "flags": 2147483648,
+      "packedSha256": "42f240c2fd005d9a0ca6d7c46527b436bd6a08e00d36ad920fab87011ae5b9c2",
+      "sha256": "d2811c83f3b4366102e7bf69558680d7b86955a1948fa40abe66303f989adaf0"
+    },
+    {
+      "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 5\\main\\data\\motion\\BattlePlayer.par",
+      "name": "P_WPC_MOV_walk.gmt",
+      "offset": 7915520,
+      "size": 5271,
+      "plain": 8192,
+      "flags": 2147483648,
+      "packedSha256": "5567e2ee12abc4f8374e0e7a5ed758267f6f3e384a5d04a9b106a87426a095fc",
+      "sha256": "ef086a4a1f82c7ed02c30c9f7f4301b46ec0d6fcf59130a17812d8faaf09f348"
+    },
+    {
+      "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 5\\main\\data\\motion\\BattlePlayer.par",
+      "name": "P_WPC_guard_st.gmt",
+      "offset": 7913472,
+      "size": 1921,
+      "plain": 4096,
+      "flags": 2147483648,
+      "packedSha256": "caf3b01f523e710ba02fe2f4ee767da5ce60806b965366ff49410320a8d3378a",
+      "sha256": "bdc5385549b20e8db04bf85468789fc82d3f4738621a9c7c40d20846b084e66f"
+    },
+    {
+      "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 5\\main\\data\\motion\\BattlePlayer.par",
+      "name": "P_WPC_guard_lp.gmt",
+      "offset": 7909376,
+      "size": 2863,
+      "plain": 6144,
+      "flags": 2147483648,
+      "packedSha256": "fe0ba1cfcc51b0894d928aba5bc30175bb92ce95386bd35b13f4ec9738823a01",
+      "sha256": "277fc82e670c7cd63fc8c4a4f732c68b677e104e47a9eed60d4facfc20434f6b"
+    },
+    {
+      "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 5\\main\\data\\motion\\BattlePlayer.par",
+      "name": "P_WPC_guard.gmt",
+      "offset": 7901184,
+      "size": 3476,
+      "plain": 6144,
+      "flags": 2147483648,
+      "packedSha256": "399e35e72a0327015198887bf3ef2ac0ea52bf20c85032b046a4ee3eb08909ed",
+      "sha256": "e0b52aa472dc01cbfe43cb656768778f13f3a7d8452888f5dd08fdf9898e61a6"
+    },
+    {
+      "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 5\\main\\data\\motion\\BattlePlayer.par",
+      "name": "P_WPC_guard_en.gmt",
+      "offset": 7905280,
+      "size": 3635,
+      "plain": 6144,
+      "flags": 2147483648,
+      "packedSha256": "ece9f2b6ade4952f957e590aad1aab0bcecd323ad6b828220dfba04dbebfdfca",
+      "sha256": "4b1e270a167fab9cd69ef93890ce7a02105d1ed1025a9d60b43724becd4caed3"
+    }
+  ],
+  "clips": [
+    {
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\crate-hold-0116\\P_WPC_stand_btl_lp.gmt",
+      "sourceSha256": "d02fbacbb219844a5c5af979462b835720b685fd10f999780b3c6148ca3a7d33",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_CrateReady.x",
+      "sha256": "45f0cf10813a4b784d3b3753436748786ad5ccb1216b9b212565f88f4bfdbcd7",
+      "frames": 61,
+      "sourceFrames": 61,
+      "nativeBase": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleAimBat.x",
+      "nativeBaseSha256": "73c6e3a297508889da0ded649dd89fed94f86a53edd115a7fff192743f216461",
+      "fps": 30
+    },
+    {
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\crate-hold-0116\\P_WPC_stand.gmt",
+      "sourceSha256": "d2811c83f3b4366102e7bf69558680d7b86955a1948fa40abe66303f989adaf0",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_CrateRelaxedIdle.x",
+      "sha256": "99d92bc1118727ba25698b502f8b0349ba2991620ee00373d9e7671d248a22e3",
+      "frames": 61,
+      "sourceFrames": 61,
+      "nativeBase": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleBat.x",
+      "nativeBaseSha256": "4f34bc95eb8eeb0882163e7b7c149cc0df4a6bf473f001f31d46dd1c4c542c03",
+      "fps": 30
+    },
+    {
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\crate-hold-0116\\P_WPC_MOV_walk.gmt",
+      "sourceSha256": "ef086a4a1f82c7ed02c30c9f7f4301b46ec0d6fcf59130a17812d8faaf09f348",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_CrateWalk.x",
+      "sha256": "a68378e3604d962357ab77809c132df9020f39dff90715843689c7df4be4d9c0",
+      "frames": 21,
+      "sourceFrames": 33,
+      "nativeBase": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkBat.x",
+      "nativeBaseSha256": "3fb1dbf21d717844fad0cc9571a8c98e1b04c8840a69ede7f2388fd09b8bcf00",
+      "fps": 30
+    },
+    {
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\crate-hold-0116\\P_WPC_MOV_walk.gmt",
+      "sourceSha256": "ef086a4a1f82c7ed02c30c9f7f4301b46ec0d6fcf59130a17812d8faaf09f348",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_CrateWalkSlow.x",
+      "sha256": "c8116b088436ea5dd747264bbc584ccaa1f189f598322d07009215a50e4bf840",
+      "frames": 21,
+      "sourceFrames": 33,
+      "nativeBase": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkSlow_Bat.x",
+      "nativeBaseSha256": "cf6a953adbea195f3d7e6f3a4a3a4955204ebe7b97530c26f82809c325e2c2f9",
+      "fps": 30
+    },
+    {
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\crate-hold-0116\\P_WPC_MOV_walk.gmt",
+      "sourceSha256": "ef086a4a1f82c7ed02c30c9f7f4301b46ec0d6fcf59130a17812d8faaf09f348",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_CrateWalkLightLimpR.x",
+      "sha256": "88f9c3eefc06ae492ae4719cbf73d7d0d19c7af6d266c275799145ecd6aaa045",
+      "frames": 21,
+      "sourceFrames": 33,
+      "nativeBase": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkLightLimpR_Bat.x",
+      "nativeBaseSha256": "cf798ff5e8818d95aa1cdaae13c37f2bee8d0f8291b12da6ea4dc7228c22a0fe",
+      "fps": 30
+    },
+    {
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\crate-hold-0116\\P_WPC_MOV_walk.gmt",
+      "sourceSha256": "ef086a4a1f82c7ed02c30c9f7f4301b46ec0d6fcf59130a17812d8faaf09f348",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_CrateWalkLightLimpL.x",
+      "sha256": "cd0c150a3ea0e2ad9ba151710ad0f0ef49d4566e02abe70041a72b78ecbccddd",
+      "frames": 21,
+      "sourceFrames": 33,
+      "nativeBase": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkLightLimpL_Bat.x",
+      "nativeBaseSha256": "31b6f6e2225e847b8f3db5a248e0efc6d48f92e385e3e6032ea5089ecc7d4188",
+      "fps": 30
+    },
+    {
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\crate-hold-0116\\P_WPC_MOV_walk.gmt",
+      "sourceSha256": "ef086a4a1f82c7ed02c30c9f7f4301b46ec0d6fcf59130a17812d8faaf09f348",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_CrateWalkHeavyLimpR.x",
+      "sha256": "a6ca4ca15220511bf8b7f25649b23eb802efafc5a8fafca14108cf6f202a79e2",
+      "frames": 21,
+      "sourceFrames": 33,
+      "nativeBase": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkHeavyLimpR_Bat.x",
+      "nativeBaseSha256": "9945a51f9674f66f851c68cb4b87701ceca9f0b4bade3d91cb4a5ee60afdf1e6",
+      "fps": 30
+    },
+    {
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\crate-hold-0116\\P_WPC_MOV_walk.gmt",
+      "sourceSha256": "ef086a4a1f82c7ed02c30c9f7f4301b46ec0d6fcf59130a17812d8faaf09f348",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_CrateWalkHeavyLimpL.x",
+      "sha256": "e9e0971b8afcb31e2aa08b7ee00f199a65d206829014e0bb6e43f4ff9ff9f6df",
+      "frames": 21,
+      "sourceFrames": 33,
+      "nativeBase": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkHeavyLimpL_Bat.x",
+      "nativeBaseSha256": "17e8c55bd086669aa9bb0711c5566617fc6d038c1c7bcd1ded561b33b2211b82",
+      "fps": 30
+    },
+    {
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\crate-hold-0116\\P_WPC_guard_st.gmt",
+      "sourceSha256": "bdc5385549b20e8db04bf85468789fc82d3f4738621a9c7c40d20846b084e66f",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_CrateGuardEnter.x",
+      "sha256": "e7554fca96f5fece66bb0921f4e55bf388a5ce44395351d124eb461fa06b8a09",
+      "frames": 5,
+      "fps": 30
+    },
+    {
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\crate-hold-0116\\P_WPC_guard_lp.gmt",
+      "sourceSha256": "277fc82e670c7cd63fc8c4a4f732c68b677e104e47a9eed60d4facfc20434f6b",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_CrateGuardLoop.x",
+      "sha256": "c1314c272b0964528aa415f69936cb59aeb61466bbd980edf912d2409f9ce7c4",
+      "frames": 41,
+      "fps": 30
+    },
+    {
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\crate-hold-0116\\P_WPC_guard.gmt",
+      "sourceSha256": "e0b52aa472dc01cbfe43cb656768778f13f3a7d8452888f5dd08fdf9898e61a6",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_CrateGuardHit.x",
+      "sha256": "ce346fe15dc33be07ebb051ce0f7126c3389cd1f3ddf7d327a1b6d632fe9cad0",
+      "frames": 17,
+      "fps": 30
+    },
+    {
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\crate-hold-0116\\P_WPC_guard_en.gmt",
+      "sourceSha256": "4b1e270a167fab9cd69ef93890ce7a02105d1ed1025a9d60b43724becd4caed3",
+      "output": "42/media/anims_X/Bob/ProjectYakuza_DD_CrateGuardExit.x",
+      "sha256": "2ca53a47beca21d141eda3bf00457bd3d5ad0fd2788b2ae4d57d5f62faaa53a5",
+      "frames": 18,
+      "fps": 30
+    }
+  ],
+  "nativeBodySha256": "a0a7cbb3f8fb55827f4039edd04f9af28299d76ae9160484069084faca2aff01"
+}
