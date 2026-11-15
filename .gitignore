@@ -366,3 +366,6 @@
 !tools/combat-tests/build_bicycle_fragments.py
 !tools/combat-tests/build_bicycle_break_tests.py
 !tools/combat-tests/bicycle-break-test-fixture.lua
+
+!tools/Install-CombatUpdate.py
+!tools/combat-tests/test_combat_install.py

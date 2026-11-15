@@ -2,7 +2,7 @@
 
 Project Zomboid Build 42 combat framework with the Dragon of Dojima style.
 
-Current combat version: **0.114.0**. Source mod folder: [combat/ProjectYakuza](combat/ProjectYakuza). See its [README](combat/ProjectYakuza/README.md) and [release notes](combat/ProjectYakuza/docs/RELEASE_NOTES.md) for controls, features and validation.
+Current combat version: **0.115.0**. Source mod folder: [combat/ProjectYakuza](combat/ProjectYakuza). See its [README](combat/ProjectYakuza/README.md) and [release notes](combat/ProjectYakuza/docs/RELEASE_NOTES.md) for controls, features and validation.
 
 Download the ZIP from this repository's Releases page. Extract its `ProjectYakuza` folder into `Zomboid/mods`, enable the mod and restart PZ. Install the same version on server and clients. Custom Voice Framework and a compatible voice pack are optional; they are not bundled in the combat ZIP.
 
@@ -10,7 +10,7 @@ All graphical/audio assets originate from supplied local game files. No generati
 
 ## Publishing updates
 
-Each installed, validated update receives a new version and GitHub release with its install ZIP. Run `tools/Publish-CombatRelease.ps1` after updating the version, release notes and validation. It builds the ZIP, commits only the combat project files, pushes main, and publishes a unique version tag. Preview-only work is not a mod release.
+Each installed, validated update receives a new version and GitHub release with its install ZIP. Run `tools/Publish-CombatRelease.ps1` after updating the version, release notes and validation. It builds the runtime and Workshop ZIPs, installs and verifies the local update, archives obsolete Workshop staging copies outside the game cache, commits the project changes, pushes main, and publishes a unique version tag. Use -SkipLocalInstall only when an update should not be installed locally. Preview-only work is not a mod release.
 
 The local workspace also contains a separate Kiryu CVF voice-pack project, preview renders and extraction tools. Those are excluded from this combat repository.
 

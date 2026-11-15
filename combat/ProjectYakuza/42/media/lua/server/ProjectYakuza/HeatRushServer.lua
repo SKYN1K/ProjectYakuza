@@ -11,9 +11,9 @@ function H.finish(p,completed)
     if completed and(not job.failed or R.pairedFailure(job.move))and job.hits[#job.contacts]then R.ground(z,R.endFacing(job))end
     if job.started then PY.HeatActions.finish(p,job);if not job.victimRestored then R.restore(z,job.old);job.victimRestored=true end end
     PY.HeatActions.settle(job,p,z,job.weapon,completed and(not job.failed or R.pairedFailure(job.move))and(R.targetKind(z)~="player"or R.playerAllowed(p,z)))
-    PY.HeatActions.breakWeapon(job,p,job.weapon,job.move,completed==true and not job.failed and job.hits[#job.contacts]==true)
+    PY.HeatActions.releaseWeapon(job,p,job.weapon)
     if completed and(not job.failed or R.pairedFailure(job.move))and job.hits[#job.contacts]and not z:isDead()then R.ground(z,R.endFacing(job))end
-    S.fanout(p,"heatRushEnd",{player=p:getOnlineID(),action=job.action,zombie=z:getOnlineID(),targetKind=R.targetKind(z),health=z:getHealth(),useless=job.old.useless,ignore=job.old.ignore,deferred=job.old.deferred,locked=job.old.locked,completed=completed==true,weaponBroken=job.weaponBroken==true,weaponBrokenItem=job.weaponBroken and job.weapon.getID and job.weapon:getID()or nil})
+    S.fanout(p,"heatRushEnd",{player=p:getOnlineID(),action=job.action,zombie=z:getOnlineID(),targetKind=R.targetKind(z),health=z:getHealth(),useless=job.old.useless,ignore=job.old.ignore,deferred=job.old.deferred,locked=job.old.locked,completed=completed==true,weaponBroken=job.weaponBroken==true,weaponBrokenItem=job.weaponBroken and job.weapon.getID and job.weapon:getID()or nil,breakX=job.weaponBroken and job.z:getX()or nil,breakY=job.weaponBroken and job.z:getY()or nil,breakZ=job.weaponBroken and job.z:getZ()or nil})
 end
 function H.abort(job,index)
     if job.failed or not job.move.qteFailure then return end
@@ -153,8 +153,9 @@ function H.command(p,command,a,s)
         if prompt and not job.presses[prompt]or job.hits[a.index]or age<contact-.1 or age>contact+R.contactGraceMs/1000 or job.z:isDead()or R.targetKind(job.z)=="player"and not R.playerAllowed(p,job.z)or not P.near(p,job.z,2)or not P.path(p,job.z:getX(),job.z:getY())then return end
         job.hits[a.index]=true
         local amount=R.amount(job.move,a.index,job.weapon,job.hits);if not amount then return end
-        PY.HeatActions.strike(job,p,job.z,job.weapon,amount,a.index)
-        S.fanout(p,"heatRushContact",{player=p:getOnlineID(),action=job.action,index=a.index,zombie=job.z:getOnlineID(),targetKind=R.targetKind(job.z),health=job.z:getHealth(),cue=entry.cue,node=job.move.nodeValue,presentation=true,strong=entry.strong~=false})
+        local applied=PY.HeatActions.strike(job,p,job.z,job.weapon,amount,a.index)
+        if applied and a.index==#job.contacts then PY.HeatActions.breakWeapon(job,p,job.weapon,job.move,true)end
+        S.fanout(p,"heatRushContact",{player=p:getOnlineID(),action=job.action,index=a.index,zombie=job.z:getOnlineID(),targetKind=R.targetKind(job.z),health=job.z:getHealth(),cue=entry.cue,node=job.move.nodeValue,presentation=true,strong=entry.strong~=false,weaponBroken=job.weaponBroken==true,weaponBrokenItem=job.weaponBroken and job.weapon.getID and job.weapon:getID()or nil,breakX=job.weaponBroken and job.z:getX()or nil,breakY=job.weaponBroken and job.z:getY()or nil,breakZ=job.weaponBroken and job.z:getZ()or nil})
     end
 end
 function H.tick(t,online)
@@ -175,7 +176,7 @@ function H.tick(t,online)
             local age=math.min(job.duration,R.sourceTime(job.move,(t-job.started)/1000));local x,y=R.point(job,job.motion.victim,age)
             if not z:isDead()and (not P.near(p,z,3)or not P.path(z,x,y))then H.finish(p,false)
             else if not z:isDead()then z:setX(x);z:setY(y);z:setNextX(x);z:setNextY(y);R.hold(z)end
-                S.fanout(p,"heatRushPose",{player=p:getOnlineID(),action=job.action,zombie=z:getOnlineID(),targetKind=R.targetKind(z),x=job.x,y=job.y,fx=job.fx,fy=job.fy,motionId=job.move.motionId,node=job.move.nodeValue,age=age})end
+                S.fanout(p,"heatRushPose",{player=p:getOnlineID(),action=job.action,zombie=z:getOnlineID(),targetKind=R.targetKind(z),x=job.x,y=job.y,fx=job.fx,fy=job.fy,motionId=job.move.motionId,node=job.move.nodeValue,age=age,weaponBroken=job.weaponBroken==true,weaponBrokenItem=job.weaponBroken and job.weapon.getID and job.weapon:getID()or nil})end
             end
         end
     end

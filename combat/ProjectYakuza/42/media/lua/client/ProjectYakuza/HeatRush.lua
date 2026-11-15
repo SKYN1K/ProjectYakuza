@@ -222,7 +222,7 @@ end
 function A:contact(index)
     if not self.success[index]then return end
     local p,z=self.character,self.context.target.z;local granted=self.context.target.granted
-    if index==#R.contacts(self.context.action)then self.finalRequested=true end
+    if index==#R.contacts(self.context.action)then self.finalRequested=true;PY.HeatActions.reserveWeapon(self,p,self.held,self.context.action)end
     if granted then
         local previous=H.localContacts[p]
         if not previous or previous.action~=granted.action or previous.session~=granted.session then previous={action=granted.action,session=granted.session,seen={}};H.localContacts[p]=previous end
@@ -234,7 +234,8 @@ function A:contact(index)
     end
     local amount=R.amount(self.context.action,index,self.held,self.success);if not amount then return end
     if R.targetKind(z)=="player"and not R.playerAllowed(p,z)then return end
-    PY.HeatActions.strike(self,p,z,self.held,amount,index)
+    local applied=PY.HeatActions.strike(self,p,z,self.held,amount,index)
+    if applied and index==#R.contacts(self.context.action)and PY.HeatActions.breakWeapon(self,p,self.held,self.context.action,true)and PY.BicycleBreak then PY.BicycleBreak.start(p,"local:"..now(),now(),z:getX(),z:getY(),z:getZ())end
     H.present(p,z,self.context.action,index)
 end
 function A:fail(index,remote)
@@ -324,7 +325,8 @@ function A:cleanup(done)
         if settled then R.ground(z,R.endFacing(self.pose))end
         if not self.victimRestored then R.restore(z,self.victim);self.victimRestored=true end
         PY.releaseActionAnimation(p,self,true)
-        if not isClient()then PY.HeatActions.settle(self,p,z,self.held,done and(not self.failed or R.pairedFailure(self.context.action)));if PY.HeatActions.breakWeapon(self,p,self.held,self.context.action,settled==true)and PY.BicycleBreak then PY.BicycleBreak.start(p,"local:"..now(),now(),p:getX(),p:getY(),p:getZ())end end
+        if not isClient()then PY.HeatActions.settle(self,p,z,self.held,done and(not self.failed or R.pairedFailure(self.context.action)))end
+        PY.HeatActions.releaseWeapon(self,p,self.held)
         if not isClient()and done and(not self.failed or R.pairedFailure(self.context.action))and self.success[#R.contacts(self.context.action)]and not z:isDead()then R.ground(z,R.endFacing(self.pose))end
     end
     local granted=self.context.target.granted;if granted then PY.Network.send(p,"heatRushEnd",{action=granted.action,completed=done==true and(not self.failed or R.pairedFailure(self.context.action))})end
@@ -399,7 +401,7 @@ function H.remoteEnd(id,action,packet)
     if PY.HeatActionPresentation then PY.HeatActionPresentation.stop(job.p,job,packet and packet.completed)end
     local z=job.z;local saved=R.targetKind(z)=="zombie"and packet or job.old
     if saved and saved~=job.old then saved={useless=saved.useless,ignore=saved.ignore,deferred=saved.deferred,locked=saved.locked,target=job.old.target,groundAction=job.old.groundAction,floor=job.old.floor,knocked=job.old.knocked}end
-    if packet and packet.completed then R.ground(z,R.endFacing(job))end;PY.HeatActions.finish(job.p,job);if not job.victimRestored then R.restore(z,saved or job.old)end;if packet and packet.completed then R.ground(z,R.endFacing(job))end
+    if packet and packet.completed then R.ground(z,R.endFacing(job))end;PY.HeatActions.finish(job.p,job);PY.HeatActions.releaseWeapon(job,job.p,job.weapon);if not job.victimRestored then R.restore(z,saved or job.old)end;if packet and packet.completed then R.ground(z,R.endFacing(job))end
 end
 function H.session(id,session)
     if PY.Network and not PY.Network.acceptSession(id,session)then return false end
@@ -422,6 +424,23 @@ function H.syncHealth(p,a)
     if record.healthSeen[key]then return end;record.healthSeen[key]=true;record.at=now()
     z:setHealth(math.min(z:getHealth(),a.health))
 end
+function H.applyBreak(p,a,silent)
+    if a.weaponBroken~=true or not PY.NetworkProtocol.integer(a.action,1,1000000000)or a.action<=(H.ended[a.player]or 0)then return end
+    local active=H.active[p];local grant=active and active.context.target.granted
+    local job=grant and grant.action==a.action and active or H.remote[a.player]
+    if job and(job==active or job.action==a.action)then
+        local item=job.held or job.weapon;local move=job.context and job.context.action or job.move
+        if item and(a.weaponBrokenItem==nil or item.getID and item:getID()==a.weaponBrokenItem)then PY.HeatActions.breakWeapon(job,p,item,move,true,false)end
+    else
+        local item=p:getPrimaryHandItem()
+        if item and item:getFullType()=="ProjectYakuza.Bicycle"and item.getID and item:getID()==a.weaponBrokenItem then
+            item:setCondition(0,false)
+            if p.getSecondaryHandItem and p:getSecondaryHandItem()==item then p:setSecondaryHandItem(nil)end
+            p:setPrimaryHandItem(nil)
+        end
+    end
+    if PY.BicycleBreak then PY.BicycleBreak.remote(p,a,silent)end
+end
 function H.receive(module,command,a)
     if module~=PY.NetworkProtocol.module or type(a)~="table"or not PY.NetworkProtocol.integer(a.player,0,32767)then return end
     local p=getPlayerByOnlineID(a.player);if not p then return end
@@ -437,15 +456,7 @@ function H.receive(module,command,a)
     if command=="heatRushEnd"then
         if not H.session(a.player,a.session)then return end
         H.syncHealth(p,a)
-        if a.weaponBroken then
-            local held=p:getPrimaryHandItem()
-            if held and held:getFullType()=="ProjectYakuza.Bicycle"and held.getID and held:getID()==a.weaponBrokenItem then
-                held:setCondition(0)
-                if p.getSecondaryHandItem and p:getSecondaryHandItem()==held then p:setSecondaryHandItem(nil)end
-                if p.setPrimaryHandItem then p:setPrimaryHandItem(nil)end
-            end
-            if PY.BicycleBreak then PY.BicycleBreak.remote(p,a)end
-        end
+        H.applyBreak(p,a)
         local active=p:isLocalPlayer()and H.active[p];local grant=active and active.context.target.granted
         if grant and grant.action==a.action and a.completed~=true then active:cancel()end
         H.remoteEnd(a.player,a.action,a);return
@@ -469,6 +480,7 @@ function H.receive(module,command,a)
     if command=="heatRushContact"then
         if not H.session(a.player,a.session)or not PY.NetworkProtocol.integer(a.action,1,1000000000)or not PY.NetworkProtocol.integer(a.index,1,32)then return end
         H.syncHealth(p,a)
+        H.applyBreak(p,a)
         local predicted=H.localContacts[p]
         if p:isLocalPlayer()and predicted and(predicted.session==nil or predicted.session==a.session)and(predicted.action>a.action or predicted.action==a.action and predicted.seen[a.index])then return end
         H.contacts=H.contacts or {};local previous=H.contacts[a.player]
@@ -502,12 +514,13 @@ function H.receive(module,command,a)
     local style=a.node and PY.getStyle(p:getModData().ProjectYakuzaStyle or "")
     local move=style and PY.NetworkProtocol.move(style.id,a.node,p:GetVariable("ProjectYakuzaWeaponProfile"))or nil
     if a.node and(not move or move.motionId~=a.motionId)then return end
-    local job=old or {p=p,z=z,action=a.action,remote=true};job.move=move
+    local job=old or {p=p,z=z,action=a.action,remote=true,weapon=p:getPrimaryHandItem()};job.move=move
     local contacts=H.contacts and H.contacts[a.player]
     if contacts and contacts.action==a.action then job.confirmedContacts=contacts.seen end
     job.motion=motion;job.duration=motion and motion.duration or R.duration
     job.x,job.y,job.fx,job.fy,job.age,job.at=a.x,a.y,a.fx,a.fy,a.age,now();H.remote[a.player]=job
     if not old then job.old=R.lock(z,motion and motion.targetAnimation);PY.HeatActions.begin(p,job,{duration=move and R.wallDuration(move)or job.duration})end
+    H.applyBreak(p,a,true)
     if move and PY.HeatActionPresentation then PY.HeatActionPresentation.start(p,z,move,job)end
     if not H.remoteHook then Events.OnTick.Add(H.updateRemote);H.remoteHook=true end
 end

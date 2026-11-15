@@ -66,7 +66,8 @@ function W.profile(styleId,item)
     if not item then return nil end
     local lookup=W.byItem[styleId];local id=lookup and lookup[item:getFullType()]
 
-    if not id or (item.getCondition and item:getCondition()<=0) then return nil end
+    if not id then return nil end
+    if item.getCondition and item:getCondition()<=0 and not(PY.HeatActions and PY.HeatActions.retainsWeapon(styleId,item))then return nil end
     return id
 end
 function W.view(style,id)
@@ -124,6 +125,7 @@ function W.extraDamage(item,damage)
 end
 function W.sync(p)
     if not p or not p:isLocalPlayer() then return end
+    W.movement(p)
     local item=p:getPrimaryHandItem();local id=p:getModData().ProjectYakuzaStyle
     local profile=W.profile(id,item) or ""
     local old=W.equipment[p]
@@ -143,6 +145,23 @@ function W.sync(p)
         PY.emit("weaponProfileChanged",p,profile,item)
     end
 end
+W.carry=setmetatable({}, {__mode="k"})
+function W.restoreMovement(p)
+    local old=W.carry[p];if not old then return end
+    W.carry[p]=nil;p:setAllowRun(old.run);p:setAllowSprint(old.sprint)
+end
+function W.movement(p)
+    local primary=p:getPrimaryHandItem();local secondary=p.getSecondaryHandItem and p:getSecondaryHandItem()
+    local bicycle=primary and primary:getFullType()=="ProjectYakuza.Bicycle"or secondary and secondary:getFullType()=="ProjectYakuza.Bicycle"
+    if not bicycle or p:isDead()then W.restoreMovement(p);return end
+    if not W.carry[p]then W.carry[p]={run=p:isAllowRun(),sprint=p:isAllowSprint()}end
+    p:setAllowRun(false);p:setAllowSprint(false);p:setForceRun(false);p:setForceSprint(false);p:setRunning(false);p:setSprinting(false)
+end
+function W.clearMovement()
+    for p in pairs(W.carry)do W.restoreMovement(p)end
+end
 if Events and Events.OnPlayerUpdate then Events.OnPlayerUpdate.Add(W.sync) end
+if Events and Events.OnSave then Events.OnSave.Add(W.clearMovement)end
+if Events and Events.OnMainMenuEnter then Events.OnMainMenuEnter.Add(W.clearMovement)end
 
 PY.on("styleRegistered",function(style)W.moveIndexes[style]=nil end)

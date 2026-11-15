@@ -31,12 +31,15 @@ function E.start(p,key,seed,x,y,z)
     if #E.parts>0 and not E.hooked then Events.OnTick.Add(E.tick);E.hooked=true end
     return true
 end
-function E.remote(p,packet)
+function E.remote(p,packet,silent)
     if not packet.weaponBroken or not ProjectYakuza.NetworkProtocol.integer(packet.action,1,1000000000)then return end
     local serial=packet.session..":"..packet.action
     local last=E.seen[p]
     if type(last)=="table"and last.session==packet.session and last.action>=packet.action then return end
-    E.start(p,serial,packet.action,p:getX(),p:getY(),p:getZ());E.seen[p]={session=packet.session,action=packet.action}
+    local P=ProjectYakuza.NetworkProtocol
+    local valid=P.number(packet.breakX,-1000000,1000000)and P.number(packet.breakY,-1000000,1000000)and P.number(packet.breakZ,-32,32)
+    if not silent then E.start(p,serial,packet.action,valid and packet.breakX or p:getX(),valid and packet.breakY or p:getY(),valid and packet.breakZ or p:getZ())end
+    E.seen[p]={session=packet.session,action=packet.action}
 end
 function E.tick()
     local time=getTimestampMs();local paused=isGamePaused()

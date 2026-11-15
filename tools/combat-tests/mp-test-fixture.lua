@@ -29,6 +29,8 @@ local function player(id,x)
  function p:setPrimaryHandItem(item)self.hand=item;self.equipped=item~=nil end
  function p:setSecondaryHandItem(item)self.secondary=item end
  function p:resetModelNextFrame()self.modelsReset=true end
+ function p:isHideWeaponModel()return self.hideWeapon==true end
+ function p:setHideWeaponModel(v)self.hideWeapon=v end
  function p:updateHandEquips()self.equipSent=(self.equipSent or 0)+1 end
  function p:setIgnoreMovement(v)self.ignore=v;if v then self.nativeUpdates=(self.nativeUpdates or 0)+1 end end
  function p:getOnlineID()return self.id end
@@ -1246,8 +1248,12 @@ do
  for i,contact in ipairs(lease.contacts)do
   clock=lease.started+contact.atMs+10;command('heatRushHit',{action=lease.action,index=i,damage=999});command('heatRushHit',{action=lease.action,index=i,damage=999})
   check(z1.hits==hits and math.abs(z1.health-({9.625,8.5})[i])<.000001,'MP bicycle uses server weapon damage and original weights with replay rejection '..i)
+  check(item.condition==(i==1 and 10 or 0)and p:getPrimaryHandItem()==item,'server breaks bicycle only at final impact and retains it through recovery '..i)
+  check(ProjectYakuza.Weapons.profile('dragon_of_dojima',item)=='bicycle'and rush.leases[p]==lease,'broken bicycle does not cancel authoritative recovery '..i)
+  check(p:isHideWeaponModel()==(i==2),'server model hides at crushing impact only '..i)
  end
- clock=lease.started+lease.duration*1000-50;neutral({clip='ProjectYakuza_DD_BicycleHeat',move='dd_bicycle_heat'});command('heatRushEnd',{action=lease.action,completed=true})
+ clock=lease.started+lease.duration*1000-50;neutral({clip='ProjectYakuza_DD_BicycleHeat',move='dd_bicycle_heat'});check(rush.leases[p]==lease and server.players[p.id].packet.weaponProfile=='bicycle','broken bicycle recovery accepts authoritative snapshots');command('heatRushEnd',{action=lease.action,completed=true})
+ check(not p.hideWeapon and p:getPrimaryHandItem()~=item and not ProjectYakuza.Weapons.profile('dragon_of_dojima',item),'server completion restores visibility and releases broken profile')
  check(not rush.leases[p]and not p.invincible and item.condition==0 and item.synced,'MP bicycle completion breaks and syncs only its own weapon while releasing the lease')
  clock=clock+500;ProjectYakuza.HeatActions.tick();p.hand=p.token
 end

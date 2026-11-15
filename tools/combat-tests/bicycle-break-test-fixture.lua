@@ -6,7 +6,7 @@ local clock,paused=0,false
 getTimestampMs=function()return clock end
 isGamePaused=function()return paused end
 require=function()end
-ProjectYakuza={NetworkProtocol={integer=function(v,a,b)return type(v)=='number'and v==math.floor(v)and v>=a and v<=b end}}
+ProjectYakuza={NetworkProtocol={integer=function(v,a,b)return type(v)=='number'and v==math.floor(v)and v>=a and v<=b end,number=function(v,a,b)return type(v)=='number'and v==v and v>=a and v<=b end}}
 local plays,items,objects=0,{},{}
 GameSounds={getSound=function(name)check(name=='ProjectYakuza_BicycleBreak','dedicated original bicycle break cue');return {getRandomClip=function()return {}end}end}
 getWorld=function()return {getFreeEmitter=function(_,x,y,z)return {playClip=function()plays=plays+1;return plays end,setVolume=function(_,id,volume)check(volume==.8,'audible break volume')end}end}end
@@ -26,8 +26,12 @@ instanceItem=function(name)
  local item={name=name};function item:getWorldItem()return self.world end;function item:setWorldItem(v)self.world=v end;function item:setWorldZRotation(v)self.rotation=v end;function item:getContainer()return self.container end;items[#items+1]=item;return item
 end
 do local _="ProjectYakuzaFixture:BICYCLE_BREAK" end
+local lastEmitter
+local priorWorld=getWorld
+getWorld=function()local world=priorWorld();local emit=world.getFreeEmitter;world.getFreeEmitter=function(self,x,y,z)lastEmitter={x=x,y=y,z=z};return emit(self,x,y,z)end;return world end
 local E=ProjectYakuza.BicycleBreak;local p={getX=function()return 10.3 end,getY=function()return 20.4 end,getZ=function()return 0 end}
-E.remote(p,{session='one',action=5,weaponBroken=true});check(#E.parts==3 and plays==1,'one authoritative break produces one cue and three parts')
+E.remote(p,{session='one',action=5,weaponBroken=true,breakX=10.6,breakY=20.7,breakZ=0});check(#E.parts==3 and plays==1,'one authoritative break produces one cue and three parts')
+check(lastEmitter.x==10.6 and lastEmitter.y==20.7,'multiplayer fragments and break cue originate at confirmed victim impact')
 for _,object in ipairs(objects)do check(object.noPicking,'temporary parts cannot be selected for pickup')end
 E.remote(p,{session='one',action=5,weaponBroken=true});E.remote(p,{session='one',action=4,weaponBroken=true});check(#E.parts==3 and plays==1,'duplicate and older break packets cannot replay sound or parts')
 E.remote(p,{session='one',action=6,weaponBroken=false});check(#E.parts==3 and plays==1,'ordinary action completion does not shatter a bicycle')

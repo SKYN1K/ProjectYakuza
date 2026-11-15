@@ -771,10 +771,14 @@ do
   for i,contact in ipairs(move.contacts)do
    phase=(contact.atMs+.001)/1000;fire('OnPlayerUpdate',p);fire('OnPlayerUpdate',p)
    check(z.hits==hits and math.abs(z.health-({9.625,8.5})[i])<.000001,'bicycle contacts apply canonical damage once without native Hit '..i)
+   check(action.held.condition==(i==1 and 10 or 0),'bicycle breaks at crushing impact only '..i)
+   check(p:getPrimaryHandItem()==action.held and PY.Weapons.profile('dragon_of_dojima',action.held)=='bicycle'and not action.cleaned,'bicycle equipment survives impact through recovery '..i)
+   check(p:isHideWeaponModel()==(i==2),'bicycle model hides at crushing impact only '..i)
   end
   phase=move.duration;fire('OnPlayerUpdate',p)
   check(action.cleaned and not PY.activeActions[p]and not p.invincible and p.ghost,'bicycle retains full original recovery and restores control')
   clock=clock+500;PY.HeatActions.tick();check(not p.ghost,'bicycle targeting grace expires')
+  check(not p.hideWeapon and p:getPrimaryHandItem()~=action.held,'recovery restores model visibility and removes broken bicycle')
   check(action.held.condition==0 and action.held.synced,'completed bicycle Heat Action breaks and syncs its held weapon');action.held.condition=0;check(not R.weaponAllowed(p,view,move),'broken bicycle cannot start a Heat Action')
  end
  do
@@ -782,6 +786,7 @@ do
   check(not PY.HeatActions.breakWeapon(job,p,item,move,false)and item.condition==10,'cancelled bicycle Heat Action keeps its weapon condition')
   check(PY.HeatActions.breakWeapon(job,p,item,move,true)and item.condition==0 and item.synced,'confirmed completion breaks the held bicycle')
   item.condition=9;check(not PY.HeatActions.breakWeapon(job,p,item,move,true)and item.condition==9,'duplicate completion cannot break a weapon twice')
+  PY.HeatActions.releaseWeapon(job,p,item);check(not p.hideWeapon and not PY.HeatActions.retainsWeapon('dragon_of_dojima',item),'release removes broken weapon reservation and restores model visibility')
   p.held=previous
  end
  for _,id in ipairs({'Base.MetalPipe','Base.Nightstick','Base.MetalBar','Base.Katana'})do
@@ -912,5 +917,24 @@ do
  job.move={duration=8};actor.vars.ProjectYakuzaHeatActorPhase=.2;target.vars.ProjectYakuzaHeatVictimPhase=.3
  H.syncPhase(job,6);H.clearPhase(job)
  check(actor.vars.ProjectYakuzaHeatActorPhase==.2 and target.vars.ProjectYakuzaHeatVictimPhase==.3,'unrelated scenes never modify paired clock slots')
+end
+do
+ local priorClient=isClient;local priorNetwork=PY.Network;local previous=p.held
+ isClient=function()return true end;PY.Network={acceptSession=function()return true end}
+ local view=PY.Weapons.views.dragon_of_dojima.bicycle;local move=view.actions.heatAction
+ local item={condition=10,getID=function()return 771 end,getFullType=function()return 'ProjectYakuza.Bicycle'end,getCondition=function(self)return self.condition end,setCondition=function(self,v)self.condition=v end,syncItemFields=function()error('client must not echo authoritative condition synchronization')end}
+ p.held=item;local job={held=item,finalRequested=true,context={style=view,action=move,target={granted={action=7001}}}}
+ H.active[p]=job;PY.HeatActions.reserveWeapon(job,p,item,move);item.condition=0
+ check(PY.Weapons.profile(view.id,item)=='bicycle','native item sync before contact confirmation retains owner recovery')
+ H.localContacts[p]={action=7001,session=77,seen={[2]=true}}
+ local packet={player=2,session=77,action=7001,index=2,weaponBroken=true,weaponBrokenItem=771}
+ H.receive('ProjectYakuza','heatRushContact',packet);H.receive('ProjectYakuza','heatRushContact',packet)
+ check(job.weaponBroken and p:isHideWeaponModel()and p:getPrimaryHandItem()==item,'predicted contact dedup still applies authoritative bicycle break without unequipping during recovery')
+ check(PY.Weapons.profile(view.id,item)=='bicycle','confirmed owner break keeps profile through recovery')
+ local other={getCondition=function()return 0 end,getFullType=item.getFullType}
+ check(not PY.Weapons.profile(view.id,other),'unrelated broken bicycle cannot borrow active recovery reservation')
+ PY.HeatActions.releaseWeapon(job,p,item);H.active[p]=nil;H.localContacts[p]=nil
+ check(not p:isHideWeaponModel()and not PY.Weapons.profile(view.id,item),'owner recovery cleanup restores visibility and removes broken reservation')
+ p.held=previous;PY.Network=priorNetwork;isClient=priorClient
 end
 return true,'PASS '..checks..' generic QTE validation, custom bindings, fresh presses, replay safety, native-phase contacts, canonical damage, paired cleanup and interruption checks'

@@ -1,5 +1,5 @@
 require "ProjectYakuza/Registry"
-local H={active=setmetatable({}, {__mode="k"})};ProjectYakuza.HeatActions=H
+local H={active=setmetatable({}, {__mode="k"}),broken=setmetatable({}, {__mode="k"}),hidden=setmetatable({}, {__mode="k"})};ProjectYakuza.HeatActions=H
 function H.useGhostProtection()
     return not((isClient and isClient())or(isServer and isServer()))
 end
@@ -22,13 +22,37 @@ function H.settle(job,p,z,item,completed)
     if z:isDead()then z:hitConsequences(item,p,true,0,false)end
     return true
 end
-function H.breakWeapon(job,p,item,move,completed)
-    if not completed or job.weaponBroken or not move or not move.breakWeapon or not item or item:getFullType()~="ProjectYakuza.Bicycle"or p:getPrimaryHandItem()~=item then return false end
-    job.weaponBroken=true;item:setCondition(0)
-    if p.getSecondaryHandItem and p:getSecondaryHandItem()==item then p:setSecondaryHandItem(nil)end
-    if p.setPrimaryHandItem then p:setPrimaryHandItem(nil)end
-    if item.syncItemFields then item:syncItemFields()end
+function H.reserveWeapon(job,p,item,move)
+    if not move or move.breakWeapon~=true or not item or item:getFullType()~="ProjectYakuza.Bicycle"or p:getPrimaryHandItem()~=item then return false end
+    local owner=H.broken[item];if owner and owner~=job then return false end
+    job.breakPlayer=p;job.breakStyle=job.context and job.context.style.id or job.style or p:getModData().ProjectYakuzaStyle
+    H.broken[item]=job;return true
+end
+function H.retainsWeapon(style,item)
+    local job=H.broken[item]
+    return job~=nil and not job.breakReleased and job.breakStyle==style and(job.weaponBroken or job.finalRequested==true)and job.breakPlayer:getPrimaryHandItem()==item
+end
+function H.breakWeapon(job,p,item,move,confirmed,synchronize)
+    if not confirmed or job.weaponBroken or not H.reserveWeapon(job,p,item,move)then return false end
+    job.weaponBroken=true;item:setCondition(0,false)
+    if p.setHideWeaponModel then
+        job.breakHidden=p:isHideWeaponModel();H.hidden[p]=job;p:setHideWeaponModel(true)
+        if p.resetModelNextFrame then p:resetModelNextFrame()end
+    end
+    if item.syncItemFields and synchronize~=false then item:syncItemFields()end
     return true
+end
+function H.releaseWeapon(job,p,item)
+    if job.breakReleased then return end;job.breakReleased=true
+    if item and H.broken[item]==job then H.broken[item]=nil end
+    if job.weaponBroken then
+        if p.getSecondaryHandItem and p:getSecondaryHandItem()==item then p:setSecondaryHandItem(nil)end
+        if p:getPrimaryHandItem()==item and p.setPrimaryHandItem then p:setPrimaryHandItem(nil)end
+    end
+    if H.hidden[p]==job then
+        H.hidden[p]=nil;p:setHideWeaponModel(job.breakHidden==true)
+        if p.resetModelNextFrame then p:resetModelNextFrame()end
+    end
 end
 function H.restore(p,job)
     if H.active[p]~=job then return false end

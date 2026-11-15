@@ -40,6 +40,20 @@ function p:getPlayerNum()return 0 end
 function p:getModData()return self.data end
 function p:isLocalPlayer()return true end
 function p:isDead()return false end
+function p:isAllowRun()return self.allowRun~=false end
+function p:isAllowSprint()return self.allowSprint~=false end
+function p:setAllowRun(v)self.allowRun=v end
+function p:setAllowSprint(v)self.allowSprint=v end
+function p:setForceRun(v)self.forceRun=v end
+function p:setForceSprint(v)self.forceSprint=v end
+function p:setRunning(v)self.running=v end
+function p:setSprinting(v)self.sprinting=v end
+function p:isHideWeaponModel()return self.hideWeapon==true end
+function p:setHideWeaponModel(v)self.hideWeapon=v end
+function p:resetModelNextFrame()self.modelReset=(self.modelReset or 0)+1 end
+function p:setPrimaryHandItem(v)self.held=v end
+function p:getSecondaryHandItem()return self.secondary end
+function p:setSecondaryHandItem(v)self.secondary=v end
 function p:isAiming()return true end
 function p:getPrimaryHandItem()return self.held or token end
 function p:setVariable(k,v)self.vars[k]=v end
@@ -259,5 +273,22 @@ do
   check(not PY.tryRecoveryCancel(p,view,state),'single bottle swing cannot auto-cancel recovery '..i)
  end
  PY.resetPlayer(p,'bottle_done')
+end
+do
+ local priorStyle=p.data.ProjectYakuzaStyle
+ p.held=weapon('ProjectYakuza.Bicycle');p.secondary=nil;p.data.ProjectYakuzaStyle=nil
+ p.allowRun=true;p.allowSprint=false;p.forceRun=true;p.forceSprint=true;p.running=true;p.sprinting=true;p.vars.Moving=true
+ W.sync(p)
+ check(not p.allowRun and not p.allowSprint and not p.forceRun and not p.forceSprint and not p.running and not p.sprinting,'bicycle suppresses native run/sprint permissions and queued input without an equipped style')
+ check(p.vars.Moving==true,'bicycle carry keeps walking input intact')
+ p.allowRun=true;p.forceRun=true;W.sync(p)
+ check(not p.allowRun and not p.forceRun,'bicycle reapplies carry limits on later input frames')
+ p.held=token;W.sync(p)
+ check(p.allowRun and not p.allowSprint and not W.carry[p],'unequip restores original run and sprint permissions independently')
+ p.secondary=weapon('ProjectYakuza.Bicycle');p.allowSprint=true;W.sync(p)
+ check(not p.allowRun and not p.allowSprint,'bicycle in secondary hand also limits movement')
+ W.clearMovement();check(p.allowRun and p.allowSprint,'save and world exit restore native carry permissions')
+ W.sync(p);p.secondary=nil;W.sync(p);check(p.allowRun and p.allowSprint,'secondary unequip restores permissions')
+ p.data.ProjectYakuzaStyle=priorStyle
 end
 return true,'PASS '..checks..' real-weapon style, sharp/blunt combo, heavy, reach, damage and isolation checks'
