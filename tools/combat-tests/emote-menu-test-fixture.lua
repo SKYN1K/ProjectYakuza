@@ -63,4 +63,9 @@ if hasCVF then
  ProjectYakuza={activeActions={[p]={}}};check(not menu:emote('cvf_y0_point')and not menu:emote(E.stepUpId),'both providers retain optional combat action blocking');ProjectYakuza=nil
 end
 p.emoting=false;before=#p.calls;menu:emote('wavehi');check(#p.calls==before+1,'vanilla remains delegated beside zombies')
+p.emoting=false;p.empty=true;before=#p.calls
+check(menu:emote(E.shimanoId)and #p.calls==before+1 and p.calls[#p.calls]==E.shimanoId,'Shimano uses actual native menu with either CVF load order')
+check(not menu:emote(E.shimanoId)and #p.calls==before+1,'Shimano cannot restart through actual menu');p.emoting=false;p.empty=false
+check(not menu:emote(E.shimanoId),'Shimano cannot dispatch with a held weapon');p.empty=true
+menu:init();check(ISEmoteRadialMenu.menu[E.category].subMenu[E.shimanoId]and ISEmoteRadialMenu.icons[E.shimanoId]==ISEmoteRadialMenu.icons.stop,'Shimano survives actual menu reconstruction')
 return true,'PASS '..checks..' actual installed B42 and pinned CVF emote hooks in Project Yakuza load order ProjectYakuzaFixture:ORDER'

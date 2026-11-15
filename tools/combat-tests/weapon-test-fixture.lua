@@ -291,4 +291,6 @@ do
  W.sync(p);p.secondary=nil;W.sync(p);check(p.allowRun and p.allowSprint,'secondary unequip restores permissions')
  p.data.ProjectYakuzaStyle=priorStyle
 end
+p.held=weapon('ProjectYakuza.LauKaLongSpear');p.secondary=p.held
+check(not PY.Weapons.profile('dragon_of_dojima',p.held)and not PY.isEquipped(p)and not PY.isCombatWeapon(p,p.held),'Lau spear retains native spear attacks instead of unarmed Dragon interception')
 return true,'PASS '..checks..' real-weapon style, sharp/blunt combo, heavy, reach, damage and isolation checks'

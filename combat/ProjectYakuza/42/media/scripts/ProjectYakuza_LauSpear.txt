@@ -1,0 +1,79 @@
+module ProjectYakuza
+{
+    item LauKaLongSpear
+    {
+        DisplayName = Lau Ka Long's Spear,
+        DisplayCategory = Weapon,
+        ItemType = base:weapon,
+        Weight = 2.7,
+        Icon = Spear_Forged_02,
+        AttachmentType = Shovel,
+        WeaponSprite = ProjectYakuza_LauSpear,
+        StaticModel = ProjectYakuza_LauSpear,
+        WorldStaticModel = ProjectYakuza_LauSpear,
+        Categories = base:spear,
+        SubCategory = Spear,
+        TwoHandWeapon = true,
+        ConditionMax = 10,
+        ConditionLowerChanceOneIn = 10,
+        MinDamage = 1.2,
+        MaxDamage = 1.7,
+        CriticalChance = 20,
+        CritDmgMultiplier = 5,
+        MaxHitCount = 2,
+        MinRange = 0.98,
+        MaxRange = 1.48,
+        MinAngle = 0.8,
+        DamageCategory = Slash,
+        DamageMakeHole = true,
+        SwingAnim = Spear,
+        IdleAnim = Idle_Weapon2,
+        RunAnim = Run_Weapon2,
+        SwingTime = 2.0,
+        MinimumSwingTime = 2.0,
+        SwingAmountBeforeImpact = 0.02,
+        KnockBackOnNoDeath = false,
+        KnockdownMod = 0,
+        PushBackMod = 0.3,
+        DoorDamage = 7,
+        TreeDamage = 0,
+        SplatBloodOnNoDeath = false,
+        SplatNumber = 1,
+        HitSound = LongSpearHit,
+        ImpactSound = LongSpearHit,
+        HitFloorSound = LongSpearHit,
+        DoorHitSound = LongSpearHit,
+        SwingSound = LongSpearSwing,
+        BreakSound = LongSpearBreak,
+        EquipSound = LongSpearEquip,
+        UnequipSound = LongSpearUnEquip,
+        SoundMap = SpearStab LongSpearStab,
+        Tags = base:fishingspear;base:hasmetal;base:sharpenable;base:repairwithglue;base:repairwithtape,
+        Sharpness = 1.0,
+        HeadCondition = 10,
+        HeadConditionMax = 10,
+        HeadConditionLowerChanceMultiplier = 2.0,
+    }
+}
+
+module Base
+{
+    model ProjectYakuza_LauSpear
+    {
+        mesh = Static/ProjectYakuza_LauSpear,
+        texture = ProjectYakuza_LauSpear,
+        shader = basicEffect,
+        static = true,
+        scale = 1.0,
+        attachment world
+        {
+            offset = 0.0 0.29 0.0,
+            rotate = 0.0 0.0 0.0,
+        }
+        attachment Bip01_Prop2
+        {
+            offset = 0.0 0.0 0.0,
+            rotate = 180.0 -88.7733 -178.5756,
+        }
+    }
+}

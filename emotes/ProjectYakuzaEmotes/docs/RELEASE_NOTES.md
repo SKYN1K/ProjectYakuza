@@ -1,5 +1,5 @@
-# Project Yakuza Emotes 0.2.5
+# Project Yakuza Emotes 0.2.6
 
-- Install and Workshop packages now contain only runtime Build 42 files. Development documentation, provenance reports, templates, tools, backups and private source paths are excluded.
-- Existing animation and selector bytes match 0.2.4 exactly. Lau's 10.1-second source motion, native character movement and all 22 spear calibrations are retained. The native wheel and optional CVF integration are unchanged.
-- Package privacy tests, source/installed/archive comparisons, native Workshop content validation, production Lua compilation, standalone isolation and native/CVF fixtures pass offline. Only replaced or removed installed files are backed up. No game launch or Steam Workshop upload is performed.
+- Added Shimano: Shut the Fuck Up to the native Project Yakuza Emotes wheel with empty hands. Uses the original Kiwami Tojo HQ meeting, main03_s05 cut 009, identified by the CMN subtitle at frames 1948–2020. The entire 167-frame original body gesture retains source animation identifier main03_009_12 and plays for 5.53 seconds at 1x/30 fps.
+- Retains original head, neck and body rotations, native skeleton proportions, grounded feet and cancellable native emote playback. Existing native wheel/CVF entries and all previous gesture assets remain unchanged. No combat/CVF dependency, new voice, sounds or artwork.
+- Offline validation verifies source archive/scene/resource GUIDs, subtitle and cut boundaries, all 167 source samples, preserved body/finger channels, head/neck rotations and adapted arm directions. Native Human import, full-body masks, isolated selector and native completion/cancellation pass; standalone and both actual CVF load orders pass. Runtime-only package/privacy, local changed-file backups and installed bytes are checked. No game launch or Steam upload.

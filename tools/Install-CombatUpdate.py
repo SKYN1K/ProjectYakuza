@@ -25,27 +25,29 @@ def matches(folder,files):
     actual=files_at(folder)
     return actual.keys()==files.keys()and all(actual[name].read_bytes()==source.read_bytes()for name,source in files.items())
 
-def install(mod,version,zomboid,backup,stage_source):
+def install(mod,version,zomboid,backup,stage_source,mod_id="ProjectYakuza"):
+    assert mod_id in {"ProjectYakuza","ProjectYakuzaEmotes"}
     assert re.fullmatch(r'\d+\.\d+\.\d+',version)
     mod=Path(mod).resolve();zomboid=Path(zomboid).resolve();backup=Path(backup).resolve();stage_source=Path(stage_source).resolve()
     assert not backup.is_relative_to(zomboid),'Backups must be outside the game cache and Workshop search path'
     files=package.runtime_files(mod)
     assert 'version='+version in(mod/'42/mod.info').read_text()
-    assert matches(stage_source/'Contents/mods/ProjectYakuza',files),'Build the matching Workshop package first'
-    assert set(files_at(stage_source))=={'Contents/mods/ProjectYakuza/'+name for name in files}|{'preview.png','workshop.txt'}
-    target=contained(zomboid,zomboid/'mods/ProjectYakuza');workshop=contained(zomboid,zomboid/'Workshop');desired=contained(workshop,workshop/('ProjectYakuza-v'+version))
+    assert re.search(r'^id='+re.escape(mod_id)+r'\s*$',(mod/'42/mod.info').read_text(),re.M)
+    assert matches(stage_source/('Contents/mods/'+mod_id),files),'Build the matching Workshop package first'
+    assert set(files_at(stage_source))=={('Contents/mods/'+mod_id+'/')+name for name in files}|{'preview.png','workshop.txt'}
+    target=contained(zomboid,zomboid/('mods/'+mod_id));workshop=contained(zomboid,zomboid/'Workshop');desired=contained(workshop,workshop/(mod_id+'-v'+version))
     existing=files_at(target);changed=[name for name in existing if name not in files or existing[name].read_bytes()!=files[name].read_bytes()]
     stages=[];metadata=[]
-    if desired.exists():assert (desired/'Contents/mods/ProjectYakuza').exists(),'The destination is already used by a different Workshop stage'
+    if desired.exists():assert (desired/('Contents/mods/'+mod_id)).exists(),'The destination is already used by a different Workshop stage'
     if workshop.exists():
         for stage in sorted(workshop.iterdir()):
             if not stage.is_dir():continue
             contained(workshop,stage)
-            payload=stage/'Contents/mods/ProjectYakuza'
+            payload=stage/('Contents/mods/'+mod_id)
             if not payload.exists():continue
             files_at(stage)
-            assert {p.name for p in(stage/'Contents/mods').iterdir()}=={'ProjectYakuza'},'Mixed-mod Workshop stage needs manual separation: '+str(stage)
-            text=(payload/'42/mod.info').read_text();assert re.search(r'^id=ProjectYakuza\s*$',text,re.M),str(stage)
+            assert {p.name for p in(stage/'Contents/mods').iterdir()}=={mod_id},'Mixed-mod Workshop stage needs manual separation: '+str(stage)
+            text=(payload/'42/mod.info').read_text();assert re.search(r'^id='+re.escape(mod_id)+r'\s*$',text,re.M),str(stage)
             info=stage/'workshop.txt'
             if info.is_file():metadata.append((stage,info.read_bytes()))
             if stage!=desired or not matches(payload,files):stages.append(stage)
@@ -78,20 +80,21 @@ def install(mod,version,zomboid,backup,stage_source):
     (target/'common').mkdir(parents=True,exist_ok=True)
     desired.mkdir(parents=True,exist_ok=True)
     for name,source in files.items():
-        output=contained(desired,desired/'Contents/mods/ProjectYakuza'/name);output.parent.mkdir(parents=True,exist_ok=True)
+        output=contained(desired,desired/('Contents/mods/'+mod_id)/name);output.parent.mkdir(parents=True,exist_ok=True)
         if not output.exists()or output.read_bytes()!=source.read_bytes():shutil.copyfile(source,output)
-    (desired/'Contents/mods/ProjectYakuza/common').mkdir(exist_ok=True)
+    (desired/('Contents/mods/'+mod_id+'/common')).mkdir(exist_ok=True)
     shutil.copyfile(stage_source/'preview.png',desired/'preview.png');(desired/'workshop.txt').write_bytes(chosen)
-    assert matches(target,files)and matches(desired/'Contents/mods/ProjectYakuza',files)
+    assert matches(target,files)and matches(desired/('Contents/mods/'+mod_id),files)
     loadable=[]
     for stage in workshop.iterdir():
-        payload=stage/'Contents/mods/ProjectYakuza'
+        payload=stage/('Contents/mods/'+mod_id)
         if payload.exists():assert stage==desired and matches(payload,files);loadable.append(str(payload))
     return {'version':version,'runtimeFiles':len(files),'written':written,'backedUp':len(changed),'archivedWorkshopStages':archived,'installed':str(target),'workshop':str(desired),'loadableWorkshopCopies':loadable,'verified':True,'workshopItemIdPreserved':bool(ids)}
 
 def main():
-    parser=argparse.ArgumentParser();parser.add_argument('--version',required=True);parser.add_argument('--zomboid-root',type=Path,default=Path.home()/'Zomboid');args=parser.parse_args()
-    report=install(ROOT/'combat/ProjectYakuza',args.version,args.zomboid_root,ROOT/'combat/backups'/('before-'+args.version),ROOT/'dist/Workshop'/('ProjectYakuza-v'+args.version))
-    (ROOT/'tools'/('install-combat-'+args.version+'.json')).write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report))
+    parser=argparse.ArgumentParser();parser.add_argument('--version',required=True);parser.add_argument('--project',choices=['combat','emotes'],default='combat');parser.add_argument('--zomboid-root',type=Path,default=Path.home()/'Zomboid');args=parser.parse_args()
+    mod_id='ProjectYakuza'if args.project=='combat'else'ProjectYakuzaEmotes'
+    report=install(ROOT/args.project/mod_id,args.version,args.zomboid_root,ROOT/args.project/'backups'/('before-'+args.version),ROOT/'dist/Workshop'/(mod_id+'-v'+args.version),mod_id)
+    (ROOT/'tools'/('install-'+args.project+'-'+args.version+'.json')).write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report))
 
 if __name__=='__main__':main()

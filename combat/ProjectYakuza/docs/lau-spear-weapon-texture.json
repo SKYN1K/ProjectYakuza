@@ -1,0 +1,16 @@
+{
+  "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\lau-spear-weapon\\o_ayam_spr_rhau_d.dds",
+  "sourceSha256": "1eab44beaf77482e160a2551a51ecad58840bbae3eae2e927e8f8478869b16d3",
+  "originalSize": [
+    512,
+    512
+  ],
+  "output": "42/media/textures/ProjectYakuza_LauSpear.png",
+  "size": [
+    128,
+    128
+  ],
+  "filter": "Pillow NEAREST; supplied source texels and alpha only, no painting, synthesis or upscaling",
+  "rgbaSha256": "743c8ab0ae3ef4f8c481e16a1c736b869c7fff27d150575c7c3ed78b3c72718c",
+  "sha256": "88c433ce131ffd9c161fb9140bec8b44f50da899e8592823a8cb869ad7ce3398"
+}

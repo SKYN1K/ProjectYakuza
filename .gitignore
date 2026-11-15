@@ -377,3 +377,9 @@
 !tools/combat-tests/build_activation_audio.py
 !tools/combat-tests/ActivationAudioProbe.java
 !tools/combat-tests/validate_stomp_timing.py
+!tools/combat-tests/build_lau_spear_weapon.py
+!tools/combat-tests/build_lau_spear_texture.py
+!tools/combat-tests/LauSpearProbe.java
+!tools/combat-tests/extract_shimano_emote.py
+!tools/combat-tests/build_shimano_emote.py
+!tools/combat-tests/validate_shimano_emote.py

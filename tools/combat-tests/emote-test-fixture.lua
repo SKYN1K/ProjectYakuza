@@ -71,6 +71,7 @@ for id in pairs(ProjectYakuzaEmotes.EmoteSpears)do
  item.id=id;p.emoting=false;local before=#p.calls;check(menu:emote(E.spearId),'every native spear accepted '..id);check(p.calls[#p.calls]==ProjectYakuzaEmotes.SpearClips[id]and #p.calls==before+1 and p.primary==item,'calibrated source spear gesture dispatches once without replacing equipment');check(not menu:emote(E.spearId)and #p.calls==before+1,'spear gesture cannot restart')
 end
 item.id='Modded.LongSpear';item.subCategory='Spear';p.emoting=false;check(E.play(p,E.spearId)and p.calls[#p.calls]==E.spearId,'modded spear category uses native fallback without item substitution');item.subCategory=nil;item.swingAnim='Spear';p.emoting=false;check(E.play(p,E.spearId)and p.calls[#p.calls]==E.spearId,'modded spear swing animation uses native fallback');item.swingAnim=nil;p.emoting=false;check(not E.play(p,E.spearId),'unrelated modded weapon cannot borrow spear gesture')
+item.id='ProjectYakuza.LauKaLongSpear';item.subCategory='Spear';p.emoting=false;check(E.play(p,E.spearId)and p.calls[#p.calls]==E.spearId,'Lau original spear weapon uses the shaft-calibrated fallback');item.subCategory=nil
 item.id='Base.SpearCrafted';p.emoting=false
 for _,state in ipairs({'remote','dead','asleep','vehicle','sitting','moving','aiming','busy','emoting','hidden','rightHidden'})do p[state]=true;check(not E.play(p,E.spearId),'spear shares native safety guard '..state);p[state]=nil end
 item.condition=0;check(not E.play(p,E.spearId),'broken spear rejected');item.condition=6
@@ -97,4 +98,13 @@ p.reading=true;check(not E.canPlay(p,E.stepUpId),'native reading still blocks cu
 CustomVoice={getEmote=function(id)if id=='cvf_test'then return {id=id}end end,canPlayEmote=function()return false end};E.bindCVF();local cvfGuard=CustomVoice.canPlayEmote;E.bindCVF();check(cvfGuard==CustomVoice.canPlayEmote,'optional CVF binding is idempotent');p.nearby=true;check(CustomVoice.canPlayEmote(p,'cvf_test'),'CVF ignores combat-proximity busy flag');check(not CustomVoice.canPlayEmote(p,'unknown'),'CVF unknown IDs remain rejected')
 for _,state in ipairs({'remote','dead','asleep','vehicle','sitting','moving','aiming','busy','reading','emoting'})do p[state]=true;check(not CustomVoice.canPlayEmote(p,'cvf_test'),'CVF retains actual native state guard '..state);p[state]=nil end
 ISTimedActionQueue.queues[p]={queue={true}};check(not CustomVoice.canPlayEmote(p,'cvf_test'),'CVF retains Lua action queue guard');ISTimedActionQueue.queues[p]=nil;ProjectYakuza={activeActions={[p]={}}};check(not CustomVoice.canPlayEmote(p,'cvf_test'),'CVF cannot interrupt active optional combat');ProjectYakuza=nil;p.nearby=nil;CustomVoice=nil
+p.primary=nil;p.secondary=nil;p.emoting=false;p.nearby=true
+check(E.canPlay(p,E.shimanoId)and E.play(p,E.shimanoId)and p.calls[#p.calls]==E.shimanoId,'Shimano dispatches through standalone native state beside zombies')
+check(not E.play(p,E.shimanoId),'Shimano cannot restart during playback');p.emoting=false
+for _,state in ipairs({'remote','dead','asleep','vehicle','sitting','moving','aiming','busy','reading','emoting'})do p[state]=true;check(not E.play(p,E.shimanoId),'Shimano retains safety guard '..state);p[state]=nil end
+p.primary=item;check(not E.play(p,E.shimanoId),'Shimano requires an empty main hand');p.primary=nil;p.secondary=item;check(not E.play(p,E.shimanoId),'Shimano requires an empty off hand');p.secondary=nil
+paused=true;check(not E.play(p,E.shimanoId),'Shimano respects pause');paused=false
+ISTimedActionQueue.queues[p]={queue={true}};check(not E.play(p,E.shimanoId),'Shimano cannot interrupt queued actions');ISTimedActionQueue.queues[p]=nil
+ProjectYakuza={activeActions={[p]={}}};check(not E.play(p,E.shimanoId),'Shimano cannot interrupt combat');ProjectYakuza=nil
+menu:init();check(ISEmoteRadialMenu.menu[E.category].subMenu[E.shimanoId]and ISEmoteRadialMenu.icons[E.shimanoId]=='native-stop-icon','Shimano label and existing native icon survive menu rebuild')
 return true,'PASS '..checks..' standalone bat/spear/unarmed emote native/CVF menu coexistence, safety guards, equipment identity, native dispatch and replay checks'

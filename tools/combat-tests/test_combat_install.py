@@ -4,6 +4,17 @@ import importlib.util,tempfile,unittest
 root=Path(__file__).resolve().parents[2];spec=importlib.util.spec_from_file_location('combat_install',root/'tools/Install-CombatUpdate.py');installer=importlib.util.module_from_spec(spec);spec.loader.exec_module(installer)
 
 class CombatInstallTests(unittest.TestCase):
+ def test_emote_install_isolates_combat_and_archives_only_emote_stage(self):
+  with tempfile.TemporaryDirectory()as folder:
+   mod,game,backup,stage=self.prepare(folder);payload=stage/'Contents/mods/ProjectYakuza';payload.rename(payload.with_name('ProjectYakuzaEmotes'))
+   for target in [mod/'42/mod.info',stage/'Contents/mods/ProjectYakuzaEmotes/42/mod.info']:target.write_bytes(b'name=Project Yakuza Emotes\nid=ProjectYakuzaEmotes\nversion=1.2.3\n')
+   combat=game/'mods/ProjectYakuza/42/mod.info';combat.parent.mkdir(parents=True);combat.write_bytes(b'id=ProjectYakuza\nversion=9.0.0\n')
+   old=game/'Workshop/ProjectYakuzaEmotes-v1.0.0';oldPayload=old/'Contents/mods/ProjectYakuzaEmotes/42/mod.info';oldPayload.parent.mkdir(parents=True);oldPayload.write_bytes(b'id=ProjectYakuzaEmotes\nversion=1.0.0\n');(old/'workshop.txt').write_bytes(b'version=1\nid=456789\n')
+   prior=game/'mods/ProjectYakuzaEmotes/42/mod.info';prior.parent.mkdir(parents=True);prior.write_bytes(oldPayload.read_bytes())
+   report=installer.install(mod,'1.2.3',game,backup,stage,'ProjectYakuzaEmotes')
+   self.assertTrue(report['verified']);self.assertEqual(report['backedUp'],1);self.assertFalse(old.exists());self.assertEqual(combat.read_bytes(),b'id=ProjectYakuza\nversion=9.0.0\n')
+   self.assertEqual((backup/'replaced/42/mod.info').read_bytes(),b'id=ProjectYakuzaEmotes\nversion=1.0.0\n');self.assertIn(b'id=456789',(game/'Workshop/ProjectYakuzaEmotes-v1.2.3/workshop.txt').read_bytes())
+   again=installer.install(mod,'1.2.3',game,backup,stage,'ProjectYakuzaEmotes');self.assertEqual(again['written'],0);self.assertEqual(again['backedUp'],0)
  def prepare(self,folder):
   base=Path(folder);mod=base/'source';game=base/'Zomboid';backup=base/'backup';stage=base/'package'
   for name,data in {'42/mod.info':b'name=Project Yakuza\nid=ProjectYakuza\nversion=1.2.3\n','42/media/lua/shared/Test.lua':b'return true'}.items():
