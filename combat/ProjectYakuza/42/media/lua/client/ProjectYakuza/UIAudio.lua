@@ -13,8 +13,8 @@ function A.play(p,kind)
     getSoundManager():playUISound(name)
     return true
 end
-function A.style(p,id)
-    if id=="none" or not PY.getStyle(id) then return false end
+function A.style(p,id,feedback)
+    if feedback==false or id=="none" or not PY.getStyle(id) then return false end
     local last=A.last[p];local t=getTimestampMs()
     if last and last.style==id and t-(last.styleAt or 0)<150 then return false end
     if not A.play(p,"style") then return false end

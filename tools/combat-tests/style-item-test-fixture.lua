@@ -1,5 +1,8 @@
 do local _="ProjectYakuzaFixture:POLICY" end
 local T=PY.StyleItem
+local styleSounds={}
+getSoundManager=function()return {playUISound=function(_,name)styleSounds[#styleSounds+1]=name end}end
+do local _="ProjectYakuzaFixture:UI_AUDIO" end
 local inventory={items={}}
 local function list(items)return {size=function()return #items end,get=function(_,i)return items[i+1]end}end
 function inventory:getItems()return list(self.items)end
@@ -61,9 +64,14 @@ p.hand=nil;p.timed=true;T.update(p)
 check(not second.removed and p.data.ProjectYakuzaStyle=='dragon_of_dojima','transient hand during timed equip is deferred')
 p.hand=regular;p.timed=false;T.update(p)
 check(second.removed and p.hand==regular and PY.isEquipped(p),'supported weapon removes unused token and retains style')
+clock=clock+1000;local soundCount=#styleSounds;local lifecycleEvents=0
+PY.on('styleChanged',function()lifecycleEvents=lifecycleEvents+1 end)
 p.hand=nil;T.update(p)
 local third=p.hand
 check(PY.isStyleToken(third) and PY.StyleEntry.count==entries,'removing real weapon restores temporary token without stance entry')
+check(#styleSounds==soundCount and lifecycleEvents==1,'automatic empty-hand restoration keeps lifecycle cleanup and suppresses style audio')
+clock=clock+1000;PY.equipStyle(p,'dragon_of_dojima')
+check(#styleSounds==soundCount+1 and styleSounds[#styleSounds]=='ProjectYakuza_StyleSwitch','explicit reselection still plays style audio after a silent weapon handoff')
 check(PY.unequipStyle(p) and third.removed and not p.hand,'explicit style removal deletes token')
 p.hand=regular;PY.equipStyle(p,'dragon_of_dojima');check(p.hand==regular,'style selection preserves real weapon')
 check(PY.unequipStyle(p) and p.hand==regular and not regular.removed,'style removal preserves real weapon')

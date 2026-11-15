@@ -210,7 +210,7 @@
       "kick": false,
       "qte": [],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BicycleGround.x",
-      "clipSha256": "421489dce5189fe7441fc82735dcf384c45b5693f38b1be6a0ba501b924a2300",
+      "clipSha256": "0cac31b7233a3c591bb7a9247beee952b83dfa20c334d5e88dbfd768c4e24ea9",
       "samples": 66,
       "duration": 2.1666666666666665,
       "windows": [
@@ -243,7 +243,7 @@
         2.33333333333
       ],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BicycleHeat.x",
-      "clipSha256": "1270df3ee10357b43a45541956dcd3d2605bb4198660889b3fcb299e500e2e0a",
+      "clipSha256": "0c7ed815df0395b8ded8139c64ec2a909377abaef45d41added5c07d8afaed81",
       "samples": 151,
       "duration": 5.0,
       "windows": [
@@ -287,7 +287,7 @@
       "kick": false,
       "qte": [],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BicycleHeavy.x",
-      "clipSha256": "111b15ec19c4066d5020660faa9cec877475357c367e63ab9969d7410b98a7c7",
+      "clipSha256": "b22308b897964db9fba3065bdb3c500b78ad95aad6f134d6c80944c5c97b0add",
       "samples": 67,
       "duration": 2.2,
       "windows": [
@@ -317,7 +317,7 @@
       "kick": false,
       "qte": [],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BicycleLight01.x",
-      "clipSha256": "f4188ea76c080867645903f239660b6dc3c53d2c0dd12558acb763e403a14577",
+      "clipSha256": "33b7e2189817ea3294f63d29e9dcf985e597f7d4f9498a671951b1b6be6f13cf",
       "samples": 74,
       "duration": 2.433333333333333,
       "windows": [
@@ -347,7 +347,7 @@
       "kick": false,
       "qte": [],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BicycleLight02.x",
-      "clipSha256": "8143f3b35f5daa295d3b4d9b2d8d9ed064f58b492d763a26515efeae594f3e9c",
+      "clipSha256": "84a11568349d187f968a91115f80866d277c17cc6716825d4a76ee6a697d57c7",
       "samples": 61,
       "duration": 2.0,
       "windows": [
@@ -377,7 +377,7 @@
       "kick": false,
       "qte": [],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_BicycleLight03.x",
-      "clipSha256": "0c69b801fa15e8594aad6651c2cec7dd04e504fb611bb9223dd5a4a5a6a6d944",
+      "clipSha256": "743c85d6bbb2de5f55f557b8718ba944ab8d3ae60c89646b748708f045817cc6",
       "samples": 75,
       "duration": 2.466666666666667,
       "windows": [

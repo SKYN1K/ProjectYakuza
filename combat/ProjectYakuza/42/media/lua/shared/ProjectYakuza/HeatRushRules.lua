@@ -211,7 +211,7 @@ function R.failurePose(job,age)
     local recovery=job.move and job.move.qteFailure
     local motion=assert(recovery and recovery.motionId and ProjectYakuza.PairedMotions[recovery.motionId],"paired failure motion is not registered")
     local af,ar=R.sample(motion.actor,0)
-    local result={p=job.p,z=job.z,x=x-job.fx*af-job.fy*ar,y=y-job.fy*af+job.fx*ar,fx=job.fx,fy=job.fy,motion=motion,duration=motion.duration}
+    local result={p=job.p,z=job.z,x=x-job.fx*af-job.fy*ar,y=y-job.fy*af+job.fx*ar,fx=job.fx,fy=job.fy,motion=motion,duration=motion.duration,move=recovery,remote=job.remote}
     local tx,ty=R.point(result,result.motion.victim,0);result.victimCorrection={x=zx-tx,y=zy-ty}
     return result
 end

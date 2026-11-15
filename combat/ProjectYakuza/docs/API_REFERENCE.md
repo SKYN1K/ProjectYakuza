@@ -56,7 +56,7 @@ Built-in kinds: finisher, grab, grabHeat, groundHeat, parry, block, quickstep, q
 | --- | --- |
 | getStyle(id)/listStyles() | Definition or nil / fresh menu descriptors |
 | getPlayerStyle(player) | Selected registered style; default DoD |
-| selectStyle(player,id) | ok,reason; selection only; busy/unknown rejected; none disables |
+| selectStyle(player,id,feedback) | ok,reason; selection only; busy/unknown rejected; none disables; optional false feedback suppresses selection audio while retaining lifecycle events |
 | equipStyle(player,id) | Client helper: select, provision token, optional entry |
 | isEquipped/isBusy(player) | Recognized token/style (MP acknowledged) / combo or action ownership |
 | StyleSlots.get/id/assign | Persisted left/right assignments; see selector guide |
@@ -87,7 +87,7 @@ Failures include unknown_action, style_not_equipped, busy, not_implemented, unkn
 
 | Event | Arguments |
 | --- | --- |
-| styleRegistered / styleChanged / styleSlotChanged | (style)/(player,id)/(player,side,id) |
+| styleRegistered / styleChanged / styleSlotChanged | (style)/(player,id,feedback)/(player,side,id) |
 | lightAttackStarted / lightAttackFinished | (player,style,step,move)/(player,step) |
 | finisherStarted / finisherFinished | (player,style,step,move)/(player,step,move) |
 | groundAttackStarted / groundAttackFinished | (player,style,move)/(player,move) |
@@ -228,7 +228,7 @@ Shared `HeatActions.begin(player,ownerKey,definition)` and `HeatActions.finish(p
 
 ## QTE failure policy (0.73.0)
 
-QTE definitions support per-prompt timing/bindings plus `failureLimit`, `failureMode` and `feedback`. Sessions expose total/consecutive misses, failure identity and accepted input times. `qteFailed` and callback `failure` select author-supplied failure endings. Client `QTEFeedback` maps existing style sounds to success/miss/failure. DoD's paired backend supports `qteFailure` and deferred final health settlement while preserving native victim playback. See [QTE API](QTE.md) for bounds, sound setup, author examples and MP responsibilities.
+QTE definitions support per-prompt timing/bindings plus `failureLimit`, `failureMode` and `feedback`. Sessions expose total/consecutive misses, failure identity and accepted input times. `qteFailed` and callback `failure` select author-supplied failure endings. Client `QTEFeedback` plays original local Y6 prompt/press/failure cues; optional `prompt`, `success`, `miss` and `failure` keys override individual cues with style sounds. DoD's paired backend supports `qteFailure` and deferred final health settlement while preserving native victim playback. See [QTE API](QTE.md) for bounds, sound setup, author examples and MP responsibilities.
 
 Attack effects (0.87.0) resolve the actually playing native clip within its committed `actionAnimation` family. Catalogue windows select independent arm/leg tracks per contact, including linked finishers and paired endings. `AttackEffects.finish(player)` retires the live coat into a short world-space wake; `clear(player)` and `clearAll()` also remove retired wakes. MP visual deduplication uses action, swing and clip identity. See ATTACK_EFFECTS.md for the numeric-track/provider contract and bounded budgets.
 

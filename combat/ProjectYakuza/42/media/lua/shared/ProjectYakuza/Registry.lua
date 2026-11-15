@@ -98,7 +98,7 @@ function Q.valid(def,durationMs)
         if type(def.feedback)~="table"then return false,"invalid QTE feedback"end
         for key,value in pairs(def.feedback)do
             if key=="gain"then if not finite(value)or value<0 or value>1 then return false,"invalid QTE feedback gain"end
-            elseif not ({success=true,miss=true,failure=true})[key]or type(value)~="string"or #value>120 or not value:match("^[%w_.-]+$")then return false,"invalid QTE feedback cue"end
+            elseif not ({prompt=true,success=true,miss=true,failure=true})[key]or type(value)~="string"or #value>120 or not value:match("^[%w_.-]+$")then return false,"invalid QTE feedback cue"end
         end
     end
     if def.allowOverlap~=nil and type(def.allowOverlap)~="boolean"then return false,"invalid QTE overlap policy"end
@@ -293,7 +293,7 @@ end
 local ProjectYakuza = ProjectYakuza
 ProjectYakuza.FEATURES={grab=true}
 ProjectYakuza.TigerDropRules={windowMs=160,cooldownMs=20000}
-ProjectYakuza.VERSION = "0.111.0"
+ProjectYakuza.VERSION = "0.112.0"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -660,12 +660,12 @@ function ProjectYakuza.isEquipped(player)
     end
     return equipped
 end
-function ProjectYakuza.selectStyle(player, id)
+function ProjectYakuza.selectStyle(player, id, feedback)
     if id ~= "none" and not ProjectYakuza.styles[id] then return false, "unknown_style" end
     if ProjectYakuza.isBusy and ProjectYakuza.isBusy(player) then return false, "busy" end
     player:getModData().ProjectYakuzaStyle = id
     if ProjectYakuza.resetPlayer then ProjectYakuza.resetPlayer(player, "style_changed") end
-    ProjectYakuza.emit("styleChanged", player, id)
+    ProjectYakuza.emit("styleChanged", player, id, feedback~=false)
     return true
 end
 function ProjectYakuza.registerActionHandler(kind, handler)

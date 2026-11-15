@@ -18,7 +18,7 @@ require "ProjectYakuza/EncounterIntroY6"
 local ProjectYakuza = ProjectYakuza
 function ProjectYakuza.equipStyle(player, styleId,playEntry)
     local hadStyle=ProjectYakuza.isEquipped(player)
-    local ok, reason = ProjectYakuza.selectStyle(player, styleId)
+    local ok, reason = ProjectYakuza.selectStyle(player, styleId,playEntry~=false)
     if not ok then player:Say("Cannot switch style: " .. tostring(reason)); return end
 
     if isClient() then ProjectYakuza.Network.equip(player,styleId,playEntry~=false,hadStyle);return end

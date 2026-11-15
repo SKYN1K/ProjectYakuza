@@ -78,4 +78,43 @@ module ProjectYakuza
             volume = 0.5,
         }
     }
+    sound ProjectYakuza_QTEAppear
+    {
+        category = ProjectYakuza_Interface,
+        is3D = false,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuza/QTEAppear.wav,
+            distanceMin = 0,
+            distanceMax = 0,
+            volume = 0.5,
+        }
+    }
+    sound ProjectYakuza_QTEPress
+    {
+        category = ProjectYakuza_Interface,
+        is3D = false,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuza/QTEPress.wav,
+            distanceMin = 0,
+            distanceMax = 0,
+            volume = 0.5,
+        }
+    }
+    sound ProjectYakuza_QTEFail
+    {
+        category = ProjectYakuza_Interface,
+        is3D = false,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuza/QTEFail.wav,
+            distanceMin = 0,
+            distanceMax = 0,
+            volume = 0.5,
+        }
+    }
 }

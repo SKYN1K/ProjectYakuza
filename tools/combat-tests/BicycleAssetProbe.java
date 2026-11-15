@@ -7,7 +7,7 @@ public class BicycleAssetProbe {
   Path media=Path.of(args[0]);Jassimp.setLibraryLoader(new JassimpLibraryLoader(){public void loadLibrary(){System.load("F:/SteamLibrary/steamapps/common/ProjectZomboid/jassimp64.dll");}});
   var scene=Jassimp.importFile(media.resolve("models_X/Static/ProjectYakuza_Bicycle.x").toString(),EnumSet.of(AiPostProcessSteps.MAKE_LEFT_HANDED,AiPostProcessSteps.REMOVE_REDUNDANT_MATERIALS));
   if(scene.getNumMeshes()!=1)throw new AssertionError("single supplied bicycle mesh");var mesh=scene.getMeshes().get(0);
-  if(mesh.getNumFaces()!=250||mesh.getNumVertices()<397||!mesh.hasNormals()||!mesh.hasTexCoords(0))throw new AssertionError("source geometry and UVs");
+  if(mesh.getNumFaces()!=496||mesh.getNumVertices()<570||!mesh.hasNormals()||!mesh.hasTexCoords(0))throw new AssertionError("source geometry and UVs");
   var pt=Class.forName("zombie.core.skinnedmodel.model.jassimp.ProcessedAiSceneParams");Object params=pt.getMethod("create").invoke(null);pt.getField("scene").set(params,scene);Class mode=Class.forName("zombie.core.skinnedmodel.model.jassimp.JAssImpImporter$LoadMode");pt.getField("mode").set(params,Enum.valueOf(mode,"StaticMesh"));if(Class.forName("zombie.core.skinnedmodel.model.jassimp.ProcessedAiScene").getMethod("process",pt).invoke(null,params)==null)throw new AssertionError("native static processing");
   var it=Class.forName("zombie.core.textures.ImageData");Object image;try(var stream=Files.newInputStream(media.resolve("textures/ProjectYakuza_Bicycle.png"))){image=it.getConstructor(InputStream.class,boolean.class).newInstance(stream,false);}
   if((Integer)it.getMethod("getWidth").invoke(image)!=128||(Integer)it.getMethod("getHeight").invoke(image)!=128||it.getMethod("getData").invoke(image)==null)throw new AssertionError("native reduced texture");it.getMethod("dispose").invoke(image);
@@ -16,7 +16,7 @@ public class BicycleAssetProbe {
   var mt=Class.forName("zombie.scripting.objects.ModelScript");Object model=mt.getConstructor().newInstance();String block=text.substring(text.indexOf("model ProjectYakuza_Bicycle"),text.lastIndexOf('}'));mt.getMethod("Load",String.class,String.class).invoke(model,"ProjectYakuza_Bicycle",block);
   if(!mt.getMethod("getMeshName").invoke(model).equals("Static/ProjectYakuza_Bicycle")||!mt.getField("isStatic").getBoolean(model))throw new AssertionError("native model contract");
   if(!Files.readString(media.resolve("scripts/ProjectYakuza_Models.txt")).contains("scale = 0.5,"))throw new AssertionError("crate scale");
-  System.out.println("PASS native B42 bicycle: 250 original triangles, normals/UVs, static importer, 128x128 ImageData and two-handed item/model scripts");
+  System.out.println("PASS native B42 bicycle: 496 original Y6 LOD2 triangles, normals/UVs, static importer, 128x128 ImageData and two-handed item/model scripts");
  }
  static String value(Object block,String key)throws Exception{Object v=block.getClass().getMethod("getValue",String.class).invoke(block,key);return ((String)v.getClass().getMethod("getValue").invoke(v)).trim();}
 }

@@ -185,6 +185,7 @@ selector.openSetup(p);before=#uiSounds;selector.clear();check(#uiSounds==before,
 clock=clock+1000;uiSounds={};ProjectYakuza.selectStyle(p,'dragon_of_dojima');check(#uiSounds==1 and uiSounds[1]=='ProjectYakuza_StyleSwitch','committed style selection uses Kiwami switch waveform')
 ProjectYakuza.selectStyle(p,'dragon_of_dojima');check(#uiSounds==1,'duplicate style event is suppressed')
 clock=clock+151;ProjectYakuza.selectStyle(p,'dragon_of_dojima');check(#uiSounds==2,'later explicit style reselection can play again')
+clock=clock+1000;ProjectYakuza.selectStyle(p,'dragon_of_dojima',false);check(#uiSounds==2,'equipment-only reselection suppresses style audio after debounce expires')
 local localPlayer=p.isLocalPlayer;p.isLocalPlayer=function()return false end;clock=clock+1000;ProjectYakuza.selectStyle(p,'dragon_of_dojima');check(#uiSounds==2,'remote style selection never plays local UI audio');p.isLocalPlayer=localPlayer
 p.dead=true;check(not A.play(p,'open')and #uiSounds==2,'dead-player UI audio is ignored');p.dead=false
 ProjectYakuza.selectStyle(p,'none');check(#uiSounds==2 and not A.play(p,'missing'),'unequip and unknown cues cannot leak style/audio events')

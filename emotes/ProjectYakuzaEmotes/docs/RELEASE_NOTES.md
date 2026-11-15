@@ -1,6 +1,5 @@
-# Project Yakuza Emotes 0.2.3
+# Project Yakuza Emotes 0.2.4
 
-- Fixed custom emotes silently refusing to play near zombies. PZ’s isCurrentlyBusy flag includes one very close zombie or three chasing zombies, which blocked both this addon and CVF while vanilla emotes remained available.
-- Playback now checks actual native actions, reading, Lua queues and active Project Yakuza combat actions. Existing movement, aiming, vehicle, sleep, death, equipment and replay guards remain in place.
-- The addon applies the same correction to optional CVF emotes after providers load. CVF framework and separate voice-pack files remain unchanged; vanilla emote dispatch remains delegated.
-- All animation, selector, model, texture and audio bytes remain unchanged. Native B42 reproduction, Kahlua playback/provider-order checks, compilation, isolation and zero-comment gates pass offline. Installed locally without launching Project Zomboid; live gameplay and multiplayer remain untested.
+- Extended Lau Ka Long's spear ground-strike by five more seconds using the original cut-008 continuation, without looping or slowing the motion. Playback is now 304 source samples over 10.1 seconds at 30 fps.
+- The emote now moves the character along the original center-inclusive source path through native deferred movement. The cut boundary retains continuous position. Original body/prop timing, shaft calibration and spear floor clearance are retained for all 22 native spear meshes; modded spear-class weapons keep the crafted-spear fallback.
+- Fresh archive, native Human importer, per-sample source/shaft/sole checks and all 22 native movement tracks are validated offline, including pause, stopping, completion and zero deferred rotation. Existing unrelated emote media are byte-identical to 0.2.3. Native and optional CVF wheel behavior remains independent of the combat mod. Installed bytes and separate release ZIP are verified. Project Zomboid was not launched; live playback and multiplayer still need checking.

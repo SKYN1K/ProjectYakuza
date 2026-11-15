@@ -339,3 +339,5 @@
 !/tools/combat-tests/bicycle_grip.py
 !/tools/combat-tests/validate_bicycle_k2_assets.py
 !/tools/combat-tests/BicycleK2Probe.java
+
+!tools/combat-tests/extract_y6_bicycle_model.py

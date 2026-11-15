@@ -19,17 +19,19 @@ for path in (media/'lua').rglob('*.lua'):
 info=(addon/'42/mod.info').read_text(encoding='utf-8');version=re.search(r'^version=(\d+\.\d+\.\d+)$',info,re.M).group(1);assert 'id=ProjectYakuzaEmotes'in info and version and not re.search(r'^require\s*=',info,re.M)
 assert 'id=ProjectYakuza\n'in(main/'42/mod.info').read_text()and re.search(r'^version=\d+\.\d+\.\d+$',(main/'42/mod.info').read_text(),re.M)
 assert not list(media.rglob('*.png'))and not list(media.rglob('*.ogg'))and not list(media.rglob('*.wav'))and not(media/'models_X').exists()
-with zipfile.ZipFile(root/'dist/ProjectYakuza-B42-v0.106.0.zip')as archive:
+with zipfile.ZipFile(root/'dist/ProjectYakuza-B42-v0.111.0.zip')as archive:
     retained=0
     for name in archive.namelist():
         if name.endswith('/')or '/media/'not in name:continue
         path=main/name.removeprefix('ProjectYakuza/')
         if path.suffix not in ['.x','.xml','.png','.wav','.ogg']or not path.exists():continue
+        intended='Bicycle'in path.name and path.suffix in ['.x','.xml','.png']or'HeatRush'in path.name and path.suffix=='.xml'
+        if intended:continue
         assert path.read_bytes()==archive.read(name),name;retained+=1
-with zipfile.ZipFile(root/'dist/ProjectYakuzaEmotes-B42-v0.1.0.zip')as archive:
+with zipfile.ZipFile(root/'dist/ProjectYakuzaEmotes-B42-v0.2.3.zip')as archive:
     checked=0
     for name in archive.namelist():
-        if name.endswith('/')or Path(name).suffix not in ['.x','.xml']or name=='ProjectYakuzaEmotes/42/media/anims_X/Bob/ProjectYakuza_MajimaBatPoint.x':continue
+        if name.endswith('/')or Path(name).suffix not in ['.x','.xml']or Path(name).stem in {o['clip']for o in lau['outputs']}:continue
         path=addon/name.removeprefix('ProjectYakuzaEmotes/');assert path.read_bytes()==archive.read(name),name;checked+=1
 assert ('ProjectYakuzaEmotes.VERSION="'+version+'"')in(media/'lua/shared/ProjectYakuzaEmotes/EmoteSpears.lua').read_text(encoding='utf-8')
-print('PASS standalone isolation: 25 clips/selectors;',checked,'existing emote media byte-identical;',retained,'combat media unchanged; separate IDs, standalone require graph and no new textures/models/audio')
+print('PASS standalone isolation: 25 clips/selectors;',checked,'unrelated emote media byte-identical;',retained,'unrelated combat media unchanged; separate IDs, standalone require graph and no new textures/models/audio')

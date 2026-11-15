@@ -17,7 +17,7 @@ ProjectYakuza.SoundSettings={
 ProjectYakuza.Bindings.configure(options)
 local impacts={punchImpact=true,kickImpact=true,heatImpact=true,finisher=true,doubleFinisher=true,throwImpact=true,guardHit=true,guardBreak=true}
 function options:apply()
-    local musicNames,hitNames={},{}
+    local musicNames,hitNames={},{ProjectYakuza_QTEAppear=true,ProjectYakuza_QTEPress=true,ProjectYakuza_QTEFail=true}
     for _,style in pairs(ProjectYakuza.styles) do
         if type(style.music)=="table" then for _,track in ipairs(style.music) do musicNames[track.sound]=true end end
         if type(style.sounds)=="table" then for _,name in pairs(style.sounds) do if type(name)=="string" then hitNames[name]=true end end end

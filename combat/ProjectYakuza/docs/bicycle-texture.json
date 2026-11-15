@@ -1,9 +1,9 @@
 {
-  "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\bicycle-heat-097\\models\\s_bsom_bicycle_blue_d.dds",
-  "sourceSha256": "1ad3db1c953e97507c2705809b3b5bb4ac84c0a48dffe48484e463c34de00fe1",
+  "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\extracted\\bicycle-model-y6-0112\\r_oj_bicy_b00_tt_d.dds",
+  "sourceSha256": "a74647cdbf1eaed06ed069fbf9c6fa4c1e02fcdb7e888f2c958be1048d66a630",
   "originalSize": [
-    256,
-    256
+    512,
+    512
   ],
   "output": "42/media/textures/ProjectYakuza_Bicycle.png",
   "size": [
@@ -11,6 +11,6 @@
     128
   ],
   "filter": "Pillow NEAREST; original supplied texels only, no synthesized painting or upscaling",
-  "rgbaSha256": "83677fdd1cf7de78a4ef27ef3ded5429a3a929d653d66d22d9f8db5ec9f98826",
-  "sha256": "e34e2198a4032198e14025f3a3298607ba2366530a98d67ffa80431fe79280bc"
+  "rgbaSha256": "2c32d90a8010bbe568d72a07c009d10edd1f15322721a505ada1157e31af9673",
+  "sha256": "f4eab62af71bbb79ec5b41906c8f21ab2ac27e841578610389b2dc72c4fa400c"
 }

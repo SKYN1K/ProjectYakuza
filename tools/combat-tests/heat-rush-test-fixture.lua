@@ -92,8 +92,8 @@ function z:isAttacking()return false end;function z:getIgnoreMovement()return se
 function z:isDeferredMovementEnabled()return self.deferred end;function z:setDeferredMovementEnabled(v)self.deferred=v end
 function z:getTarget()return self.target end;function z:setTarget(v)self.target=v end
 function z:GetVariable(k)local v=self.vars[k];return type(v)=="boolean"and tostring(v)or v or ""end
-function z:setVariable(k,v)self.vars[k]=v end;function z:setHitReaction(v)self.reaction=v end;function z:getHitReaction()return self.reaction or ''end
-function z:clearVariable(k)self.vars[k]=nil end
+function z:setVariable(k,v)self.vars[k]=v end
+function z:clearVariable(k)self.vars[k]=nil end;function z:setHitReaction(v)self.reaction=v end;function z:getHitReaction()return self.reaction or ''end
 function z:setAttackOutcome(v)self.outcome=v end
 function z:reportEvent(v)self.report=v end;function z:setTargetAndCurrentDirection(x,y)self.facingX=x;self.facingY=y end
 function z:Hit(item,who,amount)check(item==token and who==p,'paired source contact uses native item/actor');self.hits=self.hits+1;self.total=self.total+amount;self.health=self.health-amount end
@@ -118,6 +118,16 @@ Q.update(feedbackSession,1000,function(b)return feedbackHeld[b]end);Q.update(fee
 check(#heard==3 and heard[1].cue=='good'and heard[2].cue=='miss'and heard[3].cue=='fail'and heard[1].gain==.3,'framework plays distinct configured success/miss/failure sounds once at the selected gain')
 PY.Feedback=savedFeedback
 
+do
+ local manager=getSoundManager;local played={};getSoundManager=function()return {playUISound=function(_,cue)played[#played+1]=cue end}end
+ local d=def(2);d.failureLimit=1;local buttons={};local context={player=p,action={qte=d}};local q=Q.create(d,function(k)return buttons[k]end,context)
+ Q.update(q,250,function(k)return buttons[k]end);Q.update(q,300,function(k)return buttons[k]end);check(#played==1 and played[1]=='ProjectYakuza_QTEAppear','prompt appears once with original local UI cue')
+ buttons.finisher=true;Q.update(q,400,function(k)return buttons[k]end);Q.update(q,450,function(k)return buttons[k]end);check(#played==2 and played[2]=='ProjectYakuza_QTEPress','fresh QTE press sounds once while held input stays silent')
+ buttons.finisher=false;Q.update(q,500,function(k)return buttons[k]end);Q.update(q,750,function(k)return buttons[k]end);Q.update(q,1000,function(k)return buttons[k]end);Q.update(q,1200,function(k)return buttons[k]end)
+ check(#played==4 and played[3]=='ProjectYakuza_QTEAppear'and played[4]=='ProjectYakuza_QTEFail','timeout sounds once without duplicating the final miss/failure')
+ local localPlayer=p.isLocalPlayer;p.isLocalPlayer=function()return false end;PY.QTEFeedback.play(context,'prompt');check(#played==4,'remote QTEs cannot emit local UI audio');p.isLocalPlayer=localPlayer;getSoundManager=manager
+ check(style.actions.heatAction.syncPaired and style.actions.heatAction.qteFailure.syncPaired,'both extreme QTE stages opt into shared victim clocks')
+end
 for i,binding in ipairs({'light','finisher','grab','light','finisher','grab'})do check(style.actions.heatAction.qte.prompts[i].binding==binding,'requested six-role QTE order')end
 check(#style.actions.heatAction.contacts==13 and R.duration==326/30,'retail source duration and finishing contact')
 check(R.amount(style.actions.heatAction,13,token,{qte={[1]=true,[6]=true}})==.75,'missed QTEs reduce final payoff without applying early damage')
@@ -328,6 +338,7 @@ function victim:isDeferredMovementEnabled()return self.deferred end;function vic
 function victim:isBlockMovement()return self.blocked end;function victim:setBlockMovement(v)self.blocked=v end
 function victim:isAuthorizeMeleeAction()return self.authorize end;function victim:setAuthorizeMeleeAction(v)self.authorize=v end
 function victim:GetVariable(k)local v=self.vars[k];return type(v)=='boolean'and tostring(v)or v or''end;function victim:setVariable(k,v)self.vars[k]=v end
+function victim:clearVariable(k)self.vars[k]=nil end
 function victim:getHitReaction()return self.reaction or''end;function victim:setHitReaction(v)self.reaction=v end
 function victim:reportEvent(v)self.event=v end;function victim:setTargetAndCurrentDirection()end
 function victim:isUseless()error('player target must not call zombie AI APIs')end;function victim:getTarget()error('player target must not call zombie AI APIs')end
@@ -870,6 +881,7 @@ do
  check(actor.vars.ProjectYakuzaHeatActorPhase==.625 and target.vars.ProjectYakuzaHeatVictimPhase==.625,'victim selector restart cannot rewind the pair')
  H.clearPhase(job)
  check(actor.vars.ProjectYakuzaHeatActorPhase==nil and target.vars.ProjectYakuzaHeatVictimPhase==nil,'completion clears both paired clocks')
+ local paths=PY.PairedMotions.dod_rush_ending;local endJob={p=actor,z=target,move=style.actions.heatAction,motion=PY.HeatRushPaths,fx=1,fy=0,x=0,y=0,remote=true};local recovery=R.failurePose(endJob,2);H.syncPhase(recovery,.5);check(math.abs(target.vars.ProjectYakuzaHeatVictimPhase-.5/style.actions.heatAction.qteFailure.duration)<.000001 and actor.vars.ProjectYakuzaHeatActorPhase==target.vars.ProjectYakuzaHeatVictimPhase,'failure recovery retains move duration and remote clock ownership');H.clearPhase(recovery)
  job.move={duration=8};actor.vars.ProjectYakuzaHeatActorPhase=.2;target.vars.ProjectYakuzaHeatVictimPhase=.3
  H.syncPhase(job,6);H.clearPhase(job)
  check(actor.vars.ProjectYakuzaHeatActorPhase==.2 and target.vars.ProjectYakuzaHeatVictimPhase==.3,'unrelated scenes never modify paired clock slots')

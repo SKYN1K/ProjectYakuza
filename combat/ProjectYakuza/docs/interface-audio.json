@@ -173,8 +173,92 @@
       "volume": 0.5,
       "distanceMin": 0,
       "distanceMax": 0
+    },
+    {
+      "key": "QTEAppear",
+      "sound": "ProjectYakuza_QTEAppear",
+      "bank": {
+        "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 6 - The Song of Life\\data\\sound.par",
+        "name": "console.acb",
+        "offset": 26566656,
+        "size": 1248768,
+        "plain": 1248768,
+        "flags": 0,
+        "packedSha256": "37ac964fc0d5a94ef5a2b1d27cc96d160f6a4b24e01dfccf8d5293e44968ee13",
+        "sha256": "37ac964fc0d5a94ef5a2b1d27cc96d160f6a4b24e01dfccf8d5293e44968ee13"
+      },
+      "cueId": 15,
+      "cue": "button_appear",
+      "streamIndex": 4,
+      "sourceAliases": [
+        "button_appear"
+      ],
+      "sampleRate": 32000,
+      "channels": 2,
+      "samples": 50388,
+      "output": "42/media/sound/ProjectYakuza/QTEAppear.wav",
+      "sha256": "e5f378506dbec854cb6260fab50d013537debfc4b4d2f1edb1a4fcf0f2493515",
+      "volume": 0.5,
+      "distanceMin": 0,
+      "distanceMax": 0
+    },
+    {
+      "key": "QTEPress",
+      "sound": "ProjectYakuza_QTEPress",
+      "bank": {
+        "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 6 - The Song of Life\\data\\sound.par",
+        "name": "console.acb",
+        "offset": 26566656,
+        "size": 1248768,
+        "plain": 1248768,
+        "flags": 0,
+        "packedSha256": "37ac964fc0d5a94ef5a2b1d27cc96d160f6a4b24e01dfccf8d5293e44968ee13",
+        "sha256": "37ac964fc0d5a94ef5a2b1d27cc96d160f6a4b24e01dfccf8d5293e44968ee13"
+      },
+      "cueId": 17,
+      "cue": "button_suc",
+      "streamIndex": 6,
+      "sourceAliases": [
+        "button_suc"
+      ],
+      "sampleRate": 32000,
+      "channels": 2,
+      "samples": 41713,
+      "output": "42/media/sound/ProjectYakuza/QTEPress.wav",
+      "sha256": "0b76b5935461c7778d2430e06fb70d27655a634351593cbf00075e8c77954063",
+      "volume": 0.5,
+      "distanceMin": 0,
+      "distanceMax": 0
+    },
+    {
+      "key": "QTEFail",
+      "sound": "ProjectYakuza_QTEFail",
+      "bank": {
+        "archive": "F:\\SteamLibrary\\steamapps\\common\\Yakuza 6 - The Song of Life\\data\\sound.par",
+        "name": "console.acb",
+        "offset": 26566656,
+        "size": 1248768,
+        "plain": 1248768,
+        "flags": 0,
+        "packedSha256": "37ac964fc0d5a94ef5a2b1d27cc96d160f6a4b24e01dfccf8d5293e44968ee13",
+        "sha256": "37ac964fc0d5a94ef5a2b1d27cc96d160f6a4b24e01dfccf8d5293e44968ee13"
+      },
+      "cueId": 16,
+      "cue": "button_miss",
+      "streamIndex": 5,
+      "sourceAliases": [
+        "button_miss"
+      ],
+      "sampleRate": 24000,
+      "channels": 2,
+      "samples": 30257,
+      "output": "42/media/sound/ProjectYakuza/QTEFail.wav",
+      "sha256": "081a08e3d2f75f198cc6aae9f3616ec33025168f3ca83c68ce0aa84efc594a27",
+      "volume": 0.5,
+      "distanceMin": 0,
+      "distanceMax": 0
     }
   ],
   "script": "42/media/scripts/ProjectYakuza_Interface.txt",
-  "scriptSha256": "e4d2428fbaa2b9f539638c3eb14a3e43d1e9a525a0a85f5f2640cf9c9f4d30bf"
+  "scriptSha256": "5f1751e5b4e812e6bf12d11718a7e5244f7477b52972243f234b9a0a70cfbfb8"
 }

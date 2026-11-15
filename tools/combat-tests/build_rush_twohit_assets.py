@@ -43,7 +43,7 @@ for index,(first,last)in enumerate(pairs,1):
  for j,frame in enumerate(sourceHits):contacts.append({'atMs':(bounds[index-1]+frame-(first-1))/30*1000,'damageMultiplier':0,'cue':'punchImpact'if j==0 else'heatImpact','strong':False,'charged':j==1,**({'voice':'CombatLightAttack'}if j==0 else{})})
  prompts.append({'atMs':bounds[index]/30*1000,'windowMs':1000,'binding':['light','finisher','grab'][(index-1)%3],'damageMultiplier':.625})
 contacts.append({'atMs':245/30*1000,'sumQTE':True,'cue':'kickImpact','strong':True,'charged':True,'layers':['heavyImpact','heatImpact'],'voice':'CombatHeavyAttack'})
-action={'enabled':True,'animation':'ProjectYakuza_DD_HeatRush','targetAnimation':'ProjectYakuza_DD_HeatRushVictim','nodeValue':'dd_heat_rush','requiresTarget':True,'extremeHeat':True,'heatRush':True,'duration':326/30,'hitResponse':False,'noKnockback':True,'qteStages':True,'qteFailure':{'animation':'ProjectYakuza_DD_HeatRushFail','targetAnimation':'ProjectYakuza_DD_HeatRushFailVictim','nodeValue':'dd_heat_rush_fail','duration':106/30,'paired':True,'motionId':'dod_rush_ending','contactMs':25/30*1000},'qte':{'failureLimit':1,'failureMode':'consecutive','feedback':{'success':'heatGain','miss':'guardHit','failure':'heatOff','gain':.35},'prompts':prompts},'contacts':contacts}
+action={'enabled':True,'animation':'ProjectYakuza_DD_HeatRush','targetAnimation':'ProjectYakuza_DD_HeatRushVictim','nodeValue':'dd_heat_rush','requiresTarget':True,'extremeHeat':True,'heatRush':True,'syncPaired':True,'duration':326/30,'hitResponse':False,'noKnockback':True,'qteStages':True,'qteFailure':{'syncPaired':True,'animation':'ProjectYakuza_DD_HeatRushFail','targetAnimation':'ProjectYakuza_DD_HeatRushFailVictim','nodeValue':'dd_heat_rush_fail','duration':106/30,'paired':True,'motionId':'dod_rush_ending','contactMs':25/30*1000},'qte':{'failureLimit':1,'failureMode':'consecutive','feedback':{'gain':.35},'prompts':prompts},'contacts':contacts}
 (media/'lua/shared/ProjectYakuza/RushMove.lua').write_text('require "ProjectYakuza/Registry"\nrequire "ProjectYakuza/RushEndingPaths"\nProjectYakuza.RushMove='+lua(action)+'\n')
 style=media/'lua/shared/ProjectYakuza/Styles/DragonOfDojima.lua';s=style.read_text();lines=s.splitlines();lines=[('        heatAction=ProjectYakuza.RushMove,'if line.strip().startswith('heatAction={enabled=true,animation="ProjectYakuza_DD_HeatRush"')else line)for line in lines];s='\n'.join(lines)+'\n';s=s.replace('require "ProjectYakuza/GrabMoves"','require "ProjectYakuza/GrabMoves"\nrequire "ProjectYakuza/RushMove"');style.write_text(s)
 for group,stem in [('zombie/hitreaction','ProjectYakuza_DD_HeatRushVictim'),('zombie/hitreaction-hit','ProjectYakuza_DD_HeatRushVictim'),('zombie/idle','ProjectYakuza_DD_HeatRushVictim'),('player/actions','ProjectYakuza_PVP_HeatRushVictim'),('player/hitreactionpvp','ProjectYakuza_PVP_HeatRushVictim')]:
@@ -54,3 +54,15 @@ for group,stem in [('zombie/hitreaction','ProjectYakuza_DD_HeatRushVictim'),('zo
 report={'authorization':'User approved splitting and replaying original two-punch sections on 2026-11-05, and declined slowing/retiming original motion.','operation':'Copied original converted source poses at 30 fps. Three original two-hit sections are replayed twice. Every QTE spans one one-second section containing two source contacts. The original final kick is automatic on success or failure. No new poses, artwork, audio, AI or upscaling.','baseline':'ProjectYakuza-B42-v0.83.0.zip','clips':records,'pairs':pairs,'qteFrames':bounds[1:],'contactFrames':[round(c['atMs']*.03)for c in contacts],'paths':paths,'endingPaths':ending,'stagingCuts':cuts,'duration':326/30}
 (mod/'docs/rush-twohit-sections.json').write_text(json.dumps(report,indent=2)+'\n')
 print('PASS split/replayed original sections:',len(records),'clips,',len(mapping),'frames, 12 punch contacts, 6 one-second QTEs, automatic source kick')
+
+for path in (media/'AnimSets').rglob('*.xml'):
+    node=E.parse(path).getroot();clip=node.findtext('m_AnimName')or''
+    if clip not in ['ProjectYakuza_DD_HeatRush','ProjectYakuza_DD_HeatRushVictim','ProjectYakuza_DD_HeatRushFail','ProjectYakuza_DD_HeatRushFailVictim']:continue
+    target=node.find('m_TrackTimeToVariable')
+    if target is None:target=E.SubElement(node,'m_TrackTimeToVariable')
+    target.text='ProjectYakuzaHeatVictimPhase'if'Victim'in clip else'ProjectYakuzaHeatActorPhase'
+    for weight in node.findall('m_SubStateBoneWeights'):
+        target=weight.find('includeDescendants')
+        if target is None:target=E.SubElement(weight,'includeDescendants')
+        target.text='true'
+    E.indent(node,space='  ');E.ElementTree(node).write(path,encoding='utf-8',xml_declaration=True)

@@ -19,7 +19,7 @@ from y5_retarget import source_context,read_gmt
 from weapon_hold_geometry import source_pose
 from y5_source_assets import entry
 saved=sys.argv;sys.argv=['validate','--validate'];exec(compile((w/'build_bicycle_model.py').read_text(),str(w/'build_bicycle_model.py'),'exec'),{'__file__':str(w/'build_bicycle_model.py'),'__name__':'validate_model'});sys.argv=saved
-for record in attacks['archiveEntries']+json.loads((root/'extracted/bicycle-heat-097/models/index.json').read_text())+[json.loads((root/'extracted/bicycle-heat-097/bone-index.json').read_text())]:
+for record in attacks['archiveEntries']+json.loads((mod/'docs/bicycle-model-assets.json').read_text())['archiveEntries']+[json.loads((root/'extracted/bicycle-heat-097/bone-index.json').read_text())]:
     data,actual=entry(record['archive'],record['name']);assert actual==record
 for record in attacks['retargetProvenance']:assert sha(record['path'])==record['sha256']
 mirror=Matrix.Diagonal((1,1,-1,1));contracts=[];samples=0;worst=0;vectors=[]

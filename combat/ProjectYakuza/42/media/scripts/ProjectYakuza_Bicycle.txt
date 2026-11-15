@@ -2,7 +2,7 @@ module ProjectYakuza
 {
     item Bicycle
     {
-        DisplayName = Bicycle (Yakuza 5),
+        DisplayName = Bicycle (Yakuza 6),
         DisplayCategory = Weapon,
         ItemType = base:weapon,
         Weight = 7.0,
@@ -57,7 +57,7 @@ module Base
         scale = 0.44308598137428024,
         attachment world
         {
-            offset = 0.0005133002996444702 -0.8299474716186523 -0.3901141434907913,
+            offset = -0.0739847049117 -0.797463476658 -0.333114564419,
             rotate = 0.0 0.0 0.0,
         }
     }

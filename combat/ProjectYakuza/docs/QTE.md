@@ -58,7 +58,7 @@ The server observes the ordered boost-input snapshots, deduplicated by native sw
 
 Player victims reuse the existing converted victim clip through two scoped player state definitions. Native movement, attack authorization and action variables are saved and restored on every exit. Typed target IDs prevent player/zombie ID collisions. PvP must be enabled, both safety flags cannot protect the pair, protected players and non-PvP zones are rejected, and faction PvP settings apply. The server rechecks permissions during the sequence and aborts if they change. No animation motion or graphical/audio asset is created or changed. This path is offline-validated and still needs live multiplayer presentation/latency testing.
 
-Boost lights use the `boostStun` response and `noKnockback=true`; their prior damage multiplier remains 0.525. The shared stun lasts 250 ms, refreshes without overwriting saved flags, suppresses root movement and zombie AI, and restores native state on expiry. A paired action releases an existing stun before taking its own movement/AI lease.
+Boost lights use the `boostStun` response and `noKnockback=true`; their setup damage multiplier is 0.10. The shared stun lasts 250 ms, refreshes without overwriting saved flags, suppresses root movement and zombie AI, and restores native state on expiry. A paired action releases an existing stun before taking its own movement/AI lease.
 
 ## Paired contact mapping (0.72.0)
 
@@ -137,3 +137,5 @@ The session exposes `pressCounts[index]` and `lastPressAt[index]`. Each accepted
 The server checks the registered prompt window, ordered bounded tap counts, minimum interval and a bounded client source-clock timestamp. A bare single-press message cannot pass a mash stage. The owner sends taps, not a claimed success result.
 
 A final `sumQTE` contact may supply `baseDamageMultiplier` (0–10, default 0). Its multiplier is this base plus the earned prompt multipliers. This supports a source ending that still deals base damage after an early missed mash. The original Rush keeps its zero base. The built-in beer-crate action uses three one-second stages with two Heat Action presses each, base multiplier 1.5 and .75 per completed stage. All original body poses and section speeds are preserved.
+
+Built-in QTE prompts use the original Y6 console button_appear, button_suc and button_miss waveforms through local 2D UI playback. Prompt, accepted-press and failed-window events fire once. A final timeout does not also play a separate miss cue. The mod Sounds slider includes these cues. Optional feedback.prompt, feedback.success, feedback.miss and feedback.failure override individual events with style sound keys; unspecified events retain the built-in cues. Native paired phase tracking keeps the Extreme Heat victim and failure ending aligned through selector restarts and observer playback.

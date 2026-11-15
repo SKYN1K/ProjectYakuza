@@ -193,4 +193,9 @@
     <includeDescendants>false</includeDescendants>
     <weight>1.0</weight>
   </m_SubStateBoneWeights>
+  <m_DeferredBoneName>Translation_Data</m_DeferredBoneName>
+  <m_deferredBoneAxis>Y</m_deferredBoneAxis>
+  <m_useDeferredMovement>true</m_useDeferredMovement>
+  <m_useDeferedRotation>false</m_useDeferedRotation>
+  <m_deferredRotationScale>0.0</m_deferredRotationScale>
 </animNode>

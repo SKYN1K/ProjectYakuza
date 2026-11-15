@@ -10,7 +10,7 @@ def palm_offsets(body,pose):
     return result
 
 def grip_rail(model):
-    vertices=[Vector(p)for p in model['vertices']];triangles=[tuple(vertices[i]for i in face)for face in model['faces']];indices=[296,108,240,2];guides=[vertices[i]for i in indices];anchor=guides[0];samples=[]
+    vertices=[Vector(p)for p in model['vertices']];triangles=[tuple(vertices[i]for i in face)for face in model['faces']];indices=model['gripRailVertexIndices'];guides=[vertices[i]for i in indices];anchor=guides[0];samples=[]
     for a,b in zip(guides,guides[1:]):
         for i in range(129):
             point=a.lerp(b,i/128);point=min((closest_point_on_tri(point,*triangle)for triangle in triangles),key=lambda p:(p-point).length_squared);radius=(point-anchor).length

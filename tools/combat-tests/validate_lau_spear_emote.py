@@ -13,14 +13,15 @@ if '--inside-blender'not in sys.argv:
             record=segment['selection'][role];assert nested(data,record['resource']+'.gmt')==Path(record['path']).read_bytes()
         assert nested(data,'res.bin')==Path(segment['resources']).read_bytes()
     scene,_=entry(contract['archive'],'cmn.par');assert nested(scene,'cmn.bin')==Path(contract['scene']).read_bytes();rig,_=entry('F:/SteamLibrary/steamapps/common/Yakuza Kiwami/media/data/chara_common/bone.par','c_cm_bone.gmd');assert rig==Path(report['rig']).read_bytes()
-    result=subprocess.run(['F:/SteamLibrary/steamapps/common/Blender/blender.exe','-b','--factory-startup','-t','1','--python',str(Path(__file__).resolve()),'--','--inside-blender'],cwd=root,capture_output=True,text=True);print(result.stdout,flush=True);assert result.returncode==0 and'PASS original Lau'in result.stdout,result.stderr
+    result=subprocess.run(['F:/SteamLibrary/steamapps/common/Blender/blender.exe','-b','--factory-startup','-t','1','--python-exit-code','1','--python',str(Path(__file__).resolve()),'--','--inside-blender'],cwd=root,capture_output=True,text=True);print(result.stdout,flush=True);assert result.returncode==0 and'PASS original Lau'in result.stdout,result.stderr
     java='F:/SteamLibrary/steamapps/common/ProjectZomboid/jre64/bin/java.exe';prefix=[java,'-Xms16m','-Xmx256m','-XX:ActiveProcessorCount=2','--enable-native-access=ALL-UNNAMED','-cp','.;F:/SteamLibrary/steamapps/common/ProjectZomboid/*']
     subprocess.run(prefix+['PropAttachmentProbe',str(w/'lau-emote-props.tsv')],cwd=w,check=True)
+    movementFile=root/'tools/lau-native-path.csv';movementFile.write_text('\n'.join(str(x)+','+str(-z)for x,y,z in report['deferredPath'])+'\n')
     for output in report['outputs']:
-        for args in [['AnimationProbe',str(mod/output['output'])],['MajimaEmoteProbe','F:/SteamLibrary/steamapps/common/ProjectZomboid/media/models_X/Skinned/MaleBody.x',str(mod/output['output']),str(mod/output['selector']),'154',output['clip']]]:
+        for args in [['AnimationProbe',str(mod/output['output'])],['MajimaEmoteProbe','F:/SteamLibrary/steamapps/common/ProjectZomboid/media/models_X/Skinned/MaleBody.x',str(mod/output['output']),str(mod/output['selector']),'304',output['clip']],['StepUpMotionProbe','F:/SteamLibrary/steamapps/common/ProjectZomboid/media/models_X/Skinned/MaleBody.x',str(mod/output['output']),str(mod/output['selector']),str(movementFile),output['clip']]]:
             result=subprocess.run(prefix+args,cwd=w,capture_output=True,text=True);assert result.returncode==0,result.stdout+result.stderr
-        print('PASS native Human / 154 keys / 5.1 seconds / selector and MP state:',output['item'],flush=True)
-    print('PASS fresh original Kiwami cuts 007/008, seamless 75-frame extension and all 22 native spear imports')
+        print('PASS native Human / 304 keys / 10.1 seconds / selector and MP state:',output['item'],flush=True)
+    print('PASS fresh original Kiwami cuts 007/008, seamless 225-frame continuation and all 22 native spear imports')
     raise SystemExit(0)
 
 sys.path.insert(0,str(w))
@@ -30,7 +31,7 @@ from weapon_hold_geometry import source_pose,fit_arms
 from native_body_geometry import load_body,skin_part
 from extract_majima_bat_emote import read_scene,resource
 from extract_lau_spear_emote import native_profiles,mesh_vertices
-from build_lau_spear_emote import context_for
+from build_lau_spear_emote import context_for,source_root
 from yk.gmt_lib import read_gmt
 assert sha(report['rig'])==report['rigSha256']
 for row in report['provenance']+report['retargets']:assert sha(row['path'])==row['sha256']
@@ -39,8 +40,8 @@ for segment in selection['segments']:
     assert sha(segment['resources'])==segment['resourcesSha256']
     for role in ['actor','spear']:
         record=segment['selection'][role];assert record['node']in rows and record['motion']in rows and record['motion']['parent']==record['node']['offset']and resource(segment['resources'],record['motion']['guid'])==record['resource']and sha(record['path'])==record['sha256']
-assert [(s['cut'],s['firstFrame'],s['lastFrame'])for s in selection['segments']]==[('007',112,190),('008',1,75)]
-expected=[{'segment':0,'frame':i}for i in range(112,191)]+[{'segment':1,'frame':i}for i in range(1,76)];assert report['sourceSamples']==expected and report['frames']==154 and report['fps']==30 and report['duration']==5.1 and report['extensionSeconds']==2.5
+assert [(s['cut'],s['firstFrame'],s['lastFrame'])for s in selection['segments']]==[('007',112,190),('008',1,225)]
+expected=[{'segment':0,'frame':i}for i in range(112,191)]+[{'segment':1,'frame':i}for i in range(1,226)];assert report['sourceSamples']==expected and report['frames']==304 and report['fps']==30 and report['duration']==10.1 and report['extensionSeconds']==7.5 and report['addedSeconds']==5
 assert json.loads(json.dumps(native_profiles()))==selection['nativeProfiles'];profiles=selection['nativeProfiles']['items'];assert len(profiles)==len(report['outputs'])==22
 contexts=[context_for(True,i)for i in range(2)];raws=[read(r['path'])for r in report['retargets']];props=[read_gmt(s['selection']['spear']['path']).animation.bones['anm_root']for s in selection['segments']]
 for prop in props:prop.rotation.fill_channels();prop.location.fill_channels()
@@ -56,9 +57,10 @@ for profile,output in zip(profiles,report['outputs']):
     for variant in profile['variants']:assert sha(variant['mesh'])==variant['meshSha256']
     _,bones,animation,_=read(mod/output['output']);encoded=[];vertices=[Vector(v)for v in mesh_vertices(profile['mesh'])]
     for channels in animation.values():
-        for keys in channels.values():assert len(keys)==154 and all(t==i*160 and all(math.isfinite(v)for v in values)for i,(t,values)in enumerate(keys))
+        for keys in channels.values():assert len(keys)==304 and all(t==i*160 and all(math.isfinite(v)for v in values)for i,(t,values)in enumerate(keys))
     for i,sample in enumerate(expected):
-        local=locals_at(bones,animation,i*160);pose=world(bones,local);original=locals_at(raws[sample['segment']][1],raws[sample['segment']][2],sample['frame']*160);lift=output['armLift'][i];assert 0<=lift<.12;maxLift=max(maxLift,lift);changed={'Bip01','Bip01_Prop1','Bip01_Prop2'}|{'Bip01_'+side+'_'+bone for side in ['L','R']for bone in ['Clavicle','UpperArm','Forearm','Hand']}
+        delta=(source_root(contexts[sample['segment']],sample['frame'])+Vector(report['sourceStageOffsets'][sample['segment']])-source_root(contexts[0],112))*contexts[0]['scale'];movement=Vector((delta.x,0,-delta.z));assert (Vector(report['deferredPath'][i])-movement).length<.000002
+        local=locals_at(bones,animation,i*160);pose=world(bones,local);original=locals_at(raws[sample['segment']][1],raws[sample['segment']][2],sample['frame']*160);lift=output['armLift'][i];assert 0<=lift<.12;maxLift=max(maxLift,lift);assert (local['Translation_Data'].translation-original['Translation_Data'].translation-movement).length<.000002;changed={'Bip01','Bip01_Prop1','Bip01_Prop2','Translation_Data'}|{'Bip01_'+side+'_'+bone for side in ['L','R']for bone in ['Clavicle','UpperArm','Forearm','Hand']}
         for n in local:
             if n not in changed:assert max(abs(local[n][a][b]-original[n][a][b])for a in range(4)for b in range(4))<.00001
         target=base[i]['Bip01_R_Hand'].translation.copy();target.y=pose['Bip01_Spine1'].translation.y-base[i]['Bip01_Spine1'].translation.y+target.y+lift;assert(pose['Bip01_R_Hand'].translation-target).length<.00003
@@ -72,6 +74,6 @@ for profile,output in zip(profiles,report['outputs']):
         bottom=min((prop@v).y for v in vertices);assert bottom>=report['ground']['floor']-.00002,(profile['item'],i,bottom)
         if i==9:maximumContact=max(maximumContact,abs(bottom-report['ground']['floor']));assert abs(bottom-report['ground']['floor'])<.00002
         offset=pose['Bip01_R_Hand'].inverted()@prop;assert max(abs(offset[a][b]-output['nativeOffsets'][i][a][b])for a in range(4)for b in range(4))<.00002;encoded.append(','.join(str(v)for row in offset for v in row));tested+=1
-    leftOffset=','.join(str(v)for row in grip['offsets']['Bip01_Prop2']for v in row);rowsTSV.append('\t'.join([str(mod/output['output']),';'.join(encoded),leftOffset,'154']))
+    leftOffset=','.join(str(v)for row in grip['offsets']['Bip01_Prop2']for v in row);rowsTSV.append('\t'.join([str(mod/output['output']),';'.join(encoded),leftOffset,'304']))
 (w/'lau-emote-props.tsv').write_text('\n'.join(rowsTSV),encoding='utf-8')
-print('PASS original Lau CMN cuts 007/008, matching source seam',seam,'; 75 original continuation frames / +2.5 seconds; all 22 native spear meshes /',tested,'frame checks; source wrist/weapon rotation, native bone lengths, shaft grips, soles and floor contact; max arm clearance',maxLift,'; max contact error',maximumContact)
+print('PASS original Lau CMN cuts 007/008, matching source seam',seam,'; 225 original continuation frames / +7.5 seconds total, +5 seconds this update, original center-inclusive native movement; all 22 native spear meshes /',tested,'frame checks; source wrist/weapon rotation, native bone lengths, shaft grips, soles and floor contact; max arm clearance',maxLift,'; max contact error',maximumContact)
