@@ -1,11 +1,11 @@
 from pathlib import Path
 import hashlib,json,re,zipfile,xml.etree.ElementTree as E
 
-root=Path(__file__).resolve().parents[2];main=root/'combat/ProjectYakuza';addon=root/'emotes/ProjectYakuzaEmotes';media=addon/'42/media';lau=json.loads((addon/'docs/lau-spear-emote-assets.json').read_text(encoding='utf-8'));names=['ProjectYakuza_MajimaBatPoint','ProjectYakuza_KiryuBadLuck','ProjectYakuza_KiryuStepUp','main03_007_12']+[o['clip']for o in lau['outputs']];sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest();clips=list((media/'anims_X').rglob('*.x'));selectors=list((media/'AnimSets').rglob('*.xml'));assert len(names)==26 and {p.stem for p in clips}==set(names)and {p.stem for p in selectors}==set(names)
+root=Path(__file__).resolve().parents[2];main=root/'combat/ProjectYakuza';addon=root/'emotes/ProjectYakuzaEmotes';media=addon/'42/media';lau=json.loads((addon/'docs/lau-spear-emote-assets.json').read_text(encoding='utf-8'));names=['main12_007_9','ProjectYakuza_MajimaBatPoint','ProjectYakuza_KiryuBadLuck','ProjectYakuza_KiryuStepUp','main03_007_12']+[o['clip']for o in lau['outputs']];sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest();clips=list((media/'anims_X').rglob('*.x'));selectors=list((media/'AnimSets').rglob('*.xml'));assert len(names)==27 and {p.stem for p in clips}==set(names)and {p.stem for p in selectors}==set(names)
 for name in names:
     for relative in [f'42/media/anims_X/Bob/{name}.x',f'42/media/AnimSets/player/emote/{name}.xml']:assert not(main/relative).exists()
     node=E.parse(media/f'AnimSets/player/emote/{name}.xml').getroot();assert node.findtext('m_AnimName')==name and node.findtext('m_Conditions/m_Value')==('ProjectYakuza_ShimanoShutUp'if name=='main03_007_12'else name)
-for kind in ['majima-bat','lau-spear','kiryu-bad-luck','kiryu-step-up','shimano']:
+for kind in ['majima-bat','lau-spear','kiryu-bad-luck','kiryu-step-up','shimano','lau-weapon']:
     report=json.loads((addon/'docs'/(kind+'-emote-assets.json')).read_text(encoding='utf-8'))
     for output in report.get('outputs',[report]):assert sha(addon/output['output'])==output['sha256']and sha(addon/output['selector'])==output['selectorSha256']
     for row in report['provenance']:assert sha(Path(row['path']))==row['sha256'],row['path']
@@ -18,7 +18,7 @@ for path in (media/'lua').rglob('*.lua'):
     for module in re.findall(r'require\s+"(ProjectYakuzaEmotes/[^"\n]+)"',text):assert any((media/'lua'/side/(module+'.lua')).is_file()for side in ['shared','client','server'])
 info=(addon/'42/mod.info').read_text(encoding='utf-8');version=re.search(r'^version=(\d+\.\d+\.\d+)$',info,re.M).group(1);assert 'id=ProjectYakuzaEmotes'in info and version and not re.search(r'^require\s*=',info,re.M)
 assert 'id=ProjectYakuza\n'in(main/'42/mod.info').read_text()and re.search(r'^version=\d+\.\d+\.\d+$',(main/'42/mod.info').read_text(),re.M)
-assert not list(media.rglob('*.png'))and not list(media.rglob('*.ogg'))and not list(media.rglob('*.wav'))and not(media/'models_X').exists()
+assert {p.relative_to(media).as_posix()for p in media.rglob('*.png')}=={'textures/ProjectYakuzaEmotes/e_f_0006_spark01.png'}and not list(media.rglob('*.ogg'))and not list(media.rglob('*.wav'))and not(media/'models_X').exists()
 with zipfile.ZipFile(root/'dist/ProjectYakuza-B42-v0.118.0.zip')as archive:
     retained=0
     for name in archive.namelist():
@@ -34,4 +34,4 @@ with zipfile.ZipFile(root/'dist/ProjectYakuzaEmotes-B42-v0.2.6.zip')as archive:
         if name.endswith('/')or Path(name).suffix not in ['.x','.xml']or Path(name).stem in {o['clip']for o in lau['outputs']}|{'main03_009_12'}:continue
         path=addon/name.removeprefix('ProjectYakuzaEmotes/');assert path.read_bytes()==archive.read(name),name;checked+=1
 assert ('ProjectYakuzaEmotes.VERSION="'+version+'"')in(media/'lua/shared/ProjectYakuzaEmotes/EmoteSpears.lua').read_text(encoding='utf-8')
-print('PASS standalone isolation: 26 clips/selectors;',checked,'unrelated emote media byte-identical;',retained,'unrelated combat media unchanged; separate IDs, standalone require graph and no new textures/models/audio')
+print('PASS standalone isolation: 27 clips/selectors;',checked,'unrelated emote media byte-identical;',retained,'unrelated combat media unchanged; separate IDs, standalone require graph and one unchanged supplied spark, no new models/audio')

@@ -1,4 +1,11 @@
-# Project Yakuza Emotes 0.2.7
+# Project Yakuza Emotes 0.2.8
+
+- Lau Ka Long's custom spear now selects a dedicated grip calibration. Its closed hand stays on the original shaft instead of sliding onto the blade, and the finishing stance clears the opposite arm. Short smooth wrist corrections also keep the flourish outside the native arms. The original 10.1-second timeline, full continuation, native arm lengths and footwork remain.
+- The custom clip retains native source name main12_007_9. It samples the original timeline at 120 Hz to reduce hand/prop separation during fast turns; animation playback stays at its original speed. The 22 native spear clips and other gestures are unchanged. Combat remains optional.
+- Added ground-impact sparks using an unchanged original Yakuza 6 texture. The burst follows the visible native animation clock at frame nine and uses each supported spear's actual contact point. Clients observe their local and remote emotes independently. Effects stay at the impact location, pause safely, hide under the map and release their sprites promptly.
+- Offline validation covers original provenance and spark pixels, all 1213 fitted poses, 4849 interpolated grip samples, native arm surfaces, floor contact, original movement, native Human import/selector/prop transforms, standalone/CVF menus, spark timing/lifetime and runtime-only packaging. No game launch or Steam upload; live visual blending and multiplayer remain unverified.
+
+## Project Yakuza Emotes 0.2.7
 
 - Corrected Shimano: Shut the Fuck Up to use the preceding furniture strike and getting-up action. The earlier release used the already-standing shot during the subtitle. This replacement uses main03_s05 cut 007, source frames 60–169, retaining native asset name main03_007_12, a short lead-in, the strike, the full rise and standing recovery at the original 30 fps. Duration is 3.63 seconds.
 - Original source hip/foot height rises from a seated position below 0.55 m to standing above 1 m; the retargeted native pelvis rises with it while the soles stay grounded. Original head, neck and body timing, native arm lengths and full-body animation masks remain. The obsolete standing-shot animation and selector are removed. Existing emote wheel selection, empty-hand requirement, other gestures and optional CVF behavior are unchanged.

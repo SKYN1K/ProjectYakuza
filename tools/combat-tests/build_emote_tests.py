@@ -12,3 +12,6 @@ for order,providers in [('native',[source]),('first',[source,cvf]),('last',[cvf,
     text=integration.replace('"ProjectYakuzaFixture:HAS_CVF"','false'if order=='native'else'true').replace('"ProjectYakuzaFixture:NATIVE_MENU"',native).replace('"ProjectYakuzaFixture:PROVIDERS"','\n'.join('do\n'+provider+'\nend'for provider in providers)).replace('ProjectYakuzaFixture:ORDER',order)
     text,_=clean(text,'lua')
     target=w/('emote-menu-'+order+'-tests.lua');target.write_text(text,encoding='utf-8')
+
+spark=(root/'emotes/ProjectYakuzaEmotes/42/media/lua/shared/ProjectYakuzaEmotes/EmoteSpears.lua').read_text()+'\n'+(root/'emotes/ProjectYakuzaEmotes/42/media/lua/client/ProjectYakuzaEmotes/SpearSparks.lua').read_text()
+(w/'spear-spark-tests.lua').write_text((w/'spear-spark-test-fixture.lua').read_text().replace('"ProjectYakuzaFixture:SPARK_SOURCE"',spark))

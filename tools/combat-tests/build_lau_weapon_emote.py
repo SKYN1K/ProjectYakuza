@@ -1,0 +1,46 @@
+from pathlib import Path
+import sys,json,math,hashlib,shutil,xml.etree.ElementTree as E
+from mathutils import Vector,Matrix,Quaternion
+root=Path(__file__).resolve().parents[2];w=Path(__file__).parent;sys.path.insert(0,str(w))
+from locomotion_math import read,locals_at,world,blocks,write
+from native_body_geometry import load_body,skin_part
+from extract_lau_spear_emote import mesh_vertices
+mod=root/'emotes/ProjectYakuzaEmotes';combat=root/'combat/ProjectYakuza';native=Path('F:/SteamLibrary/steamapps/common/ProjectZomboid/media');name='main12_007_9';sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
+
+def smooth_limit(value,high,width=.015):
+    if value<=high-width:return value
+    if value>=high+width:return high
+    t=(value-high+width)/(2*width)
+    return high-width+width*(2*t-t*t)
+
+def shift_hand(bones,local,delta):
+    pose=world(bones,local);names=['Bip01_R_'+p for p in ['UpperArm','Forearm','Hand']];u,e,h=[pose[n].translation for n in names];target=h+Vector((0,delta,0));a=(e-u).length;b=(h-e).length;direction=(target-u).normalized();distance=min((target-u).length,a+b-.000001);target=u+direction*distance;pole=e-u-direction*(e-u).dot(direction);pole.normalize();along=(a*a-b*b+distance*distance)/(2*distance);middle=u+direction*along+pole*math.sqrt(max(0,a*a-along*along));rotations={names[0]:(e-u).rotation_difference(middle-u)@pose[names[0]].to_quaternion(),names[1]:(h-e).rotation_difference(target-middle)@pose[names[1]].to_quaternion(),names[2]:pose[names[2]].to_quaternion()};actual={}
+    for n,data in bones.items():
+        parent=data['parent']
+        if n in rotations:
+            value=actual[parent].inverted()@rotations[n].to_matrix().to_4x4();value.translation=local[n].translation;local[n]=value
+        actual[n]=actual[parent]@local[n]if parent else local[n]
+    return list(actual[names[2]].translation-h)
+
+def build():
+    baseline=mod/'42/media/anims_X/Bob/ProjectYakuza_LauSpearGround.x';text,bones,animation,spans=read(baseline);source=json.loads((mod/'docs/lau-spear-emote-assets.json').read_text());model=json.loads((combat/'docs/lau-spear-weapon-model.json').read_text());bodyPath=native/'models_X/Skinned/MaleBody.x';body=load_body(bodyPath);vertices=[Vector(p)for p in model['outputVertices']];shaft=[Vector(p)for p in model['sourceOutputVertices'][:model['sourceParts'][0]['vertices']]];bounds=[min(p.y for p in shaft),max(p.y for p in shaft)];grip=Matrix(source['grip']['offsets']['Bip01_Prop1']);palm=grip.translation;rows=[];poses=[];floor=source['ground']['floor'];maxFinger=0
+    for i in range(304):
+        pose=world(bones,locals_at(bones,animation,i*160));prop=pose['Bip01_Prop1'];axisGrip=prop.inverted()@(pose['Bip01_R_Hand']@palm);hand=skin_part(body,pose,['Bip01_R_Hand','Bip01_R_Finger']);maxFinger=max(maxFinger,max((prop.inverted()@v).y-axisGrip.y for v in hand))
+    high=bounds[1]-maxFinger-.003;impactProp=world(bones,locals_at(bones,animation,9*160))["Bip01_Prop1"];impactOffset=floor-min((impactProp@p).y for p in vertices)
+    for sample in range(1213):
+        i=sample/4
+        local=locals_at(bones,animation,i*160);pose=world(bones,local);original=pose['Bip01_Prop1'];oldRotation=original.to_quaternion();oldGrip=(original.inverted()@(pose['Bip01_R_Hand']@palm)).y;newGrip=smooth_limit(oldGrip,high);t=max(0,min(1,(i-145)/14));t=t*t*(3-2*t);angle=-10*t;correctionQ=Quaternion((0,0,1),math.radians(angle))
+        for first,last,degrees,direction in [(47,61,25,60),(47,61,5,150),(98,111,50,0),(118,131,75,120)]:
+            t=max(0,min(1,(i-first)/4,(last-i)/4));t=t*t*(3-2*t);axis=Vector((math.cos(math.radians(direction)),0,math.sin(math.radians(direction))));correctionQ=correctionQ@Quaternion(axis,math.radians(degrees)*t)
+        rotation=oldRotation@correctionQ;hand='Bip01_R_Hand';parent=bones[hand]['parent'];wrist=(pose[parent].to_quaternion().inverted()@rotation@grip.to_quaternion().inverted()).to_matrix().to_4x4();wrist.translation=local[hand].translation;local[hand]=wrist;pose=world(bones,local);initial=rotation.to_matrix().to_4x4();initial.translation=pose[hand]@palm-rotation@Vector((0,newGrip,0));bottom=min((original@v).y for v in vertices);newBottom=min((initial@v).y for v in vertices);weight=max(0,1-abs(i-9)/9);weight=weight*weight*(3-2*weight);delta=max((bottom-newBottom+impactOffset)*weight,floor-newBottom)
+        correction=shift_hand(bones,local,delta)if abs(delta)>1e-8 else[0,0,0]
+        pose=world(bones,local);prop=rotation.to_matrix().to_4x4();prop.translation=pose['Bip01_R_Hand']@palm-rotation@Vector((0,newGrip,0));local['Bip01_Prop1']=pose[bones['Bip01_Prop1']['parent']].inverted()@prop;poses.append(local);rows.append({'sourceFrame':i,'gripY':newGrip,'closingWristTiltDegrees':angle,'wristCorrection':list(correctionQ),'sourceGripY':oldGrip,'handVerticalCorrection':delta,'handCorrection':correction,'minY':min((prop@v).y for v in vertices),'nativeOffset':[list(row)for row in pose['Bip01_R_Hand'].inverted()@prop]})
+    output=mod/'42/media/anims_X/Bob'/(name+'.x');changes=blocks(bones,poses,[i*40 for i in range(1213)],None);write(output,text,spans,changes,name);selector=mod/'42/media/AnimSets/player/emote'/(name+'.xml');template=mod/'42/media/AnimSets/player/emote/ProjectYakuza_LauSpearGround.xml';node=E.fromstring(template.read_text().replace('ProjectYakuza_LauSpearGround',name));E.indent(node,space='  ');E.ElementTree(node).write(selector,encoding='utf-8',xml_declaration=True)
+    contacts={}
+    for record in source['outputs']+[{'clip':name,'output':output.relative_to(mod).as_posix()}]:
+        clip=record['clip'];path=mod/record['output'];_,cb,ca,_=read(path);cp=world(cb,locals_at(cb,ca,9*160))['Bip01_Prop1'];points=vertices if clip==name else[Vector(p)for p in mesh_vertices(next(p['mesh']for p in source['selection']['nativeProfiles']['items']if p['clip']==clip))];point=min((cp@v for v in points),key=lambda p:p.y);contacts[clip]=[point.x,point.y,point.z]
+    shared=mod/'42/media/lua/shared/ProjectYakuzaEmotes/EmoteSpears.lua';version=next(line.split('=',1)[1]for line in(mod/'42/mod.info').read_text().splitlines()if line.startswith('version='));items=source['selection']['nativeProfiles']['items'];code='ProjectYakuzaEmotes=ProjectYakuzaEmotes or {}\nProjectYakuzaEmotes.VERSION='+json.dumps(version)+'\nProjectYakuzaEmotes.EmoteSpears={'+','.join('['+json.dumps(p['item'])+']=true'for p in items)+'}\nProjectYakuzaEmotes.SpearClips={'+','.join('['+json.dumps(p['item'])+']='+json.dumps(p['clip'])for p in items)+',["ProjectYakuza.LauKaLongSpear"]="'+name+'"}\nProjectYakuzaEmotes.SpearContacts={'+','.join('['+json.dumps(clip)+']={'+','.join(format(v,'.10g')for v in p)+'}'for clip,p in contacts.items())+'}\n';shared.write_text(code)
+    sparkSource=combat/'42/media/textures/ProjectYakuza/ChargeSpark.png';spark=mod/'42/media/textures/ProjectYakuzaEmotes/e_f_0006_spark01.png';spark.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(sparkSource,spark);sparkReference=json.loads((combat/'docs/charged-heavy-assets.json').read_text())['spark'];assert sha(sparkSource)==sparkReference['output_sha256'];sparkRecord={'output':spark.relative_to(mod).as_posix(),'sha256':sha(spark),'source':sparkReference,'contactTime':.3,'contacts':contacts,'operation':'Exact unchanged copy of the supplied Yakuza 6 spark decode. No new pixels, resizing or synthesized artwork.'}
+    refs=[Path(__file__),w/'build_lau_spear_emote.py',w/'locomotion_math.py',w/'native_body_geometry.py',bodyPath,baseline,template,mod/'docs/lau-spear-emote-assets.json',combat/'docs/lau-spear-weapon-model.json',combat/model['output'],sparkSource,combat/'docs/charged-heavy-assets.json'];report={'operation':'Optional custom Lau spear calibration of the supplied Kiwami cutscene composite. The original native motion identifier selects a dedicated clip only for ProjectYakuza.LauKaLongSpear. Shaft limits come from the original Yakuza 3 mesh; the native closed hand and fingers stay entirely below the blade. A smooth shaft slide and bounded native-length right-arm correction retain the floor strike, full continuation and native footwork. A ten-degree wrist-and-weapon clearance correction blends in over fourteen source samples for the closing stance; the native grip stays rigid through the correction. The same source timeline is sampled at 120 Hz to keep interpolated hand/prop motion attached during fast turns. Three short continuous wrist clearance corrections keep the source flourish outside the native arms. Other emotes and all native spear clips remain unchanged.','item':'ProjectYakuza.LauKaLongSpear','clip':name,'output':output.relative_to(mod).as_posix(),'sha256':sha(output),'selector':selector.relative_to(mod).as_posix(),'selectorSha256':sha(selector),'frames':1213,'fps':120,'originalFrames':304,'originalFps':30,'duration':10.1,'sourceSamples':source['sourceSamples'],'shaftBounds':bounds,'maxFingerAxialOffset':maxFinger,'upperGripLimit':high,'samples':rows,'spark':sparkRecord,'modelSource':model['modelSource'],'modelSha256':model['sha256'],'provenance':[{'path':str(p),'sha256':sha(p)}for p in refs]};(mod/'docs/lau-weapon-emote-assets.json').write_text(json.dumps(report,indent=2)+'\n');print('BUILT',name,'shaft',bounds,'max grip',high,'max hand correction',max(Vector(v['handCorrection']).length for v in rows),'floor',rows[36]['minY'])
+
+if __name__=='__main__':build()
