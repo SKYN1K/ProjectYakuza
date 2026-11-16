@@ -1,13 +1,13 @@
 # Project Yakuza Emotes
 
-Version **0.2.9**, for Project Zomboid Build 42. Mod ID: `ProjectYakuzaEmotes`.
+Version **0.2.10**, for Project Zomboid Build 42. Mod ID: `ProjectYakuzaEmotes`.
 
 This standalone mod contains five original Kiwami 1 cutscene gestures. It works without Project Yakuza combat or Custom Voice Framework, and coexists with either. Enable Project Yakuza Emotes separately in your game or server mod list. Both peers need the same files for multiplayer playback.
 
 Stand still without aiming and open the native emote wheel, then choose **Project Yakuza Emotes**:
 
 - **Majima: Bat Point**: hold a usable supported native baseball bat. The opening batting-center Kiryu-chan greeting moves the bat from behind his head into a forward point and lowers it over 3 seconds.
-- **Lau Ka Long: Spear Ground Strike**: hold any usable spear-class weapon. All 22 native spear items have model-specific grip/floor calibration. Lau Ka Long's custom spear has its own shaft and arm-clearance fit; other modded spear-class weapons have a fallback. A short burst of original Yakuza 6 sparks appears at the last floor hit, 2.5 seconds into the emote. The floor strike and continued flourish lasts 10.1 seconds and moves the character along the original footwork.
+- **Lau Ka Long: Spear Ground Strike**: hold any usable spear-class weapon. All 22 native spear items have model-specific grip/floor calibration. Lau Ka Long's custom spear has its own shaft and arm-clearance fit; other modded spear-class weapons have a fallback. A short burst of original Yakuza 6 sparks appears where the blade reaches the floor during the last strike. The floor strike and continued flourish lasts 10.1 seconds and moves the character along the original footwork.
 - **Kiryu: Bad Luck**: empty both hands. The original puppy-rescue neck/head gesture and closing lean lasts 11.8 seconds.
 - **Kiryu: Step Up**: empty both hands. The original final-chapter crowd challenge with Haruka lasts 7.3 seconds and moves your character along its original footsteps.
 - **Shimano: Shut the Fuck Up**: empty both hands. The original Tojo HQ furniture strike and seated-to-standing action lasts 3.63 seconds. It uses contiguous frames 60–169 from the preceding Kiwami shot, retaining native animation name main03_007_12.

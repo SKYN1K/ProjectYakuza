@@ -10,11 +10,16 @@ function F.clear()
     F.bursts={};F.states=setmetatable({}, {__mode="k"})
     if F.rendering then Events.OnPostRender.Remove(F.render);F.rendering=false end
 end
-function F.spawn(p,contact)
+function F.point(impact,time)
+    local frame=math.max(0,math.min(#impact.points-1,(time-impact.at)*impact.fps));local index=math.floor(frame);local t=frame-index;local a=impact.points[index+1];local b=impact.points[math.min(index+2,#impact.points)]
+    return {a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t,a[3]+(b[3]-a[3])*t}
+end
+function F.spawn(p,impact,time)
+    local contact=F.point(impact,time)
     if #F.bursts>=F.maxBursts then dispose(table.remove(F.bursts,1))end
     if not F.sprite then F.sprite=IsoSprite.CreateSprite(nil);F.sprite:LoadFramesNoDirPageSimple("media/textures/ProjectYakuzaEmotes/e_f_0006_spark01.png")end
     local a=p:getAnimAngleRadians()+math.pi/2;local c,s=math.cos(a),math.sin(a);local x,z=contact[1],contact[3]
-    local b={owner=p,x=p:getX()+(-x*c-z*s)*1.5,y=p:getY()+(-x*s+z*c)*1.5,z=p:getZ(),age=0,last=getTimestampMs(),points={}}
+    local b={owner=p,x=p:getX()+(-x*c-z*s)*1.5,y=p:getY()+(-x*s+z*c)*1.5,z=p:getZ()+math.max(0,contact[2])*.61237234,age=0,last=getTimestampMs(),points={}}
     local seed=(p:getOnlineID()or 0)%17
     for i=1,9 do
         local angle=i*math.pi*2/9+seed*.37;local speed=.28+(i%4)*.13;local instance=IsoSpriteInstance.get(F.sprite)
@@ -27,7 +32,7 @@ end
 function F.observe(p)
     if not p or p:isDead()or not p:getVariableBoolean("EmotePlaying")then if p then F.states[p]=nil end;return end
     local item=p:getPrimaryHandItem();if not item or p:isHideWeaponModel()or p:isHideEquippedHandR()then F.states[p]=nil;return end
-    local clip=PY.SpearClips[item:getFullType()]or "ProjectYakuza_LauSpearGround";local contact=PY.SpearContacts[clip];local time,weight
+    local clip=PY.SpearClips[item:getFullType()]or "ProjectYakuza_LauSpearGround";local impact=PY.SpearImpacts[clip];local time,weight
     for layer=0,3 do
         for slot=0,7 do
             local name=p:dbgGetAnimTrackName(layer,slot);if not name or name==""then break end
@@ -37,13 +42,13 @@ function F.observe(p)
             end
         end
     end
-    if not time or not contact then F.states[p]=nil;return end
-    local impact=PY.SpearSparkTime;local deadline=impact+.12
+    if not time or not impact then F.states[p]=nil;return end
+    local deadline=impact.at+.12
     local state=F.states[p]
     if not state or state.clip~=clip or time<.1 and state.time>deadline then state={clip=clip,time=time,fired=time>deadline};F.states[p]=state end
-    if not state.fired and time>=impact then
+    if not state.fired and time>=impact.at then
         state.fired=true
-        if time<=deadline then F.spawn(p,contact)end
+        if time<=deadline then F.spawn(p,impact,time)end
     end
     state.time=time
 end

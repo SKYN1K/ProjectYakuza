@@ -16,6 +16,6 @@ The local workspace also contains a separate Kiryu CVF voice-pack project, previ
 
 Lua API 3 supports independent styles, custom action lifecycles, addon controls and registered multiplayer observers. Start with the [manual index](combat/ProjectYakuza/docs/INDEX.md) and [starter addon](combat/ProjectYakuza/templates/StyleSubmod/README.md). Unarmed grabs, four grab strikes and a wall Heat Action are enabled per style. The separate voice pack is untouched.
 
-[Project Yakuza Emotes](emotes/ProjectYakuzaEmotes/README.md) is a separate, optional Build 42 mod, version **0.2.9**, containing Majima, Lau Ka Long, Kiryu and Shimano cutscene gestures. It works without the combat mod or Custom Voice Framework and has its own install ZIP and release.
+[Project Yakuza Emotes](emotes/ProjectYakuzaEmotes/README.md) is a separate, optional Build 42 mod, version **0.2.10**, containing Majima, Lau Ka Long, Kiryu and Shimano cutscene gestures. It works without the combat mod or Custom Voice Framework and has its own install ZIP and release.
 
 Install and Workshop archives contain only runtime game files. See [Workshop publishing](docs/WORKSHOP.md) for the prepared folder, privacy checks and upload steps. Sandbox Options now includes Dragon Tiger Drop timing/cooldown and feature switches; local audio and controls use readable labels.

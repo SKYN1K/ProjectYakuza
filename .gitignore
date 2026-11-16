@@ -390,3 +390,5 @@
 !tools/combat-tests/validate_lau_weapon_emote.py
 !tools/combat-tests/SpearSparkProbe.java
 !tools/combat-tests/spear-spark-test-fixture.lua
+
+!tools/combat-tests/build_spear_spark_contacts.py

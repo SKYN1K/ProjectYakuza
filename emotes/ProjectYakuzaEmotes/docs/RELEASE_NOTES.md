@@ -1,4 +1,10 @@
-# Project Yakuza Emotes 0.2.9
+# Project Yakuza Emotes 0.2.10
+
+- Corrected the spear spark anchor to the blade. Earlier versions selected the lowest point of the whole weapon, which could be the shaft butt. Lau's original blade part reaches the floor at emote frame 79.75, about 2.658 seconds into the unchanged motion.
+- Each supported spear now has its own head-contact timing and a short sampled blade path. A client that observes the hit slightly late emits from the blade's current pose instead of an earlier static point. The effect keeps its world position after emission.
+- Native checks compare 368 blade poses across 23 imported models against the actual game animation tracks, plus eight facing projections per pose. Lua checks cover early shaft contact, moving late anchors, interpolation, separate timings, once-only local/remote playback, map/pause handling and sprite cleanup. Animation and texture files remain byte-identical to 0.2.9. No game launch.
+
+## Project Yakuza Emotes 0.2.9
 
 - Moved Lau's spear sparks from the opening strike to the last floor hit: emote frame 75, at 2.5 seconds. The native animation clock remains the timing source, with one burst per playback and the existing late-packet guard.
 - Recalculated all 23 spear contact positions at the later impact, so the sparks appear beneath the spear at that hit. The animation, grip correction, speed and spark texture are unchanged.
