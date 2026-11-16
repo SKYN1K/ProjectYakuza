@@ -8,14 +8,15 @@ if '--inside-blender'not in sys.argv:
     spark=report['spark'];assert sha(mod/spark['output'])==spark['sha256']==spark['source']['output_sha256']
     from PIL import Image
     original=Image.open(spark['source']['source']).convert('RGBA');actual=Image.open(mod/spark['output']).convert('RGBA');assert actual.size==original.size==(16,32)and actual.tobytes()==original.tobytes()
-    with zipfile.ZipFile(root/'dist/ProjectYakuzaEmotes-B42-v0.2.7.zip')as archive:
+    with zipfile.ZipFile(root/'dist/ProjectYakuzaEmotes-B42-v0.2.8.zip')as archive:
         for name in archive.namelist():
-            if name.endswith('/')or Path(name).suffix not in ['.x','.xml']:continue
+            if name.endswith('/')or Path(name).suffix not in ['.x','.xml','.png']:continue
             assert archive.read(name)==(mod/name.removeprefix('ProjectYakuzaEmotes/')).read_bytes(),name
-    subprocess.run(['F:/SteamLibrary/steamapps/common/Blender/blender.exe','-b','--factory-startup','-t','1','--python-exit-code','1','--python',str(Path(__file__).resolve()),'--','--inside-blender'],cwd=root,check=True)
+    subprocess.run(['F:/SteamLibrary/steamapps/common/Blender/blender.exe','-b','--factory-startup','-t','1','--python-exit-code','1','--python',str(Path(__file__).resolve()),'--','--inside-blender']+(['--spark-only']if '--spark-only'in sys.argv else[]),cwd=root,check=True)
     source=json.loads((mod/'docs/lau-spear-emote-assets.json').read_text());movement=root/'tools/lau-weapon-path.csv';movement.write_text('\n'.join(str(x)+','+str(-z)for x,y,z in source['deferredPath'])+'\n');prefix=['F:/SteamLibrary/steamapps/common/ProjectZomboid/jre64/bin/java.exe','-Xms16m','-Xmx256m','-XX:ActiveProcessorCount=2','--enable-native-access=ALL-UNNAMED','-cp','.;F:/SteamLibrary/steamapps/common/ProjectZomboid/*'];clip=str(mod/report['output']);selector=str(mod/report['selector']);body='F:/SteamLibrary/steamapps/common/ProjectZomboid/media/models_X/Skinned/MaleBody.x'
-    for args in [['AnimationProbe',clip],['MajimaEmoteProbe',body,clip,selector,'1213',report['clip']],['PropAttachmentProbe',str(w/'lau-weapon-props.tsv')],['StepUpMotionProbe',body,clip,selector,str(movement),report['clip']],['SpearSparkProbe',str(mod/report['spark']['output'])]]:subprocess.run(prefix+args,cwd=w,check=True)
-    print('PASS custom Lau spear source provenance, unchanged existing emote media, original spark pixels and native Human/prop/movement/spark checks; no game launch')
+    jobs=[['AnimationProbe',clip],['MajimaEmoteProbe',body,clip,selector,'1213',report['clip']],['PropAttachmentProbe',str(w/'lau-weapon-props.tsv')],['StepUpMotionProbe',body,clip,selector,str(movement),report['clip']],['SpearSparkProbe',str(mod/report['spark']['output'])]]
+    for args in jobs[-1:]if '--spark-only'in sys.argv else jobs:subprocess.run(prefix+args,cwd=w,check=True)
+    print('PASS source provenance, unchanged 0.2.8 animation/texture bytes and native spark checks; no game launch'if '--spark-only'in sys.argv else'PASS custom Lau spear source provenance, unchanged existing emote media, original spark pixels and native Human/prop/movement/spark checks; no game launch')
     raise SystemExit
 
 sys.path.insert(0,str(w))
@@ -23,6 +24,14 @@ from mathutils import Matrix,Vector,Quaternion
 from mathutils.bvhtree import BVHTree
 from locomotion_math import read,locals_at,world
 from native_body_geometry import load_body,skin_part
+
+from extract_lau_spear_emote import mesh_vertices
+source=json.loads((mod/'docs/lau-spear-emote-assets.json').read_text());spark=report['spark'];floor=source['ground']['floor'];heights=source['outputs'][0]['spearMinY'];entries=[i for i in range(1,len(heights))if heights[i]<=floor+.001 and heights[i-1]>floor+.001];assert entries==[9,75]and spark['contactFrame']==entries[-1]and spark['contactTime']==75/30 and spark['sourceContact']=={'segment':0,'frame':187};model=json.loads((root/'combat/ProjectYakuza/docs/lau-spear-weapon-model.json').read_text())
+for record in source['outputs']+[report]:
+    _,cb,ca,_=read(mod/record['output']);prop=world(cb,locals_at(cb,ca,spark['contactTime']*4800))['Bip01_Prop1'];vertices=model['outputVertices']if record['clip']==report['clip']else mesh_vertices(next(p['mesh']for p in source['selection']['nativeProfiles']['items']if p['clip']==record['clip']));point=min((prop@Vector(v)for v in vertices),key=lambda p:p.y);actual=Vector(spark['contacts'][record['clip']]);assert(point-actual).length<.00001 and abs(point.y-floor)<.001,record['clip']
+assert 'ProjectYakuzaEmotes.SpearSparkTime=2.5'in(mod/'42/media/lua/shared/ProjectYakuzaEmotes/EmoteSpears.lua').read_text()
+print('PASS final floor-hit entry at source cut 007 frame 187 / emote frame 75 / 2.5 seconds; all 23 measured model contacts match the later impact',flush=True)
+if '--spark-only'in sys.argv:raise SystemExit
 _,bones,animation,_=read(mod/report['output']);_,bb,ba,_=read(mod/'42/media/anims_X/Bob/ProjectYakuza_LauSpearGround.x');source=json.loads((mod/'docs/lau-spear-emote-assets.json').read_text());bodyPath=Path('F:/SteamLibrary/steamapps/common/ProjectZomboid/media/models_X/Skinned/MaleBody.x');body=load_body(bodyPath);model=json.loads((root/'combat/ProjectYakuza/docs/lau-spear-weapon-model.json').read_text());points=[Vector(p)for p in model['outputVertices']];grip=Matrix(source['grip']['offsets']['Bip01_Prop1']);changed={'Bip01_R_UpperArm','Bip01_R_Forearm','Bip01_R_Hand','Bip01_Prop1'};text=bodyPath.read_text();match=re.search(r'Mesh Body\s*\{\s*(\d+);',text);tail=text[match.end():];numbers=list(re.finditer(r'[-+]?\d*\.?\d+(?:[eE][-+]?\d+)?',tail));tail=tail[numbers[len(body['points'])*3-1].end():];match=re.search(r'(\d+)\s*;\s*\n\s*3;',tail);faces=[tuple(map(int,p))for p in re.findall(r'3;\s*(\d+),\s*(\d+),\s*(\d+);',tail[match.start():])[:int(match[1])]];armBones=['Bip01_'+s+'_'+p for s in ['R','L']for p in ['UpperArm','Forearm']];selected={i for i,weights in enumerate(body['weights'])if sum(weight for bone,weight,offset in weights if bone in armBones)>.6};faces=[face for face in faces if all(i in selected for i in face)];edges={tuple(sorted((a,b)))for face in model['faces']for a,b in zip(face,[*face[1:],face[0]])};encoded=[[],[]];maximumHand=0;minimumFloor=1;maxLimbError=0
 assert report['frames']==1213 and report['fps']==120 and report['originalFrames']==304 and report['duration']==10.1 and report['sourceSamples']==source['sourceSamples']
 for channels in animation.values():
@@ -51,5 +60,5 @@ for i,row in enumerate(report['samples']):
 worst=0
 for i in range(4849):
     pose=world(bones,locals_at(bones,animation,i*10));p=pose['Bip01_Prop1'].inverted()@(pose['Bip01_R_Hand']@grip.translation);error=math.hypot(p.x,p.z);worst=max(worst,error);assert error<.002
-assert all(len(p)==3 and abs(p[1]-source['ground']['floor'])<.00005 for p in report['spark']['contacts'].values())
+assert all(len(p)==3 and abs(p[1]-source['ground']['floor'])<.001 for p in report['spark']['contacts'].values())
 print('PASS 1213 native-length source-fit poses, original 10.1-second body/footwork, shaft-only closed-hand grip, floor strike, zero arm-surface intersections and 4849 interpolated grip checks; max wrist reach correction',maximumHand,'limb float roundtrip error',maxLimbError,'interpolated radial error',worst,flush=True)

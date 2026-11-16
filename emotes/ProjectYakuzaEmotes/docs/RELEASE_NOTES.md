@@ -1,4 +1,10 @@
-# Project Yakuza Emotes 0.2.8
+# Project Yakuza Emotes 0.2.9
+
+- Moved Lau's spear sparks from the opening strike to the last floor hit: emote frame 75, at 2.5 seconds. The native animation clock remains the timing source, with one burst per playback and the existing late-packet guard.
+- Recalculated all 23 spear contact positions at the later impact, so the sparks appear beneath the spear at that hit. The animation, grip correction, speed and spark texture are unchanged.
+- Offline checks verify the last floor-contact entry, each model's later contact position, no sparks on the opening strike, local/remote playback, replay protection and the existing effect lifetime/pause/map behavior. All animation, selector and texture bytes match 0.2.8. Runtime-only packaging, changed-file backups and installed-byte verification remain in place. No game launch.
+
+## Project Yakuza Emotes 0.2.8
 
 - Lau Ka Long's custom spear now selects a dedicated grip calibration. Its closed hand stays on the original shaft instead of sliding onto the blade, and the finishing stance clears the opposite arm. Short smooth wrist corrections also keep the flourish outside the native arms. The original 10.1-second timeline, full continuation, native arm lengths and footwork remain.
 - The custom clip retains native source name main12_007_9. It samples the original timeline at 120 Hz to reduce hand/prop separation during fast turns; animation playback stays at its original speed. The 22 native spear clips and other gestures are unchanged. Combat remains optional.

@@ -38,11 +38,12 @@ function F.observe(p)
         end
     end
     if not time or not contact then F.states[p]=nil;return end
+    local impact=PY.SpearSparkTime;local deadline=impact+.12
     local state=F.states[p]
-    if not state or state.clip~=clip or time<.1 and state.time>.42 then state={clip=clip,time=time,fired=time>.42};F.states[p]=state end
-    if not state.fired and time>=.3 then
+    if not state or state.clip~=clip or time<.1 and state.time>deadline then state={clip=clip,time=time,fired=time>deadline};F.states[p]=state end
+    if not state.fired and time>=impact then
         state.fired=true
-        if time<=.42 then F.spawn(p,contact)end
+        if time<=deadline then F.spawn(p,contact)end
     end
     state.time=time
 end
