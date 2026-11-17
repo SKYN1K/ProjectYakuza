@@ -211,7 +211,7 @@ renders={};F.render();B.render();check(#renders==#withoutOffset,'native-anchor c
 for i,r in ipairs(renders)do
  local old=withoutOffset[i]
  check(r.x==old.x and r.y==old.y and r.z==old.z,'render offset preserves world coordinates and depth')
- check(math.abs(r.dy-old.dy+PY.WorldEffects.modelOffsetY())<.00001,'native contact impact and blood share the actual character-camera translation')
+ check(math.abs(r.dy-old.dy)<.00001,'world contact impact and blood receive no added camera translation')
 end
 F.clear();check(allocated==disposed,'corrected source anchors release all sprites')
 return true,'PASS '..checks..' source-frame blood animation, confirmed hit, world anchor, MP budgets and cleanup checks'

@@ -74,7 +74,7 @@ phase=0;source={};C.start(p,z,move,source);step(400);clock=clock+2000;step(401);
 check(C.states[p]~=nil,'missing-track grace starts from last observed track');weight=1
 p.equipped=false;C.tick();check(not C.states[p],'unequip cleans controller');p.equipped=true
 phase=0;source={};C.start(p,z,move,source);source.cleaned=true;C.tick();check(not C.states[p],'action cleanup cancels presentation')
-for i=0,7 do p.angle=i*math.pi/4;local a=C.anchor(p,z,{.2,.7,-.3});check(a.modelAnchor==true,'source bone anchors explicitly select the character-camera correction');check(math.abs(a.z-z:getZ()-.7)<.00001,'native height remains constant in all rotations');check(math.abs((a.x-z:getX())^2+(a.y-z:getY())^2-.13)<.00001,'world anchor rotates around victim')end
+for i=0,7 do p.angle=i*math.pi/4;local a=C.anchor(p,z,{.2,.7,-.3});check(math.abs(a.z-z:getZ()-.7)<.00001,'native height remains constant in all rotations');check(math.abs((a.x-z:getX())^2+(a.y-z:getY())^2-.13)<.00001,'world anchor rotates around victim')end
 p.angle=0;C.clearAll();check(not C.hooked,'no idle render hook remains')
 move={animation='Custom',contacts={{atMs=500,cue='punchImpact',qteIndex=1}}};source={qte={accepted={}}};phase=0;plays={};fx={};C.start(p,z,move,source);step(500)
 check(#plays==0 and #fx==0,'unaccepted custom QTE contact cannot present')

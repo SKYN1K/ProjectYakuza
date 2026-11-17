@@ -81,7 +81,7 @@ end
 local renderProjection="ProjectYakuzaFixture:MODELPROJECTION"
 for i=0,15 do
  local x,y=F.project(.1,.65,-.4,i*math.pi/8,2)
- check(math.abs(x-renderProjection[i+1][1])<.0001 and math.abs(y+ProjectYakuza.WorldEffects.modelOffsetY()-renderProjection[i+1][2])<.0001,'effect screen centre matches the full native character camera including its model translation')
+ check(math.abs(x-renderProjection[i+1][1])<.0001 and math.abs(y-renderProjection[i+1][2])<.0001,'effect uses the native bone/world projection without an added camera translation')
 end
 for i=0,30 do
  for bone=1,4 do
@@ -97,7 +97,7 @@ p.time=.04;F.tick();F.render();check(allocated==0 and #draws==0,'no particles be
 p.time=.2;F.tick();F.render()
 check(allocated==30 and #F.states[p].points==30,'limb coating and lingering trails have a fixed thirty-sprite budget')
 check(#draws>=14 and additive,'contiguous coat and inner arm layers draw, restoring renderer state')
-check(F.states[p].points[1].scale<=.60 and F.states[p].points[15].scale>.5,'smaller visible core sits within a slightly wider smoke layer')
+check(F.states[p].points[1].scale<=.46 and F.states[p].points[15].scale<.36,'smaller visible core stays inside a compact smoke layer')
 for _,d in ipairs(draws)do check(not d.additive and d.alpha<=.55,'all arm layers use restrained ordinary alpha')end
 check(F.normal.r>=.6 and F.normal.g>=.8 and F.normal.b==1,'white-blue normal tint remains')
 for facing=0,31 do
@@ -106,8 +106,8 @@ for facing=0,31 do
  local sx,sy=F.project(ux,uy,uz,p.angle,2)
  local hx,hy=F.project(wx+(kx-wx)*.35,wy+(ky-wy)*.35,wz+(kz-wz)*.35,p.angle,2)
  local cx,cy=centre(draws[1]);local fx,fy=centre(draws[11])
- check(near(cx,sx)and near(cy,sy+ProjectYakuza.WorldEffects.modelOffsetY()),'coating starts at native shoulder for every continuous facing')
- check(near(fx,hx)and near(fy,hy+ProjectYakuza.WorldEffects.modelOffsetY()),'coating ends at native fist without an outward offset')
+ check(near(cx,sx)and near(cy,sy+F.coatOffset()),'coating starts at native shoulder for every continuous facing')
+ check(near(fx,hx)and near(fy,hy+F.coatOffset()),'coating ends at native fist without an outward offset')
  for i=2,11 do
   local a,b=draws[i-1],draws[i];local ax,ay=centre(a);local bx,by=centre(b)
   check(math.sqrt((bx-ax)^2+(by-ay)^2)<math.min(a.height*a.scale,b.height*b.scale)*.6,'arm coverage stays connected in every direction')
@@ -116,7 +116,7 @@ end
 for frame=3,14 do for facing=0,7 do
  p.time=frame/30;F.states[p].time=p.time;p.angle=facing*math.pi/4;draws={};F.render()
  local ux,uy,uz=F.sample(track,p.time,4);local sx,sy=F.project(ux,uy,uz,p.angle,2);local x,y=centre(draws[1])
- check(near(x,sx)and near(y,sy+ProjectYakuza.WorldEffects.modelOffsetY()),'deforming source shoulder stays centred throughout the configured punch')
+ check(near(x,sx)and near(y,sy+F.coatOffset()),'deforming source shoulder stays centred throughout the configured punch')
  for point=2,11 do
   local ax,ay=centre(draws[point-1]);local bx,by=centre(draws[point])
   check(math.sqrt((bx-ax)^2+(by-ay)^2)<draws[point].height*draws[point].scale*.6,'coating has no gaps across source frames and eight facings')
@@ -196,7 +196,7 @@ for branch=1,4 do
  local state=C.states[p];check(state and #state.instances==6,'branch has only six limb-bound charging particles')
  local row=state.track.frames[1];local ax,ay,az=row[1],row[2],row[3];local bx,by,bz=row[4],row[5],row[6]
  local x,y=F.project(ax+(bx-ax)*.31,ay+(by-ay)*.31,az+(bz-az)*.31,p.angle,2)
- local d=draws[1];local cx,cy=centre(d);check(near(cx,x) and near(cy,y+4+ProjectYakuza.WorldEffects.modelOffsetY()) and d.z>d.rootZ,'charge particle centres and depth follow the branch-specific limb')
+ local d=draws[1];local cx,cy=centre(d);check(near(cx,x) and near(cy,y+4+F.coatOffset()) and d.z>d.rootZ,'charge particle centres and depth follow the branch-specific limb')
  check(d.color.r>=.6 and d.color.g>=.8,'limb charge glow is white-blue')
  local n=allocated;C.update(p);C.render();check(allocated==n,'stable charge never rebuilds particles')
  C.clear(p)
@@ -356,7 +356,7 @@ F.start(p,style,1,move);F.tick();draws={};F.render()
 local cloud=F.states[p];local coreDraw,outerDraw
 for _,d in ipairs(draws)do if d.instance==cloud.points[6].instance then coreDraw=d elseif d.instance==cloud.points[20].instance then outerDraw=d end end
 check(coreDraw and outerDraw and coreDraw.alpha>outerDraw.alpha and outerDraw.alpha<=.13,'smaller inner layer is stronger while the outer smoke stays transparent')
-check(outerDraw.height*outerDraw.scale>coreDraw.height*coreDraw.scale and outerDraw.height*outerDraw.scale<35,'smoke is slightly wider than the previous 28-pixel coat without a large cloud')
+check(outerDraw.height*outerDraw.scale>coreDraw.height*coreDraw.scale and outerDraw.height*outerDraw.scale<23,'outer smoke stays below 23 pixels at normal tile scale')
 local startingScale=cloud.points[6].scale;local firstSeed=cloud.seed
 for turn=1,24 do
  clock=clock+10;p.time=.2+turn*.004;p.angle=turn*.31;p.x=turn*.015;p.y=turn*.008;F.tick();draws={};F.render()
@@ -402,8 +402,8 @@ for animation,entry in pairs(catalog)do for _,window in ipairs(entry.windows)do
    F.start(p,style,0,{animation=animation});F.tick();draws={};F.render()
    local active=F.states[p];check(active and active.track.limb==track.limb and #draws>=14,'every kick/stomp remains visible at actual partial track weights')
    local hx,hy,hz=F.armPoint(active.joints,1);local dx,dy=centre(draws[11])
-   local expectedX=(hx-p.x-hy+p.y)*64;local expectedY=(hx-p.x+hy-p.y)*32-(hz-p.z)*192+ProjectYakuza.WorldEffects.modelOffsetY()
-   check(near(dx,expectedX)and near(dy,expectedY),'foot coating uses the rendered-model offset rather than the unshifted gameplay bone')
+   local expectedX=(hx-p.x-hy+p.y)*64;local expectedY=(hx-p.x+hy-p.y)*32-(hz-p.z)*192+F.coatOffset()
+   check(near(dx,expectedX)and near(dy,expectedY),'foot coating uses only the requested compact ten-percent drop')
   end
  end
 end end
@@ -411,7 +411,18 @@ check(legContacts>=30,'kick and stomp source coverage includes linked, direction
 F.clearAll();p.clip=move.animation;p.time=.2;p.weight=1;F.start(p,style,1,move);F.tick();F.render();F.hit(p,nil,true,false)
 local corrected=F.bursts[1];draws={};F.render();local spark
 for _,d in ipairs(draws)do if d.instance==corrected.points[1].instance then spark=d end end
-check(corrected.modelAnchor and spark and near(spark.oy,corrected.points[1].oy*corrected.points[1].scale-ProjectYakuza.WorldEffects.modelOffsetY()),'limb-emitted Gaiden sparks receive the same camera correction as the hand')
+check(spark and near(spark.oy,corrected.points[1].oy*corrected.points[1].scale-F.coatOffset()),'limb-emitted Gaiden sparks start at the same ten-percent drop as the coating')
 F.clearAll();p.weight=1
+F.clearAll();p.clip=move.animation;p.time=.2;p.weight=1;F.start(p,style,1,move);F.tick();draws={};F.render()
+check(near(F.coatOffset(),2.176)and F.coatOffset()<3,'requested ten-percent drop is about two pixels, not the removed fifty-six-pixel displacement')
+local coat=F.states[p]
+check(near(F.coatOffset(),coat.points[15].height*coat.points[15].baseScale*.1),'drop is exactly ten percent of the compact outer smoke base height')
+for _,d in ipairs(draws)do
+ local x,y=centre(d);local dx,dy,dz=d.x-p.x,d.y-p.y,d.z-p.z
+ check(near(x,(dx-dy)*64)and near(y,(dx+dy)*32-dz*192+F.coatOffset()),'all coating layers share one small screen drop and preserve their world-depth positions')
+end
+F.clearAll();local originalTile=Core.getTileScale;Core.getTileScale=function()return 1 end
+check(near(F.coatOffset(),1.088),'ten-percent placement follows native tile scale')
+Core.getTileScale=originalTile
 p.clip=nil;F.clearAll();check(allocated==disposed and not F.hooked,'expanded effects release all sprites and hooks')
 return 'PASS '..count..' original-punch tracking, world projection, lifecycle, bounded MP and source-clock audio checks'

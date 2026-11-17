@@ -1,9 +1,6 @@
 require "ProjectYakuza/Registry"
 local W={}
 ProjectYakuza.WorldEffects=W
-function W.modelOffsetY()
-    return .48*.61237234*96*Core.getTileScale()
-end
 
 function W.detached(sprite,scale,speed)
     local instance=IsoSpriteInstance.get(sprite)

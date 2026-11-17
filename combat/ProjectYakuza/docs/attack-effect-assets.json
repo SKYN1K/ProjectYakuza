@@ -1,5 +1,5 @@
 {
-  "version": "0.123.0",
+  "version": "0.124.0",
   "authorization": "User requested suitable original installed Yakuza effects, more dramatic limb effects on all weapon moves and flying sparks in the same colour.",
   "game": "Yakuza Kiwami 2",
   "source": "Original supplied particle.par textures, retained in extracted/kiwami2-particles",
@@ -53,19 +53,20 @@
       "operation": "Unchanged original Kiwami 2 spark-fan pixels. Runtime colour, world trajectories and fades supply variation."
     }
   ],
-  "appearance": "The three translucent layers remain, with original Gaiden e_n_5001_hitsmoke_small providing the narrow middle wisp and e_f_d0004_spark providing alternating fine flying sparks. Existing Yakuza 6 animated smoke/flame and small Kiwami 2 impact shapes remain. All pixels retain native dimensions; no generated artwork. Particle budgets, brief histories, colour and bounded swirls are retained.",
-  "tracking": "Native bone-to-world coordinates omit the character camera translation in Core.DoPushIsoStuff. WorldEffects.modelOffsetY adds the missing .48*.61237234*96*tileScale only in sprite screen offsets, preserving world depth. This applies to limb coats, source-derived sparks, charging limbs and explicitly marked model-bone Heat Action/blood anchors; ordinary authored world anchors remain unchanged. Active coating uses proportional native track weight instead of the erroneous 70-percent visibility cutoff. Recovery-only smoke still drops when its old track fades. Baked curves remain subject to actual engine blending differences; this is not live blended-bone access.",
+  "appearance": "User-requested approximate placement: all coating layers and source-limb sparks share a screen drop equal to 10% of the compact outer-smoke base height. Outer smoke scale is .17, giving a 1.088*tileScale pixel drop (2.176 pixels at B42 tile scale 2). Base core scale .22, middle Gaiden wisp .065, outer smoke .17 and small limb sparks .065 reduce the previous outer diameter by about 35% and core by about 21%. Original Gaiden, Kiwami 2 and Yakuza 6 pixels remain unchanged; layered translucency, colours, swirls and budgets are retained.",
+  "tracking": "Removed the 0.123.0 56-pixel screen shift after the user observed arm smoke at foot level. The isolated character-camera reconstruction did not establish end-to-end effect placement and its alignment conclusion is withdrawn. Runtime returns to the native bone/world projection and applies only the requested small cosmetic drop, preserving world coordinates/depth. The same small drop is captured for limb-origin flying sparks and used for charging effects. Native source-bone Heat Action/blood anchors receive no added camera shift. Active leg effects retain proportional track weights instead of the former 70-percent cutoff. Baked pose curves and the actual final blended/rendered skeleton can still differ; live in-game placement has not been verified.",
   "reusedSmokeProvenance": "docs/extreme-smoke-assets.json",
   "modelProjection": {
-    "engineMethod": "zombie.core.Core.DoPushIsoStuff",
-    "coreClassSha256": "dcf8345b049013b0b40a768f7f1501bc595e5389ad6f20e3c83879dc98588f04",
-    "cameraSequence": "scale(Core.scale), rotateX(0.5235988), rotateY(2.3561945), scale(-1.5,1.5,1.5), rotateY(renderedAngle+PI), translate(0,-0.48,0)",
-    "rootTransform": "Root character ModelInstanceRenderData xfrm is identity; the camera offset is not cancelled.",
-    "proof": "LimbRenderProjectionProbe reconstructs the installed rendering-camera equation using native JOML matrices, independent of the gameplay Model.vectorToWorldCoords helper. A separate Kahlua assertion compares actual effect screen centres to native-matrix reference samples.",
+    "status": "The 0.123 camera-only alignment inference was contradicted by user-observed placement and withdrawn.",
+    "currentMethod": "Actual installed Model.vectorToWorldCoords and IsoUtils.XToScreen/YToScreen, with no synthetic camera translation.",
+    "scope": "Checks bone/world coordinate math and handedness. This does not validate the final engine-blended skeleton or end-to-end in-game placement.",
     "projections": 23232,
     "facings": 16,
-    "maxErrorPixels": 4.1561465268577745e-05,
-    "previousOffsetPixelsAtTileScale2": 56.436263945262894,
+    "maxErrorPixels": 1.7100034386995274e-05,
+    "finalRenderedSkeletonVerified": false,
+    "requestedDropFraction": 0.1,
+    "dropBasis": "64-pixel outer smoke frame times its .17 base scale times tileScale",
+    "dropPixelsAtTileScale2": 2.176,
     "worldDepthUnchanged": true
   },
   "gaidenProvenance": "docs/gaiden-effect-assets.json"

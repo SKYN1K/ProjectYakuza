@@ -3,7 +3,7 @@ require "ProjectYakuza/WorldEffects"
 require "ProjectYakuza/AttackTracks"
 require "ProjectYakuza/AttackTrailCatalog"
 local PY=ProjectYakuza
-local F={states=setmetatable({}, {__mode="k"}),maxActors=8,maxTails=8,pointCount=30,historySize=24,trailMs=70,tails={},bursts={},maxBursts=16,serial=0}
+local F={states=setmetatable({}, {__mode="k"}),maxActors=8,maxTails=8,pointCount=30,historySize=24,trailMs=70,tails={},bursts={},maxBursts=16,serial=0,outerScale=.17,dropFraction=.10}
 PY.AttackEffects=F
 local function valid(p,s)
     local style=PY.getPlayerStyle(p)
@@ -237,7 +237,7 @@ local function allocate(s)
     local tile=Core.getTileScale();s.points={}
     for i=1,F.pointCount do
         local sp=i<=11 and F.flame or i<=14 and F.gaidenSmoke or i<=26 and F.smoke or F.spark
-        local scale=(i<=11 and .28 or i<=14 and .095 or i<=26 and .26 or .09)*tile
+        local scale=(i<=11 and .22 or i<=14 and .065 or i<=26 and F.outerScale or .065)*tile
         local phase=(s.seed+i*13)%17;local speed=(i<=11 and .48 or .32)*(.72+phase/24)
         local animated=i<=11 or i>=15 and i<=26
         local instance=PY.WorldEffects.detached(sp,scale,animated and speed or 0)
@@ -297,11 +297,14 @@ function F.historyPose(s,target,out)
     end
     return false
 end
+function F.coatOffset()
+    return 64*F.outerScale*F.dropFraction*Core.getTileScale()
+end
 local function drawPoint(p,s,index,x,y,z,alpha,color)
     if alpha<=.001 then return end
     local point=s.points[index]
     if point.alpha~=alpha then point.instance:SetAlpha(alpha);point.instance:SetTargetAlpha(alpha);point.alpha=alpha end
-    point.instance:render(p,x,y,z,IsoDirections.N,0,-point.height*point.scale/2-PY.WorldEffects.modelOffsetY(),color)
+    point.instance:render(p,x,y,z,IsoDirections.N,0,-point.height*point.scale/2-F.coatOffset(),color)
 end
 function F.swirl(s,index,t,clock,amount)
     local a=clock*(.017+(index%4)*.004)+s.seed*.71+index*2.399963
@@ -336,18 +339,18 @@ end
 function F.hit(p,victim,strong,charged,anchor)
     local style=PY.getPlayerStyle(p)
     if not style or style.hitEffects~="yakuza6" or p:getModData().ProjectYakuzaHitEffectsDisabled or p:isDead()then return end
-    local s=F.states[p];local x,y,z;local modelAnchor=false
+    local s=F.states[p];local x,y,z;local drop=0
     if s then
         local time,weight,location=F.findTrack(p,s.track.animation,s.location)
         time=time or s.time
         local window=time and F.window(s,time)
         if window and F.attachmentWeight(weight)>=.05 then
             s.track=PY.AttackTracks[window.track];s.location=location or s.location
-            local joints=F.worldJoints(p,s,time,F.pose(p,s,time));x,y,z=F.armPoint(joints,1);modelAnchor=true
+            local joints=F.worldJoints(p,s,time,F.pose(p,s,time));x,y,z=F.armPoint(joints,1);drop=F.coatOffset()
         end
     end
     if not x then
-        if anchor then x,y,z=anchor.x,anchor.y,anchor.z;modelAnchor=anchor.modelAnchor==true
+        if anchor then x,y,z=anchor.x,anchor.y,anchor.z
         elseif victim then x,y,z=victim:getX(),victim:getY(),victim:getZ()+.48
         else return end
     end
@@ -363,7 +366,7 @@ function F.hit(p,victim,strong,charged,anchor)
     F.colors();F.serial=F.serial+1
     local seed=(F.serial*7919+math.floor(getTimestampMs())%65521)%2147483647
     local function random()seed=seed*48271%2147483647;return seed/2147483647 end
-    local b={owner=p,style=style.id,x=x,y=y,z=z,modelAnchor=modelAnchor,last=getTimestampMs(),age=0,life=charged and 210 or strong and 180 or 150,color=PY.Heat.isExtreme(p)and F.extreme or F.normal,points={}}
+    local b={owner=p,style=style.id,x=x,y=y,z=z,drop=drop,last=getTimestampMs(),age=0,life=charged and 210 or strong and 180 or 150,color=PY.Heat.isExtreme(p)and F.extreme or F.normal,points={}}
     local tile=Core.getTileScale();local angle=random()*math.pi*2;local puff=F.puffs[math.floor(random()*#F.puffs)+1]
     for i=1,7 do
         local scale=(i==7 and .11 or .055+random()*.035)*(strong and 1.10 or 1)*tile
@@ -386,9 +389,8 @@ function F.drawBursts(now,paused,hidden)
                 if k<1 then
                     local alpha=(n==7 and .34 or .62)*(1-k)^1.5
                     point.instance:SetAlpha(alpha);point.instance:SetTargetAlpha(alpha)
-                    local offset=b.modelAnchor and PY.WorldEffects.modelOffsetY()or 0
-                    if n==7 then point.instance:render(p,b.x,b.y,b.z,IsoDirections.N,point.ox*point.scale,point.oy*point.scale-offset,b.color)
-                    else point.instance:render(p,b.x+point.vx*t-point.vy*point.curve*t*t,b.y+point.vy*t+point.vx*point.curve*t*t,b.z+point.vz*t-1.4*t*t,IsoDirections.N,0,point.oy*point.scale-offset,b.color)end
+                    if n==7 then point.instance:render(p,b.x,b.y,b.z,IsoDirections.N,point.ox*point.scale,point.oy*point.scale-b.drop,b.color)
+                    else point.instance:render(p,b.x+point.vx*t-point.vy*point.curve*t*t,b.y+point.vy*t+point.vx*point.curve*t*t,b.z+point.vz*t-1.4*t*t,IsoDirections.N,0,point.oy*point.scale-b.drop,b.color)end
                 end
             end
         end

@@ -77,7 +77,7 @@ function F.draw()
                     local bx,by,bz=PY.AttackEffects.sample(s.track,phase,point.limb+1)
                     local i=point.index;local t=i<=3 and (.12+i*.19) or i==4 and .38 or i==5 and .70 or (.18+.55*((s.clock/360)%1))
                     local x,y,wx,wy,wz=PY.AttackEffects.project(ax+(bx-ax)*t,ay+(by-ay)*t,az+(bz-az)*t,angle,tile)
-                    y=y+2*tile+PY.WorldEffects.modelOffsetY()
+                    y=y+2*tile+PY.AttackEffects.coatOffset()
                     local alpha=fade*(.55+.30*s.power)*(i<=3 and .8 or i<=5 and .9 or 1)
                     SpriteRenderer.instance:setDoAdditive(i<=3)
                     if i==6 then x=x+math.sin(s.clock*.025)*tile;y=y+math.cos(s.clock*.025)*tile end
