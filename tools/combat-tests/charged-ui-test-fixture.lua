@@ -246,7 +246,7 @@ instance=function(sprite)
   SetAlpha=function(self,v)self.alpha=v end,SetTargetAlpha=function()end,
   render=function(self,p,x,y,z,d,dx,dy,color)if self.fail then error('intentional charge FX failure')end;rendered=rendered+1;self.direction=d;self.dx=dx;self.dy=dy;self.color=color end}
 end
-IsoSprite={CreateSprite=function()return {LoadFramesNoDirPageSimple=function(self,path)self.path=path end,LoadFramesNoDirPageDirect=function(self,path,kind,count)self.path=path;self.kind=kind;self.frameCount=count end,setAnimate=function()end,update=function(self,i)i.advanced=(i.advanced or 0)+1 end}end}
+IsoSprite={CreateSprite=function()return {getTextureForFrame=function()return {getHeight=function()return 128 end,setWidth=function()end}end,LoadFramesNoDirPageSimple=function(self,path)self.path=path end,LoadFramesNoDirPageDirect=function(self,path,kind,count)self.path=path;self.kind=kind;self.frameCount=count end,setAnimate=function()end,update=function(self,i)i.advanced=(i.advanced or 0)+1 end}end}
 function p:getZ()return 0 end
 function p:getOffsetX()return 0 end;function p:getOffsetY()return 0 end
 function p:getForwardDirection()return {getX=function()return self.fx or 1 end,getY=function()return self.fy or 0 end}end

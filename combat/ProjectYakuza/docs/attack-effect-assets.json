@@ -1,5 +1,5 @@
 {
-  "version": "0.124.0",
+  "version": "0.125.0",
   "authorization": "User requested suitable original installed Yakuza effects, more dramatic limb effects on all weapon moves and flying sparks in the same colour.",
   "game": "Yakuza Kiwami 2",
   "source": "Original supplied particle.par textures, retained in extracted/kiwami2-particles",
@@ -53,7 +53,7 @@
       "operation": "Unchanged original Kiwami 2 spark-fan pixels. Runtime colour, world trajectories and fades supply variation."
     }
   ],
-  "appearance": "User-requested approximate placement: all coating layers and source-limb sparks share a screen drop equal to 10% of the compact outer-smoke base height. Outer smoke scale is .17, giving a 1.088*tileScale pixel drop (2.176 pixels at B42 tile scale 2). Base core scale .22, middle Gaiden wisp .065, outer smoke .17 and small limb sparks .065 reduce the previous outer diameter by about 35% and core by about 21%. Original Gaiden, Kiwami 2 and Yakuza 6 pixels remain unchanged; layered translucency, colours, swirls and budgets are retained.",
+  "appearance": "Original game pixels and requested small screen drop are retained. A native B42 64x128 sprite heuristic was overriding the Gaiden smoke and two Kiwami 2 impact wisps to scale 2 after their anchors were prepared, enlarging them and moving their visible centres down/right. Runtime texture width metadata is set to 65, with horizontal instance scale multiplied by 64/65. The metadata correction is reasserted before drawing to handle asynchronous texture readiness or reloads. Full original UVs, aspect ratio, intended dimensions and centred placement are preserved; no image file is changed. Outer smoke tapers by 35% towards the hand, shrinks during its 45ms retirement fade, and impact puffs use base scale .065 instead of .11, alpha .25 instead of .34, shrinking geometry and at most 94.5ms visibility.",
   "tracking": "Removed the 0.123.0 56-pixel screen shift after the user observed arm smoke at foot level. The isolated character-camera reconstruction did not establish end-to-end effect placement and its alignment conclusion is withdrawn. Runtime returns to the native bone/world projection and applies only the requested small cosmetic drop, preserving world coordinates/depth. The same small drop is captured for limb-origin flying sparks and used for charging effects. Native source-bone Heat Action/blood anchors receive no added camera shift. Active leg effects retain proportional track weights instead of the former 70-percent cutoff. Baked pose curves and the actual final blended/rendered skeleton can still differ; live in-game placement has not been verified.",
   "reusedSmokeProvenance": "docs/extreme-smoke-assets.json",
   "modelProjection": {
@@ -69,5 +69,13 @@
     "dropPixelsAtTileScale2": 2.176,
     "worldDepthUnchanged": true
   },
-  "gaidenProvenance": "docs/gaiden-effect-assets.json"
+  "gaidenProvenance": "docs/gaiden-effect-assets.json",
+  "nativeSpriteScaling": {
+    "probe": "tools/combat-tests/ParticleScaleProbe.java",
+    "reproduced": "IsoSprite.performRenderFrame forces 64x128 textures to scale 2 after prepareToRenderSprite computes small-scale moving-object placement.",
+    "fix": "Only the three affected static particle textures use runtime width metadata 65 and scaleX=scaleY*64/65. Source texture UVs and all file bytes are unchanged.",
+    "normalLuaVerified": true,
+    "runtimeJavaBridgeRequired": false,
+    "finalInGamePlacementVerified": false
+  }
 }

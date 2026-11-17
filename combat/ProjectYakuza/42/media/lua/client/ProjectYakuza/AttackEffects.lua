@@ -3,7 +3,7 @@ require "ProjectYakuza/WorldEffects"
 require "ProjectYakuza/AttackTracks"
 require "ProjectYakuza/AttackTrailCatalog"
 local PY=ProjectYakuza
-local F={states=setmetatable({}, {__mode="k"}),maxActors=8,maxTails=8,pointCount=30,historySize=24,trailMs=70,tails={},bursts={},maxBursts=16,serial=0,outerScale=.17,dropFraction=.10}
+local F={states=setmetatable({}, {__mode="k"}),maxActors=8,maxTails=8,pointCount=30,historySize=24,trailMs=45,tails={},bursts={},maxBursts=16,serial=0,outerScale=.17,dropFraction=.10}
 PY.AttackEffects=F
 local function valid(p,s)
     local style=PY.getPlayerStyle(p)
@@ -222,13 +222,19 @@ function F.tick()
     end
 end
 local corePositions={.25,.62,1}
-local function sprite(path)
-    local result=IsoSprite.CreateSprite(nil);result:LoadFramesNoDirPageSimple(path);return result
+local compactTextures=setmetatable({}, {__mode="k"})
+local function sprite(path,compact)
+    local result=IsoSprite.CreateSprite(nil);result:LoadFramesNoDirPageSimple(path)
+    if compact then
+        local texture=result:getTextureForFrame(0,IsoDirections.N)
+        texture:getHeight();texture:setWidth(65);compactTextures[result]=texture
+    end
+    return result
 end
 local function allocate(s)
     if not F.flame then
         F.spark=sprite("media/textures/ProjectYakuza/ChargeSpark.png")
-        F.gaidenSmoke=sprite("media/textures/ProjectYakuza/AttackFX/e_n_5001_hitsmoke_small.png")
+        F.gaidenSmoke=sprite("media/textures/ProjectYakuza/AttackFX/e_n_5001_hitsmoke_small.png",true)
         F.flame=IsoSprite.CreateSprite(nil)
         F.flame:LoadFramesNoDirPageDirect("media/textures/ProjectYakuza/ExtremeHeat","flame",64);F.flame:setAnimate(true)
         F.smoke=IsoSprite.CreateSprite(nil)
@@ -241,8 +247,9 @@ local function allocate(s)
         local phase=(s.seed+i*13)%17;local speed=(i<=11 and .48 or .32)*(.72+phase/24)
         local animated=i<=11 or i>=15 and i<=26
         local instance=PY.WorldEffects.detached(sp,scale,animated and speed or 0)
+        local texture=compactTextures[sp];local widthScale=texture and 64/65 or 1;instance:setScale(scale*widthScale,scale)
         for n=1,phase do if animated then sp:update(instance)end end
-        s.points[i]={instance=instance,sprite=sp,animated=animated,height=i>=12 and i<=14 and 128 or i>=15 and i<=26 and 64 or 32,scale=scale,baseScale=scale}
+        s.points[i]={instance=instance,sprite=sp,texture=texture,widthScale=widthScale,animated=animated,height=i>=12 and i<=14 and 128 or i>=15 and i<=26 and 64 or 32,scale=scale,baseScale=scale}
     end
 end
 function F.armPoint(joints,t)
@@ -314,8 +321,9 @@ function F.swirl(s,index,t,clock,amount)
     return math.cos(a)*radius,math.sin(a*1.19)*radius,math.sin(a*.83)*radius*.6,.86+.14*math.sin(a*1.37)
 end
 function F.resize(point,factor)
+    if point.texture then point.texture:setWidth(65)end
     local scale=point.baseScale*factor
-    if point.scale~=scale then point.instance:setScale(scale,scale);point.scale=scale end
+    if point.scale~=scale then point.instance:setScale(scale*(point.widthScale or 1),scale);point.scale=scale end
 end
 function F.drawHistory(p,s,animate)
     if not s.lastEmission or s.clock-s.lastEmission>=F.trailMs then return end
@@ -327,9 +335,10 @@ function F.drawHistory(p,s,animate)
         local distance=math.sqrt(sx*sx+sy*sy)
         if distance>2 then local k=2/distance;x=cx+dx*k;y=cy+dy*k;z=cz+dz*k end
         local ox,oy,oz,pulse=F.swirl(s,i,t,s.clock,1)
-        local point=s.points[i];F.resize(point,.92+.12*pulse)
-        if animate and point.animated then point.sprite:update(point.instance)end
         local fade=math.max(0,1-(s.clock-s.lastEmission)/F.trailMs)
+        local taper=1-.35*t*t
+        local point=s.points[i];F.resize(point,(.92+.12*pulse)*taper*(.55+.45*fade))
+        if animate and point.animated then point.sprite:update(point.instance)end
         drawPoint(p,s,i,x+ox,y+oy,z+oz,.13*fade*pulse*(s.lastWeight or 1),s.lastColor)
     end
 end
@@ -361,7 +370,7 @@ function F.hit(p,victim,strong,charged,anchor)
     if not F.streak then
         F.streak=sprite("media/textures/ProjectYakuza/AttackFX/e_j_0361_spark_b.png")
         F.gaidenSpark=sprite("media/textures/ProjectYakuza/AttackFX/e_f_d0004_spark.png")
-        F.puffs={{sprite=sprite("media/textures/ProjectYakuza/AttackFX/e_j_0332_sparks_a.png"),ox=-64,oy=0},{sprite=sprite("media/textures/ProjectYakuza/AttackFX/e_j_0073_aura_cA8L8.png"),ox=0,oy=-64},{sprite=sprite("media/textures/ProjectYakuza/AttackFX/e_j_0073_aura_dA8L8.png"),ox=0,oy=-64}}
+        F.puffs={{sprite=sprite("media/textures/ProjectYakuza/AttackFX/e_j_0332_sparks_a.png"),ox=-64,oy=0},{sprite=sprite("media/textures/ProjectYakuza/AttackFX/e_j_0073_aura_cA8L8.png",true),ox=0,oy=-64},{sprite=sprite("media/textures/ProjectYakuza/AttackFX/e_j_0073_aura_dA8L8.png",true),ox=0,oy=-64}}
     end
     F.colors();F.serial=F.serial+1
     local seed=(F.serial*7919+math.floor(getTimestampMs())%65521)%2147483647
@@ -369,11 +378,13 @@ function F.hit(p,victim,strong,charged,anchor)
     local b={owner=p,style=style.id,x=x,y=y,z=z,drop=drop,last=getTimestampMs(),age=0,life=charged and 210 or strong and 180 or 150,color=PY.Heat.isExtreme(p)and F.extreme or F.normal,points={}}
     local tile=Core.getTileScale();local angle=random()*math.pi*2;local puff=F.puffs[math.floor(random()*#F.puffs)+1]
     for i=1,7 do
-        local scale=(i==7 and .11 or .055+random()*.035)*(strong and 1.10 or 1)*tile
+        local scale=(i==7 and .065 or .055+random()*.035)*(strong and 1.10 or 1)*tile
         local gaiden=i<7 and i%2==1
-        local instance=PY.WorldEffects.detached(i==7 and puff.sprite or gaiden and F.gaidenSpark or F.streak,scale,0)
+        local sp=i==7 and puff.sprite or gaiden and F.gaidenSpark or F.streak
+        local instance=PY.WorldEffects.detached(sp,scale,0)
+        local texture=compactTextures[sp];local widthScale=texture and 64/65 or 1;instance:setScale(scale*widthScale,scale)
         local turn=angle+i*2.399963+random()*.7;local speed=.3+random()*.7
-        b.points[i]={instance=instance,scale=scale,vx=math.cos(turn)*speed,vy=math.sin(turn)*speed,vz=.18+random()*.7,life=.55+random()*.45,curve=(random()-.5)*2.4,ox=i==7 and puff.ox or 0,oy=i==7 and puff.oy or gaiden and -32 or -48}
+        b.points[i]={instance=instance,scale=scale,baseScale=scale,texture=texture,widthScale=widthScale,vx=math.cos(turn)*speed,vy=math.sin(turn)*speed,vz=.18+random()*.7,life=i==7 and .45 or .55+random()*.45,curve=(random()-.5)*2.4,ox=i==7 and puff.ox or 0,oy=i==7 and puff.oy or gaiden and -32 or -48}
     end
     F.bursts[#F.bursts+1]=b;F.syncHook()
 end
@@ -387,9 +398,9 @@ function F.drawBursts(now,paused,hidden)
             for n,point in ipairs(b.points)do
                 local k=b.age/(b.life*point.life)
                 if k<1 then
-                    local alpha=(n==7 and .34 or .62)*(1-k)^1.5
+                    local alpha=(n==7 and .25 or .62)*(1-k)^1.5
                     point.instance:SetAlpha(alpha);point.instance:SetTargetAlpha(alpha)
-                    if n==7 then point.instance:render(p,b.x,b.y,b.z,IsoDirections.N,point.ox*point.scale,point.oy*point.scale-b.drop,b.color)
+                    if n==7 then F.resize(point,1-.45*k);point.instance:render(p,b.x,b.y,b.z,IsoDirections.N,point.ox*point.scale,point.oy*point.scale-b.drop,b.color)
                     else point.instance:render(p,b.x+point.vx*t-point.vy*point.curve*t*t,b.y+point.vy*t+point.vx*point.curve*t*t,b.z+point.vz*t-1.4*t*t,IsoDirections.N,0,point.oy*point.scale-b.drop,b.color)end
                 end
             end

@@ -32,6 +32,7 @@ subprocess.run([sys.executable,str(WORK/'build_gaiden_effect_assets.py'),'--vali
 gaiden=json.loads((MOD/'docs/gaiden-effect-assets.json').read_text())
 for row in gaiden['textures']:outputs.append(str((MOD/row['output']).resolve()))
 subprocess.run([str(GAME/'jre64/bin/java.exe'),'-Xms16m','-Xmx256m','-XX:ActiveProcessorCount=2','--enable-native-access=ALL-UNNAMED','-cp','.;'+str(GAME/'*'),'AttackEffectProbe',*outputs],cwd=WORK,check=True)
+subprocess.run([str(GAME/'jre64/bin/java.exe'),'-Xms16m','-Xmx256m','-XX:ActiveProcessorCount=2','--enable-native-access=ALL-UNNAMED','-cp','.;'+str(GAME/'*'),'ParticleScaleProbe'],cwd=WORK,check=True)
 catalog=json.loads((MOD/'docs/attack-trail-catalog.json').read_text())
 code=(MOD/catalog['catalog']).read_bytes();assert hashlib.sha256(code).hexdigest()==catalog['sha256']
 rows=catalog['clips'];assert len(rows)==95 and sum(len(r['windows'])for r in rows)==121

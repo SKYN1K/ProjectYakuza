@@ -22,14 +22,27 @@ end
 
 local function instance()
  allocated=allocated+1
- return {setScale=function(s,x,y)s.scale=x end,setFrameSpeedPerFrame=function()end,SetAlpha=function(s,v)s.alpha=v end,SetTargetAlpha=function()end,
+ return {setScale=function(s,x,y)s.xScale=x;s.scale=y end,setFrameSpeedPerFrame=function()end,SetAlpha=function(s,v)s.alpha=v end,SetTargetAlpha=function()end,
  Dispose=function(s)check(not s.disposed,'no double disposal');s.disposed=true;disposed=disposed+1 end,
  render=function(s,p,x,y,z,d,ox,oy,col)
   if failRender then error('injected render failure')end
-  draws[#draws+1]={instance=s,p=p,x=x,y=y,z=z,ox=ox,oy=oy,color=col,alpha=s.alpha,scale=s.scale,height=s.sprite.height,additive=additive,rootX=p:getX(),rootY=p:getY(),rootZ=p:getZ()}
+  if s.sprite.texture and s.sprite.texture.width==64 and s.sprite.height==128 then s.xScale=2;s.scale=2 end
+  draws[#draws+1]={instance=s,p=p,x=x,y=y,z=z,ox=ox,oy=oy,color=col,alpha=s.alpha,scale=s.scale,xScale=s.xScale,width=s.sprite.texture and s.sprite.texture.width,height=s.sprite.height,additive=additive,rootX=p:getX(),rootY=p:getY(),rootZ=p:getZ()}
  end}
 end
-IsoSprite={CreateSprite=function()return {height=64,LoadFramesNoDirPageSimple=function(s,path)s.height=string.find(path,'ChargeSpark')and 32 or (string.find(path,'e_j_0073')or string.find(path,'e_j_0332')or string.find(path,'e_n_5001'))and 128 or 64 end,LoadFramesNoDirPageDirect=function(s,path,kind)s.height=kind=='smoke'and 64 or 32 end,setAnimate=function()end,update=function()updated=updated+1 end}end}
+IsoSprite={CreateSprite=function()
+ local s={height=64}
+ function s:LoadFramesNoDirPageSimple(path)
+  self.height=string.find(path,'ChargeSpark')and 32 or (string.find(path,'e_j_0073')or string.find(path,'e_j_0332')or string.find(path,'e_n_5001'))and 128 or 64
+  local width=string.find(path,'e_j_0332')and 128 or string.find(path,'e_j_0361')and 32 or self.height==32 and 32 or 64
+  self.texture={width=width,getHeight=function()return s.height end,setWidth=function(t,w)t.width=w end}
+ end
+ function s:getTextureForFrame()return self.texture end
+ function s:LoadFramesNoDirPageDirect(path,kind)self.height=kind=='smoke'and 64 or 32 end
+ function s:setAnimate()end
+ function s:update()updated=updated+1 end
+ return s
+end}
 IsoSpriteInstance={add=function()end,get=function(sprite)local i=instance();i.sprite=sprite;return i end}
 local function actor()
  local a={dead=false,equipped=true,reaction='',floor=false,md={},angle=0,time=0,weight=1,localPlayer=true,lookup=0,empty=false,x=0,y=0,z=0}
@@ -96,7 +109,10 @@ emit('lightAttackStarted',p,style,1,move);check(F.states[p]and F.hooked and allo
 p.time=.04;F.tick();F.render();check(allocated==0 and #draws==0,'no particles before source window')
 p.time=.2;F.tick();F.render()
 check(allocated==30 and #F.states[p].points==30,'limb coating and lingering trails have a fixed thirty-sprite budget')
+for _,d in ipairs(draws)do if d.width==65 then check(near(d.xScale*65,d.scale*64)and d.scale<.15,'64x128 wisp bypasses native automatic 2x scaling without stretching pixels')end end
 check(#draws>=14 and additive,'contiguous coat and inner arm layers draw, restoring renderer state')
+local wispTexture=F.states[p].points[12].texture;wispTexture.width=64;draws={};F.render()
+check(wispTexture.width==65 and F.states[p].points[12].instance.scale<.15,'texture readiness or reload cannot restore automatic enlargement')
 check(F.states[p].points[1].scale<=.46 and F.states[p].points[15].scale<.36,'smaller visible core stays inside a compact smoke layer')
 for _,d in ipairs(draws)do check(not d.additive and d.alpha<=.55,'all arm layers use restrained ordinary alpha')end
 check(F.normal.r>=.6 and F.normal.g>=.8 and F.normal.b==1,'white-blue normal tint remains')
@@ -276,11 +292,13 @@ F.remote(p,nil,{clip='Unknown'});check(not F.states[p],'missing remote style is 
 F.clearAll();p.clip=move.animation;p.time=.2;p.angle=0;p.x=0;p.y=0
 F.start(p,style,1,move);F.tick();F.render()
 for i=1,16 do clock=clock+10;p.time=.2+i*.005;p.angle=p.angle+.04;p.x=p.x+.004;F.tick();F.render()end
-local old=F.states[p];local oldRoot={p.x,p.y};emit('lightAttackFinished',p)
+local old=F.states[p];local oldSmokeScale=old.points[20].scale;local oldRoot={p.x,p.y};emit('lightAttackFinished',p)
 check(not F.states[p]and #F.tails==1 and F.hooked,'finished attack leaves a short world-space trail')
 for i,point in ipairs(old.points)do check((point.instance~=nil)==(i>=15 and i<=26),'retired state keeps only twelve historical flame instances')end
 clock=clock+20;p.angle=p.angle+2;p.x=p.x+.1;draws={};F.render();check(#draws>0,'world history still renders after the source attack finishes')
 for _,draw in ipairs(draws)do check(draw.alpha<=.13,'retired smoke remains translucent')end
+check(old.points[20].scale<oldSmokeScale,'ending smoke shrinks as it fades')
+check(F.trailMs==45,'ending smoke expires within 45 milliseconds')
 F.start(p,style,1,move);F.tick();F.render();check(F.states[p]and #F.tails==1,'new attack does not erase the previous attack trail')
 paused=true;local clocked=old.clock;clock=clock+1000;F.render();check(old.clock==clocked,'retired trail freezes during pause');paused=false
 clock=clock+210;F.render();check(#F.tails==0,'retired trail expires without following the current hand')
@@ -357,6 +375,7 @@ local cloud=F.states[p];local coreDraw,outerDraw
 for _,d in ipairs(draws)do if d.instance==cloud.points[6].instance then coreDraw=d elseif d.instance==cloud.points[20].instance then outerDraw=d end end
 check(coreDraw and outerDraw and coreDraw.alpha>outerDraw.alpha and outerDraw.alpha<=.13,'smaller inner layer is stronger while the outer smoke stays transparent')
 check(outerDraw.height*outerDraw.scale>coreDraw.height*coreDraw.scale and outerDraw.height*outerDraw.scale<23,'outer smoke stays below 23 pixels at normal tile scale')
+check(cloud.points[26].scale<cloud.points[15].scale*.72,'outer smoke tapers towards the hand')
 local startingScale=cloud.points[6].scale;local firstSeed=cloud.seed
 for turn=1,24 do
  clock=clock+10;p.time=.2+turn*.004;p.angle=turn*.31;p.x=turn*.015;p.y=turn*.008;F.tick();draws={};F.render()
@@ -390,6 +409,8 @@ for i=1,12 do
  F.hit(p,nil,true,false,{x=0,y=0,z=.5});local b=F.bursts[#F.bursts]
  for _,point in ipairs(b.points)do check(point.scale<=.2421,'impact sparks and puffs stay below the new size cap')end
  check(b.life<=210,'small chaotic bursts remain brief')
+ local puff=b.points[7];check(puff.scale<=.1431 and b.life*puff.life<=94.5,'ending impact puff is compact and expires within 95 milliseconds')
+ if puff.widthScale~=1 then check(near(puff.instance.xScale*65,puff.scale*64),'impact wisp keeps original aspect ratio without native 2x enlargement')end
 end
 F.clearAll()
 F.clearAll();local legContacts=0
