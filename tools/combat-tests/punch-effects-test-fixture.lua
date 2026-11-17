@@ -29,7 +29,7 @@ local function instance()
   draws[#draws+1]={instance=s,p=p,x=x,y=y,z=z,ox=ox,oy=oy,color=col,alpha=s.alpha,scale=s.scale,height=s.sprite.height,additive=additive,rootX=p:getX(),rootY=p:getY(),rootZ=p:getZ()}
  end}
 end
-IsoSprite={CreateSprite=function()return {height=64,LoadFramesNoDirPageSimple=function(s,path)s.height=string.find(path,'ChargeSpark') and 32 or 64 end,LoadFramesNoDirPageDirect=function(s)s.height=32 end,setAnimate=function()end,update=function()updated=updated+1 end}end}
+IsoSprite={CreateSprite=function()return {height=64,LoadFramesNoDirPageSimple=function(s,path)s.height=string.find(path,'ChargeSpark')and 32 or (string.find(path,'e_j_0073')or string.find(path,'e_j_0332'))and 128 or 64 end,LoadFramesNoDirPageDirect=function(s)s.height=32 end,setAnimate=function()end,update=function()updated=updated+1 end}end}
 IsoSpriteInstance={add=function()end,get=function(sprite)local i=instance();i.sprite=sprite;return i end}
 local function actor()
  local a={dead=false,equipped=true,reaction='',floor=false,md={},angle=0,time=0,weight=1,localPlayer=true,lookup=0,empty=false,x=0,y=0,z=0}
@@ -80,12 +80,12 @@ for i=0,7 do
 end
 for i=0,30 do
  for bone=1,4 do
-  local x,y,z=F.sample(track,i/30,bone);local row=bone==4 and track.upperFrames[i+1]or track.frames[i+1];local n=bone==4 and 0 or (bone-1)*3
+  local x,y,z=F.sample(track,i/30,bone);local row=bone==4 and track.upperFrames[i*4+1]or track.frames[i*4+1];local n=bone==4 and 0 or (bone-1)*3
   check(near(x,row[n+1])and near(y,row[n+2])and near(z,row[n+3]),'exact imported shoulder/elbow/hand/knuckle sample')
  end
 end
-local x,y,z=F.sample(track,6.5/30,4)
-check(near(x,(track.upperFrames[7][1]+track.upperFrames[8][1])/2),'shoulder source is interpolated at subframes')
+local x,y,z=F.sample(track,26.5/120,4)
+check(near(x,(track.upperFrames[27][1]+track.upperFrames[28][1])/2),'shoulder source is interpolated at subframes')
 F.start(p,style,1,{animation='Other'});check(not F.states[p],'unconfigured moves remain unchanged')
 emit('lightAttackStarted',p,style,1,move);check(F.states[p]and F.hooked and allocated==0,'allocation waits for actual clip window')
 p.time=.04;F.tick();F.render();check(allocated==0 and #draws==0,'no particles before source window')
@@ -135,7 +135,7 @@ check(state.historyCount==24 and #state.history==24 and allocated==allocations,'
 local ticks=state.clock;local beforeUpdate=updated;paused=true;clock=clock+1000;p.time=.3;F.tick();F.render()
 check(state.time==.2 and state.clock==ticks and updated==beforeUpdate,'pause freezes source clock, pose history and flames')
 paused=false;p.time=.25;p.extreme=true;clock=clock+16;F.tick();draws={};F.render()
-check(draws[1].color==F.extreme and draws[1].alpha<=.34,'Extreme uses its restrained brighter tint without changing body aura')
+check(draws[1].color==F.extreme and draws[1].alpha<=.40,'Extreme uses its restrained brighter tint without changing body aura')
 local providerCalls=0
 F.registerLimbProvider('live',function(who,animation,time)
  providerCalls=providerCalls+1
@@ -262,7 +262,7 @@ for animation,entry in pairs(catalog)do
  emit('actionCompleted',stamp);check(not F.states[p],'matching action completion clears coating')
  F.remote(p,style,{clip=animation});check(F.states[p],'observer catalogue covers every attack');F.clear(p)
 end
-check(clips==91 and contacts==116,'complete active moveset coverage including four bottle hits, crate loops and both bicycle contacts')
+check(clips==95 and contacts==121,'complete active moveset coverage including four bottle hits, crate loops and both bicycle contacts')
 p.style={id='other_style'};F.start(p,p.style,0,{animation='ProjectYakuza_DD_Heavy'});check(not F.states[p],'builtin catalogue remains style exclusive');p.style=nil
 F.remote(p,nil,{clip='Unknown'});check(not F.states[p],'missing remote style is safe')
 
@@ -301,5 +301,48 @@ p.clip=linked;p.time=(cfg.windows[1].from+cfg.windows[1].to)/2;p.localPlayer=fal
 F.remote(p,style,{clip=linked,action=77,swing=12});F.tick();F.render();local remote=F.states[p];F.remote(p,style,{clip=linked,action=77,swing=12});check(F.states[p]==remote,'repeated MP snapshots cannot reset current limb phase/history')
 F.clear(p);p.localPlayer=true
 
+F.clearAll();style.hitEffects='yakuza6'
+local bottle=catalog.ProjectYakuza_DD_BottleHeat
+local source={};local mask={true,true,true,true}
+p.clip=bottle.animation;p.time=bottle.windows[1].contact
+F.paired(p,source,{animation=bottle.animation,duration=bottle.duration},bottle.animation,0,1,mask)
+local paired=F.states[p];check(paired and paired.external and near(paired.time,p.time),'paired heat uses the actual native clip clock before fallback time')
+F.tick();draws={};F.render();check(#draws>0 and paired.track.limb=='rightArm','bottle Heat Action coats the swinging weapon arm')
+p.time=bottle.windows[1].to+.3;clock=clock+16;F.tick();F.render();check(F.states[p]==paired,'paired effect driver survives gaps between strikes')
+p.time=bottle.windows[2].contact;mask[2]=false;F.paired(p,source,{duration=bottle.duration},bottle.animation,0,1,mask)
+check(not F.window(paired,p.time),'unconfirmed QTE contact has no limb effect')
+mask[2]=true;F.paired(p,source,{duration=bottle.duration},bottle.animation,0,1,mask)
+check(F.window(paired,p.time),'confirmed local or replicated contact enables its limb')
+F.endPaired(p,{},false);check(F.states[p]==paired,'unrelated paired cleanup preserves current source')
+F.endPaired(p,source,false);check(not F.states[p],'paired interruption disposes coating and pending tails')
+local failure=catalog.ProjectYakuza_DD_HeatRushFail;p.clip=failure.animation;p.time=failure.windows[1].contact
+F.paired(p,source,{duration=failure.duration},failure.animation,p.time,1,{[13]=true})
+check(F.window(F.states[p],p.time).index==13,'failure ending retains original confirmed contact index')
+F.clearAll();p.clip=bottle.animation;p.time=bottle.windows[1].contact;p.extreme=false
+F.paired(p,source,{duration=bottle.duration},bottle.animation,p.time,1,mask);F.render()
+local js=F.states[p].joints;local hx,hy,hz=F.armPoint(js,1)
+F.hit(p,nil,true,false,{x=99,y=99,z=99});local burst=F.bursts[1]
+check(burst and near(burst.x,hx)and near(burst.y,hy)and near(burst.z,hz),'weapon sparks emit at the current swinging hand instead of a fixed victim offset')
+check(burst.color==F.normal and #burst.points==7,'six moving original sparks and one source fan use the exact limb colour')
+local vx,vy=burst.points[1].vx,burst.points[1].vy
+F.hit(p,nil,true,false,{x=99,y=99,z=99});check(F.bursts[2].points[1].vx~=vx or F.bursts[2].points[1].vy~=vy,'successive impacts vary cosmetic flight directions')
+clock=clock+40;draws={};F.render();local emittedPoint
+for _,d in ipairs(draws)do if d.instance==burst.points[1].instance then emittedPoint=d end end
+check(emittedPoint and near(emittedPoint.x,hx+vx*.04)and near(emittedPoint.y,hy+vy*.04),'sparks leave the hand with a world-space trajectory')
+p.angle=p.angle+2;p.x=p.x+1;paused=true;clock=clock+500;draws={};F.render()
+check(burst.age==40,'flying sparks pause without aging')
+local frozen
+for _,d in ipairs(draws)do if d.instance==burst.points[1].instance then frozen=d end end
+check(frozen and near(frozen.x,emittedPoint.x)and near(frozen.y,emittedPoint.y),'moving or turning after impact does not rotate emitted sparks')
+paused=false;ISWorldMap_instance={isVisible=function()return true end};draws={};F.render();check(#draws==0,'map suppresses limb, tail and free-spark layers');ISWorldMap_instance=nil
+p.extreme=true;F.hit(p,nil,false,false,{x=0,y=0,z=.5});check(F.bursts[#F.bursts].color==F.extreme,'Extreme sparks match Extreme limb colour')
+for i=1,10 do F.hit(p,nil,false,false,{x=0,y=0,z=.5})end
+check(#F.bursts==3,'dense confirmed hits cap burst instances per actor')
+F.clearAll()
+for i=1,20 do F.hit(actor(),nil,false,false,{x=0,y=0,z=.5})end
+check(#F.bursts==F.maxBursts,'crowd sparks have a fixed global budget')
+clock=clock+400;F.render();check(#F.bursts==0 and allocated==disposed,'all free sparks expire and return native instances')
+p.extreme=false;p.clip=nil;F.clearAll()
+emit('throwStarted',p);check(F.states[p]and F.states[p].track.limb=='leftArm','ordinary grab throw follows its gripping arm');F.clearAll()
 p.clip=nil;F.clearAll();check(allocated==disposed and not F.hooked,'expanded effects release all sprites and hooks')
 return 'PASS '..count..' original-punch tracking, world projection, lifecycle, bounded MP and source-clock audio checks'

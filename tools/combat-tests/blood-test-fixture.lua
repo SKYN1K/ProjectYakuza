@@ -55,15 +55,16 @@ do local _="ProjectYakuzaFixture:WORLD" end
 do local _="ProjectYakuzaFixture:BLOOD" end
 do local _="ProjectYakuzaFixture:HITS" end
 local PY=ProjectYakuza;local B=PY.BloodEffects;local F=PY.HitEffects
+local limbHits=0;PY.AttackEffects={hit=function()limbHits=limbHits+1 end}
 local p,z=actor(),actor('IsoZombie');local weapon={token=true}
 F.onHit(p,z,weapon,0)
 check(#B.bursts==0,'no blood on non-damaging hit')
 F.onHit(p,z,{token=false},1)
 check(#B.bursts==0,'unrelated weapon cannot create blood')
 F.onHit(p,z,weapon,1)
-check(#B.bursts==1 and #F.bursts==1,'actual confirmed-hit path produces sparks and blood')
+check(#B.bursts==1 and #F.bursts==1 and limbHits==1,'actual confirmed-hit path produces limb sparks and blood')
 F.onHit(p,z,weapon,1)
-check(#B.bursts==1,'same victim and swing is deduplicated')
+check(#B.bursts==1 and limbHits==1,'same victim and swing is deduplicated for limb sparks too')
 F.clear(p)
 check(#B.bursts==0 and #F.bursts==0 and not B.hooked,'shared visual cleanup releases blood')
 local initialAttaches=attaches

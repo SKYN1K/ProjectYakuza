@@ -392,3 +392,7 @@
 !tools/combat-tests/spear-spark-test-fixture.lua
 
 !tools/combat-tests/build_spear_spark_contacts.py
+
+!tools/combat-tests/LimbImpactProbe.java
+!tools/combat-tests/AttackEffectProbe.java
+!tools/combat-tests/validate_attack_effect_assets.py

@@ -1,4 +1,12 @@
 local C=PY.HeatActionPresentation;local D=PY.HeatPresentationData
+local limbDriven,limbStopped,limbSparks=0,0,0
+PY.AttackEffects.hit=function()limbSparks=limbSparks+1 end
+PY.AttackEffects.paired=function(actor,source,move,clip,time,weight,mask)
+ check(actor==p and type(clip)=='string'and type(time)=='number'and weight>=.05,'presentation drives paired limbs with its live phase')
+ for i,contact in ipairs(PY.HeatRushRules.contacts(move))do check(not not mask[i]==not not C.allowed({source=source},contact,i),'limb driver shares local and remote confirmed-contact gating')end
+ limbDriven=limbDriven+1
+end
+PY.AttackEffects.endPaired=function(actor,source,complete)check(actor==p and source~=nil,'paired cleanup owns exact heat source');limbStopped=limbStopped+1 end
 local builtin=PY.getStyle('dragon_of_dojima')
 local sourceMoves={builtin.actions.heatAction,builtin.actions.grabHeat.variants.default,builtin.actions.grabHeat.variants.open,builtin.actions.groundHeat}
 for _,profile in ipairs({'bottle','crate','blade','bat','bicycle','knife'})do sourceMoves[#sourceMoves+1]=PY.Weapons.views.dragon_of_dojima[profile].actions.heatAction end
@@ -44,8 +52,10 @@ for animation,data in pairs(D.moves)do
   C.clearAll();plays={};fx={};source={};phase=0;C.start(p,z,move,source);C.tick()
   C.start(p,z,move,source);check(C.states[p].source==source,'MP snapshots preserve presentation session')
   local at=meta.atMs
-  local before=emitted;step(at);check(emitted==before+1,'canonical contact emits once independently of source particles')
-  local count=#fx;step(at+1);check(#fx==count,'contact cannot duplicate on next render')
+  local before=emitted;local previous=limbSparks;local impact=false;for _,effect in ipairs(data.effects)do if effect.index==meta.index and effect.impact then impact=true end end
+  step(at);check(emitted==before+1,'canonical contact emits once independently of source particles')
+  check(limbSparks==previous+(impact and 0 or 1),'source-only blood scenes also emit one coloured limb-spark burst per contact')
+  local count=#fx;local sparks=limbSparks;step(at+1);check(#fx==count and limbSparks==sparks,'contact and limb sparks cannot duplicate on next render')
   H.present(p,z,move,meta.index,true);check(#fx==count,'damage/network echo cannot replay presentation')
   total=total+1
  end
@@ -165,4 +175,5 @@ for _,remote in ipairs({false,true})do
  C.stop(p,source);advance(1000);check(#plays==0 and #fx==0,'interruption cancels stomp sound and impact')
 end
 C.clearAll()
+check(limbDriven>100 and limbStopped>10,'all paired scene lifecycle paths drive and stop limbs')
 return true,'PASS '..checks..' paired Heat Action timing, 38 native contacts, 129 source blood emitters and one stomp contact effect, independent cues and voices, replay suppression and lifecycle checks'

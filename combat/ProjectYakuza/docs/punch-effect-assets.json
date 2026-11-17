@@ -1,5 +1,5 @@
 {
-  "version": "0.101.0",
+  "version": "0.121.0",
   "operation": "The active generated attack catalogue owns first-light numeric FK data; the obsolete duplicated dd_light_01 dataset is removed. Original supplied punch, active source pixels, source whooshes and projection checks are retained.",
   "clip": {
     "path": "42/media/anims_X/Bob/ProjectYakuza_DD_Light01.x",
@@ -8,16 +8,16 @@
   },
   "track": {
     "path": "42/media/lua/client/ProjectYakuza/AttackTrailCatalog.lua",
-    "sha256": "53999b63d3bfaa3ecddad2e1d131ae0d8648dddfc84a7258b61d3f33d2765e26",
-    "fps": 30,
-    "samples": 31,
+    "sha256": "ea187191dadb628d900aa5df18cce1c4510ff65a5d90a9dd931d6aab47b9cf4b",
+    "fps": 120,
+    "samples": 121,
     "bones": [
       "Bip01_L_Forearm",
       "Bip01_L_Hand",
       "Bip01_L_Finger1"
     ],
     "upperArmBone": "Bip01_L_UpperArm",
-    "upperArmSamples": 31,
+    "upperArmSamples": 121,
     "key": "dd_trail_light01_1"
   },
   "reused_textures": [

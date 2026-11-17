@@ -13,6 +13,7 @@ end
 function C.stop(p,source,complete)
     local s=C.states[p];if not s or source and s.source~=source then return end
     if not complete then for _,h in ipairs(s.handles)do if h.emitter:isPlaying(h.id)then h.emitter:stopSound(h.id)end end end
+    if PY.AttackEffects.endPaired then PY.AttackEffects.endPaired(p,s.source,complete)end
     C.states[p]=nil;C.sync()
 end
 function C.start(p,z,move,source)
@@ -106,6 +107,9 @@ function C.tick()
                 if time+20<s.last then C.stop(p,s.source)
                 else
                     s.last=time;s.waitAt=getTimestampMs()
+                    s.limbContacts=s.limbContacts or {}
+                    for i,contact in ipairs(PY.HeatRushRules.contacts(s.move))do s.limbContacts[i]=C.allowed(s,contact,i)end
+                    if PY.AttackEffects.paired then PY.AttackEffects.paired(p,s.source,s.move,clip,phase,weight,s.limbContacts)end
                     local definition=ending and s.move.qteFailure or s.move
                     C.authoredEvents(p,s,time,definition)
                     for i,meta in ipairs(contacts)do
@@ -124,7 +128,10 @@ function C.tick()
                             if not s.effects[i]and time>=meta.atMs then
                                 s.effects[i]=true
                                 if time-meta.atMs<=C.late(s) then
-                                    if effects~=nil then PY.emit("heatRushHit",p,s.victim,index,contact)
+                                    if effects~=nil then
+                                        local impact=false;for _,event in ipairs(effects)do if event.index==index and event.impact then impact=true;break end end
+                                        if not impact and PY.AttackEffects.hit then PY.AttackEffects.hit(p,s.victim,contact.strong~=false,contact.charged==true,C.anchor(p,s.victim,meta.point))end
+                                        PY.emit("heatRushHit",p,s.victim,index,contact)
                                     else PY.HeatRush.present(p,s.victim,s.move,index,true,true,C.anchor(p,s.victim,meta.point),meta.feedback,meta.bloodOnly)end
                                 end
                             end

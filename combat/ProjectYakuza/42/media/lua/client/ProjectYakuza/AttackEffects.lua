@@ -3,7 +3,7 @@ require "ProjectYakuza/WorldEffects"
 require "ProjectYakuza/AttackTracks"
 require "ProjectYakuza/AttackTrailCatalog"
 local PY=ProjectYakuza
-local F={states=setmetatable({}, {__mode="k"}),maxActors=8,maxTails=8,pointCount=30,historySize=24,trailMs=200,tails={}}
+local F={states=setmetatable({}, {__mode="k"}),maxActors=8,maxTails=8,pointCount=30,historySize=24,trailMs=120,tails={},bursts={},maxBursts=16,serial=0}
 PY.AttackEffects=F
 local function valid(p,s)
     local style=PY.getPlayerStyle(p)
@@ -93,13 +93,14 @@ function F.dispose(s,tailOnly)
     end
 end
 function F.syncHook()
-    local any=#F.tails>0;for _ in pairs(F.states)do any=true;break end
+    local any=#F.tails>0 or #F.bursts>0;for _ in pairs(F.states)do any=true;break end
     if any and not F.hooked then Events.OnTick.Add(F.tick);Events.OnPostRender.Add(F.render);F.hooked=true
     elseif not any and F.hooked then Events.OnTick.Remove(F.tick);Events.OnPostRender.Remove(F.render);F.hooked=false end
 end
 function F.clear(p)
     local s=F.states[p];if s then F.dispose(s);F.states[p]=nil end
     for i=#F.tails,1,-1 do if F.tails[i].owner==p then F.dispose(F.tails[i]);table.remove(F.tails,i)end end
+    for i=#F.bursts,1,-1 do if F.bursts[i].owner==p then F.dispose(F.bursts[i]);table.remove(F.bursts,i)end end
     F.syncHook()
 end
 function F.finish(p)
@@ -114,7 +115,8 @@ end
 function F.clearAll()
     for _,s in pairs(F.states)do F.dispose(s)end
     for _,s in ipairs(F.tails)do F.dispose(s)end
-    F.states=setmetatable({}, {__mode="k"});F.tails={};F.syncHook()
+    for _,s in ipairs(F.bursts)do F.dispose(s)end
+    F.states=setmetatable({}, {__mode="k"});F.tails={};F.bursts={};F.syncHook()
 end
 function F.configuration(style,move)
     if not move then return end
@@ -148,6 +150,24 @@ function F.remote(p,style,packet)
     end
     if config then F.start(p,style,0,{animation=config.actionAnimation or animation},stamp)else F.finish(p)end
 end
+function F.paired(p,source,move,clip,time,weight,contacts)
+    local style=PY.getPlayerStyle(p);local catalog=style and PY.AttackEffectCatalog and PY.AttackEffectCatalog[style.id]
+    local config=catalog and catalog[clip]
+    if not config then F.endPaired(p,source);return end
+    local s=F.states[p]
+    if not s or s.heatSource~=source or s.track.animation~=clip then
+        F.start(p,style,0,{animation=clip})
+        s=F.states[p];if not s then return end
+        s.heatSource=source;s.external=true;s.family=clip;s.timeout=math.max(s.timeout,(move.duration or config.duration)*4000+5000)
+    end
+    s.contactMask=contacts;s.externalAt=getTimestampMs()
+    local native,nativeWeight,location=F.findTrack(p,clip,s.location)
+    s.time=native or time;s.weight=nativeWeight or weight;s.location=location;s.seen=true
+end
+function F.endPaired(p,source,complete)
+    local s=F.states[p];if not s or not s.external or source and s.heatSource~=source then return end
+    if complete then F.finish(p)else F.clear(p)end
+end
 function F.playing(p,s)
     local now=getTimestampMs()
     if s.location and now<(s.nextResolve or 0)then
@@ -173,7 +193,7 @@ function F.playing(p,s)
 end
 function F.window(s,time)
     if not s.config.windows then return s.config end
-    for _,window in ipairs(s.config.windows)do if time>=window.from and time<=window.to then return window end end
+    for _,window in ipairs(s.config.windows)do if time>=window.from and time<=window.to and(not s.contactMask or s.contactMask[window.index])then return window end end
 end
 
 function F.tick()
@@ -182,6 +202,8 @@ function F.tick()
         local dt=math.max(0,now-s.last);s.last=now
         if not paused then s.clock=s.clock+dt end
         if not valid(p,s) or s.clock>s.timeout then F.clear(p)
+        elseif s.external then
+            if not paused and now-s.externalAt>1500 then F.clear(p)end
         elseif not paused then
             local time,weight,location=F.playing(p,s)
             s.location=location
@@ -203,16 +225,18 @@ local function allocate(s)
     if not F.glint then
         F.glint=sprite("media/textures/ProjectYakuza/HitGlint.png")
         F.spark=sprite("media/textures/ProjectYakuza/ChargeSpark.png")
+        F.wispA=sprite("media/textures/ProjectYakuza/AttackFX/e_j_0073_aura_cA8L8.png")
+        F.wispB=sprite("media/textures/ProjectYakuza/AttackFX/e_j_0073_aura_dA8L8.png")
         F.flame=IsoSprite.CreateSprite(nil)
         F.flame:LoadFramesNoDirPageDirect("media/textures/ProjectYakuza/ExtremeHeat","flame",64);F.flame:setAnimate(true)
     end
     local tile=Core.getTileScale();s.points={}
     for i=1,F.pointCount do
         local flame=i<=11 or i>=15 and i<=26
-        local sp=flame and F.flame or i>=27 and F.spark or F.glint
+        local sp=flame and F.flame or i>=27 and F.spark or i==12 and F.wispA or i==13 and F.wispB or F.glint
         local scale=(i<=11 and .44 or i==14 and .18 or i<=14 and .13 or i<=26 and .35 or .16)*tile
         local instance=PY.WorldEffects.detached(sp,scale,flame and .72 or 0)
-        s.points[i]={instance=instance,height=(flame or i>=27)and 32 or 64,scale=scale}
+        s.points[i]={instance=instance,height=(flame or i>=27)and 32 or i<=13 and 128 or 64,scale=scale}
     end
 end
 function F.armPoint(joints,t)
@@ -276,7 +300,7 @@ end
 function F.drawHistory(p,s,animate)
     if not s.lastEmission or s.clock-s.lastEmission>=F.trailMs then return end
     for i=15,26 do
-        local lag=20+math.floor((i-15)/3)*45;local target=s.clock-lag
+        local lag=20+math.floor((i-15)/3)*26;local target=s.clock-lag
         if target<=s.lastEmission and F.historyPose(s,target,s.scratch)then
             local x,y,z=F.armPoint(s.scratch,trailPositions[(i-15)%3+1])
             if animate then F.flame:update(s.points[i].instance)end
@@ -285,9 +309,71 @@ function F.drawHistory(p,s,animate)
         end
     end
 end
-function F.draw()
+function F.colors()
     if not F.normal then F.normal=ColorInfo.new(.70,.86,1,1);F.extreme=ColorInfo.new(.62,.76,1,1)end
+end
+function F.hit(p,victim,strong,charged,anchor)
+    local style=PY.getPlayerStyle(p)
+    if not style or style.hitEffects~="yakuza6" or p:getModData().ProjectYakuzaHitEffectsDisabled or p:isDead()then return end
+    local s=F.states[p];local x,y,z
+    if s then
+        local time,weight,location=F.findTrack(p,s.track.animation,s.location)
+        time=time or s.time
+        local window=time and F.window(s,time)
+        if window then
+            s.track=PY.AttackTracks[window.track];s.location=location or s.location
+            local joints=F.worldJoints(p,s,time,F.pose(p,s,time));x,y,z=F.armPoint(joints,1)
+        end
+    end
+    if not x then
+        if anchor then x,y,z=anchor.x,anchor.y,anchor.z
+        elseif victim then x,y,z=victim:getX(),victim:getY(),victim:getZ()+.48
+        else return end
+    end
+    local count=0;for _,b in ipairs(F.bursts)do if b.owner==p then count=count+1 end end
+    if #F.bursts>=F.maxBursts or count>=3 then
+        for i,b in ipairs(F.bursts)do if count<3 or b.owner==p then F.dispose(b);table.remove(F.bursts,i);break end end
+    end
+    if not F.streak then
+        F.streak=sprite("media/textures/ProjectYakuza/AttackFX/e_j_0361_spark_b.png")
+        F.fan=sprite("media/textures/ProjectYakuza/AttackFX/e_j_0332_sparks_a.png")
+    end
+    F.colors();F.serial=F.serial+1
+    local seed=(F.serial*7919+math.floor(getTimestampMs())%65521)%2147483647
+    local function random()seed=seed*48271%2147483647;return seed/2147483647 end
+    local b={owner=p,style=style.id,x=x,y=y,z=z,last=getTimestampMs(),age=0,life=charged and 290 or strong and 250 or 210,color=PY.Heat.isExtreme(p)and F.extreme or F.normal,points={}}
+    local tile=Core.getTileScale();local angle=random()*math.pi*2
+    for i=1,7 do
+        local scale=(i==7 and .28 or .10+random()*.08)*(strong and 1.18 or 1)*tile
+        local instance=PY.WorldEffects.detached(i==7 and F.fan or F.streak,scale,0)
+        local turn=angle+i*2.399963+random()*.7;local speed=.35+random()*.65
+        b.points[i]={instance=instance,scale=scale,vx=math.cos(turn)*speed,vy=math.sin(turn)*speed,vz=.3+random()*.65,life=.7+random()*.3}
+    end
+    F.bursts[#F.bursts+1]=b;F.syncHook()
+end
+function F.drawBursts(now,paused,hidden)
+    for i=#F.bursts,1,-1 do
+        local b=F.bursts[i];local p=b.owner;local dt=math.max(0,now-b.last);b.last=now
+        if not paused then b.age=b.age+dt end
+        if b.age>=b.life or not valid(p,b)then F.dispose(b);table.remove(F.bursts,i)
+        elseif not hidden then
+            local t=b.age/1000
+            for n,point in ipairs(b.points)do
+                local k=b.age/(b.life*point.life)
+                if k<1 then
+                    local alpha=(n==7 and .68 or .85)*(1-k)^1.5
+                    point.instance:SetAlpha(alpha);point.instance:SetTargetAlpha(alpha)
+                    if n==7 then point.instance:render(p,b.x,b.y,b.z,IsoDirections.N,-64*point.scale,0,b.color)
+                    else point.instance:render(p,b.x+point.vx*t,b.y+point.vy*t,b.z+point.vz*t-1.4*t*t,IsoDirections.N,0,-48*point.scale,b.color)end
+                end
+            end
+        end
+    end
+end
+function F.draw()
+    F.colors()
     local now=getTimestampMs();local paused=isGamePaused()
+    local hidden=ISWorldMap_instance and ISWorldMap_instance:isVisible()or false
     for p,s in pairs(F.states)do
         local dt=math.max(0,now-s.last);s.last=now;if not paused then s.clock=s.clock+dt end
         local time=s.time
@@ -296,7 +382,7 @@ function F.draw()
             if current and weight>=.05 and(not time or not s.seen or current>=time-.02)then time=current;s.time=current;s.weight=weight;s.location=location end
         end
         local animate=not paused and s.lastFlameClock~=s.clock
-        if time and time>=s.config.from and time<=s.config.to+.12 then
+        if not hidden and time and time>=s.config.from and time<=s.config.to+.12 then
             local window=F.window(s,time)
             if window then
                 if s.windowRef~=window then s.windowRef=window;s.track=PY.AttackTracks[window.track];s.historyCount=0;s.recordedAt=nil end
@@ -313,9 +399,9 @@ function F.draw()
                     if length>.00001 then x=x+dx/length*noise;y=y+dy/length*noise end
                     z=z+math.sin(time*91+i*2.7+s.seed)*.009*envelope
                     if animate then F.flame:update(s.points[i].instance)end
-                    drawPoint(p,s,i,x,y,z,fade*(extreme and .34 or .28)*(.90+.10*math.sin(s.clock*.012+i*.8)),color)
+                    drawPoint(p,s,i,x,y,z,fade*(extreme and .40 or .34)*(.84+.16*math.sin(s.clock*.019+i*1.7+s.seed)),color)
                 end
-                for i=12,14 do local x,y,z=F.armPoint(joints,corePositions[i-11]);drawPoint(p,s,i,x,y,z,fade*(extreme and .25 or .20),color)end
+                for i=12,14 do local x,y,z=F.armPoint(joints,corePositions[i-11]);drawPoint(p,s,i,x,y,z,fade*(extreme and .38 or .30)*(.78+.22*math.sin(s.clock*.027+i+s.seed)),color)end
                 for i=27,30 do
                     local age=(s.clock+(i-27)*23)%92
                     if F.historyPose(s,s.clock-age,s.scratch)then
@@ -325,14 +411,15 @@ function F.draw()
                 end
             end
         end
-        if s.points then F.drawHistory(p,s,animate)end
+        if s.points and not hidden then F.drawHistory(p,s,animate)end
         if animate then s.lastFlameClock=s.clock end
     end
     for i=#F.tails,1,-1 do
         local s=F.tails[i];local p=s.owner;local dt=math.max(0,now-s.last);s.last=now;if not paused then s.clock=s.clock+dt end
         if not valid(p,s)or s.clock-s.lastEmission>=F.trailMs or (p:getX()-s.rootX)^2+(p:getY()-s.rootY)^2>1 or math.abs(p:getZ()-s.rootZ)>.5 then F.dispose(s);table.remove(F.tails,i)
-        else local animate=not paused and s.lastFlameClock~=s.clock;F.drawHistory(p,s,animate);if animate then s.lastFlameClock=s.clock end end
+        else local animate=not paused and s.lastFlameClock~=s.clock;if not hidden then F.drawHistory(p,s,animate)end;if animate then s.lastFlameClock=s.clock end end
     end
+    F.drawBursts(now,paused,hidden)
     F.syncHook()
 end
 function F.render()
@@ -354,6 +441,7 @@ PY.on("runningAttackStarted",special)
 PY.on("quickstepAttackStarted",special)
 PY.on("chargedHeavyStarted",special)
 PY.on("groundAttackStarted",special)
+PY.on("throwStarted",function(p)F.start(p,PY.getPlayerStyle(p),0,{animation="ProjectYakuza_DD_Throw"})end)
 PY.on("lightAttackFinished",F.finish)
 PY.on("finisherFinished",F.finish)
 PY.on("runningAttackFinished",F.finish)

@@ -1,0 +1,58 @@
+{
+  "version": "0.121.0",
+  "authorization": "User requested suitable original installed Yakuza effects, more dramatic limb effects on all weapon moves and flying sparks in the same colour.",
+  "game": "Yakuza Kiwami 2",
+  "source": "Original supplied particle.par textures, retained in extracted/kiwami2-particles",
+  "assets": [
+    {
+      "dds": "extracted/kiwami2-particles/e_j_0073_aura_cA8L8.dds",
+      "ddsSha256": "f16a4becefb46cbc2a9bbd282a85364552823580214e3a9e44d984ca636514d2",
+      "decodedOriginal": "extracted/kiwami2-particles/e_j_0073_aura_cA8L8.dds.png",
+      "output": "42/media/textures/ProjectYakuza/AttackFX/e_j_0073_aura_cA8L8.png",
+      "sha256": "4ec24192cc37bd5e1223561eab26d1325a012a9ee8380109909066da7d4c5c8b",
+      "size": [
+        64,
+        128
+      ],
+      "operation": "Byte-identical copy of previously decoded original Kiwami 2 pixels; no recolouring, resizing or artwork generation. Runtime geometry/tint/fade provide motion."
+    },
+    {
+      "dds": "extracted/kiwami2-particles/e_j_0073_aura_dA8L8.dds",
+      "ddsSha256": "b1125dd9d242f2503ccee82212da3179921289141dfb7930db303c55b54bdd30",
+      "decodedOriginal": "extracted/kiwami2-particles/e_j_0073_aura_dA8L8.dds.png",
+      "output": "42/media/textures/ProjectYakuza/AttackFX/e_j_0073_aura_dA8L8.png",
+      "sha256": "18e86ad3f7f614ebbd36f09635d24ffdafeb0e58b5684109f766eebd169b8e71",
+      "size": [
+        64,
+        128
+      ],
+      "operation": "Byte-identical copy of previously decoded original Kiwami 2 pixels; no recolouring, resizing or artwork generation. Runtime geometry/tint/fade provide motion."
+    },
+    {
+      "dds": "extracted/kiwami2-particles/e_j_0361_spark_b.dds",
+      "ddsSha256": "f42624d9f35b8a8969f0e5efa5995fce0d0b4e67684fc1019e0f28898f37f86a",
+      "decodedOriginal": "extracted/kiwami2-particles/e_j_0361_spark_b.dds.png",
+      "output": "42/media/textures/ProjectYakuza/AttackFX/e_j_0361_spark_b.png",
+      "sha256": "08bac823dea4be75f4761b61061e4dce96215719742b66a35638986df85c84a9",
+      "size": [
+        32,
+        64
+      ],
+      "operation": "Byte-identical copy of previously decoded original Kiwami 2 pixels; no recolouring, resizing or artwork generation. Runtime geometry/tint/fade provide motion."
+    },
+    {
+      "dds": "extracted/kiwami2-particles/e_j_0332_sparks_a.dds",
+      "ddsSha256": "57ab9be627a4ebe91464740b05353d8b786046d28229ab5376cf6ec6b417d935",
+      "decodedOriginal": "extracted/kiwami2-particles/e_j_0332_sparks_a.dds.png",
+      "output": "42/media/textures/ProjectYakuza/AttackFX/e_j_0332_sparks_a.png",
+      "sha256": "fc257e436ac99aed8d9ae39ea767cbb78a0abccbb9c3fa8f81fc1fcbbc2a0354",
+      "size": [
+        128,
+        128
+      ],
+      "operation": "Unchanged original Kiwami 2 spark-fan pixels. Runtime colour, world trajectories and fades supply variation."
+    }
+  ],
+  "appearance": "Original Kiwami 2 wisps, streak sparks and fan layered with existing Yakuza 6 flame/glint pixels. No texture painting, recolouring, resizing, upscaling, audio changes or preview generation. Cosmetic trajectories use an independent bounded generator. Six ballistic streaks and one short fan per confirmed impact; three bursts per actor and sixteen total. Limb windows are normally 60 ms before / 120 ms after contact with 120 ms history tails.",
+  "tracking": "120 Hz native AnimationTrack.get forward kinematics projected by current character world position and rendered animation facing. Actual local and observer native clip clocks take priority over paired fallback clocks. This is baked source-bone tracking and does not read the final engine-blended skeleton. Local accepted QTE and replicated confirmed-contact masks gate the paired limb effect; spark hits reuse the existing confirmed HitEffects presentation path."
+}
