@@ -396,3 +396,6 @@
 !tools/combat-tests/LimbImpactProbe.java
 !tools/combat-tests/AttackEffectProbe.java
 !tools/combat-tests/validate_attack_effect_assets.py
+
+!tools/combat-tests/LimbRenderProjectionProbe.java
+!tools/combat-tests/build_gaiden_effect_assets.py

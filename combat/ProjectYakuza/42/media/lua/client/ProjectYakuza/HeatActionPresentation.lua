@@ -34,7 +34,7 @@ end
 function C.anchor(p,z,point)
     if not point then return end
     local _,_,x,y,h=PY.AttackEffects.project(point[1],point[2],point[3],p:getAnimAngleRadians(),1)
-    return {x=z:getX()+x,y=z:getY()+y,z=z:getZ()+h}
+    return {x=z:getX()+x,y=z:getY()+y,z=z:getZ()+h,modelAnchor=true}
 end
 function C.prepare(p,s,contact,meta)
     local style=PY.getPlayerStyle(p);local base=meta.base and PY.getStyle(style.id)or style

@@ -29,7 +29,7 @@ local function instance()
   draws[#draws+1]={instance=s,p=p,x=x,y=y,z=z,ox=ox,oy=oy,color=col,alpha=s.alpha,scale=s.scale,height=s.sprite.height,additive=additive,rootX=p:getX(),rootY=p:getY(),rootZ=p:getZ()}
  end}
 end
-IsoSprite={CreateSprite=function()return {height=64,LoadFramesNoDirPageSimple=function(s,path)s.height=string.find(path,'ChargeSpark')and 32 or (string.find(path,'e_j_0073')or string.find(path,'e_j_0332'))and 128 or 64 end,LoadFramesNoDirPageDirect=function(s,path,kind)s.height=kind=='smoke'and 64 or 32 end,setAnimate=function()end,update=function()updated=updated+1 end}end}
+IsoSprite={CreateSprite=function()return {height=64,LoadFramesNoDirPageSimple=function(s,path)s.height=string.find(path,'ChargeSpark')and 32 or (string.find(path,'e_j_0073')or string.find(path,'e_j_0332')or string.find(path,'e_n_5001'))and 128 or 64 end,LoadFramesNoDirPageDirect=function(s,path,kind)s.height=kind=='smoke'and 64 or 32 end,setAnimate=function()end,update=function()updated=updated+1 end}end}
 IsoSpriteInstance={add=function()end,get=function(sprite)local i=instance();i.sprite=sprite;return i end}
 local function actor()
  local a={dead=false,equipped=true,reaction='',floor=false,md={},angle=0,time=0,weight=1,localPlayer=true,lookup=0,empty=false,x=0,y=0,z=0}
@@ -78,6 +78,11 @@ for i=0,7 do
  check(near(x,nativeProjection[i+1][1])and near(y,nativeProjection[i+1][2]),'native eight-facing model/world/screen projection')
  check(near(wx,nativeProjection[i+1][3])and near(wy,nativeProjection[i+1][4])and near(wz,nativeProjection[i+1][5]),'native limb-height projection')
 end
+local renderProjection="ProjectYakuzaFixture:MODELPROJECTION"
+for i=0,15 do
+ local x,y=F.project(.1,.65,-.4,i*math.pi/8,2)
+ check(math.abs(x-renderProjection[i+1][1])<.0001 and math.abs(y+ProjectYakuza.WorldEffects.modelOffsetY()-renderProjection[i+1][2])<.0001,'effect screen centre matches the full native character camera including its model translation')
+end
 for i=0,30 do
  for bone=1,4 do
   local x,y,z=F.sample(track,i/30,bone);local row=bone==4 and track.upperFrames[i*4+1]or track.frames[i*4+1];local n=bone==4 and 0 or (bone-1)*3
@@ -101,8 +106,8 @@ for facing=0,31 do
  local sx,sy=F.project(ux,uy,uz,p.angle,2)
  local hx,hy=F.project(wx+(kx-wx)*.35,wy+(ky-wy)*.35,wz+(kz-wz)*.35,p.angle,2)
  local cx,cy=centre(draws[1]);local fx,fy=centre(draws[11])
- check(near(cx,sx)and near(cy,sy),'coating starts at native shoulder for every continuous facing')
- check(near(fx,hx)and near(fy,hy),'coating ends at native fist without an outward offset')
+ check(near(cx,sx)and near(cy,sy+ProjectYakuza.WorldEffects.modelOffsetY()),'coating starts at native shoulder for every continuous facing')
+ check(near(fx,hx)and near(fy,hy+ProjectYakuza.WorldEffects.modelOffsetY()),'coating ends at native fist without an outward offset')
  for i=2,11 do
   local a,b=draws[i-1],draws[i];local ax,ay=centre(a);local bx,by=centre(b)
   check(math.sqrt((bx-ax)^2+(by-ay)^2)<math.min(a.height*a.scale,b.height*b.scale)*.6,'arm coverage stays connected in every direction')
@@ -111,7 +116,7 @@ end
 for frame=3,14 do for facing=0,7 do
  p.time=frame/30;F.states[p].time=p.time;p.angle=facing*math.pi/4;draws={};F.render()
  local ux,uy,uz=F.sample(track,p.time,4);local sx,sy=F.project(ux,uy,uz,p.angle,2);local x,y=centre(draws[1])
- check(near(x,sx)and near(y,sy),'deforming source shoulder stays centred throughout the configured punch')
+ check(near(x,sx)and near(y,sy+ProjectYakuza.WorldEffects.modelOffsetY()),'deforming source shoulder stays centred throughout the configured punch')
  for point=2,11 do
   local ax,ay=centre(draws[point-1]);local bx,by=centre(draws[point])
   check(math.sqrt((bx-ax)^2+(by-ay)^2)<draws[point].height*draws[point].scale*.6,'coating has no gaps across source frames and eight facings')
@@ -191,7 +196,7 @@ for branch=1,4 do
  local state=C.states[p];check(state and #state.instances==6,'branch has only six limb-bound charging particles')
  local row=state.track.frames[1];local ax,ay,az=row[1],row[2],row[3];local bx,by,bz=row[4],row[5],row[6]
  local x,y=F.project(ax+(bx-ax)*.31,ay+(by-ay)*.31,az+(bz-az)*.31,p.angle,2)
- local d=draws[1];local cx,cy=centre(d);check(near(cx,x) and near(cy,y+4) and d.z>d.rootZ,'charge particle centres and depth follow the branch-specific limb')
+ local d=draws[1];local cx,cy=centre(d);check(near(cx,x) and near(cy,y+4+ProjectYakuza.WorldEffects.modelOffsetY()) and d.z>d.rootZ,'charge particle centres and depth follow the branch-specific limb')
  check(d.color.r>=.6 and d.color.g>=.8,'limb charge glow is white-blue')
  local n=allocated;C.update(p);C.render();check(allocated==n,'stable charge never rebuilds particles')
  C.clear(p)
@@ -367,7 +372,7 @@ for turn=1,24 do
 end
 check(cloud.points[6].scale~=startingScale,'source smoke breathes with independent size variation')
 F.clearAll();p.time=.2;F.start(p,style,1,move);check(F.states[p].seed~=firstSeed,'repeated same attack gets a different cosmetic phase')
-F.tick();F.render();p.weight=.3;clock=clock+16;F.tick();draws={};F.render();check(#draws==0 and not F.states[p].lastEmission,'heavy blending suppresses full-pose approximations and stale smoke')
+F.tick();F.render();p.weight=.3;clock=clock+16;F.tick();draws={};F.render();check(#draws>0 and near(F.states[p].poseWeight,.3),'active low-weight attacks remain visible without the old seventy-percent cutoff')
 p.weight=1;clock=clock+16;F.tick();draws={};F.render();check(#draws>0,'limb coating returns once the attack owns the pose')
 p.empty=true;draws={};F.render();check(#draws==0,'missing native track cannot render a stale limb or smoke pose');p.empty=false
 F.clearAll();p.weight=1;p.time=.2
@@ -377,7 +382,7 @@ function overlap:dbgGetAnimTrackTime(layer,slot)return slot==0 and .32 or .2 end
 function overlap:dbgGetAnimTrackWeight(layer,slot)return slot==0 and 1-self.weight or self.weight end
 local incoming,incomingWeight,incomingSlot=F.findTrack(overlap,move.animation,{layer=1,slot=0})
 check(near(incoming,.2)and near(incomingWeight,.2)and incomingSlot.slot==1,'fading cached copy cannot hide the incoming source clock')
-F.start(overlap,style,1,move);F.tick();draws={};F.render();check(#draws==0,'incoming low-weight pose stays hidden while the outgoing copy blends')
+F.start(overlap,style,1,move);F.tick();draws={};F.render();check(#draws>0 and near(F.states[overlap].poseWeight,.2),'incoming low-weight attack remains visible with proportional alpha')
 overlap.weight=.95;clock=clock+20;F.tick();draws={};F.render();check(#draws>0 and F.states[overlap].poseWeight>.5,'incoming coating fades in with the correct stronger native pose')
 F.finish(overlap);overlap.weight=.1;draws={};F.render();check(#draws==0 and #F.tails==0,'retired smoke cannot float through the return-to-idle blend')
 F.clearAll()
@@ -387,5 +392,26 @@ for i=1,12 do
  check(b.life<=210,'small chaotic bursts remain brief')
 end
 F.clearAll()
+F.clearAll();local legContacts=0
+for animation,entry in pairs(catalog)do for _,window in ipairs(entry.windows)do
+ local track=ProjectYakuza.AttackTracks[window.track]
+ if track.limb=='leftLeg'or track.limb=='rightLeg'then
+  legContacts=legContacts+1
+  for _,weight in ipairs({.2,.45,.69,1})do
+   F.clearAll();p.clip=animation;p.time=window.contact;p.weight=weight;clock=clock+10
+   F.start(p,style,0,{animation=animation});F.tick();draws={};F.render()
+   local active=F.states[p];check(active and active.track.limb==track.limb and #draws>=14,'every kick/stomp remains visible at actual partial track weights')
+   local hx,hy,hz=F.armPoint(active.joints,1);local dx,dy=centre(draws[11])
+   local expectedX=(hx-p.x-hy+p.y)*64;local expectedY=(hx-p.x+hy-p.y)*32-(hz-p.z)*192+ProjectYakuza.WorldEffects.modelOffsetY()
+   check(near(dx,expectedX)and near(dy,expectedY),'foot coating uses the rendered-model offset rather than the unshifted gameplay bone')
+  end
+ end
+end end
+check(legContacts>=30,'kick and stomp source coverage includes linked, directional, ground and Heat Action endings')
+F.clearAll();p.clip=move.animation;p.time=.2;p.weight=1;F.start(p,style,1,move);F.tick();F.render();F.hit(p,nil,true,false)
+local corrected=F.bursts[1];draws={};F.render();local spark
+for _,d in ipairs(draws)do if d.instance==corrected.points[1].instance then spark=d end end
+check(corrected.modelAnchor and spark and near(spark.oy,corrected.points[1].oy*corrected.points[1].scale-ProjectYakuza.WorldEffects.modelOffsetY()),'limb-emitted Gaiden sparks receive the same camera correction as the hand')
+F.clearAll();p.weight=1
 p.clip=nil;F.clearAll();check(allocated==disposed and not F.hooked,'expanded effects release all sprites and hooks')
 return 'PASS '..count..' original-punch tracking, world projection, lifecycle, bounded MP and source-clock audio checks'

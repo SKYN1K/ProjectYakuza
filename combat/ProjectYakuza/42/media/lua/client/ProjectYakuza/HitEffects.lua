@@ -100,7 +100,7 @@ function F.spawn(player,victim,strong,charged,guard,feedback,anchor)
     end
     local tile=Core.getTileScale()
     local b={player=player,victim=victim,emitters={},last=getTimestampMs(),age=0,life=charged and 340 or strong and 280 or 240,strong=strong,charged=charged,guard=guard,family=family}
-    if anchor then b.anchor={x=anchor.x,y=anchor.y,z=anchor.z}end
+    if anchor then b.anchor={x=anchor.x,y=anchor.y,z=anchor.z,modelAnchor=anchor.modelAnchor==true}end
     if not guard and not charged and family=="blade"then b.life=strong and 240 or 180 end
     local selected=guard and guardParticles or charged and chargedParticles or family=="blunt"and bluntParticles or family=="blade"and bladeParticles or particles
     local points={};for _,point in ipairs(selected) do points[#points+1]=point end
@@ -168,7 +168,8 @@ function F.draw()
             e.instance:setScale(scale,scale)
             e.instance:SetAlpha(opacity*(ring and .13 or b.guard and .65 or 1));e.instance:SetTargetAlpha(opacity*(ring and .13 or b.guard and .65 or 1))
             if b.anchor then
-                e.instance:render(v,b.anchor.x,b.anchor.y,b.anchor.z,IsoDirections.N,-dx*tile,-dy*tile-e.point.size*scale/2,b.charged and F.chargeColor or b.family=="blunt"and F.bluntColor or b.family=="blade"and F.bladeColor or F.color)
+                local offset=b.anchor.modelAnchor and ProjectYakuza.WorldEffects.modelOffsetY()or 0
+                e.instance:render(v,b.anchor.x,b.anchor.y,b.anchor.z,IsoDirections.N,-dx*tile,-dy*tile-e.point.size*scale/2-offset,b.charged and F.chargeColor or b.family=="blunt"and F.bluntColor or b.family=="blade"and F.bladeColor or F.color)
             else ProjectYakuza.WorldEffects.renderCentered(v,e.instance,e.point.size,scale,
                 bx+dx*tile,by-height+dy*tile,b.guard and F.guardColor or b.charged and F.chargeColor or b.family=="blunt"and F.bluntColor or b.family=="blade"and F.bladeColor or F.color,wx,wy,height/(96*tile))
             end

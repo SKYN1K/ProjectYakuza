@@ -1,5 +1,5 @@
 {
-  "version": "0.122.0",
+  "version": "0.123.0",
   "authorization": "User requested suitable original installed Yakuza effects, more dramatic limb effects on all weapon moves and flying sparks in the same colour.",
   "game": "Yakuza Kiwami 2",
   "source": "Original supplied particle.par textures, retained in extracted/kiwami2-particles",
@@ -53,7 +53,20 @@
       "operation": "Unchanged original Kiwami 2 spark-fan pixels. Runtime colour, world trajectories and fades supply variation."
     }
   ],
-  "appearance": "Three translucent layers: a smaller clearer flame core, middle smoke and slightly wider faint outer smoke. All 64 original Yakuza 6 e_f_0014_roop_smoke01 frames are reused unchanged. Each sprite varies its source animation phase, speed, size and tight swirl; every attack receives a fresh cosmetic seed. Kiwami 2 wisps/fan now supply randomized small confirmed-impact puffs, plus six smaller curved flying sparks. Their original pixels and matching colours are unchanged. Smoke history lasts at most 70 ms and is tethered to within two base-scale screen pixels of the current limb before bounded swirl. Impact puffs shrink from scale .28 to .11; spark scale becomes .055..09; lives shrink to 150..210 ms. The pre-existing heavy shock ring is also smaller and fainter.",
-  "tracking": "120 Hz baked native limb FK with current animation clock/facing and actor position. Cached fading copies are rechecked so incoming source time is retained; same-clip duplicate resolution chooses the incoming track. Baked coating is suppressed below 70% attack track weight and smoothly fades in above that weight. Missing native tracks cannot display stale coating; outgoing smoke reanchors to the current source pose and disappears when that pose blends out. This reduces blending mismatch without reading the final engine-blended skeleton or adding a Java bridge. Existing QTE confirmation gating and hit presentation remain intact.",
-  "reusedSmokeProvenance": "docs/extreme-smoke-assets.json"
+  "appearance": "The three translucent layers remain, with original Gaiden e_n_5001_hitsmoke_small providing the narrow middle wisp and e_f_d0004_spark providing alternating fine flying sparks. Existing Yakuza 6 animated smoke/flame and small Kiwami 2 impact shapes remain. All pixels retain native dimensions; no generated artwork. Particle budgets, brief histories, colour and bounded swirls are retained.",
+  "tracking": "Native bone-to-world coordinates omit the character camera translation in Core.DoPushIsoStuff. WorldEffects.modelOffsetY adds the missing .48*.61237234*96*tileScale only in sprite screen offsets, preserving world depth. This applies to limb coats, source-derived sparks, charging limbs and explicitly marked model-bone Heat Action/blood anchors; ordinary authored world anchors remain unchanged. Active coating uses proportional native track weight instead of the erroneous 70-percent visibility cutoff. Recovery-only smoke still drops when its old track fades. Baked curves remain subject to actual engine blending differences; this is not live blended-bone access.",
+  "reusedSmokeProvenance": "docs/extreme-smoke-assets.json",
+  "modelProjection": {
+    "engineMethod": "zombie.core.Core.DoPushIsoStuff",
+    "coreClassSha256": "dcf8345b049013b0b40a768f7f1501bc595e5389ad6f20e3c83879dc98588f04",
+    "cameraSequence": "scale(Core.scale), rotateX(0.5235988), rotateY(2.3561945), scale(-1.5,1.5,1.5), rotateY(renderedAngle+PI), translate(0,-0.48,0)",
+    "rootTransform": "Root character ModelInstanceRenderData xfrm is identity; the camera offset is not cancelled.",
+    "proof": "LimbRenderProjectionProbe reconstructs the installed rendering-camera equation using native JOML matrices, independent of the gameplay Model.vectorToWorldCoords helper. A separate Kahlua assertion compares actual effect screen centres to native-matrix reference samples.",
+    "projections": 23232,
+    "facings": 16,
+    "maxErrorPixels": 4.1561465268577745e-05,
+    "previousOffsetPixelsAtTileScale2": 56.436263945262894,
+    "worldDepthUnchanged": true
+  },
+  "gaidenProvenance": "docs/gaiden-effect-assets.json"
 }

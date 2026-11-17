@@ -1,4 +1,5 @@
 from pathlib import Path
+import sys
 import hashlib,json,re,struct,subprocess
 from PIL import Image
 
@@ -27,6 +28,9 @@ for row in smoke['frames']:
     assert hashlib.sha256(output.read_bytes()).hexdigest()==row['sha256']
     assert pixels.size==tuple(row['size'])and pixels.tobytes()==original.crop(row['crop']).tobytes()
     outputs.append(str(output.resolve()))
+subprocess.run([sys.executable,str(WORK/'build_gaiden_effect_assets.py'),'--validate'],check=True)
+gaiden=json.loads((MOD/'docs/gaiden-effect-assets.json').read_text())
+for row in gaiden['textures']:outputs.append(str((MOD/row['output']).resolve()))
 subprocess.run([str(GAME/'jre64/bin/java.exe'),'-Xms16m','-Xmx256m','-XX:ActiveProcessorCount=2','--enable-native-access=ALL-UNNAMED','-cp','.;'+str(GAME/'*'),'AttackEffectProbe',*outputs],cwd=WORK,check=True)
 catalog=json.loads((MOD/'docs/attack-trail-catalog.json').read_text())
 code=(MOD/catalog['catalog']).read_bytes();assert hashlib.sha256(code).hexdigest()==catalog['sha256']

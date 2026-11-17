@@ -204,4 +204,14 @@ do
  check(randomCalls==0,'visual noise leaves gameplay RNG untouched');ZombRand=previousRandom
  check(allocated==disposed and not F.ticking,'varied hit effects retain bounded cleanup')
 end
+F.clear();local sourceAnchor={x=15.2,y=19.3,z=.6}
+F.noiseState=123456;F.spawn(p,z,true,false,false,'unarmed',sourceAnchor);renders={};F.render();B.render();local withoutOffset=renders
+F.clear();F.noiseState=123456;sourceAnchor.modelAnchor=true;F.spawn(p,z,true,false,false,'unarmed',sourceAnchor);sourceAnchor.modelAnchor=false
+renders={};F.render();B.render();check(#renders==#withoutOffset,'native-anchor correction preserves particle count')
+for i,r in ipairs(renders)do
+ local old=withoutOffset[i]
+ check(r.x==old.x and r.y==old.y and r.z==old.z,'render offset preserves world coordinates and depth')
+ check(math.abs(r.dy-old.dy+PY.WorldEffects.modelOffsetY())<.00001,'native contact impact and blood share the actual character-camera translation')
+end
+F.clear();check(allocated==disposed,'corrected source anchors release all sprites')
 return true,'PASS '..checks..' source-frame blood animation, confirmed hit, world anchor, MP budgets and cleanup checks'

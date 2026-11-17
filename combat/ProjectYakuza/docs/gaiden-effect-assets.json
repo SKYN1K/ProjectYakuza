@@ -1,0 +1,39 @@
+{
+  "game": "Like a Dragon Gaiden",
+  "authorization": "User explicitly allowed Gaiden particles for the limb effects.",
+  "operation": "Original supplied DDS pixels decoded to RGBA PNG at native dimensions. No painting, resizing, upscaling, synthesized frames or sound. Runtime colour and motion only.",
+  "textures": [
+    {
+      "archive": "F:\\SteamLibrary\\steamapps\\common\\LikeADragonGaiden\\runtime\\media\\data\\particle.par",
+      "name": "e_n_5001_hitsmoke_small.dds",
+      "offset": 422436864,
+      "size": [
+        64,
+        128
+      ],
+      "plain": 11088,
+      "flags": 2147483648,
+      "packedSha256": "2f1bab1d98dd8c37fa58eab3dbae4506bdfde62f0c885b2690ba76bb2be47cff",
+      "sha256": "5c8bedc6df0413bb9a1e20aa79f38de49d499d3ed18f6abd293432a5e0bce80e",
+      "output": "42/media/textures/ProjectYakuza/AttackFX/e_n_5001_hitsmoke_small.png",
+      "pngSha256": "62f02323e18c674fc0d490e461186371ff0103097b2d6d75dc5b0d6b86043751",
+      "rgbaSha256": "67ca859333877ed86a99b253ad0b9266842c1338d9858ba6c730fa96cbe76535"
+    },
+    {
+      "archive": "F:\\SteamLibrary\\steamapps\\common\\LikeADragonGaiden\\runtime\\media\\data\\particle.par",
+      "name": "e_f_d0004_spark.dds",
+      "offset": 281171968,
+      "size": [
+        64,
+        64
+      ],
+      "plain": 5616,
+      "flags": 2147483648,
+      "packedSha256": "23f2d9e92794a623e550d243e76f5b0dc366f6543dd49b674fae391fc3e878cd",
+      "sha256": "7c01224340ee19738725347bc04adb4ff8b423daf6b955de40e55e07d60189c5",
+      "output": "42/media/textures/ProjectYakuza/AttackFX/e_f_d0004_spark.png",
+      "pngSha256": "2395e0d3cecfc53eeee864c7abc13e811cac154dc711279b18d9ea2818ce9259",
+      "rgbaSha256": "d3bcf321eadee5959b923dbd839553ad52f28bd1cbcb3afa8ad31b25fb10140f"
+    }
+  ]
+}
