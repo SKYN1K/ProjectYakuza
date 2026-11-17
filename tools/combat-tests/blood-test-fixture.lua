@@ -126,7 +126,7 @@ check(attaches==attachedBefore,'spark and shock sprites never mutate native atta
 clock=clock+100;renders={};F.render()
 local foundRing=false
 for _,r in ipairs(renders)do
- if r.path:find('EncounterShock',1,true) then foundRing=true;check(r.alpha<=.20 and not r.additive,'heavy ring stays subtle with normal alpha') end
+ if r.path:find('EncounterShock',1,true) then foundRing=true;check(r.alpha<=.13 and r.scale<.3 and not r.additive,'heavy ring is smaller and more transparent') end
 end
 check(foundRing and additive,'strong ring uses supplied texture and restores additive state')
 F.clear();local bloodBefore=#B.bursts

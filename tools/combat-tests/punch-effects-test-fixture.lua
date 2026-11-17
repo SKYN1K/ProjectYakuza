@@ -29,7 +29,7 @@ local function instance()
   draws[#draws+1]={instance=s,p=p,x=x,y=y,z=z,ox=ox,oy=oy,color=col,alpha=s.alpha,scale=s.scale,height=s.sprite.height,additive=additive,rootX=p:getX(),rootY=p:getY(),rootZ=p:getZ()}
  end}
 end
-IsoSprite={CreateSprite=function()return {height=64,LoadFramesNoDirPageSimple=function(s,path)s.height=string.find(path,'ChargeSpark')and 32 or (string.find(path,'e_j_0073')or string.find(path,'e_j_0332'))and 128 or 64 end,LoadFramesNoDirPageDirect=function(s)s.height=32 end,setAnimate=function()end,update=function()updated=updated+1 end}end}
+IsoSprite={CreateSprite=function()return {height=64,LoadFramesNoDirPageSimple=function(s,path)s.height=string.find(path,'ChargeSpark')and 32 or (string.find(path,'e_j_0073')or string.find(path,'e_j_0332'))and 128 or 64 end,LoadFramesNoDirPageDirect=function(s,path,kind)s.height=kind=='smoke'and 64 or 32 end,setAnimate=function()end,update=function()updated=updated+1 end}end}
 IsoSpriteInstance={add=function()end,get=function(sprite)local i=instance();i.sprite=sprite;return i end}
 local function actor()
  local a={dead=false,equipped=true,reaction='',floor=false,md={},angle=0,time=0,weight=1,localPlayer=true,lookup=0,empty=false,x=0,y=0,z=0}
@@ -92,7 +92,7 @@ p.time=.04;F.tick();F.render();check(allocated==0 and #draws==0,'no particles be
 p.time=.2;F.tick();F.render()
 check(allocated==30 and #F.states[p].points==30,'limb coating and lingering trails have a fixed thirty-sprite budget')
 check(#draws>=14 and additive,'contiguous coat and inner arm layers draw, restoring renderer state')
-check(near(F.states[p].points[1].scale,.88),'coating is wide enough for the PZ arm')
+check(F.states[p].points[1].scale<=.60 and F.states[p].points[15].scale>.5,'smaller visible core sits within a slightly wider smoke layer')
 for _,d in ipairs(draws)do check(not d.additive and d.alpha<=.55,'all arm layers use restrained ordinary alpha')end
 check(F.normal.r>=.6 and F.normal.g>=.8 and F.normal.b==1,'white-blue normal tint remains')
 for facing=0,31 do
@@ -127,7 +127,9 @@ local sample={};check(F.historyPose(state,oldAt,sample),'recorded earlier world 
 for i=1,9 do check(near(sample[i],old[i]),'turning does not rotate historical arm positions')end
 local trail
 for _,d in ipairs(draws)do if d.instance==state.points[15].instance then trail=d end end
-check(trail and near(trail.x,select(1,F.armPoint(old,.5)))and near(trail.y,select(2,F.armPoint(old,.5))),'rendered history trail interpolates past world positions, not current facing')
+check(trail~=nil,'tethered smoke retains a short history layer')
+local tx,ty,tz=F.armPoint(state.joints,0);local dsx=(trail.x-tx-trail.y+ty)*32;local dsy=(trail.x-tx+trail.y-ty)*16-(trail.z-tz)*96
+check(math.sqrt(dsx*dsx+dsy*dsy)<=2.0001,'smoke cannot detach from the current shoulder while turning')
 clock=clock+20;p.x=p.x+5;draws={};F.render()
 check(state.historyCount==1,'teleport clears the trail instead of drawing across the map')
 for i=1,40 do clock=clock+10;p.angle=p.angle+.02;F.render()end
@@ -273,7 +275,7 @@ local old=F.states[p];local oldRoot={p.x,p.y};emit('lightAttackFinished',p)
 check(not F.states[p]and #F.tails==1 and F.hooked,'finished attack leaves a short world-space trail')
 for i,point in ipairs(old.points)do check((point.instance~=nil)==(i>=15 and i<=26),'retired state keeps only twelve historical flame instances')end
 clock=clock+20;p.angle=p.angle+2;p.x=p.x+.1;draws={};F.render();check(#draws>0,'world history still renders after the source attack finishes')
-for _,draw in ipairs(draws)do check(draw.x<oldRoot[1]+.7 and draw.alpha<.32,'retired trail is restrained and stays near prior world positions')end
+for _,draw in ipairs(draws)do check(draw.alpha<=.13,'retired smoke remains translucent')end
 F.start(p,style,1,move);F.tick();F.render();check(F.states[p]and #F.tails==1,'new attack does not erase the previous attack trail')
 paused=true;local clocked=old.clock;clock=clock+1000;F.render();check(old.clock==clocked,'retired trail freezes during pause');paused=false
 clock=clock+210;F.render();check(#F.tails==0,'retired trail expires without following the current hand')
@@ -328,7 +330,7 @@ local vx,vy=burst.points[1].vx,burst.points[1].vy
 F.hit(p,nil,true,false,{x=99,y=99,z=99});check(F.bursts[2].points[1].vx~=vx or F.bursts[2].points[1].vy~=vy,'successive impacts vary cosmetic flight directions')
 clock=clock+40;draws={};F.render();local emittedPoint
 for _,d in ipairs(draws)do if d.instance==burst.points[1].instance then emittedPoint=d end end
-check(emittedPoint and near(emittedPoint.x,hx+vx*.04)and near(emittedPoint.y,hy+vy*.04),'sparks leave the hand with a world-space trajectory')
+check(emittedPoint and near(emittedPoint.x,hx+vx*.04-vy*burst.points[1].curve*.04^2)and near(emittedPoint.y,hy+vy*.04+vx*burst.points[1].curve*.04^2),'sparks leave the hand with a world-space trajectory')
 p.angle=p.angle+2;p.x=p.x+1;paused=true;clock=clock+500;draws={};F.render()
 check(burst.age==40,'flying sparks pause without aging')
 local frozen
@@ -344,5 +346,46 @@ check(#F.bursts==F.maxBursts,'crowd sparks have a fixed global budget')
 clock=clock+400;F.render();check(#F.bursts==0 and allocated==disposed,'all free sparks expire and return native instances')
 p.extreme=false;p.clip=nil;F.clearAll()
 emit('throwStarted',p);check(F.states[p]and F.states[p].track.limb=='leftArm','ordinary grab throw follows its gripping arm');F.clearAll()
+F.clearAll();p.clip=move.animation;p.time=.2;p.angle=0;p.x=0;p.y=0;p.weight=1
+F.start(p,style,1,move);F.tick();draws={};F.render()
+local cloud=F.states[p];local coreDraw,outerDraw
+for _,d in ipairs(draws)do if d.instance==cloud.points[6].instance then coreDraw=d elseif d.instance==cloud.points[20].instance then outerDraw=d end end
+check(coreDraw and outerDraw and coreDraw.alpha>outerDraw.alpha and outerDraw.alpha<=.13,'smaller inner layer is stronger while the outer smoke stays transparent')
+check(outerDraw.height*outerDraw.scale>coreDraw.height*coreDraw.scale and outerDraw.height*outerDraw.scale<35,'smoke is slightly wider than the previous 28-pixel coat without a large cloud')
+local startingScale=cloud.points[6].scale;local firstSeed=cloud.seed
+for turn=1,24 do
+ clock=clock+10;p.time=.2+turn*.004;p.angle=turn*.31;p.x=turn*.015;p.y=turn*.008;F.tick();draws={};F.render()
+ for i=15,26 do
+  local d;for _,row in ipairs(draws)do if row.instance==cloud.points[i].instance then d=row;break end end
+  if d then
+   local x,y,z=F.armPoint(cloud.joints,(i-15)/11);local dx,dy,dz=d.x-x,d.y-y,d.z-z
+   local sx,sy=(dx-dy)*32,(dx+dy)*16-dz*96
+   check(math.sqrt(sx*sx+sy*sy)<3.5,'outer smoke remains tethered during rapid turns, movement and source deformation')
+   check(d.alpha<=.13,'chaotic outer smoke never becomes an opaque billboard')
+  end
+ end
+end
+check(cloud.points[6].scale~=startingScale,'source smoke breathes with independent size variation')
+F.clearAll();p.time=.2;F.start(p,style,1,move);check(F.states[p].seed~=firstSeed,'repeated same attack gets a different cosmetic phase')
+F.tick();F.render();p.weight=.3;clock=clock+16;F.tick();draws={};F.render();check(#draws==0 and not F.states[p].lastEmission,'heavy blending suppresses full-pose approximations and stale smoke')
+p.weight=1;clock=clock+16;F.tick();draws={};F.render();check(#draws>0,'limb coating returns once the attack owns the pose')
+p.empty=true;draws={};F.render();check(#draws==0,'missing native track cannot render a stale limb or smoke pose');p.empty=false
+F.clearAll();p.weight=1;p.time=.2
+local overlap=actor();overlap.weight=.2
+function overlap:dbgGetAnimTrackName(layer,slot)if layer==1 and slot<2 then return move.animation end;return ''end
+function overlap:dbgGetAnimTrackTime(layer,slot)return slot==0 and .32 or .2 end
+function overlap:dbgGetAnimTrackWeight(layer,slot)return slot==0 and 1-self.weight or self.weight end
+local incoming,incomingWeight,incomingSlot=F.findTrack(overlap,move.animation,{layer=1,slot=0})
+check(near(incoming,.2)and near(incomingWeight,.2)and incomingSlot.slot==1,'fading cached copy cannot hide the incoming source clock')
+F.start(overlap,style,1,move);F.tick();draws={};F.render();check(#draws==0,'incoming low-weight pose stays hidden while the outgoing copy blends')
+overlap.weight=.95;clock=clock+20;F.tick();draws={};F.render();check(#draws>0 and F.states[overlap].poseWeight>.5,'incoming coating fades in with the correct stronger native pose')
+F.finish(overlap);overlap.weight=.1;draws={};F.render();check(#draws==0 and #F.tails==0,'retired smoke cannot float through the return-to-idle blend')
+F.clearAll()
+for i=1,12 do
+ F.hit(p,nil,true,false,{x=0,y=0,z=.5});local b=F.bursts[#F.bursts]
+ for _,point in ipairs(b.points)do check(point.scale<=.2421,'impact sparks and puffs stay below the new size cap')end
+ check(b.life<=210,'small chaotic bursts remain brief')
+end
+F.clearAll()
 p.clip=nil;F.clearAll();check(allocated==disposed and not F.hooked,'expanded effects release all sprites and hooks')
 return 'PASS '..count..' original-punch tracking, world projection, lifecycle, bounded MP and source-clock audio checks'

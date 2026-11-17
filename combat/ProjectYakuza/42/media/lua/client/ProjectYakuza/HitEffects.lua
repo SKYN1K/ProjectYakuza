@@ -16,7 +16,7 @@ local particles={
     {kind="spark",path="media/textures/ProjectYakuza/HitGlint.png",size=64,scale=.06,dx=-5,dy=7},
     {kind="spark",path="media/textures/ProjectYakuza/HitGlint.png",size=64,scale=.07,dx=10,dy=5},
 }
-local shock={kind="shock",path="media/textures/ProjectYakuza/EncounterShock.png",size=256,scale=.13,dx=0,dy=0}
+local shock={kind="shock",path="media/textures/ProjectYakuza/EncounterShock.png",size=256,scale=.075,dx=0,dy=0}
 local bluntParticles={{kind="bluntCore",path="media/textures/ProjectYakuza/HitGlint.png",size=64,scale=.22,dx=0,dy=0}}
 for i=1,6 do local a=i*math.pi/3;bluntParticles[#bluntParticles+1]={kind="bluntSpark",path="media/textures/ProjectYakuza/ChargeSpark.png",size=32,scale=.19,dx=math.cos(a)*21,dy=math.sin(a)*15}end
 local bladeParticles={
@@ -163,10 +163,10 @@ function F.draw()
             local dx=e.cx+e.point.dx*u+(spark and e.curve*u*u or 0)
             local dy=e.cy+e.point.dy*u+(spark and e.gravity*u*u or -2*u)
             local opacity=alpha*math.max(0,1-u*u)
-            local growth=ring and (.6+1.5*t) or (e.point.kind=="core"or e.point.kind=="bluntCore") and (.65+.6*math.sin(t*math.pi)) or (1-.6*t)
+            local growth=ring and (.65+.8*t) or (e.point.kind=="core"or e.point.kind=="bluntCore") and (.65+.6*math.sin(t*math.pi)) or (1-.6*t)
             local scale=e.scale*growth
             e.instance:setScale(scale,scale)
-            e.instance:SetAlpha(opacity*(ring and .20 or b.guard and .65 or 1));e.instance:SetTargetAlpha(opacity*(ring and .20 or b.guard and .65 or 1))
+            e.instance:SetAlpha(opacity*(ring and .13 or b.guard and .65 or 1));e.instance:SetTargetAlpha(opacity*(ring and .13 or b.guard and .65 or 1))
             if b.anchor then
                 e.instance:render(v,b.anchor.x,b.anchor.y,b.anchor.z,IsoDirections.N,-dx*tile,-dy*tile-e.point.size*scale/2,b.charged and F.chargeColor or b.family=="blunt"and F.bluntColor or b.family=="blade"and F.bladeColor or F.color)
             else ProjectYakuza.WorldEffects.renderCentered(v,e.instance,e.point.size,scale,

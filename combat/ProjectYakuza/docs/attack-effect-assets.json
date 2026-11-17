@@ -1,5 +1,5 @@
 {
-  "version": "0.121.0",
+  "version": "0.122.0",
   "authorization": "User requested suitable original installed Yakuza effects, more dramatic limb effects on all weapon moves and flying sparks in the same colour.",
   "game": "Yakuza Kiwami 2",
   "source": "Original supplied particle.par textures, retained in extracted/kiwami2-particles",
@@ -53,6 +53,7 @@
       "operation": "Unchanged original Kiwami 2 spark-fan pixels. Runtime colour, world trajectories and fades supply variation."
     }
   ],
-  "appearance": "Original Kiwami 2 wisps, streak sparks and fan layered with existing Yakuza 6 flame/glint pixels. No texture painting, recolouring, resizing, upscaling, audio changes or preview generation. Cosmetic trajectories use an independent bounded generator. Six ballistic streaks and one short fan per confirmed impact; three bursts per actor and sixteen total. Limb windows are normally 60 ms before / 120 ms after contact with 120 ms history tails.",
-  "tracking": "120 Hz native AnimationTrack.get forward kinematics projected by current character world position and rendered animation facing. Actual local and observer native clip clocks take priority over paired fallback clocks. This is baked source-bone tracking and does not read the final engine-blended skeleton. Local accepted QTE and replicated confirmed-contact masks gate the paired limb effect; spark hits reuse the existing confirmed HitEffects presentation path."
+  "appearance": "Three translucent layers: a smaller clearer flame core, middle smoke and slightly wider faint outer smoke. All 64 original Yakuza 6 e_f_0014_roop_smoke01 frames are reused unchanged. Each sprite varies its source animation phase, speed, size and tight swirl; every attack receives a fresh cosmetic seed. Kiwami 2 wisps/fan now supply randomized small confirmed-impact puffs, plus six smaller curved flying sparks. Their original pixels and matching colours are unchanged. Smoke history lasts at most 70 ms and is tethered to within two base-scale screen pixels of the current limb before bounded swirl. Impact puffs shrink from scale .28 to .11; spark scale becomes .055..09; lives shrink to 150..210 ms. The pre-existing heavy shock ring is also smaller and fainter.",
+  "tracking": "120 Hz baked native limb FK with current animation clock/facing and actor position. Cached fading copies are rechecked so incoming source time is retained; same-clip duplicate resolution chooses the incoming track. Baked coating is suppressed below 70% attack track weight and smoothly fades in above that weight. Missing native tracks cannot display stale coating; outgoing smoke reanchors to the current source pose and disappears when that pose blends out. This reduces blending mismatch without reading the final engine-blended skeleton or adding a Java bridge. Existing QTE confirmation gating and hit presentation remain intact.",
+  "reusedSmokeProvenance": "docs/extreme-smoke-assets.json"
 }

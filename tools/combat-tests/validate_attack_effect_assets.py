@@ -19,6 +19,14 @@ for item in report['assets']:
         expected=Image.frombytes('LA',actual.size,raw[128:128+actual.width*actual.height*2]).convert('RGBA')
     assert actual.size==tuple(item['size'])and actual.tobytes()==expected.tobytes()
     outputs.append(str(output.resolve()))
+smoke=json.loads((MOD/'docs/extreme-smoke-assets.json').read_text())
+source=Path(smoke['source']);assert hashlib.sha256(source.read_bytes()).hexdigest()==smoke['source_sha256']
+original=Image.open(source).convert('RGBA');assert len(smoke['frames'])==64
+for row in smoke['frames']:
+    output=MOD/row['output'];pixels=Image.open(output).convert('RGBA')
+    assert hashlib.sha256(output.read_bytes()).hexdigest()==row['sha256']
+    assert pixels.size==tuple(row['size'])and pixels.tobytes()==original.crop(row['crop']).tobytes()
+    outputs.append(str(output.resolve()))
 subprocess.run([str(GAME/'jre64/bin/java.exe'),'-Xms16m','-Xmx256m','-XX:ActiveProcessorCount=2','--enable-native-access=ALL-UNNAMED','-cp','.;'+str(GAME/'*'),'AttackEffectProbe',*outputs],cwd=WORK,check=True)
 catalog=json.loads((MOD/'docs/attack-trail-catalog.json').read_text())
 code=(MOD/catalog['catalog']).read_bytes();assert hashlib.sha256(code).hexdigest()==catalog['sha256']
