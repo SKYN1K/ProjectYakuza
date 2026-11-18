@@ -1,5 +1,5 @@
 {
-  "version": "0.126.0",
+  "version": "0.127.0",
   "authorization": "User requested suitable original installed Yakuza effects, more dramatic limb effects on all weapon moves and flying sparks in the same colour.",
   "game": "Yakuza Kiwami 2",
   "source": "Original supplied particle.par textures, retained in extracted/kiwami2-particles",
@@ -53,7 +53,7 @@
       "operation": "Unchanged original Kiwami 2 spark-fan pixels. Runtime colour, world trajectories and fades supply variation."
     }
   ],
-  "appearance": "Original game pixels and requested small screen drop are retained. A native B42 64x128 sprite heuristic was overriding the Gaiden smoke and two Kiwami 2 impact wisps to scale 2 after their anchors were prepared, enlarging them and moving their visible centres down/right. Runtime texture width metadata is set to 65, with horizontal instance scale multiplied by 64/65. The metadata correction is reasserted before drawing to handle asynchronous texture readiness or reloads. Full original UVs, aspect ratio, intended dimensions and centred placement are preserved; no image file is changed. Outer smoke tapers by 35% towards the hand, shrinks during its 45ms retirement fade, and impact puffs use base scale .065 instead of .11, alpha .25 instead of .34, shrinking geometry and at most 94.5ms visibility.",
+  "appearance": "Larger Dragon Engine-inspired presentation using unchanged supplied Yakuza 6, Kiwami 2 and Gaiden pixels. Forty-eight limb sprites: eleven bright additive cyan cores, three original Gaiden wisps, twenty-four independently animated blue smoke sprites in two translucent shells, and ten small moving embers. Core scale .30, wisp .09, inner smoke .23 and halo 1.22 times inner smoke. Shells swirl and pulse independently, taper towards the hand and shrink during 65ms retirement. Core/mid/outer colours are distinct shades of the same blue. The existing 2.176-pixel cosmetic drop is fixed independently of visual size; predicted limb positions and the 64x128 native-scale workaround are retained. Sixteen impact sprites produce twelve directional/curved sparks, three staggered soft puffs and one brief additive flash. Spark velocities include the recorded strike direction. Per-actor/global burst caps are four/twenty-four, with eight coating actors and eight tails.",
   "tracking": "Masked ordinary attacks now replace their raw clip pelvis/spine parent with the live layer-zero standing/walking parent, using 30 Hz native Human local PRS curves, actual playing clip clocks and effective blend weights. This corrects both rotation and translation of the shoulder, elbow, wrist and palm prediction; limb-sourced hit sparks use the same corrected endpoint. The source clips and all media are unchanged. Full-body kicks, throws and paired Heat Actions retain source FK; registered live providers are preserved. Existing small requested cosmetic drop and compact smoke settings remain. The native masked-pose test covers attack weight 1, single/mixed base poses, and no procedural body twist. Partial attack-to-idle blends and unrelated third-party base clips can still differ; no live-rendered skeleton access or Java bridge is added.",
   "reusedSmokeProvenance": "docs/extreme-smoke-assets.json",
   "modelProjection": {
@@ -88,5 +88,17 @@
     "maxTestedModelPositionError": 9.701561692486794e-06,
     "previousMaxTestedModelPositionError": 0.575387431381462,
     "liveInGameVerified": false
+  },
+  "budgets": {
+    "coatingSprites": 48,
+    "retiredSmokeSprites": 24,
+    "impactSprites": 16,
+    "actors": 8,
+    "tails": 8,
+    "bursts": 24,
+    "burstsPerActor": 4,
+    "maxAttackEffectSprites": 960,
+    "retirementMs": 65,
+    "maxBurstMs": 320
   }
 }

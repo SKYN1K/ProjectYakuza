@@ -111,7 +111,7 @@ F.start(p,style,1,{animation='Other'});check(not F.states[p],'unconfigured moves
 emit('lightAttackStarted',p,style,1,move);check(F.states[p]and F.hooked and allocated==0,'allocation waits for actual clip window')
 p.time=.04;F.tick();F.render();check(allocated==0 and #draws==0,'no particles before source window')
 p.time=.2;F.tick();F.render()
-check(allocated==30 and #F.states[p].points==30,'limb coating and lingering trails have a fixed thirty-sprite budget')
+check(allocated==48 and #F.states[p].points==48,'limb coating and lingering trails have a fixed forty-eight-sprite budget')
 local masked="ProjectYakuzaFixture:NATIVEMASK"
 local testedState=F.states[p];local beforeTime=p.time
 for facing=0,7 do
@@ -126,13 +126,13 @@ for facing=0,7 do
 end
 p.baseClip=nil;p.baseTime=nil;p.time=beforeTime;p.angle=0;F.tick();draws={};F.render()
 
-for _,d in ipairs(draws)do if d.width==65 then check(near(d.xScale*65,d.scale*64)and d.scale<.15,'64x128 wisp bypasses native automatic 2x scaling without stretching pixels')end end
+for _,d in ipairs(draws)do if d.width==65 then check(near(d.xScale*65,d.scale*64)and d.scale<.22,'64x128 wisp bypasses native automatic 2x scaling without stretching pixels')end end
 check(#draws>=14 and additive,'contiguous coat and inner arm layers draw, restoring renderer state')
 local wispTexture=F.states[p].points[12].texture;wispTexture.width=64;draws={};F.render()
-check(wispTexture.width==65 and F.states[p].points[12].instance.scale<.15,'texture readiness or reload cannot restore automatic enlargement')
-check(F.states[p].points[1].scale<=.46 and F.states[p].points[15].scale<.36,'smaller visible core stays inside a compact smoke layer')
-for _,d in ipairs(draws)do check(not d.additive and d.alpha<=.55,'all arm layers use restrained ordinary alpha')end
-check(F.normal.r>=.6 and F.normal.g>=.8 and F.normal.b==1,'white-blue normal tint remains')
+check(wispTexture.width==65 and F.states[p].points[12].instance.scale<.22,'texture readiness or reload cannot restore automatic enlargement')
+check(F.states[p].points[1].scale<=.65 and F.states[p].points[15].scale<.55,'smaller visible core stays inside a compact smoke layer')
+local glow,smoke=false,false;for _,d in ipairs(draws)do check(d.alpha<=.55,'layers preserve transparency');glow=glow or d.additive;smoke=smoke or not d.additive end;check(glow and smoke,'bright additive cores sit inside translucent non-additive smoke')
+check(F.normal.r>=.4 and F.normal.g>=.75 and F.normal.b==1,'white-blue normal tint remains')
 for facing=0,31 do
  p.angle=facing*math.pi/16;p.x=.13;p.y=-.17;p.z=.25;draws={};F.render()
  local ux,uy,uz=F.sample(track,.2,4);local wx,wy,wz=F.sample(track,.2,2);local kx,ky,kz=F.sample(track,.2,3)
@@ -175,7 +175,7 @@ check(state.historyCount==24 and #state.history==24 and allocated==allocations,'
 local ticks=state.clock;local beforeUpdate=updated;paused=true;clock=clock+1000;p.time=.3;F.tick();F.render()
 check(state.time==.2 and state.clock==ticks and updated==beforeUpdate,'pause freezes source clock, pose history and flames')
 paused=false;p.time=.25;p.extreme=true;clock=clock+16;F.tick();draws={};F.render()
-check(draws[1].color==F.extreme and draws[1].alpha<=.40,'Extreme uses its restrained brighter tint without changing body aura')
+check(draws[1].color==F.extreme and draws[1].alpha<=.50,'Extreme uses its restrained brighter tint without changing body aura')
 local providerCalls=0
 F.registerLimbProvider('live',function(who,animation,time)
  providerCalls=providerCalls+1
@@ -292,7 +292,7 @@ for animation,entry in pairs(catalog)do
   for facing=0,7 do
    p.angle=facing*math.pi/4;clock=clock+10;F.tick();draws={};F.render()
    check(F.states[p]==active and active.track==ProjectYakuza.AttackTracks[window.track],'correct source limb selected at contact')
-   check(#draws>=14 and #active.points==30,'every contact has bounded animated coating')
+   check(#draws>=14 and #active.points==48,'every contact has bounded animated coating')
    for i=1,11 do
     local x,y,z=F.armPoint(active.joints,(i-1)/10);local d=draws[i]
     check(math.sqrt((d.x-x)^2+(d.y-y)^2+(d.z-z)^2)<.025,'chaos remains tightly around the attacking limb')
@@ -311,11 +311,11 @@ F.start(p,style,1,move);F.tick();F.render()
 for i=1,16 do clock=clock+10;p.time=.2+i*.005;p.angle=p.angle+.04;p.x=p.x+.004;F.tick();F.render()end
 local old=F.states[p];local oldSmokeScale=old.points[20].scale;local oldRoot={p.x,p.y};emit('lightAttackFinished',p)
 check(not F.states[p]and #F.tails==1 and F.hooked,'finished attack leaves a short world-space trail')
-for i,point in ipairs(old.points)do check((point.instance~=nil)==(i>=15 and i<=26),'retired state keeps only twelve historical flame instances')end
+for i,point in ipairs(old.points)do check((point.instance~=nil)==(i>=15 and i<=38),'retired state keeps only twenty-four historical smoke instances')end
 clock=clock+20;p.angle=p.angle+2;p.x=p.x+.1;draws={};F.render();check(#draws>0,'world history still renders after the source attack finishes')
-for _,draw in ipairs(draws)do check(draw.alpha<=.13,'retired smoke remains translucent')end
+for _,draw in ipairs(draws)do check(draw.alpha<=.16,'retired smoke remains translucent')end
 check(old.points[20].scale<oldSmokeScale,'ending smoke shrinks as it fades')
-check(F.trailMs==45,'ending smoke expires within 45 milliseconds')
+check(F.trailMs==65,'ending smoke expires within 65 milliseconds')
 F.start(p,style,1,move);F.tick();F.render();check(F.states[p]and #F.tails==1,'new attack does not erase the previous attack trail')
 paused=true;local clocked=old.clock;clock=clock+1000;F.render();check(old.clock==clocked,'retired trail freezes during pause');paused=false
 clock=clock+210;F.render();check(#F.tails==0,'retired trail expires without following the current hand')
@@ -365,7 +365,7 @@ F.paired(p,source,{duration=bottle.duration},bottle.animation,p.time,1,mask);F.r
 local js=F.states[p].joints;local hx,hy,hz=F.armPoint(js,1)
 F.hit(p,nil,true,false,{x=99,y=99,z=99});local burst=F.bursts[1]
 check(burst and near(burst.x,hx)and near(burst.y,hy)and near(burst.z,hz),'weapon sparks emit at the current swinging hand instead of a fixed victim offset')
-check(burst.color==F.normal and #burst.points==7,'six moving original sparks and one source fan use the exact limb colour')
+check(burst.color==F.normal and #burst.points==16,'twelve flying sparks, three source puffs and one flash use the exact limb colour')
 local vx,vy=burst.points[1].vx,burst.points[1].vy
 F.hit(p,nil,true,false,{x=99,y=99,z=99});check(F.bursts[2].points[1].vx~=vx or F.bursts[2].points[1].vy~=vy,'successive impacts vary cosmetic flight directions')
 clock=clock+40;draws={};F.render();local emittedPoint
@@ -379,9 +379,9 @@ check(frozen and near(frozen.x,emittedPoint.x)and near(frozen.y,emittedPoint.y),
 paused=false;ISWorldMap_instance={isVisible=function()return true end};draws={};F.render();check(#draws==0,'map suppresses limb, tail and free-spark layers');ISWorldMap_instance=nil
 p.extreme=true;F.hit(p,nil,false,false,{x=0,y=0,z=.5});check(F.bursts[#F.bursts].color==F.extreme,'Extreme sparks match Extreme limb colour')
 for i=1,10 do F.hit(p,nil,false,false,{x=0,y=0,z=.5})end
-check(#F.bursts==3,'dense confirmed hits cap burst instances per actor')
+check(#F.bursts==F.maxActorBursts,'dense confirmed hits cap burst instances per actor')
 F.clearAll()
-for i=1,20 do F.hit(actor(),nil,false,false,{x=0,y=0,z=.5})end
+for i=1,30 do F.hit(actor(),nil,false,false,{x=0,y=0,z=.5})end
 check(#F.bursts==F.maxBursts,'crowd sparks have a fixed global budget')
 clock=clock+400;F.render();check(#F.bursts==0 and allocated==disposed,'all free sparks expire and return native instances')
 p.extreme=false;p.clip=nil;F.clearAll()
@@ -390,19 +390,19 @@ F.clearAll();p.clip=move.animation;p.time=.2;p.angle=0;p.x=0;p.y=0;p.weight=1
 F.start(p,style,1,move);F.tick();draws={};F.render()
 local cloud=F.states[p];local coreDraw,outerDraw
 for _,d in ipairs(draws)do if d.instance==cloud.points[6].instance then coreDraw=d elseif d.instance==cloud.points[20].instance then outerDraw=d end end
-check(coreDraw and outerDraw and coreDraw.alpha>outerDraw.alpha and outerDraw.alpha<=.13,'smaller inner layer is stronger while the outer smoke stays transparent')
-check(outerDraw.height*outerDraw.scale>coreDraw.height*coreDraw.scale and outerDraw.height*outerDraw.scale<23,'outer smoke stays below 23 pixels at normal tile scale')
+check(coreDraw and outerDraw and coreDraw.alpha>outerDraw.alpha and outerDraw.alpha<=.16,'smaller inner layer is stronger while the outer smoke stays transparent')
+check(outerDraw.height*outerDraw.scale>coreDraw.height*coreDraw.scale and outerDraw.height*outerDraw.scale<40,'outer smoke stays below 40 pixels at normal tile scale')
 check(cloud.points[26].scale<cloud.points[15].scale*.72,'outer smoke tapers towards the hand')
 local startingScale=cloud.points[6].scale;local firstSeed=cloud.seed
 for turn=1,24 do
  clock=clock+10;p.time=.2+turn*.004;p.angle=turn*.31;p.x=turn*.015;p.y=turn*.008;F.tick();draws={};F.render()
- for i=15,26 do
+ for i=15,38 do
   local d;for _,row in ipairs(draws)do if row.instance==cloud.points[i].instance then d=row;break end end
   if d then
-   local x,y,z=F.armPoint(cloud.joints,(i-15)/11);local dx,dy,dz=d.x-x,d.y-y,d.z-z
+   local x,y,z=F.armPoint(cloud.joints,((i-15)%12)/11);local dx,dy,dz=d.x-x,d.y-y,d.z-z
    local sx,sy=(dx-dy)*32,(dx+dy)*16-dz*96
-   check(math.sqrt(sx*sx+sy*sy)<3.5,'outer smoke remains tethered during rapid turns, movement and source deformation')
-   check(d.alpha<=.13,'chaotic outer smoke never becomes an opaque billboard')
+   check(math.sqrt(sx*sx+sy*sy)<6.5,'outer smoke remains tethered during rapid turns, movement and source deformation')
+   check(d.alpha<=.16,'chaotic outer smoke never becomes an opaque billboard')
   end
  end
 end
@@ -424,9 +424,9 @@ F.finish(overlap);overlap.weight=.1;draws={};F.render();check(#draws==0 and #F.t
 F.clearAll()
 for i=1,12 do
  F.hit(p,nil,true,false,{x=0,y=0,z=.5});local b=F.bursts[#F.bursts]
- for _,point in ipairs(b.points)do check(point.scale<=.2421,'impact sparks and puffs stay below the new size cap')end
- check(b.life<=210,'small chaotic bursts remain brief')
- local puff=b.points[7];check(puff.scale<=.1431 and b.life*puff.life<=94.5,'ending impact puff is compact and expires within 95 milliseconds')
+ for _,point in ipairs(b.points)do check(point.scale<=.47,'impact sparks and puffs stay below the new size cap')end
+ check(b.life<=320,'small chaotic bursts remain brief')
+ local puff=b.points[14];check(puff.scale<=.30 and b.life*puff.life+puff.delay<=160,'staggered impact smoke stays bounded and expires within 160 milliseconds')
  if puff.widthScale~=1 then check(near(puff.instance.xScale*65,puff.scale*64),'impact wisp keeps original aspect ratio without native 2x enlargement')end
 end
 F.clearAll()
@@ -454,7 +454,7 @@ F.clearAll();p.weight=1
 F.clearAll();p.clip=move.animation;p.time=.2;p.weight=1;F.start(p,style,1,move);F.tick();draws={};F.render()
 check(near(F.coatOffset(),2.176)and F.coatOffset()<3,'requested ten-percent drop is about two pixels, not the removed fifty-six-pixel displacement')
 local coat=F.states[p]
-check(near(F.coatOffset(),coat.points[15].height*coat.points[15].baseScale*.1),'drop is exactly ten percent of the compact outer smoke base height')
+check(near(F.coatOffset(),64*.17*Core.getTileScale()*.1),'larger effects preserve the existing two-pixel placement instead of shifting their anchor')
 for _,d in ipairs(draws)do
  local x,y=centre(d);local dx,dy,dz=d.x-p.x,d.y-p.y,d.z-p.z
  check(near(x,(dx-dy)*64)and near(y,(dx+dy)*32-dz*192+F.coatOffset()),'all coating layers share one small screen drop and preserve their world-depth positions')
