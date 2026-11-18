@@ -87,10 +87,12 @@ function F.spawn(player,victim,strong,charged,guard,feedback,anchor)
     local style=ProjectYakuza.getPlayerStyle(player)
     if not style or style.hitEffects~="yakuza6" then return end
     if player:getModData().ProjectYakuzaHitEffectsDisabled then return end
-    if not guard and ProjectYakuza.AttackEffects and ProjectYakuza.AttackEffects.hit then ProjectYakuza.AttackEffects.hit(player,victim,strong,charged,anchor)end
+    local contact
+    if not guard and ProjectYakuza.AttackEffects and ProjectYakuza.AttackEffects.hit then contact=ProjectYakuza.AttackEffects.hit(player,victim,strong,charged,anchor)end
     local family=feedback;if family==nil then family=style.impactFeedback end
     if family~="blunt"and family~="blade"then family="unarmed"end
     if not guard and ProjectYakuza.BloodEffects then ProjectYakuza.BloodEffects.spawn(player,victim,strong,charged,family,anchor) end
+    if contact then return end
     local count=0
     for _,b in ipairs(F.bursts) do if b.player==player then count=count+1 end end
     if count>=F.maxBursts or #F.bursts>=F.maxTotal then

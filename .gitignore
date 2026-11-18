@@ -413,5 +413,6 @@
 !tools/combat-tests/PhoneDevNativeProbe.java
 !tools/combat-tests/build_phone_dev_tests.py
 !tools/combat-tests/phone-dev-test-fixture.lua
+!tools/combat-tests/build_phone_font.py
 !tools/Build-PhoneDev.py
 !tools/Publish-PhoneDevRelease.ps1

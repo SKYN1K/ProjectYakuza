@@ -214,4 +214,8 @@ for i,r in ipairs(renders)do
  check(math.abs(r.dy-old.dy)<.00001,'world contact impact and blood receive no added camera translation')
 end
 F.clear();check(allocated==disposed,'corrected source anchors release all sprites')
+PY.AttackEffects.hit=function()return {}end
+F.spawn(p,z,true,false,false,'unarmed',sourceAnchor)
+check(#F.bursts==0 and #B.bursts==1,'new source burst replaces the repeated legacy flash while preserving blood')
+F.clear();check(allocated==disposed,'shared impact path still releases blood without duplicate flash instances')
 return true,'PASS '..checks..' source-frame blood animation, confirmed hit, world anchor, MP budgets and cleanup checks'

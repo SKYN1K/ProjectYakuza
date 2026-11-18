@@ -132,9 +132,9 @@ local wispTexture=F.states[p].points[12].texture;wispTexture.width=64;draws={};F
 check(wispTexture.width==65 and F.states[p].points[12].instance.scale<.24,'texture readiness or reload cannot restore automatic enlargement')
 check(F.states[p].points[1].scale<=.72 and F.states[p].points[15].scale<.69,'wider visible core stays inside a larger smoke layer')
 local glow,smoke=false,false;for _,d in ipairs(draws)do check(d.alpha<=.55,'layers preserve transparency');glow=glow or d.additive;smoke=smoke or not d.additive end;check(glow and smoke,'additive embers sit outside alpha-blended smoke and cores')
-check(F.normal.r<=.2 and F.normal.g<=.6 and F.normal.b==1,'normal coating stays saturated blue instead of white')
+check(F.normal.r>=.9 and F.normal.g>=.9 and F.normal.b==1,'limb coating returns to soft cool white')
 for i=1,11 do
- local point=F.states[p].points[i];check(not point.additive,'overlapping flame cores use alpha blending so they cannot add up to white')
+ local point=F.states[p].points[i];check(not point.additive and point.sprite==F.smoke,'inner coating uses animated source smoke with normal alpha blending')
  for _,d in ipairs(draws)do if d.instance==point.instance then check(not d.additive and d.alpha<=.28,'limb cores stay soft even where source sprites overlap')end end
 end
 check(F.outerScale/.23>1.25,'limb smoke footprint is at least one quarter larger without changing its anchor')
@@ -373,6 +373,9 @@ check(burst and near(burst.x,hx)and near(burst.y,hy)and near(burst.z,hz),'weapon
 check(burst.color==F.normal and #burst.points==16,'twelve flying sparks, three source puffs and one flash use the exact limb colour')
 local vx,vy=burst.points[1].vx,burst.points[1].vy
 F.hit(p,nil,true,false,{x=99,y=99,z=99});check(F.bursts[2].points[1].vx~=vx or F.bursts[2].points[1].vy~=vy,'successive impacts vary cosmetic flight directions')
+check(F.bursts[2].variant~=burst.variant,'adjacent hits change their burst silhouette instead of repeating a radial stamp')
+check(F.puffs[1].additive==true,'opaque-black original spark sheet uses additive drawing instead of a smoke blend')
+for _,b in ipairs(F.bursts)do for _,point in ipairs(b.points)do if point.puff and point.ox==-64 then check(point.additive,'black-backed burst cannot draw an opaque rectangle')end end end
 clock=clock+40;draws={};F.render();local emittedPoint
 for _,d in ipairs(draws)do if d.instance==burst.points[1].instance then emittedPoint=d end end
 check(emittedPoint and near(emittedPoint.x,hx+vx*.04-vy*burst.points[1].curve*.04^2)and near(emittedPoint.y,hy+vy*.04+vx*burst.points[1].curve*.04^2),'sparks leave the hand with a world-space trajectory')
@@ -395,7 +398,7 @@ F.clearAll();p.clip=move.animation;p.time=.2;p.angle=0;p.x=0;p.y=0;p.weight=1
 F.start(p,style,1,move);F.tick();draws={};F.render()
 local cloud=F.states[p];local coreDraw,outerDraw
 for _,d in ipairs(draws)do if d.instance==cloud.points[6].instance then coreDraw=d elseif d.instance==cloud.points[20].instance then outerDraw=d end end
-check(coreDraw and outerDraw and coreDraw.alpha>outerDraw.alpha and outerDraw.alpha<=.16,'smaller inner layer is stronger while the outer smoke stays transparent')
+check(coreDraw and outerDraw and coreDraw.alpha>=outerDraw.alpha*.85 and outerDraw.alpha<=.16,'white inner smoke and soft outer layers stay translucent')
 check(outerDraw.height*outerDraw.scale>coreDraw.height*coreDraw.scale and outerDraw.height*outerDraw.scale<52,'larger inner smoke remains below 52 pixels at normal tile scale')
 check(cloud.points[26].scale<cloud.points[15].scale*.72,'outer smoke tapers towards the hand')
 local startingScale=cloud.points[6].scale;local firstSeed=cloud.seed
