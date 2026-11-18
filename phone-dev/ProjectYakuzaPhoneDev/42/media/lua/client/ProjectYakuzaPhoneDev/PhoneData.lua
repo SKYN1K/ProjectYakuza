@@ -43,9 +43,9 @@ function D.rows(p,page)
     elseif page=="equipment"then
         local held=p:getPrimaryHandItem();add(rows,"In hand",held and held:getDisplayName()or"Empty")
         local items=p:getInventory():getItems();local weapons={}
-        for i=0,items:size()-1 do local item=items:get(i);if instanceof(item,"HandWeapon")and not PY.isStyleToken(item)then weapons[#weapons+1]=item end end
-        table.sort(weapons,function(a,b)return a:getDisplayName()<b:getDisplayName()end)
-        for _,item in ipairs(weapons)do local weapon=item;local max=math.max(1,item:getConditionMax());add(rows,item:getDisplayName(),"Condition "..math.floor(item:getCondition()/max*100).."%  |  Select to equip",function()
+        for i=0,items:size()-1 do local item=items:get(i);if instanceof(item,"HandWeapon")and not PY.isStyleToken(item)then weapons[#weapons+1]={item=item,name=item:getDisplayName()}end end
+        table.sort(weapons,function(a,b)return a.name<b.name end)
+        for _,entry in ipairs(weapons)do local weapon=entry.item;local max=math.max(1,weapon:getConditionMax());add(rows,entry.name,"Condition "..math.floor(weapon:getCondition()/max*100).."%  |  Select to equip",function()
             if not p:getInventory():contains(weapon)then return false,"That weapon is no longer in your inventory."end
             return after(p,function()ISInventoryPaneContextMenu.equipWeapon(weapon,true,weapon:isTwoHandWeapon(),p:getPlayerNum())end)
         end)end

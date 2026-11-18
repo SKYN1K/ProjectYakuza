@@ -6,7 +6,7 @@ local function check(v,m)checks=checks+1;assert(v,m)end
 local function near(a,b,e)return math.abs(a-b)<(e or .00002)end
 local function event()local e={hooks={}};function e.Add(fn)e.hooks[fn]=true end;return e end
 Events={OnGameStart=event(),OnSave=event(),OnMainMenuEnter=event()}
-ProjectYakuza={VERSION="0.127.0"}
+ProjectYakuza={VERSION="0.128.0"}
 do local _="ProjectYakuzaFixture:PHONEASSETS" end
 do local _="ProjectYakuzaFixture:PHONEMATH" end
 local PY=ProjectYakuza;local D=PY.PhoneDev;local M=D.Math
@@ -23,7 +23,7 @@ end
 for first=1,#refs,13 do
  local q={};for corner=1,4 do local p=refs[first+corner-1].native;q[corner]={p[1],p[2]}end
  local source=refs[first];local scene={sceneToUIX=function(_,x,y,z)return source.width/2+z*mult*source.width/1366 end,sceneToUIY=function(_,x,y,z)return source.height/2-y*mult*source.width/1366 end}
- local projected=M.project(scene,source.pose);for corner=1,4 do check(near(projected[corner][1],q[corner][1],.001)and near(projected[corner][2],q[corner][2],.001),'production screen corners coincide with the native model projection')end
+ local projected=M.project(source.pose,source.width,source.height);for corner=1,4 do check(near(projected[corner][1],q[corner][1],.001)and near(projected[corner][2],q[corner][2],.001),'production screen corners coincide with the native model projection')end
  for index=1,9 do local p=refs[first+3+index].native;check(M.hit(q,p[1],p[2])==index,'inverse screen input follows every native app centre during motion')end
 end
 for _,name in ipairs({'styles','equipment','combat','heat','audio','effects','grabs','controls','settings'})do
@@ -44,7 +44,8 @@ Keyboard={KEY_ESCAPE=1,KEY_RETURN=28,KEY_NUMPADENTER=156,KEY_TAB=15,KEY_LEFT=203
 Joypad={AButton=0,BButton=1,YButton=3};JoypadState={players={}}
 local sounds,equipped,assigned,saves,volumes,draws,legacy=0,0,0,0,{musicVolume=100,hitVolume=100,voiceVolume=100},0,0
 local manager={};local failModel=false
-local function vector()return {set=function(self,x,y,z)self.x=x;self.y=y;self.z=z end}end
+local vectorWrites,projectionCalls,projectedDraws,inventoryScans,nameReads=0,0,0,0,0
+local function vector()return {set=function(self,x,y,z)vectorWrites=vectorWrites+1;self.x=x;self.y=y;self.z=z end}end
 local function native(owner)
  local n={rotation=vector(),translation=vector(),scale=vector()}
  function n:fromLua1(name,arg)
@@ -55,8 +56,8 @@ local function native(owner)
   if name=='createModel'then if failModel then error('injected model load failure')end;check(value=='ProjectYakuzaPhoneDev.Xperia','original Xperia model selected')
   else check((name=='setModelUseWorldAttachment'or name=='setModelWeaponRotationHack')and value==false,'native model has no weapon-attachment transforms')end
  end
- function n:sceneToUIX(x,y,z)return owner.width/2+z*mult*owner.width/1366 end
- function n:sceneToUIY(x,y,z)return owner.height/2-y*mult*owner.width/1366 end
+ function n:sceneToUIX(x,y,z)projectionCalls=projectionCalls+1;return owner.width/2+z*mult*owner.width/1366 end
+ function n:sceneToUIY(x,y,z)projectionCalls=projectionCalls+1;return owner.height/2-y*mult*owner.width/1366 end
  return n
 end
 local Base={};Base.__index=Base
@@ -78,7 +79,7 @@ function Base:clearStencilRect()self.stencil=false end
 function Base:drawRect(x,y,w,h,a)check(w>=0 and h>=0 and a>=0 and a<=1,'UI rectangles stay finite and translucent');draws=draws+1 end
 function Base:drawText(text)check(type(text)=='string','UI labels stay readable strings');draws=draws+1 end
 Base.drawTextCentre=Base.drawText
-function Base:drawTextureAllPoint(texture,x1,y1,x2,y2,x3,y3,x4,y4,r,g,b,a)check(texture~=nil and a>=0 and a<=1 and x1==x1 and y4==y4,'projected original textures stay finite');draws=draws+1 end
+function Base:drawTextureAllPoint(texture,x1,y1,x2,y2,x3,y3,x4,y4,r,g,b,a)check(texture~=nil and a>=0 and a<=1 and x1==x1 and y4==y4,'projected original textures stay finite');draws=draws+1;projectedDraws=projectedDraws+1 end
 function Base:drawTextureScaled()draws=draws+1 end
 function Base:drawSubTexture()draws=draws+1 end
 ISPanel=Base:derive('ISPanel');ISPanelJoypad=Base:derive('ISPanelJoypad');ISUI3DScene=Base:derive('ISUI3DScene')
@@ -97,9 +98,9 @@ local options={getOption=function(self,id)return self[id]end,apply=function()end
 for id,value in pairs(volumes)do options[id]={min=0,max=200,value=value,getValue=function(self)return self.value end,setValue=function(self,v)self.value=v end}end
 PZAPI={ModOptions={getOptions=function()return options end,save=function()saves=saves+1 end}}
 local inventory={items={}}
-function inventory:getItems()return {size=function()return #self.items end,get=function(_,i)return self.items[i+1]end}end
+function inventory:getItems()inventoryScans=inventoryScans+1;return {size=function()return #self.items end,get=function(_,i)return self.items[i+1]end}end
 function inventory:contains(item)return not item.missing end
-for i=1,25 do local item={kind='HandWeapon',name='Weapon '..i};function item:getDisplayName()return self.name end;function item:getConditionMax()return 100 end;function item:getCondition()return 75 end;function item:isTwoHandWeapon()return true end;inventory.items[i]=item end
+for i=1,25 do local item={kind='HandWeapon',name='Weapon '..i};function item:getDisplayName()nameReads=nameReads+1;return self.name end;function item:getConditionMax()return 100 end;function item:getCondition()return 75 end;function item:isTwoHandWeapon()return true end;inventory.items[i]=item end
 instanceof=function(o,kind)return o and o.kind==kind end
 local p={md={},style=dragon.id,equipped=true,slots={left=dragon.id},dead=false,busy=false,joypad=-1}
 function p:getModData()return self.md end;function p:getPlayerNum()return 0 end;function p:getInventory()return inventory end;function p:getPrimaryHandItem()return inventory.items[1]end
@@ -115,12 +116,27 @@ setJoypadFocus=function(num,panel)local state=JoypadState.players[num+1];state.f
 do local _="ProjectYakuzaFixture:PHONEDATA" end
 do local _="ProjectYakuzaFixture:PHONEPANEL" end
 do local _="ProjectYakuzaFixture:PHONEBOOT" end
-check(D.compatible('0.127.0')and D.compatible('1.0.0')and not D.compatible('0.126.0')and not D.compatible('invalid'),'dev menu enforces its shared polished combat baseline')
+check(D.compatible('0.128.0')and D.compatible('1.0.0')and not D.compatible('0.127.0')and not D.compatible('invalid'),'dev menu enforces its shared polished combat baseline')
 D.install();D.install();check(PY.StyleSelector.openSetup==D.open and D.legacyOpenSetup==original,'menu hook installs once and preserves the original settings')
-local function advance(ms)for i=1,math.ceil(ms/20)do clock=clock+20;if D.panel then D.panel:update()end end end
+check(D.open(p),'render timing regression opens the phone')
+local smooth=D.panel;local priorOpen=0
+for frame=1,6 do
+ clock=clock+16;smooth:prerender();smooth.screen:prerender()
+ check(smooth.open>priorOpen,'animation advances on every 16ms render without a single 100ms UI update');priorOpen=smooth.open
+ check(near(smooth.rotation.x,-math.deg(smooth.pose.rz))and near(smooth.rotation.z,math.deg(smooth.pose.rx)),'model uses the newly rendered pose before its screen overlay')
+ local x,y,z=M.screenPoint(smooth.pose,0,0)
+ check(near(smooth.screen.quad[1][1],smooth.scene.width/2+z*mult*smooth.scene.width/1366,.001)and near(smooth.screen.quad[1][2],smooth.height/2-y*mult*smooth.scene.width/1366,.001),'screen and model remain on the same rendered frame')
+end
+check(projectionCalls==0,'rendering eliminates repeated native projection/matrix calculations')
+D.clear()
+local function advance(ms)for i=1,math.ceil(ms/20)do clock=clock+20;if D.panel then D.panel:prerender();D.panel:update()end end end
 local function open()check(D.open(p),'phone opens through the optional menu hook');advance(600);return D.panel end
 local panel=open();check(panel.page==2 and panel.wantsKeys and manager[panel],'equipment is the saved-reference default and input belongs to the visible phone')
 panel:prerender();panel.screen:prerender();panel.rows:prerender();check(draws>50 and not panel.rows.stencil,'native phone screen and page draw without leaking clipping')
+projectedDraws=0;panel.screen:prerender();check(projectedDraws<=39,'phone screen submits at most thirty-nine quads instead of fifty-seven')
+nameReads=0;panel:refresh();check(nameReads==#inventory.items+1,'inventory sort reads each weapon name once instead of crossing to Java for every comparison')
+local scans=inventoryScans;advance(1200);check(inventoryScans==scans,'inventory is not rebuilt repeatedly while browsing a static phone');advance(400);check(inventoryScans==scans+1,'carried items still refresh while the menu stays open')
+local pref=D.preferences(p);pref.tilt=false;advance(20);local writes=vectorWrites;advance(100);check(vectorWrites==writes,'settled phone avoids rewriting unchanged native model transforms');pref.tilt=true
 check(panel.rows:onMouseWheel(3)==true and panel.rows.offset>0 and panel:onMouseWheel(1)==true,'inventory wheel scrolls and cannot zoom the world')
 panel.focusRows=false;panel:onKeyPress(Keyboard.KEY_RIGHT);check(panel.page==3,'arrow navigation changes phone apps');panel:onKeyPress(Keyboard.KEY_TAB);check(panel.focusRows,'Tab moves to the page rows')
 panel:selectPage(5);panel.row=1;panel.focusRows=true;panel:onKeyPress(Keyboard.KEY_RIGHT);check(options.musicVolume:getValue()==110 and saves==1,'audio adjusts and persists through the existing mod-options API')
@@ -139,5 +155,5 @@ viewportWidth=900;viewportHeight=1000;panel=open();check(panel.panelW>300 and pa
 p.joypad=0;local prior={};JoypadState.players[1]={focus=prior};panel=open();check(panel.gamepad and JoypadState.players[1].focus==panel,'controller focus moves to the dev menu');panel:onJoypadDown(Joypad.YButton);check(panel.focusRows,'controller focus changes between phone and list');panel:onJoypadDown(Joypad.BButton);advance(400);check(JoypadState.players[1].focus==prior and not D.panel,'closing restores the previous controller focus');p.joypad=-1;JoypadState.players[1]=nil
 failModel=true;check(D.open(p)and legacy==2 and D.panel==nil and PY.StyleSelector.setup.legacy,'a native model failure restores the old menu without retaining input');failModel=false;PY.StyleSelector.setup:close()
 check(panel:isKeyConsumed(Keyboard.KEY_ESCAPE)and not panel:isKeyConsumed(Keyboard.KEY_W),'phone keys are consumed without disabling player movement')
-check(PY.VERSION=='0.127.0'and PY.Heat.stocks(p)==2,'dev interface does not replace combat version or grant heat')
+check(PY.VERSION=='0.128.0'and PY.Heat.stocks(p)==2,'dev interface does not replace combat version or grant heat')
 return 'PASS '..checks..' native projection, inverse input, alpha centring, pages, scrolling, options, actions, fallback and lifecycle assertions'

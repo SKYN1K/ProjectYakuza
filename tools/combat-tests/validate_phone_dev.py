@@ -23,6 +23,6 @@ references=json.loads(output.read_text());assert len(cases)==len(references)
 for case,reference in zip(cases,references):case['native']=reference
 (WORK/'cases.json').write_text(json.dumps(cases,separators=(',',':')))
 subprocess.run([*java,'AttackEffectProbe',*[str(p.resolve())for p in sorted((MOD/'42/media/textures').rglob('*.png'))]],cwd=W,check=True)
-required=MOD/'42/mod.info';assert 'require=ProjectYakuza'in required.read_text()and'version=0.1.0'in required.read_text()
+required=MOD/'42/mod.info';assert 'require=ProjectYakuza'in required.read_text()and'version=0.1.1'in required.read_text()
 for name,row in d['images'].items():assert hashlib.sha256((MOD/row['output']).read_bytes()).hexdigest()==row['sha256']
 print('PASS phone dev source assets, original pixels, native geometry/UVs and',len(cases),'projection references; separate shared-combat dependency')

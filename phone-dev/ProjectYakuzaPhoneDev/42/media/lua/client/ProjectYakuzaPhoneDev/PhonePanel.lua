@@ -11,32 +11,35 @@ local Rows=ISPanel:derive("ProjectYakuzaPhoneDevRows")
 D.PhonePanel=Phone
 local function audio(self,cue)PY.UIAudio.play(self.player,cue)end
 local function quad(panel,q,texture,x,y,w,h,r,g,b,a)
-    local x1,y1=M.point(q,x/320,y/568);local x2,y2=M.point(q,(x+w)/320,y/568)
-    local x3,y3=M.point(q,(x+w)/320,(y+h)/568);local x4,y4=M.point(q,x/320,(y+h)/568)
+    local ax,ay=(q[2][1]-q[1][1])/320,(q[2][2]-q[1][2])/320
+    local bx,by=(q[4][1]-q[1][1])/568,(q[4][2]-q[1][2])/568
+    local x1,y1=q[1][1]+ax*x+bx*y,q[1][2]+ay*x+by*y
+    local x2,y2=x1+ax*w,y1+ay*w;local x4,y4=x1+bx*h,y1+by*h
+    local x3,y3=x2+bx*h,y2+by*h
     panel:drawTextureAllPoint(texture,x1,y1,x2,y2,x3,y3,x4,y4,r,g,b,a)
 end
 local function caption(panel,q,text,x,y,a)
     local px,py=M.point(q,x/320,y/568);panel:drawTextCentre(text,px,py,.94,.95,1,a,UIFont.Small)
 end
 function Screen:prerender()
-    local host=self.host;local native=host.scene.javaObject
+    local host=self.host
     if host.closed or host.open<=.005 or math.cos(host.pose.rx)*math.cos(host.pose.ry)<.12 then self.quad=nil;return end
-    local q=M.project(native,host.pose);self.quad=q
+    local q=M.project(host.pose,self.width,self.height,self.quad);self.quad=q
     local alpha=host.open;local white=host.textures.Pixel
-    for row=0,23 do local t=row/23;quad(self,q,white,0,row*568/24,320,568/24+1,.075+.12*t,.12-.025*t,.17+.055*t,alpha)end
+    for row=0,5 do local t=row/5;quad(self,q,white,0,row*568/6,320,568/6+1,.075+.12*t,.12-.025*t,.17+.055*t,alpha)end
     quad(self,q,white,0,0,320,26,0,0,0,alpha)
-    local hours=getGameTime():getTimeOfDay();caption(self,q,string.format("%02d:%02d",math.floor(hours)%24,math.floor(hours%1*60)),43,4,alpha)
+    caption(self,q,host.clockLabel,43,4,alpha)
     quad(self,q,host.textures.signal,254,5,22,15,1,1,1,alpha);quad(self,q,host.textures.battery,283,7,25,13,1,1,1,alpha)
     caption(self,q,"PROJECT YAKUZA",160,45,alpha)
-    local style=PY.getPlayerStyle(host.player);caption(self,q,style and style.name or"No style equipped",160,73,alpha*.75)
-    local rules=PY.Heat.rules(host.player);local heat=PY.Heat.stocks(host.player)/math.max(1,rules.maxStocks)
+    caption(self,q,host.styleLabel,160,73,alpha*.75)
+    local heat=host.heatLevel
     caption(self,q,"HEAT",52,112,alpha*.9);quad(self,q,white,85,119,210,4,.05,.08,.12,alpha)
     quad(self,q,white,85,119,210*heat,4,.10,.60,1,alpha)
     for index,page in ipairs(D.pages)do
         local x,y,w,h=M.appRect(index);local selected=host.page==index
         quad(self,q,white,x-4,y-4,w+8,h+8,.03,.04,.06,alpha*.55)
         quad(self,q,white,x,y,w,h,.95,selected and .40 or .95,selected and .10 or .96,alpha*.96)
-        local asset=D.assets[page.id];local ix,iy,iw,ih=M.iconRect(asset,x+w/2,y+h/2,46)
+        local icon=host.icons[index];local ix,iy,iw,ih=icon[1],icon[2],icon[3],icon[4]
         local tint=page.id=="effects"and .20 or 1
         quad(self,q,host.textures[page.id],ix,iy,iw,ih,tint,tint,tint,alpha)
         caption(self,q,page.label,x+w/2,y+h+7,alpha)
@@ -98,6 +101,7 @@ end
 function Phone:initialise()
     ISPanelJoypad.initialise(self)
     self.textures={};for name,asset in pairs(D.assets)do self.textures[name]=getTexture(asset.path)end
+    self.icons={};for index,page in ipairs(D.pages)do local x,y,w,h=M.appRect(index);self.icons[index]={M.iconRect(D.assets[page.id],x+w/2,y+h/2,46)}end
     local sw=math.min(self.height*.70,self.width*.48);self.scene=ISUI3DScene:new(0,0,sw,self.height);self.scene.background=false;self.scene:initialise();self:addChild(self.scene)
     local native=self.scene.javaObject
     for _,name in ipairs({"setDrawGrid","setDrawGridAxes","setDrawGridPlane","setDrawAttachments","setDrawGeometry"})do native:fromLua1(name,false)end
@@ -112,14 +116,23 @@ function Phone:initialise()
 end
 function Phone:applyPose()
     local pref=D.preferences(self.player);local tx,ty=0,0
-    if not self.gamepad then tx=(getMouseX()-self:getAbsoluteX()-self.scene.width/2)/(self.scene.width/2);ty=(getMouseY()-self:getAbsoluteY()-self.height/2)/(self.height/2)end
+    if not self.gamepad then tx=M.clamp((getMouseX()-self:getAbsoluteX()-self.scene.width/2)/(self.scene.width/2),-1,1);ty=M.clamp((getMouseY()-self:getAbsoluteY()-self.height/2)/(self.height/2),-1,1)end
     local blend=1-math.exp(-self.dt*14);self.pointerX=self.pointerX+(tx-self.pointerX)*blend;self.pointerY=self.pointerY+(ty-self.pointerY)*blend
-    self.pose=M.pose(self.open,self.pointerX,self.pointerY,pref.reduceMotion==true,pref.tilt~=false)
+    local pose=M.pose(self.open,self.pointerX,self.pointerY,pref.reduceMotion==true,pref.tilt~=false)
+    local old=self.pose
+    if old and math.abs(old.rx-pose.rx)<.000001 and math.abs(old.ry-pose.ry)<.000001 and math.abs(old.rz-pose.rz)<.000001 and math.abs(old.scale-pose.scale)<.000001 and math.abs(old.y-pose.y)<.000001 and math.abs(old.z-pose.z)<.000001 then return end
+    self.pose=pose
     self.rotation:set(-math.deg(self.pose.rz),math.deg(self.pose.ry),math.deg(self.pose.rx))
     self.translation:set(self.pose.x,self.pose.y,self.pose.z);self.scale:set(self.pose.scale,self.pose.scale,self.pose.scale)
 end
 function Phone:refresh()
     self.rows.items=D.rows(self.player,D.pages[self.page].id);self.row=M.clamp(self.row,1,math.max(1,#self.rows.items));self.rows.offset=M.clamp(self.rows.offset,0,self.rows:maxScroll());self.refreshed=getTimestampMs()
+    self:refreshHeader()
+end
+function Phone:refreshHeader()
+    local hours=getGameTime():getTimeOfDay();self.clockLabel=string.format("%02d:%02d",math.floor(hours)%24,math.floor(hours%1*60))
+    local style=PY.getPlayerStyle(self.player);self.styleLabel=style and style.name or"No style equipped"
+    local rules=PY.Heat.rules(self.player);self.heatLevel=M.clamp(PY.Heat.stocks(self.player)/math.max(1,rules.maxStocks),0,1);self.headerAt=getTimestampMs()
 end
 function Phone:selectPage(index)
     index=M.clamp(index,1,#D.pages);if index==self.page then return end
@@ -136,6 +149,8 @@ function Phone:activateRow(delta)
     if not self.closed then self:refresh()end
 end
 function Phone:prerender()
+    if self.closed then return end
+    self:animate(getTimestampMs())
     local a=self.open
     self:drawRect(0,0,self.width,self.height,a*.48,.015,.018,.026)
     self:drawRect(self.panelX,self.height*.15,self.panelW,self.height*.70,a*.88,.025,.027,.035)
@@ -154,15 +169,19 @@ end
 function Phone:update()
     ISPanelJoypad.update(self)
     if self.closed then return end
-    local now=getTimestampMs();self.dt=M.clamp((now-self.last)/1000,0,.05);self.last=now
+    local now=getTimestampMs()
     local index=self.player:getPlayerNum()
     if getPlayerScreenWidth(index)~=self.width or getPlayerScreenHeight(index)~=self.height or getCore():isDoingTextEntry()or self.player:isDead()or self.player:getVehicle()or PY.isBusy(self.player)or(ISWorldMap_instance and ISWorldMap_instance:isVisible())then self:close(true);return end
+    if self.closing and self.open<=.001 and now>self.transitionAt then self:finishClose();return end
+    if now-self.headerAt>400 then self:refreshHeader()end
+    if now-self.refreshed>(self.page==2 and 1500 or 400)then self:refresh()end
+end
+function Phone:animate(now)
+    self.dt=M.clamp((now-self.last)/1000,0,.10);self.last=now
     local target=self.closing and 0 or 1;local duration=self.closing and .28 or .48
     if D.preferences(self.player).reduceMotion then duration=.12 end
     local t=M.clamp((now-self.transitionAt)/1000/duration,0,1);self.open=self.fromOpen+(target-self.fromOpen)*M.ease(t)
-    if self.closing and t>=1 then self:finishClose();return end
     self:applyPose()
-    if now-self.refreshed>400 then self:refresh()end
 end
 function Phone:finishClose()
     if self.closed then return end

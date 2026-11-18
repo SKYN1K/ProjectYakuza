@@ -4,7 +4,7 @@ local D=PY.PhoneDev
 function D.compatible(version)
     local a,b,c=string.match(tostring(version or""),"^(%d+)%.(%d+)%.(%d+)")
     a,b,c=tonumber(a),tonumber(b),tonumber(c)
-    return a and(a>0 or b>127 or b==127 and c>=0)or false
+    return a and(a>0 or b>128 or b==128 and c>=0)or false
 end
 function D.open(p)
     local selector=PY.StyleSelector

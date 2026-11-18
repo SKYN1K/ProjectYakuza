@@ -21,10 +21,11 @@ end
 function M.screenPoint(pose,u,v)
     return M.transform(pose,-.3905,5.7124272-11.4788473*v,-3.2274276+6.4548552*u)
 end
-function M.project(native,pose)
-    local quad={}
+function M.project(pose,width,height,quad)
+    quad=quad or {{},{},{},{}}
+    local mult=math.exp(.2)*160/1.82*width/1366
     for i,p in ipairs({{0,0},{1,0},{1,1},{0,1}})do
-        local x,y,z=M.screenPoint(pose,p[1],p[2]);quad[i]={native:sceneToUIX(x,y,z),native:sceneToUIY(x,y,z)}
+        local x,y,z=M.screenPoint(pose,p[1],p[2]);quad[i][1]=width/2+z*mult;quad[i][2]=height/2-y*mult
     end
     return quad
 end
