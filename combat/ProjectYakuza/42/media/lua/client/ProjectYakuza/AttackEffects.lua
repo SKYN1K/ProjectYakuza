@@ -4,7 +4,7 @@ require "ProjectYakuza/AttackTracks"
 require "ProjectYakuza/AttackTrailCatalog"
 require "ProjectYakuza/ParentPosePrediction"
 local PY=ProjectYakuza
-local F={states=setmetatable({}, {__mode="k"}),maxActors=8,maxTails=8,pointCount=48,historySize=24,trailMs=65,tails={},bursts={},maxBursts=24,maxActorBursts=4,serial=0,outerScale=.23,anchorScale=.17,dropFraction=.10}
+local F={states=setmetatable({}, {__mode="k"}),maxActors=8,maxTails=8,pointCount=48,historySize=24,trailMs=65,tails={},bursts={},maxBursts=24,maxActorBursts=4,serial=0,outerScale=.29,anchorScale=.17,dropFraction=.10}
 PY.AttackEffects=F
 local function valid(p,s)
     local style=PY.getPlayerStyle(p)
@@ -244,13 +244,13 @@ local function allocate(s)
     local tile=Core.getTileScale();s.points={}
     for i=1,F.pointCount do
         local sp=i<=11 and F.flame or i<=14 and F.gaidenSmoke or i<=38 and F.smoke or F.spark
-        local scale=(i<=11 and .30 or i<=14 and .09 or i<=38 and F.outerScale*(i>26 and 1.22 or 1)or .085)*tile
+        local scale=(i<=11 and .33 or i<=14 and .105 or i<=38 and F.outerScale*(i>26 and 1.22 or 1)or .085)*tile
         local phase=(s.seed+i*17)%64;local speed=(i<=11 and .65 or .43)*(.78+phase/100)
         local animated=i<=11 or i>=15 and i<=38
         local instance=PY.WorldEffects.detached(sp,scale,animated and speed or 0)
         local texture=compactTextures[sp];local widthScale=texture and 64/65 or 1;instance:setScale(scale*widthScale,scale)
         for n=1,phase do if animated then sp:update(instance)end end
-        s.points[i]={instance=instance,sprite=sp,texture=texture,widthScale=widthScale,additive=i<=11 or i>=39,animated=animated,height=i>=12 and i<=14 and 128 or i>=15 and i<=38 and 64 or 32,scale=scale,baseScale=scale}
+        s.points[i]={instance=instance,sprite=sp,texture=texture,widthScale=widthScale,additive=i>=39,animated=animated,height=i>=12 and i<=14 and 128 or i>=15 and i<=38 and 64 or 32,scale=scale,baseScale=scale}
     end
 end
 function F.armPoint(joints,t)
@@ -354,7 +354,7 @@ function F.drawHistory(p,s,animate)
 end
 function F.colors()
     if not F.normal then
-        F.normal=ColorInfo.new(.45,.82,1,1);F.extreme=ColorInfo.new(.62,.84,1,1)
+        F.normal=ColorInfo.new(.18,.54,1,1);F.extreme=ColorInfo.new(.28,.60,1,1)
         F.smokeNormal=ColorInfo.new(.12,.46,1,1);F.smokeExtreme=ColorInfo.new(.24,.43,1,1)
         F.midNormal=ColorInfo.new(.27,.68,1,1);F.midExtreme=ColorInfo.new(.36,.61,1,1)
     end
@@ -471,7 +471,7 @@ function F.draw()
                     local ox,oy,oz,pulse=F.swirl(s,i,t,s.clock,.35)
                     local point=s.points[i];F.resize(point,.92+.12*pulse)
                     if animate and point.animated then point.sprite:update(point.instance)end
-                    drawPoint(p,s,i,x+ox,y+oy,z+oz,fade*(extreme and .48 or .42)*pulse,color)
+                    drawPoint(p,s,i,x+ox,y+oy,z+oz,fade*(extreme and .28 or .24)*pulse,color)
                 end
                 for i=12,14 do
                     local t=corePositions[i-11];local x,y,z=F.armPoint(joints,t)

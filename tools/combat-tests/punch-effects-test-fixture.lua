@@ -126,13 +126,18 @@ for facing=0,7 do
 end
 p.baseClip=nil;p.baseTime=nil;p.time=beforeTime;p.angle=0;F.tick();draws={};F.render()
 
-for _,d in ipairs(draws)do if d.width==65 then check(near(d.xScale*65,d.scale*64)and d.scale<.22,'64x128 wisp bypasses native automatic 2x scaling without stretching pixels')end end
+for _,d in ipairs(draws)do if d.width==65 then check(near(d.xScale*65,d.scale*64)and d.scale<.24,'64x128 wisp bypasses native automatic 2x scaling without stretching pixels')end end
 check(#draws>=14 and additive,'contiguous coat and inner arm layers draw, restoring renderer state')
 local wispTexture=F.states[p].points[12].texture;wispTexture.width=64;draws={};F.render()
-check(wispTexture.width==65 and F.states[p].points[12].instance.scale<.22,'texture readiness or reload cannot restore automatic enlargement')
-check(F.states[p].points[1].scale<=.65 and F.states[p].points[15].scale<.55,'smaller visible core stays inside a compact smoke layer')
-local glow,smoke=false,false;for _,d in ipairs(draws)do check(d.alpha<=.55,'layers preserve transparency');glow=glow or d.additive;smoke=smoke or not d.additive end;check(glow and smoke,'bright additive cores sit inside translucent non-additive smoke')
-check(F.normal.r>=.4 and F.normal.g>=.75 and F.normal.b==1,'white-blue normal tint remains')
+check(wispTexture.width==65 and F.states[p].points[12].instance.scale<.24,'texture readiness or reload cannot restore automatic enlargement')
+check(F.states[p].points[1].scale<=.72 and F.states[p].points[15].scale<.69,'wider visible core stays inside a larger smoke layer')
+local glow,smoke=false,false;for _,d in ipairs(draws)do check(d.alpha<=.55,'layers preserve transparency');glow=glow or d.additive;smoke=smoke or not d.additive end;check(glow and smoke,'additive embers sit outside alpha-blended smoke and cores')
+check(F.normal.r<=.2 and F.normal.g<=.6 and F.normal.b==1,'normal coating stays saturated blue instead of white')
+for i=1,11 do
+ local point=F.states[p].points[i];check(not point.additive,'overlapping flame cores use alpha blending so they cannot add up to white')
+ for _,d in ipairs(draws)do if d.instance==point.instance then check(not d.additive and d.alpha<=.28,'limb cores stay soft even where source sprites overlap')end end
+end
+check(F.outerScale/.23>1.25,'limb smoke footprint is at least one quarter larger without changing its anchor')
 for facing=0,31 do
  p.angle=facing*math.pi/16;p.x=.13;p.y=-.17;p.z=.25;draws={};F.render()
  local ux,uy,uz=F.sample(track,.2,4);local wx,wy,wz=F.sample(track,.2,2);local kx,ky,kz=F.sample(track,.2,3)
@@ -391,7 +396,7 @@ F.start(p,style,1,move);F.tick();draws={};F.render()
 local cloud=F.states[p];local coreDraw,outerDraw
 for _,d in ipairs(draws)do if d.instance==cloud.points[6].instance then coreDraw=d elseif d.instance==cloud.points[20].instance then outerDraw=d end end
 check(coreDraw and outerDraw and coreDraw.alpha>outerDraw.alpha and outerDraw.alpha<=.16,'smaller inner layer is stronger while the outer smoke stays transparent')
-check(outerDraw.height*outerDraw.scale>coreDraw.height*coreDraw.scale and outerDraw.height*outerDraw.scale<40,'outer smoke stays below 40 pixels at normal tile scale')
+check(outerDraw.height*outerDraw.scale>coreDraw.height*coreDraw.scale and outerDraw.height*outerDraw.scale<52,'larger inner smoke remains below 52 pixels at normal tile scale')
 check(cloud.points[26].scale<cloud.points[15].scale*.72,'outer smoke tapers towards the hand')
 local startingScale=cloud.points[6].scale;local firstSeed=cloud.seed
 for turn=1,24 do
