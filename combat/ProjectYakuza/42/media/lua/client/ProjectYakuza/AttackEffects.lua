@@ -2,6 +2,7 @@ require "ProjectYakuza/Runtime"
 require "ProjectYakuza/WorldEffects"
 require "ProjectYakuza/AttackTracks"
 require "ProjectYakuza/AttackTrailCatalog"
+require "ProjectYakuza/ParentPosePrediction"
 local PY=ProjectYakuza
 local F={states=setmetatable({}, {__mode="k"}),maxActors=8,maxTails=8,pointCount=30,historySize=24,trailMs=45,tails={},bursts={},maxBursts=16,serial=0,outerScale=.17,dropFraction=.10}
 PY.AttackEffects=F
@@ -270,6 +271,13 @@ function F.worldJoints(p,s,time,pose)
     local kx,ky,kz=F.sample(s.track,time,3)
     local ux,uy,uz=ex,ey,ez
     if s.track.upperFrames then ux,uy,uz=F.sample(s.track,time,4)end
+    local correction=not pose and PY.ParentPosePrediction.correction(p,s.track.animation,time)
+    if correction then
+        ux,uy,uz=PY.ParentPosePrediction.point(correction,ux,uy,uz)
+        ex,ey,ez=PY.ParentPosePrediction.point(correction,ex,ey,ez)
+        hx,hy,hz=PY.ParentPosePrediction.point(correction,hx,hy,hz)
+        kx,ky,kz=PY.ParentPosePrediction.point(correction,kx,ky,kz)
+    end
     local _,_,uwx,uwy,uwz=F.project(ux,uy,uz,angle,1)
     local _,_,ewx,ewy,ewz=F.project(ex,ey,ez,angle,1)
     local _,_,hwx,hwy,hwz=F.project(hx+(kx-hx)*.35,hy+(ky-hy)*.35,hz+(kz-hz)*.35,angle,1)

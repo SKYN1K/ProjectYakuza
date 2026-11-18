@@ -42,7 +42,9 @@ for f in report['reused_sounds']:assert sha(mod/'42'/f['output'])==f['sha256']
 print('PASS 121 native shoulder/forearm/hand/knuckle FK samples, 66 unchanged texture hashes and original Y6 whoosh hashes')
 m=mod/'42/media/lua/client/ProjectYakuza'
 s=(w/'punch-effects-test-fixture.lua').read_text(encoding='utf-8')
-for marker,name in [('WORLD','WorldEffects'),('TRACKS','AttackTracks'),('CATALOG','AttackTrailCatalog'),('EFFECTS','AttackEffects'),('CHARGELIMBTRACKS','ChargeTracks'),('CHARGELIMBEFFECTS','ChargeEffects'),('FEEDBACK','Feedback')]:s=s.replace(fixture_marker(marker),'do\n'+(m/(name+'.lua')).read_text(encoding='utf-8')+'\nend\n')
+for marker,name in [('WORLD','WorldEffects'),('TRACKS','AttackTracks'),('CATALOG','AttackTrailCatalog'),('PARENTTRACKS','ParentPoseTracks'),('PARENTPREDICTION','ParentPosePrediction'),('EFFECTS','AttackEffects'),('CHARGELIMBTRACKS','ChargeTracks'),('CHARGELIMBEFFECTS','ChargeEffects'),('FEEDBACK','Feedback')]:s=s.replace(fixture_marker(marker),'do\n'+(m/(name+'.lua')).read_text(encoding='utf-8')+'\nend\n')
 s=s.replace('"ProjectYakuzaFixture:PROJECTION"','{'+','.join('{'+','.join(str(x) for x in row)+'}' for row in d['projection'])+'}')
 s=s.replace('"ProjectYakuzaFixture:MODELPROJECTION"','{'+','.join('{'+','.join(str(v)for v in row)+'}'for row in render['reference'])+'}')
+masked=next(row for row in json.loads((w/'parent-poses-native/masked-reference.json').read_text())if row['animation']=='ProjectYakuza_DD_Light01'and row['base']=='Bob_Idle'and abs(row['time']-.2)<.0001)
+s=s.replace('"ProjectYakuzaFixture:NATIVEMASK"','{base='+json.dumps(masked['base'])+',baseTime='+str(masked['baseTime'])+',time='+str(masked['time'])+',points={'+','.join('{'+','.join(str(v)for v in point)+'}'for point in masked['points'])+'}}')
 (w/'punch-effects-tests.lua').write_text(s,encoding='utf-8')

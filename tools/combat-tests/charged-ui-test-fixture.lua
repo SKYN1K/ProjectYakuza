@@ -254,6 +254,8 @@ function p:AttachExistingAnim(sprite)self.attached=instance(sprite)end
 function p:getAttachedAnimSprite()return {size=function()return self.attached and 1 or 0 end,get=function()return self.attached end,remove=function()self.attached=nil end}end
 do local _="ProjectYakuzaFixture:WORLD" end
 do local _="ProjectYakuzaFixture:ATTACKTRACKS" end
+do local _="ProjectYakuzaFixture:PARENTTRACKS" end
+do local _="ProjectYakuzaFixture:PARENTPREDICTION" end
 do local _="ProjectYakuzaFixture:ATTACKEFFECTS" end
 do local _="ProjectYakuzaFixture:CHARGETRACKS" end
 function p:dbgGetAnimTrackName(layer,slot)

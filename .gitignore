@@ -400,3 +400,7 @@
 !tools/combat-tests/LimbRenderProjectionProbe.java
 !tools/combat-tests/build_gaiden_effect_assets.py
 !tools/combat-tests/ParticleScaleProbe.java
+!tools/combat-tests/PoseParentProbe.java
+!tools/combat-tests/MaskedLimbPoseProbe.java
+!tools/combat-tests/build_parent_poses.py
+!tools/combat-tests/build_parent_pose_tests.py

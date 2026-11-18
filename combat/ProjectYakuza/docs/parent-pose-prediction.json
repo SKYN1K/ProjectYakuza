@@ -1,0 +1,3131 @@
+{
+  "version": "0.126.0",
+  "operation": "Numeric parent-bone PRS samples from original installed Human animations; no model, motion, texture, audio or preview generated. Parent masks follow actual mod XML. Runtime replaces the raw attack pelvis/spine parent with the current layer-zero standing/walking pose.",
+  "fps": 30,
+  "native": {
+    "probeSha256": "f56249d80f35dc9b40dc616197ad5a71e1bc8a32bf783ea2c35335dee8920592",
+    "importerSha256": "efccfbce788c94fef86a19220b2dfe185f1eca850d6b48e153674e69ae045bde",
+    "gameJarSha256": "3c4a7c5f149d784758c6fb5f8fa85f3a21d572e38bc081400e89035f8120d287",
+    "humanRigSha256": "a0a7cbb3f8fb55827f4039edd04f9af28299d76ae9160484069084faca2aff01"
+  },
+  "clips": [
+    {
+      "animation": "Bob_AimShove",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_AimShove.x",
+      "sha256": "d8afef33c35921f45b23a98d7c8c21509bfab1f8090bfd916c957f82422bcb59",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_AimToIdle_1Hand",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_AimToIdle_1Hand.x",
+      "sha256": "6e1213829a308cd444af8ffcc2ad848c5451e16b15a61672f41604c0b21ae637",
+      "samples": 31
+    },
+    {
+      "animation": "Bob_AimToIdle_2H_Heavy",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_AimToIdle_2H_Heavy.x",
+      "sha256": "e592dc5d3d5ffc9edab401033ad86907f591ad35f8edfd386f18d3aaefffe8b4",
+      "samples": 31
+    },
+    {
+      "animation": "Bob_AimToIdle_Bat",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_AimToIdle_Bat.x",
+      "sha256": "7256ddb4b9193e8efffa72b8b0673090547bca0789d1a871bc07607449721bc4",
+      "samples": 31
+    },
+    {
+      "animation": "Bob_AimToIdle_Chainsaw",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_AimToIdle_Chainsaw.x",
+      "sha256": "976244469b3b2b9a1398556ea501c11398c216130e84169ec128ccd322fe9d89",
+      "samples": 31
+    },
+    {
+      "animation": "Bob_AimToIdle_Handgun",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_AimToIdle_Handgun.x",
+      "sha256": "ad32205d27db4b4520c932f6aef2bce6f9e42a85cfd09cfbdfeee2eab53278f8",
+      "samples": 31
+    },
+    {
+      "animation": "Bob_AimToIdle_Rifle",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_AimToIdle_Rifle.x",
+      "sha256": "26d975a39371b22d108b0a2871f230f3b839590d359c9a576b3a8fe6f2cd6b75",
+      "samples": 31
+    },
+    {
+      "animation": "Bob_AttackPistolWhip01",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_AttackPistolWhip01.x",
+      "sha256": "f7516cdfcba236b0a9eafdf97b03ba2f80825fff1cbec52e63ddbb839c9207ca",
+      "samples": 31
+    },
+    {
+      "animation": "Bob_AttackPistolWhip02",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_AttackPistolWhip02.x",
+      "sha256": "e365618f82b3df07096f4e65b516d30633e40204a26a2ef012331c102184a37b",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_AttackRifleButt02_Hit",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_AttackRifleButt02_Hit.x",
+      "sha256": "d224695a0837d8acd941ab5f2c4bb6f18b0fec031d9208ba123114fdd6bc3277",
+      "samples": 34
+    },
+    {
+      "animation": "Bob_Idle",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_Idle.x",
+      "sha256": "255303336122d5d8470366512e8ad948adf2e46bf61259cc51f201a3ed27d45e",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_Idle2H_Heavy",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_Idle2H_Heavy.x",
+      "sha256": "501957643a9e4d0015ab55b84ee744ee160828b2f42b476077455fea1086c0ab",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleAim1Hand",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleAim1Hand.x",
+      "sha256": "501721d1112990bb0550f45daf06799a6752ae510f66839262ff99369dd509a6",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleAim1Hand_Down",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleAim1Hand_Down.x",
+      "sha256": "3c95bb363b8f85e66bb8e464a05448bdd9fa75438697a2ea711b89bfa689b049",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleAim1Hand_Down75",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleAim1Hand_Down75.x",
+      "sha256": "382d03b953e9785cf40629c943e90adac36b0d3a061b8522e3bb44d11f583d37",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleAim1Hand_Turn180L",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleAim1Hand_Turn180L.x",
+      "sha256": "8891ab4a66349404c7f4487f2b324c0f7535826cb5545340568873b32aef9d04",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleAim1Hand_Turn180R",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleAim1Hand_Turn180R.x",
+      "sha256": "faa3a7ad136b8f1ff7e99c3d11ad0c700e35c1046c5f55e82b75d9a745f22c6e",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleAim1Hand_Turn90L",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleAim1Hand_Turn90L.x",
+      "sha256": "0ead219d7172b760244b4c95b3c766aa027b34acc993cd02269fc517b6dbc240",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleAim1Hand_Turn90R",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleAim1Hand_Turn90R.x",
+      "sha256": "91903bf3d5c0a536464f49b97cd7c412db9acc0ee9c1ae321410a664fbcce368",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleAim1Hand_Up45",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleAim1Hand_Up45.x",
+      "sha256": "89f8dc1b693c687c7321033469fdc900fee1a5c2cee97bcdea7830f2521fa432",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleAim1Hand_Up75",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleAim1Hand_Up75.x",
+      "sha256": "80e15ac1bd0b18314c1de567ac178e862130fcd7e7105fec24be8e4631225a7b",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleAim2H_Heavy",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleAim2H_Heavy.x",
+      "sha256": "5d196250819dabfed52a3dcec8ad7a668e157a6a4832c353005c1247c172fe6c",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleAim2H_HeavyDown",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleAim2H_HeavyDown.x",
+      "sha256": "ca13b11236a3835ab6b55839ec82348326052616a82bd9b6474a63bbcb9bbbff",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleAim2H_HeavyDown75",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleAim2H_HeavyDown75.x",
+      "sha256": "95f22c233b57339ba339f5336f323b3264d957f3fa4be57bb0a33cfea9209a88",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleAim2H_Heavy_Up45",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleAim2H_Heavy_Up45.x",
+      "sha256": "1776ed08862b133a62d48bf19aef588e1eb07888e6b1fd4ad9c0f207bd48dd05",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleAim2H_Heavy_Up75",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleAim2H_Heavy_Up75.x",
+      "sha256": "b937ec6805de2332460a843f753d40c77f52b7e8a641e35b168e5ea6673a30a4",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleAimBat",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleAimBat.x",
+      "sha256": "73c6e3a297508889da0ded649dd89fed94f86a53edd115a7fff192743f216461",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleAimBat_Down",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleAimBat_Down.x",
+      "sha256": "ec670f8aed940182769f6ca13126ad770e351357208c8cc5188be426a0675a69",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleAimBat_Down75",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleAimBat_Down75.x",
+      "sha256": "69bdd4eba7b062fe92235745f431ccee1c5e47f372ab2c85bdc846a76b432dff",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleAimBat_Up45",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleAimBat_Up45.x",
+      "sha256": "c8ab14435b115c5d336eb7c34f93d9daeb0fbbe790859743b20fc9be08ae3e33",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleAimBat_Up75",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleAimBat_Up75.x",
+      "sha256": "edf77044f2e16961623539971f6026fb6139d79a0dc88b168d0451835b6d242c",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleAimChainsaw",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleAimChainsaw.x",
+      "sha256": "8291c69dff673518ca9f2327a5d31066f9c29d7e1aa5657c9eb135b92d26266a",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleAimHandgun",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleAimHandgun.x",
+      "sha256": "08b1bfe3545676afd796f41fff7eb647f106735af07c6bc4fd52be444519d421",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleAimHandgun_Down",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleAimHandgun_Down.x",
+      "sha256": "94f6ee3c4e22b3bc3edb920400033b160fb78bfd017b15b9673938ab3270084f",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleAimHandgun_Down75",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleAimHandgun_Down75.x",
+      "sha256": "9a628ef9272756db05dd308169f52b909114d2e3df2903e8a54af39c93a4e591",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleAimHandgun_Up45",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleAimHandgun_Up45.x",
+      "sha256": "78b5ebb5a6c4b0a20135698c00759d4ae472995b713f79c4e471d638ffddc97d",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleAimHandgun_Up75",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleAimHandgun_Up75.x",
+      "sha256": "2f186d096e83bd6a1203142c0bc06012e961c4e1da069aba0ab505136b7a857d",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleAimRifle",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleAimRifle.x",
+      "sha256": "af5de552855cf09ded3a2a9bf29e1b935fb06f7f10b6af91af63bde0e200f0cb",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleAimRifle_Down",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleAimRifle_Down.x",
+      "sha256": "d7f521d097ae16cb1ecf634d9284f5a59e8577467d60f61f80fa160b443425d6",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleAimRifle_Down75",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleAimRifle_Down75.x",
+      "sha256": "ffae06d08b0942f47ba743c9b94396ba824a4fcc870164fdad5b19fe801905e8",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleAimRifle_Up45",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleAimRifle_Up45.x",
+      "sha256": "3e5505411d1ba886769976099844455e3fe9274395d44ad220f50c8c4e854b04",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleAimRifle_Up75",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleAimRifle_Up75.x",
+      "sha256": "d90550c9593ba8b4e5f37f9a0c483f0099084911ad71ab85d6fcd5581eb8e3d6",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleAimSpear",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleAimSpear.x",
+      "sha256": "0de3d70f608e6c8472da14dd0db8776eb93972baa8b15e711af46aab00ed96fb",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleAimSpear_Down",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleAimSpear_Down.x",
+      "sha256": "a3a5c371696507897f6d65832058374f6f01b11fd91399ad444170f77703f67c",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleAimSpear_Down75",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleAimSpear_Down75.x",
+      "sha256": "36437ac30daecc1a0769df7d8a2db76aaf32ca87ea5cb90d1af7be21c3a8531f",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleAimSpear_Up45",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleAimSpear_Up45.x",
+      "sha256": "9dfab023ffba3115ca5641f8ff6ccfa976caf245b31b4e389cdac46f00c17d0e",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleAimSpear_Up75",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleAimSpear_Up75.x",
+      "sha256": "8a8247df1cebd34a50f6cfbaeaa8cf63881ed820b59281191548888ae79dd1af",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleBat",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleBat.x",
+      "sha256": "4f34bc95eb8eeb0882163e7b7c149cc0df4a6bf473f001f31d46dd1c4c542c03",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleChainsaw",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleChainsaw.x",
+      "sha256": "83327b849b7d3fb6658a6a5a0dc114600e69ce5160404ca1f97c2a85f1139d3e",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleHandgun",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleHandgun.x",
+      "sha256": "98fe1823ab632f83bcf047bc8299d241d44954eae0f787d7fdbb73dda1990389",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleLowSneak",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleLowSneak.x",
+      "sha256": "6a499f8873e05f6f258f3abb189ea72b6a7aff5dd009657f5b1f70debb8c9d74",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleLowSneak_2H_Heavy",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleLowSneak_2H_Heavy.x",
+      "sha256": "3bdbe66db0ca2f398595be080eec1a829906ebded2a2d2641eab4c9dfddc08e1",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleLowSneak_Bat",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleLowSneak_Bat.x",
+      "sha256": "29912a20ab8146e39b2e9ce118bbd1af0ed59cb90bc7d6e80b5c3df8d4ba52b2",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleLowSneak_Handgun",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleLowSneak_Handgun.x",
+      "sha256": "ca944f82829fbd5782a3a061c293150fb51dcb6434ef12d873698b4733653dcd",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleLowSneak_Shotgun",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleLowSneak_Shotgun.x",
+      "sha256": "0e8c135266a9c1d5341e00e9cc7b63a98e717ffc053ce53cc3a2a8dabc108809",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleLowSneak_Turn180L",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleLowSneak_Turn180L.x",
+      "sha256": "6824b363b887e12d465db31b79db3c4e649b50fa896b852a85c33bd7dfb6e443",
+      "samples": 31
+    },
+    {
+      "animation": "Bob_IdleLowSneak_Turn180R",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleLowSneak_Turn180R.x",
+      "sha256": "b8210c591dc3b947347fa63851523490f33df3a1c3833bd181e3c4455a00fd30",
+      "samples": 31
+    },
+    {
+      "animation": "Bob_IdleLowSneak_Turn90L",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleLowSneak_Turn90L.x",
+      "sha256": "5e1a042fba94e047e2e16f87ff9e5ea9b48c2e154c71f6010038a82b5477b008",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleLowSneak_Turn90R",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleLowSneak_Turn90R.x",
+      "sha256": "dddea29bbc3e04d3dcaf005e1c0efbe134803bf11d1b7ae3c3551f18cc67776b",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleRifle",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleRifle.x",
+      "sha256": "1030c5ec2e01d6ef93826fd6cc72583d1d9aadb8c6eb7f0bebcd1ed09cde6da7",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleSneak",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleSneak.x",
+      "sha256": "16431adc7276a1d61d5902384be8badd9b8e73caa7d3d062bfea5ca70864320a",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleSneakLow_2hHeavy_HBreathing",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleSneakLow_2hHeavy_HBreathing.x",
+      "sha256": "6b815f4ab7459fece5c456cbab2825f42e143629e26412cf661d488d5f23134c",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleSneakLow_Bat_HBreathing",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleSneakLow_Bat_HBreathing.x",
+      "sha256": "0baefc806599a36c241e4da7e98624ead8fbdf0f2fa2a965af2b429636689163",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleSneakLow_HBreathing",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleSneakLow_HBreathing.x",
+      "sha256": "e5397887d958f350fa51ff0623a098f8759756339a7f0470aa5e77ac4d31b772",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleSneakLow_Hgun_HBreathing",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleSneakLow_Hgun_HBreathing.x",
+      "sha256": "2141acadf521c83a7899ee958142f4aab1f2c518b990b772f6ce3af23c865b2b",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleSneakLow_Rifle_HBreathing",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleSneakLow_Rifle_HBreathing.x",
+      "sha256": "f0817f736566e82ad739da383891ba1884486f85ab0b1b9451568d9f86902484",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleSneak_2H_Heavy",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleSneak_2H_Heavy.x",
+      "sha256": "769ec4bbc5392f18e7824d116cc359abb0bc137a3af224018d22120642b58838",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleSneak_2Hheavy_HBreathing",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleSneak_2Hheavy_HBreathing.x",
+      "sha256": "7fdc886cb548e3034cad93ee6d46af8a5b54ccdb1b71d24d26d208d356dec175",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleSneak_Bat",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleSneak_Bat.x",
+      "sha256": "5c32c0dda4395b671e503fb5fcce650627b138c9ec7fe963520fb544d30b17ca",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleSneak_Bat_HBreathing",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleSneak_Bat_HBreathing.x",
+      "sha256": "492af13896ed6c4bbfab311486dc8f89666fe72763076ffdd2559c17fb170228",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleSneak_HBreathing",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleSneak_HBreathing.x",
+      "sha256": "f516b007b1cad52cfacf41676d8d50be9800956bdf142b12503417b0a633a030",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleSneak_Handgun",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleSneak_Handgun.x",
+      "sha256": "83ec385db4b890a51bd3ac54182f9a925f64616e1d7882e39b68b0561c510a5e",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleSneak_Hgun_HBreathing",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleSneak_Hgun_HBreathing.x",
+      "sha256": "1a38658dff3a8d86d69e6ea646e89b81cc8cdb169932d6573a37ab1955e9a906",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleSneak_Rifle_HBreathing",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleSneak_Rifle_HBreathing.x",
+      "sha256": "f4bbd4b59961f6a2134699f75cbccfdec2377684c4e21c38151e3b958592e159",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleSneak_Shotgun",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleSneak_Shotgun.x",
+      "sha256": "ec053a707b108b0ee2d075ebb79d76e726d43a20bd0e000ed736c349c7be4502",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleSneak_Turn180L",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleSneak_Turn180L.x",
+      "sha256": "4124181b152326adde06e74299d36dab7763a9afd37a985a3d95460a47083399",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleSneak_Turn180R",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleSneak_Turn180R.x",
+      "sha256": "35010b0352f2c09f2b7d56fe762d43426680b72bfe27bba505aae7ed9400e302",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleSneak_Turn90L",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleSneak_Turn90L.x",
+      "sha256": "3d40cf22256e450deb90c8aa4443179f85858bf001a29249b3dd73973edbf1c5",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleSneak_Turn90R",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleSneak_Turn90R.x",
+      "sha256": "4a06872e4372f7abaedcacb154d7083a1ec3ad633522da120513b7cf73c20764",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleToAim2H_Heavy",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleToAim2H_Heavy.x",
+      "sha256": "520628b213863b53d98ab72dbbc15e54ae8272d5e1ce695b80a2b455e09a1e27",
+      "samples": 31
+    },
+    {
+      "animation": "Bob_IdleToAim_1Hand",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleToAim_1Hand.x",
+      "sha256": "b280fa2a376e522d9000881b2e2e9061a0a3d7ffb080c39255f68bc902717e49",
+      "samples": 31
+    },
+    {
+      "animation": "Bob_IdleToAim_Bat",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleToAim_Bat.x",
+      "sha256": "9424b325d20fd31c0514e7003724bdea2912271be7baa8cd1a3ec0ae582add7c",
+      "samples": 31
+    },
+    {
+      "animation": "Bob_IdleToAim_Chainsaw",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleToAim_Chainsaw.x",
+      "sha256": "0032cf340203fe5be576f31d6c52c3c88884062b0e00cb5581221aad44c7dd17",
+      "samples": 31
+    },
+    {
+      "animation": "Bob_IdleToAim_Handgun",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleToAim_Handgun.x",
+      "sha256": "55548ef6b70f569a7a233edb403f794215584e04bc47180a0301acd95da68a54",
+      "samples": 31
+    },
+    {
+      "animation": "Bob_IdleToAim_Rifle",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleToAim_Rifle.x",
+      "sha256": "6ea1de2a77fa8dd596858f016c080ba97da66e6838c81fe88d2070a4fa47b763",
+      "samples": 31
+    },
+    {
+      "animation": "Bob_IdleToAim_Spear",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleToAim_Spear.x",
+      "sha256": "fa0b4d309d77bf887640aee045cf8d2c72d970508d0977e62998953cd4438a0b",
+      "samples": 31
+    },
+    {
+      "animation": "Bob_IdleToRun",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleToRun.x",
+      "sha256": "d9e25ec45313c0a45de95a79a3a8eed01d87ee54c201f3e963ca79606150fa14",
+      "samples": 26
+    },
+    {
+      "animation": "Bob_IdleToRun180L",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleToRun180L.x",
+      "sha256": "c87a50e0426341f1b6429d27ccb60ee84a5785a92bc97e67d1ec95f6f48aab87",
+      "samples": 16
+    },
+    {
+      "animation": "Bob_IdleToRun180R",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleToRun180R.x",
+      "sha256": "c238f1a7b5deb3f55f6fdc2fe655c2f3f384d7b091bb1d9aaec88850a95a1f4f",
+      "samples": 16
+    },
+    {
+      "animation": "Bob_IdleToRun2H_Heavy",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleToRun2H_Heavy.x",
+      "sha256": "d6b68d72ebdb801a5b70bd8a3ac6f61ebd419c061fea3a5d918346c59f99e357",
+      "samples": 26
+    },
+    {
+      "animation": "Bob_IdleToRun_Bat",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleToRun_Bat.x",
+      "sha256": "9efabb6b9dc7c06f4ec96c719e8a17eb7df01b0e527f862155e458ccb3a1178e",
+      "samples": 26
+    },
+    {
+      "animation": "Bob_IdleToRun_Chainsaw",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleToRun_Chainsaw.x",
+      "sha256": "01889c5ca45be3ed1eb83aa03d3e1b198c61ff3c51f4c1d8fe1577a12d077952",
+      "samples": 26
+    },
+    {
+      "animation": "Bob_IdleToRun_Handgun",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleToRun_Handgun.x",
+      "sha256": "052ac942760af30ceaf7b5f30cd31676061cac9cf6674e3c667553f38187bcde",
+      "samples": 26
+    },
+    {
+      "animation": "Bob_IdleToRun_Rifle",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleToRun_Rifle.x",
+      "sha256": "fd8f33fd9c35809332ab32135ca387c5f1f6d22e7011803f1a56f3e07c447285",
+      "samples": 26
+    },
+    {
+      "animation": "Bob_IdleToSprint",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleToSprint.x",
+      "sha256": "4b14faf4c73ba74cc19e52bcc96441cc8da0fced03822ea0819bfdc5b018560d",
+      "samples": 31
+    },
+    {
+      "animation": "Bob_IdleToSprint2H_Heavy",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleToSprint2H_Heavy.x",
+      "sha256": "9f729630eaec00a575cd5fc0cdd2ce35ca7e05a72190cd80bba9c49650f0dbaa",
+      "samples": 31
+    },
+    {
+      "animation": "Bob_IdleToSprint_Bat",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleToSprint_Bat.x",
+      "sha256": "bb901758bdf87030ca0a4f54f81a972393703ae16214534f571cf60de4f89405",
+      "samples": 31
+    },
+    {
+      "animation": "Bob_IdleToSprint_Chainsaw",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleToSprint_Chainsaw.x",
+      "sha256": "89b1b30ebcefd59ea5937ab996bc7951d0f4fd34287a63058a903fc5139fd415",
+      "samples": 31
+    },
+    {
+      "animation": "Bob_IdleToSprint_Handgun",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleToSprint_Handgun.x",
+      "sha256": "9abca85a801fd1676ec0cad763121a135dd1239119c6a5f606fe0ea3255aba67",
+      "samples": 31
+    },
+    {
+      "animation": "Bob_IdleToSprint_Rifle",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleToSprint_Rifle.x",
+      "sha256": "152e1cb3ee902406b81eff56987ce74814cbaf98dd8121ddcb6116ae90304c8c",
+      "samples": 31
+    },
+    {
+      "animation": "Bob_IdleToWalk180L",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleToWalk180L.x",
+      "sha256": "c7739bb14fd791f4b893bb1940f4e8c6fc89c4c957062c70998a3c8400d962eb",
+      "samples": 16
+    },
+    {
+      "animation": "Bob_IdleToWalk180R",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleToWalk180R.x",
+      "sha256": "696512e2c1b70768d11b95f4177224b38e8a7145968606b351d0464320cd6dad",
+      "samples": 16
+    },
+    {
+      "animation": "Bob_IdleToWalk_Chainsaw",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleToWalk_Chainsaw.x",
+      "sha256": "6a383c1cbaa89adfdf60cda56326e339695bde5256c23495420427d7e2a6d6d6",
+      "samples": 15
+    },
+    {
+      "animation": "Bob_IdleTurn180L",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleTurn180L.x",
+      "sha256": "1106446c1bcd351789ccfbfcd930bab3efa5104731686e048b95b6b557e58881",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleTurn180R",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleTurn180R.x",
+      "sha256": "1bbaddaa0628b3c5eb0e3a4a80542af3b694ccf639004bcc27c1ff322194428e",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleTurn90L",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleTurn90L.x",
+      "sha256": "85211f627699b6c8c89e72eaef4838532df325383c6270200bbb2d83695b2e59",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_IdleTurn90R",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_IdleTurn90R.x",
+      "sha256": "fd4b2d44c4ede912232fb119289049e2f2f1c70f31a849d144fcf08cae218747",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_Idle_HeavyBreathing",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_Idle_HeavyBreathing.x",
+      "sha256": "66bb7e340109ed0a99917e47b0b764a716ffeb3f9fb29769f704d59105d5128c",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_Idle_HeavyBreathing_2Hheavy",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_Idle_HeavyBreathing_2Hheavy.x",
+      "sha256": "b6575bdfaf6517de4549ed2d5b491e5bc291b2f63b032280b253e2aaae128724",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_Idle_HeavyBreathing_Bat",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_Idle_HeavyBreathing_Bat.x",
+      "sha256": "b16168a3102e1c8b6d3b9dd3a42b3f26a5de685018c49a268c01cf1ab1604bce",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_Idle_HeavyBreathing_Chsaw",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_Idle_HeavyBreathing_Chsaw.x",
+      "sha256": "b7423e8b87ff1357a168542f69fad28bbcc30c19f37ec4099aeeafc64dbed2c4",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_Idle_HeavyBreathing_Hgun",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_Idle_HeavyBreathing_Hgun.x",
+      "sha256": "56cf303a3180cb343935f6879c9635bba074d8819af149c19311375928ec89b6",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_Idle_HeavyBreathing_Rifle",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_Idle_HeavyBreathing_Rifle.x",
+      "sha256": "49d8c37e92c7b63b2895d1aceb30179d90401318f7304d89da6b363c2fa6ae0d",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_Run",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_Run.x",
+      "sha256": "d9dd32db99f540cf32152bcbee02ec200c83c34816a98f60f49ccc5799eeba65",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_Run2H_Heavy",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_Run2H_Heavy.x",
+      "sha256": "dee66cac796972270bc99d7026acf89b718456e2be77a1dbaa984fb84ce4c87e",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_RunBat",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunBat.x",
+      "sha256": "da5c43a7291fd024a6b7a83c173f52abd2a2f0f9d5c495d03528b558c40ce883",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_RunChainsaw",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunChainsaw.x",
+      "sha256": "acfb5029124e73afdc533ef56d053afe2c6d14d6ac58cd6e34cf39cb5853517b",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_RunLightLimpL",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunLightLimpL.x",
+      "sha256": "1fe56be227521c842c9b074bf9929efdbeba8d665a648d745cba2b7adaf77823",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_RunLightLimpL_2H_Heavy",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunLightLimpL_2H_Heavy.x",
+      "sha256": "2142a79cda9aec599a9524a72824059f4240748df5e6a6a6da629f5bb9590393",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_RunLightLimpL_Bat",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunLightLimpL_Bat.x",
+      "sha256": "48e6a686bdf4717bae684ac74bd557fb9b9f1160e376003e2bab84ef1380c939",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_RunLightLimpL_ChSaw",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunLightLimpL_ChSaw.x",
+      "sha256": "7c5ed70b22eea7e3ddfda62c95da5a1813f999ca60a5e1dc5b9a22ab8e44e5fd",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_RunLightLimpL_Hgun",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunLightLimpL_Hgun.x",
+      "sha256": "158a3df4a3f2851987e0d3c2310c460f926387c7c4afc1d650b845dc731766cf",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_RunLightLimpL_Rifle",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunLightLimpL_Rifle.x",
+      "sha256": "ce19b42169464ed3e70f75da41759c6843072bbceee542d857cc29fbf0693b76",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_RunLightLimpR",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunLightLimpR.x",
+      "sha256": "4b0a119803935c9e51c5ec9aeece1176e72f6656735dbc6007abd5b8ac1887e9",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_RunLightLimpR_2H_Heavy",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunLightLimpR_2H_Heavy.x",
+      "sha256": "5eb3e50972cbb2e293247fd16f0012764d869365b2edb317aac0ef6c8cd6e0c4",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_RunLightLimpR_Bat",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunLightLimpR_Bat.x",
+      "sha256": "7b7d1a129fb7470a33f8ee8f894b8b16e2c5f9aa21b2546368bed1f2c262e667",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_RunLightLimpR_ChSaw",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunLightLimpR_ChSaw.x",
+      "sha256": "2aa4a3f7d50c2b2067b675130c3f45b18f1df3b113e87f87c32acea1e2cc56b9",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_RunLightLimpR_Hgun",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunLightLimpR_Hgun.x",
+      "sha256": "98b9242a25f9aeef4cb0329a109522768b467e7dbdefd010556220dab3f6f48b",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_RunLightLimpR_Rifle",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunLightLimpR_Rifle.x",
+      "sha256": "097a8ac8fb2dc2dd23b08238e9b04b822c1c3fa3119a9c0f6a82e40cb5965158",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_RunLowSneak",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunLowSneak.x",
+      "sha256": "a6c37bb0425ccaaf3617bd8ceede6c11a4977f2df81d1ba43c77e8bd9e7ed8f9",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_RunLowSneak_2H_Heavy",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunLowSneak_2H_Heavy.x",
+      "sha256": "be8829f976cab7aa6bc100fb1b29ac9369dc361b7b793bd494d056399a19c309",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_RunLowSneak_Bat",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunLowSneak_Bat.x",
+      "sha256": "b24efb533a7aa0987e6702f9df815667cfcd53432fca3792eef6c7b48411e47d",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_RunLowSneak_Handgun",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunLowSneak_Handgun.x",
+      "sha256": "6345b6f2d7b827bf361d2da02952d419dcf7fc30f64b63ed610e0acb15b99dd3",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_RunLowSneak_Shotgun",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunLowSneak_Shotgun.x",
+      "sha256": "8b8e35d7bdaa9309e25b20eb9b22a13bfa47b63d2eebc66d3d9c2d63190bd818",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_RunLowSneak_Slow",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunLowSneak_Slow.x",
+      "sha256": "bbdb5266379f1b593bc2c69b36451a22bd5e910fe8b13a60daf07700aac9828f",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_RunLowSneak_Slow_2Hheavy",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunLowSneak_Slow_2Hheavy.x",
+      "sha256": "25095f5d1a8092edf0831851944832ef467687c332394a49550f33d6f188a28f",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_RunLowSneak_Slow_Bat",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunLowSneak_Slow_Bat.x",
+      "sha256": "638030360ada6a7a11c00257ee5086a9ec55fe32e4da3d7959e82df20194a4d3",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_RunLowSneak_Slow_Hgun",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunLowSneak_Slow_Hgun.x",
+      "sha256": "5ff6d4a32ce568e6dc3c742b1b40861d7d02b739364cb54714b53e686a31f735",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_RunLowSneak_Slow_Rifle",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunLowSneak_Slow_Rifle.x",
+      "sha256": "ea4a0303106fff0a230c94455d02924e9fae99bd3cd88de627c0611c3c720776",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_RunRifle",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunRifle.x",
+      "sha256": "d00106a352af2a465c9a010a9f6c21d42e3d49eb3945025725aaf766ac43163e",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_RunSneak",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunSneak.x",
+      "sha256": "43eb837e433c162105202e6ba40de1e197d7620a683d1de3ce6f7d10b3ebd61e",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_RunSneakLowToTurn180L",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunSneakLowToTurn180L.x",
+      "sha256": "379e66e3e837df550d2d6e01473eaf0b5bb32baf25c013d1415d5ebce299cf84",
+      "samples": 19
+    },
+    {
+      "animation": "Bob_RunSneakLowToTurn180R",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunSneakLowToTurn180R.x",
+      "sha256": "19fc90a519f960dfdb487bd8cd6e73ae9b7e738c70e5fbe15fbbbeebb3c15ef5",
+      "samples": 25
+    },
+    {
+      "animation": "Bob_RunSneakToStop",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunSneakToStop.x",
+      "sha256": "deb347cda989c76547b7a47d4a5f3e3def103d451c7e1534ebdbd76f16b9d75a",
+      "samples": 31
+    },
+    {
+      "animation": "Bob_RunSneakToStop2H_Heavy",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunSneakToStop2H_Heavy.x",
+      "sha256": "806d6ef740b18118ebe1de7e10493f0bc8004f2ffcd62dfddf7a2c2364c32eb8",
+      "samples": 31
+    },
+    {
+      "animation": "Bob_RunSneakToStop_Bat",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunSneakToStop_Bat.x",
+      "sha256": "301d4935f5509dfa1605f0b6096fb3d344e107d8328b44cfd3316f02eba571eb",
+      "samples": 31
+    },
+    {
+      "animation": "Bob_RunSneakToStop_Handgun",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunSneakToStop_Handgun.x",
+      "sha256": "f1ca4ac3618bc9620e65f44536f37ce4710a1a9551168f0a6ed38605f5fe1beb",
+      "samples": 31
+    },
+    {
+      "animation": "Bob_RunSneakToStop_Shotgun",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunSneakToStop_Shotgun.x",
+      "sha256": "4b43e398b8bcac78036460e2a631246d10039e6da6536b95d0e7121f3fe38183",
+      "samples": 31
+    },
+    {
+      "animation": "Bob_RunSneakToTurn180L",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunSneakToTurn180L.x",
+      "sha256": "011fbaa9308647f09e152d920c437734b80ce8fa7ee270707e15a722cb7dfdc4",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_RunSneakToTurn180R",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunSneakToTurn180R.x",
+      "sha256": "3ac8c717373eed4b2ac266ccf6eebd7625d86b873b552aea29932aa1fdfc669b",
+      "samples": 22
+    },
+    {
+      "animation": "Bob_RunSneak_2H_Heavy",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunSneak_2H_Heavy.x",
+      "sha256": "3ce6f172e4968d8bbecda7b41049d262f130ea225391d80f2b1cdfcac107f3d2",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_RunSneak_2H_Heavy_SLow",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunSneak_2H_Heavy_SLow.x",
+      "sha256": "8af5b493412b46d2201dc6063e80dd90784707a1dc6027aa09c1d6c9900cf988",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_RunSneak_Bat",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunSneak_Bat.x",
+      "sha256": "4577cc9903642e34ba284130d8a003d1d78dfebed80ea20258e4f323987d3d4f",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_RunSneak_Bat_Slow",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunSneak_Bat_Slow.x",
+      "sha256": "13713800ede9fc6782c7e4413647fc7703f41491342a914200c08849ef48fe49",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_RunSneak_Handgun",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunSneak_Handgun.x",
+      "sha256": "07817bc10985a43b0c5db031dc7a9c58ddb73cdbe3c7cb91675dea914385f2db",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_RunSneak_Handgun_Slow",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunSneak_Handgun_Slow.x",
+      "sha256": "f2039a02ea939435d31512ac63e4537eec1d788282a3cd8b061bbf7f6a2f348f",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_RunSneak_Shotgun",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunSneak_Shotgun.x",
+      "sha256": "d2497b6f317746ac56760c1c3df5ce73408a4ff9b60ea84b8a1804a670dc786c",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_RunSneak_Shotgun_Slow",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunSneak_Shotgun_Slow.x",
+      "sha256": "452ba4367e97dc8e366a7cc516fcc8ad72324c7d9c3d7b5ab71b354635b51517",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_RunSneak_Slow",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunSneak_Slow.x",
+      "sha256": "5946b022e3aebf28434fe8b0a84458ec446ae6694f992edde4cbd9c87d1e37a2",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_RunToStop",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunToStop.x",
+      "sha256": "298b3b74698402661ee1d7f04dbc0abb0d7f07c750c506febb4bc444585edbae",
+      "samples": 31
+    },
+    {
+      "animation": "Bob_RunToStop2H_Heavy",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunToStop2H_Heavy.x",
+      "sha256": "0ce1e9a862f7402a5a1a2022e1fe149ab6255b2e6a96b9f8b2d6b9c1e369dd0e",
+      "samples": 31
+    },
+    {
+      "animation": "Bob_RunToStop_Bat",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunToStop_Bat.x",
+      "sha256": "6d05a396d5081038f0522af2a3221913f9692e86255ad628d19defe4f034b96e",
+      "samples": 31
+    },
+    {
+      "animation": "Bob_RunToStop_Chainsaw",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunToStop_Chainsaw.x",
+      "sha256": "d4bfef5e134e9afc81689b1309d7baa069c4fceff9c6ab21b6095ec25ed14b76",
+      "samples": 31
+    },
+    {
+      "animation": "Bob_RunToStop_Handgun",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunToStop_Handgun.x",
+      "sha256": "857da3ffa86376b54102a8b44ee4a004ec4965ce7bba7446e60401da837a160f",
+      "samples": 31
+    },
+    {
+      "animation": "Bob_RunToStop_Rifle",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunToStop_Rifle.x",
+      "sha256": "a1189d828b721c39c32202f020f75fba0481607f23a78a1c463086610ec46423",
+      "samples": 31
+    },
+    {
+      "animation": "Bob_RunToTurn180L",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunToTurn180L.x",
+      "sha256": "3ac6b37dbec4f463b358dc3d60eaf172b5eafdadd26a79fe379215733382a72f",
+      "samples": 24
+    },
+    {
+      "animation": "Bob_RunToTurn180R",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunToTurn180R.x",
+      "sha256": "b994014131ffe4dc0e07a386127c2f1d5c1712e79795c0eea27a9b3a6f770d4e",
+      "samples": 27
+    },
+    {
+      "animation": "Bob_RunTrees",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunTrees.x",
+      "sha256": "db3708de98fdf3a08922209bd565b04e7095487369ebf7a46787191285546466",
+      "samples": 41
+    },
+    {
+      "animation": "Bob_RunTrees_2H_Heavy",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunTrees_2H_Heavy.x",
+      "sha256": "4f4ecfd1ef3a24d92a2365271f3fb853f3e278c54ae5e73ec934070f398d6729",
+      "samples": 41
+    },
+    {
+      "animation": "Bob_RunTrees_Bat",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunTrees_Bat.x",
+      "sha256": "3e30008bc5e9cff50d897b34b6d21fc87e302aa0e554c0d6f5e02a2d015b715f",
+      "samples": 41
+    },
+    {
+      "animation": "Bob_RunTrees_Handgun",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunTrees_Handgun.x",
+      "sha256": "cfce42fa51aec2605b73fa274c59d875109f175dc94498a0c87025c381eab3d2",
+      "samples": 41
+    },
+    {
+      "animation": "Bob_RunTrees_Rifle",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_RunTrees_Rifle.x",
+      "sha256": "e69057141af0806a0ddca556d0634ea9a6b41ebc60c06aed692316c8dc8271a7",
+      "samples": 41
+    },
+    {
+      "animation": "Bob_Run_Handgun",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_Run_Handgun.x",
+      "sha256": "3a0cbdd85b21f03148aae5e4f72cd189cc9312985f13a04f0cb764785b37a9bd",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_Shove_Rifle",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_Shove_Rifle.x",
+      "sha256": "1370dfa21d5af651a97d86aaea6206dca4e7e74853e824da30117dc656998264",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_SneakToSneakRun",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_SneakToSneakRun.x",
+      "sha256": "d7ef6746fd48cbdd818cfa7e78ea80ac03cd54c18c6b0a4054029dd8fae6db7f",
+      "samples": 26
+    },
+    {
+      "animation": "Bob_SneakToSneakRun2H_Heavy",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_SneakToSneakRun2H_Heavy.x",
+      "sha256": "572ca21f96afd88cd4c28539422b35302360be27fce01cd61217889480b4d68e",
+      "samples": 26
+    },
+    {
+      "animation": "Bob_SneakToSneakRunLow_Turn180L",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_SneakToSneakRunLow_Turn180L.x",
+      "sha256": "5d556e696b4e06f840677c22b96388d19388138916e6d1695439e0ff2f7feaa7",
+      "samples": 16
+    },
+    {
+      "animation": "Bob_SneakToSneakRunLow_Turn180R",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_SneakToSneakRunLow_Turn180R.x",
+      "sha256": "c8a5b3471d4442cb65d3c1e7d2d8d91385fa1b9147d650c8738e6af66a090b04",
+      "samples": 16
+    },
+    {
+      "animation": "Bob_SneakToSneakRun_Bat",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_SneakToSneakRun_Bat.x",
+      "sha256": "15a4e515be9cb29ef4c8c44dc77711c77469405db5ddf28c5645c1a86f09b7c7",
+      "samples": 26
+    },
+    {
+      "animation": "Bob_SneakToSneakRun_Hgun",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_SneakToSneakRun_Hgun.x",
+      "sha256": "b2737ea9e6ea43700848573a3e6aefdc9d768e2f28ac0bae20e3b052763ce0cf",
+      "samples": 26
+    },
+    {
+      "animation": "Bob_SneakToSneakRun_Sgun",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_SneakToSneakRun_Sgun.x",
+      "sha256": "2104f6a9ddb70838099add47a2aa41e287c2168c3e4c4666d9a7cccb60ed8c0c",
+      "samples": 26
+    },
+    {
+      "animation": "Bob_SneakToSneakRun_Turn180L",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_SneakToSneakRun_Turn180L.x",
+      "sha256": "3e6725df6d1f595b45d27f3156745fc644a185d064061d4c6234d43996e037a2",
+      "samples": 16
+    },
+    {
+      "animation": "Bob_SneakToSneakRun_Turn180R",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_SneakToSneakRun_Turn180R.x",
+      "sha256": "17ff7085b0ac34685839b98f7fd88208f89de0ce3d3c3654b34f354040f2e7ba",
+      "samples": 16
+    },
+    {
+      "animation": "Bob_SneakToSneakWalkLow_Turn180L",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_SneakToSneakWalkLow_Turn180L.x",
+      "sha256": "87c8a6c48055cf490a007ef9d9d0f7af0f95d96cfe3a56f4ccb10fd10952365d",
+      "samples": 16
+    },
+    {
+      "animation": "Bob_SneakToSneakWalkLow_Turn180R",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_SneakToSneakWalkLow_Turn180R.x",
+      "sha256": "a6dc80cddaa40907935bd4227d230e5c5ae9665c05f2a2bf552e689dce974642",
+      "samples": 16
+    },
+    {
+      "animation": "Bob_SneakToSneakWalk_Turn180L",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_SneakToSneakWalk_Turn180L.x",
+      "sha256": "42f637d3355333183fe21e24aa763a834736452963a3c48efa1a96b66fd0e6aa",
+      "samples": 16
+    },
+    {
+      "animation": "Bob_SneakToSneakWalk_Turn180R",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_SneakToSneakWalk_Turn180R.x",
+      "sha256": "4a39170ed6a1596516452ce902cee615fae4c821e993d1365d6c84216cab5513",
+      "samples": 16
+    },
+    {
+      "animation": "Bob_Strafe_Left",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_Strafe_Left.x",
+      "sha256": "790121f6915fe6bc02d682fc344cd59a1fc928c26bcb73b1c2e5db7f4c3a0fa7",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_Strafe_Right",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_Strafe_Right.x",
+      "sha256": "42af135e91af99b67be059227e59ae4748d8a8f8857223164b7be750a3e40521",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_Walk",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_Walk.x",
+      "sha256": "cd6b5b79efc06e6064b8cc9b333bf832254dcefe68319fe3d5849437eae678ce",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_Walk2H_Heavy",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_Walk2H_Heavy.x",
+      "sha256": "332181497f673cc04c17571c55d26e3dbe683bb65265c1727dfb36d7b9dfc048",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkAim1Hand",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkAim1Hand.x",
+      "sha256": "f9341f11b3e3d53b54a1884b01aebaa3f13797f6832167fd7c156f3ae06a76c3",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkAim1Hand_DiagL",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkAim1Hand_DiagL.x",
+      "sha256": "706992690efc7fbdc85062d5129cc57589a5ca85a9fcfebaac343554d3bfdade",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkAim1Hand_DiagR",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkAim1Hand_DiagR.x",
+      "sha256": "9af2676f6273f10009c76ae71a07f7d2e4bb5dd1337244c2f3def5ee09a3afc4",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkBat",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkBat.x",
+      "sha256": "3fb1dbf21d717844fad0cc9571a8c98e1b04c8840a69ede7f2388fd09b8bcf00",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkBwdAim1Hand",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkBwdAim1Hand.x",
+      "sha256": "b07b25e67f1878443a822db67372ac3e0a5f7faaeb8e07ff11e94a25aff6d35e",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkBwdAim1HandSlow",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkBwdAim1HandSlow.x",
+      "sha256": "473e69d77b65976989d6aa6fc11552364ff35ecfe69aa9776a0bdb65ce5228f1",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkBwdAim1Hand_DiagL",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkBwdAim1Hand_DiagL.x",
+      "sha256": "035e136a1315d016f893a24a274093380c4fa4d87164d17052de05452aef8211",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkBwdAim1Hand_DiagLSlow",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkBwdAim1Hand_DiagLSlow.x",
+      "sha256": "5bcda65df09301594461a52a0360c21f2255d778cc5dda6ccb8115863a00e69f",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkBwdAim1Hand_DiagR",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkBwdAim1Hand_DiagR.x",
+      "sha256": "7204d9d6c4c9cd7c85d55baca4a68156950b1778de9732a0e57bc70dbbeee895",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkBwdAim1Hand_DiagRSlow",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkBwdAim1Hand_DiagRSlow.x",
+      "sha256": "825428e579fad7074075e536ed7715d30d7475299cfea3b5e5e120562ddb1417",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkChainsaw",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkChainsaw.x",
+      "sha256": "5701f664d61c1e4f816bdf0d38e98f49251dd9a7a2fa8e39ff3d19a8c4a549a7",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkHandgun",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkHandgun.x",
+      "sha256": "1a26126cde9b21a16c1b5cea7666afe8b2c10f0c77e5e8b180976e1e2a12ebb0",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkHeavyLimpL",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkHeavyLimpL.x",
+      "sha256": "3208584214492d6c647030f78ff15cd20f3bf5cd57c89ec28e7d8ff7597f97a6",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkHeavyLimpL_2H_Heavy",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkHeavyLimpL_2H_Heavy.x",
+      "sha256": "32f6686a8671de5bf904dc30ceefcc9c61ac1a6bf46cabc1096211cd0a4ba271",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkHeavyLimpL_Bat",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkHeavyLimpL_Bat.x",
+      "sha256": "17e8c55bd086669aa9bb0711c5566617fc6d038c1c7bcd1ded561b33b2211b82",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkHeavyLimpL_ChSaw",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkHeavyLimpL_ChSaw.x",
+      "sha256": "2376efa4045eb03832128a0547e2b67936ffdb7010618b8538cecc8ea3e63b71",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkHeavyLimpL_Hgun",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkHeavyLimpL_Hgun.x",
+      "sha256": "cef7381b690f9653104468da44d19d4e60867711151a03a93a2bab13a292b1af",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkHeavyLimpL_Rifle",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkHeavyLimpL_Rifle.x",
+      "sha256": "a1fd543de76a3c69bec76b2a1c4bc6838aa1a9232da42ce454d336698bde9e7f",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkHeavyLimpR",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkHeavyLimpR.x",
+      "sha256": "0b44ab6a00400f5ce311ea99b613fac480e0e50555e3e1b4ddcdc8f9eaa3eadf",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkHeavyLimpR_2H_Heavy",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkHeavyLimpR_2H_Heavy.x",
+      "sha256": "e8f968cb48c784db961bb0fb937741a5fab64c9fc724498ebd30f0448f38ff08",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkHeavyLimpR_Bat",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkHeavyLimpR_Bat.x",
+      "sha256": "9945a51f9674f66f851c68cb4b87701ceca9f0b4bade3d91cb4a5ee60afdf1e6",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkHeavyLimpR_ChSaw",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkHeavyLimpR_ChSaw.x",
+      "sha256": "0d8934eb18c2839cabdcc074faaec9b71cbbeafad07db001fb06471eee8c6691",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkHeavyLimpR_Hgun",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkHeavyLimpR_Hgun.x",
+      "sha256": "afbef109a19374813e3bb766f036cba8cd5bf1fa7bfff714bdd02e5f5e30e5e6",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkHeavyLimpR_Rifle",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkHeavyLimpR_Rifle.x",
+      "sha256": "e530a83e2929c490e5bcd514bef42617895374c33e117f475d4df72153715abd",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkLightLimpL",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkLightLimpL.x",
+      "sha256": "4a48292e0b205416cca1d0e297fd68c1b4bbd65c500d84c5c3c719415da234cd",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkLightLimpL_2H_Heavy",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkLightLimpL_2H_Heavy.x",
+      "sha256": "e64dc9669a08d6625fa90b7302c32d9dc48739efddf3458c75f3830e1dfaaa61",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkLightLimpL_Bat",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkLightLimpL_Bat.x",
+      "sha256": "31b6f6e2225e847b8f3db5a248e0efc6d48f92e385e3e6032ea5089ecc7d4188",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkLightLimpL_ChSaw",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkLightLimpL_ChSaw.x",
+      "sha256": "100b536e781fcd6477005228e84db27c64815ac4ee5cdd345c0728e845a554d8",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkLightLimpL_Hgun",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkLightLimpL_Hgun.x",
+      "sha256": "ebfd9f818d995922c767094c0d3029efb2da98c4d79bf456c7c5e5c0ebf7886e",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkLightLimpL_Rifle",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkLightLimpL_Rifle.x",
+      "sha256": "1108eb4bbe5e79ff616a59ef6e31933be94d719d5e936d769d6c72667d12136b",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkLightLimpR",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkLightLimpR.x",
+      "sha256": "caf15c4e72a84613b20f3de32a86d5e74dfff1e9b14c9b31c99dfbdf7bfd2638",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkLightLimpR_2H_Heavy",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkLightLimpR_2H_Heavy.x",
+      "sha256": "77c3e63c465850272cf70a10f80cd9277b94e6dbef20e84d0830db2463264aaa",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkLightLimpR_Bat",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkLightLimpR_Bat.x",
+      "sha256": "cf798ff5e8818d95aa1cdaae13c37f2bee8d0f8291b12da6ea4dc7228c22a0fe",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkLightLimpR_ChSaw",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkLightLimpR_ChSaw.x",
+      "sha256": "afd6d6766c82570592039e4e316c8ffe1876bcab673d96814b4cb8f8c42b4c68",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkLightLimpR_Hgun",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkLightLimpR_Hgun.x",
+      "sha256": "6ac6819f26b44183e27d9aaa542dfff02b795852ac7d3c03e8e4aac89ebd17da",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkLightLimpR_Rifle",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkLightLimpR_Rifle.x",
+      "sha256": "f40d23763ceaaa849ee7f809ff1e0ece0842804dd59deff49cca7096213d934b",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkLowSneak",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkLowSneak.x",
+      "sha256": "23031b077f9cd8da554647df16232237d401078152d262bfac8d9d4797e30866",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkLowSneak_2H_Heavy",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkLowSneak_2H_Heavy.x",
+      "sha256": "f3aadce9296f8863597236214148ad8b16b6e3905802db45afd4f32684b03a16",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkLowSneak_Bat",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkLowSneak_Bat.x",
+      "sha256": "937e9a904a1f17611d4a156adbc5a6de70beaf6ed0acbbef322935b07d049f2a",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkLowSneak_Handgun",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkLowSneak_Handgun.x",
+      "sha256": "fc2b02d059e741c31b154dc6284bfea96eb14f8a848e0e387a5ef00392d85026",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkLowSneak_Shotgun",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkLowSneak_Shotgun.x",
+      "sha256": "40019af29d59fa7b0ad34ab06b19fc0be8b43f22a7dbe2deec30c860ef28d70d",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkLowSneak_Slow",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkLowSneak_Slow.x",
+      "sha256": "984ce5f9f2b71543660e0ae71566f960834e72fe89e2f1509171290824ab1ba9",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkLowSneak_Slow_2H_Heavy",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkLowSneak_Slow_2H_Heavy.x",
+      "sha256": "0651286beb4babdf9bb0a0ac91c0ebeccbb59e8a8d1d10f0b2b2ff6c600ccbd4",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkLowSneak_Slow_Bat",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkLowSneak_Slow_Bat.x",
+      "sha256": "22fb7765d191e6f2da5e4615c1489c69d872d6140bfab64ba54d3077a109cdea",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkLowSneak_Slow_Handgun",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkLowSneak_Slow_Handgun.x",
+      "sha256": "7d7e57791d4ea0ce8da896331d449cecaea7c7f667b5b1abf44fb048d574143d",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkLowSneak_Slow_Shotgun",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkLowSneak_Slow_Shotgun.x",
+      "sha256": "55399265a20a1595b9ef0858639b728f764ec8965206ff5dbfedab8f415e0175",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkRifle",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkRifle.x",
+      "sha256": "386b19a870c790a176cdfdee719b57f2fafd8f9035c6ce2c476ba706dc316008",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkSlow",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkSlow.x",
+      "sha256": "833b715fff865799302a212dcced3ec38befae7f6d6b452e0190a34cb6deeaf0",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkSlow_2H_Heavy",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkSlow_2H_Heavy.x",
+      "sha256": "babebdfe9097541371e995258c4d95db9c116c3cf012145d8a3f3341cdee8130",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkSlow_Bat",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkSlow_Bat.x",
+      "sha256": "cf6a953adbea195f3d7e6f3a4a3a4955204ebe7b97530c26f82809c325e2c2f9",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkSlow_Chainsaw",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkSlow_Chainsaw.x",
+      "sha256": "1391fd44d66858bc75bf23e035685df69ab737b434d6b5149a944b303a5cddb9",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkSlow_Handgun",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkSlow_Handgun.x",
+      "sha256": "f4ca0dbe5345d37884d20ec52dce1e5e09d490169bd22434d4d60223a8411d1c",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkSlow_Rifle",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkSlow_Rifle.x",
+      "sha256": "08d122a3ba369035b7113b2d9702b905bd69e9482cec057ea3eb565e297cf6cf",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkSneak",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkSneak.x",
+      "sha256": "a2130fb5a3f2aae955de4542d919004e7a32a02c054669b4788ec121bdd65485",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkSneakLowToTurn180L",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkSneakLowToTurn180L.x",
+      "sha256": "ac6632591a05380304c17b2e4b232d983a6414a084ee3e378cc77b8f4df3526b",
+      "samples": 18
+    },
+    {
+      "animation": "Bob_WalkSneakLowToTurn180R",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkSneakLowToTurn180R.x",
+      "sha256": "94d63dcbb378bd71b994beaaf9dc10c21b4bc661f0b576134f3b46522ea5c452",
+      "samples": 25
+    },
+    {
+      "animation": "Bob_WalkSneakToStop2H_Heavy",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkSneakToStop2H_Heavy.x",
+      "sha256": "92c80d75a4dfe476d576a4278f35fab3813bb78c2080e11e8e2108e9539f6615",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkSneakToStop_Bat",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkSneakToStop_Bat.x",
+      "sha256": "86b9941e37b47fbb99ae37b57092bc1eaef8516c73fe1444bd1cc212b3e37822",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkSneakToStop_Hgun",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkSneakToStop_Hgun.x",
+      "sha256": "6d28496483fc3c938e239998c4b78b579729ae7e6d310022b171b94c7a2241c5",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkSneakToStop_Sgun",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkSneakToStop_Sgun.x",
+      "sha256": "2adc8eaaed91e1fca593780f44a3e31631c5fbb3637bb0db28047e31c4ca457f",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkSneakToTurn180L",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkSneakToTurn180L.x",
+      "sha256": "08cd328a94ec32d83a9ea348a716c264c0bf630bb22c12dc29278c71a8e49a9d",
+      "samples": 16
+    },
+    {
+      "animation": "Bob_WalkSneakToTurn180R",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkSneakToTurn180R.x",
+      "sha256": "7568ab7490ed310e1ddd61b1134165240408e3ca0e40e4e280b13f01f54270ca",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkSneak_2H_Heavy",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkSneak_2H_Heavy.x",
+      "sha256": "a031aefadc03d04ab480e9a1dba5c761a4d2a91216df3009d49270bfec473f60",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkSneak_2H_Heavy_Slow",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkSneak_2H_Heavy_Slow.x",
+      "sha256": "863424b73725f4ad9837c9e5eb794fc4bcff412f34fed9e84f6667849e3c6cc2",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkSneak_Bat",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkSneak_Bat.x",
+      "sha256": "83a77c76fd41bd48cfa6ae55705c2d5517a96ed566deae4bcd0fdeace4edf4bb",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkSneak_Bat_Slow",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkSneak_Bat_Slow.x",
+      "sha256": "666ae71838effe058572e73b2c834e9ff9238baacd8a602f36b41b956615c706",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkSneak_Handgun",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkSneak_Handgun.x",
+      "sha256": "d0ead5b61e98b89d9f2e3b85b6e6a758a2a684bdab57eedebe009876983dfac4",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkSneak_Handgun_Slow",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkSneak_Handgun_Slow.x",
+      "sha256": "40e0a7cbbd35ff56e27831e1ef395f5fbb4fce255d1fc8451de70dcabccffe8d",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkSneak_Shotgun",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkSneak_Shotgun.x",
+      "sha256": "c09307b22b2d1856864c536f3eb556bd4e176abd9a380f1c2b3846e357a04e59",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkSneak_Shotgun_Slow",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkSneak_Shotgun_Slow.x",
+      "sha256": "dacf30bd29c7d080426b6a01722729ba0cd1646edf801da53debabb2c96f903c",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkSneak_Slow",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkSneak_Slow.x",
+      "sha256": "6ee73c8abfc7d2f8711ca4a19e944385bae42fdb9e987329b55f875d3231b16c",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkToStop_Chainsaw",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkToStop_Chainsaw.x",
+      "sha256": "54638d4b4f5804fb0f4fa25dfeff30aef1cc3d1e63cc6229ef95b00b30eaa43d",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkToTurn180L",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkToTurn180L.x",
+      "sha256": "ed47745c6b27d621a1324383d2e46278c3995064bb0fa612179ee8b877b4ae1e",
+      "samples": 19
+    },
+    {
+      "animation": "Bob_WalkToTurn180R",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkToTurn180R.x",
+      "sha256": "ef94f5a00374cf82a1047704470e74f6285bf31ff80f5d6888112b080daf9a77",
+      "samples": 19
+    },
+    {
+      "animation": "Bob_WalkToWalkAim1Hand",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkToWalkAim1Hand.x",
+      "sha256": "5a796de2b52dc2f71fea10c3694daa57701a4cbbb7cba193deeffdffe3f6aab5",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkToWalkAim2H_Heavy",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkToWalkAim2H_Heavy.x",
+      "sha256": "4c14a1d9f1995928b2ec4e88b3bc85374b3248ae7e0860304f53b904ea1a525d",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkToWalkAimBat",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkToWalkAimBat.x",
+      "sha256": "b9b8e3fc6b20151e7f5a9191a30865aa883cdf28d76ddc9699841370ee437a1b",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkToWalkAimChainsaw",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkToWalkAimChainsaw.x",
+      "sha256": "870cc5eb785f6e576b38354e61fbe41fd98d02db5a85e536cb7894d209c1d6e1",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkToWalkAimHandgun",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkToWalkAimHandgun.x",
+      "sha256": "bbfbcf078685b7a66880984a47e8a418bde438e5948bc5122c94c1b1b374c6af",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkToWalkAimRifle",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkToWalkAimRifle.x",
+      "sha256": "309da221709a68490b3e059aabc66429f43b73dbae4ef8d5134f14cb370db1ef",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkToWalkAimSpear",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkToWalkAimSpear.x",
+      "sha256": "66b8a533a74a80679a23ec7537a3de1391bcbe1fdcf47a41dfbeaabfacc03b31",
+      "samples": 21
+    },
+    {
+      "animation": "Bob_WalkTrees",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkTrees.x",
+      "sha256": "e62b54d9a32909f3b15d7c20dbd271928bcdf03e4bcb931bff71490b5cf0841c",
+      "samples": 41
+    },
+    {
+      "animation": "Bob_WalkTrees_2H_Heavy",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkTrees_2H_Heavy.x",
+      "sha256": "afb10067093258a89ffcd2dbffe9e3e4fe73f482e4fe9c58aa0fc9f7b4c1f14b",
+      "samples": 41
+    },
+    {
+      "animation": "Bob_WalkTrees_Bat",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkTrees_Bat.x",
+      "sha256": "b5f5d243f4f6ef7e1b281a758dd7589020490bc78d5e7015f0c9968a261afb8d",
+      "samples": 41
+    },
+    {
+      "animation": "Bob_WalkTrees_Handgun",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkTrees_Handgun.x",
+      "sha256": "52d70f05883d484ee36fab24b2e72b0f84aca6346eed9941fb82932cc3e2dcc6",
+      "samples": 41
+    },
+    {
+      "animation": "Bob_WalkTrees_Rifle",
+      "source": "F:\\SteamLibrary\\steamapps\\common\\ProjectZomboid\\media\\anims_X\\Bob\\Bob_WalkTrees_Rifle.x",
+      "sha256": "3211133299b5f732186115ed17846c28cb5a1fff8f0dcf0a0ff69d92496f2259",
+      "samples": 41
+    },
+    {
+      "animation": "ProjectYakuza_DD_BatGround",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BatGround.x",
+      "sha256": "1aed15235d43dd0c257bf856a3c648381e677704e51565a751c601d5c2b67d95",
+      "samples": 56
+    },
+    {
+      "animation": "ProjectYakuza_DD_BatGuardEnter",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BatGuardEnter.x",
+      "sha256": "c0c636da67b27dea9137c86dff28afd90a49e65e2b4aebb7fa1e7ff76b56e8d7",
+      "samples": 7
+    },
+    {
+      "animation": "ProjectYakuza_DD_BatGuardExit",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BatGuardExit.x",
+      "sha256": "6173991932dc278e56fec117aa8c2598b4ddd26ac2ce122b9fe4fd98fdc7774c",
+      "samples": 11
+    },
+    {
+      "animation": "ProjectYakuza_DD_BatGuardHit",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BatGuardHit.x",
+      "sha256": "ac438a4b9fd53d7726fb53d57bd7d5bef6c8376cb026327c8054010425c861cf",
+      "samples": 19
+    },
+    {
+      "animation": "ProjectYakuza_DD_BatGuardLoop",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BatGuardLoop.x",
+      "sha256": "793dfb3078049ecfcf2f5c3871e0d65950dc35dacd3f464790fa5108cc042617",
+      "samples": 61
+    },
+    {
+      "animation": "ProjectYakuza_DD_BatHeat",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BatHeat.x",
+      "sha256": "e14c393bfe70aa201679d920bf3c08fe02271f1786f338fd91e9291760269751",
+      "samples": 103
+    },
+    {
+      "animation": "ProjectYakuza_DD_BatHeatVictim",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BatHeatVictim.x",
+      "sha256": "bbcb0e2d701634c29025c2b09db5e60625b55dc98321cb339072e93e80370067",
+      "samples": 103
+    },
+    {
+      "animation": "ProjectYakuza_DD_BatHeavy",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BatHeavy.x",
+      "sha256": "6bdd4ba1ed2741b592e30d78e4e2805656cb55a021c6f7da19ecb021bcd4cb9d",
+      "samples": 54
+    },
+    {
+      "animation": "ProjectYakuza_DD_BatLight01",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BatLight01.x",
+      "sha256": "51cea2d697834d88d0967d74b080061e25248a5f2ebc029a4616e893fb25fcd1",
+      "samples": 41
+    },
+    {
+      "animation": "ProjectYakuza_DD_BatLight02",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BatLight02.x",
+      "sha256": "7b85fa8ab1d630623edf21fb86154d87b6040df352c8a379d2dee3bb4c673447",
+      "samples": 36
+    },
+    {
+      "animation": "ProjectYakuza_DD_BatLight03",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BatLight03.x",
+      "sha256": "59580c850fd13aabb6d0d5abf7c0d67da0276fa69ffb105455b044581daab743",
+      "samples": 48
+    },
+    {
+      "animation": "ProjectYakuza_DD_BicycleGround",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BicycleGround.x",
+      "sha256": "0cebfa3285e05c24ef317f51b665b0b0a91046f084f96edc89537bb72d9bc6a9",
+      "samples": 61
+    },
+    {
+      "animation": "ProjectYakuza_DD_BicycleHeat",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BicycleHeat.x",
+      "sha256": "0c7ed815df0395b8ded8139c64ec2a909377abaef45d41added5c07d8afaed81",
+      "samples": 151
+    },
+    {
+      "animation": "ProjectYakuza_DD_BicycleHeatVictim",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BicycleHeatVictim.x",
+      "sha256": "cf2178d634af69c3c53cf971a220699e090de352345a8b1339c65366265424e2",
+      "samples": 151
+    },
+    {
+      "animation": "ProjectYakuza_DD_BicycleHeavy",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BicycleHeavy.x",
+      "sha256": "d558db9ccf333bb7b29617191470ebd477faadf568ca76353b02896320c502fc",
+      "samples": 71
+    },
+    {
+      "animation": "ProjectYakuza_DD_BicycleLight01",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BicycleLight01.x",
+      "sha256": "a2f7204b02a31acca406fccc18d8d44f9875c310cfb14ad341dd960658c0df92",
+      "samples": 71
+    },
+    {
+      "animation": "ProjectYakuza_DD_BicycleLight02",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BicycleLight02.x",
+      "sha256": "9267516f37ab1494f90d3b2c45f1777f4b9cf967f817dfadb476662ce9f2594c",
+      "samples": 56
+    },
+    {
+      "animation": "ProjectYakuza_DD_BicycleLight03",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BicycleLight03.x",
+      "sha256": "d8e401eed0a91f8db975f915d94e82247a300f0fcdffc742ceb721e11c155318",
+      "samples": 66
+    },
+    {
+      "animation": "ProjectYakuza_DD_BicycleReady",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BicycleReady.x",
+      "sha256": "a40f1f48bcf0ed168539a48348b501ec4251adcb4f7dec21de0ee6fb7355f575",
+      "samples": 61
+    },
+    {
+      "animation": "ProjectYakuza_DD_BicycleRelaxedIdle",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BicycleRelaxedIdle.x",
+      "sha256": "8a49e358789856e5c462879e26b53e3194e24b07a93760ad8e3c93720cdd0e20",
+      "samples": 61
+    },
+    {
+      "animation": "ProjectYakuza_DD_BicycleWalk",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BicycleWalk.x",
+      "sha256": "b265c88e88e0a87f998ee4635c832c1c729b2849d4e8b007e54badef4d016757",
+      "samples": 21
+    },
+    {
+      "animation": "ProjectYakuza_DD_BicycleWalkHeavyLimpL",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BicycleWalkHeavyLimpL.x",
+      "sha256": "b56efea4835bb58ada1f9b39f35b54c56469e0780fd657922bf4fe55c829c542",
+      "samples": 21
+    },
+    {
+      "animation": "ProjectYakuza_DD_BicycleWalkHeavyLimpR",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BicycleWalkHeavyLimpR.x",
+      "sha256": "63772621c4aa3bfd43c0bf1485572e2384d833ef8bc721e1f42ed498dec0cafd",
+      "samples": 21
+    },
+    {
+      "animation": "ProjectYakuza_DD_BicycleWalkLightLimpL",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BicycleWalkLightLimpL.x",
+      "sha256": "5283d75615be8d826e383470ac0be53d9ee69c39d9c9102863e6de5e4acde79c",
+      "samples": 21
+    },
+    {
+      "animation": "ProjectYakuza_DD_BicycleWalkLightLimpR",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BicycleWalkLightLimpR.x",
+      "sha256": "6cec312fea69b5ab38bcc072e2dc8106555e154d8ec58ea57fd123fcbbba2554",
+      "samples": 21
+    },
+    {
+      "animation": "ProjectYakuza_DD_BicycleWalkSlow",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BicycleWalkSlow.x",
+      "sha256": "e659ecbb40152a5c7545a3fd1f5ba55fccb5440b9624188cb7e4f4f0ec5ba643",
+      "samples": 21
+    },
+    {
+      "animation": "ProjectYakuza_DD_BladeGround",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BladeGround.x",
+      "sha256": "3158859cc7c823b075e0ad73d4d444951690ba378adfb32a16d8d357944f0759",
+      "samples": 59
+    },
+    {
+      "animation": "ProjectYakuza_DD_BladeGuardEnter",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BladeGuardEnter.x",
+      "sha256": "d3423111888286cb9faecd9c4c359ac9d8f577cdfa8d7567ec59bed3632bd181",
+      "samples": 7
+    },
+    {
+      "animation": "ProjectYakuza_DD_BladeGuardExit",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BladeGuardExit.x",
+      "sha256": "29d1ca7b5a1da29441675e5a2f60285c90ff42ceea5ab86867577a2bdd28365e",
+      "samples": 11
+    },
+    {
+      "animation": "ProjectYakuza_DD_BladeGuardHit",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BladeGuardHit.x",
+      "sha256": "192f7de16c20af37d9239cd4d776c1d897290bb6489132bede4acacede306eb0",
+      "samples": 19
+    },
+    {
+      "animation": "ProjectYakuza_DD_BladeGuardLoop",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BladeGuardLoop.x",
+      "sha256": "c0e8aa5d5234d2baa56d937c9c9a2bd3ae7c14eb9053cc92a1f2780a3dd13d5a",
+      "samples": 61
+    },
+    {
+      "animation": "ProjectYakuza_DD_BladeHeavy",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BladeHeavy.x",
+      "sha256": "2ca1f11382fd3cebc6aad1ba2fabad32dc1282d86ae23df4fd52b28ce74bdcf4",
+      "samples": 71
+    },
+    {
+      "animation": "ProjectYakuza_DD_BladeLight01",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BladeLight01.x",
+      "sha256": "4d03f929a90af204fd24eec6f4f4de38351b2a04306e591e498dc32b958f6414",
+      "samples": 59
+    },
+    {
+      "animation": "ProjectYakuza_DD_BladeLight02",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BladeLight02.x",
+      "sha256": "1db36e2b54b188af9128ac37c4799b09e4e7ee815abaeb836a0dfd8472058d4b",
+      "samples": 49
+    },
+    {
+      "animation": "ProjectYakuza_DD_BladeLight03",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BladeLight03.x",
+      "sha256": "4c841469913e681639f604d36cf199744081e95611d22d943485ac817cd3c6c6",
+      "samples": 62
+    },
+    {
+      "animation": "ProjectYakuza_DD_BoostLight01",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BoostLight01.x",
+      "sha256": "041e97849c61e5b1495ef97cce0eabe810cd6d6d7482ae380cad8f35e8609177",
+      "samples": 34
+    },
+    {
+      "animation": "ProjectYakuza_DD_BoostLight02",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BoostLight02.x",
+      "sha256": "00d074276d3e29fc5a5abf8f34677a120cf2bb6d35aa52f358b17db00b15a86e",
+      "samples": 31
+    },
+    {
+      "animation": "ProjectYakuza_DD_BoostLight03",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BoostLight03.x",
+      "sha256": "f18300a5659fd1c666e9aca4c6c28dbc20f9bd8f4a30c207d0587ab256883db4",
+      "samples": 32
+    },
+    {
+      "animation": "ProjectYakuza_DD_BoostLight04",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BoostLight04.x",
+      "sha256": "c4a957e23801abf904526e87b9a0fa29dc4ab4c5599f736eccf87677ca9da761",
+      "samples": 31
+    },
+    {
+      "animation": "ProjectYakuza_DD_BottleGround",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BottleGround.x",
+      "sha256": "827477bb13b9c593379703cc355a64a14addf7cc83825d3855ab797d5a2a2773",
+      "samples": 56
+    },
+    {
+      "animation": "ProjectYakuza_DD_BottleGuardEnter",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BottleGuardEnter.x",
+      "sha256": "47ba918da6e8b648f0fa2bf0ac9df6f4dc0bbb240338efc8f921450d2b9ccccf",
+      "samples": 7
+    },
+    {
+      "animation": "ProjectYakuza_DD_BottleGuardExit",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BottleGuardExit.x",
+      "sha256": "060b6c413b4e7bd39d702e13b0ae9fdc614216e2dc285d3939b58dc9b8135515",
+      "samples": 11
+    },
+    {
+      "animation": "ProjectYakuza_DD_BottleGuardHit",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BottleGuardHit.x",
+      "sha256": "8497af8c89c53fba44a50ca9d32e603bf6d523878967be66bed4fba12eec12dc",
+      "samples": 19
+    },
+    {
+      "animation": "ProjectYakuza_DD_BottleGuardLoop",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BottleGuardLoop.x",
+      "sha256": "0af2aa1160bb02d06a8a8f4535d57991a62c8d6e28bb665a2b1ba9f45a62e02c",
+      "samples": 61
+    },
+    {
+      "animation": "ProjectYakuza_DD_BottleHeat",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BottleHeat.x",
+      "sha256": "8fd29b96163ef793b0e78b9b5d15cdf8b484709c4cd17285a1938db9d64837ef",
+      "samples": 151
+    },
+    {
+      "animation": "ProjectYakuza_DD_BottleHeatVictim",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BottleHeatVictim.x",
+      "sha256": "5e8090abb34ff95da811837b23b0103b6992b8bcb5eab4f02a1f0c0de6e64b3c",
+      "samples": 151
+    },
+    {
+      "animation": "ProjectYakuza_DD_BottleHeavy",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BottleHeavy.x",
+      "sha256": "e8a34379a694edfebf9f93996c90dccfcb3a6d5184a4c2f88bd13c21d2a9ae21",
+      "samples": 54
+    },
+    {
+      "animation": "ProjectYakuza_DD_BottleLight01",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BottleLight01.x",
+      "sha256": "b36580f580a3ebef6614a24ac75a061ed16ade6e61139f0e5dc53616f2367c2f",
+      "samples": 41
+    },
+    {
+      "animation": "ProjectYakuza_DD_BottleLight02",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BottleLight02.x",
+      "sha256": "72e1db017b13713f7709297dabbd3625cb6f2f66981300263be28816a59475a6",
+      "samples": 36
+    },
+    {
+      "animation": "ProjectYakuza_DD_BottleLight03",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BottleLight03.x",
+      "sha256": "3bcd97566dca707a2f7d0a91f84006d245996e5ff60a81e56c92fd05785dd0e3",
+      "samples": 48
+    },
+    {
+      "animation": "ProjectYakuza_DD_BottleReady",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BottleReady.x",
+      "sha256": "a7a25cee0c2db4ad2231c14fc2065a606bad0750dcf8b8fdbef6e5d36be85c20",
+      "samples": 61
+    },
+    {
+      "animation": "ProjectYakuza_DD_BottleRelaxedIdle",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_BottleRelaxedIdle.x",
+      "sha256": "5c444ee5d78e630c2e255910f3536852a21f4233625464f063f0f40145f1e40d",
+      "samples": 61
+    },
+    {
+      "animation": "ProjectYakuza_DD_ChargeEnd",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_ChargeEnd.x",
+      "sha256": "3729e9d78996b47fd978bc7505b908833b56e27f32a469da5f100939c8f364cd",
+      "samples": 56
+    },
+    {
+      "animation": "ProjectYakuza_DD_ChargeHold01",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_ChargeHold01.x",
+      "sha256": "226e76d900fcd8fdc4dd9d785e882621645a73bc1164983c8641e7a07f3e65d2",
+      "samples": 2
+    },
+    {
+      "animation": "ProjectYakuza_DD_ChargeHold02",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_ChargeHold02.x",
+      "sha256": "5532b8b83ec8724cfbefc6ff053f50c7c98f1193ea786fe54bf8c00e1e641198",
+      "samples": 2
+    },
+    {
+      "animation": "ProjectYakuza_DD_ChargeHold03",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_ChargeHold03.x",
+      "sha256": "e0e1beac04a085c8168a644e0d59f8701ea6840327e566492582c6debce5e7da",
+      "samples": 2
+    },
+    {
+      "animation": "ProjectYakuza_DD_ChargeHold04",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_ChargeHold04.x",
+      "sha256": "7862b893930e761374ca72dddf8fe4d7b3a0c40f2bfb0f623f8869bfeb7c1505",
+      "samples": 2
+    },
+    {
+      "animation": "ProjectYakuza_DD_ChargeLoop",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_ChargeLoop.x",
+      "sha256": "07aa0ca1bab2be25fa0177982469e46cfc73cb7721c2ac9c96136d44d7747f8a",
+      "samples": 51
+    },
+    {
+      "animation": "ProjectYakuza_DD_ChargeWindup01",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_ChargeWindup01.x",
+      "sha256": "1ae9ff471dc9f818ec719b688154c2c8197ae726b869787d7390df8583b4745c",
+      "samples": 7
+    },
+    {
+      "animation": "ProjectYakuza_DD_ChargeWindup02",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_ChargeWindup02.x",
+      "sha256": "5285871a36957ada896e310ad08052f5aa9e710119c80ae3e0d6c4027df0026e",
+      "samples": 8
+    },
+    {
+      "animation": "ProjectYakuza_DD_ChargeWindup03",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_ChargeWindup03.x",
+      "sha256": "a5aac0c149fb327445d65459d8aa832e785d3bbf9b754d6830c10d67d6d4183a",
+      "samples": 7
+    },
+    {
+      "animation": "ProjectYakuza_DD_ChargeWindup04",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_ChargeWindup04.x",
+      "sha256": "31415b096e5426d9a327ddbab1ef5270d6a6adf12e35a8d64410d7e490f0fc9d",
+      "samples": 6
+    },
+    {
+      "animation": "ProjectYakuza_DD_ChargedFinisher01",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_ChargedFinisher01.x",
+      "sha256": "a865549da00def73258999d47ea1b8bcf33978459765206529a21510286924ed",
+      "samples": 52
+    },
+    {
+      "animation": "ProjectYakuza_DD_ChargedFinisher02",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_ChargedFinisher02.x",
+      "sha256": "6548b6fa0c86e88dcb8b3aa74d46876fc568fe750129f4b0a7bd1e5c598bc4b7",
+      "samples": 47
+    },
+    {
+      "animation": "ProjectYakuza_DD_ChargedFinisher03",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_ChargedFinisher03.x",
+      "sha256": "c5f3874539594b944c723cc7b93b51a9b2441753a4012732a7f0d41f2a7cbc50",
+      "samples": 56
+    },
+    {
+      "animation": "ProjectYakuza_DD_ChargedFinisher04",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_ChargedFinisher04.x",
+      "sha256": "4547e1454d730cfe8b5ccc777168130a6233b4d47976dd46b32d31c77c4f83d8",
+      "samples": 56
+    },
+    {
+      "animation": "ProjectYakuza_DD_CombatIdleLoop",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_CombatIdleLoop.x",
+      "sha256": "a8be65057d0d84063c0c8f1f8816da13b52a63c6cd8dc81285c4226fc3692815",
+      "samples": 361
+    },
+    {
+      "animation": "ProjectYakuza_DD_CrateGround",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_CrateGround.x",
+      "sha256": "20827291e0b6ea4f46f2de03bdedaed0f286a0b76217d049f459d4cf5fa8b18a",
+      "samples": 53
+    },
+    {
+      "animation": "ProjectYakuza_DD_CrateGuardEnter",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_CrateGuardEnter.x",
+      "sha256": "e7554fca96f5fece66bb0921f4e55bf388a5ce44395351d124eb461fa06b8a09",
+      "samples": 5
+    },
+    {
+      "animation": "ProjectYakuza_DD_CrateGuardExit",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_CrateGuardExit.x",
+      "sha256": "2ca53a47beca21d141eda3bf00457bd3d5ad0fd2788b2ae4d57d5f62faaa53a5",
+      "samples": 18
+    },
+    {
+      "animation": "ProjectYakuza_DD_CrateGuardHit",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_CrateGuardHit.x",
+      "sha256": "ce346fe15dc33be07ebb051ce0f7126c3389cd1f3ddf7d327a1b6d632fe9cad0",
+      "samples": 17
+    },
+    {
+      "animation": "ProjectYakuza_DD_CrateGuardLoop",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_CrateGuardLoop.x",
+      "sha256": "c1314c272b0964528aa415f69936cb59aeb61466bbd980edf912d2409f9ce7c4",
+      "samples": 41
+    },
+    {
+      "animation": "ProjectYakuza_DD_CrateHeat",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_CrateHeat.x",
+      "sha256": "509a145563091ddddd9da4e73700aa961bfc2ab37615ebbaec018714fca5944a",
+      "samples": 635
+    },
+    {
+      "animation": "ProjectYakuza_DD_CrateHeatFail",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_CrateHeatFail.x",
+      "sha256": "3ea33523e348712ef40f84a7242113417416f986b99d6cf73035687e87493fa4",
+      "samples": 181
+    },
+    {
+      "animation": "ProjectYakuza_DD_CrateHeatFailVictim",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_CrateHeatFailVictim.x",
+      "sha256": "61572156173e1e6df95241d903dd5385ab8057b26ea2a0b58d99cff84c6dbd44",
+      "samples": 181
+    },
+    {
+      "animation": "ProjectYakuza_DD_CrateHeatVictim",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_CrateHeatVictim.x",
+      "sha256": "df904204a30ec4478ddc17c4316fdc5271bfcb915b1e3c4570ee6ac0c89b6167",
+      "samples": 635
+    },
+    {
+      "animation": "ProjectYakuza_DD_CrateHeavy",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_CrateHeavy.x",
+      "sha256": "79b4894dc5e8ad24ece4172a55813253ab65676ce04d3e5133d2069bd0fc1c50",
+      "samples": 53
+    },
+    {
+      "animation": "ProjectYakuza_DD_CrateLight01",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_CrateLight01.x",
+      "sha256": "72953b25122592b0fd7c979b0fbfa0f4b2f43052358ecfcc4ab1430bf08fcfd3",
+      "samples": 46
+    },
+    {
+      "animation": "ProjectYakuza_DD_CrateLight02",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_CrateLight02.x",
+      "sha256": "129ebc1809eb612b32e61d0ca54bbdac5c3e5d2aa8b2e4ff0c34af9ec7bd34db",
+      "samples": 51
+    },
+    {
+      "animation": "ProjectYakuza_DD_CrateLight03",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_CrateLight03.x",
+      "sha256": "f1f20cc373cac61b52948463acf9ab64e9d6bbed831a19e4ed272391ea1045fb",
+      "samples": 66
+    },
+    {
+      "animation": "ProjectYakuza_DD_CrateReady",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_CrateReady.x",
+      "sha256": "45f0cf10813a4b784d3b3753436748786ad5ccb1216b9b212565f88f4bfdbcd7",
+      "samples": 61
+    },
+    {
+      "animation": "ProjectYakuza_DD_CrateRelaxedIdle",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_CrateRelaxedIdle.x",
+      "sha256": "99d92bc1118727ba25698b502f8b0349ba2991620ee00373d9e7671d248a22e3",
+      "samples": 61
+    },
+    {
+      "animation": "ProjectYakuza_DD_CrateWalk",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_CrateWalk.x",
+      "sha256": "a68378e3604d962357ab77809c132df9020f39dff90715843689c7df4be4d9c0",
+      "samples": 21
+    },
+    {
+      "animation": "ProjectYakuza_DD_CrateWalkHeavyLimpL",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_CrateWalkHeavyLimpL.x",
+      "sha256": "e9e0971b8afcb31e2aa08b7ee00f199a65d206829014e0bb6e43f4ff9ff9f6df",
+      "samples": 21
+    },
+    {
+      "animation": "ProjectYakuza_DD_CrateWalkHeavyLimpR",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_CrateWalkHeavyLimpR.x",
+      "sha256": "a6ca4ca15220511bf8b7f25649b23eb802efafc5a8fafca14108cf6f202a79e2",
+      "samples": 21
+    },
+    {
+      "animation": "ProjectYakuza_DD_CrateWalkLightLimpL",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_CrateWalkLightLimpL.x",
+      "sha256": "cd0c150a3ea0e2ad9ba151710ad0f0ef49d4566e02abe70041a72b78ecbccddd",
+      "samples": 21
+    },
+    {
+      "animation": "ProjectYakuza_DD_CrateWalkLightLimpR",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_CrateWalkLightLimpR.x",
+      "sha256": "88f9c3eefc06ae492ae4719cbf73d7d0d19c7af6d266c275799145ecd6aaa045",
+      "samples": 21
+    },
+    {
+      "animation": "ProjectYakuza_DD_CrateWalkSlow",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_CrateWalkSlow.x",
+      "sha256": "c8116b088436ea5dd747264bbc584ccaa1f189f598322d07009215a50e4bf840",
+      "samples": 21
+    },
+    {
+      "animation": "ProjectYakuza_DD_DirectionalLeft",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_DirectionalLeft.x",
+      "sha256": "7860b61cd21445c7fbc6d3eee76f1fe6e9089e617a908ce9081a61986f8ed09d",
+      "samples": 46
+    },
+    {
+      "animation": "ProjectYakuza_DD_DirectionalRear",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_DirectionalRear.x",
+      "sha256": "a2bdf13061feb82113f8c9a82a200ada05fde2f6fdba191c596327a1f841ffef",
+      "samples": 58
+    },
+    {
+      "animation": "ProjectYakuza_DD_DirectionalRight",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_DirectionalRight.x",
+      "sha256": "e874d050ac2dd9e96a87c149e08ec0aeabd87ba62f955e837e1602bcda080439",
+      "samples": 46
+    },
+    {
+      "animation": "ProjectYakuza_DD_DoubleFinisher01",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_DoubleFinisher01.x",
+      "sha256": "b31bccb37638b481fcfc06212e629212fbd074b6a81ba82335eb1041deac661a",
+      "samples": 83
+    },
+    {
+      "animation": "ProjectYakuza_DD_DoubleFinisher02",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_DoubleFinisher02.x",
+      "sha256": "6002e6c2836bef1ec9b33c20cfa78de2ccb4307324f4e4173c1021467f02c66f",
+      "samples": 82
+    },
+    {
+      "animation": "ProjectYakuza_DD_DoubleFinisher03",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_DoubleFinisher03.x",
+      "sha256": "3eaadd8023b354377a545d26bbc059b55c1916acf60858a58535eabb002fa179",
+      "samples": 62
+    },
+    {
+      "animation": "ProjectYakuza_DD_DoubleFinisher04",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_DoubleFinisher04.x",
+      "sha256": "6d51fa9c23a3ac005fbb0929fa1be3581feaf212d0f561477a917d34456345c0",
+      "samples": 72
+    },
+    {
+      "animation": "ProjectYakuza_DD_Finisher01",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_Finisher01.x",
+      "sha256": "6f423c06e6fed65debc3503f024b97fb122355e2ed2d08203009e8ada87fc302",
+      "samples": 58
+    },
+    {
+      "animation": "ProjectYakuza_DD_Finisher02",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_Finisher02.x",
+      "sha256": "2fffce981ee6d0c191745ae6c4aa30285d9a1181350fbd0e3ce28d28b02592f3",
+      "samples": 54
+    },
+    {
+      "animation": "ProjectYakuza_DD_Finisher03",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_Finisher03.x",
+      "sha256": "5e3c1254057b168cdfa39a5b87728a94ad7d61a9a276cfd0ff20bcbab123ab7c",
+      "samples": 62
+    },
+    {
+      "animation": "ProjectYakuza_DD_Finisher04",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_Finisher04.x",
+      "sha256": "26705de56b710be92d166534ae064c076631ff2e5548f65034d18794f7db8987",
+      "samples": 61
+    },
+    {
+      "animation": "ProjectYakuza_DD_GrabEnter",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_GrabEnter.x",
+      "sha256": "d6bc4d7b64f152603a69d79acbdc1cce37b25e714645cce4e416d5ba816896a9",
+      "samples": 16
+    },
+    {
+      "animation": "ProjectYakuza_DD_GrabEscape",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_GrabEscape.x",
+      "sha256": "8e704a71b34feacfc6d6e4eedf26d3c7fc13ac7e07d3aea7de35ead06d4d7db3",
+      "samples": 71
+    },
+    {
+      "animation": "ProjectYakuza_DD_GrabHold",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_GrabHold.x",
+      "sha256": "841e369a2e70e091201ae269b697d5bf53a52060d5293490bd70634d9aa211e6",
+      "samples": 86
+    },
+    {
+      "animation": "ProjectYakuza_DD_GrabStrike01",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_GrabStrike01.x",
+      "sha256": "7d9768ee6346024992803f61bef4372d7660dc63df08d39c4172c60d5500d5ad",
+      "samples": 31
+    },
+    {
+      "animation": "ProjectYakuza_DD_GrabStrike02",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_GrabStrike02.x",
+      "sha256": "77217bc15f4413139966be2e6b25c6afb7b917e47d1a881940e7e0b1b4c6501b",
+      "samples": 40
+    },
+    {
+      "animation": "ProjectYakuza_DD_GrabStrike03",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_GrabStrike03.x",
+      "sha256": "e305a2932572473f98d076bd1086e63e6059c5a65bf0c0e71ee5e99d23915077",
+      "samples": 40
+    },
+    {
+      "animation": "ProjectYakuza_DD_GrabStrike04",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_GrabStrike04.x",
+      "sha256": "caefe4754019f34b15430f362429dfbddf2877ed874a785ca4f4c16519ae5bb9",
+      "samples": 40
+    },
+    {
+      "animation": "ProjectYakuza_DD_GrabWalk",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_GrabWalk.x",
+      "sha256": "4140dade4dea969954bb315952229864cfda4a709f986b8e438d3fc5cc27a432",
+      "samples": 31
+    },
+    {
+      "animation": "ProjectYakuza_DD_GroundHeat",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_GroundHeat.x",
+      "sha256": "4003f1cc04ddf2b75933de265dc169c470aec819debe235ee00e4476d0cd9ef6",
+      "samples": 111
+    },
+    {
+      "animation": "ProjectYakuza_DD_GroundStomp01",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_GroundStomp01.x",
+      "sha256": "bf224bae0feb39486a5828e062523ff15de073272542dfe2e02417bde999e35b",
+      "samples": 55
+    },
+    {
+      "animation": "ProjectYakuza_DD_GroundStomp02",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_GroundStomp02.x",
+      "sha256": "e7c091938eef5aa051b624176877c9a7ca2c601c8a31dad5aabfddae0bb9ccab",
+      "samples": 55
+    },
+    {
+      "animation": "ProjectYakuza_DD_GuardEnter",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_GuardEnter.x",
+      "sha256": "961ca156d849c75cac2e9ec586f525c8f588d93e94cef86f96dd259372ece441",
+      "samples": 5
+    },
+    {
+      "animation": "ProjectYakuza_DD_GuardExit",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_GuardExit.x",
+      "sha256": "104e5cc777432e838ed7192d2b041286cb558650c2b1e804a6be1319b77688c7",
+      "samples": 11
+    },
+    {
+      "animation": "ProjectYakuza_DD_GuardHit",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_GuardHit.x",
+      "sha256": "ac6e6bd5d0af0a9b0328c6734a9f0cc627a2ec4aa0e8a4328bb97e642d56dc24",
+      "samples": 21
+    },
+    {
+      "animation": "ProjectYakuza_DD_GuardLoop",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_GuardLoop.x",
+      "sha256": "c2c1a70b61bc6115bb8fdf0f9fa6c218fe6c65b6f39071528d592c655d9a1e13",
+      "samples": 211
+    },
+    {
+      "animation": "ProjectYakuza_DD_HeatActivate01",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_HeatActivate01.x",
+      "sha256": "29cf1441dfbb62f2d55b4fcd47e8125a3d679187828a019cfed84362cf9de731",
+      "samples": 46
+    },
+    {
+      "animation": "ProjectYakuza_DD_HeatActivate02",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_HeatActivate02.x",
+      "sha256": "be9a0693fd5301c4d315b5b8b31ce936a3984f15a20da5485bae7de5c994548e",
+      "samples": 56
+    },
+    {
+      "animation": "ProjectYakuza_DD_HeatActivate03",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_HeatActivate03.x",
+      "sha256": "e834a48b5eb62a07fcf2faedc5bcf823cca056d39abb89d383dd0d7e0c54ff2f",
+      "samples": 61
+    },
+    {
+      "animation": "ProjectYakuza_DD_HeatActivate04",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_HeatActivate04.x",
+      "sha256": "07bca28f8971ab7482d74c97fd3c00836fc0809d4ed9ce78de3638d932152545",
+      "samples": 69
+    },
+    {
+      "animation": "ProjectYakuza_DD_HeatRush",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_HeatRush.x",
+      "sha256": "0049ab9a56119b95f2f3f8c381f0adfa40985434a3dafcf3ff6f1f95ef6120a0",
+      "samples": 271
+    },
+    {
+      "animation": "ProjectYakuza_DD_HeatRushFail",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_HeatRushFail.x",
+      "sha256": "db5daca0c8fa1987f50973a3ff5b98479fd03f2e70a628d2d63d2945558ac127",
+      "samples": 107
+    },
+    {
+      "animation": "ProjectYakuza_DD_HeatRushFailVictim",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_HeatRushFailVictim.x",
+      "sha256": "5b8cf98e4c800adcf0183f5e550753398ebdffd0e0f192304077e1e8e7b21328",
+      "samples": 107
+    },
+    {
+      "animation": "ProjectYakuza_DD_HeatRushVictim",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_HeatRushVictim.x",
+      "sha256": "f4a169ce2bc6c7c8846b4abc88e3ba6a92f58c5bb8d0034b3282b95b41b36f60",
+      "samples": 271
+    },
+    {
+      "animation": "ProjectYakuza_DD_Heavy",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_Heavy.x",
+      "sha256": "6f005523db810da4c68e28f95bb6a2f120df1256ba84d2c5646103ebcbd2b250",
+      "samples": 51
+    },
+    {
+      "animation": "ProjectYakuza_DD_KatanaHeat",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_KatanaHeat.x",
+      "sha256": "7f024e2a87f6ee63bf6da3f58d90a467c29e491f25357f33e4b92e1ccfc71bc1",
+      "samples": 141
+    },
+    {
+      "animation": "ProjectYakuza_DD_KatanaHeatVictim",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_KatanaHeatVictim.x",
+      "sha256": "47d20dc05f192103f56771b7c454ed741b97810588aa0e805e96e96e481a78e6",
+      "samples": 141
+    },
+    {
+      "animation": "ProjectYakuza_DD_KnifeGround",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_KnifeGround.x",
+      "sha256": "8339963d5ad8141a72c467161c04da8de152a729338d4e1f41ea728d7663afd8",
+      "samples": 53
+    },
+    {
+      "animation": "ProjectYakuza_DD_KnifeHeat",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_KnifeHeat.x",
+      "sha256": "0326d78d0c919d38b84142ebfe3805e6f985b320ac84f1d10ee7d18a277d1ad7",
+      "samples": 131
+    },
+    {
+      "animation": "ProjectYakuza_DD_KnifeHeatVictim",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_KnifeHeatVictim.x",
+      "sha256": "4028cdcb81a51ec1132863a2b9392986c3fe34001e5cbd0e9b585f7aef31222d",
+      "samples": 131
+    },
+    {
+      "animation": "ProjectYakuza_DD_KnifeHeavy",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_KnifeHeavy.x",
+      "sha256": "3c418d1216399cbd51d727ecd4749a955caf7cf65bf8cc720b63ccd36ffffa69",
+      "samples": 46
+    },
+    {
+      "animation": "ProjectYakuza_DD_KnifeLight01",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_KnifeLight01.x",
+      "sha256": "05685730b752dcfb3450f629db5642754258fed0845c8297c808911846d16b60",
+      "samples": 41
+    },
+    {
+      "animation": "ProjectYakuza_DD_KnifeLight02",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_KnifeLight02.x",
+      "sha256": "ece14202ba13b72fe8b154db83f357d7779a79b9b31a67cb507c76e98c345d7c",
+      "samples": 41
+    },
+    {
+      "animation": "ProjectYakuza_DD_KnifeLight03",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_KnifeLight03.x",
+      "sha256": "0b0b7433aecfa9335913b80d6e5d831ceed5f7fc45906e2e22f0f2065c20e65c",
+      "samples": 46
+    },
+    {
+      "animation": "ProjectYakuza_DD_Light01",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_Light01.x",
+      "sha256": "79294a1ff6a2589950696a3a8938337b8bc60d4e56537222945f1a34d1466d30",
+      "samples": 31
+    },
+    {
+      "animation": "ProjectYakuza_DD_Light02",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_Light02.x",
+      "sha256": "4a37db6fe32599db765bdf0c4386b65917745dac31b5a059c2df8386443e5702",
+      "samples": 48
+    },
+    {
+      "animation": "ProjectYakuza_DD_Light03",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_Light03.x",
+      "sha256": "3d3d04bd21ffc0204e62e79ec78936f58922d3724741ce576d8be0937f46ee55",
+      "samples": 43
+    },
+    {
+      "animation": "ProjectYakuza_DD_Light04",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_Light04.x",
+      "sha256": "9ceb5a5ef5713803da69ba6dc69cc0f64380a33da4a855a9ca8b0e6135710e54",
+      "samples": 48
+    },
+    {
+      "animation": "ProjectYakuza_DD_LinkedDoubleFinisher01",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_LinkedDoubleFinisher01.x",
+      "sha256": "b41bbd5b055b11212e572cd309001a7af9e808f6210448f0e3817e28f0354781",
+      "samples": 83
+    },
+    {
+      "animation": "ProjectYakuza_DD_LinkedDoubleFinisher02",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_LinkedDoubleFinisher02.x",
+      "sha256": "39d8f00b058a0bf9c2c43b2c331faaf16a0a1b95de2db2960ce1ff0d7e1b51f3",
+      "samples": 78
+    },
+    {
+      "animation": "ProjectYakuza_DD_LinkedDoubleFinisher03",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_LinkedDoubleFinisher03.x",
+      "sha256": "7f6acdd51e3d01b48d9adf210b8045ec3afca8f4ef349979b48dbbb0a1eeac9f",
+      "samples": 62
+    },
+    {
+      "animation": "ProjectYakuza_DD_LinkedDoubleFinisher04",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_LinkedDoubleFinisher04.x",
+      "sha256": "fec14c927328326b873a82f222a3ac4799949d84541a575e24af24da533c5885",
+      "samples": 70
+    },
+    {
+      "animation": "ProjectYakuza_DD_OpenGrabHeat",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_OpenGrabHeat.x",
+      "sha256": "7ee72fdad01bd491f8255a267b9deb9ae44b4cebe5969f70f5973bc161db1192",
+      "samples": 201
+    },
+    {
+      "animation": "ProjectYakuza_DD_Quickstep01",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_Quickstep01.x",
+      "sha256": "0fd40de55ed9cc935177b198291b53244380815c6b7e7f75236a1ea1f4697a31",
+      "samples": 23
+    },
+    {
+      "animation": "ProjectYakuza_DD_Quickstep02",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_Quickstep02.x",
+      "sha256": "2e620a386f0ae22b7cc92012b162c4edef8e44b50207b8aa0ead0cdec6dea56d",
+      "samples": 23
+    },
+    {
+      "animation": "ProjectYakuza_DD_Quickstep03",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_Quickstep03.x",
+      "sha256": "7fd843adf136659161ce543a3b291dd9f1ab9fa2237a2f86fca552249bc32ed2",
+      "samples": 23
+    },
+    {
+      "animation": "ProjectYakuza_DD_Quickstep04",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_Quickstep04.x",
+      "sha256": "8782ca0436ff78470cc82f837d5bb17c994732eeb56180d0de4520a8eca92def",
+      "samples": 23
+    },
+    {
+      "animation": "ProjectYakuza_DD_QuickstepAttack01",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_QuickstepAttack01.x",
+      "sha256": "707becdd5f25e730fa7e80beaf3b7f1519fca0ec918805a33495eb3f4b1e71d1",
+      "samples": 45
+    },
+    {
+      "animation": "ProjectYakuza_DD_QuickstepAttack02",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_QuickstepAttack02.x",
+      "sha256": "9e5a593a12e1ee1dec99e4013423243c0682228a98718a6a22791ea3a62d7e79",
+      "samples": 70
+    },
+    {
+      "animation": "ProjectYakuza_DD_QuickstepAttack03",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_QuickstepAttack03.x",
+      "sha256": "a0e3ac1490f6d57e8b3215f6bff88952dcc5944887ea05286449a2e37e5957bd",
+      "samples": 48
+    },
+    {
+      "animation": "ProjectYakuza_DD_QuickstepAttack04",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_QuickstepAttack04.x",
+      "sha256": "591db61e91aab047cebc13a118ba4f2f7ce3176f0680d1b27ccd8f4ad76a24e1",
+      "samples": 58
+    },
+    {
+      "animation": "ProjectYakuza_DD_ReverseDoubleFinisher01",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_ReverseDoubleFinisher01.x",
+      "sha256": "42150827040365bece2f097eb77938804d65faf8f0e4a714bf9e2e91717d37ce",
+      "samples": 51
+    },
+    {
+      "animation": "ProjectYakuza_DD_ReverseDoubleFinisher02",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_ReverseDoubleFinisher02.x",
+      "sha256": "b35a125e00e4d3acfaf7b00f44f7b3cc9badf3b6ccb5f1fe750c069c5ee31dfe",
+      "samples": 75
+    },
+    {
+      "animation": "ProjectYakuza_DD_ReverseDoubleFinisher03",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_ReverseDoubleFinisher03.x",
+      "sha256": "1514babb6eabcd89567c86863c95dd4eb92ddaf85a3c9b4743476ffd52eceaa2",
+      "samples": 76
+    },
+    {
+      "animation": "ProjectYakuza_DD_ReverseDoubleFinisher04",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_ReverseDoubleFinisher04.x",
+      "sha256": "5ceb00b7266c6d2ac0c4bb2ac8de3c905389c769df6ed660a9210743cf6bb156",
+      "samples": 42
+    },
+    {
+      "animation": "ProjectYakuza_DD_ReverseFinisher01",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_ReverseFinisher01.x",
+      "sha256": "f4083bda73572149a1479a48bfe6fb87c077ac3e5a305fd2cb331b922487ca76",
+      "samples": 68
+    },
+    {
+      "animation": "ProjectYakuza_DD_ReverseFinisher02",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_ReverseFinisher02.x",
+      "sha256": "b9384573f03c6530a5b5702b9db8d93fb0f1fa2da05fdfe8268fe9304cf2c51a",
+      "samples": 55
+    },
+    {
+      "animation": "ProjectYakuza_DD_ReverseFinisher03",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_ReverseFinisher03.x",
+      "sha256": "4b6cb30a9e15a7107ffec3abd494551f4f0ede1abb39898d88beb5ea1f04e308",
+      "samples": 66
+    },
+    {
+      "animation": "ProjectYakuza_DD_ReverseFinisher04",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_ReverseFinisher04.x",
+      "sha256": "17a66d47813094111b46aae91e9e57b9086d34fe58c180eed32e74f9bb71bf25",
+      "samples": 65
+    },
+    {
+      "animation": "ProjectYakuza_DD_Run",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_Run.x",
+      "sha256": "77bd5950a2bcd6eafdbb05c5ef3af9f02c0840b4c4b2fd5a96ef679bd52fa74d",
+      "samples": 33
+    },
+    {
+      "animation": "ProjectYakuza_DD_RunningAttack01",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_RunningAttack01.x",
+      "sha256": "67e6b5914b7ec4c1cb1d382018a42665610cef2794d4187d329437e45aa68ca6",
+      "samples": 56
+    },
+    {
+      "animation": "ProjectYakuza_DD_RunningAttack02",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_RunningAttack02.x",
+      "sha256": "b96f56becb56d658432d426d30816cbc133e74f35462361e594c2b109de0cb75",
+      "samples": 81
+    },
+    {
+      "animation": "ProjectYakuza_DD_RunningAttack03",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_RunningAttack03.x",
+      "sha256": "0c2a28efd36e02705c25723fb5c3db0b0d6b7a49781d12be7eed4d6d95f92ac2",
+      "samples": 51
+    },
+    {
+      "animation": "ProjectYakuza_DD_RunningAttack04",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_RunningAttack04.x",
+      "sha256": "ac3b9da5a149d6f66f9cfc69cdd6e0ad88b0d5e9ebc3d9d56bb79f85e3d9507e",
+      "samples": 65
+    },
+    {
+      "animation": "ProjectYakuza_DD_Sprint",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_Sprint.x",
+      "sha256": "4cba2573d8dd1713a6b5a5fbd99a87f1413cf69701a0405be9bce140277a9d82",
+      "samples": 21
+    },
+    {
+      "animation": "ProjectYakuza_DD_StyleEntry",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_StyleEntry.x",
+      "sha256": "12fd9639a93c46e45e78363e902bab9eef8f0ce864918f2a07d8dcd8694e141d",
+      "samples": 76
+    },
+    {
+      "animation": "ProjectYakuza_DD_Taunt01",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_Taunt01.x",
+      "sha256": "d300293a4e9964a3b8a45e5a883afce85252ae1abaa632d98e3e18917a21289d",
+      "samples": 56
+    },
+    {
+      "animation": "ProjectYakuza_DD_Throw",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_Throw.x",
+      "sha256": "7ca8860aa44fe74561917736b92fd6e8f092aad3b9c24321810e96dae53393ca",
+      "samples": 78
+    },
+    {
+      "animation": "ProjectYakuza_DD_TigerDrop",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_TigerDrop.x",
+      "sha256": "482c5f8802b0461459a41a108a0632ac8c33730d3395ceaf3cde1cf49fac6f0a",
+      "samples": 34
+    },
+    {
+      "animation": "ProjectYakuza_DD_WallHeat",
+      "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_WallHeat.x",
+      "sha256": "5543160834f5395eeda1e56cc62c4ee3bd51323f1d8c2f01bbad46cb5ad86786",
+      "samples": 141
+    }
+  ],
+  "masks": [
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\actions\\ProjectYakuza_DD_BatGuardEnter.xml",
+      "sha256": "ea1de9cef0b6e5cea3d94a1895a3b1b26d7fd85f3d8501f766f0ec1e345b82c3",
+      "animation": "ProjectYakuza_DD_BatGuardEnter",
+      "parent": 4
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\actions\\ProjectYakuza_DD_BatGuardExit.xml",
+      "sha256": "f247d959788afa79e69f042f869de2c07560d045ba95e90c64bd9844be56989e",
+      "animation": "ProjectYakuza_DD_BatGuardExit",
+      "parent": 4
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\actions\\ProjectYakuza_DD_BatGuardHit.xml",
+      "sha256": "c8220582ad85ba2599410fea396456876311a61cce2c0d968e8332de2dd8276f",
+      "animation": "ProjectYakuza_DD_BatGuardHit",
+      "parent": 4
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\actions\\ProjectYakuza_DD_BatGuardLoop.xml",
+      "sha256": "04d7082cc428b5663d4c7e6a746b52d4e564589f37679ce1669829172cffffcf",
+      "animation": "ProjectYakuza_DD_BatGuardLoop",
+      "parent": 4
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\actions\\ProjectYakuza_DD_BladeGuardEnter.xml",
+      "sha256": "8cf4aeb26bbff631cab34cccc1ca411f2844607b572235117f0682f814544900",
+      "animation": "ProjectYakuza_DD_BladeGuardEnter",
+      "parent": 4
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\actions\\ProjectYakuza_DD_BladeGuardExit.xml",
+      "sha256": "a7c9be952ed2f43d06398e1f834e9b3d6c335bfa9743b34d5ed87d5f2a5e0e0e",
+      "animation": "ProjectYakuza_DD_BladeGuardExit",
+      "parent": 4
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\actions\\ProjectYakuza_DD_BladeGuardHit.xml",
+      "sha256": "0209e084db634ab3b7d60ab83653ae1bc1133e0afb26ae8fddd36d6101a3e395",
+      "animation": "ProjectYakuza_DD_BladeGuardHit",
+      "parent": 4
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\actions\\ProjectYakuza_DD_BladeGuardLoop.xml",
+      "sha256": "e0d2d5022ce7f9ee1b584622c6ae045c7f7f324e00e2a4626ed991a85194adbf",
+      "animation": "ProjectYakuza_DD_BladeGuardLoop",
+      "parent": 4
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\actions\\ProjectYakuza_DD_BottleGuardEnter.xml",
+      "sha256": "cc79f9fe3b605f3425cc5eb3983429c48e520cfe0b47ad2b7c99a6d11f51c4cf",
+      "animation": "ProjectYakuza_DD_BottleGuardEnter",
+      "parent": 4
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\actions\\ProjectYakuza_DD_BottleGuardExit.xml",
+      "sha256": "11f500b81fa7d82269e970e23815d22b88a9b87a10beeab26f3e4f87ed9ff342",
+      "animation": "ProjectYakuza_DD_BottleGuardExit",
+      "parent": 4
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\actions\\ProjectYakuza_DD_BottleGuardHit.xml",
+      "sha256": "e45cfe4e110e8a8c293df65384bf62effc6274689f0f664a25ee1615aefcff5f",
+      "animation": "ProjectYakuza_DD_BottleGuardHit",
+      "parent": 4
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\actions\\ProjectYakuza_DD_BottleGuardLoop.xml",
+      "sha256": "5feedad625bdee4acf27d1df56b3fdc6c651f4f496b870c0d35823a66c8a0a20",
+      "animation": "ProjectYakuza_DD_BottleGuardLoop",
+      "parent": 4
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\actions\\ProjectYakuza_DD_CrateGuardEnter.xml",
+      "sha256": "2ab712d754bfabfa7d11ff0ab5251990493c26cd03e5b29cf352e2f2c03803ff",
+      "animation": "ProjectYakuza_DD_CrateGuardEnter",
+      "parent": 4
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\actions\\ProjectYakuza_DD_CrateGuardExit.xml",
+      "sha256": "13c87818b227ee1b7fdec0f42634f92c37d443f1884c3112549ecf6c0997bb2c",
+      "animation": "ProjectYakuza_DD_CrateGuardExit",
+      "parent": 4
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\actions\\ProjectYakuza_DD_CrateGuardHit.xml",
+      "sha256": "7a6c8e01ba6428a5af0639343c8ebaff61fbc553c9a5f1534240883bb15c70ac",
+      "animation": "ProjectYakuza_DD_CrateGuardHit",
+      "parent": 4
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\actions\\ProjectYakuza_DD_CrateGuardLoop.xml",
+      "sha256": "0170a54a0040222687b8c4078a3ebe7fad2b609e8661606ad5ca2709139fadf1",
+      "animation": "ProjectYakuza_DD_CrateGuardLoop",
+      "parent": 4
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\actions\\ProjectYakuza_DD_GrabHold.xml",
+      "sha256": "833bd2ed47c9ffd790dbfd56ce3e40f9d5c345ad016249b777d48d1321cdda68",
+      "animation": "ProjectYakuza_DD_GrabHold",
+      "parent": 4
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\actions\\ProjectYakuza_DD_GrabWalk.xml",
+      "sha256": "323b7de84d7b0dae72fccd1f31d65ad422130685b3a646491e69f134737838f6",
+      "animation": "ProjectYakuza_DD_GrabWalk",
+      "parent": 4
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\actions\\ProjectYakuza_DD_GuardEnter.xml",
+      "sha256": "c1853530ebfb5642620aea209e576e674fdbc05d93052253d5b511b3ea5f7bab",
+      "animation": "ProjectYakuza_DD_GuardEnter",
+      "parent": 4
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\actions\\ProjectYakuza_DD_GuardExit.xml",
+      "sha256": "1cd24fab4506d16f5d5964e99215a8507ee2ef4c188922adf68b5ed62bd684cf",
+      "animation": "ProjectYakuza_DD_GuardExit",
+      "parent": 4
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\actions\\ProjectYakuza_DD_GuardHit.xml",
+      "sha256": "11fd4672ccb3237f43868e4a8d04113552a55e07f0f6842215c8150233ef41db",
+      "animation": "ProjectYakuza_DD_GuardHit",
+      "parent": 4
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\actions\\ProjectYakuza_DD_GuardLoop.xml",
+      "sha256": "be578701e0fd909f195f525555fd18aca7a3d5eb7410b3508d30282fa4250d23",
+      "animation": "ProjectYakuza_DD_GuardLoop",
+      "parent": 4
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\aim\\ProjectYakuza_DD_BicycleIdle.xml",
+      "sha256": "a2e902f31d095e33091cfa7e1e8b8cc701e561a2497e7ccd34cd58324c2a3a3f",
+      "animation": "ProjectYakuza_DD_BicycleReady",
+      "parent": 4
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\aim\\ProjectYakuza_DD_BottleReady.xml",
+      "sha256": "4e8cf970d55cd7c8009bbcfb1c0675e1bf72b616a4b5b15ecaab8c4a1a3da50f",
+      "animation": "ProjectYakuza_DD_BottleReady",
+      "parent": 4
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\aim\\ProjectYakuza_DD_CombatIdle.xml",
+      "sha256": "642be459cd80edf8a35d1d46c2ceb854fc636e09b3e1b9144d6708bbd1f25332",
+      "animation": "ProjectYakuza_DD_CombatIdleLoop",
+      "parent": 4
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\aim\\ProjectYakuza_DD_CrateIdle.xml",
+      "sha256": "12525bfa76f51c646c41da994e41c5dde11e81451a3657b9d0562cbd6af41054",
+      "animation": "ProjectYakuza_DD_CrateReady",
+      "parent": 4
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\aim-strafe\\ProjectYakuza_DD_BicycleIdle.xml",
+      "sha256": "a2e902f31d095e33091cfa7e1e8b8cc701e561a2497e7ccd34cd58324c2a3a3f",
+      "animation": "ProjectYakuza_DD_BicycleReady",
+      "parent": 4
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\aim-strafe\\ProjectYakuza_DD_BottleReady.xml",
+      "sha256": "4e8cf970d55cd7c8009bbcfb1c0675e1bf72b616a4b5b15ecaab8c4a1a3da50f",
+      "animation": "ProjectYakuza_DD_BottleReady",
+      "parent": 4
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\aim-strafe\\ProjectYakuza_DD_CombatIdle.xml",
+      "sha256": "642be459cd80edf8a35d1d46c2ceb854fc636e09b3e1b9144d6708bbd1f25332",
+      "animation": "ProjectYakuza_DD_CombatIdleLoop",
+      "parent": 4
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\aim-strafe\\ProjectYakuza_DD_CrateIdle.xml",
+      "sha256": "12525bfa76f51c646c41da994e41c5dde11e81451a3657b9d0562cbd6af41054",
+      "animation": "ProjectYakuza_DD_CrateReady",
+      "parent": 4
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\idle\\ProjectYakuza_DD_BicycleRelaxedIdle.xml",
+      "sha256": "79fde17bdd450b31d5d3360127c59e2a0686bc71abf09d9692f1bdccf6bc9f18",
+      "animation": "ProjectYakuza_DD_BicycleRelaxedIdle",
+      "parent": 4
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\idle\\ProjectYakuza_DD_BottleRelaxedIdle.xml",
+      "sha256": "401f119f4aebd608d7df03952bcddf3473b7e3bea673f1e1fc3ac1c2ce650e51",
+      "animation": "ProjectYakuza_DD_BottleRelaxedIdle",
+      "parent": 4
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\idle\\ProjectYakuza_DD_CrateRelaxedIdle.xml",
+      "sha256": "de949d75dd011910d0dc0ad0bc45a05a55d809264c771776da5820f5065624db",
+      "animation": "ProjectYakuza_DD_CrateRelaxedIdle",
+      "parent": 4
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\melee\\ProjectYakuza_DD_BatGround.xml",
+      "sha256": "e67c0a6c63fe6fc98ef0adaec47384c45f8a515110892fd1122e4fd9b9c79b32",
+      "animation": "ProjectYakuza_DD_BatGround",
+      "parent": 3
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\melee\\ProjectYakuza_DD_BatHeavy.xml",
+      "sha256": "8389104584c92877149cae009806ab0b156aa8b956e14ea06e40991f6437ab84",
+      "animation": "ProjectYakuza_DD_BatHeavy",
+      "parent": 3
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\melee\\ProjectYakuza_DD_BatLight01.xml",
+      "sha256": "b4610487a9637f182880d292f5a89f7938c690e96bb3ba236db24a39c3002474",
+      "animation": "ProjectYakuza_DD_BatLight01",
+      "parent": 3
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\melee\\ProjectYakuza_DD_BatLight02.xml",
+      "sha256": "074573913f91b4e49f10cb4de046e8fcb9d1dacf04149bcc409494f6f787bdc7",
+      "animation": "ProjectYakuza_DD_BatLight02",
+      "parent": 3
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\melee\\ProjectYakuza_DD_BatLight03.xml",
+      "sha256": "3c173c3eb1e36397eb5545eac9381b4d55b5f1986b6b942ca51e76916fa4d3c7",
+      "animation": "ProjectYakuza_DD_BatLight03",
+      "parent": 3
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\melee\\ProjectYakuza_DD_BicycleGround.xml",
+      "sha256": "22e1f2def99f8f39138cd0a43ad048185468b243ac92bac7be1da120c0218728",
+      "animation": "ProjectYakuza_DD_BicycleGround",
+      "parent": 3
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\melee\\ProjectYakuza_DD_BicycleHeavy.xml",
+      "sha256": "e1c1950a2d5ea7b07f9f2997f728f9d70d095e8fa483de6e024b4f5f9c099b89",
+      "animation": "ProjectYakuza_DD_BicycleHeavy",
+      "parent": 3
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\melee\\ProjectYakuza_DD_BicycleLight01.xml",
+      "sha256": "ce7b620a4c00012884df579b9f82c3ed0fd51e8dffa21d629a715509d161981a",
+      "animation": "ProjectYakuza_DD_BicycleLight01",
+      "parent": 3
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\melee\\ProjectYakuza_DD_BicycleLight02.xml",
+      "sha256": "e8ccc1f9ce7db01dff64e75f14c7747a73a8575b9d61c3a2aa18fb070599d57f",
+      "animation": "ProjectYakuza_DD_BicycleLight02",
+      "parent": 3
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\melee\\ProjectYakuza_DD_BicycleLight03.xml",
+      "sha256": "7b76523cf43f27e283e19c7bbd44204fd95b0051d62a3fba9a52d2dc4fe255b4",
+      "animation": "ProjectYakuza_DD_BicycleLight03",
+      "parent": 3
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\melee\\ProjectYakuza_DD_BladeGround.xml",
+      "sha256": "bfec031019ebde7e0db2b658c97b1cffc1de4fc67c85d4318a102fba50271eaf",
+      "animation": "ProjectYakuza_DD_BladeGround",
+      "parent": 3
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\melee\\ProjectYakuza_DD_BladeHeavy.xml",
+      "sha256": "0c5ac526333654fdb53fd290ac7251a73b0f030b013391059d47879e9fc9c91a",
+      "animation": "ProjectYakuza_DD_BladeHeavy",
+      "parent": 3
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\melee\\ProjectYakuza_DD_BladeLight01.xml",
+      "sha256": "e90c91526a712f24823de6d8a04f91665610046846892afb71b4f83324c8c4f6",
+      "animation": "ProjectYakuza_DD_BladeLight01",
+      "parent": 3
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\melee\\ProjectYakuza_DD_BladeLight02.xml",
+      "sha256": "756e64b8117babd737bf3a746ffa17ccf77a55ef64ac0b60d4a63677dd689bfd",
+      "animation": "ProjectYakuza_DD_BladeLight02",
+      "parent": 3
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\melee\\ProjectYakuza_DD_BladeLight03.xml",
+      "sha256": "2e9147ac470e82ac5523227c3c982b0722f8b42f2e5e9877a989ef2540e3bf60",
+      "animation": "ProjectYakuza_DD_BladeLight03",
+      "parent": 3
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\melee\\ProjectYakuza_DD_BoostLight01.xml",
+      "sha256": "4a2205241c5f7f4e09316577bbfcd657635f502933015a40e3a2e31d47616b0c",
+      "animation": "ProjectYakuza_DD_BoostLight01",
+      "parent": 4
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\melee\\ProjectYakuza_DD_BoostLight02.xml",
+      "sha256": "bfdad63849c3b38c28ffd653ad300e979145ae107cdbbc6506884df321ad7d67",
+      "animation": "ProjectYakuza_DD_BoostLight02",
+      "parent": 4
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\melee\\ProjectYakuza_DD_BoostLight03.xml",
+      "sha256": "c3fee7a279a53f464f7bf21552a3ac5ec852c30b856903e7d1a73e92d8a7b178",
+      "animation": "ProjectYakuza_DD_BoostLight03",
+      "parent": 4
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\melee\\ProjectYakuza_DD_BoostLight04.xml",
+      "sha256": "bea33bcab438c868e5ab6334232fb19eea83bb4ac6ec5a62e9c621f2470a44d9",
+      "animation": "ProjectYakuza_DD_BoostLight04",
+      "parent": 4
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\melee\\ProjectYakuza_DD_BottleGround.xml",
+      "sha256": "cea156bd2e58f7c06c231fadadb634b488235c64b5b35cbcbd08ae445d7eac7a",
+      "animation": "ProjectYakuza_DD_BottleGround",
+      "parent": 3
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\melee\\ProjectYakuza_DD_BottleHeavy.xml",
+      "sha256": "21351b97a85e4f5432e2641d6385722315c4aa3900ac80c8252e1b62054dba8f",
+      "animation": "ProjectYakuza_DD_BottleHeavy",
+      "parent": 3
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\melee\\ProjectYakuza_DD_BottleLight01.xml",
+      "sha256": "7fd8ea4a98617001d4e515c0fbf9cf1436420ba293725ba69325441b8c4a5aa6",
+      "animation": "ProjectYakuza_DD_BottleLight01",
+      "parent": 3
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\melee\\ProjectYakuza_DD_BottleLight02.xml",
+      "sha256": "71b636d242d3e0328db07c9f2fa9b3830125808c90256ce82f988e1ab52bee34",
+      "animation": "ProjectYakuza_DD_BottleLight02",
+      "parent": 3
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\melee\\ProjectYakuza_DD_BottleLight03.xml",
+      "sha256": "0dfea4ac4f1eaead8978dd13d160cb532037133f4e79e92130922899c54189ef",
+      "animation": "ProjectYakuza_DD_BottleLight03",
+      "parent": 3
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\melee\\ProjectYakuza_DD_CrateGround.xml",
+      "sha256": "14a48ebd5400dc91888d124290c37c7818ec8ff0db44fbc3bbf913bbc03bddda",
+      "animation": "ProjectYakuza_DD_CrateGround",
+      "parent": 3
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\melee\\ProjectYakuza_DD_CrateHeavy.xml",
+      "sha256": "45e1c9b10a570272b5cb44997afbca0e5b488a3b04a1ed6838714e2d78873a6a",
+      "animation": "ProjectYakuza_DD_CrateHeavy",
+      "parent": 3
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\melee\\ProjectYakuza_DD_CrateLight01.xml",
+      "sha256": "e40ca8a8473bcacdbef53fd2b322a5b8011a7745c55503b9bcf56983d8d06a95",
+      "animation": "ProjectYakuza_DD_CrateLight01",
+      "parent": 3
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\melee\\ProjectYakuza_DD_CrateLight02.xml",
+      "sha256": "39e39fff3435348b4c9cd31d1c7039d80f3daab6a05657d9c0092bf2eae150cc",
+      "animation": "ProjectYakuza_DD_CrateLight02",
+      "parent": 3
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\melee\\ProjectYakuza_DD_CrateLight03.xml",
+      "sha256": "18da0965957d258f7731f07c1e6b7ca1e9d3163aad278100eaf04768246a254c",
+      "animation": "ProjectYakuza_DD_CrateLight03",
+      "parent": 3
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\melee\\ProjectYakuza_DD_KnifeGround.xml",
+      "sha256": "334df819552fb9d5f2961b251e49976a9bf8bc7605be32b797f9f4ee7f66e256",
+      "animation": "ProjectYakuza_DD_KnifeGround",
+      "parent": 3
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\melee\\ProjectYakuza_DD_KnifeHeavy.xml",
+      "sha256": "39807bb5904676c24db39da834cbaa43439dbe3ca981212fd58d76fabd7542d0",
+      "animation": "ProjectYakuza_DD_KnifeHeavy",
+      "parent": 3
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\melee\\ProjectYakuza_DD_KnifeLight01.xml",
+      "sha256": "b84b004170b6a6e7a5e4673ac1b0dfd33daf65f9ee7277bd5c53b20fef2a9e29",
+      "animation": "ProjectYakuza_DD_KnifeLight01",
+      "parent": 3
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\melee\\ProjectYakuza_DD_KnifeLight02.xml",
+      "sha256": "bc2f6d2f9ad326358d8305e899bf15fe46c82c7e915824b59f065fb7bcedae34",
+      "animation": "ProjectYakuza_DD_KnifeLight02",
+      "parent": 3
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\melee\\ProjectYakuza_DD_KnifeLight03.xml",
+      "sha256": "d908bd0fdb8e7b01f9fa9304667027100622ec1de312667addd50c580ea10aa6",
+      "animation": "ProjectYakuza_DD_KnifeLight03",
+      "parent": 3
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\melee\\ProjectYakuza_DD_Light01.xml",
+      "sha256": "d08c9a7212ebfc433d13e9c27f24a72f8f1aa93cd2a9a048e679545f31f35163",
+      "animation": "ProjectYakuza_DD_Light01",
+      "parent": 3
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\melee\\ProjectYakuza_DD_Light02.xml",
+      "sha256": "16dadc3e4900280628ba6cb647053e2c9c36ee68718b2c94ad455a47f16b0e11",
+      "animation": "ProjectYakuza_DD_Light02",
+      "parent": 3
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\melee\\ProjectYakuza_DD_Light03.xml",
+      "sha256": "09c239676a4cad4db0ecca8876e3db6b07087227610b5c1c23462f401678b0f0",
+      "animation": "ProjectYakuza_DD_Light03",
+      "parent": 3
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\melee\\ProjectYakuza_DD_Light04.xml",
+      "sha256": "b718fa030fd17847abbebf56c765ab2ed0127b8253a4007810369b1a114b0963",
+      "animation": "ProjectYakuza_DD_Light04",
+      "parent": 3
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\stomp\\ProjectYakuza_DD_BatNativeGround.xml",
+      "sha256": "22bca0b809f26264f5b8346ecfa1061fd23c0a5e92d0c7838b19bdde28f5596d",
+      "animation": "ProjectYakuza_DD_BatGround",
+      "parent": 3
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\stomp\\ProjectYakuza_DD_BladeNativeGround.xml",
+      "sha256": "460fee2a9933b641aae0948a20ee832a29c59acac345bdbdd24e90c58abf2d8a",
+      "animation": "ProjectYakuza_DD_BladeGround",
+      "parent": 3
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\stomp\\ProjectYakuza_DD_KnifeNativeGround.xml",
+      "sha256": "e3e4fffba5df059ed763a5bd4979281521ba28815f9738a185f7cd8d73da62d5",
+      "animation": "ProjectYakuza_DD_KnifeGround",
+      "parent": 3
+    }
+  ],
+  "output": "42\\media\\lua\\client\\ProjectYakuza\\ParentPoseTracks.lua",
+  "sha256": "0c02a2e76b1f4ec459b73ad201edd1957ccd8a1108a4edd68ada3b072d45b7f1"
+}

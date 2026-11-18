@@ -59,12 +59,13 @@ local function actor()
  function a:dbgGetAnimTrackName(layer,slot)
   self.lookup=self.lookup+1
   if self.empty then return '' end
+  if layer==0 and slot==0 and self.baseClip then return self.baseClip end
   if layer==1 and slot==0 then return 'Idle' end
   if layer==1 and slot==1 then return self.clip or 'ProjectYakuza_DD_Light01' end
   return ''
  end
- function a:dbgGetAnimTrackTime()return self.time end
- function a:dbgGetAnimTrackWeight()return self.weight end
+ function a:dbgGetAnimTrackTime(layer)if layer==0 and self.baseClip then return self.baseTime or 0 end;return self.time end
+ function a:dbgGetAnimTrackWeight(layer)if layer==0 and self.baseClip then return 1 end;return self.weight end
  return a
 end
 local style={id='dragon_of_dojima',sounds={punchSwing='OriginalWhoosh'}}
@@ -78,6 +79,8 @@ local function emit(name,...)for _,f in ipairs(ProjectYakuza.listeners[name] or 
 do local _="ProjectYakuzaFixture:WORLD" end
 do local _="ProjectYakuzaFixture:TRACKS" end
 do local _="ProjectYakuzaFixture:CATALOG" end
+do local _="ProjectYakuzaFixture:PARENTTRACKS" end
+do local _="ProjectYakuzaFixture:PARENTPREDICTION" end
 do local _="ProjectYakuzaFixture:EFFECTS" end
 local F=ProjectYakuza.AttackEffects
 check(ProjectYakuza.AttackTracks.dd_light_01==nil,'obsolete duplicate first-light numeric track is not loaded')
@@ -109,6 +112,20 @@ emit('lightAttackStarted',p,style,1,move);check(F.states[p]and F.hooked and allo
 p.time=.04;F.tick();F.render();check(allocated==0 and #draws==0,'no particles before source window')
 p.time=.2;F.tick();F.render()
 check(allocated==30 and #F.states[p].points==30,'limb coating and lingering trails have a fixed thirty-sprite budget')
+local masked="ProjectYakuzaFixture:NATIVEMASK"
+local testedState=F.states[p];local beforeTime=p.time
+for facing=0,7 do
+ p.baseClip=masked.base;p.baseTime=masked.baseTime;p.time=masked.time;p.angle=facing*math.pi/4
+ F.tick();draws={};F.render()
+ local expected={masked.points[1],masked.points[2],{}}
+ for axis=1,3 do expected[3][axis]=masked.points[3][axis]+(masked.points[4][axis]-masked.points[3][axis])*.35 end
+ for point=1,3 do
+  local model=expected[point];local _,_,x,y,z=F.project(model[1],model[2],model[3],p.angle,1);local start=(point-1)*3
+  check(math.abs(testedState.joints[start+1]-p.x-x)<.00006 and math.abs(testedState.joints[start+2]-p.y-y)<.00006 and math.abs(testedState.joints[start+3]-p.z-z)<.00006,'rendered first punch uses the actual native standing-pose parent in every facing')
+ end
+end
+p.baseClip=nil;p.baseTime=nil;p.time=beforeTime;p.angle=0;F.tick();draws={};F.render()
+
 for _,d in ipairs(draws)do if d.width==65 then check(near(d.xScale*65,d.scale*64)and d.scale<.15,'64x128 wisp bypasses native automatic 2x scaling without stretching pixels')end end
 check(#draws>=14 and additive,'contiguous coat and inner arm layers draw, restoring renderer state')
 local wispTexture=F.states[p].points[12].texture;wispTexture.width=64;draws={};F.render()
