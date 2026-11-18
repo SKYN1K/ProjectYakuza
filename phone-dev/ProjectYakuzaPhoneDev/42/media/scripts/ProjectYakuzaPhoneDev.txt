@@ -1,0 +1,11 @@
+module ProjectYakuzaPhoneDev
+{
+    model Xperia
+    {
+        mesh = Static/ProjectYakuzaPhoneDev_Xperia,
+        texture = ProjectYakuzaPhoneDev/Xperia,
+        shader = basicEffect,
+        static = TRUE,
+        scale = 1.0,
+    }
+}

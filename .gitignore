@@ -404,3 +404,14 @@
 !tools/combat-tests/MaskedLimbPoseProbe.java
 !tools/combat-tests/build_parent_poses.py
 !tools/combat-tests/build_parent_pose_tests.py
+
+!/phone-dev/
+/phone-dev/*
+!/phone-dev/ProjectYakuzaPhoneDev/
+!tools/combat-tests/build_phone_dev_assets.py
+!tools/combat-tests/validate_phone_dev.py
+!tools/combat-tests/PhoneDevNativeProbe.java
+!tools/combat-tests/build_phone_dev_tests.py
+!tools/combat-tests/phone-dev-test-fixture.lua
+!tools/Build-PhoneDev.py
+!tools/Publish-PhoneDevRelease.ps1

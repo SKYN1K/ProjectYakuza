@@ -1,0 +1,13 @@
+# Project Yakuza Phone development build
+
+This is an optional menu add-on for Project Yakuza 0.127.0 or newer. The combat mod remains the shared dependency, so the normal installation and phone development build always use the same hit effects, gameplay, settings and network code. Disabling this add-on restores the original mod settings menu after restarting the game. Do not replace the combat folder with the add-on.
+
+Enable Project Yakuza and Project Yakuza Phone (Dev). Open the normal style wheel, move to Settings, and release. The phone replaces that settings screen only. The style wheel itself remains available.
+
+The Xperia is the supplied Yakuza 6 a00_21z_smrt_ph_xpra52bl model with its original UV layer 1 and diffuse. PZ's existing UI3DScene renders the hardware. The screen icons are projected onto its display plane, and mouse input uses the inverse mapping. Opening, closing and pointer tilt are adapted animations. This is not a port of the original Yakuza 6 camera animation or shaders. Native UI3DScene is orthographic; dynamic text stays upright for readability, and the world is dimmed rather than blurred. No Java bridge is included.
+
+The nine pages provide style equipment and quick slots, carried weapons, combat information, heat information, audio levels, effect toggles, grab instructions, current bindings and phone preferences. Equipment lists the main inventory and opens the normal inventory for other containers. Changes use existing combat APIs, sandbox rules, normal equip actions and local interface sounds. Audio values persist through the existing mod-options system. The Advanced mod settings row opens the original panel.
+
+Mouse wheel scrolls the page list and is consumed while the phone is open. Arrow keys navigate apps; Tab changes between the phone and the page list; Enter selects; left/right adjusts audio in the list; Escape closes. Controller directions and A/B/Y provide the equivalent actions. Closing, death, entering a vehicle, opening the map, chat text entry, viewport changes, saving and leaving the game remove the phone and release its input focus. The menu does not pause the world or disable player movement.
+
+Validation passed offline: 4,316 original triangles and their native imported positions, normals and UVs; 1,132,164 original pixels; 3,510 native projection references; 35,379 Kahlua interaction assertions; and compilation of all five production Lua modules. Package privacy checks also passed. PZ was not launched. Live appearance, model loading and interaction still need an in-game check. Development notes, extracted files, provenance, tools, local paths and credentials are excluded from the install ZIP.
