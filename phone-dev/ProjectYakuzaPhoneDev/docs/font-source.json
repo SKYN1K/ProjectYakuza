@@ -1,0 +1,8 @@
+{
+  "source": "Project Zomboid/media/fonts/EN/2x/zomboidSmall.fnt",
+  "sha256": "5ab7404ee2a1fbd205873dc4e7d33c21d20556315ba0337d5e44018355a5985f",
+  "glyphs": 1136,
+  "atlas": "media/fonts/EN/2x/zomboidSmall_0.png",
+  "atlasSha256": "136226dd9f2712c2638a8668bdfeef28163e87368efb58e442b4c6eacb9d118b",
+  "operation": "Original installed font metrics embedded as Lua data; original game atlas sampled at runtime. No font image, pixels or artwork created or modified."
+}

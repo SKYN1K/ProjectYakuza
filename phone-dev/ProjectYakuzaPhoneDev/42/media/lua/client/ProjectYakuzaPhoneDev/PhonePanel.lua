@@ -1,4 +1,5 @@
 require "ProjectYakuzaPhoneDev/PhoneData"
+require "ProjectYakuzaPhoneDev/PhoneFont"
 require "ISUI/ISPanelJoypad"
 require "ISUI/ISPanel"
 require "Vehicles/ISUI/ISUI3DScene"
@@ -18,34 +19,43 @@ local function quad(panel,q,texture,x,y,w,h,r,g,b,a)
     local x3,y3=x2+bx*h,y2+by*h
     panel:drawTextureAllPoint(texture,x1,y1,x2,y2,x3,y3,x4,y4,r,g,b,a)
 end
-local function caption(panel,q,text,x,y,a)
-    local px,py=M.point(q,x/320,y/568);panel:drawTextCentre(text,px,py,.94,.95,1,a,UIFont.Small)
+local appColors={{.80,.20,.24},{.51,.25,.72},{.12,.61,.35},{1,1,1},{.08,.51,.85},{.70,.13,.43},{.82,.62,.14},{.19,.42,.80},{.28,.31,.36}}
+D.appColors=appColors
+local function caption(panel,q,text,x,y,a,size,width)
+    local cache=panel.host.captionCache;local key=x+y*320;local entry=cache[key]
+    if not entry or entry.text~=text then entry={text=text,layout=D.Font.layout(text,size or 20,width or 96)};cache[key]=entry end
+    D.Font.draw(quad,panel,q,entry.layout,x,y,a)
 end
 function Screen:prerender()
     local host=self.host
     if host.closed or host.open<=.005 or math.cos(host.pose.rx)*math.cos(host.pose.ry)<.12 then self.quad=nil;return end
     local q=M.project(host.pose,self.width,self.height,self.quad);self.quad=q
     local alpha=host.open;local white=host.textures.Pixel
-    for row=0,5 do local t=row/5;quad(self,q,white,0,row*568/6,320,568/6+1,.075+.12*t,.12-.025*t,.17+.055*t,alpha)end
+    for row=0,5 do local t=row/5;quad(self,q,white,0,row*568/6,320,568/6+1,.025+.19*t,.14+.035*t,.18+.10*t,alpha)end
     quad(self,q,white,0,0,320,26,0,0,0,alpha)
-    caption(self,q,host.clockLabel,43,4,alpha)
+    caption(self,q,host.clockLabel,43,2,alpha,19)
     quad(self,q,host.textures.signal,254,5,22,15,1,1,1,alpha);quad(self,q,host.textures.battery,283,7,25,13,1,1,1,alpha)
-    caption(self,q,"PROJECT YAKUZA",160,45,alpha)
-    caption(self,q,host.styleLabel,160,73,alpha*.75)
-    local heat=host.heatLevel
-    caption(self,q,"HEAT",52,112,alpha*.9);quad(self,q,white,85,119,210,4,.05,.08,.12,alpha)
-    quad(self,q,white,85,119,210*heat,4,.10,.60,1,alpha)
+    quad(self,q,white,0,28,320,46,.03,.16,.21,alpha*.8)
+    caption(self,q,host.styleLabel,160,36,alpha,27,286)
+    quad(self,q,white,0,73,320,2,.28,.46,.51,alpha)
+    caption(self,q,"PROJECT YAKUZA",160,83,alpha*.65,15,280)
+    caption(self,q,"HEAT",38,113,alpha*.9,18)
+    if host:loadOrbs()then for index=1,6 do
+        quad(self,q,host.orbRing,70+(index-1)*30,116,23,23,1,1,1,alpha*.8)
+        if index<=host.heatStocks then quad(self,q,host.orbFill,70+(index-1)*30,116,23,23,1,1,1,alpha*.9)end
+    end end
+    caption(self,q,host.heatLabel,280,116,alpha*.8,18,58)
     for index,page in ipairs(D.pages)do
         local x,y,w,h=M.appRect(index);local selected=host.page==index
-        quad(self,q,white,x-4,y-4,w+8,h+8,.03,.04,.06,alpha*.55)
-        quad(self,q,white,x,y,w,h,.95,selected and .40 or .95,selected and .10 or .96,alpha*.96)
+        quad(self,q,white,x-13,y-6,w+26,h+33,selected and .89 or .59,selected and .34 or .45,selected and .11 or .62,alpha*(selected and .95 or .20))
+        quad(self,q,white,x+3,y+1,w-6,h-10,.96,.95,.97,alpha*.98)
         local icon=host.icons[index];local ix,iy,iw,ih=icon[1],icon[2],icon[3],icon[4]
-        local tint=page.id=="effects"and .20 or 1
-        quad(self,q,host.textures[page.id],ix,iy,iw,ih,tint,tint,tint,alpha)
-        caption(self,q,page.label,x+w/2,y+h+7,alpha)
+        local tint=appColors[index]
+        quad(self,q,host.textures[page.id],ix,iy-5,iw,ih,tint[1],tint[2],tint[3],alpha)
+        caption(self,q,page.label,x+w/2,y+h+1,alpha,22,94)
     end
     quad(self,q,white,0,540,320,28,0,0,0,alpha*.94)
-    caption(self,q,"Enter: select    Esc: close",160,545,alpha*.8)
+    caption(self,q,host.gamepad and"A Select     B Close"or"Enter Select     Esc Close",160,541,alpha*.8,18,292)
 end
 function Screen:onMouseMove(dx,dy)
     if not self.quad or self.host.closing then return true end
@@ -90,8 +100,10 @@ function Rows:prerender()
         local item=self.items[i];local y=(i-1)*self.rowHeight-self.offset;local active=i==selected and self.host.focusRows
         if active then self:drawRect(0,y,self.width,self.rowHeight,a*.25,.90,.35,.05);self:drawRect(0,y,3,self.rowHeight,a,.98,.51,.12)end
         self:drawRect(14,y+self.rowHeight-1,self.width-28,1,a*.16,.65,.69,.75)
-        self:drawText(item.label,18,y+8,.95,.96,1,a,UIFont.Small)
-        self:drawText(item.detail,18,y+29,.65,.72,.82,a*.9,UIFont.Small)
+        local inline=#item.label+#item.detail<math.floor((self.width-70)/7)
+        self:drawText(item.label,18,y+(inline and 17 or 8),.78,.75,.73,a,UIFont.Small)
+        if inline then self:drawTextRight(item.detail,self.width-43,y+17,.97,.96,.94,a,UIFont.Small)
+        else self:drawText(item.detail,18,y+29,.78,.81,.83,a*.85,UIFont.Small)end
         if item.adjust then self:drawText("-     +",self.width-100,y+9,.98,.61,.27,a,UIFont.Medium)
         elseif item.action then self:drawText(">",self.width-31,y+16,.98,.61,.27,a,UIFont.Medium)end
     end
@@ -101,6 +113,8 @@ end
 function Phone:initialise()
     ISPanelJoypad.initialise(self)
     self.textures={};for name,asset in pairs(D.assets)do self.textures[name]=getTexture(asset.path)end
+    self.captionCache={}
+    self:loadOrbs()
     self.icons={};for index,page in ipairs(D.pages)do local x,y,w,h=M.appRect(index);self.icons[index]={M.iconRect(D.assets[page.id],x+w/2,y+h/2,46)}end
     local sw=math.min(self.height*.70,self.width*.48);self.scene=ISUI3DScene:new(0,0,sw,self.height);self.scene.background=false;self.scene:initialise();self:addChild(self.scene)
     local native=self.scene.javaObject
@@ -110,9 +124,15 @@ function Phone:initialise()
     native:fromLua2("setModelUseWorldAttachment","xperia",false);native:fromLua2("setModelWeaponRotationHack","xperia",false)
     self.rotation=native:fromLua1("getObjectRotation","xperia");self.translation=native:fromLua1("getObjectTranslation","xperia");self.scale=native:fromLua1("getObjectScale","xperia")
     self.screen=Screen:new(0,0,sw,self.height);self.screen.host=self;self.screen.background=false;self.screen:initialise();self:addChild(self.screen)
-    self.panelX=math.max(sw*.95,self.width*.43);self.panelW=self.width-self.panelX-28
-    self.rows=Rows:new(self.panelX+8,self.height*.15+93,self.panelW-16,self.height*.70-112);self.rows.host=self;self.rows.items={};self.rows.offset=0;self.rows.rowHeight=59;self.rows.background=false;self.rows:initialise();self:addChild(self.rows)
+    self.panelX=math.max(sw*.95,self.width*.48);self.panelW=self.width-self.panelX-self.width*.033;self.panelY=self.height*.08;self.panelH=self.height*.81
+    self.rows=Rows:new(self.panelX+8,self.panelY+130,self.panelW-16,self.panelH-213);self.rows.host=self;self.rows.items={};self.rows.offset=0;self.rows.rowHeight=59;self.rows.background=false;self.rows:initialise();self:addChild(self.rows)
     self:setWantKeyEvents(true);self:refresh();self:applyPose()
+end
+function Phone:loadOrbs()
+    if self.orbRing then return true end
+    local atlas=getTexture("media/textures/ProjectYakuza/HeatHUD/OriginalDragonAtlas.png")
+    if not atlas or not atlas:isReady()then return false end
+    self.orbRing=atlas:split("ProjectYakuzaPhoneDevOrbRing",0,0,37,37);self.orbFill=atlas:split("ProjectYakuzaPhoneDevOrbFill",76,0,37,37);return true
 end
 function Phone:applyPose()
     local pref=D.preferences(self.player);local tx,ty=0,0
@@ -132,7 +152,7 @@ end
 function Phone:refreshHeader()
     local hours=getGameTime():getTimeOfDay();self.clockLabel=string.format("%02d:%02d",math.floor(hours)%24,math.floor(hours%1*60))
     local style=PY.getPlayerStyle(self.player);self.styleLabel=style and style.name or"No style equipped"
-    local rules=PY.Heat.rules(self.player);self.heatLevel=M.clamp(PY.Heat.stocks(self.player)/math.max(1,rules.maxStocks),0,1);self.headerAt=getTimestampMs()
+    local rules=PY.Heat.rules(self.player);self.heatStocks=PY.Heat.stocks(self.player);self.heatLabel=self.heatStocks.." / "..rules.maxStocks;self.headerAt=getTimestampMs()
 end
 function Phone:selectPage(index)
     index=M.clamp(index,1,#D.pages);if index==self.page then return end
@@ -153,18 +173,21 @@ function Phone:prerender()
     self:animate(getTimestampMs())
     local a=self.open
     self:drawRect(0,0,self.width,self.height,a*.48,.015,.018,.026)
-    self:drawRect(self.panelX,self.height*.15,self.panelW,self.height*.70,a*.88,.025,.027,.035)
-    self:drawRect(self.panelX,self.height*.15,self.panelW,28,a*.94,.83,.84,.85)
-    self:drawTextCentre(D.pages[self.page].label,self.panelX+self.panelW/2,self.height*.15+5,.04,.04,.045,a,UIFont.Small)
-    self:drawText(D.pages[self.page].description,self.panelX+24,self.height*.15+49,.82,.86,.92,a,UIFont.Small)
+    self:drawRect(self.panelX,self.panelY,self.panelW,self.panelH,a*.88,.025,.022,.025)
+    self:drawRect(self.panelX,self.panelY,self.panelW,26,a*.96,.88,.88,.86)
+    self:drawTextCentre(D.pages[self.page].label,self.panelX+self.panelW/2,self.panelY+4,.04,.04,.045,a,UIFont.Small)
+    self:drawText(self.styleLabel,self.panelX+23,self.panelY+43,.96,.94,.92,a,UIFont.Medium)
+    self:drawText("PROJECT YAKUZA",self.panelX+24,self.panelY+73,.66,.64,.63,a*.85,UIFont.Small)
+    self:drawRect(self.panelX,self.panelY+101,self.panelW,1,a*.35,.54,.53,.53)
+    self:drawText(D.pages[self.page].description,self.panelX+24,self.panelY+111,.63,.80,.67,a,UIFont.Small)
     if self.page==1 or self.page==3 or self.page==4 then
         local selector=PY.StyleSelector;local style=PY.getPlayerStyle(self.player);local icon=selector.styleIcon and selector.styleIcon(style)
-        if icon and selector.assets and icon==selector.assets.dragon then self:drawSubTexture(icon,8,23,112,82,self.panelX+self.panelW-84,self.height*.15+33,64,47,a*.8,1,1,1)
-        elseif icon then self:drawTextureScaled(icon,self.panelX+self.panelW-75,self.height*.15+34,46,46,a*.8,1,1,1)end
+        if icon and selector.assets and icon==selector.assets.dragon then self:drawSubTexture(icon,8,23,112,82,self.panelX+self.panelW-84,self.panelY+40,64,47,a*.8,1,1,1)
+        elseif icon then self:drawTextureScaled(icon,self.panelX+self.panelW-75,self.panelY+40,46,46,a*.8,1,1,1)end
     end
-    self:drawRect(self.panelX+24,self.height*.15+82,self.panelW-48,1,a*.4,.61,.64,.7)
-    self:drawText(self.message or(self.focusRows and"Select a row  |  Left / right adjusts audio"or"Choose an app"),self.panelX+23,self.height*.85+18,.85,.87,.93,a,UIFont.Small)
-    self:drawText("Tab: change focus     Enter: select     Esc: close",self.panelX+23,self.height*.85+43,.62,.68,.77,a,UIFont.Small)
+    self:drawRect(self.panelX,self.panelY+self.panelH-78,self.panelW,1,a*.30,.54,.53,.53)
+    self:drawText(self.message or(self.focusRows and"Select a row  |  Left / right adjusts audio"or"Choose an app"),self.panelX+23,self.panelY+self.panelH-62,.80,.77,.75,a,UIFont.Small)
+    self:drawText(self.gamepad and"Y: change focus     A: select     B: close"or"Tab: change focus     Enter: select     Esc: close",self.panelX+23,self.panelY+self.panelH-31,.64,.64,.64,a,UIFont.Small)
 end
 function Phone:update()
     ISPanelJoypad.update(self)

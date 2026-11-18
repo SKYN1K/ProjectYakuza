@@ -2,6 +2,7 @@ from pathlib import Path
 import json,math,subprocess,sys,hashlib
 ROOT=Path(__file__).resolve().parents[2];W=Path(__file__).parent;MOD=ROOT/'phone-dev/ProjectYakuzaPhoneDev';GAME=Path('F:/SteamLibrary/steamapps/common/ProjectZomboid');WORK=ROOT/'tools/phone-dev-build';WORK.mkdir(exist_ok=True)
 subprocess.run([sys.executable,str(W/'build_phone_dev_assets.py'),'--validate'],check=True)
+subprocess.run([sys.executable,str(W/'build_phone_font.py'),'--validate'],check=True)
 d=json.loads((MOD/'docs/assets.json').read_text());contract=WORK/'vertices.tsv';contract.write_text(''.join('\t'.join(str(x)for x in p+n+uv)+'\n'for p,n,uv in zip(d['exportedPositions'],d['exportedNormals'],d['uv'])))
 inputs=[];cases=[]
 points=[[-.3905,5.7124272,-3.2274276],[-.3905,5.7124272,3.2274276],[-.3905,-5.7664201,3.2274276],[-.3905,-5.7664201,-3.2274276]]
@@ -22,7 +23,7 @@ subprocess.run([*java,'PhoneDevNativeProbe',str((MOD/'42/media').resolve()),str(
 references=json.loads(output.read_text());assert len(cases)==len(references)
 for case,reference in zip(cases,references):case['native']=reference
 (WORK/'cases.json').write_text(json.dumps(cases,separators=(',',':')))
-subprocess.run([*java,'AttackEffectProbe',*[str(p.resolve())for p in sorted((MOD/'42/media/textures').rglob('*.png'))]],cwd=W,check=True)
-required=MOD/'42/mod.info';assert 'require=ProjectYakuza'in required.read_text()and'version=0.1.1'in required.read_text()
+subprocess.run([*java,'AttackEffectProbe',*[str(p.resolve())for p in sorted((MOD/'42/media/textures').rglob('*.png'))],str(GAME/'media/fonts/EN/2x/zomboidSmall_0.png'),str(ROOT/'combat/ProjectYakuza/42/media/textures/ProjectYakuza/HeatHUD/OriginalDragonAtlas.png')],cwd=W,check=True)
+required=MOD/'42/mod.info';assert 'require=ProjectYakuza'in required.read_text()and'version=0.1.2'in required.read_text()
 for name,row in d['images'].items():assert hashlib.sha256((MOD/row['output']).read_bytes()).hexdigest()==row['sha256']
 print('PASS phone dev source assets, original pixels, native geometry/UVs and',len(cases),'projection references; separate shared-combat dependency')

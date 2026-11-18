@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [string]$Version = '0.1.1',
+    [string]$Version = '0.1.2',
     [string]$Repo = 'SKYN1K/ProjectYakuza',
     [string]$GhPath = 'gh',
     [string]$PythonPath = 'python',
@@ -33,7 +33,7 @@ try {
     if (-not $SkipLocalInstall) { $build += '--install' }
     & $PythonPath @build
     if ($LASTEXITCODE -ne 0) { throw 'Phone runtime package or installation failed.' }
-    & git add -A -- .gitignore phone-dev/ProjectYakuzaPhoneDev tools/Build-PhoneDev.py tools/Publish-PhoneDevRelease.ps1 tools/combat-tests/build_phone_dev_assets.py tools/combat-tests/validate_phone_dev.py tools/combat-tests/PhoneDevNativeProbe.java tools/combat-tests/build_phone_dev_tests.py tools/combat-tests/phone-dev-test-fixture.lua tools/combat-tests/AttackEffectProbe.java
+    & git add -A -- .gitignore phone-dev/ProjectYakuzaPhoneDev tools/Build-PhoneDev.py tools/Publish-PhoneDevRelease.ps1 tools/combat-tests/build_phone_dev_assets.py tools/combat-tests/build_phone_font.py tools/combat-tests/validate_phone_dev.py tools/combat-tests/PhoneDevNativeProbe.java tools/combat-tests/build_phone_dev_tests.py tools/combat-tests/phone-dev-test-fixture.lua tools/combat-tests/AttackEffectProbe.java
     if ($LASTEXITCODE -ne 0) { throw 'Phone git staging failed.' }
     & git diff --cached --check
     if ($LASTEXITCODE -ne 0) { throw 'Phone staged whitespace validation failed.' }

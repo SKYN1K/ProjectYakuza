@@ -6,7 +6,7 @@ local function check(v,m)checks=checks+1;assert(v,m)end
 local function near(a,b,e)return math.abs(a-b)<(e or .00002)end
 local function event()local e={hooks={}};function e.Add(fn)e.hooks[fn]=true end;return e end
 Events={OnGameStart=event(),OnSave=event(),OnMainMenuEnter=event()}
-ProjectYakuza={VERSION="0.128.0"}
+ProjectYakuza={VERSION="0.129.0"}
 do local _="ProjectYakuzaFixture:PHONEASSETS" end
 do local _="ProjectYakuzaFixture:PHONEMATH" end
 local PY=ProjectYakuza;local D=PY.PhoneDev;local M=D.Math
@@ -79,11 +79,13 @@ function Base:clearStencilRect()self.stencil=false end
 function Base:drawRect(x,y,w,h,a)check(w>=0 and h>=0 and a>=0 and a<=1,'UI rectangles stay finite and translucent');draws=draws+1 end
 function Base:drawText(text)check(type(text)=='string','UI labels stay readable strings');draws=draws+1 end
 Base.drawTextCentre=Base.drawText
+Base.drawTextRight=Base.drawText
 function Base:drawTextureAllPoint(texture,x1,y1,x2,y2,x3,y3,x4,y4,r,g,b,a)check(texture~=nil and a>=0 and a<=1 and x1==x1 and y4==y4,'projected original textures stay finite');draws=draws+1;projectedDraws=projectedDraws+1 end
 function Base:drawTextureScaled()draws=draws+1 end
 function Base:drawSubTexture()draws=draws+1 end
 ISPanel=Base:derive('ISPanel');ISPanelJoypad=Base:derive('ISPanelJoypad');ISUI3DScene=Base:derive('ISUI3DScene')
-getTexture=function(path)return path end
+local glyphSplits=0;local fontReady=true
+getTexture=function(path)return {path=path,isReady=function()return fontReady end,split=function(self,name,x,y,w,h)glyphSplits=glyphSplits+1;return {path=self.path,name=name,x=x,y=y,w=w,h=h}end}end
 local dragon={id='dragon_of_dojima',name='Dragon of Dojima'};local other={id='other',name='Other Style'}
 PY.styles={dragon_of_dojima=dragon,other=other};PY.getStyle=function(id)return PY.styles[id]end;PY.listStyles=function()return {dragon,other}end
 PY.getPlayerStyle=function(p)return PY.styles[p.style]or dragon end;PY.isEquipped=function(p)return p.equipped end;PY.isStyleToken=function(item)return item.token==true end;PY.isBusy=function(p)return p.busy==true end
@@ -114,9 +116,10 @@ local original=function(who)legacy=legacy+1;PY.StyleSelector.setup={legacy=true,
 PY.StyleSelector.openSetup=original
 setJoypadFocus=function(num,panel)local state=JoypadState.players[num+1];state.focus=panel;if panel and panel.onGainJoypadFocus then panel:onGainJoypadFocus(state)end end
 do local _="ProjectYakuzaFixture:PHONEDATA" end
+do local _="ProjectYakuzaFixture:PHONEFONT" end
 do local _="ProjectYakuzaFixture:PHONEPANEL" end
 do local _="ProjectYakuzaFixture:PHONEBOOT" end
-check(D.compatible('0.128.0')and D.compatible('1.0.0')and not D.compatible('0.127.0')and not D.compatible('invalid'),'dev menu enforces its shared polished combat baseline')
+check(D.compatible('0.129.0')and D.compatible('1.0.0')and not D.compatible('0.128.0')and not D.compatible('invalid'),'dev menu enforces its shared polished combat baseline')
 D.install();D.install();check(PY.StyleSelector.openSetup==D.open and D.legacyOpenSetup==original,'menu hook installs once and preserves the original settings')
 check(D.open(p),'render timing regression opens the phone')
 local smooth=D.panel;local priorOpen=0
@@ -133,8 +136,19 @@ local function advance(ms)for i=1,math.ceil(ms/20)do clock=clock+20;if D.panel t
 local function open()check(D.open(p),'phone opens through the optional menu hook');advance(600);return D.panel end
 local panel=open();check(panel.page==2 and panel.wantsKeys and manager[panel],'equipment is the saved-reference default and input belongs to the visible phone')
 panel:prerender();panel.screen:prerender();panel.rows:prerender();check(draws>50 and not panel.rows.stencil,'native phone screen and page draw without leaking clipping')
-projectedDraws=0;panel.screen:prerender();check(projectedDraws<=39,'phone screen submits at most thirty-nine quads instead of fifty-seven')
+projectedDraws=0;panel.screen:prerender();check(projectedDraws<=260,'projected labels and phone tiles have a bounded draw budget')
 nameReads=0;panel:refresh();check(nameReads==#inventory.items+1,'inventory sort reads each weapon name once instead of crossing to Java for every comparison')
+local splits=glyphSplits;panel.screen:prerender();check(glyphSplits==splits,'original font glyph regions are cached across render frames')
+for i,color in ipairs(D.appColors)do if i~=4 then check(color[1]<.9 and color[2]<.9 and color[3]<.9,'every monochrome app has a readable colour on its white tile')end end
+local layout=D.Font.layout('Styles',22,94);local glyphDraws={}
+D.Font.draw(function(_,q,tex,x,y,w,h,r,g,b,a)glyphDraws[#glyphDraws+1]={q=q,tex=tex,x=x,y=y,w=w,h=h}end,panel.screen,panel.screen.quad,layout,57,237,1)
+check(#glyphDraws==6 and layout.width<=94,'phone labels use original glyph textures rather than unrotated native captions')
+for _,g in ipairs(glyphDraws)do
+ check(g.tex.path==D.Font.path and g.tex.w>0 and g.q==panel.screen.quad,'label glyphs sample original font pixels and share the phone screen projection')
+ local x1,y1=M.point(g.q,g.x/320,g.y/568);local x2,y2=M.point(g.q,(g.x+g.w)/320,g.y/568)
+ check(math.abs(y2-y1)>.001 and x2>x1,'letters tilt and scale along the phone surface instead of floating upright')
+end
+fontReady=false;D.Font.glyphs[64]=nil;check(not D.Font.texture(64),'asynchronous atlas readiness never splits an unloaded texture');fontReady=true
 local scans=inventoryScans;advance(1200);check(inventoryScans==scans,'inventory is not rebuilt repeatedly while browsing a static phone');advance(400);check(inventoryScans==scans+1,'carried items still refresh while the menu stays open')
 local pref=D.preferences(p);pref.tilt=false;advance(20);local writes=vectorWrites;advance(100);check(vectorWrites==writes,'settled phone avoids rewriting unchanged native model transforms');pref.tilt=true
 check(panel.rows:onMouseWheel(3)==true and panel.rows.offset>0 and panel:onMouseWheel(1)==true,'inventory wheel scrolls and cannot zoom the world')
@@ -155,5 +169,5 @@ viewportWidth=900;viewportHeight=1000;panel=open();check(panel.panelW>300 and pa
 p.joypad=0;local prior={};JoypadState.players[1]={focus=prior};panel=open();check(panel.gamepad and JoypadState.players[1].focus==panel,'controller focus moves to the dev menu');panel:onJoypadDown(Joypad.YButton);check(panel.focusRows,'controller focus changes between phone and list');panel:onJoypadDown(Joypad.BButton);advance(400);check(JoypadState.players[1].focus==prior and not D.panel,'closing restores the previous controller focus');p.joypad=-1;JoypadState.players[1]=nil
 failModel=true;check(D.open(p)and legacy==2 and D.panel==nil and PY.StyleSelector.setup.legacy,'a native model failure restores the old menu without retaining input');failModel=false;PY.StyleSelector.setup:close()
 check(panel:isKeyConsumed(Keyboard.KEY_ESCAPE)and not panel:isKeyConsumed(Keyboard.KEY_W),'phone keys are consumed without disabling player movement')
-check(PY.VERSION=='0.128.0'and PY.Heat.stocks(p)==2,'dev interface does not replace combat version or grant heat')
+check(PY.VERSION=='0.129.0'and PY.Heat.stocks(p)==2,'dev interface does not replace combat version or grant heat')
 return 'PASS '..checks..' native projection, inverse input, alpha centring, pages, scrolling, options, actions, fallback and lifecycle assertions'
