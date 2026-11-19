@@ -38,7 +38,7 @@ IsoSprite={CreateSprite=function()
   self.texture={width=width,getHeight=function()return s.height end,setWidth=function(t,w)t.width=w end}
  end
  function s:getTextureForFrame()return self.texture end
- function s:LoadFramesNoDirPageDirect(path,kind)self.height=kind=='smoke'and 64 or 32 end
+ function s:LoadFramesNoDirPageDirect(path,kind)self.height=kind=='smoke'and 64 or 32;self.texture={width=self.height,getHeight=function()return s.height end}end
  function s:setAnimate()end
  function s:update()updated=updated+1 end
  return s
@@ -377,6 +377,14 @@ check(F.bursts[2].variant~=burst.variant,'adjacent hits change their burst silho
 check(F.puffs[1].additive==true,'opaque-black original spark sheet uses additive drawing instead of a smoke blend')
 for _,b in ipairs(F.bursts)do for _,point in ipairs(b.points)do if point.puff and point.ox==-64 then check(point.additive,'black-backed burst cannot draw an opaque rectangle')end end end
 clock=clock+40;draws={};F.render();local emittedPoint
+for _,b in ipairs(F.bursts)do for _,point in ipairs(b.points)do
+ for _,draw in ipairs(draws)do if draw.instance==point.instance then
+  check(draw.alpha<=.32,'contact effects remain below the washed-out white opacity')
+  if point.flash then check(not draw.additive and draw.scale<=.18*Core.getTileScale(),'contact flash uses a small normally blended translucent source')
+  elseif point.additive then check(draw.additive and draw.alpha<=.22,'opaque-black spark sources stay additive at restrained opacity')
+  else check(not draw.additive,'transparent contact sources do not accumulate a white additive glare')end
+ end end
+end end
 for _,d in ipairs(draws)do if d.instance==burst.points[1].instance then emittedPoint=d end end
 check(emittedPoint and near(emittedPoint.x,hx+vx*.04-vy*burst.points[1].curve*.04^2)and near(emittedPoint.y,hy+vy*.04+vx*burst.points[1].curve*.04^2),'sparks leave the hand with a world-space trajectory')
 p.angle=p.angle+2;p.x=p.x+1;paused=true;clock=clock+500;draws={};F.render()

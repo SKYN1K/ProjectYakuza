@@ -1,13 +1,22 @@
 require "ProjectYakuza/Registry"
-local W={}
+require "ProjectYakuza/TextureWarmup"
+local W={sprites=setmetatable({}, {__mode="k"})}
 ProjectYakuza.WorldEffects=W
 
 function W.detached(sprite,scale,speed)
     local instance=IsoSpriteInstance.get(sprite)
+    W.sprites[instance]=sprite
     instance:setScale(scale,scale);instance:setFrameSpeedPerFrame(speed or 0)
     return instance
 end
+function W.ready(instance)
+    local sprite=W.sprites[instance]
+    if not sprite or not sprite.getTextureForFrame then return true end
+    local texture=sprite:getTextureForFrame(0,IsoDirections.N)
+    return texture and(not texture.isReady or texture:isReady())or false
+end
 function W.renderCentered(character,instance,frameHeight,scale,x,y,color,anchorX,anchorY,anchorZ)
+    if not W.ready(instance)then return end
 
     anchorX,anchorY,anchorZ=anchorX or 0,anchorY or 0,anchorZ or 0
     local tile=Core.getTileScale()
@@ -25,6 +34,7 @@ function W.attach(character,sprite,frameHeight,scale,height,loop,speed,horizonta
     character:AttachExistingAnim(sprite,math.floor(x+0.5),math.floor(y+0.5),loop,0,false,0)
     local list=character:getAttachedAnimSprite()
     local instance=list:get(list:size()-1)
+    W.sprites[instance]=sprite
     instance:setScale(scale,scale)
     instance:setFrameSpeedPerFrame(speed)
     return instance

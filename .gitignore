@@ -414,5 +414,8 @@
 !tools/combat-tests/build_phone_dev_tests.py
 !tools/combat-tests/phone-dev-test-fixture.lua
 !tools/combat-tests/build_phone_font.py
+!tools/combat-tests/phone_source_assets.py
+!tools/combat-tests/build_texture_warmup.py
+!tools/combat-tests/texture-warmup-test-fixture.lua
 !tools/Build-PhoneDev.py
 !tools/Publish-PhoneDevRelease.ps1

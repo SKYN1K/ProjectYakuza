@@ -49,6 +49,8 @@ function H:prerender()
     if not p or p:isDead() or not ProjectYakuza.isEquipped(p) then ProjectYakuza.StyleUI.releaseAll(self);return end
     if ProjectYakuza.StyleUI.render("heat",p,self) then return end
     if ProjectYakuza.getPlayerStyle(p).heatHud~="yakuza6" or not ProjectYakuza.Heat.enabled(p) then return end
+    local assets=H.loadAssets()
+    for _,key in ipairs({"atlas","combat","healthFrame","healthEmpty"})do local texture=assets[key];if texture and texture.isReady and not texture:isReady()then return end end
 
     local renderer=SpriteRenderer.instance;local previous=renderer:getDoAdditive()
     renderer:setDoAdditive(false)

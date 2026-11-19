@@ -319,6 +319,7 @@ end
 local function drawPoint(p,s,index,x,y,z,alpha,color)
     if alpha<=.001 then return end
     local point=s.points[index]
+    if not PY.WorldEffects.ready(point.instance)then return end
     if point.alpha~=alpha then point.instance:SetAlpha(alpha);point.instance:SetTargetAlpha(alpha);point.alpha=alpha end
     SpriteRenderer.instance:setDoAdditive(point.additive==true)
     point.instance:render(p,x,y,z,IsoDirections.N,0,-point.height*point.scale/2-F.coatOffset(),color)
@@ -404,7 +405,7 @@ function F.hit(p,victim,strong,charged,anchor)
     for i=1,16 do
         local puff=i>=13 and i<=15 and F.puffs[(puffStart+i-13)%#F.puffs+1]
         local flash=i==16;local gaiden=i<=12 and i%2==1
-        local scale=(flash and .19 or puff and(.065+random()*.05)or .045+random()*.06)*(charged and 1.20 or strong and 1.10 or 1)*tile
+        local scale=(flash and .15 or puff and(.065+random()*.05)or .045+random()*.06)*(charged and 1.20 or strong and 1.10 or 1)*tile
         local sp=flash and F.flash or puff and puff.sprite or gaiden and F.gaidenSpark or F.streak
         local instance=PY.WorldEffects.detached(sp,scale,0)
         local texture=compactTextures[sp];local widthScale=texture and 64/65 or 1;instance:setScale(scale*widthScale,scale)
@@ -412,7 +413,7 @@ function F.hit(p,victim,strong,charged,anchor)
         if b.variant==1 then turn=angle+(i-6.5)*.18+(random()-.5)*.6;speed=speed*1.2
         elseif b.variant==2 then speed=speed*.65;drive=drive*.6
         elseif b.variant==3 then turn=angle+(i%2==0 and 1 or -1)*(.5+random()*.8);speed=speed*1.05 end
-        b.points[i]={instance=instance,scale=scale,baseScale=scale,texture=texture,widthScale=widthScale,puff=puff~=false and puff~=nil,flash=flash,additive=not puff or puff.additive==true,
+        b.points[i]={instance=instance,scale=scale,baseScale=scale,texture=texture,widthScale=widthScale,puff=puff~=false and puff~=nil,flash=flash,additive=puff and puff.additive==true or not puff and not flash and not gaiden,
             vx=math.cos(turn)*speed+bx*drive,vy=math.sin(turn)*speed+by*drive,vz=.25+random()*.9+bz*drive*.5,
             life=flash and .16 or puff and(.22+random()*.12)or .55+random()*.45,delay=puff and(i-13)*14 or 0,curve=(random()-.5)*(b.variant==3 and 5 or 3.2),
             ox=puff and puff.ox or 0,oy=puff and puff.oy or flash and -32 or gaiden and -32 or -48}
@@ -428,9 +429,9 @@ function F.drawBursts(now,paused,hidden)
         elseif not hidden then
             for _,point in ipairs(b.points)do
                 local age=b.age-point.delay;local k=age/(b.life*point.life)
-                if k>=0 and k<1 then
+                if k>=0 and k<1 and PY.WorldEffects.ready(point.instance)then
                     local t=age/1000
-                    local alpha=(point.flash and .70 or point.puff and .20/(1+point.delay/15)or .72)*(1-k)^1.5
+                    local alpha=(point.flash and .30 or point.puff and(point.additive and .08 or .16)/(1+point.delay/15)or point.additive and .22 or .32)*(1-k)^1.5
                     point.instance:SetAlpha(alpha);point.instance:SetTargetAlpha(alpha)
                     SpriteRenderer.instance:setDoAdditive(point.additive==true)
                     if point.puff or point.flash then

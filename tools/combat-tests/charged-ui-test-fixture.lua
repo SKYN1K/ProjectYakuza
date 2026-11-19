@@ -285,12 +285,14 @@ end
 local before=disposed;PY.activeActions[p]=nil;E.update(p)
 check(not E.states[p] and not E.hooked and disposed==before+12,'ending charge disposes particles and removes render hook')
 do local _="ProjectYakuzaFixture:HITS" end
+local modernHit=PY.AttackEffects.hit;PY.AttackEffects.hit=nil
 PY.HitEffects.spawn(p,p,true,true)
 local burst=PY.HitEffects.bursts[1]
 check(#burst.emitters==10 and burst.charged,'confirmed charged impact selects bounded core, eight original sparks and one subtle source ring')
 PY.HitEffects.render();check(burst.emitters[2].instance.color.b==1,'charged impact uses blue world tint')
 before=disposed;PY.HitEffects.clear(p)
 check(#PY.HitEffects.bursts==0 and disposed==before+10,'impact cleanup releases every world sprite')
+PY.AttackEffects.hit=modernHit
 
 local hudDraws={};ISPanel={}
 function ISPanel:derive()local c={};c.__index=c;setmetatable(c,{__index=self});return c end
