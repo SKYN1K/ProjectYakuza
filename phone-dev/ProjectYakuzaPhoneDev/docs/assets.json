@@ -178,6 +178,30 @@
         25
       ]
     },
+    "dragon": {
+      "source": "previews\\y6-phone-menu\\dragon.png",
+      "sourceSha256": "c2e0c5484d3ffa8df9b2838b7be3ff5780ad86eb53f3947e8bb2736967987dcd",
+      "output": "42\\media\\textures\\ProjectYakuzaPhoneDev\\dragon.png",
+      "sha256": "c2e0c5484d3ffa8df9b2838b7be3ff5780ad86eb53f3947e8bb2736967987dcd",
+      "size": [
+        258,
+        151
+      ],
+      "alphaBounds": [
+        0,
+        2,
+        252,
+        146
+      ],
+      "sourceAtlas": "pausemenu.dds",
+      "sourceAtlasSha256": "8a81983162ed9edeea4d99dd7bc89c048407f0481c6c05aabe621d658e8c4fc0",
+      "sourceCrop": [
+        510,
+        0,
+        768,
+        151
+      ]
+    },
     "Pixel": {
       "source": "previews\\y6-phone-menu\\pause_cursor.png",
       "sourceSha256": "508e92238640e05034d4f6ac7d906a3288e82dbe047b7e8f55ff4d993a7523ef",

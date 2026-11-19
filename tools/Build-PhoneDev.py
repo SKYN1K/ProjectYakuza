@@ -9,7 +9,7 @@ def build(release,install=False):
  assets=(MOD/'42/media/lua/client/ProjectYakuzaPhoneDev/Assets.lua').read_text();assert 'VERSION="'+release+'"'in assets
  required=re.search(r'requiredCombatVersion="([^"]+)"',assets)[1];base_version=version(BASE);assert tuple(map(int,base_version.split('.')))>=tuple(map(int,required.split('.')))
  assert 'require=ProjectYakuza'in(MOD/'42/mod.info').read_text()
- files=package.runtime_files(MOD);assert len(files)==22
+ files=package.runtime_files(MOD);assert len(files)==25
  dist=ROOT/'dist';dist.mkdir(exist_ok=True);archive=dist/(MOD_ID+'-B42-v'+release+'.zip');package.write_zip(archive,MOD_ID,files)
  effects={n:sha(BASE/'42/media/lua/client/ProjectYakuza'/n)for n in ['AttackEffects.lua','ParentPosePrediction.lua','ParentPoseTracks.lua']}
  report={'version':release,'modId':MOD_ID,'combatVersion':base_version,'requiredCombatVersion':required,'sharedEffects':effects,'files':len(files),'zip':str(archive),'sha256':sha(archive),'runtimeOnly':True,'privacyScanPassed':True}

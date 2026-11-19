@@ -3,6 +3,12 @@ local D=ProjectYakuza.PhoneDev
 local M={width=320,height=568}
 D.Math=M
 function M.clamp(v,a,b)return math.max(a,math.min(b,v))end
+function M.battery(health)
+    local level=M.clamp(tonumber(health)or 0,0,100)/100
+    local r,g,b
+    if level<=.5 then r,g,b=1,.10+1.20*level,.08 else r,g,b=1-1.80*(level-.5),.70+.30*(level-.5),.08+.24*(level-.5)end
+    return level,r,g,b,tostring(math.floor(level*100+.5)).."%"
+end
 function M.ease(v)v=M.clamp(v,0,1);return 1-(1-v)^3 end
 function M.pose(open,px,py,reduce,tilt)
     local amount=reduce and 0 or 1-open

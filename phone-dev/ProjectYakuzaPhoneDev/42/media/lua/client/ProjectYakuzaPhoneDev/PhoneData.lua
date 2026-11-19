@@ -5,13 +5,27 @@ require "ProjectYakuza/Menu"
 require "ISUI/ISInventoryPaneContextMenu"
 local PY=ProjectYakuza
 local D=PY.PhoneDev
-D.pages={{id="styles",label="Styles",description="Styles and quick slots."},{id="equipment",label="Equipment",description="Weapons in your inventory."},{id="combat",label="Combat",description="Condition and combat rules."},{id="heat",label="Heat",description="Heat and Extreme Heat."},{id="audio",label="Audio",description="Music, impacts and voices."},{id="effects",label="Effects",description="Choose your visual effects."},{id="grabs",label="Grabs",description="Grabs, throws and Heat Actions."},{id="controls",label="Controls",description="Your current combat bindings."},{id="settings",label="Settings",description="Phone and advanced settings."}}
+D.pages={{id="styles",label="Styles",description="Styles and quick slots."},{id="equipment",label="Items",description="Skills overview. Select Items to browse your inventory."},{id="combat",label="Skills",description="Your Project Zomboid skills and XP progress."},{id="heat",label="Heat",description="Heat and Extreme Heat."},{id="audio",label="Audio",description="Music, impacts and voices."},{id="effects",label="Effects",description="Choose your visual effects."},{id="grabs",label="Grabs",description="Grabs, throws and Heat Actions."},{id="controls",label="Controls",description="Your current combat bindings."},{id="settings",label="Settings",description="Phone and advanced settings."}}
 function D.preferences(p)
     local data=p:getModData()
     if type(data.ProjectYakuzaPhoneDev)~="table"then data.ProjectYakuzaPhoneDev={page=2,tilt=true,reduceMotion=false}end
     return data.ProjectYakuzaPhoneDev
 end
 local function status(v)return v and "On"or "Off"end
+function D.skillRows(p)
+    local rows={};local perks=PerkFactory.PerkList
+    for i=0,perks:size()-1 do
+        local perk=perks:get(i)
+        if perk:getParent()~=Perks.None then
+            local level=p:getPerkLevel(perk:getType());local previous=0
+            for n=1,level do previous=previous+perk:getXpForLevel(n)end
+            local progress=level>=10 and 1 or D.Math.clamp((p:getXp():getXP(perk:getType())-previous)/math.max(1,perk:getXpForLevel(level+1)),0,1)
+            rows[#rows+1]={label=perk:getName(),detail="Level "..level.." / 10",level=level,progress=progress}
+        end
+    end
+    table.sort(rows,function(a,b)return a.label<b.label end)
+    return rows
+end
 local function add(rows,label,detail,action,adjust)
     rows[#rows+1]={label=tostring(label),detail=tostring(detail or ""),action=action,adjust=adjust}
 end
@@ -34,30 +48,13 @@ function D.volume(id,delta)
     option:setValue(D.Math.clamp(option:getValue()+delta,option.min,option.max));options:apply();PZAPI.ModOptions:save();return true
 end
 function D.rows(p,page)
+    if page=="equipment"or page=="combat"then return D.skillRows(p)end
     local rows={};local style=PY.getPlayerStyle(p);local md=p:getModData();local binding=PY.Bindings.label
     if page=="styles"then
         add(rows,"Current style",PY.isEquipped(p)and style and style.name or "No style equipped")
         for _,entry in ipairs(PY.listStyles())do local id=entry.id;add(rows,"Equip "..entry.name,"Switch to this style",function()return after(p,function()PY.equipStyle(p,id)end)end)end
         for _,side in ipairs({"left","right"})do local slot=side;local current=PY.getStyle(PY.StyleSlots.id(p,side));add(rows,side=="left"and"First style slot"or"Second style slot",(current and current.name or "Empty").."  |  Select to cycle",function()return cycleSlot(p,slot)end)end
         add(rows,"Unequip style","Return to ordinary weapon handling",function()return after(p,function()PY.unequipStyle(p)end)end)
-    elseif page=="equipment"then
-        local held=p:getPrimaryHandItem();add(rows,"In hand",held and held:getDisplayName()or"Empty")
-        local items=p:getInventory():getItems();local weapons={}
-        for i=0,items:size()-1 do local item=items:get(i);if instanceof(item,"HandWeapon")and not PY.isStyleToken(item)then weapons[#weapons+1]={item=item,name=item:getDisplayName()}end end
-        table.sort(weapons,function(a,b)return a.name<b.name end)
-        for _,entry in ipairs(weapons)do local weapon=entry.item;local max=math.max(1,weapon:getConditionMax());add(rows,entry.name,"Condition "..math.floor(weapon:getCondition()/max*100).."%  |  Select to equip",function()
-            if not p:getInventory():contains(weapon)then return false,"That weapon is no longer in your inventory."end
-            return after(p,function()ISInventoryPaneContextMenu.equipWeapon(weapon,true,weapon:isTwoHandWeapon(),p:getPlayerNum())end)
-        end)end
-        if #weapons==0 then add(rows,"No weapons in this container","Weapons in your main inventory appear here.")end
-        add(rows,"Open inventory","Use the normal inventory and containers",function()return after(p,function()local inventory=getPlayerInventory(p:getPlayerNum());if inventory then inventory:setVisible(true)end end)end)
-    elseif page=="combat"then
-        add(rows,"Health",math.floor(p:getBodyDamage():getOverallBodyHealth()+.5).." / 100")
-        add(rows,"Fighting style",style and style.name or"None")
-        add(rows,"Tiger Drop",PY.Sandbox.tigerDrop(style)and"Enabled"or"Disabled by sandbox rules")
-        add(rows,"Tiger Drop window",PY.Sandbox.tigerWindowMs(style).." ms")
-        add(rows,"Tiger Drop cooldown",string.format("%.1f seconds",PY.Sandbox.tigerCooldownMs(style)/1000))
-        add(rows,"Quickstep",binding("quickstep").."  |  Aim and step away from an attack")
     elseif page=="heat"then
         local rules=PY.Heat.rules(p);add(rows,"Heat orbs",PY.Heat.stocks(p).." / "..rules.maxStocks)
         add(rows,"Extreme Heat",status(PY.Heat.isExtreme(p)).."  |  "..binding("extremeHeat"))

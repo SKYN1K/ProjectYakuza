@@ -12,17 +12,19 @@ model=MOD/'42/media/models_X/Static/ProjectYakuzaPhoneDev_Xperia.x';model.parent
 if validate:assert model.read_text()==text
 else:model.write_text(text,newline='\n')
 textures=MOD/'42/media/textures/ProjectYakuzaPhoneDev';textures.mkdir(parents=True,exist_ok=True);images={}
+wallpaper=Image.open(SRC/'pausemenu.dds').convert('RGBA').crop((510,0,768,151));assert Image.open(SRC/'dragon.png').convert('RGBA').tobytes()==wallpaper.tobytes()
 sourceDiffuse=SRC/'source-animation/r_tu_xpra_blu1_ay_d.dds';assert sha(sourceDiffuse)=='6708ebdd01bfa8e6627e0b0c18286da86fdd703bf4e43129cb60564c1b0c6e45';expected=Image.open(sourceDiffuse).convert('RGBA');diffuse=SRC/'source-animation/xperia-diffuse.png';assert Image.open(diffuse).convert('RGBA').tobytes()==expected.tobytes()
-for name,src in {**{n:SRC/(n+'.png')for n in ['styles','equipment','combat','audio','effects','grabs','controls','settings','battery','signal']},'Pixel':SRC/'pause_cursor.png','Xperia':diffuse}.items():
+for name,src in {**{n:SRC/(n+'.png')for n in ['styles','equipment','combat','audio','effects','grabs','controls','settings','battery','signal','dragon']},'Pixel':SRC/'pause_cursor.png','Xperia':diffuse}.items():
  output=textures/(name+'.png')
  if validate:assert output.read_bytes()==src.read_bytes()
  else:shutil.copyfile(src,output)
  image=Image.open(output).convert('RGBA');bbox=image.getchannel('A').getbbox();images[name]={'source':str(src.relative_to(ROOT)),'sourceSha256':sha(src),'output':str(output.relative_to(MOD)),'sha256':sha(output),'size':list(image.size),'alphaBounds':list(bbox)}
+images['dragon'].update(sourceAtlas='pausemenu.dds',sourceAtlasSha256=sha(SRC/'pausemenu.dds'),sourceCrop=[510,0,768,151])
 heat=ROOT/'combat/ProjectYakuza/42/media/textures/ProjectYakuza/HeatActionIconAtlas.png';flame=Image.open(heat).convert('RGBA').crop((64,0,128,80));output=textures/'heat.png'
 if validate:assert Image.open(output).convert('RGBA').tobytes()==flame.tobytes()
 else:flame.save(output)
 images['heat']={'source':str(heat.relative_to(ROOT)),'sourceSha256':sha(heat),'crop':[64,0,128,80],'output':str(output.relative_to(MOD)),'sha256':sha(output),'size':list(flame.size),'alphaBounds':list(flame.getchannel('A').getbbox())}
-assets='ProjectYakuza=ProjectYakuza or {}\nProjectYakuza.PhoneDev=ProjectYakuza.PhoneDev or {}\nProjectYakuza.PhoneDev.VERSION="0.1.2"\nProjectYakuza.PhoneDev.requiredCombatVersion="0.129.0"\nProjectYakuza.PhoneDev.assets={'+','.join('['+json.dumps(n)+']={path='+json.dumps('media/textures/ProjectYakuzaPhoneDev/'+n+'.png')+',width='+str(v['size'][0])+',height='+str(v['size'][1])+',bounds={'+','.join(map(str,v['alphaBounds']))+'}}'for n,v in sorted(images.items()))+'}\n'
+assets='ProjectYakuza=ProjectYakuza or {}\nProjectYakuza.PhoneDev=ProjectYakuza.PhoneDev or {}\nProjectYakuza.PhoneDev.VERSION="0.1.3"\nProjectYakuza.PhoneDev.requiredCombatVersion="0.130.0"\nProjectYakuza.PhoneDev.assets={'+','.join('['+json.dumps(n)+']={path='+json.dumps('media/textures/ProjectYakuzaPhoneDev/'+n+'.png')+',width='+str(v['size'][0])+',height='+str(v['size'][1])+',bounds={'+','.join(map(str,v['alphaBounds']))+'}}'for n,v in sorted(images.items()))+'}\n'
 p=MOD/'42/media/lua/client/ProjectYakuzaPhoneDev/Assets.lua'
 if validate:assert p.read_text()==assets
 else:p.write_text(assets,newline='\n')

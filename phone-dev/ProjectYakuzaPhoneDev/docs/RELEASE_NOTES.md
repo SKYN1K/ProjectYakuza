@@ -1,10 +1,12 @@
-# Project Yakuza Phone (Dev) 0.1.2
+# Project Yakuza Phone (Dev) 0.1.3
 
-Optional add-on for Project Yakuza 0.129.0 or newer. Enable both mods and choose Settings in the style wheel. The shared combat dependency supplies the white, fuller smoke and varied impacts in both setups.
+Requires Project Yakuza 0.130.0 or newer. Enable both mods, then choose Settings in the style wheel.
 
-- Matched the saved reference preview's hierarchy: tilted Xperia at left, coloured app symbols on pale icon plates, orange selection frames, original Heat orbs, and a taller dark right panel with a pale title bar, style header, green section text, fine dividers, aligned values and a footer.
-- Phone text is now projected glyph by glyph onto the display. Labels, the clock, style name, Heat count and prompts follow its rotation, scale and opening pose. The old upright hovering captions are removed. Original PZ font metrics and its unchanged atlas supply the glyphs; native Texture.split and ordinary four-corner UI drawing need no Java bridge or generated text images.
-- Cached glyph textures and label layouts avoid recreating text while animating. The render-cadence fix, bounded drawing, saved preferences, scrolling, input cleanup and existing gameplay actions remain.
-- Offline checks pass 41,215 native-projection/input/text-placement/page/lifecycle assertions. All six Lua modules compile. Native importer checks retain all original geometry and pixels, test normal Lua font-atlas bindings and verify original glyph regions. Package privacy and installed-byte checks are required before release.
+- Selecting or hovering over Items previews the character's real Project Zomboid skills, levels and progress toward the next level. Pressing Items opens a categorized inventory page for weapons, food, medical supplies, clothing and other items. Skills also has a dedicated app. Items are rechecked before native equip or context actions run.
+- The Items page adapts the original Yakuza 6 pause_item scene's ten-frame root fade to a 60 Hz UI clock. Its categories, inventory actions and skills use PZ data. This does not reproduce the full original scene hierarchy, camera or shaders.
+- Original Yakuza 6 English gothic menu glyphs replace the PZ Latin font. The original BC4 coverage strip is retained without resizing; non-Latin text uses native PZ fallback glyphs. Text remains attached to the phone display. Font regions and layouts are cached.
+- Added the original dragon wallpaper, icon plate shadows and edge shading. Filled Heat stocks now use the luminous filled core; empty stocks retain the empty ring. Battery fill, percentage and red-to-green colour follow overall character health.
+- Phone textures warm up at game start. Unready hardware, UI textures and glyphs wait for loading instead of drawing temporary placeholders. Combat 0.130.0 supplies the same texture warm-up and softer zombie contact effects in both builds; white limb smoke is unchanged.
+- Offline validation: 121,936 Kahlua projection/input/menu/lifecycle assertions; 3,510 native UI3DScene projection cases; 4,316 source triangles with native imported geometry and UV checks; 2,031,282 native decoded pixels across 17 textures; original font coverage, wallpaper crop and scene source hashes; and all seven production Lua modules compile. PZ was not launched. Live GPU appearance and performance remain unverified.
 
-PZ was not launched. The preview is adapted to native orthographic UI rendering with world dimming; original Yakuza 6 perspective, blur and shaders are not reproduced. Live appearance and performance still need an in-game check.
+The Flaticon research and proposed category mapping are saved in ICON_CANDIDATES.md. No third-party icons are included. Install ZIPs contain runtime files only; documentation, source extractions, tools and private paths are excluded.

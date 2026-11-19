@@ -1,5 +1,101 @@
 local D=ProjectYakuza.PhoneDev
-local F={path="media/fonts/EN/2x/zomboidSmall_0.png",lineHeight=26,glyphs={},metrics={
+local F={path="media/textures/ProjectYakuzaPhoneDev/Yakuza6Gothic.png",fallbackPath="media/fonts/EN/2x/zomboidSmall_0.png",lineHeight=40,glyphs={},metrics={
+[32]={43,1,1,1,0,0,20},
+[33]={92,4,5,31,0,3,7},
+[34]={212,2,14,11,0,1,16},
+[35]={295,3,20,35,0,2,22},
+[36]={338,4,17,34,0,3,19},
+[37]={422,6,18,30,0,5,20},
+[38]={505,7,19,28,0,6,21},
+[39]={589,1,9,11,0,0,11},
+[40]={680,3,11,36,0,2,13},
+[41]={800,3,12,36,0,2,14},
+[42]={883,9,20,24,0,8,22},
+[43]={926,8,18,26,0,7,20},
+[44]={1052,30,6,10,0,29,8},
+[45]={1136,19,18,4,0,18,20},
+[46]={1178,30,6,5,0,29,8},
+[47]={1262,3,18,36,0,2,20},
+[48]={1346,6,17,29,0,5,19},
+[49]={1432,7,10,28,0,6,12},
+[50]={1515,6,16,29,0,5,18},
+[51]={1640,6,17,29,0,5,19},
+[52]={1724,7,18,28,0,6,20},
+[53]={1766,7,17,28,0,6,19},
+[54]={1850,6,17,29,0,5,19},
+[55]={1977,7,16,28,0,6,18},
+[56]={2060,6,18,29,0,5,20},
+[57]={2144,6,17,29,0,5,19},
+[58]={2234,16,5,19,0,15,7},
+[59]={2276,16,6,24,0,15,8},
+[60]={2354,2,18,38,0,1,20},
+[61]={2481,15,15,12,0,14,17},
+[62]={2564,2,18,38,0,1,20},
+[63]={2648,4,18,31,0,3,20},
+[64]={2689,6,20,30,0,5,22},
+[65]={2816,7,18,28,0,6,20},
+[66]={2858,7,18,28,0,6,20},
+[67]={2942,6,18,29,0,5,20},
+[68]={3068,7,18,28,0,6,20},
+[69]={3152,7,17,28,0,6,19},
+[70]={3236,7,17,28,0,6,19},
+[71]={3278,6,18,29,0,5,20},
+[72]={3362,7,17,28,0,6,19},
+[73]={3453,7,4,28,0,6,6},
+[74]={3531,7,15,28,0,6,17},
+[75]={3614,7,17,28,0,6,19},
+[76]={3698,7,17,28,0,6,19},
+[77]={3823,7,19,28,0,6,21},
+[78]={3908,7,17,28,0,6,19},
+[79]={3950,6,18,29,0,5,20},
+[80]={4034,7,17,28,0,6,19},
+[81]={4118,6,18,33,0,5,20},
+[82]={4202,7,18,28,0,6,20},
+[83]={4328,6,18,29,0,5,20},
+[84]={4370,7,17,28,0,6,19},
+[85]={4496,7,17,28,0,6,19},
+[86]={4538,7,18,28,0,6,20},
+[87]={4663,7,19,28,0,6,21},
+[88]={4706,7,17,28,0,6,19},
+[89]={4790,7,18,28,0,6,20},
+[90]={4916,7,17,28,0,6,19},
+[91]={5006,3,11,36,0,2,13},
+[92]={5043,7,16,28,0,6,18},
+[93]={5126,3,11,36,0,2,13},
+[94]={5213,1,12,5,0,0,14},
+[95]={5293,38,20,2,0,37,22},
+[96]={5382,1,10,6,0,0,12},
+[97]={5462,14,17,21,0,13,19},
+[98]={5547,7,16,28,0,6,18},
+[99]={5631,14,16,21,0,13,18},
+[100]={5757,7,16,28,0,6,18},
+[101]={5799,14,16,21,0,13,18},
+[102]={5926,6,14,29,0,5,16},
+[103]={5966,14,17,25,0,13,19},
+[104]={6051,7,15,28,0,6,17},
+[105]={6182,7,5,28,0,6,7},
+[106]={6263,7,9,32,0,6,11},
+[107]={6345,7,16,28,0,6,18},
+[108]={6435,7,4,28,0,6,6},
+[109]={6469,14,19,21,0,13,21},
+[110]={6597,14,15,21,0,13,17},
+[111]={6680,14,17,21,0,13,19},
+[112]={6765,14,16,25,0,13,18},
+[113]={6807,14,16,25,0,13,18},
+[114]={6893,14,11,21,0,13,13},
+[115]={6975,14,16,21,0,13,18},
+[116]={7060,8,13,27,0,7,15},
+[117]={7185,15,16,20,0,14,18},
+[118]={7226,15,17,20,0,14,19},
+[119]={7309,15,19,20,0,14,21},
+[120]={7436,15,17,20,0,14,19},
+[121]={7479,15,16,24,0,14,18},
+[122]={7562,15,17,20,0,14,19},
+[123]={7652,3,11,36,0,2,13},
+[124]={7737,1,3,39,0,0,5},
+[125]={7856,3,12,36,0,2,14},
+[126]={7939,1,20,10,0,0,22},
+},fallback={
 [0]={510,35,1,1,0,0,0},
 [13]={297,333,2,1,0,25,4},
 [32]={504,315,2,1,0,25,4},
@@ -1140,24 +1236,42 @@ local F={path="media/fonts/EN/2x/zomboidSmall_0.png",lineHeight=26,glyphs={},met
 D.Font=F
 function F.layout(text,size,maxWidth)
     text=tostring(text or "");local glyphs={};local width=0
-    for i=1,math.min(#text,64)do
-        local code=string.byte(text,i);local m=F.metrics[code]or F.metrics[63]
-        glyphs[#glyphs+1]={code=F.metrics[code]and code or 63,x=width+m[5],y=m[6],w=m[3],h=m[4]};width=width+m[7]
+    local i=1
+    while i<=#text and #glyphs<64 do
+        local code=string.byte(text,i);local count=1
+        if code>=240 then code=code-240;count=4 elseif code>=224 then code=code-224;count=3 elseif code>=192 then code=code-192;count=2 end
+        for j=1,count-1 do local byte=string.byte(text,i+j);if not byte or byte<128 or byte>191 then code=63;count=1;break end;code=code*64+byte-128 end
+        i=i+count
+        if not F.metrics[code]and not F.fallback[code]then code=63 end
+        local m=F.metrics[code]or F.fallback[code];local unit=F.metrics[code]and 1 or F.lineHeight/26
+        glyphs[#glyphs+1]={code=(F.metrics[code]or F.fallback[code])and code or 63,x=width+m[5]*unit,y=m[6]*unit,w=m[3]*unit,h=m[4]*unit};width=width+m[7]*unit
     end
     local scale=math.min(size/F.lineHeight,(maxWidth or 300)/math.max(1,width))
     return {glyphs=glyphs,width=width*scale,scale=scale}
 end
 function F.texture(code)
-    if F.glyphs[code]then return F.glyphs[code]end
-    F.atlas=F.atlas or getTexture(F.path)
-    if not F.atlas or not F.atlas:isReady()then return end
-    local m=F.metrics[code]
+    if F.glyphs[code]then local tex=F.glyphs[code];if not tex.isReady or tex:isReady()then return tex end;return end
+    local original=F.metrics[code]~=nil;local key=original and "atlas"or"fallbackAtlas"
+    F[key]=F[key]or getTexture(original and F.path or F.fallbackPath)
+    local atlas=F[key];if not atlas or not atlas:isReady()then return end
+    local m=F.metrics[code]or F.fallback[code]
     if not m or m[3]<=0 or m[4]<=0 then return end
-    local tex=F.atlas:split("ProjectYakuzaPhoneDevGlyph"..code,m[1],m[2],m[3],m[4]);F.glyphs[code]=tex;return tex
+    local tex=atlas:split("ProjectYakuzaPhoneDevGlyph"..code,m[1],m[2],m[3],m[4]);F.glyphs[code]=tex;return tex
 end
 function F.draw(drawQuad,panel,q,layout,cx,y,alpha)
     local scale=layout.scale;local left=cx-layout.width/2
     for _,g in ipairs(layout.glyphs)do
         if g.code~=32 then local tex=F.texture(g.code);if tex then drawQuad(panel,q,tex,left+g.x*scale,y+g.y*scale,g.w*scale,g.h*scale,.96,.96,.96,alpha)end end
     end
+end
+function F.flat(panel,text,x,y,r,g,b,a,size,align,maxWidth)
+    maxWidth=maxWidth or(align=="right"and x-18 or align=="center"and math.min(x-10,panel.width-x-10)*2 or panel.width-x-10)
+    panel.fontLayouts=panel.fontLayouts or {};local key=tostring(size)..":"..tostring(maxWidth)..":"..tostring(text)
+    local layout=panel.fontLayouts[key]
+    if not layout then
+        if(panel.fontLayoutCount or 0)>=128 then panel.fontLayouts={};panel.fontLayoutCount=0 end
+        layout=F.layout(text,size,math.max(1,maxWidth));panel.fontLayouts[key]=layout;panel.fontLayoutCount=(panel.fontLayoutCount or 0)+1
+    end
+    local left=align=="right"and x-layout.width or align=="center"and x-layout.width/2 or x
+    for _,glyph in ipairs(layout.glyphs)do if glyph.code~=32 then local tex=F.texture(glyph.code);if tex then panel:drawTextureScaled(tex,left+glyph.x*layout.scale,y+glyph.y*layout.scale,glyph.w*layout.scale,glyph.h*layout.scale,a,r,g,b)end end end
 end
