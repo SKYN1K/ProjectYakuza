@@ -419,3 +419,4 @@
 !tools/combat-tests/texture-warmup-test-fixture.lua
 !tools/Build-PhoneDev.py
 !tools/Publish-PhoneDevRelease.ps1
+!tools/combat-tests/build_phone_presentation_assets.py

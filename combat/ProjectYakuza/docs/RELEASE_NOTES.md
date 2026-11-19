@@ -1,6 +1,7 @@
-# Project Yakuza 0.130.0
+# Project Yakuza 0.131.0
 
-- Softened zombie contact effects: transparent flash and Gaiden spark textures now use normal alpha blending, central flashes are smaller, and contact opacity is reduced. Opaque-black source streaks retain low-opacity additive rendering to avoid black rectangles. Existing varied silhouettes, flight paths and brief lifetimes remain. White limb smoke, limb anchors and the 48-sprite coating budget are unchanged.
-- All 270 supplied combat textures are requested at player creation/game start and retained for reuse. Their original decoded RGBA footprint is 30.57 MiB, excluding native allocation overhead. Loading is queued once without a permanent polling loop. Effect and Heat HUD rendering wait for texture readiness to reduce first-use red/white placeholders. Original texture pixels are unchanged.
-- Shared combat changes also apply when the optional phone development add-on is enabled. The add-on has its own version and ZIP; standalone emotes and the separate voice pack are unchanged.
-- Offline validation passed 29,952 limb/projection/contact-brightness/lifecycle assertions, 818 blood/contact/multiplayer-budget assertions and 275 preload/readiness assertions. Native source texture, pose and importer checks pass, and all 92 production Lua modules compile. Source-comment and runtime privacy checks precede installation/publication. PZ was not launched; final live appearance remains unverified.
+- The single shared binding is now named Heavy attack / finisher throughout the mod controls and the phone's controls page. Tap from neutral for a heavy attack, tap during a combo for its finisher, or hold to charge. The existing saved button/key and context-sensitive routing are preserved; there is no separate heavy-only binding to configure.
+- English mod settings use Heavy attack / finisher button and Heavy attack / finisher key for that same action's mouse/keyboard configuration. The phone reads the shared binding definitions rather than maintaining its own controls list.
+- Offline checks pass 200 charged-heavy, normal-heavy, combo-finisher, HUD and lifecycle assertions, including executing both attack types through the same remapped keyboard binding. All 92 production Lua modules compile. Runtime privacy, source-comment and installation byte checks precede publication. Project Zomboid was not launched.
+
+The optional phone update is version 0.1.4 with its own ZIP. No combat motions, effects, audio assets, standalone emotes or separate voice-pack files change in this release.

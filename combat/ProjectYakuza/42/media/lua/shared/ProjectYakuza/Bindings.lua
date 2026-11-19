@@ -6,7 +6,7 @@ ProjectYakuza.Bindings=B
 B.definitions={
  {id="light",name="Light attack",mode=1},
  {id="heatAction",name="Heat Action (hold RMB, outside combos)",mode=3},
- {id="finisher",name="Finisher (tap) / charged heavy (hold)",mode=3},
+ {id="finisher",name="Heavy attack / finisher (hold to charge)",mode=3},
  {id="runningLight",name="Running attack",mode=1},
  {id="dropkick",name="Running dropkick",mode=3},
  {id="quickstepAttack",name="Quickstep attack",mode=1},

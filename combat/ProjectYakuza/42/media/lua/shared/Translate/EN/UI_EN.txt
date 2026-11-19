@@ -20,9 +20,9 @@ UI_EN = {
 
     UI_ProjectYakuza_Key_heatAction = "Heat Action key",
 
-    UI_ProjectYakuza_Bind_finisher = "Finisher / charged heavy button",
+    UI_ProjectYakuza_Bind_finisher = "Heavy attack / finisher button",
 
-    UI_ProjectYakuza_Key_finisher = "Finisher / charged heavy key",
+    UI_ProjectYakuza_Key_finisher = "Heavy attack / finisher key",
 
     UI_ProjectYakuza_Bind_runningLight = "Running attack button",
 

@@ -56,6 +56,20 @@ PY.Combo.reset(state());state().finisherMove=style.actions.finisher.variants.aft
 H.input(p,true,true,state(),style);H.input(p,false,false,state(),style)
 check(state().queuedDouble==true,'tap release retains double finisher input')
 PY.Combo.reset(state())
+local priorOptions,priorKeys=PY.Bindings.options,isKeyDown;local sharedDown=false
+PY.Bindings.options={getOption=function(_,id)
+ if id=='input_finisher'then return {getValue=function()return 4 end}end
+ if id=='key_finisher'then return {getValue=function()return 47 end}end
+end}
+isKeyDown=function(key)return key==47 and sharedDown end
+sharedDown=true;H.input(p,PY.Bindings.down('finisher'),true,state(),style)
+sharedDown=false;H.input(p,PY.Bindings.down('finisher'),false,state(),style)
+check(state().finisherMove and state().finisherMove.neutralHeavy,'one remapped keyboard binding executes the neutral heavy on release')
+finish();PY.resetPlayer(p,'test');state().step=1;state().finishedAt=clock
+sharedDown=true;H.input(p,PY.Bindings.down('finisher'),true,state(),style)
+sharedDown=false;H.input(p,PY.Bindings.down('finisher'),false,state(),style)
+check(state().queuedFinisher==1,'the same remapped keyboard binding queues the combo finisher')
+PY.Combo.reset(state());PY.Bindings.options=priorOptions;isKeyDown=priorKeys
 local a,c=charge();check(p.blocked and p.ignored and not p.deferred,'charge locks movement, without invulnerability')
 check(PY.blocksNativeAttacks(p) and not PY.attemptAttack(p),'charge blocks native LMB attacks')
 p.x=18;p.y=19;a:update();check(p.x==10 and p.y==12 and not p.moving,'charge anchors player while movement is pressed')
