@@ -26,6 +26,6 @@
   "screenTrianglesOmitted": 56,
   "lightingPolygons": 421,
   "retainedCasingAreaFraction": 0.9617374654012308,
-  "runtimeSha256": "fb002b0317c9a35ad90cfe412cb4b6c66b1a84e0ccf45bf9c37b98fd57b27291",
+  "runtimeSha256": "2cf94be9305fdf65e8c888f35fa298c50011b91de149e5184eb0cde5284ee2a1",
   "operation": "Lighting overlays only. Original coplanar adjacent source triangles merge into convex polygons only when their union area is unchanged. No source mesh, normals, UVs or diffuse pixels change. Original m/n maps supply bounded material-response weights; this is an adaptation rather than the original engine shader. Fully screen-covered faces and subpixel patches are omitted. The native model retains all source geometry."
 }

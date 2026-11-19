@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [string]$Version = '0.1.5',
+    [string]$Version = '0.1.6',
     [string]$Repo = 'SKYN1K/ProjectYakuza',
     [string]$GhPath = 'gh',
     [string]$PythonPath = 'python',

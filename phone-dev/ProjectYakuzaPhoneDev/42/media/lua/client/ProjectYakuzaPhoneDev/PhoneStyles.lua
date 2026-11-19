@@ -39,10 +39,15 @@ function Styles:select(index)
     self.selected=M.clamp(index,1,math.max(1,#self.styles));self.message=nil;self.descriptionOffset=0
     local style=self.styles[self.selected]
     self.theme=style and style.theme or{accent={.62,.66,.73},background={.025,.025,.032},text={.94,.96,.98}}
-    local g=self:layout();for _,entry in ipairs(self.styles)do entry.nameLines=D.Font.wrap(entry.name,22,g.listW-22)end;self.description=D.Font.wrap(style and style.description or"No styles are available.",22,g.w)
+    local g=self:layout();for _,entry in ipairs(self.styles)do entry.nameLines=D.Font.wrap(entry.name,22,g.listW-58)end;self.description=D.Font.wrap(style and style.description or"No styles are available.",22,g.w)
     self:selectPreview(1)
     if self.selected<=self.offset then self.offset=self.selected-1 end
     if self.selected>self.offset+g.listRows then self.offset=self.selected-g.listRows end
+end
+function Styles:toggleFavorite(index)
+    local entry=self.styles[index];if not entry then return end
+    self.favorites[entry.id]=not self.favorites[entry.id]or nil
+    PY.UIAudio.play(self.host.player,"confirm")
 end
 function Styles:activate()
     if self.closing or self.alpha<.99 then return end
@@ -62,6 +67,7 @@ function Styles:onKeyPress(key)
     elseif key==Keyboard.KEY_DOWN then self:select(self.selected+1)
     elseif key==Keyboard.KEY_LEFT then self.action=1
     elseif key==Keyboard.KEY_RIGHT then self.action=2
+    elseif key==Keyboard.KEY_F then self:toggleFavorite(self.selected)
     elseif key==Keyboard.KEY_TAB then local style=self.styles[self.selected];if style and #style.previews>1 then self:selectPreview(self.previewIndex%#style.previews+1)end
     elseif key==Keyboard.KEY_RETURN or key==Keyboard.KEY_NUMPADENTER then self:activate();return
     else return end
@@ -72,7 +78,9 @@ function Styles:onMouseDown(x,y)
     local g=self.geometry or self:layout();local style=self.styles[self.selected]
     if x<g.listW+g.pad and y>=g.top and y<g.footerY-g.pad then
         local index=math.floor((y-g.top)/g.rowH)+1+self.offset
-        if index<=#self.styles then self:select(index);PY.UIAudio.play(self.host.player,"cursor")end
+        if index<=#self.styles then
+            if x>=g.pad+g.listW-42 then self:toggleFavorite(index)else self:select(index);PY.UIAudio.play(self.host.player,"cursor")end
+        end
     elseif x>=g.x and x<g.x+g.w and y>=g.buttonY and y<g.buttonY+g.buttonH then
         self.action=x<g.x+g.w/2 and 1 or 2;self:activate()
     elseif style and g.tabRows>0 and x>=g.x and x<g.x+g.w and y>=g.tabsY and y<g.tabsY+g.tabsH then
@@ -104,10 +112,12 @@ function Styles:prerender()
     for i=self.offset+1,math.min(#self.styles,self.offset+g.listRows)do
         local entry=self.styles[i];local y=g.top+(i-self.offset-1)*g.rowH
         if i==self.selected then self:box(g.pad,y,g.listW,g.rowH-3,.22,accent);self:box(g.pad,y,3,g.rowH-3,.9,accent)end
+        local heart=self.heart
+        if heart and(not heart.isReady or heart:isReady())then self:drawTextureScaled(heart,g.pad+g.listW-36,y+15,28,28,a*(self.favorites[entry.id]and 1 or .27),1,1,1)end
         local names=entry.nameLines
-        for line=1,math.min(2,#names)do self:label(names[line],g.pad+10,y+5+(line-1)*23,22,nil,nil,g.listW-22,i==self.selected)end
+        for line=1,math.min(2,#names)do self:label(names[line],g.pad+10,y+5+(line-1)*23,22,nil,nil,g.listW-58,i==self.selected)end
         local slots={};for index,side in ipairs({"left","right"})do if PY.StyleSlots.id(self.host.player,side)==entry.id then slots[#slots+1]="Slot "..index end end
-        if #slots>0 then self:label(table.concat(slots," / "),g.pad+10,y+51,16,accent,nil,g.listW-22)end
+        if #slots>0 then self:label(table.concat(slots," / "),g.pad+10,y+51,16,accent,nil,g.listW-58)end
     end
     self:clearStencilRect();self:box(g.x-g.pad,g.top,1,g.footerY-g.top-g.pad,.28,accent)
     if style then
@@ -131,7 +141,7 @@ function Styles:prerender()
         self:label(name,x+w/2,g.buttonY+9,23,nil,"center",w-16)
     end
     self:box(g.pad,g.footerY,self.width-g.pad*2,1,.35,accent)
-    local help=self.message or("Up/Down: style  |  Left/Right: slot  |  Enter: assign  |  Esc: back"..(style and #style.previews>1 and"  |  Tab: preview"or""))
+    local help=self.message or("Up/Down: style  |  Left/Right: slot  |  Enter: assign  |  F: favorite  |  Esc: back"..(style and #style.previews>1 and"  |  Tab: preview"or""))
     if self.helpText~=help then self.helpText=help;self.helpLines=D.Font.wrap(help,18,self.width-g.pad*2)end
     local lines=self.helpLines
     for i=1,math.min(2,#lines)do self:label(lines[i],g.pad,g.footerY+7+(i-1)*20,18,nil,nil,self.width-g.pad*2)end
@@ -141,5 +151,8 @@ function Styles.open(host)
     local panel=Styles:new(host.width*.04,host.height*.06,host.width*.92,host.height*.88)
     panel.host=host;panel.alpha=0;panel.at=getTimestampMs();panel.selected=1;panel.offset=0;panel.action=1;panel.background=false;panel.styles={}
     for _,entry in ipairs(PY.listStyles())do panel.styles[#panel.styles+1]=D.Preview.style(entry)end
+    table.sort(panel.styles,function(a,b)local an,bn=string.lower(a.name),string.lower(b.name);return an==bn and a.id<b.id or an<bn end)
+    local preferences=D.preferences(host.player);if type(preferences.favorites)~="table"then preferences.favorites={}end;panel.favorites=preferences.favorites
+    panel.heart=D.preloaded and D.preloaded.heart or getTexture("media/textures/ProjectYakuzaPhoneDev/FavoriteHeart.png")
     panel:initialise();panel:select(1);host.activeStyles=panel;host:addChild(panel);PY.UIAudio.play(host.player,"confirm")
 end

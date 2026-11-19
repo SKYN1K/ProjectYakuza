@@ -83,6 +83,7 @@ function D.rows(p,page)
         add(rows,"Pointer tilt",status(pref.tilt~=false),function()pref.tilt=pref.tilt==false;return true end)
         add(rows,"Reduced motion",status(pref.reduceMotion==true),function()pref.reduceMotion=not pref.reduceMotion;return true end)
         add(rows,"Advanced mod settings","Style slots, effects and diagnostics",function()return after(p,function()D.legacyOpenSetup(p)end)end)
+        add(rows,"Heart icon credit","Anggara / Flaticon.com - Casino pack")
         add(rows,"Phone development build",D.VERSION.."  |  Combat "..PY.VERSION)
     end
     return rows

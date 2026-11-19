@@ -2,5 +2,5 @@ name=Project Yakuza Phone (Dev)
 id=ProjectYakuzaPhoneDev
 author=Local mod project
 require=ProjectYakuza
-description=Optional development build of the Yakuza 6 Xperia mod menu. Requires Project Yakuza 0.131.0 or newer. Uses the shared combat effects. Disable this add-on to restore the original mod settings menu.
-version=0.1.5
+description=Optional development build of the Yakuza 6 Xperia mod menu. Requires Project Yakuza 0.133.0 or newer. Uses the shared combat effects. Disable this add-on to restore the original mod settings menu.
+version=0.1.6

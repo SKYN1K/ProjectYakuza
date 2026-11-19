@@ -17,12 +17,14 @@ function M.pose(open,px,py,reduce,tilt)
     return {rx=math.rad(4+y*3-55*amount),ry=math.rad(6+x*6-35*amount),rz=math.rad(10+x*1.5+12*amount),scale=1-.5*amount,x=0,y=-14*amount,z=-.6*amount}
 end
 function M.transform(pose,x,y,z)
-    x,y,z=x*pose.scale,y*pose.scale,z*pose.scale
-    local a,b,c=-pose.rz,pose.ry,pose.rx
-    local cc,sc=math.cos(c),math.sin(c);x,y=x*cc-y*sc,x*sc+y*cc
-    local cb,sb=math.cos(b),math.sin(b);x,z=x*cb+z*sb,-x*sb+z*cb
-    local ca,sa=math.cos(a),math.sin(a);y,z=y*ca-z*sa,y*sa+z*ca
-    return x+pose.x,y+pose.y,z+pose.z
+    local matrix=pose.matrix
+    if not matrix then
+        local a,b,c=-pose.rz,pose.ry,pose.rx
+        local ca,sa,cb,sb,cc,sc=math.cos(a),math.sin(a),math.cos(b),math.sin(b),math.cos(c),math.sin(c)
+        local scale=pose.scale
+        matrix={cb*cc*scale,-cb*sc*scale,sb*scale,(ca*sc+sa*sb*cc)*scale,(ca*cc-sa*sb*sc)*scale,-sa*cb*scale,(sa*sc-ca*sb*cc)*scale,(sa*cc+ca*sb*sc)*scale,ca*cb*scale};pose.matrix=matrix
+    end
+    return matrix[1]*x+matrix[2]*y+matrix[3]*z+pose.x,matrix[4]*x+matrix[5]*y+matrix[6]*z+pose.y,matrix[7]*x+matrix[8]*y+matrix[9]*z+pose.z
 end
 function M.screenPoint(pose,u,v)
     return M.transform(pose,-.3905,5.7124272-11.4788473*v,-3.2274276+6.4548552*u)

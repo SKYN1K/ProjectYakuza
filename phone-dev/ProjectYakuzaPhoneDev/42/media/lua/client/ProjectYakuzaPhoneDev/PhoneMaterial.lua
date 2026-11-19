@@ -456,8 +456,9 @@ function Material:prerender()
     self:setStencilRect(0,0,self.width,self.height)
     for _,entry in ipairs(self.draws)do
         local q=entry.points;local a=host.open
-        self:drawTextureAllPoint(texture,q[1][1],q[1][2],q[2][1],q[2][2],q[3][1],q[3][2],q[4][1],q[4][2],0,0,0,a*entry.shade)
-        if entry.specular>.005 then self:drawTextureAllPoint(texture,q[1][1],q[1][2],q[2][1],q[2][2],q[3][1],q[3][2],q[4][1],q[4][2],.82,.91,1,a*entry.specular)end
+        local dark=a*entry.shade;local shine=entry.specular>.005 and a*entry.specular or 0
+        local alpha=dark+shine*(1-dark);local light=alpha>0 and shine/alpha or 0
+        self:drawTextureAllPoint(texture,q[1][1],q[1][2],q[2][1],q[2][2],q[3][1],q[3][2],q[4][1],q[4][2],.82*light,.91*light,light,alpha)
     end
     self:clearStencilRect()
 end

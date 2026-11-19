@@ -281,7 +281,7 @@ function Phone:onMouseWheel()return true end
 function Phone:onRightMouseDown()self:close();return true end
 function Phone:onRightMouseUp()return true end
 function Phone:isKeyConsumed(key)
-    return key==Keyboard.KEY_ESCAPE or key==Keyboard.KEY_RETURN or key==Keyboard.KEY_NUMPADENTER or key==Keyboard.KEY_TAB or key==Keyboard.KEY_LEFT or key==Keyboard.KEY_RIGHT or key==Keyboard.KEY_UP or key==Keyboard.KEY_DOWN
+    return self.activeStyles~=nil and key==Keyboard.KEY_F or key==Keyboard.KEY_ESCAPE or key==Keyboard.KEY_RETURN or key==Keyboard.KEY_NUMPADENTER or key==Keyboard.KEY_TAB or key==Keyboard.KEY_LEFT or key==Keyboard.KEY_RIGHT or key==Keyboard.KEY_UP or key==Keyboard.KEY_DOWN
 end
 function Phone:onKeyPress(key)
     local submenu=self:submenu();if submenu then submenu:onKeyPress(key);return end

@@ -1,5 +1,7 @@
 # Style themes and previews
 
+The list sorts by style name without case-sensitive ASCII ordering. Equal names use the style ID as a stable tie-break. Hearts toggle per-character favorites; favorites do not change alphabetical ordering. Click a row heart or press F for the selected style. The heart icon is by Anggara from Flaticon's Casino pack: https://www.flaticon.com/free-icon/heart_6567791. Attribution is also visible in phone Settings.
+
 The optional phone reads each registered style's full definition through ProjectYakuza.getStyle. Creators can add phoneMenu to their style definition before registration. No combat framework changes or dependency on the phone are required for the fighting style to work.
 
 The theme applies to the selected style page: highlights, borders, header, buttons, background and text. Colours accept RGB values from 0 to 1 or a #RRGGBB string. Unspecified colours have readable defaults. Dragon of Dojima defaults to light blue with its supplied image, without preview tabs. Other styles default to neutral grey until their creators provide a theme.

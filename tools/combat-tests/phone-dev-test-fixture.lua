@@ -6,7 +6,7 @@ local function check(v,m)checks=checks+1;assert(v,m)end
 local function near(a,b,e)return math.abs(a-b)<(e or .00002)end
 local function event()local e={hooks={}};function e.Add(fn)e.hooks[fn]=true end;return e end
 Events={OnGameStart=event(),OnSave=event(),OnMainMenuEnter=event()}
-ProjectYakuza={VERSION="0.131.0"}
+ProjectYakuza={VERSION="0.133.0"}
 do local _="ProjectYakuzaFixture:PHONEASSETS" end
 do local _="ProjectYakuzaFixture:PHONEMATH" end
 local PY=ProjectYakuza;local D=PY.PhoneDev;local M=D.Math
@@ -54,7 +54,7 @@ function managerText:DrawString(font,x,y,scale,text,r,g,b,a)
  textDraws[#textDraws+1]={text=text,x=x,y=y,width=self:MeasureStringX(font,text)*scale,height=45*scale,font=font}
 end
 getTextManager=function()return managerText end
-Keyboard={KEY_ESCAPE=1,KEY_RETURN=28,KEY_NUMPADENTER=156,KEY_TAB=15,KEY_LEFT=203,KEY_RIGHT=205,KEY_UP=200,KEY_DOWN=208,KEY_W=17}
+Keyboard={KEY_ESCAPE=1,KEY_RETURN=28,KEY_NUMPADENTER=156,KEY_TAB=15,KEY_LEFT=203,KEY_RIGHT=205,KEY_UP=200,KEY_DOWN=208,KEY_W=17,KEY_F=33}
 Joypad={AButton=0,BButton=1,YButton=3};JoypadState={players={}}
 local uiSounds={}
 getSoundManager=function()return {playUISound=function(_,name)uiSounds[#uiSounds+1]=name end}end
@@ -104,6 +104,12 @@ function Base:drawSubTexture()draws=draws+1 end
 ISPanel=Base:derive('ISPanel');ISPanelJoypad=Base:derive('ISPanelJoypad');ISUI3DScene=Base:derive('ISUI3DScene')
 local uiTextureSplits=0;local fontReady=true
 getTexture=function(path)return {path=path,getWidth=function()return 512 end,getHeight=function()return 288 end,isReady=function()return fontReady end,split=function(self,name,x,y,w,h)uiTextureSplits=uiTextureSplits+1;return {path=self.path,name=name,x=x,y=y,w=w,h=h,isReady=function()return fontReady end}end}end
+local glyphQuads={}
+local originalQuad=Base.drawTextureAllPoint
+function Base:drawTextureAllPoint(texture,x1,y1,x2,y2,x3,y3,x4,y4,r,g,b,a)
+ originalQuad(self,texture,x1,y1,x2,y2,x3,y3,x4,y4,r,g,b,a)
+ if texture.path==D.Glyphs.path then glyphQuads[#glyphQuads+1]={x1,y1,x2,y2,x3,y3,x4,y4}end
+end
 local dragon={id='dragon_of_dojima',name='Dragon of Dojima',description="Kiryu's four-hit chain with Extreme Heat boost attacks."};local other={id='other',name='Other Style',description='Another style.'}
 PY.styles={dragon_of_dojima=dragon,other=other};PY.getStyle=function(id)return PY.styles[id]end;PY.listStyles=function()return {{id=dragon.id,name=dragon.name,description=dragon.description},{id=other.id,name=other.name,description=other.description}}end
 PY.getPlayerStyle=function(p)return PY.styles[p.style]or dragon end;PY.isEquipped=function(p)return p.equipped end;PY.isStyleToken=function(item)return item.token==true end;PY.isBusy=function(p)return p.busy==true end
@@ -140,6 +146,7 @@ local original=function(who)legacy=legacy+1;PY.StyleSelector.setup={legacy=true,
 PY.StyleSelector.openSetup=original
 setJoypadFocus=function(num,panel)local state=JoypadState.players[num+1];state.focus=panel;if panel and panel.onGainJoypadFocus then panel:onGainJoypadFocus(state)end end
 do local _="ProjectYakuzaFixture:PHONEDATA" end
+do local _="ProjectYakuzaFixture:PHONEGLYPHS" end
 do local _="ProjectYakuzaFixture:PHONEFONT" end
 do local _="ProjectYakuzaFixture:PHONEITEMS" end
 do local _="ProjectYakuzaFixture:PHONEPREVIEW" end
@@ -147,7 +154,7 @@ do local _="ProjectYakuzaFixture:PHONESTYLES" end
 do local _="ProjectYakuzaFixture:PHONEMATERIAL" end
 do local _="ProjectYakuzaFixture:PHONEPANEL" end
 do local _="ProjectYakuzaFixture:PHONEBOOT" end
-check(D.compatible('0.131.0')and D.compatible('1.0.0')and not D.compatible('0.130.0')and not D.compatible('invalid'),'dev menu enforces its shared polished combat baseline')
+check(D.compatible('0.133.0')and D.compatible('1.0.0')and not D.compatible('0.132.0')and not D.compatible('invalid'),'dev menu enforces its shared polished combat baseline')
 D.install();D.install();check(PY.StyleSelector.openSetup==D.open and D.legacyOpenSetup==original,'menu hook installs once and preserves the original settings')
 check(D.open(p),'render timing regression opens the phone')
 local smooth=D.panel;local priorOpen=0
@@ -168,7 +175,18 @@ projectedDraws=0;panel.screen:prerender();check(projectedDraws<=310,'projected l
 check(panel.rows.items[1].level==2 and near(panel.rows.items[1].progress,.5),'Items preview shows actual PZ skill levels and XP progress')
 for i,color in ipairs(D.appColors)do if i~=4 then check(color[1]<.9 and color[2]<.9 and color[3]<.9,'every monochrome app has a readable colour on its white tile')end end
 local oldSplits=uiTextureSplits;textDraws={};panel.screen:prerender()
-check(#textDraws>=12 and uiTextureSplits==oldSplits,'phone captions draw complete native text strings without slicing glyph images')
+check(#textDraws==0 and uiTextureSplits==oldSplits,'handset captions reuse actual font glyphs on the screen without floating native strings')
+local localQuad=M.project(M.pose(1,.5,-.4,false,true),600,900);glyphQuads={}
+local beforeMeasures=textMeasures;D.Font.projected(panel.screen,localQuad,'WWW iii',160,100,1,20,180)
+check(#glyphQuads==7 and textMeasures==beforeMeasures,'handset glyph layout uses real font advances without repeated native measurement')
+for _,q in ipairs(glyphQuads)do
+ local dx,dy=q[3]-q[1],q[4]-q[2];local ex,ey=localQuad[2][1]-localQuad[1][1],localQuad[2][2]-localQuad[1][2]
+ check(math.abs(dx*ey-dy*ex)<.001,'every glyph baseline follows the physical screen edge')
+ local dx,dy=q[7]-q[1],q[8]-q[2];local ex,ey=localQuad[4][1]-localQuad[1][1],localQuad[4][2]-localQuad[1][2]
+ check(math.abs(dx*ey-dy*ex)<.001,'every glyph side follows the physical screen tilt')
+end
+local first=D.Font.handsetLayout('iii',20,180);local second=D.Font.handsetLayout('WWW',20,180)
+check(first.width<second.width,'projected captions retain original proportional font metrics')
 local wrapped=D.Font.wrap('Long localized description with words and line breaks\nSecond paragraph',22,170)
 for _,line in ipairs(wrapped)do check(D.Font.measure(line,22)<=170.001,'native font metrics constrain wrapped text to the available width')end
 check(D.Font.measure('iii',22)<D.Font.measure('WWW',22),'native proportional text preserves narrow and wide letter spacing')
@@ -197,7 +215,7 @@ panel:selectPage(1);panel.row=4;panel:activateRow();check(assigned==1,'style qui
 panel.row=2;local before=equipped;panel:activateRow();check(panel.closing and equipped==before,'equip waits for the closing animation');advance(400);check(not D.panel and not PY.StyleSelector.setup and not panel.wantsKeys and not manager[panel]and equipped==before+1,'closing releases input and then runs the selected combat action')
 panel=open();panel:selectPage(2);panel:activatePage();advance(200);before=equipped;panel.activeItems:activate();p.dead=true;advance(20);check(not D.panel and equipped==before,'death cancels a pending equip callback');p.dead=false
 panel=open();panel:selectPage(2);panel:activatePage();advance(200);local weapon=panel.activeItems.items[1].item;weapon.missing=true;panel.activeItems:activate();check(not panel.closing and panel.activeItems.message~=nil,'a removed inventory item cannot be equipped through a stale row');weapon.missing=false;panel.activeItems:close();advance(200)
-panel:selectPage(9);panel.row=3;panel:activateRow();advance(400);check(legacy==1 and PY.StyleSelector.setup.legacy and not D.panel,'advanced settings hands off to the original mod menu');PY.StyleSelector.setup:close()
+panel:selectPage(9);for i,row in ipairs(panel.rows.items)do if row.label=='Advanced mod settings'then panel.row=i end end;panel:activateRow();advance(400);check(legacy==1 and PY.StyleSelector.setup.legacy and not D.panel,'advanced settings hands off to the original mod menu');PY.StyleSelector.setup:close()
 panel=open();panel:selectPage(9);panel.row=1;panel:activateRow();check(D.preferences(p).tilt==false,'phone tilt preference toggles');panel.row=2;panel:activateRow();check(D.preferences(p).reduceMotion,'reduced-motion preference toggles');D.clear();check(not D.panel and not manager[panel],'saving or leaving removes the optional phone immediately')
 panel=open();ISWorldMap_instance={isVisible=function()return true end};advance(20);check(not D.panel,'opening the map clears the phone');ISWorldMap_instance=nil
 panel=open();textEntry=true;advance(20);check(not D.panel,'chat text entry releases phone input');textEntry=false
@@ -208,7 +226,14 @@ failModel=true;check(D.open(p)and legacy==2 and D.panel==nil and PY.StyleSelecto
 check(panel:isKeyConsumed(Keyboard.KEY_ESCAPE)and not panel:isKeyConsumed(Keyboard.KEY_W),'phone keys are consumed without disabling player movement')
 panel=open();check(uiSounds[#uiSounds]=='ProjectYakuzaPhoneDev_PhoneOpen','opening the phone plays its dedicated local Y6 cue')
 panel:selectPage(1);panel.focusRows=false;panel:activatePage();local styles=panel.activeStyles
+check(panel:isKeyConsumed(Keyboard.KEY_F),'favorite key is consumed while Styles is open rather than toggling the game flashlight')
 check(styles and #styles.styles==2 and styles.styles[1].name=='Dragon of Dojima','Styles opens the registered style names')
+styles:toggleFavorite(1);check(D.preferences(p).favorites[dragon.id]==true,'heart favorites persist in per-character mod data')
+styles:onKeyPress(Keyboard.KEY_F);check(not D.preferences(p).favorites[dragon.id],'keyboard toggles the same saved favorite')
+styles:onMouseDown(styles.geometry.pad+styles.geometry.listW-24,styles.geometry.top+22)
+check(D.preferences(p).favorites[dragon.id]and styles.selected==1,'heart click toggles a favorite without assigning or switching a style')
+check(styles.heart.path=='media/textures/ProjectYakuzaPhoneDev/FavoriteHeart.png','heart comes from the requested icon pack rather than a game icon')
+
 advance(200);check(styles.preview.path=='media/textures/ProjectYakuzaPhoneDev/DragonOfDojima.png'and #styles.description>0,'Dragon preview uses the supplied compressed image alongside its description')
 check(panel.scene.visible==false and panel.rows.visible==false,'opaque submenus skip the hidden phone model and preview list')
 local slotCount=assigned;styles:activate();check(assigned==slotCount+1 and p.slots.left==dragon.id and not panel.closing,'first action assigns the first slot without equipping')
@@ -218,12 +243,23 @@ check(styles.theme.accent[3]==1 and styles.theme.accent[2]>.7,'Dragon uses its l
 styles:onKeyPress(Keyboard.KEY_DOWN);check(styles.selected==2 and #styles.styles[2].previews==0,'additional styles retain safe missing-preview states')
 panel:onKeyPress(Keyboard.KEY_ESCAPE);advance(200);check(not panel:submenu()and D.panel==panel and panel.scene.visible,'back restores the phone and its model visibility')
 D.clear()
+local priorList=PY.listStyles
+PY.listStyles=function()return {{id='z',name='Zulu',description=''},{id='b',name='alpha',description=''},{id='a',name='Alpha',description=''}}end
+panel=open();panel:selectPage(1);panel:activatePage();styles=panel.activeStyles
+check(styles.styles[1].id=='a'and styles.styles[2].id=='b'and styles.styles[3].id=='z','styles sort case-insensitively by name with deterministic ID ties')
+D.clear();PY.listStyles=priorList
 local front=M.pose(1,0,0,false,true);local _,_,frontZ=M.transform(front,-.39,0,3.6);local _,_,backZ=M.transform(front,.39,0,3.6)
 check(near(front.ry,math.rad(6)),'original phone angle stays unchanged while the material gains lighting')
 panel=open();panel.material:prerender();local lit=panel.material.draws
 check(#lit>0 and #lit<=D.Material.maxFaces,'casing lighting uses a bounded set of original surface polygons')
 local dark,bright=0,1;for _,face in ipairs(lit)do dark=math.max(dark,face.shade);bright=math.min(bright,face.shade);check(face.specular<=.27 and face.shade<=.45,'material response stays below an opaque or blown-out finish')end
 check(dark-bright>.1,'different original casing normals receive distinct directional shading')
+local beforeMaterial=projectedDraws;panel.material:prerender()
+check(projectedDraws-beforeMaterial==#panel.material.draws,'each visible material polygon uses one combined light/shade draw')
+for _,openAmount in ipairs({.1,.5,1})do for _,shade in ipairs({.05,.3,.45})do for _,spec in ipairs({0,.02,.26})do
+ local dark=openAmount*shade;local shine=spec>.005 and openAmount*spec or 0;local alpha=dark+shine*(1-dark);local light=shine/alpha
+ for _,base in ipairs({0,.3,1})do check(near(base*(1-dark)*(1-shine)+.91*shine,base*(1-alpha)+.91*light*alpha),'one material pass is algebraically identical to the previous two-layer composite')end
+end end end
 local cached=panel.material.draws;panel.material:prerender();check(panel.material.draws==cached,'settled lighting geometry is cached rather than transformed every frame');D.clear()
 local firstFrame='media/textures/ProjectYakuza/HeatHUD/OriginalDragonAtlas.png'
 local secondFrame='media/textures/ProjectYakuza/HeatHUD/OriginalCombatAtlas.png'
@@ -251,5 +287,5 @@ for _,viewport in ipairs({{640,480},{800,600},{1024,768},{1920,1080}})do
  styles:select(1);check(styles.geometry.tabRows==0,'Dragon remains a single image without preview buttons at every viewport size');D.clear()
 end
 viewportWidth,viewportHeight=1600,900
-check(PY.VERSION=='0.131.0'and PY.Heat.stocks(p)==2,'dev interface does not replace combat version or grant heat')
+check(PY.VERSION=='0.133.0'and PY.Heat.stocks(p)==2,'dev interface does not replace combat version or grant heat')
 return 'PASS '..checks..' native projection, inverse input, alpha centring, pages, scrolling, options, actions, fallback and lifecycle assertions'
