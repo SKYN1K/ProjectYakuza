@@ -94,7 +94,7 @@ function R.validFor(p,z,action)
 end
 function R.capture(z)
     local old={ignore=z:getIgnoreMovement(),deferred=z:isDeferredMovementEnabled()}
-    if R.targetKind(z)=="zombie"then old.useless=z:isUseless();old.target=z:getTarget();old.locked=ProjectYakuza.GrabRules.captureLock(z)
+    if R.targetKind(z)=="zombie"then old.useless=z:isUseless();old.target=z:getTarget();old.locked=ProjectYakuza.GrabRules.captureLock(z);old.ignoreStagger=z.isIgnoreStaggerBack and z:isIgnoreStaggerBack()or false
     else old.block=z:isBlockMovement();local gate=ProjectYakuza.Bindings and ProjectYakuza.Bindings.attackGates[z];old.authorize=gate and gate.allowed;if old.authorize==nil then old.authorize=z:isAuthorizeMeleeAction()end;old.performing=z:GetVariable("PerformingAction")or"";old.action=z:GetVariable("IsPerformingAnAction")=="true"end
     return old
 end
@@ -106,6 +106,13 @@ function R.hold(z)
             z:setKnockedDown(false);z:setOnFloor(false)
             if z.setStaggerBack then z:setStaggerBack(false)end
             if z.setHitForce then z:setHitForce(0)end
+            if z.setIgnoreStaggerBack then z:setIgnoreStaggerBack(true)end
+            if z.setBumpType then z:setBumpType("")end
+            if z.setBumpStaggered then z:setBumpStaggered(false)end
+            if z.setBumpFall then z:setBumpFall(false)end
+            if z.setBumpDone then z:setBumpDone(true)end
+            if z.setMoving then z:setMoving(false)end
+            if z.getMovementLastFrame then z:getMovementLastFrame():set(0,0)end
             if z:getHitReaction()~="ProjectYakuzaHeatRushVictim"then z:setHitReaction("ProjectYakuzaHeatRushVictim");z:reportEvent("wasHit")end
         end
         ProjectYakuza.GrabRules.latch(z,z:GetVariable("ProjectYakuzaHeatRushVictim")=="true")
@@ -134,6 +141,7 @@ function R.restore(z,old)
     z:setVariable("ProjectYakuzaPairedVictimClip","");z:setVariable("ProjectYakuzaHeatRushVictim",false);z:setIgnoreMovement(old.ignore==true);z:setDeferredMovementEnabled(old.deferred~=false)
     if R.targetKind(z)=="zombie"then
         ProjectYakuza.GrabRules.releaseLock(z,old)
+        if z.setIgnoreStaggerBack then z:setIgnoreStaggerBack(old.ignoreStagger==true)end
         z:setUseless(old.useless==true)
         if not z:isDead()and z:getTarget()==nil then z:setTarget(old.target)end
     else

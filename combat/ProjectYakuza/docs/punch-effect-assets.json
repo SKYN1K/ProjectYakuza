@@ -8,7 +8,7 @@
   },
   "track": {
     "path": "42/media/lua/client/ProjectYakuza/AttackTrailCatalog.lua",
-    "sha256": "ea187191dadb628d900aa5df18cce1c4510ff65a5d90a9dd931d6aab47b9cf4b",
+    "sha256": "3849becdc6fa3f7569488d187bd5de839e69dfae5586cd53cb49ab1652fc934a",
     "fps": 120,
     "samples": 121,
     "bones": [

@@ -54,6 +54,14 @@ function z:moveUnmodded(x,y)self.x=self.x+x;self.y=self.y+y end
 function z:setFallOnFront(v)self.front=v end
 function z:setKnockedDown(v)self.knock=v end;function z:setOnFloor(v)self.floor=v end;function z:setStaggerBack(v)self.stagger=v end
 function z:setHitForce(v)self.force=v end;function z:getOnlineID()return 9 end
+function z:isIgnoreStaggerBack()return self.ignoreStagger==true end
+function z:setIgnoreStaggerBack(v)self.ignoreStagger=v end
+function z:setBumpType(v)self.bump=v end
+function z:setBumpStaggered(v)self.bumpStagger=v end
+function z:setBumpFall(v)self.bumpFall=v end
+function z:setBumpDone(v)self.bumpDone=v end
+function z:setMoving(v)self.moving=v end
+function z:getMovementLastFrame()return {set=function(_,x,y)self.moveX=x;self.moveY=y end}end
 function z:Hit(_,_,damage)self.hits=self.hits+1;self.health=self.health-damage;self.floor=true;self.knock=true;self.stagger=true end
 instanceof=function(o,name)return o==z and name=='IsoZombie'or o==p and name=='IsoPlayer'end
 PY.TigerDrop={tracked={}}
@@ -140,7 +148,11 @@ check(G.updatePending(p),'wall action consumes the held-target ticket')
 local c=PY.activeActions[p];check(c and c.kind=='grabHeat'and c.target.fromGrab,'grab transfers into the paired heat-action framework')
 check(a.cleaned and not z.locked,'handoff releases the old grab lock before the new victim lock')
 local action=c.timedAction;action:start();check(p.invincible and p.ghost and p.blocked,'wall action uses full-duration protection and movement lock')
-action:cleanup(false);check(not p.invincible and p.ghost,'ending restores invulnerability immediately while target grace remains')
+z.bump='stumble';z.bumpStagger=true;z.bumpFall=true;z.stagger=true;z.force=1;z.moveX=1;z.moveY=1
+PY.HeatActions.zombie(z)
+check(z:GetVariable('ProjectYakuzaPairedVictimClip')=='ProjectYakuza_DD_WallHeatVictim'and z.bump==''and not z.bumpStagger and not z.bumpFall and z.bumpDone and z.ignoreStagger and not z.stagger and z.force==0 and z.moveX==0 and z.moveY==0,'wall victim update suppresses collision stumble flags and residual movement without replacing its paired clip')
+
+action:cleanup(false);check(not p.invincible and p.ghost and not z.ignoreStagger,'ending restores invulnerability and original stagger permission while target grace remains')
 clock=clock+600;PY.HeatActions.tick();check(not p.ghost and not z.locked,'target grace and victim lock clean up')
 
 do

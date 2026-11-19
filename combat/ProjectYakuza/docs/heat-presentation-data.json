@@ -4,8 +4,8 @@
     {
       "animation": "ProjectYakuza_DD_HeatRush",
       "targetAnimation": "ProjectYakuza_DD_HeatRushVictim",
-      "actorSha256": "0049ab9a56119b95f2f3f8c381f0adfa40985434a3dafcf3ff6f1f95ef6120a0",
-      "victimSha256": "f4a169ce2bc6c7c8846b4abc88e3ba6a92f58c5bb8d0034b3282b95b41b36f60",
+      "actorSha256": "744345e83bbd08346835fcffcb298b6e28441036b2f871ba125089778489f616",
+      "victimSha256": "e9032328c28eada13e4fcdda1ec5842dda0e10fdf78265c30ece4d594bc6ea04",
       "contacts": [
         {
           "atMs": 1866.66666667,
@@ -13,11 +13,11 @@
           "cue": "punchImpact",
           "base": true,
           "point": [
-            0.086424269,
-            0.706284761,
-            0.036850117
+            0.002568014,
+            0.563920915,
+            0.013433363
           ],
-          "bone": "Bip01_Head",
+          "bone": "Bip01_Spine1",
           "layers": [],
           "feedback": "unarmed"
         },
@@ -27,11 +27,11 @@
           "cue": "punchImpact",
           "base": true,
           "point": [
-            0.075440057,
-            0.703289032,
-            -0.01529306
+            -0.037835635,
+            0.558859885,
+            -0.029828815
           ],
-          "bone": "Bip01_Head",
+          "bone": "Bip01_Spine1",
           "layers": [],
           "feedback": "unarmed"
         },
@@ -41,9 +41,9 @@
           "cue": "punchImpact",
           "base": true,
           "point": [
-            -0.052889504,
-            0.708845198,
-            -0.072261661
+            -0.104862101,
+            0.619118392,
+            0.144205779
           ],
           "bone": "Bip01_Head",
           "layers": [],
@@ -55,11 +55,11 @@
           "cue": "punchImpact",
           "base": true,
           "point": [
-            -0.102321774,
-            0.684923291,
-            0.075723685
+            -0.000272282,
+            0.45789656,
+            0.003123435
           ],
-          "bone": "Bip01_Head",
+          "bone": "Bip01_Spine",
           "layers": [],
           "feedback": "unarmed"
         },
@@ -69,11 +69,11 @@
           "cue": "punchImpact",
           "base": true,
           "point": [
-            0.015520587,
-            0.700337827,
-            0.024176182
+            -0.064566955,
+            0.681723893,
+            0.038202953
           ],
-          "bone": "Bip01_Head",
+          "bone": "Bip01_Neck",
           "layers": [],
           "feedback": "unarmed"
         },
@@ -83,9 +83,9 @@
           "cue": "punchImpact",
           "base": true,
           "point": [
-            -0.027056767,
-            0.694850743,
-            -0.019388013
+            0.147877693,
+            0.606248677,
+            0.122053787
           ],
           "bone": "Bip01_Head",
           "layers": [],
@@ -97,11 +97,11 @@
           "cue": "punchImpact",
           "base": true,
           "point": [
-            0.086424269,
-            0.706284761,
-            0.036850117
+            0.002568014,
+            0.563920915,
+            0.013433363
           ],
-          "bone": "Bip01_Head",
+          "bone": "Bip01_Spine1",
           "layers": [],
           "feedback": "unarmed"
         },
@@ -111,11 +111,11 @@
           "cue": "punchImpact",
           "base": true,
           "point": [
-            0.075440057,
-            0.703289032,
-            -0.01529306
+            -0.037835635,
+            0.558859885,
+            -0.029828815
           ],
-          "bone": "Bip01_Head",
+          "bone": "Bip01_Spine1",
           "layers": [],
           "feedback": "unarmed"
         },
@@ -125,9 +125,9 @@
           "cue": "punchImpact",
           "base": true,
           "point": [
-            -0.052889504,
-            0.708845198,
-            -0.072261661
+            -0.104862101,
+            0.619118392,
+            0.144205779
           ],
           "bone": "Bip01_Head",
           "layers": [],
@@ -139,11 +139,11 @@
           "cue": "punchImpact",
           "base": true,
           "point": [
-            -0.102321774,
-            0.684923291,
-            0.075723685
+            -0.000272282,
+            0.45789656,
+            0.003123435
           ],
-          "bone": "Bip01_Head",
+          "bone": "Bip01_Spine",
           "layers": [],
           "feedback": "unarmed"
         },
@@ -153,11 +153,11 @@
           "cue": "punchImpact",
           "base": true,
           "point": [
-            0.015520587,
-            0.700337827,
-            0.024176182
+            -0.080959119,
+            0.678149581,
+            0.027196851
           ],
-          "bone": "Bip01_Head",
+          "bone": "Bip01_Neck",
           "layers": [],
           "feedback": "unarmed"
         },
@@ -167,9 +167,9 @@
           "cue": "punchImpact",
           "base": true,
           "point": [
-            -0.027056767,
-            0.694850743,
-            -0.019388013
+            -0.002513056,
+            0.588150799,
+            0.249800265
           ],
           "bone": "Bip01_Head",
           "layers": [],
@@ -181,11 +181,11 @@
           "cue": "kickImpact",
           "base": true,
           "point": [
-            4.58e-07,
-            0.508112729,
-            0.010861819
+            0.00148056,
+            0.135588273,
+            0.020183053
           ],
-          "bone": "Bip01_Pelvis",
+          "bone": "Bip01_Spine",
           "layers": [],
           "feedback": "unarmed"
         }
@@ -1534,11 +1534,11 @@
           "cue": "heavyImpact",
           "base": false,
           "point": [
-            0.02302487,
-            0.764577508,
-            0.076290384
+            -0.008305583,
+            0.626930952,
+            0.014548854
           ],
-          "bone": "Bip01_Head",
+          "bone": "Bip01_Spine1",
           "layers": []
         },
         {
@@ -1778,11 +1778,11 @@
           "cue": "punchImpact",
           "base": false,
           "point": [
-            4.6e-07,
-            0.091701031,
-            0.010861968
+            -0.234750003,
+            0.147169054,
+            0.165322214
           ],
-          "bone": "Bip01_Pelvis",
+          "bone": "Bip01_Head",
           "layers": []
         }
       ],
@@ -1886,11 +1886,11 @@
           "cue": "punchImpact",
           "base": false,
           "point": [
-            0.154570177,
-            0.08343935,
-            0.034942292
+            4.6e-07,
+            0.094547793,
+            0.010861968
           ],
-          "bone": "Bip01_Spine1",
+          "bone": "Bip01_Pelvis",
           "layers": []
         }
       ],

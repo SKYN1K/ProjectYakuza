@@ -1,5 +1,6 @@
 require "ProjectYakuza/Runtime"
 require "ProjectYakuza/WorldEffects"
+require "ProjectYakuza/SparkEffects"
 require "ProjectYakuza/AttackTracks"
 require "ProjectYakuza/AttackTrailCatalog"
 require "ProjectYakuza/ParentPosePrediction"
@@ -234,7 +235,7 @@ local function sprite(path,compact)
 end
 function F.loadSprites()
     if not F.smoke then
-        F.spark=sprite("media/textures/ProjectYakuza/ChargeSpark.png")
+        PY.SparkEffects.load();F.spark=PY.SparkEffects.assets[1].sprite
         F.gaidenSmoke=sprite("media/textures/ProjectYakuza/AttackFX/e_n_5001_hitsmoke_small.png",true)
         F.smoke=IsoSprite.CreateSprite(nil)
         F.smoke:LoadFramesNoDirPageDirect("media/textures/ProjectYakuza/ExtremeHeat","smoke",64);F.smoke:setAnimate(true)
@@ -373,8 +374,7 @@ end
 function F.loadContacts()
     F.loadSprites()
     if not F.streak then
-        F.streak=sprite("media/textures/ProjectYakuza/AttackFX/e_j_0361_spark_b.png")
-        F.gaidenSpark=sprite("media/textures/ProjectYakuza/AttackFX/e_f_d0004_spark.png")
+        PY.SparkEffects.load();F.streak=PY.SparkEffects.assets[2].sprite;F.gaidenSpark=PY.SparkEffects.assets[3].sprite
         F.puffs={{sprite=sprite("media/textures/ProjectYakuza/AttackFX/e_j_0332_sparks_a.png"),ox=-64,oy=0,additive=true},{sprite=sprite("media/textures/ProjectYakuza/AttackFX/e_j_0073_aura_cA8L8.png",true),ox=0,oy=-64},{sprite=sprite("media/textures/ProjectYakuza/AttackFX/e_j_0073_aura_dA8L8.png",true),ox=0,oy=-64},{sprite=F.gaidenSmoke,ox=0,oy=-64}}
     end
     if not F.flash then F.flash=sprite("media/textures/ProjectYakuza/HitGlint.png")end
@@ -422,7 +422,7 @@ function F.hit(p,victim,strong,charged,anchor)
         local sp=flash and F.flash or puff and puff.sprite or gaiden and F.gaidenSpark or F.streak
         local instance=PY.WorldEffects.detached(sp,scale,0)
         local texture=compactTextures[sp];local widthScale=texture and 64/65 or 1;instance:setScale(scale*widthScale,scale)
-        local turn=angle+i*2.399963+random()*.8;local speed=.45+random()*.95;local drive=.25+random()*.65
+        local turn=angle+random()*math.pi*2;local speed=.35+random()*1.35;local drive=.15+random()*.75
         if b.variant==1 then turn=angle+(i-6.5)*.18+(random()-.5)*.6;speed=speed*1.2
         elseif b.variant==2 then speed=speed*.65;drive=drive*.6
         elseif b.variant==3 then turn=angle+(i%2==0 and 1 or -1)*(.5+random()*.8);speed=speed*1.05 end
@@ -430,6 +430,7 @@ function F.hit(p,victim,strong,charged,anchor)
             vx=math.cos(turn)*speed+bx*drive,vy=math.sin(turn)*speed+by*drive,vz=.25+random()*.9+bz*drive*.5,
             life=flash and .16 or puff and(.22+random()*.12)or .55+random()*.45,delay=puff and(i-13)*14 or 0,curve=(random()-.5)*(b.variant==3 and 5 or 3.2),
             ox=puff and puff.ox or 0,oy=puff and puff.oy or flash and -32 or gaiden and -32 or -48}
+        if not puff and not flash then PY.SparkEffects.assign(b.points[i],seed+i*7919);b.points[i].drag=.35+random()*2.0;b.points[i].gravity=.8+random()*2.2 end
     end
     F.bursts[#F.bursts+1]=b;F.syncHook()
     return b
@@ -451,8 +452,8 @@ function F.drawBursts(now,paused,hidden)
                         F.resize(point,point.flash and 1-.30*k or 1+.25*math.sin(k*math.pi)-.55*k)
                         point.instance:render(p,b.x+point.vx*t*.12,b.y+point.vy*t*.12,b.z+math.max(0,point.vz*t*.08),IsoDirections.N,point.ox*point.scale,point.oy*point.scale-b.drop,point.puff and b.smokeColor or b.color)
                     else
-                        F.resize(point,1-.50*k)
-                        point.instance:render(p,b.x+point.vx*t-point.vy*point.curve*t*t,b.y+point.vy*t+point.vx*point.curve*t*t,b.z+point.vz*t-1.4*t*t,IsoDirections.N,0,point.oy*point.scale-b.drop,b.color)
+                        local travel=t/(1+point.drag*t)
+                        PY.SparkEffects.render(point,b.x+point.vx*travel-point.vy*point.curve*t*t,b.y+point.vy*travel+point.vx*point.curve*t*t,math.max(math.floor(b.z)+.005,b.z+point.vz*t-point.gravity*t*t),point.baseScale*(1-.50*k),point.angle+point.spin*t,alpha,b.color,b.drop)
                     end
                 end
             end
@@ -501,10 +502,10 @@ function F.draw()
                     drawPoint(p,s,i,x+ox,y+oy,z+oz,fade*.28*pulse,extreme and F.midExtreme or F.midNormal)
                 end
                 for i=39,48 do
-                    local x,y,z=F.armPoint(joints,.40+(i-39)*.065)
-                    local a=s.clock*(.041+(i-39)*.004)+s.seed+i*2.399963
-                    local k=.5+.5*math.sin(a*.71);local radius=.012+.025*k
-                    drawPoint(p,s,i,x+math.cos(a)*radius,y+math.sin(a*1.23)*radius,z+math.sin(a*.87)*radius*.5,fade*.48*(.3+.7*k),color)
+                    local x,y,z=F.coatPoint(joints,.40+(i-39)*.065)
+                    local point=s.points[i]
+                    if not point.randomSeed then point.randomSeed=s.seed*7919+i*97 end
+                    PY.SparkEffects.fly(point,p,s.clock,x,y,z,point.baseScale,fade*.48,color,F.coatOffset())
                 end
             end
         end

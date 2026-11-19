@@ -217,7 +217,7 @@ function H.present(p,z,move,index,effects,scheduled,anchor,feedback,bloodOnly)
         PY.Feedback.play(p,PY.Feedback.sound(p,contact.cue or "heavyImpact")or PY.Feedback.sound(p,"heavyImpact")or PY.Feedback.sound(p,"finisher"),.55)
         for _,cue in ipairs(contact.layers or {})do PY.Feedback.play(p,PY.Feedback.sound(p,cue),.3)end
     end
-    PY.emit("heatRushHit",p,z,index,contact)
+    PY.emit("heatRushHit",p,z,index,contact,anchor)
 end
 function A:contact(index)
     if not self.success[index]then return end

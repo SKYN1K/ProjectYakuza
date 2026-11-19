@@ -1,0 +1,21 @@
+{
+  "version": "0.134.0",
+  "offlineOnly": true,
+  "productionLuaCompiled": 95,
+  "focusedKahluaAssertions": 57625,
+  "nativeWallSelectors": 18,
+  "nativeRushMainSpeedSelectors": 13,
+  "nativeRushFailureSelectors": 8,
+  "retainedSourcePoseSamples": 26136,
+  "nativeLimbProjectionCases": 23232,
+  "nativeSparkTextures": 3,
+  "nativeSparkPixels": 6656,
+  "leadInRemovedMs": 500,
+  "mainClipDurationSeconds": 8.5,
+  "qteWindowMs": 633,
+  "qtePlaybackSpeed": 1,
+  "sourceTextureBytesUnchanged": true,
+  "sourceProvenance": "docs/rush-twohit-sections.json and docs/spark-variation-0.134.0.json",
+  "screenTreatment": "Bounded local camera shake, tone/tint pulse and contact-local red/cyan fringing; an approximation, without native full-frame shader colour separation.",
+  "limitations": "No PZ/GPU launch; final visual quality, depth/occlusion and frame pacing need an in-game check."
+}

@@ -16,9 +16,9 @@ public class NativeRushTimingProbe {
    var select=stateType.getMethod("getAnimNodes",source,java.util.List.class);if(((java.util.List)select.invoke(state,vars,new java.util.ArrayList<>())).size()!=1)throw new AssertionError(path);
    set.invoke(vars,"ProjectYakuzaPairedVictimClip","unrelated.clip");if(!((java.util.List)select.invoke(state,vars,new java.util.ArrayList<>())).isEmpty())throw new AssertionError(path);endings++;
   }}
-  if(endings!=5)throw new AssertionError(endings);
-  System.out.println("PASS five native paired-kick victim selectors require their exact clip in zombie/PvP states");
-  Class.forName("zombie.characters.IsoGameCharacter").getMethod("isFallOnFront");if(count!=10)throw new AssertionError(count);
+  if(endings!=8)throw new AssertionError(endings);
+  System.out.println("PASS eight native paired-kick victim selectors require their exact clip in zombie/PvP states");
+  Class.forName("zombie.characters.IsoGameCharacter").getMethod("isFallOnFront");if(count!=13)throw new AssertionError(count);
   System.out.println("PASS "+count+" original actor/victim/observer nodes preserve original 1x playback; native face-up posture API exists; no game launch");
  }
 }

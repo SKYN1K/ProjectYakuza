@@ -267,6 +267,9 @@ function p:getForwardDirection()return {getX=function()return self.fx or 1 end,g
 function p:AttachExistingAnim(sprite)self.attached=instance(sprite)end
 function p:getAttachedAnimSprite()return {size=function()return self.attached and 1 or 0 end,get=function()return self.attached end,remove=function()self.attached=nil end}end
 do local _="ProjectYakuzaFixture:WORLD" end
+IsoUtils={XToScreenExact=function(x,y,z)return(x-y)*64 end,YToScreenExact=function(x,y,z)return(x+y)*32-z*192 end}
+SpriteRenderer.instance.renderPoly=function()end
+do local _="ProjectYakuzaFixture:SPARKRENDER" end
 do local _="ProjectYakuzaFixture:ATTACKTRACKS" end
 do local _="ProjectYakuzaFixture:PARENTTRACKS" end
 do local _="ProjectYakuzaFixture:PARENTPREDICTION" end

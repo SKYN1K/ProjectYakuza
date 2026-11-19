@@ -4,7 +4,7 @@ import hashlib,json,re,subprocess
 w=Path(__file__).resolve().parent;root=w.parents[1];mod=root/'combat/ProjectYakuza'
 game=Path('F:/SteamLibrary/steamapps/common/ProjectZomboid')
 native=w/'punch-track-native.json'
-subprocess.run([str(game/'jre64/bin/java.exe'),'-Xms16m','-Xmx256m','-XX:ActiveProcessorCount=2','-cp',str(w)+';'+str(game/'*'),'PunchTrackProbe',str(mod/'42/media/anims_X/Bob/ProjectYakuza_DD_Light01.x'),str(native)],check=True)
+subprocess.run([str(game/'jre64/bin/java.exe'),'-Xms16m','-Xmx128m','-XX:+UseSerialGC','-XX:ReservedCodeCacheSize=32m','-XX:ActiveProcessorCount=2','-cp',str(w)+';'+str(game/'*'),'PunchTrackProbe',str(mod/'42/media/anims_X/Bob/ProjectYakuza_DD_Light01.x'),str(native)],check=True)
 d=json.loads(native.read_text())
 catalog=json.loads((mod/'docs/attack-trail-catalog.json').read_text());render_rows=[]
 limbs={'leftArm':(0,1,2,12),'rightArm':(3,4,5,13),'leftLeg':(6,7,8,14),'rightLeg':(9,10,11,15)}
@@ -17,7 +17,7 @@ for row in catalog['clips']:
    for bone in limbs[window['limb']]:render_rows.append('\t'.join(str(v)for v in frame[bone])+'\t'+row['animation'])
 render_tsv=w/'limb-render-projection.tsv';render_tsv.write_text('\n'.join(render_rows)+'\n')
 render_json=w/'limb-render-projection-native.json'
-subprocess.run([str(game/'jre64/bin/java.exe'),'-Xms16m','-Xmx256m','-XX:ActiveProcessorCount=2','-cp',str(w)+';'+str(game/'*'),'LimbRenderProjectionProbe',str(render_tsv),str(render_json)],check=True)
+subprocess.run([str(game/'jre64/bin/java.exe'),'-Xms16m','-Xmx128m','-XX:+UseSerialGC','-XX:ReservedCodeCacheSize=32m','-XX:ActiveProcessorCount=2','-cp',str(w)+';'+str(game/'*'),'LimbRenderProjectionProbe',str(render_tsv),str(render_json)],check=True)
 render=json.loads(render_json.read_text())
 
 style=(mod/'42/media/lua/shared/ProjectYakuza/Styles/DragonOfDojima.lua').read_text(encoding='utf-8')
@@ -42,7 +42,7 @@ for f in report['reused_sounds']:assert sha(mod/'42'/f['output'])==f['sha256']
 print('PASS 121 native shoulder/forearm/hand/knuckle FK samples, 66 unchanged texture hashes and original Y6 whoosh hashes')
 m=mod/'42/media/lua/client/ProjectYakuza'
 s=(w/'punch-effects-test-fixture.lua').read_text(encoding='utf-8')
-for marker,name in [('WORLD','WorldEffects'),('TRACKS','AttackTracks'),('CATALOG','AttackTrailCatalog'),('PARENTTRACKS','ParentPoseTracks'),('PARENTPREDICTION','ParentPosePrediction'),('EFFECTS','AttackEffects'),('CHARGELIMBTRACKS','ChargeTracks'),('CHARGELIMBEFFECTS','ChargeEffects'),('FEEDBACK','Feedback')]:s=s.replace(fixture_marker(marker),'do\n'+(m/(name+'.lua')).read_text(encoding='utf-8')+'\nend\n')
+for marker,name in [('WORLD','WorldEffects'),('SPARKRENDER','SparkEffects'),('TRACKS','AttackTracks'),('CATALOG','AttackTrailCatalog'),('PARENTTRACKS','ParentPoseTracks'),('PARENTPREDICTION','ParentPosePrediction'),('EFFECTS','AttackEffects'),('CHARGELIMBTRACKS','ChargeTracks'),('CHARGELIMBEFFECTS','ChargeEffects'),('FEEDBACK','Feedback')]:s=s.replace(fixture_marker(marker),'do\n'+(m/(name+'.lua')).read_text(encoding='utf-8')+'\nend\n')
 s=s.replace('"ProjectYakuzaFixture:PROJECTION"','{'+','.join('{'+','.join(str(x) for x in row)+'}' for row in d['projection'])+'}')
 s=s.replace('"ProjectYakuzaFixture:MODELPROJECTION"','{'+','.join('{'+','.join(str(v)for v in row)+'}'for row in render['reference'])+'}')
 masked=next(row for row in json.loads((w/'parent-poses-native/masked-reference.json').read_text())if row['animation']=='ProjectYakuza_DD_Light01'and row['base']=='Bob_Idle'and abs(row['time']-.2)<.0001)

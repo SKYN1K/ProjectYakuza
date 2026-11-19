@@ -90,6 +90,7 @@ function H.tick()
     if not any and H.hooked then Events.OnTick.Remove(H.tick);if Events.OnZombieUpdate then Events.OnZombieUpdate.Remove(H.zombie)end;H.hooked=false end
 end
 function H.zombie(z)
+    if z.GetVariable and z:GetVariable("ProjectYakuzaHeatRushVictim")=="true"and ProjectYakuza.HeatRushRules then ProjectYakuza.HeatRushRules.hold(z)end
     local target=z:getTarget()
     if target and H.active[target]then z:setTarget(nil);z:setAttackOutcome("fail")end
 end

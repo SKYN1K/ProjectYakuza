@@ -76,6 +76,11 @@ function F.draw()
                 local ax,ay,az=PY.AttackEffects.sample(s.track,phase,point.limb)
                 local bx,by,bz=PY.AttackEffects.sample(s.track,phase,point.limb+1)
                 local i=point.index;local t=i<=12 and(.12+((i-1)%6)/5*.91)or i<=14 and(i==13 and .45 or .86)or .35+((s.clock*.0015+i*.19)%1)*.68
+                if i>14 then
+                    local _,_,wx,wy,wz=PY.AttackEffects.project(ax+(bx-ax)*t,ay+(by-ay)*t,az+(bz-az)*t,angle,tile)
+                    if not point.randomSeed then point.randomSeed=s.seed*7919+point.limb*997+i*97 end
+                    PY.SparkEffects.fly(point,p,s.clock,p:getX()+wx,p:getY()+wy,p:getZ()+wz,point.baseScale,fade*power*.42,F.color,2*tile+PY.AttackEffects.coatOffset())
+                else
                 local wave=s.clock*(.018+(i%4)*.006)+s.seed*.71+i*2.399963
                 local radius=(i>14 and .018 or i>6 and .010 or .003)*power*math.sin(math.min(1,t)*math.pi)
                 local ox,oy,oz=math.cos(wave)*radius,math.sin(wave*1.19)*radius,math.sin(wave*.83)*radius*.6
@@ -91,6 +96,7 @@ function F.draw()
                     point.instance:SetAlpha(alpha);point.instance:SetTargetAlpha(alpha)
                     if point.animated and not paused and dt>0 then point.sprite:update(point.instance)end
                     PY.WorldEffects.renderCentered(p,point.instance,point.height,scale,x,y,F.color,wx+.06,wy+.06,wz)
+                end
                 end
             end
         end

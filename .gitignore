@@ -428,3 +428,9 @@
 !tools/combat-tests/build_recovery_tests.py
 !tools/combat-tests/locomotion-test-fixture.lua
 !tools/combat-tests/texture-warmup-runtime.lua
+
+!tools/combat-tests/SparkRenderProbe.java
+!tools/combat-tests/WallVictimSelectionProbe.java
+!tools/combat-tests/build_spark_screen_tests.py
+!tools/combat-tests/spark-effects-test-fixture.lua
+!tools/combat-tests/heat-screen-test-fixture.lua

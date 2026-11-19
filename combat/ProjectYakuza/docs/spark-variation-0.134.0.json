@@ -1,0 +1,47 @@
+{
+  "version": "0.134.0",
+  "operation": "Reuses three supplied spark textures byte-for-byte from the previous runtime. No new visual/audio assets, cropping, painting, resizing or upscaling. Actual quad rotation around each original head pivot, seeded independent spin/drag/gravity/lifetimes, and world-space free flight. Existing smoke, native effect budgets, transparency and camera-space cosmetic drop remain. Normal Lua renderer and camera APIs only.",
+  "textures": [
+    {
+      "path": "42/media/textures/ProjectYakuza/ChargeSpark.png",
+      "sha256": "3e94b064a111841796b1e057955559bbff1d5df9d83a5998a56facc3a828c85a",
+      "size": [
+        16,
+        32
+      ],
+      "pivot": [
+        8,
+        16
+      ]
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/AttackFX/e_j_0361_spark_b.png",
+      "sha256": "08bac823dea4be75f4761b61061e4dce96215719742b66a35638986df85c84a9",
+      "size": [
+        32,
+        64
+      ],
+      "pivot": [
+        16,
+        16
+      ]
+    },
+    {
+      "path": "42/media/textures/ProjectYakuza/AttackFX/e_f_d0004_spark.png",
+      "sha256": "2395e0d3cecfc53eeee864c7abc13e811cac154dc711279b18d9ea2818ce9259",
+      "size": [
+        64,
+        64
+      ],
+      "pivot": [
+        32,
+        32
+      ]
+    }
+  ],
+  "sourceProvenance": [
+    "docs/attack-effect-assets.json",
+    "docs/gaiden-effect-assets.json"
+  ],
+  "screenEffects": "Short local camera offset shake, restrained screen tint pulse and source-glint red/cyan fringing localized at the impact. Full-frame RGB scene separation and shader colour correction are not exposed to ordinary Lua; the screen treatment is an approximation, without a Java helper, shader replacement, framebuffer access or persistent graphics/climate changes."
+}

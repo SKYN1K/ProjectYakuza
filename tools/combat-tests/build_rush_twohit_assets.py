@@ -4,27 +4,33 @@ root=Path(__file__).resolve().parents[2];sys.path.insert(0,str(Path(__file__).pa
 from locomotion_math import read,locals_at,blocks,write
 from mathutils import Matrix
 mod=root/'combat/ProjectYakuza';media=mod/'42/media';work=root/'tools/rush-twohit-source';work.mkdir(exist_ok=True)
-old=json.loads((mod/'docs/heat-rush-assets.json').read_text());mapping=list(range(51));pairs=[(51,69),(74,92),(98,116)]*2
+old=json.loads((mod/'docs/heat-rush-assets.json').read_text());mapping=[0]+list(range(16,51));pairs=[(51,69),(74,92),(98,116)]*2
 for first,last in pairs:mapping.extend(range(first,last+1))
-mapping.extend(range(119,225));assert len(mapping)==271
+mapping.extend(range(119,225));assert len(mapping)==256
 records=[]
-with zipfile.ZipFile(root/'dist/ProjectYakuza-B42-v0.83.0.zip')as z:
- for role,stem in [('actor','HeatRush'),('victim','HeatRushVictim')]:
-  name='ProjectYakuza_DD_'+stem;rel='42/media/anims_X/Bob/'+name+'.x';raw=work/(name+'.x');raw.write_bytes(z.read('ProjectYakuza/'+rel));text,b,c,spans=read(raw)
-  for ending in [False,True]:
-   frames=list(range(118,225))if ending else mapping
-   destName=('ProjectYakuza_DD_HeatRushFail'+('Victim'if role=='victim'else''))if ending else name;dest=media/'anims_X/Bob'/(destName+'.x');values=[locals_at(b,c,i*160)for i in frames];seamBlends=[]
-   if not ending:
-    for index in range(1,len(frames)):
-     if frames[index]==frames[index-1]+1:continue
-     previous=values[index-1];seamBlends.append({'frame':index,'sourcePrevious':frames[index-1],'frames':3})
-     for age in range(3):
-      weight=(age+1)/4;weight=weight*weight*(3-2*weight);current=values[index+age];mixed={}
-      for bone in current:
-       p0,q0,s0=previous[bone].decompose();p1,q1,s1=current[bone].decompose();mixed[bone]=Matrix.LocRotScale(p0.lerp(p1,weight),q0.slerp(q1,weight),s0.lerp(s1,weight))
-      values[index+age]=mixed
-   write(dest,text,spans,blocks(b,values,[i*160 for i in range(len(values))],None),destName)
-   records.append({'role':role,'ending':ending,'output':dest.relative_to(mod).as_posix(),'source':str(raw),'sourceSha256':hashlib.sha256(raw.read_bytes()).hexdigest(),'sha256':hashlib.sha256(dest.read_bytes()).hexdigest(),'sourceFrames':frames,'frames':len(frames),'fps':30,'seamBlends':seamBlends})
+baseline=root/'dist/ProjectYakuza-B42-v0.83.0.zip';priorReport=json.loads((mod/'docs/rush-twohit-sections.json').read_text())
+for role,stem in [('actor','HeatRush'),('victim','HeatRushVictim')]:
+ name='ProjectYakuza_DD_'+stem;rel='42/media/anims_X/Bob/'+name+'.x';raw=work/(name+'.x');
+ if baseline.exists():
+  with zipfile.ZipFile(baseline)as archive:raw.write_bytes(archive.read('ProjectYakuza/'+rel))
+ else:
+  expected=next(record for record in priorReport['clips']if record['role']==role and not record['ending'])
+  assert raw.is_file()and hashlib.sha256(raw.read_bytes()).hexdigest()==expected['sourceSha256'],'Original baseline motion is missing'
+ text,b,c,spans=read(raw)
+ for ending in [False,True]:
+  frames=list(range(118,225))if ending else mapping
+  destName=('ProjectYakuza_DD_HeatRushFail'+('Victim'if role=='victim'else''))if ending else name;dest=media/'anims_X/Bob'/(destName+'.x');values=[locals_at(b,c,i*160)for i in frames];seamBlends=[]
+  if not ending:
+   for index in range(1,len(frames)):
+    if frames[index]==frames[index-1]+1:continue
+    previous=values[index-1];seamBlends.append({'frame':index,'sourcePrevious':frames[index-1],'frames':3})
+    for age in range(3):
+     weight=(age+1)/4;weight=weight*weight*(3-2*weight);current=values[index+age];mixed={}
+     for bone in current:
+      p0,q0,s0=previous[bone].decompose();p1,q1,s1=current[bone].decompose();mixed[bone]=Matrix.LocRotScale(p0.lerp(p1,weight),q0.slerp(q1,weight),s0.lerp(s1,weight))
+     values[index+age]=mixed
+  write(dest,text,spans,blocks(b,values,[i*160 for i in range(len(values))],None),destName)
+  records.append({'role':role,'ending':ending,'output':dest.relative_to(mod).as_posix(),'source':str(raw),'sourceSha256':hashlib.sha256(raw.read_bytes()).hexdigest(),'sha256':hashlib.sha256(dest.read_bytes()).hexdigest(),'sourceFrames':frames,'frames':len(frames),'fps':30,'seamBlends':seamBlends})
 paths=[[],[]];anchor=[0.,0.]
 for i,frame in enumerate(mapping):
  if i and frame!=mapping[i-1]+1:
@@ -48,22 +54,22 @@ def lua(v):
 code='require "ProjectYakuza/Registry"\nProjectYakuza.HeatRushPaths='+lua({'fps':30,'actor':paths[0],'victim':paths[1],'victimFacing':{'forward':-1,'right':0}})+'\n'
 (media/'lua/shared/ProjectYakuza/HeatRushPaths.lua').write_text(code)
 (media/'lua/shared/ProjectYakuza/RushEndingPaths.lua').write_text('require "ProjectYakuza/Registry"\nProjectYakuza.RushEndingPaths='+lua({'fps':30,'actor':ending[0],'victim':ending[1],'duration':106/30,'targetAnimation':'ProjectYakuza_DD_HeatRushFailVictim','victimFacing':{'forward':-1,'right':0}})+'\nProjectYakuza.PairedMotions=ProjectYakuza.PairedMotions or {}\nProjectYakuza.PairedMotions.dod_rush_ending=ProjectYakuza.RushEndingPaths\n')
-contacts=[];prompts=[];bounds=[50]
+contacts=[];prompts=[];bounds=[35]
 for first,last in pairs:bounds.append(bounds[-1]+last-first+1)
 for index,(first,last)in enumerate(pairs,1):
  sourceHits=[56,68]if first==51 else[78,90]if first==74 else[102,114]
  for j,frame in enumerate(sourceHits):contacts.append({'atMs':(bounds[index-1]+frame-(first-1))/30*1000,'damageMultiplier':0,'cue':'punchImpact'if j==0 else'heatImpact','strong':False,'charged':j==1,**({'voice':'CombatLightAttack'}if j==0 else{})})
  prompts.append({'atMs':bounds[index]/30*1000,'windowMs':round((last-first+1)/30*1000),'binding':['light','finisher','grab'][(index-1)%3],'damageMultiplier':.625})
-contacts.append({'atMs':190/30*1000,'sumQTE':True,'cue':'kickImpact','strong':True,'charged':True,'layers':['heavyImpact','heatImpact'],'voice':'CombatHeavyAttack'})
-action={'enabled':True,'animation':'ProjectYakuza_DD_HeatRush','targetAnimation':'ProjectYakuza_DD_HeatRushVictim','nodeValue':'dd_heat_rush','requiresTarget':True,'extremeHeat':True,'heatRush':True,'syncPaired':True,'duration':270/30,'hitResponse':False,'noKnockback':True,'qteStages':True,'qteFailure':{'syncPaired':True,'animation':'ProjectYakuza_DD_HeatRushFail','targetAnimation':'ProjectYakuza_DD_HeatRushFailVictim','nodeValue':'dd_heat_rush_fail','duration':106/30,'paired':True,'motionId':'dod_rush_ending','contactMs':25/30*1000},'qte':{'failureLimit':1,'failureMode':'consecutive','feedback':{'gain':.35},'prompts':prompts},'contacts':contacts}
+contacts.append({'atMs':175/30*1000,'sumQTE':True,'cue':'kickImpact','strong':True,'charged':True,'layers':['heavyImpact','heatImpact'],'voice':'CombatHeavyAttack'})
+action={'enabled':True,'animation':'ProjectYakuza_DD_HeatRush','targetAnimation':'ProjectYakuza_DD_HeatRushVictim','nodeValue':'dd_heat_rush','requiresTarget':True,'extremeHeat':True,'heatRush':True,'syncPaired':True,'duration':255/30,'hitResponse':False,'noKnockback':True,'qteStages':True,'qteFailure':{'syncPaired':True,'animation':'ProjectYakuza_DD_HeatRushFail','targetAnimation':'ProjectYakuza_DD_HeatRushFailVictim','nodeValue':'dd_heat_rush_fail','duration':106/30,'paired':True,'motionId':'dod_rush_ending','contactMs':25/30*1000},'qte':{'failureLimit':1,'failureMode':'consecutive','feedback':{'gain':.35},'prompts':prompts},'contacts':contacts}
 (media/'lua/shared/ProjectYakuza/RushMove.lua').write_text('require "ProjectYakuza/Registry"\nrequire "ProjectYakuza/RushEndingPaths"\nProjectYakuza.RushMove='+lua(action)+'\n')
-style=media/'lua/shared/ProjectYakuza/Styles/DragonOfDojima.lua';s=style.read_text();lines=s.splitlines();lines=[('        heatAction=ProjectYakuza.RushMove,'if line.strip().startswith('heatAction={enabled=true,animation="ProjectYakuza_DD_HeatRush"')else line)for line in lines];s='\n'.join(lines)+'\n';s=s.replace('require "ProjectYakuza/GrabMoves"','require "ProjectYakuza/GrabMoves"\nrequire "ProjectYakuza/RushMove"')if 'require "ProjectYakuza/RushMove"'not in s else s;style.write_text(s)
+style=media/'lua/shared/ProjectYakuza/Styles/DragonOfDojima.lua';s=style.read_text(encoding="utf-8");lines=s.splitlines();lines=[('        heatAction=ProjectYakuza.RushMove,'if line.strip().startswith('heatAction={enabled=true,animation="ProjectYakuza_DD_HeatRush"')else line)for line in lines];s='\n'.join(lines)+'\n';s=s.replace('require "ProjectYakuza/GrabMoves"','require "ProjectYakuza/GrabMoves"\nrequire "ProjectYakuza/RushMove"')if 'require "ProjectYakuza/RushMove"'not in s else s;style.write_text(s,encoding="utf-8")
 for group,stem in [('zombie/hitreaction','ProjectYakuza_DD_HeatRushVictim'),('zombie/hitreaction-hit','ProjectYakuza_DD_HeatRushVictim'),('zombie/idle','ProjectYakuza_DD_HeatRushVictim'),('player/actions','ProjectYakuza_PVP_HeatRushVictim'),('player/hitreactionpvp','ProjectYakuza_PVP_HeatRushVictim')]:
  p=media/'AnimSets'/group/(stem+'.xml');n=E.parse(p).getroot();n.find('m_Name').text=stem.replace('HeatRushVictim','HeatRushFailVictim');n.find('m_AnimName').text='ProjectYakuza_DD_HeatRushFailVictim'
  for c in n.findall('m_Conditions'):
   if c.findtext('m_Name')=='ProjectYakuzaPairedVictimClip':c.find('m_Value').text='ProjectYakuza_DD_HeatRushFailVictim'
  E.ElementTree(n).write(p.with_name(stem.replace('HeatRushVictim','HeatRushFailVictim')+'.xml'),encoding='utf-8',xml_declaration=True)
-report={'authorization':'User approved splitting and replaying original two-punch sections on 2026-11-05, and declined slowing/retiming original motion.','operation':'Copied original converted source poses at 30 fps. Three original two-hit sections are replayed twice. Each QTE spans 19 original frames containing two source contacts; only the between-pair wind-up/recovery padding is removed, with every retained sample still at 30 fps. The original final kick is automatic on success or failure. Three-frame crossfades use only adjacent supplied poses at the repeated-section seams; original contact poses, 30-fps sample spacing and 1x playback are retained. No artwork, audio, AI or upscaling.','baseline':'ProjectYakuza-B42-v0.83.0.zip','clips':records,'pairs':pairs,'prefixFrames':51,'qteFrames':bounds[1:],'contactFrames':[round(c['atMs']*.03)for c in contacts],'paths':paths,'endingPaths':ending,'stagingCuts':cuts,'duration':270/30}
+report={'authorization':'User approved splitting/replaying original two-punch sections and now requested a 500 ms shorter lead-in before the first QTE, with retained motion at the original speed.','operation':'Copied original converted source poses at 30 fps. Three original two-hit sections are replayed twice. Each QTE spans 19 original frames containing two source contacts; the opening lead-in additionally omits source frames 1 through 15, shortening it by exactly 500 ms while preserving the first pose; only wind-up/recovery padding is removed, with every retained sample still at 30 fps. The original final kick is automatic on success or failure. Three-frame crossfades use only adjacent supplied poses at the repeated-section seams; original contact poses, 30-fps sample spacing and 1x playback are retained. No artwork, audio, AI or upscaling.','baseline':'ProjectYakuza-B42-v0.83.0.zip','clips':records,'pairs':pairs,'prefixFrames':36,'leadInRemovedMs':500,'leadInSkippedFrames':list(range(1,16)),'qteFrames':bounds[1:],'contactFrames':[round(c['atMs']*.03)for c in contacts],'paths':paths,'endingPaths':ending,'stagingCuts':cuts,'duration':255/30}
 (mod/'docs/rush-twohit-sections.json').write_text(json.dumps(report,indent=2)+'\n')
 print('PASS split/replayed original sections:',len(records),'clips,',len(mapping),'frames, 12 punch contacts, 6 nineteen-frame QTEs, automatic source kick')
 

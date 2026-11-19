@@ -131,7 +131,7 @@ function C.tick()
                                     if effects~=nil then
                                         local impact=false;for _,event in ipairs(effects)do if event.index==index and event.impact then impact=true;break end end
                                         if not impact and PY.AttackEffects.hit then PY.AttackEffects.hit(p,s.victim,contact.strong~=false,contact.charged==true,C.anchor(p,s.victim,meta.point))end
-                                        PY.emit("heatRushHit",p,s.victim,index,contact)
+                                        PY.emit("heatRushHit",p,s.victim,index,contact,C.anchor(p,s.victim,meta.point))
                                     else PY.HeatRush.present(p,s.victim,s.move,index,true,true,C.anchor(p,s.victim,meta.point),meta.feedback,meta.bloodOnly)end
                                 end
                             end

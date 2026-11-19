@@ -11,8 +11,14 @@ Events={OnPlayerUpdate=event(),OnTick=event(),OnPostRender=event(),OnSave=event(
 Core={getTileScale=function()return 2 end}
 IsoDirections={N=0}
 ColorInfo={new=function(r,g,b,a)return {r=r,g=g,b=b,a=a}end}
+local sparkDraws={};local sparkRenders={}
+IsoUtils={XToScreenExact=function(x,y,z)return (x-y)*64 end,YToScreenExact=function(x,y,z)return(x+y)*32-z*192 end}
 local additive=true
 SpriteRenderer={instance={getDoAdditive=function()return additive end,setDoAdditive=function(_,v)additive=v end}}
+function SpriteRenderer.instance:renderPoly(texture,x1,y1,x2,y2,x3,y3,x4,y4,r,g,b,a)
+ check(texture and a>=0 and a<=.32,'rotated spark uses a ready original texture with restrained opacity')
+ sparkDraws[#sparkDraws+1]={texture=texture,x1=x1,y1=y1,x2=x2,y2=y2,x3=x3,y3=y3,x4=x4,y4=y4,alpha=a,additive=additive}
+end
 local allocated,disposed,updated,draws=0,0,0,{}
 local spriteCreates=0
 local failRender=false
@@ -79,6 +85,9 @@ ProjectYakuza={listeners={},WorldEffects={attach=function()return instance()end}
 function ProjectYakuza.on(name,fn)local listeners=ProjectYakuza.listeners;listeners[name]=listeners[name] or {};table.insert(listeners[name],fn)end
 local function emit(name,...)for _,f in ipairs(ProjectYakuza.listeners[name] or {})do f(...)end end
 do local _="ProjectYakuzaFixture:WORLD" end
+do local _="ProjectYakuzaFixture:SPARKRENDER" end
+local nativeSparkRender=ProjectYakuza.SparkEffects.render
+ProjectYakuza.SparkEffects.render=function(point,x,y,z,scale,angle,alpha,color,drop)sparkRenders[#sparkRenders+1]={point=point,x=x,y=y,z=z,angle=angle,drop=drop};return nativeSparkRender(point,x,y,z,scale,angle,alpha,color,drop)end
 do local _="ProjectYakuzaFixture:TRACKS" end
 do local _="ProjectYakuzaFixture:CATALOG" end
 do local _="ProjectYakuzaFixture:PARENTTRACKS" end
@@ -123,7 +132,7 @@ local masked="ProjectYakuzaFixture:NATIVEMASK"
 local testedState=F.states[p];local beforeTime=p.time
 for facing=0,7 do
  p.baseClip=masked.base;p.baseTime=masked.baseTime;p.time=masked.time;p.angle=facing*math.pi/4
- F.tick();draws={};F.render()
+ F.tick();draws={};sparkDraws={};sparkRenders={};F.render()
  local expected={masked.points[1],masked.points[2],{}}
  for axis=1,3 do expected[3][axis]=masked.points[3][axis]+(masked.points[4][axis]-masked.points[3][axis])*.35 end
  for point=1,3 do
@@ -131,18 +140,18 @@ for facing=0,7 do
   check(math.abs(testedState.joints[start+1]-p.x-x)<.00006 and math.abs(testedState.joints[start+2]-p.y-y)<.00006 and math.abs(testedState.joints[start+3]-p.z-z)<.00006,'rendered first punch uses the actual native standing-pose parent in every facing')
  end
 end
-p.baseClip=nil;p.baseTime=nil;p.time=beforeTime;p.angle=0;F.tick();draws={};F.render()
+p.baseClip=nil;p.baseTime=nil;p.time=beforeTime;p.angle=0;F.tick();draws={};sparkDraws={};sparkRenders={};F.render()
 
 for _,d in ipairs(draws)do if d.width==65 then check(near(d.xScale*65,d.scale*64)and d.scale<.27,'64x128 wisp bypasses native automatic 2x scaling without stretching pixels')end end
 check(#draws>=14 and additive,'contiguous coat and inner arm layers draw, restoring renderer state')
-local wispTexture=F.states[p].points[12].texture;wispTexture.width=64;draws={};F.render()
+local wispTexture=F.states[p].points[12].texture;wispTexture.width=64;draws={};sparkDraws={};sparkRenders={};F.render()
 check(wispTexture.width==65 and F.states[p].points[12].instance.scale<.27,'texture readiness or reload cannot restore automatic enlargement')
 check(near(F.states[p].points[1].baseScale,.22*Core.getTileScale()*1.10)and near(F.states[p].points[15].baseScale,F.outerScale*Core.getTileScale()*1.10),'inner and outer swing smoke are exactly ten percent larger before animated breathing')
 local tipJoints={0,0,0,.1,0,0,.4,0,0}
 local tipX,tipY,tipZ=F.coatPoint(tipJoints,1);local contactX=F.armPoint(tipJoints,1)
 check(near(tipX,.43)and near(contactX,.4)and tipY==0 and tipZ==0,'smoke extends three centimetres past the hand without shifting the actual impact anchor')
 check(F.states[p].points[1].scale<=.72 and F.states[p].points[15].scale<.69,'wider visible core stays inside a larger smoke layer')
-local glow,smoke=false,false;for _,d in ipairs(draws)do check(d.alpha<=.55,'layers preserve transparency');glow=glow or d.additive;smoke=smoke or not d.additive end;check(glow and smoke,'additive embers sit outside alpha-blended smoke and cores')
+local glow,smoke=false,false;for _,d in ipairs(draws)do check(d.alpha<=.55,'layers preserve transparency');glow=glow or d.additive;smoke=smoke or not d.additive end;check(#sparkDraws>0 and smoke,'rotating spark quads sit outside alpha-blended smoke and cores')
 check(F.normal.r>=.9 and F.normal.g>=.9 and F.normal.b==1,'limb coating returns to soft cool white')
 for i=1,11 do
  local point=F.states[p].points[i];check(not point.additive and point.sprite==F.smoke,'inner coating uses animated source smoke with normal alpha blending')
@@ -150,7 +159,7 @@ for i=1,11 do
 end
 check(F.outerScale/.23>1.25,'limb smoke footprint is at least one quarter larger without changing its anchor')
 for facing=0,31 do
- p.angle=facing*math.pi/16;p.x=.13;p.y=-.17;p.z=.25;draws={};F.render()
+ p.angle=facing*math.pi/16;p.x=.13;p.y=-.17;p.z=.25;draws={};sparkDraws={};sparkRenders={};F.render()
  local ux,uy,uz=F.sample(track,.2,4);local wx,wy,wz=F.sample(track,.2,2);local kx,ky,kz=F.sample(track,.2,3)
  local sx,sy=F.project(ux,uy,uz,p.angle,2)
  local hx,hy=F.project(wx+(kx-wx)*.35,wy+(ky-wy)*.35,wz+(kz-wz)*.35,p.angle,2)
@@ -163,7 +172,7 @@ for facing=0,31 do
  end
 end
 for frame=3,14 do for facing=0,7 do
- p.time=frame/30;F.states[p].time=p.time;p.angle=facing*math.pi/4;draws={};F.render()
+ p.time=frame/30;F.states[p].time=p.time;p.angle=facing*math.pi/4;draws={};sparkDraws={};sparkRenders={};F.render()
  local ux,uy,uz=F.sample(track,p.time,4);local sx,sy=F.project(ux,uy,uz,p.angle,2);local x,y=centre(draws[1])
  check(near(x,sx)and near(y,sy+F.coatOffset()),'deforming source shoulder stays centred throughout the configured punch')
  for point=2,11 do
@@ -175,7 +184,7 @@ p.time=.2;F.states[p].time=.2
 local allocations,updates=allocated,updated;F.render();check(allocated==allocations and updated==updates,'repeat render at the same clock neither allocates nor advances flames')
 clock=clock+10;F.render()
 local state=F.states[p];local old={};for i=1,9 do old[i]=state.joints[i]end;local oldAt=state.clock
-clock=clock+20;p.angle=p.angle+math.pi/2;p.x=p.x+.1;draws={};F.render()
+clock=clock+20;p.angle=p.angle+math.pi/2;p.x=p.x+.1;draws={};sparkDraws={};sparkRenders={};F.render()
 local fresh={};for i=1,9 do fresh[i]=state.joints[i]end
 local sample={};check(F.historyPose(state,oldAt,sample),'recorded earlier world pose remains available')
 for i=1,9 do check(near(sample[i],old[i]),'turning does not rotate historical arm positions')end
@@ -184,13 +193,13 @@ for _,d in ipairs(draws)do if d.instance==state.points[15].instance then trail=d
 check(trail~=nil,'tethered smoke retains a short history layer')
 local tx,ty,tz=F.armPoint(state.joints,0);local dsx=(trail.x-tx-trail.y+ty)*32;local dsy=(trail.x-tx+trail.y-ty)*16-(trail.z-tz)*96
 check(math.sqrt(dsx*dsx+dsy*dsy)<=2.0001,'smoke cannot detach from the current shoulder while turning')
-clock=clock+20;p.x=p.x+5;draws={};F.render()
+clock=clock+20;p.x=p.x+5;draws={};sparkDraws={};sparkRenders={};F.render()
 check(state.historyCount==1,'teleport clears the trail instead of drawing across the map')
 for i=1,40 do clock=clock+10;p.angle=p.angle+.02;F.render()end
 check(state.historyCount==24 and #state.history==24 and allocated==allocations,'world history and native instances stay bounded during repeated frames')
 local ticks=state.clock;local beforeUpdate=updated;paused=true;clock=clock+1000;p.time=.3;F.tick();F.render()
 check(state.time==.2 and state.clock==ticks and updated==beforeUpdate,'pause freezes source clock, pose history and flames')
-paused=false;p.time=.25;p.extreme=true;clock=clock+16;F.tick();draws={};F.render()
+paused=false;p.time=.25;p.extreme=true;clock=clock+16;F.tick();draws={};sparkDraws={};sparkRenders={};F.render()
 check(draws[1].color==F.extreme and draws[1].alpha<=.50,'Extreme uses its restrained brighter tint without changing body aura')
 local providerCalls=0
 F.registerLimbProvider('live',function(who,animation,time)
@@ -198,16 +207,16 @@ F.registerLimbProvider('live',function(who,animation,time)
  return who.x+.05,who.y+.1,who.z+.3,who.x+.25,who.y-.15,who.z+.45
 end)
 for i=0,7 do
- p.angle=i*math.pi/4;draws={};F.render()
+ p.angle=i*math.pi/4;draws={};sparkDraws={};sparkRenders={};F.render()
  local d=draws[11]
  check(near(d.x,p.x+.25)and near(d.y,p.y-.15)and near(d.z,p.z+.45),'existing six-coordinate provider keeps its exact hand endpoint')
 end
 check(providerCalls==8,'provider is queried once per actor draw')
 F.removeLimbProvider('live')
 F.registerLimbProvider('full',function(who)return who.x+.05,who.y+.1,who.z+.3,who.x+.25,who.y-.15,who.z+.45,who.x-.1,who.y+.1,who.z+.55 end)
-state.config.limbProvider='full';draws={};F.render();check(near(draws[1].x,p.x-.1)and near(draws[1].z,p.z+.55),'optional shoulder endpoint is respected')
+state.config.limbProvider='full';draws={};sparkDraws={};sparkRenders={};F.render();check(near(draws[1].x,p.x-.1)and near(draws[1].z,p.z+.55),'optional shoulder endpoint is respected')
 F.removeLimbProvider('full');state.config.limbProvider=nil
-F.registerLimbProvider('broken',function()error('unavailable native pose')end);state.config.limbProvider='broken';draws={};F.render()
+F.registerLimbProvider('broken',function()error('unavailable native pose')end);state.config.limbProvider='broken';draws={};sparkDraws={};sparkRenders={};F.render()
 check(#draws>0 and state.providerRetry,'unavailable provider falls back with retry throttle')
 state.config.limbProvider=nil;F.removeLimbProvider('broken')
 local n=p.lookup;F.tick();check(p.lookup==n+1,'cached native clip slot avoids scanning every layer')
@@ -241,7 +250,7 @@ local chargeAllocation=allocated
 for branch=1,4 do
  local animation='ProjectYakuza_DD_ChargeWindup0'..branch
  ProjectYakuza.activeActions[p]={kind='heavyCharge',action={animation=animation,holdAnimation='ProjectYakuza_DD_ChargeHold0'..branch},timedAction={started=true,holding=true,power=.5}}
- p.time=0;C.update(p);clock=clock+120;C.update(p);draws={};C.render()
+ p.time=0;C.update(p);clock=clock+120;C.update(p);draws={};sparkDraws={};sparkRenders={};C.render()
  local state=C.states[p];check(state and #state.instances==18,'branch has eighteen layered smoke and spark particles')
  local row=state.track.frames[1];local ax,ay,az=row[1],row[2],row[3];local bx,by,bz=row[4],row[5],row[6]
  local x,y=F.project(ax+(bx-ax)*.12,ay+(by-ay)*.12,az+(bz-az)*.12,p.angle,2)
@@ -255,8 +264,8 @@ local startingContext={kind='heavyCharge',action={animation='ProjectYakuza_DD_Ch
 p.empty=true
 C.begin(p,style,startingContext.action,startingContext)
 check(C.states[p] and C.owners[p]==startingContext,'synchronous action start creates effects before registry publishes its context')
-clock=clock+120;draws={};C.render()
-check(#draws==36 and not draws[1].additive and draws[15].additive,'missing debug track still draws bounded charging limbs with scoped core glow')
+clock=clock+120;draws={};sparkDraws={};sparkRenders={};C.render()
+check(#draws==28 and not draws[1].additive and #sparkDraws>0,'missing debug track still draws bounded charging limbs with scoped core glow')
 local lookups=p.lookup;clock=clock+10;C.render();check(p.lookup==lookups,'missing debug track retries are throttled')
 check(draws[1].alpha>.1 and draws[1].alpha<=.26 and draws[1].scale>=.3,'charge cores are visible before full power')
 C.clear(p);p.empty=false
@@ -306,7 +315,7 @@ for animation,entry in pairs(catalog)do
  for _,window in ipairs(entry.windows)do
   contacts=contacts+1;p.time=(window.from+window.to)/2
   for facing=0,7 do
-   p.angle=facing*math.pi/4;clock=clock+10;F.tick();draws={};F.render()
+   p.angle=facing*math.pi/4;clock=clock+10;F.tick();draws={};sparkDraws={};sparkRenders={};F.render()
    check(F.states[p]==active and active.track==ProjectYakuza.AttackTracks[window.track],'correct source limb selected at contact')
    check(#draws>=14 and #active.points==48,'every contact has bounded animated coating')
    for i=1,11 do
@@ -328,7 +337,7 @@ for i=1,16 do clock=clock+10;p.time=.2+i*.005;p.angle=p.angle+.04;p.x=p.x+.004;F
 local old=F.states[p];local oldSmokeScale=old.points[20].scale;local oldRoot={p.x,p.y};emit('lightAttackFinished',p)
 check(not F.states[p]and #F.tails==1 and F.hooked,'finished attack leaves a short world-space trail')
 for i,point in ipairs(old.points)do check((point.instance~=nil)==(i>=15 and i<=38),'retired state keeps only twenty-four historical smoke instances')end
-clock=clock+20;p.angle=p.angle+2;p.x=p.x+.1;draws={};F.render();check(#draws>0,'world history still renders after the source attack finishes')
+clock=clock+20;p.angle=p.angle+2;p.x=p.x+.1;draws={};sparkDraws={};sparkRenders={};F.render();check(#draws>0,'world history still renders after the source attack finishes')
 for _,draw in ipairs(draws)do check(draw.alpha<=.16,'retired smoke remains translucent')end
 check(old.points[20].scale<oldSmokeScale,'ending smoke shrinks as it fades')
 check(F.trailMs==65,'ending smoke expires within 65 milliseconds')
@@ -338,9 +347,9 @@ clock=clock+210;F.render();check(#F.tails==0,'retired trail expires without foll
 F.clearAll()
 local base='ProjectYakuza_DD_DoubleFinisher03';local linked='ProjectYakuza_DD_LinkedDoubleFinisher03'
 p.clip=linked;local cfg=catalog[linked];p.time=(cfg.windows[1].from+cfg.windows[1].to)/2
-local linkedMove={animation=base};F.start(p,style,0,linkedMove,901);F.tick();draws={};F.render()
+local linkedMove={animation=base};F.start(p,style,0,linkedMove,901);F.tick();draws={};sparkDraws={};sparkRenders={};F.render()
 check(F.states[p]and F.states[p].track.animation==linked and F.states[p].track.limb=='leftLeg','base double-finisher request follows the actual playing linked kick and its native leg')
-for facing=0,15 do p.angle=facing*math.pi/8;clock=clock+5;draws={};F.render();local a=F.states[p];local x,y,z=F.armPoint(a.joints,1);check(near(draws[11].x,x)and near(draws[11].y,y)and near(draws[11].z,z),'kicking foot endpoint matches current clip in every facing')end
+for facing=0,15 do p.angle=facing*math.pi/8;clock=clock+5;draws={};sparkDraws={};sparkRenders={};F.render();local a=F.states[p];local x,y,z=F.armPoint(a.joints,1);check(near(draws[11].x,x)and near(draws[11].y,y)and near(draws[11].z,z),'kicking foot endpoint matches current clip in every facing')end
 F.clearAll();p.clip='ProjectYakuza_DD_Light01';F.start(p,style,0,linkedMove);clock=clock+351;F.tick();check(not F.states[p],'unrelated visible punch cannot substitute for a committed kick')
 check(ProjectYakuza.AttackTracks[catalog.ProjectYakuza_DD_Finisher03.track].limb=='rightArm','normal finisher uses its own striking arm rather than the charge-up arm')
 check(ProjectYakuza.AttackTracks[catalog.ProjectYakuza_DD_Finisher02.track].limb=='rightLeg','high-kick finisher retains the striking leg when recovering arms move faster')
@@ -349,7 +358,7 @@ do
  local name='ProjectYakuza_DD_KatanaHeat';local config=catalog[name];local limbs={'rightArm','rightArm','rightArm'}
  check(#config.windows==3,'katana has exactly three source strike windows')
  for i,window in ipairs(config.windows)do
-  F.clearAll();p.clip=name;p.time=(window.from+window.to)/2;F.start(p,style,0,{animation=name},1000+i);F.tick();draws={};F.render()
+  F.clearAll();p.clip=name;p.time=(window.from+window.to)/2;F.start(p,style,0,{animation=name},1000+i);F.tick();draws={};sparkDraws={};sparkRenders={};F.render()
   check(F.states[p]and F.states[p].track.limb==limbs[i]and #draws>0,'katana tracks its actual striking limb '..i)
  end
  F.clearAll();p.time=97/30;F.start(p,style,0,{animation=name},1004);clock=clock+351;F.tick()
@@ -365,7 +374,7 @@ local source={};local mask={true,true,true,true}
 p.clip=bottle.animation;p.time=bottle.windows[1].contact
 F.paired(p,source,{animation=bottle.animation,duration=bottle.duration},bottle.animation,0,1,mask)
 local paired=F.states[p];check(paired and paired.external and near(paired.time,p.time),'paired heat uses the actual native clip clock before fallback time')
-F.tick();draws={};F.render();check(#draws>0 and paired.track.limb=='rightArm','bottle Heat Action coats the swinging weapon arm')
+F.tick();draws={};sparkDraws={};sparkRenders={};F.render();check(#draws>0 and paired.track.limb=='rightArm','bottle Heat Action coats the swinging weapon arm')
 p.time=bottle.windows[1].to+.3;clock=clock+16;F.tick();F.render();check(F.states[p]==paired,'paired effect driver survives gaps between strikes')
 p.time=bottle.windows[2].contact;mask[2]=false;F.paired(p,source,{duration=bottle.duration},bottle.animation,0,1,mask)
 check(not F.window(paired,p.time),'unconfirmed QTE contact has no limb effect')
@@ -387,7 +396,7 @@ F.hit(p,nil,true,false,{x=99,y=99,z=99});check(F.bursts[2].points[1].vx~=vx or F
 check(F.bursts[2].variant~=burst.variant,'adjacent hits change their burst silhouette instead of repeating a radial stamp')
 check(F.puffs[1].additive==true,'opaque-black original spark sheet uses additive drawing instead of a smoke blend')
 for _,b in ipairs(F.bursts)do for _,point in ipairs(b.points)do if point.puff and point.ox==-64 then check(point.additive,'black-backed burst cannot draw an opaque rectangle')end end end
-clock=clock+40;draws={};F.render();local emittedPoint
+clock=clock+40;draws={};sparkDraws={};sparkRenders={};F.render();local emittedPoint
 for _,b in ipairs(F.bursts)do for _,point in ipairs(b.points)do
  for _,draw in ipairs(draws)do if draw.instance==point.instance then
   check(draw.alpha<=.32,'contact effects remain below the washed-out white opacity')
@@ -396,14 +405,14 @@ for _,b in ipairs(F.bursts)do for _,point in ipairs(b.points)do
   else check(not draw.additive,'transparent contact sources do not accumulate a white additive glare')end
  end end
 end end
-for _,d in ipairs(draws)do if d.instance==burst.points[1].instance then emittedPoint=d end end
-check(emittedPoint and near(emittedPoint.x,hx+vx*.04-vy*burst.points[1].curve*.04^2)and near(emittedPoint.y,hy+vy*.04+vx*burst.points[1].curve*.04^2),'sparks leave the hand with a world-space trajectory')
-p.angle=p.angle+2;p.x=p.x+1;paused=true;clock=clock+500;draws={};F.render()
+for _,d in ipairs(sparkRenders)do if d.point==burst.points[1]then emittedPoint=d end end
+check(emittedPoint and near(emittedPoint.x,hx+vx*.04/(1+burst.points[1].drag*.04)-vy*burst.points[1].curve*.04^2)and near(emittedPoint.y,hy+vy*.04/(1+burst.points[1].drag*.04)+vx*burst.points[1].curve*.04^2),'sparks leave the hand with a world-space trajectory')
+p.angle=p.angle+2;p.x=p.x+1;paused=true;clock=clock+500;draws={};sparkDraws={};sparkRenders={};F.render()
 check(burst.age==40,'flying sparks pause without aging')
 local frozen
-for _,d in ipairs(draws)do if d.instance==burst.points[1].instance then frozen=d end end
+for _,d in ipairs(sparkRenders)do if d.point==burst.points[1]then frozen=d end end
 check(frozen and near(frozen.x,emittedPoint.x)and near(frozen.y,emittedPoint.y),'moving or turning after impact does not rotate emitted sparks')
-paused=false;ISWorldMap_instance={isVisible=function()return true end};draws={};F.render();check(#draws==0,'map suppresses limb, tail and free-spark layers');ISWorldMap_instance=nil
+paused=false;ISWorldMap_instance={isVisible=function()return true end};draws={};sparkDraws={};sparkRenders={};F.render();check(#draws==0 and #sparkDraws==0,'map suppresses limb, tail and free-spark layers');ISWorldMap_instance=nil
 p.extreme=true;F.hit(p,nil,false,false,{x=0,y=0,z=.5});check(F.bursts[#F.bursts].color==F.extreme,'Extreme sparks match Extreme limb colour')
 for i=1,10 do F.hit(p,nil,false,false,{x=0,y=0,z=.5})end
 check(#F.bursts==F.maxActorBursts,'dense confirmed hits cap burst instances per actor')
@@ -414,7 +423,7 @@ clock=clock+400;F.render();check(#F.bursts==0 and allocated==disposed,'all free 
 p.extreme=false;p.clip=nil;F.clearAll()
 emit('throwStarted',p);check(F.states[p]and F.states[p].track.limb=='leftArm','ordinary grab throw follows its gripping arm');F.clearAll()
 F.clearAll();p.clip=move.animation;p.time=.2;p.angle=0;p.x=0;p.y=0;p.weight=1
-F.start(p,style,1,move);F.tick();draws={};F.render()
+F.start(p,style,1,move);F.tick();draws={};sparkDraws={};sparkRenders={};F.render()
 local cloud=F.states[p];local coreDraw,outerDraw
 for _,d in ipairs(draws)do if d.instance==cloud.points[6].instance then coreDraw=d elseif d.instance==cloud.points[20].instance then outerDraw=d end end
 check(coreDraw and outerDraw and coreDraw.alpha>=outerDraw.alpha*.85 and outerDraw.alpha<=.16,'white inner smoke and soft outer layers stay translucent')
@@ -422,7 +431,7 @@ check(outerDraw.height*outerDraw.scale>coreDraw.height*coreDraw.scale and outerD
 check(cloud.points[26].scale<cloud.points[15].scale*.72,'outer smoke tapers towards the hand')
 local startingScale=cloud.points[6].scale;local firstSeed=cloud.seed
 for turn=1,24 do
- clock=clock+10;p.time=.2+turn*.004;p.angle=turn*.12;p.x=turn*.015;p.y=turn*.008;F.tick();draws={};F.render()
+ clock=clock+10;p.time=.2+turn*.004;p.angle=turn*.12;p.x=turn*.015;p.y=turn*.008;F.tick();draws={};sparkDraws={};sparkRenders={};F.render()
  for i=15,38 do
   local d;for _,row in ipairs(draws)do if row.instance==cloud.points[i].instance then d=row;break end end
   if d then
@@ -435,9 +444,9 @@ for turn=1,24 do
 end
 check(cloud.points[6].scale~=startingScale,'source smoke breathes with independent size variation')
 F.clearAll();p.time=.2;F.start(p,style,1,move);check(F.states[p].seed~=firstSeed,'repeated same attack gets a different cosmetic phase')
-F.tick();F.render();p.weight=.3;clock=clock+16;F.tick();draws={};F.render();check(#draws>0 and near(F.states[p].poseWeight,.3),'active low-weight attacks remain visible without the old seventy-percent cutoff')
-p.weight=1;clock=clock+16;F.tick();draws={};F.render();check(#draws>0,'limb coating returns once the attack owns the pose')
-p.empty=true;draws={};F.render();check(#draws==0,'missing native track cannot render a stale limb or smoke pose');p.empty=false
+F.tick();F.render();p.weight=.3;clock=clock+16;F.tick();draws={};sparkDraws={};sparkRenders={};F.render();check(#draws>0 and near(F.states[p].poseWeight,.3),'active low-weight attacks remain visible without the old seventy-percent cutoff')
+p.weight=1;clock=clock+16;F.tick();draws={};sparkDraws={};sparkRenders={};F.render();check(#draws>0,'limb coating returns once the attack owns the pose')
+p.empty=true;draws={};sparkDraws={};sparkRenders={};F.render();check(#draws==0,'missing native track cannot render a stale limb or smoke pose');p.empty=false
 F.clearAll();p.weight=1;p.time=.2
 local overlap=actor();overlap.weight=.2
 function overlap:dbgGetAnimTrackName(layer,slot)if layer==1 and slot<2 then return move.animation end;return ''end
@@ -445,9 +454,9 @@ function overlap:dbgGetAnimTrackTime(layer,slot)return slot==0 and .32 or .2 end
 function overlap:dbgGetAnimTrackWeight(layer,slot)return slot==0 and 1-self.weight or self.weight end
 local incoming,incomingWeight,incomingSlot=F.findTrack(overlap,move.animation,{layer=1,slot=0})
 check(near(incoming,.2)and near(incomingWeight,.2)and incomingSlot.slot==1,'fading cached copy cannot hide the incoming source clock')
-F.start(overlap,style,1,move);F.tick();draws={};F.render();check(#draws>0 and near(F.states[overlap].poseWeight,.2),'incoming low-weight attack remains visible with proportional alpha')
-overlap.weight=.95;clock=clock+20;F.tick();draws={};F.render();check(#draws>0 and F.states[overlap].poseWeight>.5,'incoming coating fades in with the correct stronger native pose')
-F.finish(overlap);overlap.weight=.1;draws={};F.render();check(#draws==0 and #F.tails==0,'retired smoke cannot float through the return-to-idle blend')
+F.start(overlap,style,1,move);F.tick();draws={};sparkDraws={};sparkRenders={};F.render();check(#draws>0 and near(F.states[overlap].poseWeight,.2),'incoming low-weight attack remains visible with proportional alpha')
+overlap.weight=.95;clock=clock+20;F.tick();draws={};sparkDraws={};sparkRenders={};F.render();check(#draws>0 and F.states[overlap].poseWeight>.5,'incoming coating fades in with the correct stronger native pose')
+F.finish(overlap);overlap.weight=.1;draws={};sparkDraws={};sparkRenders={};F.render();check(#draws==0 and #F.tails==0,'retired smoke cannot float through the return-to-idle blend')
 F.clearAll()
 for i=1,12 do
  F.hit(p,nil,true,false,{x=0,y=0,z=.5});local b=F.bursts[#F.bursts]
@@ -464,7 +473,7 @@ for animation,entry in pairs(catalog)do for _,window in ipairs(entry.windows)do
   legContacts=legContacts+1
   for _,weight in ipairs({.2,.45,.69,1})do
    F.clearAll();p.clip=animation;p.time=window.contact;p.weight=weight;clock=clock+10
-   F.start(p,style,0,{animation=animation});F.tick();draws={};F.render()
+   F.start(p,style,0,{animation=animation});F.tick();draws={};sparkDraws={};sparkRenders={};F.render()
    local active=F.states[p];check(active and active.track.limb==track.limb and #draws>=14,'every kick/stomp remains visible at actual partial track weights')
    local hx,hy,hz=F.armPoint(active.joints,1);local dx,dy=centre(draws[11])
    local expectedX=(hx-p.x-hy+p.y)*64;local expectedY=(hx-p.x+hy-p.y)*32-(hz-p.z)*192+F.coatOffset()
@@ -474,11 +483,11 @@ for animation,entry in pairs(catalog)do for _,window in ipairs(entry.windows)do
 end end
 check(legContacts>=30,'kick and stomp source coverage includes linked, directional, ground and Heat Action endings')
 F.clearAll();p.clip=move.animation;p.time=.2;p.weight=1;F.start(p,style,1,move);F.tick();F.render();F.hit(p,nil,true,false)
-local corrected=F.bursts[1];draws={};F.render();local spark
-for _,d in ipairs(draws)do if d.instance==corrected.points[1].instance then spark=d end end
-check(spark and near(spark.oy,corrected.points[1].oy*corrected.points[1].scale-F.coatOffset()),'limb-emitted Gaiden sparks start at the same ten-percent drop as the coating')
+local corrected=F.bursts[1];draws={};sparkDraws={};sparkRenders={};F.render();local spark
+for _,d in ipairs(sparkRenders)do if d.point==corrected.points[1]then spark=d end end
+check(spark and near(spark.drop,F.coatOffset()),'limb-emitted Gaiden sparks start at the same ten-percent drop as the coating')
 F.clearAll();p.weight=1
-F.clearAll();p.clip=move.animation;p.time=.2;p.weight=1;F.start(p,style,1,move);F.tick();draws={};F.render()
+F.clearAll();p.clip=move.animation;p.time=.2;p.weight=1;F.start(p,style,1,move);F.tick();draws={};sparkDraws={};sparkRenders={};F.render()
 check(near(F.coatOffset(),2.176)and F.coatOffset()<3,'requested ten-percent drop is about two pixels, not the removed fifty-six-pixel displacement')
 local coat=F.states[p]
 check(near(F.coatOffset(),64*.17*Core.getTileScale()*.1),'larger effects preserve the existing two-pixel placement instead of shifting their anchor')

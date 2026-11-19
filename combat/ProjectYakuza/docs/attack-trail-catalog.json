@@ -1,7 +1,7 @@
 {
   "operation": "Native AnimationTrack.get sampled at 120 Hz with world-space forward kinematics, independent of character facing. All weapon profiles use the wielding right arm; wall punch/kick, ground stomp, open-grab foot push, throw release and Rush ending use explicit source-pose policies. Paced QTE contact times map to actual clip time and original failure contact indices are retained. Repeated same-limb contacts share a track. Code-side numeric FK only from existing supplied PZ clips, including current paired contacts/endings and linked native finisher variants. Contacts use native collision events, authored Heat Action contacts or the documented parry fallback. Clips use contact-local endpoint/relative motion with verified original left-light and right-high-kick pose overrides, independent of charge-up pose. The high kick has right-foot height 0.721 versus planted left foot 0.093 at source frame 24; recovering arms can be faster than the striking leg. Runtime resolves the actual playing clip within the committed move family. No visual/audio/animation/model assets are generated or modified.",
   "catalog": "42/media/lua/client/ProjectYakuza/AttackTrailCatalog.lua",
-  "sha256": "ea187191dadb628d900aa5df18cce1c4510ff65a5d90a9dd931d6aab47b9cf4b",
+  "sha256": "3849becdc6fa3f7569488d187bd5de839e69dfae5586cd53cb49ab1652fc934a",
   "clips": [
     {
       "profile": "bat",
@@ -2099,9 +2099,9 @@
         6.33333333333
       ],
       "clip": "42/media/anims_X/Bob/ProjectYakuza_DD_HeatRush.x",
-      "clipSha256": "0049ab9a56119b95f2f3f8c381f0adfa40985434a3dafcf3ff6f1f95ef6120a0",
-      "samples": 1081,
-      "duration": 9.0,
+      "clipSha256": "744345e83bbd08346835fcffcb298b6e28441036b2f871ba125089778489f616",
+      "samples": 1021,
+      "duration": 8.5,
       "windows": [
         {
           "index": 1,
@@ -2111,11 +2111,11 @@
           "contact": 1.86666666667,
           "limb": "rightArm",
           "scores": [
-            0.3669303948573076,
-            1.1019122411569438,
-            0.09181007805742601,
-            0.10336742595106427,
-            0.08599904613066628
+            0.6374795047126628,
+            0.535912387824306,
+            0.1487412267428079,
+            0.13207418461210055,
+            0.14428323851901886
           ],
           "selection": "alternating right-left source punches and final right kick"
         },
@@ -2127,11 +2127,11 @@
           "contact": 2.26666666667,
           "limb": "leftArm",
           "scores": [
-            1.0607581150877994,
-            0.3146738619759994,
-            0.07450300746384814,
-            0.08941002557728117,
-            0.11971285975989171
+            0.569400492438958,
+            0.23551056815141724,
+            0.11049017667534268,
+            0.1508839425224281,
+            0.10963689337772828
           ],
           "selection": "alternating right-left source punches and final right kick"
         },
@@ -2143,11 +2143,11 @@
           "contact": 2.4666666666699997,
           "limb": "rightArm",
           "scores": [
-            0.3779783747303828,
-            0.9224427677682462,
-            0.06834032196566273,
-            0.09293310235907278,
-            0.07985051507696633
+            0.7769843755287549,
+            0.20024272179648817,
+            0.0979109778441705,
+            0.12724359442581074,
+            0.23215892372408742
           ],
           "selection": "alternating right-left source punches and final right kick"
         },
@@ -2159,11 +2159,11 @@
           "contact": 2.86666666667,
           "limb": "leftArm",
           "scores": [
-            1.1713189966411948,
-            0.23172298729697627,
-            0.13296080389757084,
-            0.10110715248966136,
-            0.10260437154956799
+            0.5845502876281093,
+            0.40157530561471527,
+            0.0969256189962835,
+            0.1279906705531794,
+            0.16493726498513023
           ],
           "selection": "alternating right-left source punches and final right kick"
         },
@@ -2175,11 +2175,11 @@
           "contact": 3.1,
           "limb": "rightArm",
           "scores": [
-            0.35066836220425246,
-            1.3154080859833093,
-            0.0771212970142537,
-            0.16874873260412757,
-            0.16373349896556996
+            0.6193914530411618,
+            0.1202209130324702,
+            0.0670199263994013,
+            0.08371992338328661,
+            0.18718680315184774
           ],
           "selection": "alternating right-left source punches and final right kick"
         },
@@ -2191,11 +2191,11 @@
           "contact": 3.5,
           "limb": "leftArm",
           "scores": [
-            1.315199693658666,
-            0.3109956411312551,
-            0.08664029905480636,
-            0.049744654878806485,
-            0.10208549207836572
+            0.23622581492657527,
+            0.594741711954564,
+            0.08809816017210756,
+            0.1065428790327462,
+            0.0640386931213055
           ],
           "selection": "alternating right-left source punches and final right kick"
         },
@@ -2207,11 +2207,11 @@
           "contact": 3.76666666667,
           "limb": "rightArm",
           "scores": [
-            0.38352848669841694,
-            1.1022270736770525,
-            0.09431652881137122,
-            0.1117951588123093,
-            0.09265737424646192
+            0.6374799894540233,
+            0.5359126369461074,
+            0.14874135211978345,
+            0.1320742157048894,
+            0.14428338226006435
           ],
           "selection": "alternating right-left source punches and final right kick"
         },
@@ -2223,11 +2223,11 @@
           "contact": 4.16666666667,
           "limb": "leftArm",
           "scores": [
-            1.0607562753922288,
-            0.31467320920379466,
-            0.07450269736037975,
-            0.08940962897704247,
-            0.11971265899738379
+            0.5694000767269608,
+            0.23550997636422233,
+            0.11049006410635386,
+            0.1508838045310284,
+            0.10963673069506343
           ],
           "selection": "alternating right-left source punches and final right kick"
         },
@@ -2239,11 +2239,11 @@
           "contact": 4.3666666666700005,
           "limb": "rightArm",
           "scores": [
-            0.3779800681162581,
-            0.9224436256781774,
-            0.06834054947080688,
-            0.09293370100124303,
-            0.07985099654061037
+            0.7769869264058074,
+            0.20024337794809693,
+            0.09791110786865466,
+            0.1272435700941715,
+            0.2321592154968565
           ],
           "selection": "alternating right-left source punches and final right kick"
         },
@@ -2255,11 +2255,11 @@
           "contact": 4.76666666667,
           "limb": "leftArm",
           "scores": [
-            1.1713190497416572,
-            0.2317230022224518,
-            0.1329608155141556,
-            0.10110717677680355,
-            0.10260437655631513
+            0.5845503600112738,
+            0.40157530522027224,
+            0.09692557208813178,
+            0.12799059203000387,
+            0.16493726776383769
           ],
           "selection": "alternating right-left source punches and final right kick"
         },
@@ -2271,11 +2271,11 @@
           "contact": 5.0,
           "limb": "rightArm",
           "scores": [
-            0.35066839402960254,
-            1.3154083209501408,
-            0.07712130026792044,
-            0.168748694857087,
-            0.16373347600283472
+            0.27547454428966883,
+            0.16411243793282604,
+            0.025349543750321134,
+            0.019085426378510094,
+            0.0835334472852018
           ],
           "selection": "alternating right-left source punches and final right kick"
         },
@@ -2287,11 +2287,11 @@
           "contact": 5.4,
           "limb": "leftArm",
           "scores": [
-            1.3152018188649086,
-            0.3109962401329003,
-            0.08664062573548062,
-            0.049744826236194965,
-            0.10208575027414225
+            0.3880800406235653,
+            0.1884456342870872,
+            0.08347480298544027,
+            0.028086830737594933,
+            0.05661412033749178
           ],
           "selection": "alternating right-left source punches and final right kick"
         },
@@ -2303,11 +2303,11 @@
           "contact": 6.33333333333,
           "limb": "rightLeg",
           "scores": [
-            0.21748420259946086,
-            0.3820006317302998,
-            0.0836115404936922,
-            0.5105581994107675,
-            0.12837632462472578
+            0.2121911877298143,
+            0.2191132755604586,
+            0.09437261781073122,
+            0.0713585598331972,
+            0.07424152864018373
           ],
           "selection": "original final right kick"
         }
