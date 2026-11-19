@@ -458,5 +458,17 @@ module Base
 
     }
 
+    sound ProjectYakuza_TechnicalDifficulties
+    {
+        category = ProjectYakuza_Music,
+        master = Music,
+        is3D = false,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuza/TechnicalDifficulties.mp3,
+            volume = 0.80,
+        }
+    }
 }
 

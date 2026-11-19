@@ -73,6 +73,7 @@ GameSound_EN = {
     GameSound_ProjectYakuza_TownBully = "Town Bully",
 
     GameSound_ProjectYakuza_KamuroAgain = "KAMURO again",
+    GameSound_ProjectYakuza_TechnicalDifficulties = "Technical Difficulties",
 
 
     GameSound_ProjectYakuza_HeatScene_bat_0 = "Bat Heat Action: sound 1",

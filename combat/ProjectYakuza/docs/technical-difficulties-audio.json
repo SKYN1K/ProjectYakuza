@@ -1,0 +1,67 @@
+{
+  "title": "Technical Difficulties",
+  "sound": "ProjectYakuza_TechnicalDifficulties",
+  "source": {
+    "file": "(06) [NYO] technical difficulties.flac",
+    "bytes": 23618824,
+    "sha256": "c5328a2d1c0b037b2376bfb1c467ec0cf4e030bfe12ac99cd24c2fb240048d27",
+    "audio": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "flac",
+          "sample_rate": "44100",
+          "channels": 2,
+          "bits_per_raw_sample": "16"
+        }
+      ],
+      "format": {
+        "duration": "168.124082",
+        "bit_rate": "1123875"
+      }
+    },
+    "decodedSamplesPerChannel": 7414272
+  },
+  "output": {
+    "path": "42/media/sound/ProjectYakuza/TechnicalDifficulties.mp3",
+    "bytes": 3363526,
+    "sha256": "59da4415c2a3f7b942aede8ee65c32a1422989676dfe9fece84861dfd89e0645",
+    "audio": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "mp3",
+          "sample_rate": "44100",
+          "channels": 2,
+          "bit_rate": "160000"
+        }
+      ],
+      "format": {
+        "duration": "168.124082",
+        "bit_rate": "160049"
+      }
+    },
+    "decodedSamplesPerChannel": 7414272
+  },
+  "conversion": {
+    "encoder": "libmp3lame",
+    "codec": "MP3",
+    "bitRate": 160000,
+    "sampleRate": 44100,
+    "channels": 2,
+    "compressionLevel": 0,
+    "id3Metadata": false,
+    "operation": "Direct user-authorized FLAC to MP3 conversion at the existing playlist target bitrate. Full decoded sample count preserved, no trimming, mixing, normalization or gain change. Metadata and embedded artwork omitted. MP3 encoding is lossy."
+  },
+  "referencePlaylist": {
+    "codec": "Vorbis",
+    "targetBitRate": 160000,
+    "channels": 2,
+    "dominantSampleRate": 44100,
+    "existingEntries": 19
+  },
+  "playlist": "Dragon of Dojima",
+  "clipGain": 0.8
+}

@@ -61,6 +61,7 @@ ProjectYakuza.registerStyle({
         {sound="ProjectYakuza_IsolatedFight",title="Isolated Fight"},
         {sound="ProjectYakuza_TownBully",title="Town Bully"},
         {sound="ProjectYakuza_KamuroAgain",title="KAMURO again"},
+        {sound="ProjectYakuza_TechnicalDifficulties",title="Technical Difficulties"},
     },
     directionalAttacks={["minimumDegrees"]=65,["rearDegrees"]=145,["moves"]={["left"]={["animation"]="ProjectYakuza_DD_DirectionalLeft",["nodeValue"]="dd_directional_left",["duration"]=0.9375,["speed"]=1.6,["impact"]=0.2222222222222222,["quickstepCancelAt"]=0.24444444444444444,["damageMultiplier"]=0.75,["directional"]=true,["fullBody"]=true,["hitResponse"]="light",["kick"]=false},["right"]={["animation"]="ProjectYakuza_DD_DirectionalRight",["nodeValue"]="dd_directional_right",["duration"]=0.9375,["speed"]=1.6,["impact"]=0.2222222222222222,["quickstepCancelAt"]=0.24444444444444444,["damageMultiplier"]=0.75,["directional"]=true,["fullBody"]=true,["hitResponse"]="light",["kick"]=false},["rear"]={["animation"]="ProjectYakuza_DD_DirectionalRear",["nodeValue"]="dd_directional_rear",["duration"]=1.1874999999999998,["speed"]=1.6,["impact"]=0.19298245614035087,["quickstepCancelAt"]=0.21052631578947367,["damageMultiplier"]=0.75,["directional"]=true,["fullBody"]=true,["hitResponse"]="light",["kick"]=true}}},
     tauntReactions={radius=5,maxTargets=8,requireThreat=true},
