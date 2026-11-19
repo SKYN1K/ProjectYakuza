@@ -423,3 +423,8 @@
 !tools/combat-tests/build_phone_material.py
 !tools/combat-tests/phone-material-runtime.lua
 !tools/Import-PhonePreview.py
+
+!tools/combat-tests/RecoverySelectionProbe.java
+!tools/combat-tests/build_recovery_tests.py
+!tools/combat-tests/locomotion-test-fixture.lua
+!tools/combat-tests/texture-warmup-runtime.lua

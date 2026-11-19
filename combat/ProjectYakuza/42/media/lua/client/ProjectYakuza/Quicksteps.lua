@@ -8,6 +8,9 @@ local Q = { input={}, nextAllowed={}, pending=setmetatable({}, {__mode="k"}),aim
 ProjectYakuza.Quicksteps = Q
 local function now() return getTimestampMs() end
 Q.limit=3;Q.windowMs=15000
+function Q.runningWithoutAim(p)
+    return not p:isAiming() and ((p.isRunning and p:isRunning())or(p.isSprinting and p:isSprinting()))
+end
 function Q.quota(p)
     local t=now();local d=p:getModData();local history=d.ProjectYakuzaQuickstepTimes or {};local keep={}
     for _,stamp in ipairs(history) do if type(stamp)=="number" and stamp>t-Q.windowMs and stamp<=t then keep[#keep+1]=stamp end end
@@ -54,7 +57,7 @@ Q.Action = A
 function A:isValid()
     local p=self.character
     local hit=p:getHitReaction()
-    return ProjectYakuza.isEquipped(p) and (p:isAiming() or self.context.shove) and not p:isDead() and not p:isOnFloor()
+    return ProjectYakuza.isEquipped(p) and not Q.runningWithoutAim(p) and (p:isAiming() or self.context.shove) and not p:isDead() and not p:isOnFloor()
         and not p:isKnockedDown() and not p:isClimbing() and p:getVehicle()==nil
         and not p:isAttackStarted() and not p:isPerformingAttackAnimation() and (not hit or hit=="")
 end
@@ -176,6 +179,7 @@ ProjectYakuza.registerActionHandler("quickstep",{
     canStart=function(context)
         local p=context.player
         context.shove=type(context.target)=="table" and context.target.shove==true
+        if Q.runningWithoutAim(p)then return false,"running"end
         local hit=p:getHitReaction()
         if not p:isLocalPlayer() or (not p:isAiming() and not context.shove) or p:isDead() or p:isOnFloor() or p:isKnockedDown()
             or p:isClimbing() or p:getVehicle() or p:isDraggingCorpse() or p:isAsleep()
@@ -322,6 +326,7 @@ function Q.pollShove(player)
     local pressed=not Q.shoveDown[player]
     Q.shoveDown[player]=down
     if not pressed or isGamePaused() then return false end
+    if Q.runningWithoutAim(player)then Q.aimPending[player]=nil;return false end
     local fx,fy=Q.facing(player);if not fx then return false end
     local dx,dy=Q.movement()
     if dx==0 and dy==0 then dx,dy=-fx,-fy end

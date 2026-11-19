@@ -77,12 +77,12 @@ local before=allocated;step(250);step(250);check(L.states[owner]and L.sample(own
 owner.style=style;step(250);step(250);failed=true;L.clear(owner);L.update(owner,true);L.markCombat(owner);step(250)
 local failedCount=played;for i=1,20 do step(250)end;check(played==failedCount,'missing audio event retries are throttled rather than spammed');failed=false
 L.clearAll();owner.style=style;owner.health=10;owner.chasing=1;L.update(owner,true);step(250)
-local uiDraws={};ISPanel={}
+local uiDraws={};local fillAlphas={};local warningTexts={};ISPanel={}
 function ISPanel:derive()local c={};c.__index=c;return setmetatable(c,{__index=self})end
 function ISPanel:new(x,y,w,h)return setmetatable({width=w,height=h},self)end
 function ISPanel:initialise()end;function ISPanel:setWantMouseEvents(v)self.mouse=v end;function ISPanel:addToUIManager()end
 function ISPanel:drawTextureScaled(texture,x,y,w,h,alpha,r,g,b)uiDraws[#uiDraws+1]={texture=texture,alpha=alpha,r=r,g=g,b=b}end
-function ISPanel:drawSubTexture()end;function ISPanel:drawRect()end;function ISPanel:drawText(text)self.lastText=text end
+function ISPanel:drawSubTexture()end;function ISPanel:drawRect(x,y,w,h,a)fillAlphas[#fillAlphas+1]=a end;function ISPanel:drawText(text)self.lastText=text;if text=="CRITICAL"or text=="LOW HEALTH"then warningTexts[#warningTexts+1]=text end end
 getSpecificPlayer=function()return owner end;getPlayerScreenWidth=function()return 1280 end
 getTexture=function(name)return name end;UIFont={Small=1}
 SpriteRenderer={instance={getDoAdditive=function()return false end,setDoAdditive=function()end}}
@@ -93,6 +93,10 @@ do local _="ProjectYakuzaFixture:HUD" end
 local HUD=PY.HeatUI;HUD.create();HUD.instance:prerender()
 local red=false;for _,draw in ipairs(uiDraws)do if draw.texture:find('BarFrame.png',1,true)and draw.g==.12 then red=true;check(draw.alpha>0 and draw.alpha<=.28,'health warning overlays the original frame at restrained alpha')end end
 check(red and HUD.instance.mouse==false,'stock HUD uses original health frame without intercepting mouse input')
+check(#warningTexts==0,'low-health status words are removed from the HUD')
+state=L.states[owner];state.last=clock;state.clock=state.period/4;fillAlphas={};HUD.instance:prerender();local peak=fillAlphas[1]
+state.clock=state.period*.75;fillAlphas={};HUD.instance:prerender();local trough=fillAlphas[1]
+check(peak>=.52 and peak<trough and trough<=1,'the health fill itself pulses while remaining visible')
 owner.health=100;step(250);step(250);uiDraws={};HUD.instance:prerender();local warned=false
 for _,draw in ipairs(uiDraws)do if draw.g==.12 then warned=true end end
 check(not warned,'healed character does not retain a pulsing health-frame overlay')

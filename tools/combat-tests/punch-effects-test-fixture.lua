@@ -14,6 +14,7 @@ ColorInfo={new=function(r,g,b,a)return {r=r,g=g,b=b,a=a}end}
 local additive=true
 SpriteRenderer={instance={getDoAdditive=function()return additive end,setDoAdditive=function(_,v)additive=v end}}
 local allocated,disposed,updated,draws=0,0,0,{}
+local spriteCreates=0
 local failRender=false
 local function centre(d)
  local x,y,z=d.x-d.rootX,d.y-d.rootY,d.z-d.rootZ
@@ -31,6 +32,7 @@ local function instance()
  end}
 end
 IsoSprite={CreateSprite=function()
+ spriteCreates=spriteCreates+1
  local s={height=64}
  function s:LoadFramesNoDirPageSimple(path)
   self.height=string.find(path,'ChargeSpark')and 32 or (string.find(path,'e_j_0073')or string.find(path,'e_j_0332')or string.find(path,'e_n_5001'))and 128 or 64
@@ -81,8 +83,13 @@ do local _="ProjectYakuzaFixture:TRACKS" end
 do local _="ProjectYakuzaFixture:CATALOG" end
 do local _="ProjectYakuzaFixture:PARENTTRACKS" end
 do local _="ProjectYakuzaFixture:PARENTPREDICTION" end
+local effectWarmups={}
+ProjectYakuza.TextureWarmup={add=function(key,fn)effectWarmups[#effectWarmups+1]=fn end}
 do local _="ProjectYakuzaFixture:EFFECTS" end
 local F=ProjectYakuza.AttackEffects
+for _,warm in ipairs(effectWarmups)do warm()end
+local warmedSprites=spriteCreates;F.loadContacts()
+check(#effectWarmups==2 and allocated==0 and spriteCreates==warmedSprites and F.smoke and F.flash and F.streak,'limb/contact sprite setup is warmed once without showing or allocating live effects')
 check(ProjectYakuza.AttackTracks.dd_light_01==nil,'obsolete duplicate first-light numeric track is not loaded')
 local track=ProjectYakuza.AttackTracks.dd_trail_light01_1
 local move={animation=track.animation,duration=.625,impact=.2,attackEffects={track='dd_trail_light01_1',from=2/30,to=14/30,swingFrame=3,verticalOffset=2.5}}
@@ -126,10 +133,14 @@ for facing=0,7 do
 end
 p.baseClip=nil;p.baseTime=nil;p.time=beforeTime;p.angle=0;F.tick();draws={};F.render()
 
-for _,d in ipairs(draws)do if d.width==65 then check(near(d.xScale*65,d.scale*64)and d.scale<.24,'64x128 wisp bypasses native automatic 2x scaling without stretching pixels')end end
+for _,d in ipairs(draws)do if d.width==65 then check(near(d.xScale*65,d.scale*64)and d.scale<.27,'64x128 wisp bypasses native automatic 2x scaling without stretching pixels')end end
 check(#draws>=14 and additive,'contiguous coat and inner arm layers draw, restoring renderer state')
 local wispTexture=F.states[p].points[12].texture;wispTexture.width=64;draws={};F.render()
-check(wispTexture.width==65 and F.states[p].points[12].instance.scale<.24,'texture readiness or reload cannot restore automatic enlargement')
+check(wispTexture.width==65 and F.states[p].points[12].instance.scale<.27,'texture readiness or reload cannot restore automatic enlargement')
+check(near(F.states[p].points[1].baseScale,.22*Core.getTileScale()*1.10)and near(F.states[p].points[15].baseScale,F.outerScale*Core.getTileScale()*1.10),'inner and outer swing smoke are exactly ten percent larger before animated breathing')
+local tipJoints={0,0,0,.1,0,0,.4,0,0}
+local tipX,tipY,tipZ=F.coatPoint(tipJoints,1);local contactX=F.armPoint(tipJoints,1)
+check(near(tipX,.43)and near(contactX,.4)and tipY==0 and tipZ==0,'smoke extends three centimetres past the hand without shifting the actual impact anchor')
 check(F.states[p].points[1].scale<=.72 and F.states[p].points[15].scale<.69,'wider visible core stays inside a larger smoke layer')
 local glow,smoke=false,false;for _,d in ipairs(draws)do check(d.alpha<=.55,'layers preserve transparency');glow=glow or d.additive;smoke=smoke or not d.additive end;check(glow and smoke,'additive embers sit outside alpha-blended smoke and cores')
 check(F.normal.r>=.9 and F.normal.g>=.9 and F.normal.b==1,'limb coating returns to soft cool white')
@@ -231,10 +242,10 @@ for branch=1,4 do
  local animation='ProjectYakuza_DD_ChargeWindup0'..branch
  ProjectYakuza.activeActions[p]={kind='heavyCharge',action={animation=animation,holdAnimation='ProjectYakuza_DD_ChargeHold0'..branch},timedAction={started=true,holding=true,power=.5}}
  p.time=0;C.update(p);clock=clock+120;C.update(p);draws={};C.render()
- local state=C.states[p];check(state and #state.instances==6,'branch has only six limb-bound charging particles')
+ local state=C.states[p];check(state and #state.instances==18,'branch has eighteen layered smoke and spark particles')
  local row=state.track.frames[1];local ax,ay,az=row[1],row[2],row[3];local bx,by,bz=row[4],row[5],row[6]
- local x,y=F.project(ax+(bx-ax)*.31,ay+(by-ay)*.31,az+(bz-az)*.31,p.angle,2)
- local d=draws[1];local cx,cy=centre(d);check(near(cx,x) and near(cy,y+4+F.coatOffset()) and d.z>d.rootZ,'charge particle centres and depth follow the branch-specific limb')
+ local x,y=F.project(ax+(bx-ax)*.12,ay+(by-ay)*.12,az+(bz-az)*.12,p.angle,2)
+ local d=draws[1];local cx,cy=centre(d);check(math.abs(cx-x)<.4 and math.abs(cy-y-4-F.coatOffset())<.4 and d.z>d.rootZ,'charge particle centres and depth follow the branch-specific limb')
  check(d.color.r>=.6 and d.color.g>=.8,'limb charge glow is white-blue')
  local n=allocated;C.update(p);C.render();check(allocated==n,'stable charge never rebuilds particles')
  C.clear(p)
@@ -245,9 +256,9 @@ p.empty=true
 C.begin(p,style,startingContext.action,startingContext)
 check(C.states[p] and C.owners[p]==startingContext,'synchronous action start creates effects before registry publishes its context')
 clock=clock+120;draws={};C.render()
-check(#draws==12 and draws[1].additive and not draws[4].additive,'missing debug track still draws bounded charging limbs with scoped core glow')
+check(#draws==36 and not draws[1].additive and draws[15].additive,'missing debug track still draws bounded charging limbs with scoped core glow')
 local lookups=p.lookup;clock=clock+10;C.render();check(p.lookup==lookups,'missing debug track retries are throttled')
-check(draws[1].alpha>.4 and draws[1].scale>=.3,'charge cores are visible before full power')
+check(draws[1].alpha>.1 and draws[1].alpha<=.26 and draws[1].scale>=.3,'charge cores are visible before full power')
 C.clear(p);p.empty=false
 check(not C.owners[p] and not C.states[p],'stopping charge clears early-start ownership too')
 
@@ -407,11 +418,11 @@ F.start(p,style,1,move);F.tick();draws={};F.render()
 local cloud=F.states[p];local coreDraw,outerDraw
 for _,d in ipairs(draws)do if d.instance==cloud.points[6].instance then coreDraw=d elseif d.instance==cloud.points[20].instance then outerDraw=d end end
 check(coreDraw and outerDraw and coreDraw.alpha>=outerDraw.alpha*.85 and outerDraw.alpha<=.16,'white inner smoke and soft outer layers stay translucent')
-check(outerDraw.height*outerDraw.scale>coreDraw.height*coreDraw.scale and outerDraw.height*outerDraw.scale<52,'larger inner smoke remains below 52 pixels at normal tile scale')
+check(outerDraw.height*outerDraw.scale>coreDraw.height*coreDraw.scale and outerDraw.height*outerDraw.scale<58,'larger inner smoke remains below 58 pixels at normal tile scale')
 check(cloud.points[26].scale<cloud.points[15].scale*.72,'outer smoke tapers towards the hand')
 local startingScale=cloud.points[6].scale;local firstSeed=cloud.seed
 for turn=1,24 do
- clock=clock+10;p.time=.2+turn*.004;p.angle=turn*.31;p.x=turn*.015;p.y=turn*.008;F.tick();draws={};F.render()
+ clock=clock+10;p.time=.2+turn*.004;p.angle=turn*.12;p.x=turn*.015;p.y=turn*.008;F.tick();draws={};F.render()
  for i=15,38 do
   local d;for _,row in ipairs(draws)do if row.instance==cloud.points[i].instance then d=row;break end end
   if d then

@@ -56,10 +56,16 @@ function emitter:stopSoundLocal()self.playing=false end
 function emitter:setPlayRemoteEvents()end;function emitter:set3D()end;function emitter:tick()end
 function emitter:setVolume(_,v)self.volume=v end
 function emitter:isPlaying()return self.playing end
-FMODSoundEmitter={new=function()return emitter end}
+local emitterAllocations=0
+FMODSoundEmitter={new=function()emitterAllocations=emitterAllocations+1;return emitter end}
+local musicWarmups={}
+PY.TextureWarmup={add=function(key,fn)musicWarmups[#musicWarmups+1]=fn end}
 ZombRand=function()return 0 end
 do local _="ProjectYakuzaFixture:MUSIC" end
-local M=PY.CombatMusic;local theme=PY.getStyle('dragon_of_dojima').music[1]
+local M=PY.CombatMusic
+check(#musicWarmups==1,'combat music registers one bounded setup job')
+musicWarmups[1]();M.prepare();check(emitterAllocations==1 and M.emitter==emitter and not M.sound,'emitter warm-up is silent, idempotent and ready before the first hit')
+local theme=PY.getStyle('dragon_of_dojima').music[1]
 check(M.start(p,theme,clock) and M.sound,'PZ music slider zero does not mute mod soundtrack')
 for i=1,4 do clock=clock+250;M.tick()end
 check(emitter.volume==1 and nativeMusic==0,'mod slider alone controls track gain while vanilla music remains muted')

@@ -62,5 +62,10 @@
       "sha256": "cf6a953adbea195f3d7e6f3a4a3a4955204ebe7b97530c26f82809c325e2c2f9"
     }
   ],
-  "armedRun": "Cadence-corrected Kiryu run body with source weapon arm motion and native hand grips; native knife run. Weapon sprint uses the cadence-matched source sprint body."
+  "armedRun": "Cadence-corrected Kiryu run body with source weapon arm motion and native hand grips; native knife run. Weapon sprint uses the cadence-matched source sprint body.",
+  "exhaustionFallback": {
+    "gate": "ProjectYakuzaRestedRun",
+    "condition": "Custom unarmed run only at zero ENDURANCE and TIRED moodle levels; native run selection and fatigue movement rates otherwise. Source clips, native stride/travel samples, player speed and attack speed unchanged.",
+    "selectorSha256": "c3ce04fb66b3b1e8f84a3036a7d0e1c62cde38beb2b2dff74cd3a77387583792"
+  }
 }

@@ -1,4 +1,5 @@
 require "ProjectYakuza/Runtime"
+require "ProjectYakuza/TextureWarmup"
 local ProjectYakuza=ProjectYakuza
 local M={themes={},quietMs=12000,fadeIn=0.8,fadeOut=1.25}
 ProjectYakuza.CombatMusic=M
@@ -34,13 +35,16 @@ function M.stop()
     M.originalMusic=nil;M.originalOption=nil
     if M.ticking then Events.OnTick.Remove(M.tick);M.ticking=false end
 end
-function M.start(p,theme,t,continuing)
-    if not theme or musicLevel()<=0 or (M.failedUntil and t<M.failedUntil) then return false end
+function M.prepare()
     if not M.emitter then
         M.emitter=FMODSoundEmitter.new()
         getSoundManager():unregisterEmitter(M.emitter)
         M.emitter:setPlayRemoteEvents(false)
     end
+end
+function M.start(p,theme,t,continuing)
+    if not theme or musicLevel()<=0 or (M.failedUntil and t<M.failedUntil) then return false end
+    M.prepare()
     local sound=M.emitter:playSoundImpl(theme.sound,false,nil)
     if not sound or sound==0 then
         M.failedUntil=t+30000
@@ -105,3 +109,5 @@ ProjectYakuza.on("styleChanged",function(p)if M.owner==p then M.stop() end end)
 Events.OnSave.Add(M.stop)
 Events.OnMainMenuEnter.Add(M.stop)
 Events.OnGameStart.Add(M.stop)
+
+if ProjectYakuza.TextureWarmup and ProjectYakuza.TextureWarmup.add then ProjectYakuza.TextureWarmup.add("music emitter",M.prepare)end

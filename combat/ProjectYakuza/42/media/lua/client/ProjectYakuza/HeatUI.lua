@@ -84,17 +84,14 @@ function H:drawGauge(p)
     local healthWidth=math.max(80,math.min(360*H.scale,getPlayerScreenWidth(0)-H.originX-80))
     local healthX,healthY=H.originX+40*H.scale,H.originY-32*H.scale
     if a.healthEmpty then self:drawTextureScaled(a.healthEmpty,healthX,healthY,healthWidth,18*H.scale,1,1,1,1)end
+    local warning=ProjectYakuza.LowHealthFeedback and ProjectYakuza.LowHealthFeedback.sample(p)or 0
+    local healthAlpha=1-warning*.48
     local fill=(healthWidth-4)*self.health/100
     if fill>0 then
-        for row=0,7 do local shine=1-math.abs(row-3.5)/4;self:drawRect(healthX+2,healthY+2+row*(14*H.scale/8),fill,14*H.scale/8+1,1,.48+.4*shine,.025+.045*shine,.035+.045*shine)end
+        for row=0,7 do local shine=1-math.abs(row-3.5)/4;self:drawRect(healthX+2,healthY+2+row*(14*H.scale/8),fill,14*H.scale/8+1,healthAlpha,.48+.4*shine,.025+.045*shine,.035+.045*shine)end
     end
     if a.healthFrame then self:drawTextureScaled(a.healthFrame,healthX,healthY,healthWidth,18*H.scale,1,1,1,1)end
-    local warning,critical=0,false
-    if ProjectYakuza.LowHealthFeedback then warning,critical=ProjectYakuza.LowHealthFeedback.sample(p)end
-    if warning>0 then
-        if a.healthFrame then self:drawTextureScaled(a.healthFrame,healthX-1,healthY-1,healthWidth+2,18*H.scale+2,warning*.28,1,.12,.1)end
-        self:drawText(critical and "CRITICAL"or "LOW HEALTH",healthX+healthWidth-82,healthY-15,1,.32,.26,warning*.9,UIFont.Small)
-    end
+    if warning>0 and a.healthFrame then self:drawTextureScaled(a.healthFrame,healthX-1,healthY-1,healthWidth+2,18*H.scale+2,warning*.28,1,.12,.1)end
     local capacity=(ProjectYakuza.Heat.rules and ProjectYakuza.Heat.rules(p)or ProjectYakuza.Heat.config).maxStocks
     local pairs=math.ceil(capacity/2)
     if self.setWidth then self:setWidth(math.max(348,healthX+healthWidth+12,H.originX+(56+38*capacity)*H.scale))end

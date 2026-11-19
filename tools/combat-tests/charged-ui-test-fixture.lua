@@ -282,7 +282,7 @@ do local _="ProjectYakuzaFixture:SPARKS" end
 local E=PY.ChargeEffects
 E.update(p);check(not E.hooked,'idle players create no particle render hook')
 PY.activeActions[p]={kind='heavyCharge',action=style.actions.heavyCharge.variants.default,timedAction={started=true,power=.5}}
-E.update(p);check(#E.states[p].instances==12 and E.hooked,'charge creates ten original sparks plus source flame/core world sprites')
+E.update(p);check(#E.states[p].instances==36 and E.hooked,'charge creates layered original smoke, wisps and sparks without legacy cores or flames')
 clock=clock+100;E.update(p);E.render();local time=E.states[p].clock
 local flameFrames=E.states[p].instances[11].advanced
 PY.emit('heavyChargeReady',p)
@@ -297,7 +297,7 @@ for _,dir in ipairs({{1,0},{0,1},{-1,0},{0,-1}})do
  check(E.states[p].instances[1].direction=='N','all character facings use the same world sprite page')
 end
 local before=disposed;PY.activeActions[p]=nil;E.update(p)
-check(not E.states[p] and not E.hooked and disposed==before+12,'ending charge disposes particles and removes render hook')
+check(not E.states[p] and not E.hooked and disposed==before+36,'ending charge disposes particles and removes render hook')
 do local _="ProjectYakuzaFixture:HITS" end
 local modernHit=PY.AttackEffects.hit;PY.AttackEffects.hit=nil
 PY.HitEffects.spawn(p,p,true,true)

@@ -37,6 +37,7 @@ for family in ['','Bat','Knife','Blade']:
    put(b,'m_AnimName',(blends if family=='Knife'else armed)[i].findtext('m_AnimName'));put(b,'m_SpeedScale',blends[i].findtext('m_SpeedScale'))
   for e,original in zip(n.findall('m_Events'),source.findall('m_Events')):put(e,'m_TimePc',original.findtext('m_TimePc'))
  else:
+  cond(n,'ProjectYakuzaRestedRun',True,'BOOL')
   for i,e in enumerate(n.findall('m_Events')):put(e,'m_TimePc',.03+i*.5)
  put(n,'m_SyncTrackingEnabled',True)
  save(n,'run',name)

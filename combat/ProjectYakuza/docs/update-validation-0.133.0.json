@@ -1,0 +1,25 @@
+{
+  "version": "0.133.0",
+  "offlineOnly": true,
+  "combatKahluaAssertions": 32312,
+  "phoneKahluaAssertions": 64229,
+  "nativeReverseAndRunSelections": 18,
+  "nativeLimbProjectionCases": 23232,
+  "originalEffectTexturesChecked": 70,
+  "originalEffectPixelsChecked": 309248,
+  "sourceAnimationHashesChecked": 95,
+  "productionLuaCompiled": 93,
+  "changedRuntimeModules": {
+    "AttackEffects": "f2abea1b318951ec6aacc209e6db8232325e1b1914cbc4d5037bb437e2d51948",
+    "BloodEffects": "7a8e67e9e1ab7ac41bccee23877d39a1ea027304f23ca003bab0862b2f1aa576",
+    "ChargeEffects": "1cec762cb96e22c7d0eec65f0907bb12df0fb3b4c9d215e22380d8cd24581a51",
+    "CombatMusic": "df94b3e0a024b4aeb5877a50f6572bef7cf623c86c5fe4d1bf3b6e987a8e4222",
+    "HeatUI": "2534b4b6775462d94efd80302275357da7dc4b0bb3d20cd2e5c6bf5d7316266e",
+    "Locomotion": "dbbaee1603f9d1506f9b4379ecfc65d392c08b797a4fc6d2c1760ba80ceaa38d",
+    "Quicksteps": "5f1e5b72a7dfef2f18043f6490b781c559918c643111e3a6d74e1294ce32086c",
+    "TextureWarmup": "22414784282405a32c851e088d10c8c7227742c27f278ba3ef4e3bc9c24c5122",
+    "WorldEffects": "7f1d1dbf82c7dc68201262f01d196e8e1ebd339d06ac95de7d9e0fd9c2a34148"
+  },
+  "scope": "No source animation, model or effect texture pixels changed. Native selectors, runtime effect placement/presentation, bounded first-use setup and HUD behaviour changed. Phone original font/icon pixel checks are recorded in its separate build.",
+  "limitations": "PZ was not launched. Live frame times, final limb placement, fatigue transitions and multiplayer rendering require an in-game check."
+}

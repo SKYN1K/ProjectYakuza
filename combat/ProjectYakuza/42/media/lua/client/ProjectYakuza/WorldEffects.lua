@@ -15,6 +15,14 @@ function W.ready(instance)
     local texture=sprite:getTextureForFrame(0,IsoDirections.N)
     return texture and(not texture.isReady or texture:isReady())or false
 end
+function W.phase(instance,phase,speed)
+    local sprite=W.sprites[instance]
+    if sprite and not isGamePaused()then
+        instance:setFrameSpeedPerFrame(phase)
+        sprite:update(instance)
+    end
+    instance:setFrameSpeedPerFrame(speed)
+end
 function W.renderCentered(character,instance,frameHeight,scale,x,y,color,anchorX,anchorY,anchorZ)
     if not W.ready(instance)then return end
 

@@ -75,11 +75,6 @@
     <weight>1.0</weight>
   </m_SubStateBoneWeights>
   <m_Conditions>
-    <m_Name>ProjectYakuzaLinkedDouble</m_Name>
-    <m_Type>BOOL</m_Type>
-    <m_Value>false</m_Value>
-  </m_Conditions>
-  <m_Conditions>
     <m_Name>ProjectYakuzaStyle</m_Name>
     <m_Type>STRING</m_Type>
     <m_Value>dragon_of_dojima</m_Value>

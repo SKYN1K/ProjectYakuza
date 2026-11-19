@@ -245,12 +245,12 @@ local function allocate(s)
     local tile=Core.getTileScale();s.points={}
     for i=1,F.pointCount do
         local sp=i<=11 and F.smoke or i<=14 and F.gaidenSmoke or i<=38 and F.smoke or F.spark
-        local scale=(i<=11 and .22 or i<=14 and .105 or i<=38 and F.outerScale*(i>26 and 1.22 or 1)or .085)*tile
+        local scale=(i<=11 and .22 or i<=14 and .105 or i<=38 and F.outerScale*(i>26 and 1.22 or 1)or .085)*tile*1.10
         local phase=(s.seed+i*17)%64;local speed=(i<=11 and .65 or .43)*(.78+phase/100)
         local animated=i<=11 or i>=15 and i<=38
         local instance=PY.WorldEffects.detached(sp,scale,animated and speed or 0)
+        if animated then PY.WorldEffects.phase(instance,.5+(phase%31)*.9,speed)end
         local texture=compactTextures[sp];local widthScale=texture and 64/65 or 1;instance:setScale(scale*widthScale,scale)
-        for n=1,phase do if animated then sp:update(instance)end end
         s.points[i]={instance=instance,sprite=sp,texture=texture,widthScale=widthScale,additive=i>=39,animated=animated,height=i>=12 and i<=14 and 128 or i<=38 and 64 or 32,scale=scale,baseScale=scale}
     end
 end
@@ -264,6 +264,15 @@ function F.armPoint(joints,t)
     if distance<=first and first>.000001 then local k=distance/first;return ax+(ex-ax)*k,ay+(ey-ay)*k,az+(ez-az)*k end
     if second>.000001 then local k=(distance-first)/second;return ex+(hx-ex)*k,ey+(hy-ey)*k,ez+(hz-ez)*k end
     return hx,hy,hz
+end
+function F.coatPoint(joints,t)
+    local x,y,z=F.armPoint(joints,t)
+    if t>.78 then
+        local dx,dy,dz=joints[7]-joints[4],joints[8]-joints[5],joints[9]-joints[6]
+        local length=math.sqrt(dx*dx+dy*dy+dz*dz)
+        if length>.000001 then local extra=math.min(.03,length*.10)*(t-.78)/.22;x=x+dx/length*extra;y=y+dy/length*extra;z=z+dz/length*extra end
+    end
+    return x,y,z
 end
 function F.worldJoints(p,s,time,pose)
     local angle=F.facing(p);local x,y,z=p:getX(),p:getY(),p:getZ()
@@ -326,10 +335,10 @@ local function drawPoint(p,s,index,x,y,z,alpha,color)
 end
 function F.swirl(s,index,t,clock,amount)
     local a=clock*(.017+(index%4)*.004)+s.seed*.71+index*2.399963
-    local pulse=.5+.5*math.sin(clock*.031+index*1.73+s.seed)
+    local pulse=.5+.32*math.sin(clock*(.026+(s.seed%7)*.001)+index*1.73+s.seed)+.18*math.sin(clock*.057+index*.83)
     local envelope=math.sin(math.max(0,math.min(1,t))*math.pi)
     local radius=(.006+.018*pulse)*s.chaos*envelope*amount
-    return math.cos(a)*radius,math.sin(a*1.19)*radius,math.sin(a*.83)*radius*.6,.86+.14*math.sin(a*1.37)
+    return math.cos(a)*radius,math.sin(a*1.19)*radius,math.sin(a*.83)*radius*.6,.84+.11*math.sin(a*1.37)+.05*math.sin(a*.73+s.seed)
 end
 function F.resize(point,factor)
     if point.texture then point.texture:setWidth(65)end
@@ -340,8 +349,8 @@ function F.drawHistory(p,s,animate)
     if not s.lastEmission or s.clock-s.lastEmission>=F.trailMs then return end
     for i=15,38 do
         local t=((i-15)%12)/11;local lag=6+(i%6)*5;local target=s.clock-lag
-        local cx,cy,cz=F.armPoint(s.joints,t);local x,y,z=cx,cy,cz
-        if target<=s.lastEmission and F.historyPose(s,target,s.scratch)then x,y,z=F.armPoint(s.scratch,t)end
+        local cx,cy,cz=F.coatPoint(s.joints,t);local x,y,z=cx,cy,cz
+        if target<=s.lastEmission and F.historyPose(s,target,s.scratch)then x,y,z=F.coatPoint(s.scratch,t)end
         local dx,dy,dz=x-cx,y-cy,z-cz;local sx,sy=(dx-dy)*32,(dx+dy)*16-dz*96
         local distance=math.sqrt(sx*sx+sy*sy)
         local tether=i>26 and 4 or 2
@@ -360,6 +369,16 @@ function F.colors()
         F.smokeNormal=ColorInfo.new(.84,.89,.96,1);F.smokeExtreme=ColorInfo.new(.93,.96,1,1)
         F.midNormal=ColorInfo.new(.95,.97,1,1);F.midExtreme=ColorInfo.new(1,1,1,1)
     end
+end
+function F.loadContacts()
+    F.loadSprites()
+    if not F.streak then
+        F.streak=sprite("media/textures/ProjectYakuza/AttackFX/e_j_0361_spark_b.png")
+        F.gaidenSpark=sprite("media/textures/ProjectYakuza/AttackFX/e_f_d0004_spark.png")
+        F.puffs={{sprite=sprite("media/textures/ProjectYakuza/AttackFX/e_j_0332_sparks_a.png"),ox=-64,oy=0,additive=true},{sprite=sprite("media/textures/ProjectYakuza/AttackFX/e_j_0073_aura_cA8L8.png",true),ox=0,oy=-64},{sprite=sprite("media/textures/ProjectYakuza/AttackFX/e_j_0073_aura_dA8L8.png",true),ox=0,oy=-64},{sprite=F.gaidenSmoke,ox=0,oy=-64}}
+    end
+    if not F.flash then F.flash=sprite("media/textures/ProjectYakuza/HitGlint.png")end
+    F.colors()
 end
 function F.hit(p,victim,strong,charged,anchor)
     local style=PY.getPlayerStyle(p)
@@ -383,13 +402,8 @@ function F.hit(p,victim,strong,charged,anchor)
     if #F.bursts>=F.maxBursts or count>=F.maxActorBursts then
         for i,b in ipairs(F.bursts)do if count<F.maxActorBursts or b.owner==p then F.dispose(b);table.remove(F.bursts,i);break end end
     end
-    F.loadSprites()
-    if not F.streak then
-        F.streak=sprite("media/textures/ProjectYakuza/AttackFX/e_j_0361_spark_b.png")
-        F.gaidenSpark=sprite("media/textures/ProjectYakuza/AttackFX/e_f_d0004_spark.png")
-        F.puffs={{sprite=sprite("media/textures/ProjectYakuza/AttackFX/e_j_0332_sparks_a.png"),ox=-64,oy=0,additive=true},{sprite=sprite("media/textures/ProjectYakuza/AttackFX/e_j_0073_aura_cA8L8.png",true),ox=0,oy=-64},{sprite=sprite("media/textures/ProjectYakuza/AttackFX/e_j_0073_aura_dA8L8.png",true),ox=0,oy=-64},{sprite=F.gaidenSmoke,ox=0,oy=-64}}
-    end
-    F.colors();F.serial=F.serial+1
+    F.loadContacts()
+    F.serial=F.serial+1
     local seed=(F.serial*7919+math.floor(getTimestampMs())%65521)%2147483647
     local function random()seed=seed*48271%2147483647;return seed/2147483647 end
     local b={owner=p,style=style.id,x=x,y=y,z=z,drop=drop,last=getTimestampMs(),age=0,life=charged and 320 or strong and 290 or 240,color=PY.Heat.isExtreme(p)and F.extreme or F.normal,points={},variant=F.serial%4}
@@ -401,7 +415,6 @@ function F.hit(p,victim,strong,charged,anchor)
         if length>.00001 then bx,by,bz=bx/length,by/length,bz/length else bx,by,bz=0,0,0 end
     end
     b.smokeColor=PY.Heat.isExtreme(p)and F.smokeExtreme or F.smokeNormal
-    if not F.flash then F.flash=sprite("media/textures/ProjectYakuza/HitGlint.png")end
     for i=1,16 do
         local puff=i>=13 and i<=15 and F.puffs[(puffStart+i-13)%#F.puffs+1]
         local flash=i==16;local gaiden=i<=12 and i%2==1
@@ -549,3 +562,8 @@ PY.on("actionCompleted",function(context)if context and F.states[context.player]
 Events.OnSave.Add(F.clearAll)
 Events.OnMainMenuEnter.Add(F.clearAll)
 Events.OnGameStart.Add(F.clearAll)
+
+if PY.TextureWarmup and PY.TextureWarmup.add then
+    PY.TextureWarmup.add("limb sprites",F.loadSprites)
+    PY.TextureWarmup.add("contact sprites",F.loadContacts)
+end

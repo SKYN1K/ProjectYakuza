@@ -31,19 +31,20 @@ function F.update(p)
         s.track=track;s.power=math.max(0,math.min(1,power));s.updated=getTimestampMs();return
     end
     local count=0;for _ in pairs(F.states) do count=count+1 end;if count>=F.maxActors then return end
-    if not F.spark then
-        F.spark=IsoSprite.CreateSprite(nil);F.spark:LoadFramesNoDirPageSimple("media/textures/ProjectYakuza/ChargeSpark.png")
-        F.flame=IsoSprite.CreateSprite(nil);F.flame:LoadFramesNoDirPageDirect("media/textures/ProjectYakuza/ExtremeHeat","flame",64);F.flame:setAnimate(true)
-        F.core=IsoSprite.CreateSprite(nil);F.core:LoadFramesNoDirPageSimple("media/textures/ProjectYakuza/HitGlint.png")
-    end
-    s={instances={},points={},track=track,power=math.max(0,math.min(1,power)),clock=0,last=getTimestampMs(),updated=getTimestampMs()};F.states[p]=s
+    local effects=PY.AttackEffects;effects.loadSprites()
+    F.spark=effects.spark;F.smoke=effects.smoke;F.wisp=effects.gaidenSmoke
+    s={instances={},points={},track=track,power=math.max(0,math.min(1,power)),clock=0,last=getTimestampMs(),updated=getTimestampMs(),seed=(getTimestampMs()+(p.getOnlineID and p:getOnlineID()or 0)*97)%997};F.states[p]=s
     local tile=Core.getTileScale()
     for _,limb in ipairs(track.limbs) do
-        for i=1,6 do
-            local sp=i<=3 and F.core or i<=5 and F.flame or F.spark
-            local height=i<=3 and 64 or 32;local scale=(i<=3 and .15 or i<=5 and .40 or .23)*tile
-            local instance=PY.WorldEffects.detached(sp,scale,i==4 and .9 or i==5 and 1.1 or 0)
-            s.instances[#s.instances+1]=instance;s.points[#s.points+1]={instance=instance,sprite=sp,height=height,scale=scale,limb=limb,index=i}
+        for i=1,18 do
+            local smoke=i<=12;local wisp=i==13 or i==14;local sp=smoke and F.smoke or wisp and F.wisp or F.spark
+            local scale=(i<=6 and .18 or smoke and .27 or wisp and .09 or .065)*tile*1.10
+            local speed=.52+(s.seed+i*17)%31*.025
+            local instance=PY.WorldEffects.detached(sp,scale,smoke and speed or 0)
+            if smoke then PY.WorldEffects.phase(instance,.5+(s.seed+i*17)%31*.9,speed)end
+            local point={instance=instance,sprite=sp,height=wisp and 128 or smoke and 64 or 32,baseScale=scale,scale=scale,limb=limb,index=i,animated=smoke,additive=i>14,texture=wisp and sp:getTextureForFrame(0,IsoDirections.N)or nil,widthScale=wisp and 64/65 or 1}
+            instance:setScale(scale*point.widthScale,scale)
+            s.instances[#s.instances+1]=instance;s.points[#s.points+1]=point
         end
     end
     if not F.hooked then Events.OnPostRender.Add(F.render);F.hooked=true end
@@ -54,36 +55,42 @@ function F.render()
     if not ok then F.clearAll();error(err) end
 end
 function F.draw()
-    if not F.color then F.color=ColorInfo.new(.60,.80,1,1) end
-    local tile=Core.getTileScale();local now=getTimestampMs()
+    if not F.color then F.color=ColorInfo.new(.94,.97,1,1)end
+    local tile=Core.getTileScale();local now=getTimestampMs();local paused=isGamePaused()
     for p,s in pairs(F.states) do
-        if p:isDead() or (not isGamePaused() and now-s.updated>2000) then F.clear(p)
+        if p:isDead()or(not paused and now-s.updated>2000)then F.clear(p)
         else
             local dt=math.max(0,math.min(100,now-s.last));s.last=now
-            if not isGamePaused() then s.clock=s.clock+dt end
+            if not paused then s.clock=s.clock+dt end
             local phase,weight
             if s.track.fixed then phase=0;weight=1
-            elseif s.location or now>=(s.retryTrackAt or 0) then
+            elseif s.location or now>=(s.retryTrackAt or 0)then
                 local location
                 phase,weight,location=PY.AttackEffects.findTrack(p,s.track.animation,s.location)
                 s.location=location;s.retryTrackAt=now+120
             end
-
             if not phase then phase=math.min(s.clock*.001,(#s.track.frames-1)/s.track.fps);weight=1 end
-            if phase then
-                local angle=p:getAnimAngleRadians();local fade=math.min(1,s.clock/120)*math.min(1,weight or 1)
-                for _,point in ipairs(s.points) do
-                    local ax,ay,az=PY.AttackEffects.sample(s.track,phase,point.limb)
-                    local bx,by,bz=PY.AttackEffects.sample(s.track,phase,point.limb+1)
-                    local i=point.index;local t=i<=3 and (.12+i*.19) or i==4 and .38 or i==5 and .70 or (.18+.55*((s.clock/360)%1))
-                    local x,y,wx,wy,wz=PY.AttackEffects.project(ax+(bx-ax)*t,ay+(by-ay)*t,az+(bz-az)*t,angle,tile)
-                    y=y+2*tile+PY.AttackEffects.coatOffset()
-                    local alpha=fade*(.55+.30*s.power)*(i<=3 and .8 or i<=5 and .9 or 1)
-                    SpriteRenderer.instance:setDoAdditive(i<=3)
-                    if i==6 then x=x+math.sin(s.clock*.025)*tile;y=y+math.cos(s.clock*.025)*tile end
+            local angle=p:getAnimAngleRadians();local fade=math.min(1,s.clock/120)*math.min(1,weight or 1)
+            local power=.65+.35*s.power;local ready=s.power>=1 and .5+.5*math.sin(s.clock*.028)or 0
+            for _,point in ipairs(s.points)do
+                local ax,ay,az=PY.AttackEffects.sample(s.track,phase,point.limb)
+                local bx,by,bz=PY.AttackEffects.sample(s.track,phase,point.limb+1)
+                local i=point.index;local t=i<=12 and(.12+((i-1)%6)/5*.91)or i<=14 and(i==13 and .45 or .86)or .35+((s.clock*.0015+i*.19)%1)*.68
+                local wave=s.clock*(.018+(i%4)*.006)+s.seed*.71+i*2.399963
+                local radius=(i>14 and .018 or i>6 and .010 or .003)*power*math.sin(math.min(1,t)*math.pi)
+                local ox,oy,oz=math.cos(wave)*radius,math.sin(wave*1.19)*radius,math.sin(wave*.83)*radius*.6
+                local x,y,wx,wy,wz=PY.AttackEffects.project(ax+(bx-ax)*t+ox,ay+(by-ay)*t+oy,az+(bz-az)*t+oz,angle,tile)
+                y=y+2*tile+PY.AttackEffects.coatOffset()
+                local pulse=.83+.12*math.sin(wave)+.05*math.sin(wave*1.71)
+                local alpha=fade*power*pulse*(i<=6 and(.22+.04*ready)or i<=12 and .075 or i<=14 and .18 or .42)
+                local scale=point.baseScale*(.82+.16*pulse+.12*s.power)
+                if point.scale~=scale then point.instance:setScale(scale*point.widthScale,scale);point.scale=scale end
+                if PY.WorldEffects.ready(point.instance)then
+                    if point.texture then point.texture:setWidth(65)end
+                    SpriteRenderer.instance:setDoAdditive(point.additive)
                     point.instance:SetAlpha(alpha);point.instance:SetTargetAlpha(alpha)
-                    if (i==4 or i==5) and not isGamePaused() then point.sprite:update(point.instance) end
-                    PY.WorldEffects.renderCentered(p,point.instance,point.height,point.scale,x,y,F.color,wx+.06,wy+.06,wz)
+                    if point.animated and not paused and dt>0 then point.sprite:update(point.instance)end
+                    PY.WorldEffects.renderCentered(p,point.instance,point.height,scale,x,y,F.color,wx+.06,wy+.06,wz)
                 end
             end
         end

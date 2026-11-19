@@ -17,16 +17,19 @@ function B.clear(player)
     end
     idle()
 end
-local function selectFrame(b,frame)
-    if b.frame==frame then return end
-    release(b)
+function B.loadFrame(frame)
     local sprite=B.sprites[frame]
     if not sprite then
         sprite=IsoSprite.CreateSprite(nil)
         sprite:LoadFramesNoDirPageSimple("media/textures/ProjectYakuza/Blood_splash_"..frame..".png")
         B.sprites[frame]=sprite
     end
-    b.instance=PY.WorldEffects.detached(sprite,b.scale,0);b.frame=frame
+    return sprite
+end
+local function selectFrame(b,frame)
+    if b.frame==frame then return end
+    release(b)
+    b.instance=PY.WorldEffects.detached(B.loadFrame(frame),b.scale,0);b.frame=frame
 end
 function B.spawn(player,victim,strong,charged,feedback,anchor)
     local style=PY.getPlayerStyle(player)
@@ -78,3 +81,7 @@ end
 Events.OnGameStart.Add(function()B.clear()end)
 Events.OnMainMenuEnter.Add(function()B.clear()end)
 Events.OnSave.Add(function()B.clear()end)
+
+if PY.TextureWarmup and PY.TextureWarmup.add then
+    for frame=0,B.frames-1 do local index=frame;PY.TextureWarmup.add("blood frame "..index,function()B.loadFrame(index)end)end
+end

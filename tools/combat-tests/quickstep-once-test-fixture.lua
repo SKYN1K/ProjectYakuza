@@ -181,6 +181,17 @@ state,move=light(1);p:setVariable('ProjectYakuzaQuickstepCancelReady',move.nodeV
 keyState[57]=true;check(Q.pollShove(p) and Q.isCancelling(p),'actual quickstep binding triggers the light cancel')
 reports=p.exitReports;Q.pollShove(p);check(p.exitReports==reports,'held quickstep input cannot request another cancel')
 keyState[57]=false;Q.clearLightCancel(p);Q.restoreAllShoves();PY.resetPlayer(p,'test_done')
+function p:isRunning()return self.running==true end
+function p:isSprinting()return self.sprinting==true end
+local previousRunningAim=p.isAiming;p.isAiming=function()return false end
+for _,mode in ipairs({'running','sprinting'})do
+ PY.resetPlayer(p,'running_space_test');Q.restoreAllShoves();keyState[57]=false;Q.pollShove(p);p[mode]=true
+ local queued=0;local savedQueue=ISTimedActionQueue.add;ISTimedActionQueue.add=function()queued=queued+1;return {}end
+ keyState[57]=true;check(not Q.pollShove(p)and queued==0 and not PY.activeActions[p]and not Q.aimPending[p],'running Space cannot queue a facing-lock action '..mode)
+ check(not p.blocked and not p:GetVariable('IsPerformingAnAction'),'running Space never takes animation/movement ownership '..mode)
+ ISTimedActionQueue.add=savedQueue;p[mode]=false;keyState[57]=false;Q.restoreAllShoves()
+end
+p.isAiming=previousRunningAim
 local previousEffects=PY.AttackEffects;local previousAim=p.isAiming;local trackPhase,trackWeight
 PY.AttackEffects={findTrack=function()return trackPhase,trackWeight,{layer=0,slot=0}end};p.dbgGetAnimTrackName=function()return ''end
 function p:StopTimedActionAnim()self.animationStops=(self.animationStops or 0)+1 end
