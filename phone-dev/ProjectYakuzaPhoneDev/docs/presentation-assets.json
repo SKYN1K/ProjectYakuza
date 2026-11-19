@@ -1,0 +1,63 @@
+{
+  "preview": {
+    "source": "Kiryu_Zomboid.jpg",
+    "sourceSha256": "9d33b054cfbf95e1b31dc39edbf60dfeacdb1fae4f31e5cc83a8c497489e52b9",
+    "sourceBytes": 50896,
+    "sourceSize": [
+      1280,
+      720
+    ],
+    "output": "42/media/textures/ProjectYakuzaPhoneDev/DragonOfDojima.png",
+    "sha256": "a8c84fadeb63c77cb28369cbb76cb71ff6fcec2a938c2eb10639497d5af4a45e",
+    "bytes": 19073,
+    "size": [
+      512,
+      288
+    ],
+    "operation": "User-authorized resize of supplied image, full composition retained, Lanczos downsampling and 128-colour PNG compression; no generated artwork or upscaling."
+  },
+  "sounds": [
+    {
+      "bank": {
+        "archive": "sound.par",
+        "name": "console.acb",
+        "offset": 26566656,
+        "size": 1248768,
+        "plain": 1248768,
+        "flags": 0,
+        "packedSha256": "37ac964fc0d5a94ef5a2b1d27cc96d160f6a4b24e01dfccf8d5293e44968ee13",
+        "sha256": "37ac964fc0d5a94ef5a2b1d27cc96d160f6a4b24e01dfccf8d5293e44968ee13"
+      },
+      "cue": "phone_open",
+      "cueId": 73,
+      "streamIndex": 23,
+      "output": "42/media/sound/ProjectYakuzaPhoneDev/PhoneOpen.wav",
+      "sha256": "b139a6161663a7b8eef334fa14aeead48b6239c2a48aa7b1f230ab3d86ab889d",
+      "sampleRate": 32000,
+      "channels": 1,
+      "samples": 8071,
+      "operation": "Untrimmed original HCA waveform decoded to PCM without mixing, pitch changes, synthesis or resampling. Native non-positional UI playback."
+    },
+    {
+      "bank": {
+        "archive": "sound.par",
+        "name": "console.acb",
+        "offset": 26566656,
+        "size": 1248768,
+        "plain": 1248768,
+        "flags": 0,
+        "packedSha256": "37ac964fc0d5a94ef5a2b1d27cc96d160f6a4b24e01dfccf8d5293e44968ee13",
+        "sha256": "37ac964fc0d5a94ef5a2b1d27cc96d160f6a4b24e01dfccf8d5293e44968ee13"
+      },
+      "cue": "phone_cancel01",
+      "cueId": 49,
+      "streamIndex": 20,
+      "output": "42/media/sound/ProjectYakuzaPhoneDev/PhoneClose.wav",
+      "sha256": "304a3fa65d6dc1ac558bb2b77a102ea3838fd2f3e445946f05e4bdd06b8b7b63",
+      "sampleRate": 32000,
+      "channels": 1,
+      "samples": 10533,
+      "operation": "Untrimmed original HCA waveform decoded to PCM without mixing, pitch changes, synthesis or resampling. Native non-positional UI playback."
+    }
+  ]
+}

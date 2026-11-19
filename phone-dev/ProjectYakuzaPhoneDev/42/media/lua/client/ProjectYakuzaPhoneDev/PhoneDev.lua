@@ -1,10 +1,14 @@
 require "ProjectYakuzaPhoneDev/PhonePanel"
 local PY=ProjectYakuza
 local D=PY.PhoneDev
+function D.phoneSound(p,kind)
+    if not p or not p:isLocalPlayer()or p:isDead()or not getSoundManager then return false end
+    getSoundManager():playUISound("ProjectYakuzaPhoneDev_Phone"..kind);return true
+end
 function D.compatible(version)
     local a,b,c=string.match(tostring(version or""),"^(%d+)%.(%d+)%.(%d+)")
     a,b,c=tonumber(a),tonumber(b),tonumber(c)
-    return a and(a>0 or b>130 or b==130 and c>=0)or false
+    return a and(a>0 or b>131 or b==131 and c>=0)or false
 end
 function D.open(p)
     local selector=PY.StyleSelector
@@ -19,7 +23,7 @@ function D.open(p)
     end
     local state=JoypadState and JoypadState.players[p:getPlayerNum()+1]
     if state and p:getJoypadBind()~=-1 then panel.previousJoypad=state.focus;panel.joypadData=state;setJoypadFocus(p:getPlayerNum(),panel)end
-    PY.UIAudio.play(p,"open");return true
+    D.phoneSound(p,"Open");return true
 end
 function D.clear()
     if D.panel then D.panel:close(true)end
@@ -31,6 +35,7 @@ function D.install()
     for _,asset in pairs(D.assets)do D.preloaded[asset.path]=getTexture(asset.path)end
     D.preloaded[D.Font.path]=getTexture(D.Font.path)
     D.preloaded[D.Font.fallbackPath]=getTexture(D.Font.fallbackPath)
+    D.preloaded.dragonPreview=getTexture("media/textures/ProjectYakuzaPhoneDev/DragonOfDojima.png")
     if selector.openSetup==D.open then return end
     D.legacyOpenSetup=selector.openSetup;selector.openSetup=D.open
 end

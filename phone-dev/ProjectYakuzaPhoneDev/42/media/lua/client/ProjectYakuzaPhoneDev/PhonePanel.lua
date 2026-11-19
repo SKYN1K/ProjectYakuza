@@ -1,6 +1,8 @@
 require "ProjectYakuzaPhoneDev/PhoneData"
 require "ProjectYakuzaPhoneDev/PhoneFont"
 require "ProjectYakuzaPhoneDev/PhoneItems"
+require "ProjectYakuzaPhoneDev/PhoneStyles"
+require "ProjectYakuzaPhoneDev/PhoneMaterial"
 require "ISUI/ISPanelJoypad"
 require "ISUI/ISPanel"
 require "Vehicles/ISUI/ISUI3DScene"
@@ -11,6 +13,7 @@ local Phone=ISPanelJoypad:derive("ProjectYakuzaPhoneDevPanel")
 local Screen=ISPanel:derive("ProjectYakuzaPhoneDevScreen")
 local Rows=ISPanel:derive("ProjectYakuzaPhoneDevRows")
 D.PhonePanel=Phone
+function Phone:submenu()return self.activeStyles or self.activeItems end
 local function audio(self,cue)PY.UIAudio.play(self.player,cue)end
 local function quad(panel,q,texture,x,y,w,h,r,g,b,a)
     if not texture or texture.isReady and not texture:isReady()then return end
@@ -72,15 +75,22 @@ function Screen:prerender()
     caption(self,q,host.gamepad and"A Select     B Close"or"Enter Select     Esc Close",160,541,alpha*.8,18,292)
     quad(self,q,white,0,28,1,512,0,0,0,alpha*.30)
     quad(self,q,white,319,28,1,512,.80,.86,.92,alpha*.13)
+    local shine=math.sin(host.pose.ry)*72
+    if white and white:isReady()then for band=0,2 do
+        local left=175+shine+band*10;local right=left+13
+        local x1,y1=M.point(q,left/320,0);local x2,y2=M.point(q,right/320,0)
+        local x3,y3=M.point(q,(right-110)/320,1);local x4,y4=M.point(q,(left-110)/320,1)
+        self:drawTextureAllPoint(white,x1,y1,x2,y2,x3,y3,x4,y4,.82,.91,1,alpha*(band==1 and .033 or .015))
+    end end
 end
 function Screen:onMouseMove(dx,dy)
-    if not self.quad or self.host.closing or self.host.activeItems then return true end
+    if not self.quad or self.host.closing or self.host:submenu() then return true end
     local index=M.hit(self.quad,self:getMouseX(),self:getMouseY())
     if index then self.host.focusRows=false;self.host:selectPage(index)end
     return true
 end
 function Screen:onMouseDown(x,y)
-    if self.host.closing or self.host.activeItems then return true end
+    if self.host.closing or self.host:submenu() then return true end
     local index=self.quad and M.hit(self.quad,x,y)
     if index then self.host:selectPage(index);self.host:activatePage()end
     return true
@@ -91,15 +101,15 @@ function Rows:maxScroll()return math.max(0,#self.items*self.rowHeight-self.heigh
 function Rows:scroll(delta)
     self.offset=M.clamp(self.offset+delta*self.rowHeight,0,self:maxScroll())
 end
-function Rows:onMouseWheel(delta)if not self.host.activeItems then self:scroll(delta)end;return true end
+function Rows:onMouseWheel(delta)if not self.host:submenu() then self:scroll(delta)end;return true end
 function Rows:onMouseMove()
-    if self.host.closing or self.host.activeItems then return true end
+    if self.host.closing or self.host:submenu() then return true end
     local row=math.floor((self:getMouseY()+self.offset)/self.rowHeight)+1
     if row>=1 and row<=#self.items and row~=self.host.row then self.host.row=row;self.host.focusRows=true;audio(self.host,"cursor")end
     return true
 end
 function Rows:onMouseDown(x,y)
-    if self.host.closing or self.host.activeItems then return true end
+    if self.host.closing or self.host:submenu() then return true end
     local index=math.floor((y+self.offset)/self.rowHeight)+1
     if index<1 or index>#self.items then return true end
     self.host.row=index;self.host.focusRows=true
@@ -150,6 +160,7 @@ function Phone:initialise()
     native:fromLua2("createModel","xperia","ProjectYakuzaPhoneDev.Xperia")
     native:fromLua2("setModelUseWorldAttachment","xperia",false);native:fromLua2("setModelWeaponRotationHack","xperia",false)
     self.rotation=native:fromLua1("getObjectRotation","xperia");self.translation=native:fromLua1("getObjectTranslation","xperia");self.scale=native:fromLua1("getObjectScale","xperia")
+    self.material=D.Material:new(0,0,sw,self.height);self.material.host=self;self.material.background=false;self.material:initialise();self:addChild(self.material)
     self.screen=Screen:new(0,0,sw,self.height);self.screen.host=self;self.screen.background=false;self.screen:initialise();self:addChild(self.screen)
     self.panelX=math.max(sw*.95,self.width*.48);self.panelW=self.width-self.panelX-self.width*.033;self.panelY=self.height*.08;self.panelH=self.height*.81
     self.rows=Rows:new(self.panelX+8,self.panelY+130,self.panelW-16,self.panelH-213);self.rows.host=self;self.rows.items={};self.rows.offset=0;self.rows.rowHeight=59;self.rows.background=false;self.rows:initialise();self:addChild(self.rows)
@@ -196,7 +207,7 @@ function Phone:selectPage(index)
     self.page=index;self.row=1;self.rows.offset=0;D.preferences(self.player).page=index;self:refresh();audio(self,"cursor")
 end
 function Phone:activatePage()
-    if self.page==2 then D.Items.open(self)else self.focusRows=true;audio(self,"confirm")end
+    if self.page==1 then D.Styles.open(self)elseif self.page==2 then D.Items.open(self)else self.focusRows=true;audio(self,"confirm")end
 end
 function Phone:activateRow(delta)
     if self.closing then return end
@@ -211,9 +222,14 @@ end
 function Phone:prerender()
     if self.closed then return end
     self:animate(getTimestampMs())
-    self.modelReady=self.textures.Xperia:isReady();self.scene:setVisible(self.modelReady)
+    local submenu=self:submenu();local covered=submenu and submenu.alpha>=.999 and not submenu.closing and not self.closing
+    self.modelReady=self.textures.Xperia:isReady();self.scene:setVisible(self.modelReady and not covered);self.material:setVisible(not covered);self.screen:setVisible(not covered);self.rows:setVisible(not covered)
     local a=self.open
     self:drawRect(0,0,self.width,self.height,a*.48,.015,.018,.026)
+    if covered then return end
+    local q=M.project(self.pose,self.scene.width,self.height,self.shadowQuad);self.shadowQuad=q
+    for _,corner in ipairs(q)do corner[1]=corner[1]+9;corner[2]=corner[2]+14 end
+    for layer=1,3 do quad(self,q,self.textures.Pixel,-19-layer*2,-76-layer*2,358+layer*4,720+layer*4,0,0,0,a*.045)end
     self:drawRect(self.panelX,self.panelY,self.panelW,self.panelH,a*.88,.025,.022,.025)
     self:drawRect(self.panelX,self.panelY,self.panelW,26,a*.96,.88,.88,.86)
     self:drawTextCentre(self.page==2 and"Skills"or D.pages[self.page].label,self.panelX+self.panelW/2,self.panelY+4,.04,.04,.045,a,UIFont.Small)
@@ -260,7 +276,7 @@ function Phone:close(silent,afterClose)
     if self.closed then return end
     if silent==true then self.afterClose=nil;self:finishClose();return end
     if self.closing then return end
-    self.afterClose=afterClose;self.closing=true;self.fromOpen=self.open;self.transitionAt=getTimestampMs();audio(self,afterClose and"confirm"or"cancel")
+    self.afterClose=afterClose;self.closing=true;self.fromOpen=self.open;self.transitionAt=getTimestampMs();D.phoneSound(self.player,"Close")
 end
 function Phone:onMouseDown()return true end
 function Phone:onMouseUp()return true end
@@ -271,7 +287,7 @@ function Phone:isKeyConsumed(key)
     return key==Keyboard.KEY_ESCAPE or key==Keyboard.KEY_RETURN or key==Keyboard.KEY_NUMPADENTER or key==Keyboard.KEY_TAB or key==Keyboard.KEY_LEFT or key==Keyboard.KEY_RIGHT or key==Keyboard.KEY_UP or key==Keyboard.KEY_DOWN
 end
 function Phone:onKeyPress(key)
-    if self.activeItems then self.activeItems:onKeyPress(key);return end
+    local submenu=self:submenu();if submenu then submenu:onKeyPress(key);return end
     if key==Keyboard.KEY_ESCAPE then self:close();return end
     if self.closing then return end
     if key==Keyboard.KEY_TAB then self.focusRows=not self.focusRows;audio(self,"cursor");return end
@@ -286,7 +302,7 @@ end
 function Phone:onGainJoypadFocus(data)self.gamepad=true;self.joypadData=data end
 function Phone:onLoseJoypadFocus()self.gamepad=false end
 function Phone:onJoypadDown(button)
-    if button==Joypad.BButton then if self.activeItems then self.activeItems:close()else self:close()end
+    if button==Joypad.BButton then local submenu=self:submenu();if submenu then submenu:close()else self:close()end
     elseif button==Joypad.AButton then self:onKeyPress(Keyboard.KEY_RETURN)
     elseif button==Joypad.YButton then self:onKeyPress(Keyboard.KEY_TAB)end
 end

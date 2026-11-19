@@ -6,7 +6,7 @@ local function check(v,m)checks=checks+1;assert(v,m)end
 local function near(a,b,e)return math.abs(a-b)<(e or .00002)end
 local function event()local e={hooks={}};function e.Add(fn)e.hooks[fn]=true end;return e end
 Events={OnGameStart=event(),OnSave=event(),OnMainMenuEnter=event()}
-ProjectYakuza={VERSION="0.130.0"}
+ProjectYakuza={VERSION="0.131.0"}
 do local _="ProjectYakuzaFixture:PHONEASSETS" end
 do local _="ProjectYakuzaFixture:PHONEMATH" end
 local PY=ProjectYakuza;local D=PY.PhoneDev;local M=D.Math
@@ -42,6 +42,8 @@ getGameTime=function()return {getTimeOfDay=function()return 14.5 end}end
 UIFont={Small=1,Medium=2}
 Keyboard={KEY_ESCAPE=1,KEY_RETURN=28,KEY_NUMPADENTER=156,KEY_TAB=15,KEY_LEFT=203,KEY_RIGHT=205,KEY_UP=200,KEY_DOWN=208,KEY_W=17}
 Joypad={AButton=0,BButton=1,YButton=3};JoypadState={players={}}
+local uiSounds={}
+getSoundManager=function()return {playUISound=function(_,name)uiSounds[#uiSounds+1]=name end}end
 local sounds,equipped,assigned,saves,volumes,draws,legacy=0,0,0,0,{musicVolume=100,hitVolume=100,voiceVolume=100},0,0
 local manager={};local failModel=false
 local vectorWrites,projectionCalls,projectedDraws,inventoryScans,nameReads,fullOrbDraws=0,0,0,0,0,0
@@ -126,9 +128,11 @@ setJoypadFocus=function(num,panel)local state=JoypadState.players[num+1];state.f
 do local _="ProjectYakuzaFixture:PHONEDATA" end
 do local _="ProjectYakuzaFixture:PHONEFONT" end
 do local _="ProjectYakuzaFixture:PHONEITEMS" end
+do local _="ProjectYakuzaFixture:PHONESTYLES" end
+do local _="ProjectYakuzaFixture:PHONEMATERIAL" end
 do local _="ProjectYakuzaFixture:PHONEPANEL" end
 do local _="ProjectYakuzaFixture:PHONEBOOT" end
-check(D.compatible('0.130.0')and D.compatible('1.0.0')and not D.compatible('0.129.0')and not D.compatible('invalid'),'dev menu enforces its shared polished combat baseline')
+check(D.compatible('0.131.0')and D.compatible('1.0.0')and not D.compatible('0.130.0')and not D.compatible('invalid'),'dev menu enforces its shared polished combat baseline')
 D.install();D.install();check(PY.StyleSelector.openSetup==D.open and D.legacyOpenSetup==original,'menu hook installs once and preserves the original settings')
 check(D.open(p),'render timing regression opens the phone')
 local smooth=D.panel;local priorOpen=0
@@ -141,7 +145,7 @@ for frame=1,6 do
 end
 check(projectionCalls==0,'rendering eliminates repeated native projection/matrix calculations')
 D.clear()
-local function advance(ms)for i=1,math.ceil(ms/20)do clock=clock+20;if D.panel then D.panel:prerender();D.panel:update();if D.panel and D.panel.activeItems then D.panel.activeItems:prerender()end end end end
+local function advance(ms)for i=1,math.ceil(ms/20)do clock=clock+20;if D.panel then D.panel:prerender();D.panel:update();if D.panel and D.panel:submenu()then D.panel:submenu():prerender()end end end end
 local function open()check(D.open(p),'phone opens through the optional menu hook');advance(600);return D.panel end
 local panel=open();check(panel.page==2 and panel.wantsKeys and manager[panel],'equipment is the saved-reference default and input belongs to the visible phone')
 panel:prerender();panel.screen:prerender();panel.rows:prerender();check(draws>50 and not panel.rows.stencil,'native phone screen and page draw without leaking clipping')
@@ -194,5 +198,24 @@ viewportWidth=900;viewportHeight=1000;panel=open();check(panel.panelW>300 and pa
 p.joypad=0;local prior={};JoypadState.players[1]={focus=prior};panel=open();check(panel.gamepad and JoypadState.players[1].focus==panel,'controller focus moves to the dev menu');panel:onJoypadDown(Joypad.YButton);check(panel.focusRows,'controller focus changes between phone and list');panel:onJoypadDown(Joypad.BButton);advance(400);check(JoypadState.players[1].focus==prior and not D.panel,'closing restores the previous controller focus');p.joypad=-1;JoypadState.players[1]=nil
 failModel=true;check(D.open(p)and legacy==2 and D.panel==nil and PY.StyleSelector.setup.legacy,'a native model failure restores the old menu without retaining input');failModel=false;PY.StyleSelector.setup:close()
 check(panel:isKeyConsumed(Keyboard.KEY_ESCAPE)and not panel:isKeyConsumed(Keyboard.KEY_W),'phone keys are consumed without disabling player movement')
-check(PY.VERSION=='0.130.0'and PY.Heat.stocks(p)==2,'dev interface does not replace combat version or grant heat')
+panel=open();check(uiSounds[#uiSounds]=='ProjectYakuzaPhoneDev_PhoneOpen','opening the phone plays its dedicated local Y6 cue')
+panel:selectPage(1);panel.focusRows=false;panel:activatePage();local styles=panel.activeStyles
+check(styles and #styles.styles==2 and styles.styles[1].name=='Dragon of Dojima','Styles opens the registered style names')
+advance(200);check(styles.preview.path=='media/textures/ProjectYakuzaPhoneDev/DragonOfDojima.png'and #styles.description>0,'Dragon preview uses the supplied compressed image alongside its description')
+check(panel.scene.visible==false and panel.rows.visible==false,'opaque submenus skip the hidden phone model and preview list')
+local slotCount=assigned;styles:onKeyPress(Keyboard.KEY_RIGHT);styles:activate();check(assigned==slotCount+1 and p.slots.left==dragon.id and not panel.closing,'style slot assignment stays inside the preview menu')
+styles:onKeyPress(Keyboard.KEY_DOWN);check(styles.selected==2 and styles.preview==nil,'additional styles retain their names and safe missing-preview state')
+panel:onKeyPress(Keyboard.KEY_ESCAPE);advance(200);check(not panel:submenu()and D.panel==panel and panel.scene.visible,'back restores the phone and its model visibility')
+panel:activatePage();advance(200);styles=panel.activeStyles;styles:select(1);local equipCount=equipped;styles:activate()
+check(panel.closing and equipped==equipCount and uiSounds[#uiSounds]=='ProjectYakuzaPhoneDev_PhoneClose','style equipment waits for the dedicated phone-close transition and local sound')
+advance(80);check(styles.alpha<1 and styles.alpha>0,'style menu fades with the phone during an equip handoff');advance(400)
+check(not D.panel and equipped==equipCount+1,'style selection equips only after releasing the menu')
+local front=M.pose(1,0,0,false,true);local _,_,frontZ=M.transform(front,-.39,0,3.6);local _,_,backZ=M.transform(front,.39,0,3.6)
+check(near(front.ry,math.rad(6)),'original phone angle stays unchanged while the material gains lighting')
+panel=open();panel.material:prerender();local lit=panel.material.draws
+check(#lit>0 and #lit<=D.Material.maxFaces,'casing lighting uses a bounded set of original surface polygons')
+local dark,bright=0,1;for _,face in ipairs(lit)do dark=math.max(dark,face.shade);bright=math.min(bright,face.shade);check(face.specular<=.27 and face.shade<=.45,'material response stays below an opaque or blown-out finish')end
+check(dark-bright>.1,'different original casing normals receive distinct directional shading')
+local cached=panel.material.draws;panel.material:prerender();check(panel.material.draws==cached,'settled lighting geometry is cached rather than transformed every frame');D.clear()
+check(PY.VERSION=='0.131.0'and PY.Heat.stocks(p)==2,'dev interface does not replace combat version or grant heat')
 return 'PASS '..checks..' native projection, inverse input, alpha centring, pages, scrolling, options, actions, fallback and lifecycle assertions'

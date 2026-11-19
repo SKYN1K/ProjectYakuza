@@ -1,0 +1,29 @@
+module ProjectYakuzaPhoneDev
+{
+    sound ProjectYakuzaPhoneDev_PhoneOpen
+    {
+        category = ProjectYakuza_Interface,
+        is3D = false,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuzaPhoneDev/PhoneOpen.wav,
+            distanceMin = 0,
+            distanceMax = 0,
+            volume = 0.55,
+        }
+    }
+    sound ProjectYakuzaPhoneDev_PhoneClose
+    {
+        category = ProjectYakuza_Interface,
+        is3D = false,
+        loop = false,
+        clip
+        {
+            file = media/sound/ProjectYakuzaPhoneDev/PhoneClose.wav,
+            distanceMin = 0,
+            distanceMax = 0,
+            volume = 0.55,
+        }
+    }
+}

@@ -87,6 +87,7 @@ function Items:onRightMouseUp()return true end
 function Items:prerender()
     local now=getTimestampMs();local t=M.clamp((now-self.at)/1000/Items.transitionSeconds,0,1)
     self.alpha=self.closing and self.fromAlpha*(1-t)or t
+    if self.host.closing then self.alpha=self.alpha*self.host.open end
     if self.closing and t>=1 then self.host.activeItems=nil;self.host:removeChild(self);return end
     if now-self.refreshed>=1500 then self:refresh()end
     local a=self.alpha;local listW=self.width*.62
@@ -119,7 +120,7 @@ function Items:prerender()
     self:label(self.message or(self.host.gamepad and"Left/right: category   A: actions   B: back"or"Left/right: category   Enter: actions   Esc: back"),23,self.height-40,19,nil,nil,nil,a)
 end
 function Items.open(host)
-    if host.activeItems or host.closing then return end
+    if host:submenu()or host.closing then return end
     local p=Items:new(host.width*.06,host.height*.09,host.width*.88,host.height*.82)
     p.host=host;p.alpha=0;p.at=getTimestampMs();p.tab=1;p.selected=1;p.offset=0;p.background=false;p:initialise();p:refresh();host.activeItems=p;host:addChild(p);PY.UIAudio.play(host.player,"confirm")
 end
