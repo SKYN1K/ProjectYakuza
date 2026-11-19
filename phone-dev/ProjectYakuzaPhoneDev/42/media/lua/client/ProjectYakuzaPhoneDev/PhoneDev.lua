@@ -33,8 +33,6 @@ function D.install()
     local selector=PY.StyleSelector
     D.preloaded=D.preloaded or {}
     for _,asset in pairs(D.assets)do D.preloaded[asset.path]=getTexture(asset.path)end
-    D.preloaded[D.Font.path]=getTexture(D.Font.path)
-    D.preloaded[D.Font.fallbackPath]=getTexture(D.Font.fallbackPath)
     D.preloaded.dragonPreview=getTexture("media/textures/ProjectYakuzaPhoneDev/DragonOfDojima.png")
     if selector.openSetup==D.open then return end
     D.legacyOpenSetup=selector.openSetup;selector.openSetup=D.open

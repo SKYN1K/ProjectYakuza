@@ -18,8 +18,15 @@ def build(release,install=False):
   base_target=mods/'ProjectYakuza';assert version(base_target)==base_version,'Install the matching combat release before the phone development add-on.'
   for name,digest in effects.items():assert sha(base_target/'42/media/lua/client/ProjectYakuza'/name)==digest,'Installed combat effect bytes do not match the shared build.'
   existing={p.relative_to(target).as_posix()for p in target.rglob('*')if p.is_file()and p.name!='.keep'}if target.exists()else set()
-  assert existing<=files.keys(),'Existing phone dev folder contains unexpected files; automatic cleanup is not permitted.'
+  retired={'42/media/textures/ProjectYakuzaPhoneDev/Yakuza6Gothic.png'}
+  assert existing<=files.keys()|retired,'Existing phone dev folder contains unexpected files; automatic cleanup is not permitted.'
   backup=ROOT/'combat/backups'/('phone-dev-before-'+release);written=backed_up=0
+  for name in existing&retired:
+   destination=target/name;assert destination.resolve().is_relative_to(target)
+   saved=backup/name;saved.parent.mkdir(parents=True,exist_ok=True)
+   if saved.exists():assert saved.read_bytes()==destination.read_bytes()
+   else:shutil.copy2(destination,saved)
+   assert saved.read_bytes()==destination.read_bytes();destination.unlink();backed_up+=1
   for name,source in sorted(files.items()):
    destination=target/name;assert destination.resolve().is_relative_to(target)
    if destination.exists()and destination.read_bytes()==source.read_bytes():continue

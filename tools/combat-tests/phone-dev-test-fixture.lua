@@ -39,7 +39,21 @@ getPlayerScreenWidth=function()return viewportWidth end;getPlayerScreenHeight=fu
 local textEntry=false
 getCore=function()return {isDoingTextEntry=function()return textEntry end}end
 getGameTime=function()return {getTimeOfDay=function()return 14.5 end}end
-UIFont={Small=1,Medium=2}
+UIFont={Small=1,Medium=2,SdfRegular=3,SdfBold=4}
+local textDraws={};local textMeasures=0
+local managerText={}
+function managerText:getFontHeight()return 45 end
+function managerText:MeasureStringX(font,text)
+ textMeasures=textMeasures+1;local width=0
+ for char in text:gmatch("[%z\1-\127\194-\244][\128-\191]*")do width=width+(char=="W"and 30 or(char=="i"or char=="l")and 8 or char==" "and 12 or 20)end
+ return width
+end
+function managerText:DrawString(font,x,y,scale,text,r,g,b,a)
+ check(font==UIFont.SdfRegular or font==UIFont.SdfBold,'all text uses the native proportional font enums')
+ check(type(text)=='string'and scale>=0 and scale==scale and x==x and a>=0 and a<=1,'native text draws stay finite')
+ textDraws[#textDraws+1]={text=text,x=x,y=y,width=self:MeasureStringX(font,text)*scale,height=45*scale,font=font}
+end
+getTextManager=function()return managerText end
 Keyboard={KEY_ESCAPE=1,KEY_RETURN=28,KEY_NUMPADENTER=156,KEY_TAB=15,KEY_LEFT=203,KEY_RIGHT=205,KEY_UP=200,KEY_DOWN=208,KEY_W=17}
 Joypad={AButton=0,BButton=1,YButton=3};JoypadState={players={}}
 local uiSounds={}
@@ -85,13 +99,13 @@ function Base:drawText(text)check(type(text)=='string','UI labels stay readable 
 Base.drawTextCentre=Base.drawText
 Base.drawTextRight=Base.drawText
 function Base:drawTextureAllPoint(texture,x1,y1,x2,y2,x3,y3,x4,y4,r,g,b,a)check(texture~=nil and a>=0 and a<=1 and x1==x1 and y4==y4,'projected original textures stay finite');draws=draws+1;projectedDraws=projectedDraws+1;if texture.name=='ProjectYakuzaPhoneDevOrbFill'then fullOrbDraws=fullOrbDraws+1 end end
-function Base:drawTextureScaled(texture,x,y,w,h,a)check(texture~=nil and w>=0 and h>=0 and a>=0 and a<=1,"native original glyph and item textures are finite");draws=draws+1 end
+function Base:drawTextureScaled(texture,x,y,w,h,a)check(texture~=nil and w>=0 and h>=0 and a>=0 and a<=1,"native preview and item textures are finite");draws=draws+1 end
 function Base:drawSubTexture()draws=draws+1 end
 ISPanel=Base:derive('ISPanel');ISPanelJoypad=Base:derive('ISPanelJoypad');ISUI3DScene=Base:derive('ISUI3DScene')
-local glyphSplits=0;local fontReady=true
-getTexture=function(path)return {path=path,isReady=function()return fontReady end,split=function(self,name,x,y,w,h)glyphSplits=glyphSplits+1;return {path=self.path,name=name,x=x,y=y,w=w,h=h,isReady=function()return fontReady end}end}end
-local dragon={id='dragon_of_dojima',name='Dragon of Dojima'};local other={id='other',name='Other Style'}
-PY.styles={dragon_of_dojima=dragon,other=other};PY.getStyle=function(id)return PY.styles[id]end;PY.listStyles=function()return {dragon,other}end
+local uiTextureSplits=0;local fontReady=true
+getTexture=function(path)return {path=path,getWidth=function()return 512 end,getHeight=function()return 288 end,isReady=function()return fontReady end,split=function(self,name,x,y,w,h)uiTextureSplits=uiTextureSplits+1;return {path=self.path,name=name,x=x,y=y,w=w,h=h,isReady=function()return fontReady end}end}end
+local dragon={id='dragon_of_dojima',name='Dragon of Dojima',description="Kiryu's four-hit chain with Extreme Heat boost attacks."};local other={id='other',name='Other Style',description='Another style.'}
+PY.styles={dragon_of_dojima=dragon,other=other};PY.getStyle=function(id)return PY.styles[id]end;PY.listStyles=function()return {{id=dragon.id,name=dragon.name,description=dragon.description},{id=other.id,name=other.name,description=other.description}}end
 PY.getPlayerStyle=function(p)return PY.styles[p.style]or dragon end;PY.isEquipped=function(p)return p.equipped end;PY.isStyleToken=function(item)return item.token==true end;PY.isBusy=function(p)return p.busy==true end
 PY.equipStyle=function(p,id)equipped=equipped+1;p.style=id;p.equipped=true end;PY.unequipStyle=function(p)p.equipped=false end
 PY.StyleSlots={get=function(p)return p.slots end,id=function(p,s)return p.slots[s]end,assign=function(p,s,id)p.slots[s]=id;assigned=assigned+1;return true end}
@@ -128,6 +142,7 @@ setJoypadFocus=function(num,panel)local state=JoypadState.players[num+1];state.f
 do local _="ProjectYakuzaFixture:PHONEDATA" end
 do local _="ProjectYakuzaFixture:PHONEFONT" end
 do local _="ProjectYakuzaFixture:PHONEITEMS" end
+do local _="ProjectYakuzaFixture:PHONEPREVIEW" end
 do local _="ProjectYakuzaFixture:PHONESTYLES" end
 do local _="ProjectYakuzaFixture:PHONEMATERIAL" end
 do local _="ProjectYakuzaFixture:PHONEPANEL" end
@@ -151,19 +166,12 @@ local panel=open();check(panel.page==2 and panel.wantsKeys and manager[panel],'e
 panel:prerender();panel.screen:prerender();panel.rows:prerender();check(draws>50 and not panel.rows.stencil,'native phone screen and page draw without leaking clipping')
 projectedDraws=0;panel.screen:prerender();check(projectedDraws<=310,'projected labels and phone tiles have a bounded draw budget')
 check(panel.rows.items[1].level==2 and near(panel.rows.items[1].progress,.5),'Items preview shows actual PZ skill levels and XP progress')
-local splits=glyphSplits;panel.screen:prerender();check(glyphSplits==splits,'original font glyph regions are cached across render frames')
 for i,color in ipairs(D.appColors)do if i~=4 then check(color[1]<.9 and color[2]<.9 and color[3]<.9,'every monochrome app has a readable colour on its white tile')end end
-local layout=D.Font.layout('Styles',22,94);local glyphDraws={}
-local unicode=D.Font.layout(string.char(208,161,208,184,208,187,208,176),22,200)
-check(#unicode.glyphs==4 and unicode.glyphs[1].code==1057,'localized PZ skills decode Unicode codepoints into native fallback glyphs')
-D.Font.draw(function(_,q,tex,x,y,w,h,r,g,b,a)glyphDraws[#glyphDraws+1]={q=q,tex=tex,x=x,y=y,w=w,h=h}end,panel.screen,panel.screen.quad,layout,57,237,1)
-check(#glyphDraws==6 and layout.width<=94,'phone labels use original glyph textures rather than unrotated native captions')
-for _,g in ipairs(glyphDraws)do
- check(g.tex.path==D.Font.path and g.tex.w>0 and g.q==panel.screen.quad,'label glyphs sample original font pixels and share the phone screen projection')
- local x1,y1=M.point(g.q,g.x/320,g.y/568);local x2,y2=M.point(g.q,(g.x+g.w)/320,g.y/568)
- check(math.abs(y2-y1)>.001 and x2>x1,'letters tilt and scale along the phone surface instead of floating upright')
-end
-fontReady=false;D.Font.glyphs[64]=nil;check(not D.Font.texture(64),'asynchronous atlas readiness never splits an unloaded texture');fontReady=true
+local oldSplits=uiTextureSplits;textDraws={};panel.screen:prerender()
+check(#textDraws>=12 and uiTextureSplits==oldSplits,'phone captions draw complete native text strings without slicing glyph images')
+local wrapped=D.Font.wrap('Long localized description with words and line breaks\nSecond paragraph',22,170)
+for _,line in ipairs(wrapped)do check(D.Font.measure(line,22)<=170.001,'native font metrics constrain wrapped text to the available width')end
+check(D.Font.measure('iii',22)<D.Font.measure('WWW',22),'native proportional text preserves narrow and wide letter spacing')
 local oldHeat=panel.heatStocks
 for _,value in ipairs({0,2,6})do
  panel.heatStocks=value;fullOrbDraws=0;panel.screen:prerender();check(fullOrbDraws==value,'only full heat stocks draw the filled core')
@@ -203,13 +211,13 @@ panel:selectPage(1);panel.focusRows=false;panel:activatePage();local styles=pane
 check(styles and #styles.styles==2 and styles.styles[1].name=='Dragon of Dojima','Styles opens the registered style names')
 advance(200);check(styles.preview.path=='media/textures/ProjectYakuzaPhoneDev/DragonOfDojima.png'and #styles.description>0,'Dragon preview uses the supplied compressed image alongside its description')
 check(panel.scene.visible==false and panel.rows.visible==false,'opaque submenus skip the hidden phone model and preview list')
-local slotCount=assigned;styles:onKeyPress(Keyboard.KEY_RIGHT);styles:activate();check(assigned==slotCount+1 and p.slots.left==dragon.id and not panel.closing,'style slot assignment stays inside the preview menu')
-styles:onKeyPress(Keyboard.KEY_DOWN);check(styles.selected==2 and styles.preview==nil,'additional styles retain their names and safe missing-preview state')
+local slotCount=assigned;styles:activate();check(assigned==slotCount+1 and p.slots.left==dragon.id and not panel.closing,'first action assigns the first slot without equipping')
+styles:onKeyPress(Keyboard.KEY_RIGHT);styles:activate();check(p.slots.right==dragon.id and not panel.closing,'second action assigns the second slot without equipping')
+check(#D.Styles.actions==2 and styles.geometry.tabRows==0,'Dragon has only two slot buttons and no preview tabs')
+check(styles.theme.accent[3]==1 and styles.theme.accent[2]>.7,'Dragon uses its light blue theme')
+styles:onKeyPress(Keyboard.KEY_DOWN);check(styles.selected==2 and #styles.styles[2].previews==0,'additional styles retain safe missing-preview states')
 panel:onKeyPress(Keyboard.KEY_ESCAPE);advance(200);check(not panel:submenu()and D.panel==panel and panel.scene.visible,'back restores the phone and its model visibility')
-panel:activatePage();advance(200);styles=panel.activeStyles;styles:select(1);local equipCount=equipped;styles:activate()
-check(panel.closing and equipped==equipCount and uiSounds[#uiSounds]=='ProjectYakuzaPhoneDev_PhoneClose','style equipment waits for the dedicated phone-close transition and local sound')
-advance(80);check(styles.alpha<1 and styles.alpha>0,'style menu fades with the phone during an equip handoff');advance(400)
-check(not D.panel and equipped==equipCount+1,'style selection equips only after releasing the menu')
+D.clear()
 local front=M.pose(1,0,0,false,true);local _,_,frontZ=M.transform(front,-.39,0,3.6);local _,_,backZ=M.transform(front,.39,0,3.6)
 check(near(front.ry,math.rad(6)),'original phone angle stays unchanged while the material gains lighting')
 panel=open();panel.material:prerender();local lit=panel.material.draws
@@ -217,5 +225,31 @@ check(#lit>0 and #lit<=D.Material.maxFaces,'casing lighting uses a bounded set o
 local dark,bright=0,1;for _,face in ipairs(lit)do dark=math.max(dark,face.shade);bright=math.min(bright,face.shade);check(face.specular<=.27 and face.shade<=.45,'material response stays below an opaque or blown-out finish')end
 check(dark-bright>.1,'different original casing normals receive distinct directional shading')
 local cached=panel.material.draws;panel.material:prerender();check(panel.material.draws==cached,'settled lighting geometry is cached rather than transformed every frame');D.clear()
+local firstFrame='media/textures/ProjectYakuza/HeatHUD/OriginalDragonAtlas.png'
+local secondFrame='media/textures/ProjectYakuza/HeatHUD/OriginalCombatAtlas.png'
+other.phoneMenu={theme={accent='#DD3366',background={.03,.01,.02},text={.98,.94,.95}},previews={{label='Stance',image=firstFrame},{label='Combo',animation={frames={firstFrame,secondFrame},durations={40,90},loops=0}}}}
+other.description=string.rep('A long creator description wraps into readable lines and scrolls without covering the preview or buttons. ',12)
+panel=open();panel:selectPage(1);panel:activatePage();advance(200);styles=panel.activeStyles;styles:select(2);styles:prerender()
+check(near(styles.theme.accent[1],221/255)and styles.geometry.tabRows==1,'full registered style metadata supplies creator colours and preview tabs')
+styles:onKeyPress(Keyboard.KEY_TAB);check(styles.previewIndex==2,'Tab selects an animated creator preview')
+local texture,index=D.Preview.texture(styles.previewState,styles.previewState.at+39);check(index==1 and texture.path==firstFrame,'animated preview respects its first original frame delay')
+texture,index=D.Preview.texture(styles.previewState,styles.previewState.at+40);check(index==2 and texture.path==secondFrame,'animated preview advances at the specified delay')
+texture,index=D.Preview.texture(styles.previewState,styles.previewState.at+130);check(index==1,'animated preview loops on its own total duration')
+local finite=D.Preview.animation({frames={firstFrame,secondFrame},durations={40,90},loops=1});check(D.Preview.frame(finite,10000)==2,'finite GIF previews retain their final frame')
+check(not D.Preview.animation({frames={firstFrame},durations={0}}),'invalid frame timings do not enter playback')
+local pending=styles.previewState.cache[secondFrame];pending.isReady=function()return false end
+check(D.Preview.texture(styles.previewState,styles.previewState.at+40).path==firstFrame,'an unready preview frame retains the previous ready image')
+fontReady=false;check(D.Preview.texture(styles.previewState,styles.previewState.at+40)==nil,'a reloading fallback image cannot draw a missing texture');fontReady=true;pending.isReady=function()return true end
+styles:getMouseX();mouseX=styles:getAbsoluteX()+styles.geometry.x+10;styles:onMouseWheel(1);check(styles.descriptionOffset>0,'long descriptions scroll independently of style selection')
+local g=styles.geometry;styles:onMouseDown(g.x+4,g.tabsY+4);check(styles.previewIndex==1,'preview tabs above the image select the matching static preview')
+D.clear()
+for _,viewport in ipairs({{640,480},{800,600},{1024,768},{1920,1080}})do
+ viewportWidth,viewportHeight=viewport[1],viewport[2];panel=open();panel:selectPage(1);panel:activatePage();advance(200);styles=panel.activeStyles;styles:select(2)
+ textDraws={};styles:prerender();g=styles.geometry
+ check(g.imageY+g.imageH<=g.descriptionY and g.descriptionY+g.descriptionH<=g.buttonY+.001 and g.buttonY+g.buttonH<g.footerY,'preview, description, slot buttons and footer have separate bounded regions')
+ for _,draw in ipairs(textDraws)do check(draw.x>=styles:getAbsoluteX()-1 and draw.x+draw.width<=styles:getAbsoluteX()+styles.width+1 and draw.y>=styles:getAbsoluteY()and draw.y+draw.height<=styles:getAbsoluteY()+styles.height,'native style text stays inside the actual viewport panel')end
+ styles:select(1);check(styles.geometry.tabRows==0,'Dragon remains a single image without preview buttons at every viewport size');D.clear()
+end
+viewportWidth,viewportHeight=1600,900
 check(PY.VERSION=='0.131.0'and PY.Heat.stocks(p)==2,'dev interface does not replace combat version or grant heat')
 return 'PASS '..checks..' native projection, inverse input, alpha centring, pages, scrolling, options, actions, fallback and lifecycle assertions'

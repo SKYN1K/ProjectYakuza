@@ -27,9 +27,7 @@ end
 local appColors={{.80,.20,.24},{.51,.25,.72},{.12,.61,.35},{1,1,1},{.08,.51,.85},{.70,.13,.43},{.82,.62,.14},{.19,.42,.80},{.28,.31,.36}}
 D.appColors=appColors
 local function caption(panel,q,text,x,y,a,size,width)
-    local cache=panel.host.captionCache;local key=x+y*320;local entry=cache[key]
-    if not entry or entry.text~=text then entry={text=text,layout=D.Font.layout(text,size or 20,width or 96)};cache[key]=entry end
-    D.Font.draw(quad,panel,q,entry.layout,x,y,a)
+    D.Font.projected(panel,q,text,x,y,a,size or 20,width)
 end
 function Screen:prerender()
     local host=self.host
@@ -150,7 +148,6 @@ end
 function Phone:initialise()
     ISPanelJoypad.initialise(self)
     self.textures={};for name,asset in pairs(D.assets)do self.textures[name]=getTexture(asset.path)end
-    self.captionCache={}
     self:loadOrbs()
     self.icons={};for index,page in ipairs(D.pages)do local x,y,w,h=M.appRect(index);self.icons[index]={M.iconRect(D.assets[page.id],x+w/2,y+h/2,46)}end
     local sw=math.min(self.height*.70,self.width*.48);self.scene=ISUI3DScene:new(0,0,sw,self.height);self.scene.background=false;self.scene:initialise();self:addChild(self.scene)

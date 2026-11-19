@@ -24,7 +24,7 @@ heat=ROOT/'combat/ProjectYakuza/42/media/textures/ProjectYakuza/HeatActionIconAt
 if validate:assert Image.open(output).convert('RGBA').tobytes()==flame.tobytes()
 else:flame.save(output)
 images['heat']={'source':str(heat.relative_to(ROOT)),'sourceSha256':sha(heat),'crop':[64,0,128,80],'output':str(output.relative_to(MOD)),'sha256':sha(output),'size':list(flame.size),'alphaBounds':list(flame.getchannel('A').getbbox())}
-assets='ProjectYakuza=ProjectYakuza or {}\nProjectYakuza.PhoneDev=ProjectYakuza.PhoneDev or {}\nProjectYakuza.PhoneDev.VERSION="0.1.4"\nProjectYakuza.PhoneDev.requiredCombatVersion="0.131.0"\nProjectYakuza.PhoneDev.assets={'+','.join('['+json.dumps(n)+']={path='+json.dumps('media/textures/ProjectYakuzaPhoneDev/'+n+'.png')+',width='+str(v['size'][0])+',height='+str(v['size'][1])+',bounds={'+','.join(map(str,v['alphaBounds']))+'}}'for n,v in sorted(images.items()))+'}\n'
+assets='ProjectYakuza=ProjectYakuza or {}\nProjectYakuza.PhoneDev=ProjectYakuza.PhoneDev or {}\nProjectYakuza.PhoneDev.VERSION="0.1.5"\nProjectYakuza.PhoneDev.requiredCombatVersion="0.131.0"\nProjectYakuza.PhoneDev.assets={'+','.join('['+json.dumps(n)+']={path='+json.dumps('media/textures/ProjectYakuzaPhoneDev/'+n+'.png')+',width='+str(v['size'][0])+',height='+str(v['size'][1])+',bounds={'+','.join(map(str,v['alphaBounds']))+'}}'for n,v in sorted(images.items()))+'}\n'
 p=MOD/'42/media/lua/client/ProjectYakuzaPhoneDev/Assets.lua'
 if validate:assert p.read_text()==assets
 else:p.write_text(assets,newline='\n')
