@@ -30,7 +30,7 @@ def install(mod,version,zomboid,backup,stage_source,mod_id="ProjectYakuza"):
     assert re.fullmatch(r'\d+\.\d+\.\d+',version)
     mod=Path(mod).resolve();zomboid=Path(zomboid).resolve();backup=Path(backup).resolve();stage_source=Path(stage_source).resolve()
     assert not backup.is_relative_to(zomboid),'Backups must be outside the game cache and Workshop search path'
-    files=package.runtime_files(mod)
+    files=package.runtime_files(mod,release=mod_id=="ProjectYakuza")
     assert 'version='+version in(mod/'42/mod.info').read_text()
     assert re.search(r'^id='+re.escape(mod_id)+r'\s*$',(mod/'42/mod.info').read_text(),re.M)
     assert matches(stage_source/('Contents/mods/'+mod_id),files),'Build the matching Workshop package first'
