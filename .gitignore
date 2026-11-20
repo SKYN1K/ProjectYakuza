@@ -443,3 +443,5 @@
 **/SKILL.md
 **/.agents/
 **/.codex/
+
+!tools/Update-ExistingRelease.py

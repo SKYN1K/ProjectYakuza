@@ -1,6 +1,6 @@
 # Lua API 3 reference
 
-Current framework release: v1 (internal build 0.136.0), multiplayer protocol 2.
+Current framework release: v1 (version 1.0.0), multiplayer protocol 2.
 
 Require `ProjectYakuza/Registry` for shared definitions, `ProjectYakuza/Runtime` for client gameplay, `ProjectYakuza/Bindings` for controls, and `ProjectYakuza/NetworkExtensions` for addon observer registration. Do not require client UI from server/shared definitions.
 

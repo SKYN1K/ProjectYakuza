@@ -1,6 +1,6 @@
 # Dragon of Dojima reference style
 
-Project Yakuza v1 packages internal build **0.136.0**, Lua API **3** and multiplayer protocol **2**. For independent style development, start with [Style authoring](docs/STYLE_AUTHORING.md) and the [API reference](docs/API_REFERENCE.md).
+Project Yakuza v1 packages version **1.0.0**, Lua API **3** and multiplayer protocol **2**. For independent style development, start with [Style authoring](docs/STYLE_AUTHORING.md) and the [API reference](docs/API_REFERENCE.md).
 
 ## Install and select
 

@@ -1,6 +1,6 @@
 # Framework documentation
 
-Current release: **[v1](https://github.com/SKYN1K/ProjectYakuza/releases/tag/v1)** · internal build **0.136.0** · Lua API **3** · multiplayer protocol **2**.
+Current release: **[v1](https://github.com/SKYN1K/ProjectYakuza/releases/tag/v1)** · version **1.0.0** · Lua API **3** · multiplayer protocol **2**.
 
 ## Start here
 
@@ -54,4 +54,4 @@ The player release contains vanilla bat/club, knife and blade profiles and their
 
 The [emote project](../../../emotes/ProjectYakuzaEmotes/README.md) and [phone project](../../../phone-dev/ProjectYakuzaPhoneDev/docs/README.md) are separate optional source projects. The phone's [style presentation contract](../../../phone-dev/ProjectYakuzaPhoneDev/docs/STYLE_PRESENTATION.md) applies only when that add-on is enabled.
 
-Version-labelled sections record historical implementation changes. Older validation notes are available in Git history rather than in the current manual. Current release filtering is recorded in [release-profile-0.136.0.json](release-profile-0.136.0.json). Asset JSON records preserve source identities, conversions and hashes. Documentation, tools and provenance records remain in the repository and are excluded from player ZIPs.
+Version-labelled sections record historical implementation changes. Older validation notes are available in Git history rather than in the current manual. Current release filtering is recorded in [release-profile-1.0.0.json](release-profile-1.0.0.json). Asset JSON records preserve source identities, conversions and hashes. Documentation, tools and provenance records remain in the repository and are excluded from player ZIPs.

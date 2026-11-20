@@ -1,6 +1,6 @@
 # v1
 
-Project Yakuza is a Lua combat framework for independent fighting-style add-ons for Project Zomboid Build 42. This release packages build 0.136.0, Lua API 3 and multiplayer protocol 2.
+Project Yakuza is a Lua combat framework for independent fighting-style add-ons for Project Zomboid Build 42. This release is version 1.0.0, Lua API 3 and multiplayer protocol 2.
 
 ## For style creators
 
@@ -17,6 +17,6 @@ Dragon of Dojima demonstrates combo/finisher routing, charged attacks, quickstep
 
 ## Downloads
 
-Use the named B42 ZIP for local installation or the Workshop ZIP for upload preparation. Their filenames retain the internal build number 0.136.0. GitHub's automatic Source code archives contain developer material and are not player packages. Server and clients need matching framework and add-on versions.
+Use the named B42 ZIP for local installation or the Workshop ZIP for upload preparation. The mod metadata and package filenames use version 1.0.0 (v1). GitHub's automatic Source code archives contain developer material and are not player packages. Server and clients need matching framework and add-on versions.
 
 [Workshop guide](https://github.com/SKYN1K/ProjectYakuza/blob/main/docs/WORKSHOP.md) · [Controls](https://github.com/SKYN1K/ProjectYakuza/blob/main/combat/ProjectYakuza/docs/CONTROLS.md) · [Validation coverage](https://github.com/SKYN1K/ProjectYakuza/blob/main/combat/ProjectYakuza/docs/VALIDATION.md)

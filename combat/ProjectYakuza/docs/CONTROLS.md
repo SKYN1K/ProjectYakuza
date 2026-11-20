@@ -1,6 +1,6 @@
 # Controls and settings
 
-These defaults apply to Dragon of Dojima in v1 (build 0.136.0). Other styles can register their own bindings and input callbacks. See the [reference-style control table](../README.md#default-controls).
+These defaults apply to Dragon of Dojima in v1 (build 1.0.0). Other styles can register their own bindings and input callbacks. See the [reference-style control table](../README.md#default-controls).
 
 ## Settings
 
