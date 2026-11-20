@@ -2,7 +2,7 @@ from pathlib import Path
 import json,uuid,hashlib
 from y5_source_assets import unpack
 from read_heat_scene import read_scene
-from extract_majima_bat_emote import resource
+from scene_resource import resource
 
 root=Path(__file__).resolve().parents[2];archive=Path('F:/SteamLibrary/steamapps/common/Yakuza 5/main/data/hact/H11240_tomoenage.par');folder=root/'extracted/grab-y5-0116'
 def extract():

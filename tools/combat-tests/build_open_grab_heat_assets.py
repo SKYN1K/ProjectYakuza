@@ -5,7 +5,7 @@ from mathutils import Vector
 root=Path(__file__).resolve().parents[2];w=Path(__file__).parent;sys.path.insert(0,str(w))
 from y5_retarget import convert
 from read_heat_scene import read_scene
-from extract_majima_bat_emote import resource
+from scene_resource import resource
 from locomotion_math import read,locals_at,world,blocks,write
 from native_body_geometry import load_body,skin_part
 from paired_paths import bridge_scene_cuts

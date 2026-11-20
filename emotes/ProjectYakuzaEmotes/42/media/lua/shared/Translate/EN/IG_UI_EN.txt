@@ -1,8 +1,0 @@
-IGUI_EN = {
-    IGUI_ProjectYakuzaEmotes_Category = "Project Yakuza Emotes",
-    IGUI_ProjectYakuzaEmotes_Emote_MajimaBatPoint = "Majima: Bat Point (hold a bat)",
-    IGUI_ProjectYakuzaEmotes_Emote_LauSpearGround = "Lau Ka Long: Spear Ground Strike (hold a spear)",
-    IGUI_ProjectYakuzaEmotes_Emote_KiryuBadLuck = "Kiryu: Bad Luck (empty hands)",
-    IGUI_ProjectYakuzaEmotes_Emote_KiryuStepUp = "Kiryu: Step Up (empty hands)",
-    IGUI_ProjectYakuzaEmotes_Emote_ShimanoShutUp = "Shimano: Shut the Fuck Up (empty hands)",
-}

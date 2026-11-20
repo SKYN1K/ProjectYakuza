@@ -46,12 +46,11 @@ Current release: **[v1](https://github.com/SKYN1K/ProjectYakuza/releases/tag/v1)
 | Encounters and original blood | [Encounter intros](ENCOUNTER_INTROS.md) and [Blood effects](BLOOD_EFFECTS.md) |
 | Runtime lookup and maintenance | [Performance](PERFORMANCE.md) |
 
-## Source records and optional projects
+## Source records
 
 The player release contains vanilla bat/club, knife and blade profiles and their supported Heat Actions. [Bat](BAT_HEAT_ACTION.md), [knife](KNIFE_HEAT_ACTION.md) and [open-space grab](OPEN_GRAB_HEAT_ACTION.md) describe retained reference scenes.
 
 [Beer crate](BEER_CRATE.md), [bicycle](BICYCLE.md) and [intact bottles](BOTTLE_WEAPONS.md) describe source-only development work excluded from v1. Their item-spawning and gameplay instructions are not part of the current player manual.
 
-The [emote project](../../../emotes/ProjectYakuzaEmotes/README.md) and [phone project](../../../phone-dev/ProjectYakuzaPhoneDev/docs/README.md) are separate optional source projects. The phone's [style presentation contract](../../../phone-dev/ProjectYakuzaPhoneDev/docs/STYLE_PRESENTATION.md) applies only when that add-on is enabled.
 
 Version-labelled sections record historical implementation changes. Older validation notes are available in Git history rather than in the current manual. Current release filtering is recorded in [release-profile-1.0.0.json](release-profile-1.0.0.json). Asset JSON records preserve source identities, conversions and hashes. Documentation, tools and provenance records remain in the repository and are excluded from player ZIPs.

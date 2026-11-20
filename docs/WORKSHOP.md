@@ -38,6 +38,6 @@ PZ can load mods from local Workshop staging folders as well as Zomboid/mods. Ke
 
 The [v1 release](https://github.com/SKYN1K/ProjectYakuza/releases/tag/v1) contains version 1.0.0. Use ProjectYakuza-B42-v1.0.0.zip for local installation or ProjectYakuza-Workshop-v1.0.0.zip for core Workshop preparation. The latter extracts to ProjectYakuza-v1.0.0; place that folder under your own Zomboid/Workshop directory. GitHub's automatic Source code archives are development snapshots, not upload packages.
 
-The core's player release includes vanilla bat/club, knife and blade profiles and their supported Heat Actions. Custom-object development profiles and the separate emote/phone projects are excluded. The source package builder applies this filter; copying the full source mod folder includes development content.
+The core's player release includes vanilla bat/club, knife and blade profiles and their supported Heat Actions. Custom-object development profiles are excluded. The source package builder applies this filter; copying the full source mod folder includes development content.
 
-For core maintenance, configure the local tool/dependency paths before using Build-GamePackage.py and the publication tools. Those tools build the framework/emote projects, not arbitrary third-party add-ons. Their package allowlist/privacy checks and native Workshop validation complement gameplay testing; they do not upload to Steam.
+For core maintenance, configure the local tool/dependency paths before using Build-GamePackage.py and the publication tools. Those tools build the framework, not arbitrary third-party add-ons. Their package allowlist/privacy checks and native Workshop validation complement gameplay testing; they do not upload to Steam.

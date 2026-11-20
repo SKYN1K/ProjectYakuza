@@ -12,7 +12,7 @@ from locomotion_math import read,locals_at,world
 from native_body_geometry import load_body,skin_part
 from y5_source_assets import entry
 from read_heat_scene import read_scene
-from extract_majima_bat_emote import resource
+from scene_resource import resource
 
 contracts=[];samples=0;body=load_body('F:/SteamLibrary/steamapps/common/ProjectZomboid/media/models_X/Skinned/MaleBody.x');repair=json.loads((mod/'docs/blade-contact-repair.json').read_text());assert sha(repair['baseline'])==repair['baselineSha256']
 for c in repair['clips']:

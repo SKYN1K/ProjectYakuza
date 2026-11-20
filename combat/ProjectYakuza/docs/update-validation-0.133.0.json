@@ -2,7 +2,6 @@
   "version": "0.133.0",
   "offlineOnly": true,
   "combatKahluaAssertions": 32312,
-  "phoneKahluaAssertions": 64229,
   "nativeReverseAndRunSelections": 18,
   "nativeLimbProjectionCases": 23232,
   "originalEffectTexturesChecked": 70,
@@ -20,6 +19,6 @@
     "TextureWarmup": "22414784282405a32c851e088d10c8c7227742c27f278ba3ef4e3bc9c24c5122",
     "WorldEffects": "7f1d1dbf82c7dc68201262f01d196e8e1ebd339d06ac95de7d9e0fd9c2a34148"
   },
-  "scope": "No source animation, model or effect texture pixels changed. Native selectors, runtime effect placement/presentation, bounded first-use setup and HUD behaviour changed. Phone original font/icon pixel checks are recorded in its separate build.",
+  "scope": "No source animation, model or effect texture pixels changed. Native selectors, runtime effect placement/presentation, bounded first-use setup and HUD behaviour changed",
   "limitations": "PZ was not launched. Live frame times, final limb placement, fatigue transitions and multiplayer rendering require an in-game check."
 }

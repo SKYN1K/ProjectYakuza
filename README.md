@@ -57,7 +57,7 @@ Dragon of Dojima demonstrates light chains, normal/reverse/charged finishers, qu
 
 Custom beer-crate, bicycle, intact-bottle and Lau Ka Long spear work remains in the development source and is excluded from the player packages. Build the core packages through `tools/Build-GamePackage.py` to apply the release filter; copying the entire source mod folder installs the development content.
 
-[Cutscene emotes](emotes/ProjectYakuzaEmotes/README.md) and the [experimental phone UI](phone-dev/ProjectYakuzaPhoneDev/docs/README.md) are separate source projects. Neither is required by the framework or included in v1. Custom Voice Framework and compatible voice packs are optional integrations; voice packs are not bundled.
+Custom Voice Framework and compatible voice packs are optional integrations; voice packs are not bundled.
 
 ## Multiplayer and distribution
 

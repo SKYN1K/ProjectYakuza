@@ -93,7 +93,7 @@ def workshop(mod_id,version,files,dist):
         target=payload/name;target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(source,target)
     (payload/'common').mkdir(exist_ok=True)
     preview=Path('F:/SteamLibrary/steamapps/common/ProjectZomboid/Workshop/ModTemplate/preview.png');assert preview.is_file(),'Supplied game preview is missing';scan('preview.png',preview.read_bytes());shutil.copyfile(preview,folder/'preview.png')
-    title='Project Yakuza'if mod_id=='ProjectYakuza'else'Project Yakuza Emotes'
+    title='Project Yakuza'
     metadata='version=1\ntitle='+title+'\ndescription='+title+' for Project Zomboid Build 42. Version '+version+'.\ntags=\nvisibility=private\n'
     (folder/'workshop.txt').write_text(metadata,encoding='utf-8')
     assert {p.relative_to(payload).as_posix()for p in payload.rglob('*')if p.is_file()}==files.keys()
@@ -106,9 +106,9 @@ def workshop(mod_id,version,files,dist):
     return folder,archive
 
 def main():
-    parser=argparse.ArgumentParser();parser.add_argument('--project',choices=['combat','emotes'],default='combat');parser.add_argument('--version',required=True);parser.add_argument('--workshop',action='store_true');args=parser.parse_args();assert re.fullmatch(r'\d+\.\d+\.\d+',args.version)
-    mod_id='ProjectYakuza'if args.project=='combat'else'ProjectYakuzaEmotes';mod=ROOT/args.project/mod_id;files=runtime_files(mod,release=args.project=="combat");assert('version='+args.version)in(mod/'42/mod.info').read_text();dist=ROOT/'dist';dist.mkdir(exist_ok=True);archive=dist/(mod_id+'-B42-v'+args.version+'.zip');write_zip(archive,mod_id,files)
-    report={'project':mod_id,'version':args.version,'files':len(files),'zip':str(archive),'size':archive.stat().st_size,'sha256':hashlib.sha256(archive.read_bytes()).hexdigest(),'runtimeOnly':True,'releaseProfile':'vanilla-weapons'if args.project=='combat'else'standalone-emotes','privacyScanPassed':True,'excluded':['development notes','provenance reports','templates','tools','backups','AGENTS.md','local paths','credentials']}
+    parser=argparse.ArgumentParser();parser.add_argument('--project',choices=['combat'],default='combat');parser.add_argument('--version',required=True);parser.add_argument('--workshop',action='store_true');args=parser.parse_args();assert re.fullmatch(r'\d+\.\d+\.\d+',args.version)
+    mod_id='ProjectYakuza';mod=ROOT/args.project/mod_id;files=runtime_files(mod,release=args.project=="combat");assert('version='+args.version)in(mod/'42/mod.info').read_text();dist=ROOT/'dist';dist.mkdir(exist_ok=True);archive=dist/(mod_id+'-B42-v'+args.version+'.zip');write_zip(archive,mod_id,files)
+    report={'project':mod_id,'version':args.version,'files':len(files),'zip':str(archive),'size':archive.stat().st_size,'sha256':hashlib.sha256(archive.read_bytes()).hexdigest(),'runtimeOnly':True,'releaseProfile':'vanilla-weapons','privacyScanPassed':True,'excluded':['development notes','provenance reports','templates','tools','backups','AGENTS.md','local paths','credentials']}
     if args.workshop:
         folder,upload=workshop(mod_id,args.version,files,dist);report.update(workshopFolder=str(folder),workshopZip=str(upload),preview='Unchanged supplied PZ template preview',visibility='private')
     (ROOT/'tools'/('package-'+args.project+'-'+args.version+'.json')).write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report))

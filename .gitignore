@@ -296,31 +296,9 @@
 
 !/tools/combat-tests/validate_asset_cleanup.py
 
-!/tools/combat-tests/extract_majima_bat_emote.py
-!/tools/combat-tests/build_majima_bat_emote.py
-!/tools/combat-tests/validate_majima_bat_emote.py
-!/tools/combat-tests/MajimaEmoteProbe.java
-!/tools/combat-tests/build_emote_tests.py
-!/tools/combat-tests/emote-test-fixture.lua
-!/tools/combat-tests/emote-menu-test-fixture.lua
 
-!/tools/combat-tests/extract_lau_spear_emote.py
-!/tools/combat-tests/build_lau_spear_emote.py
-!/tools/combat-tests/validate_lau_spear_emote.py
-!/tools/combat-tests/extract_kiryu_bad_luck_emote.py
-!/tools/combat-tests/build_kiryu_bad_luck_emote.py
-!/tools/combat-tests/validate_kiryu_bad_luck_emote.py
 
-!/emotes/
-/emotes/*
-!/emotes/ProjectYakuzaEmotes/
-/emotes/ProjectYakuzaEmotes/**/__pycache__/
-!/tools/Publish-EmoteRelease.ps1
-!/tools/combat-tests/validate_emote_split.py
 
-!/tools/combat-tests/extract_kiryu_step_up_emote.py
-!/tools/combat-tests/build_kiryu_step_up_emote.py
-!/tools/combat-tests/validate_kiryu_step_up_emote.py
 
 !/tools/combat-tests/extract_open_grab_heat_assets.py
 !/tools/combat-tests/build_open_grab_heat_assets.py
@@ -329,9 +307,7 @@
 !/tools/combat-tests/validate_open_grab_heat_assets.py
 !/tools/combat-tests/OpenGrabHeatProbe.java
 
-!/tools/combat-tests/StepUpMotionProbe.java
 
-!/tools/combat-tests/EmoteReadinessProbe.java
 !/tools/combat-tests/PairedPlaybackClockProbe.java
 !/tools/combat-tests/extract_bicycle_k2_assets.py
 !/tools/combat-tests/build_bicycle_k2_assets.py
@@ -379,18 +355,10 @@
 !tools/combat-tests/build_lau_spear_weapon.py
 !tools/combat-tests/build_lau_spear_texture.py
 !tools/combat-tests/LauSpearProbe.java
-!tools/combat-tests/extract_shimano_emote.py
-!tools/combat-tests/build_shimano_emote.py
-!tools/combat-tests/validate_shimano_emote.py
 !tools/combat-tests/spear_uv_tiles.py
 !tools/combat-tests/validate_lau_spear_surface.py
 
-!tools/combat-tests/build_lau_weapon_emote.py
-!tools/combat-tests/validate_lau_weapon_emote.py
-!tools/combat-tests/SpearSparkProbe.java
-!tools/combat-tests/spear-spark-test-fixture.lua
 
-!tools/combat-tests/build_spear_spark_contacts.py
 
 !tools/combat-tests/LimbImpactProbe.java
 !tools/combat-tests/AttackEffectProbe.java
@@ -404,24 +372,8 @@
 !tools/combat-tests/build_parent_poses.py
 !tools/combat-tests/build_parent_pose_tests.py
 
-!/phone-dev/
-/phone-dev/*
-!/phone-dev/ProjectYakuzaPhoneDev/
-!tools/combat-tests/build_phone_dev_assets.py
-!tools/combat-tests/validate_phone_dev.py
-!tools/combat-tests/PhoneDevNativeProbe.java
-!tools/combat-tests/build_phone_dev_tests.py
-!tools/combat-tests/phone-dev-test-fixture.lua
-!tools/combat-tests/build_phone_font.py
-!tools/combat-tests/phone_source_assets.py
 !tools/combat-tests/build_texture_warmup.py
 !tools/combat-tests/texture-warmup-test-fixture.lua
-!tools/Build-PhoneDev.py
-!tools/Publish-PhoneDevRelease.ps1
-!tools/combat-tests/build_phone_presentation_assets.py
-!tools/combat-tests/build_phone_material.py
-!tools/combat-tests/phone-material-runtime.lua
-!tools/Import-PhonePreview.py
 
 !tools/combat-tests/RecoverySelectionProbe.java
 !tools/combat-tests/build_recovery_tests.py
@@ -445,3 +397,4 @@
 **/.codex/
 
 !tools/Update-ExistingRelease.py
+!tools/combat-tests/scene_resource.py

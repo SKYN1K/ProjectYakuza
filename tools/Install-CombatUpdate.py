@@ -26,7 +26,7 @@ def matches(folder,files):
     return actual.keys()==files.keys()and all(actual[name].read_bytes()==source.read_bytes()for name,source in files.items())
 
 def install(mod,version,zomboid,backup,stage_source,mod_id="ProjectYakuza"):
-    assert mod_id in {"ProjectYakuza","ProjectYakuzaEmotes"}
+    assert mod_id=="ProjectYakuza"
     assert re.fullmatch(r'\d+\.\d+\.\d+',version)
     mod=Path(mod).resolve();zomboid=Path(zomboid).resolve();backup=Path(backup).resolve();stage_source=Path(stage_source).resolve()
     assert not backup.is_relative_to(zomboid),'Backups must be outside the game cache and Workshop search path'
@@ -92,8 +92,8 @@ def install(mod,version,zomboid,backup,stage_source,mod_id="ProjectYakuza"):
     return {'version':version,'runtimeFiles':len(files),'written':written,'backedUp':len(changed),'archivedWorkshopStages':archived,'installed':str(target),'workshop':str(desired),'loadableWorkshopCopies':loadable,'verified':True,'workshopItemIdPreserved':bool(ids)}
 
 def main():
-    parser=argparse.ArgumentParser();parser.add_argument('--version',required=True);parser.add_argument('--project',choices=['combat','emotes'],default='combat');parser.add_argument('--zomboid-root',type=Path,default=Path.home()/'Zomboid');args=parser.parse_args()
-    mod_id='ProjectYakuza'if args.project=='combat'else'ProjectYakuzaEmotes'
+    parser=argparse.ArgumentParser();parser.add_argument('--version',required=True);parser.add_argument('--project',choices=['combat'],default='combat');parser.add_argument('--zomboid-root',type=Path,default=Path.home()/'Zomboid');args=parser.parse_args()
+    mod_id='ProjectYakuza'
     report=install(ROOT/args.project/mod_id,args.version,args.zomboid_root,ROOT/args.project/'backups'/('before-'+args.version),ROOT/'dist/Workshop'/(mod_id+'-v'+args.version),mod_id)
     (ROOT/'tools'/('install-'+args.project+'-'+args.version+'.json')).write_text(json.dumps(report,indent=2)+'\n');print(json.dumps(report))
 
