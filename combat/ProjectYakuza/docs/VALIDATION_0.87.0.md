@@ -1,9 +1,0 @@
-# Project Yakuza 0.87.0 validation
-
-Offline only. Project Zomboid was not launched; final blended/GPU appearance and a real MP session remain untested.
-
-The focused Kahlua effect suite passes 15865 checks covering original native FK/projection, complete current catalogue contacts, all-direction arm/leg endpoints, actual linked-finisher clip resolution, independent finisher versus charge-up limbs, current Rush punch/kick contacts, retained world positions on rotation, fading wakes after completion and into the next attack, pause/teleport/interruption cleanup, bounded sprite/history budgets and duplicate observer snapshots. All 28 Kahlua suites pass, and all 72 production Lua files compile. Passive native UI routing, stun/PvP APIs, original settings-background decoding and all six lexical-preservation tests pass.
-
-`build_attack_trails.py` validates/rebuilds numeric Lua data deterministically through B42's native importer/FK for 83 unchanged supplied attack clips and 104 current contact windows. Linked double-finisher and paired failure clips are mapped to their committed action families. Existing actor/native projection probes and detached-sprite API checks remain valid. The change adds numeric code only; all 1392 non-Lua media files, including animation XML and visual/audio assets, are byte-identical to v0.86.0.
-
-The comment-policy scan reports zero comments across 915 source files. Its Lua bracket matching now avoids copying the entire remaining file for each numeric token, keeping large generated catalogues quick to validate while preserving all lexical checks. Local installation first checks the full installed v0.86.0 baseline, backs up only changed existing files, then verifies every installed byte. Source, installed files and the published v0.87.0 ZIP are compared exactly. The release uses a fresh version tag in the private ProjectYakuza repository. Restart game/server with matching MP versions.

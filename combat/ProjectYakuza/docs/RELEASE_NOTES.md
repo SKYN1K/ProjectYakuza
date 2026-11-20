@@ -1,9 +1,22 @@
-# Project Yakuza 0.136.0
+# v1
 
-- Player install and Workshop ZIPs now use a vanilla-weapons release profile. The added beer crate, bicycle, intact beer/wine/whiskey bottles and Lau Ka Long spear are excluded, together with their custom item/model definitions, ordinary and paired animations/selectors, Heat Actions, weapon profiles, object sounds, debris effects and exclusive textures. The crashing beer-crate Heat Action cannot register or be requested in this release.
-- Vanilla bat/club, knife and blade profiles remain. Baseball bat, katana and knife Heat Actions retain their source motion, damage, conditions, sounds and corrected per-contact limb trails. Unarmed combat, grabs, wall/ground Heat Actions and Extreme Heat remain. Existing vanilla spear behavior is unchanged.
-- Full custom-weapon development source stays in GitHub. The release filter also removes custom references from paired scene data, network animation metadata, limb/parent-pose catalogues, warm-up lists and translations. Local installation uses exactly the filtered payload, backs up changed/removed files, and verifies the normal install and every loadable Workshop copy. Old full-content stages are archived outside the game cache.
+Project Yakuza is a Lua combat framework for independent fighting-style add-ons for Project Zomboid Build 42. This release packages build 0.136.0, Lua API 3 and multiplayer protocol 2.
 
-Offline validation checks the complete filtered Lua set, require/animation closure, absence of custom item/action registration, retained vanilla weapon profiles and Heat Actions, native inventory handling of missing item definitions, package privacy and native B42 Workshop contents. The native inventory loader skips a removed item's saved record without consuming the next record; removed custom items are not retained in old saves. No save was opened or modified. Original retained animation, model, sound and texture bytes are unchanged. PZ was not launched; live gameplay remains for testing.
+## For style creators
 
-Use ProjectYakuza-v0.136.0 for the next Steam Workshop upload. Documentation, framework instructions, AGENTS.md, development tools, extraction folders, backups, previews, repository metadata and separate emote/voice/phone projects remain excluded from player packages.
+Install the B42 runtime ZIP, then use the repository's starter add-on and style-authoring guide. Register shared style definitions, provide matching native animation nodes, and keep your add-on under its own mod ID with require=ProjectYakuza. Observer registration supplies multiplayer presentation; new gameplay mechanics still need server validation.
+
+- [Style authoring](https://github.com/SKYN1K/ProjectYakuza/blob/main/combat/ProjectYakuza/docs/STYLE_AUTHORING.md)
+- [Lua API reference](https://github.com/SKYN1K/ProjectYakuza/blob/main/combat/ProjectYakuza/docs/API_REFERENCE.md)
+- [Starter add-on](https://github.com/SKYN1K/ProjectYakuza/tree/main/combat/ProjectYakuza/templates/StyleSubmod)
+- [Testing and packaging](https://github.com/SKYN1K/ProjectYakuza/blob/main/combat/ProjectYakuza/docs/TESTING.md)
+
+## Reference implementation
+
+Dragon of Dojima demonstrates combo/finisher routing, charged attacks, quicksteps, guard, counters, grabs, paired Heat Actions, Heat, effects and style-owned audio. The player build retains vanilla bat/club, blade and knife profiles and supported bat, katana and knife Heat Actions. Experimental custom-object content, emotes, voice packs and the phone add-on are excluded.
+
+## Downloads
+
+Use the named B42 ZIP for local installation or the Workshop ZIP for upload preparation. Their filenames retain the internal build number 0.136.0. GitHub's automatic Source code archives contain developer material and are not player packages. Server and clients need matching framework and add-on versions.
+
+[Workshop guide](https://github.com/SKYN1K/ProjectYakuza/blob/main/docs/WORKSHOP.md) · [Controls](https://github.com/SKYN1K/ProjectYakuza/blob/main/combat/ProjectYakuza/docs/CONTROLS.md) · [Validation coverage](https://github.com/SKYN1K/ProjectYakuza/blob/main/combat/ProjectYakuza/docs/VALIDATION.md)

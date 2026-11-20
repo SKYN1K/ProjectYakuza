@@ -1,14 +1,10 @@
 # Style-owned weapons
 
-Available in Project Yakuza 0.44.0, Lua API 3. A weapon profile is an equipment view of an existing style. It is not another selector slot, inventory item or global weapon replacement.
+Available in v1, Lua API 3. The released reference style includes bat/club, knife and blade profiles. Custom-object profiles in the development source are excluded from player packages.
 
-## Object profiles and restored movement (0.75.0)
+A weapon profile is an equipment view of an existing style. It is not another selector slot, inventory item or global weapon replacement.
 
-Bottles and the beer crate now have separate equipment views, bottle and crate, within DoD. The three ProjectYakuza.IntactBeerBottle/IntactWineBottle/IntactWhiskeyBottle IDs use original WPA one-handed blunt gestures with bottle grips; ProjectYakuza.BeerCrate uses original WPC bulky-object gestures. Both supply three lights, a standalone/queued heavy, ground strike and moving guard. Damage/condition/range remain native. As of 0.97.0, crate and bicycle ordinary attacks use the original Yakuza 5 WPC combo and overhead heavy, with one calibrated native contact per attack. The floor strike reuses the overhead heavy; see y5-object-attacks.json. Bottle Heat Actions remain bottle-exclusive.
-
-Bat, blade, bottle and crate have corrected source ready/relaxed holds, native-legged weapon walking and Kiryu running/sprinting. The katana uses WPD rather than the mismatched WPN hold source. See [locomotion](LOCOMOTION.md), [motion provenance](weapon-motion-assets.json) and [validation](VALIDATION_0.75.0.md). Other styles and unmapped native items are unaffected.
-
-## Sharp weapons (0.45.0)
+## Sharp weapons
 
 Dragon of Dojima now also owns two distinct supplied-source blade profiles. Select DoD and equip the actual item; existing bindings apply. Each profile has three lights, a standalone/queued x1.25 heavy, a native-targeted ground strike, an upper-body source stance with native walking legs, and post-contact light quickstep cancels. Lights use x1 of the held weapon's damage. The sweeping-blade profile adds source guard entry/hold/hit/exit with native walking legs. The knife source set supplies no guard clips, so knife blocking is unavailable.
 

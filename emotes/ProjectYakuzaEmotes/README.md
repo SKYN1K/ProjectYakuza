@@ -1,5 +1,7 @@
 # Project Yakuza Emotes
 
+This is a separate source project and is not bundled in framework v1. Its runtime can be built independently with the emote packaging tools.
+
 Version **0.2.10**, for Project Zomboid Build 42. Mod ID: `ProjectYakuzaEmotes`.
 
 This standalone mod contains five original Kiwami 1 cutscene gestures. It works without Project Yakuza combat or Custom Voice Framework, and coexists with either. Enable Project Yakuza Emotes separately in your game or server mod list. Both peers need the same files for multiplayer playback.

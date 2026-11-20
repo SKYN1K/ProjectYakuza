@@ -1,5 +1,7 @@
 # Offline multiplayer regression checks
 
+These are framework-maintainer fixtures and native probes. Configure game-library/JVM paths for your own B42 installation; the repository does not include those libraries or a universal asset conversion environment. Style authors should start with [Testing](../../combat/ProjectYakuza/docs/TESTING.md).
+
 The fixture embeds the production registry/style, protocol, server, client and
 reaction modules. It models independent client/server inventories and delayed
 native delivery; it never starts Project Zomboid or a dedicated server.
@@ -11,7 +13,7 @@ native delivery; it never starts Project Zomboid or a dedicated server.
    this directory. Do not commit the game's library or JAR.
 4. From this directory, run (Windows example, replace the install path):
 
-       java -cp ".;F:/SteamLibrary/steamapps/common/ProjectZomboid/projectzomboid.jar" LuaRunner mp-tests.lua
+       java -cp ".;PATH_TO_PZ/projectzomboid.jar" LuaRunner mp-tests.lua
 
 5. `python validate_mp_nodes.py` additionally runs the native animation-node
    parser/selector against both cycles of all 304 observer nodes. Its `game`

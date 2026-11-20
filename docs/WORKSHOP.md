@@ -1,18 +1,43 @@
-# Publishing Project Yakuza to Steam Workshop
+# Publishing a Project Yakuza style add-on
 
-The prepared combat upload folder is `C:/Users/Nik/Zomboid/Workshop/ProjectYakuza-v0.136.0`. Select that folder through the game's uploader. Its `Contents/mods/ProjectYakuza` payload contains the Build 42 runtime and empty common directory. The Workshop ZIP in release v0.136.0 contains the same payload plus workshop.txt and the unchanged supplied Project Zomboid template preview. This guide stays in the source repository, outside the upload.
+Publish your style as its own mod with `require=ProjectYakuza` in `42/mod.info`. The mod ID is a string; it is different from the numeric Steam Workshop item ID. If distributing through Workshop, add the framework's published Workshop item as a required item separately.
 
-The player release excludes the custom beer crate, bicycle, intact bottles and Lau Ka Long spear, together with their Heat Actions, animation nodes, models and exclusive sounds. Vanilla bat, katana and knife profiles and their Heat Actions remain, along with unarmed combat. Full custom-weapon development source remains in GitHub.
+## Prepare the upload
 
-The package excludes framework instructions, all documentation, AGENTS.md, style templates, extraction/build tools, provenance JSON, developer previews, backups, repository metadata and the separate emote/voice-pack/phone projects. Runtime Lua that implements the framework and supports style add-ons remains required. The package builder uses an allowlist, scans text and media metadata for personal paths and credentials, verifies ZIP bytes against the source, and checks the staged upload with the native B42 Workshop validator. No Steam upload is performed by preparation tools.
+Create an item folder under your PZ user-data directory's `Zomboid/Workshop` folder. PZ's installation includes `Workshop/ModTemplate`, which supplies uploader metadata and a default preview. Use your own add-on's runtime files under Contents:
 
-1. Fully exit PZ after the local update. Start it through Steam using the account that should own the Workshop item.
-2. From the main menu, open Workshop, then Create and Update Items. Select ProjectYakuza-v0.136.0 in the staged-folder list and continue. The folder is already under the directory the uploader scans. On another PC, first extract the named Workshop ZIP into that PC's Zomboid/Workshop directory.
-3. Review the title, description, available tags and preview. Use Project Yakuza as the title and identify Build 42 support. The prepared preview is the game's original template thumbnail; replace it with your own thumbnail if desired. The initial visibility is Private, which lets you inspect the uploaded item before making it public.
-4. Continue through the uploader's validation and new-item pages. Submit the item and wait for the success result. If Steam prompts for its Workshop agreement, accept it; an unaccepted agreement keeps an uploaded item hidden. [Steam Workshop documentation](https://partner.steamgames.com/doc/features/workshop/implementation).
-5. Open the resulting Workshop page. Check the title, description, preview, mod ID ProjectYakuza and Build 42 information. Set the visibility to Public when ready. The combat mod has no required CVF/emote/phone dependency; those are separate add-ons. Multiplayer servers and clients need matching combat versions.
-6. Keep workshop.txt after the first upload. PZ writes the published item ID there. For later updates, the installer preserves that ID in the next versioned stage. Select the new stage and update the existing item rather than creating another item. Do not replace workshop.txt with a blank template after publishing.
+```text
+MyStyleAddon/
+  workshop.txt
+  preview.png
+  Contents/
+    mods/
+      MyStyleAddon/
+        common/
+        42/
+          mod.info
+          media/
+```
 
-Use the named ProjectYakuza-Workshop-v0.136.0.zip from GitHub Releases for Workshop preparation, or ProjectYakuza-B42-v0.136.0.zip for ordinary local installation. GitHub's automatic Source code archives contain the development repository and must not be uploaded to Workshop.
+Keep `common/` present and empty if your add-on has no common assets. Include only enabled Lua, native animation nodes, scripts and required game assets. Exclude README files, templates, inactive .example files, extraction tools, source-game archives, test logs, backups, credentials and local configuration. Do not bundle another copy of ProjectYakuza.
 
-Keep only one current combat stage under Zomboid/Workshop. PZ can load these staged copies before Zomboid/mods, allowing an obsolete stage to hide an update. The local installer archives earlier combat stages outside the game cache, backs up only changed normal-install files, preserves a published item ID when present, and verifies every loadable combat copy. It leaves other mods and standalone emotes alone.
+Check mod.info identifiers, dependency, animation names, collisions and observer catalogs before packaging. Shared/server code and required assets must be identical on server and clients. See [Testing](../combat/ProjectYakuza/docs/TESTING.md).
+
+## Upload
+
+1. Start PZ through Steam on the account that should own the item.
+2. Open Workshop, then Create and Update Items. Choose your staged add-on folder.
+3. Review the title, description, tags and preview. Start with Private visibility so the uploaded item can be checked before publication.
+4. Continue through validation and submit. Accept the Steam Workshop agreement if prompted; unaccepted terms keep the item hidden. [Steam Workshop documentation](https://partner.steamgames.com/doc/features/workshop/implementation).
+5. Open the resulting page. Verify dependency/required-item settings, supported Build 42 version, controls and mod ID. Change visibility to Public when ready.
+6. Retain workshop.txt, including the published item ID. Future uploads should update that existing item rather than create a duplicate.
+
+PZ can load mods from local Workshop staging folders as well as Zomboid/mods. Keep one current staged copy of each mod while testing; obsolete copies can hide an update. Fully restart PZ after replacing runtime files.
+
+## Framework v1 packages
+
+The [v1 release](https://github.com/SKYN1K/ProjectYakuza/releases/tag/v1) contains build 0.136.0. Use ProjectYakuza-B42-v0.136.0.zip for local installation or ProjectYakuza-Workshop-v0.136.0.zip for core Workshop preparation. The latter extracts to ProjectYakuza-v0.136.0; place that folder under your own Zomboid/Workshop directory. GitHub's automatic Source code archives are development snapshots, not upload packages.
+
+The core's player release includes vanilla bat/club, knife and blade profiles and their supported Heat Actions. Custom-object development profiles and the separate emote/phone projects are excluded. The source package builder applies this filter; copying the full source mod folder includes development content.
+
+For core maintenance, configure the local tool/dependency paths before using Build-GamePackage.py and the publication tools. Those tools build the framework/emote projects, not arbitrary third-party add-ons. Their package allowlist/privacy checks and native Workshop validation complement gameplay testing; they do not upload to Steam.

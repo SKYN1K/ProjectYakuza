@@ -1,5 +1,7 @@
 # Lua API 3 reference
 
+Current framework release: v1 (internal build 0.136.0), multiplayer protocol 2.
+
 Require `ProjectYakuza/Registry` for shared definitions, `ProjectYakuza/Runtime` for client gameplay, `ProjectYakuza/Bindings` for controls, and `ProjectYakuza/NetworkExtensions` for addon observer registration. Do not require client UI from server/shared definitions.
 
 ## Style fields
@@ -24,7 +26,7 @@ Require `ProjectYakuza/Registry` for shared definitions, `ProjectYakuza/Runtime`
 | music/sounds | Per-style playlist/cue map; omitted/false adds no profile |
 | combatVoices | CVF enabled unless false; missing recordings stay silent |
 | combatVoiceVolume/combatVoiceGains | Optional overall multiplier and line-ID-to-gain map; nonnegative, default 1 per missing cue. Both compose with the Voices slider. |
-| combatVoiceVolume/quickstepVoices | Voice mix/default 1; movement-step voice enabled unless false |
+| quickstepVoices | Movement-step voice enabled unless false |
 
 ## Move and action fields
 
@@ -48,7 +50,7 @@ Require `ProjectYakuza/Registry` for shared definitions, `ProjectYakuza/Runtime`
 
 Parent quickstep.cooldownMs, runningAttack.runupMs, block.staminaPerHit and parry timing fields belong to their specific controller. Put costs on each spending variant; parent costs are not inherited. Custom fields are available to your handler. Validation cannot prove native asset existence or gameplay correctness.
 
-Built-in kinds: finisher, grab, grabHeat, groundHeat, parry, block, quickstep, quickstepAttack, runningAttack, heatAction, heatActivation, taunt, styleEntry. DoD supplies paired Heat Actions; grabHeat uses the shared held-target wall handler. See [Grabs](GRABS.md).
+Built-in kinds: finisher, heavyCharge, chargedHeavy, grab, grabHeat, groundHeat, parry, block, quickstep, quickstepAttack, runningAttack, heatAction, heatActivation, taunt, styleEntry. DoD supplies paired Heat Actions; grabHeat uses the shared held-target paired handler, including wall/open-space variants. See [Grabs](GRABS.md).
 
 ## Selection and lookup
 
@@ -153,7 +155,7 @@ While aiming, the bound quickstep input can cancel DoD lights after their native
 
 See [Weapons](WEAPONS.md) for Weapons.register, explicit per-style item mappings, equipment views, standalone heavies, native weapon preservation, events and MP authoring contracts. getPlayerStyle returns the current view while getStyle/listStyles retain the base style identity. Register profiles after the base style; every distinct move needs a unique nodeValue and supplied animation nodes.
 
-Since 0.45.0, Weapons.hitRange(item) bounds registered weapon supplementary reach to its native maximum (framework .25Ã¢â‚¬â€œ1.65 bounds); Weapons.extraDamage(item,damage) bounds SP supplementary damage to the current native maximum and 20, avoiding propagation of primary-only close kills. Native primary hit calculation is unchanged. See [weapon rules](WEAPONS.md#sharp-weapons-0450).
+Since 0.45.0, Weapons.hitRange(item) bounds registered weapon supplementary reach to its native maximum (framework .25Ã¢â‚¬â€œ1.65 bounds); Weapons.extraDamage(item,damage) bounds SP supplementary damage to the current native maximum and 20, avoiding propagation of primary-only close kills. Native primary hit calculation is unchanged. See [weapon rules](WEAPONS.md#sharp-weapons).
 
 Registration-aware internal indexes now accelerate clip and move resolution. Register configuration through the documented APIs and treat published nested tables as immutable. Re-registering a style refreshes its move index; registerNetworkAnimations publishes a fresh catalogue/selector index. See [maintenance notes](PERFORMANCE.md).
 

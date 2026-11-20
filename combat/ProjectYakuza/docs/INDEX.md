@@ -1,61 +1,57 @@
-# Documentation index
+# Framework documentation
 
-Current manual: Project Yakuza 0.74.0, Lua API 3, MP protocol 2.
+Current release: **[v1](https://github.com/SKYN1K/ProjectYakuza/releases/tag/v1)** · internal build **0.136.0** · Lua API **3** · multiplayer protocol **2**.
+
+## Start here
 
 | Task | Guide |
 | --- | --- |
-| Install/play and understand limits | [README](../README.md) |
-| Controls and volume settings | [Controls](CONTROLS.md) |
-| Build an independent addon | [Style authoring](STYLE_AUTHORING.md) |
-| Look up fields/functions/events | [API reference](API_REFERENCE.md) |
-| Original beer crate weapon | [Beer crate](BEER_CRATE.md) |
-| Yakuza 5 bicycle weapon and Heat Action | [Bicycle](BICYCLE.md) |
-| Spawnable bottle weapons and Heat Action | [Bottle weapons](BOTTLE_WEAPONS.md) |
-| Add style-specific weapon moves and impact feedback | [Weapons](WEAPONS.md) |
-| Heat Actions, protection and katana motion | [Heat Actions](HEAT_ACTIONS.md) |
-| Add configurable QTE sequences | [QTE API](QTE.md) |
-| Add new move types | [Actions and lifecycle](ACTIONS.md) |
-| Native nodes, collisions and walking legs | [Animation contracts](ANIMATIONS.md) |
-| MP ownership and observer builder | [Multiplayer](MULTIPLAYER.md) |
-| Shuffled combat sounds and addon pools | [Sound variety](SOUND_VARIETY.md) |
-| Music, sounds, voices, HUD and effects | [Presentation](PRESENTATION.md) |
-| Full-arm coating and source-tracked limb trails | [Attack effects](ATTACK_EFFECTS.md) |
-| Replace a style's HUD and selector art | [Style UI API](STYLE_UI.md) |
-| Charged attacks and assets | [Charged heavies](CHARGED_HEAVY.md) |
-| Cancel lights into quicksteps | [Light quickstep cancels](LIGHT_QUICKSTEP_CANCELS.md) |
-| Future launchers and aerial followup hooks | [Juggling](JUGGLING.md) |
-| Enemy flinch/stagger/knockdown profiles | [Hit responses](HIT_RESPONSES.md) |
-| Attack endurance costs and tuning | [Exertion](EXERTION.md) |
-| Optional speed curves for addon styles | [Heat attack speed](HEAT_ATTACK_SPEED.md) |
-| Heat rules and tuning | [Heat](HEAT.md) |
-| Per-style gain, drain and stock capacity | [Heat configuration](HEAT_CONFIGURATION.md) |
-| Code maintenance, lookup caches and comment checks | [Performance](PERFORMANCE.md) |
-| Validate/package/troubleshoot | [Testing](TESTING.md) |
-| Copy a starter | [StyleSubmod](../templates/StyleSubmod/README.md) |
-| Optional character voice packs | [CVF](CVF_COMBAT_VOICES.md) |
-| Four-slot selector | [Selector](STYLE_SELECTOR.md) |
-| Temporary item, style removal and neutral heavy | [Equipment and heavy](STYLE_ITEM_AND_HEAVY.md) |
-| Original blood effects | [Blood effects](BLOOD_EFFECTS.md) |
-| Extreme Heat attack variations | [Extreme attacks](EXTREME_ATTACKS.md) |
-| Custom style-owned encounter intros | [Encounter intros](ENCOUNTER_INTROS.md) |
-| Current changes | [Release notes](RELEASE_NOTES.md) |
+| Create a separate fighting-style add-on | [Style authoring](STYLE_AUTHORING.md) |
+| Activate the included example | [Starter add-on](../templates/StyleSubmod/README.md) |
+| Look up fields, functions and events | [API reference](API_REFERENCE.md) |
+| Install or play the reference style | [Dragon of Dojima](../README.md) and [Controls](CONTROLS.md) |
+| Publish a runtime-only package | [Workshop publishing](../../../docs/WORKSHOP.md) |
+| Understand validation coverage | [Testing](TESTING.md) and [Current validation](VALIDATION.md) |
 
-Only current guides, the current release validation and retained source-asset records are distributed. Older patch notes, raw test logs and per-release validation reports are available in Git history and previous release archives.
+## Gameplay contracts
 
-The JSON records identify original supplied files, conversions and hashes for retained assets. Keep these for debugging and source/native verification. Grab assets, including strike and wall-action pairs, retain their original-source records. Extraction folders, previews, backups, game libraries, credentials and the separate voice-pack project stay outside distributed addons.
-
-- [Source-tracked punch effects](ATTACK_EFFECTS.md): first-light prototype, numeric attachment paths, timing, budgets and fidelity limits.
-
-- [Style-exclusive running and relaxed weapon holding](LOCOMOTION.md)
-
-- [Manual directional attacks and taunt attention](DIRECTIONAL_AND_TAUNTS.md)
-
-- [Current validation](VALIDATION_0.74.0.md)
-
-[Grabs, grab strikes and wall Heat Actions](GRABS.md) documents per-style paired definitions, controls and multiplayer ownership.
-
-| Additional feature | Documentation |
+| System | Documentation |
 | --- | --- |
-| Yakuza 6 knife Heat Action | [Knife Heat Action](KNIFE_HEAT_ACTION.md) |
-| Kiwami style-switch and Y6 mod-menu audio | [Interface audio](INTERFACE_AUDIO.md) |
-| Kiwami 1 entry and vanilla idle | [Combat entry](COMBAT_ENTRY.md) |
+| Custom action kinds and cleanup | [Actions and lifecycle](ACTIONS.md) |
+| Native animation nodes, collisions and markers | [Animation contracts](ANIMATIONS.md) |
+| Equipment-specific move sets | [Weapon profiles](WEAPONS.md) |
+| Grabs, strikes, throws and held-target actions | [Grabs](GRABS.md) |
+| Paired weapon, ground and grab Heat Actions | [Heat Actions](HEAT_ACTIONS.md) |
+| QTE timing, bindings and result events | [QTE API](QTE.md) |
+| Stationary charges and native release | [Charged heavies](CHARGED_HEAVY.md) |
+| Quickstep cancels | [Light quickstep cancels](LIGHT_QUICKSTEP_CANCELS.md) |
+| Directional moves and threat-gated taunts | [Directional attacks and taunts](DIRECTIONAL_AND_TAUNTS.md) |
+| Endurance costs | [Exertion](EXERTION.md) |
+| Gain, stock retention and drain | [Heat rules](HEAT.md) and [Per-style Heat configuration](HEAT_CONFIGURATION.md) |
+| Optional speed curves | [Heat attack speed](HEAT_ATTACK_SPEED.md) |
+| Victim reactions and follow-up state | [Hit responses](HIT_RESPONSES.md) and [Juggling](JUGGLING.md) |
+
+## Presentation and multiplayer
+
+| System | Documentation |
+| --- | --- |
+| Shared/server authority and observer catalogs | [Multiplayer](MULTIPLAYER.md) |
+| Music, sound, voices and effects | [Presentation](PRESENTATION.md) |
+| Custom HUD, selector and setup providers | [Style UI API](STYLE_UI.md) and [Selector](STYLE_SELECTOR.md) |
+| Source-tracked limb effects | [Attack effects](ATTACK_EFFECTS.md) |
+| Paired scene events, anchors and damage | [Scene contracts](HEAT_SCENES.md), [Presentation](HEAT_ACTION_PRESENTATION.md), [Damage](HEAT_ACTION_DAMAGE.md) |
+| Source entry and native movement | [Combat entry](COMBAT_ENTRY.md) and [Locomotion](LOCOMOTION.md) |
+| Interface sounds and optional voices | [Interface audio](INTERFACE_AUDIO.md) and [CVF integration](CVF_COMBAT_VOICES.md) |
+| Low-health feedback | [Low-health feedback](LOW_HEALTH_FEEDBACK.md) |
+| Encounters and original blood | [Encounter intros](ENCOUNTER_INTROS.md) and [Blood effects](BLOOD_EFFECTS.md) |
+| Runtime lookup and maintenance | [Performance](PERFORMANCE.md) |
+
+## Source records and optional projects
+
+The player release contains vanilla bat/club, knife and blade profiles and their supported Heat Actions. [Bat](BAT_HEAT_ACTION.md), [knife](KNIFE_HEAT_ACTION.md) and [open-space grab](OPEN_GRAB_HEAT_ACTION.md) describe retained reference scenes.
+
+[Beer crate](BEER_CRATE.md), [bicycle](BICYCLE.md) and [intact bottles](BOTTLE_WEAPONS.md) describe source-only development work excluded from v1. Their item-spawning and gameplay instructions are not part of the current player manual.
+
+The [emote project](../../../emotes/ProjectYakuzaEmotes/README.md) and [phone project](../../../phone-dev/ProjectYakuzaPhoneDev/docs/README.md) are separate optional source projects. The phone's [style presentation contract](../../../phone-dev/ProjectYakuzaPhoneDev/docs/STYLE_PRESENTATION.md) applies only when that add-on is enabled.
+
+Version-labelled sections record historical implementation changes. Older validation notes are available in Git history rather than in the current manual. Current release filtering is recorded in [release-profile-0.136.0.json](release-profile-0.136.0.json). Asset JSON records preserve source identities, conversions and hashes. Documentation, tools and provenance records remain in the repository and are excluded from player ZIPs.

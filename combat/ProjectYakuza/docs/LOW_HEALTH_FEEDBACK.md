@@ -1,6 +1,6 @@
 # Low-health combat feedback
 
-Dragon of Dojima warns at 30% overall body health. The existing health-bar frame gains a gentle red pulse and a LOW HEALTH label. At 15% or lower the pulse becomes stronger/faster and the label reads CRITICAL. Healing to 35% clears the warning with a short fade; the separate recovery threshold avoids flickering around 30%. No full-screen filter, camera shake, health modification or combat advantage is applied.
+Dragon of Dojima warns at 30% overall body health. The existing health-bar frame gains a gentle red pulse. At 15% or lower the pulse becomes stronger/faster. No LOW HEALTH or CRITICAL text is displayed. Healing to 35% clears the warning with a short fade; the separate recovery threshold avoids flickering around 30%. No full-screen filter, camera shake, health modification or combat advantage is applied.
 
 During confirmed hits, guard contact, supported player-damage events or native chasing/nearby-visible zombie threats, the local player hears a quiet heartbeat. It stops after six quiet seconds. Merely swinging into empty air does not start it. The heartbeat uses the installed PZ `Character/Foley/Heartbeat` event already declared in `media/scripts/generated/sounds/player/sounds_player_foley.txt`. The mod registers its own `ProjectYakuza_LowHealthHeartbeat` sound name, rather than modifying the base `HeartBeat` sound. Sounds volume controls it; Voices and combat music remain separate. Advanced audio settings label it Low-health heartbeat.
 

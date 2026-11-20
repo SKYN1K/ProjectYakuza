@@ -11,7 +11,7 @@ Normal launcher, Lua-only protocol 2. Server and clients need matching shared st
 | Primary hits | Native PZ; impact reporting does not hit again |
 | Supplemental hits | Server checks/deduplication and shared three-target cap; observer result is not another Hit |
 | Dash travel | Bounded collision-checked samples/interpolation |
-| Counter | Local 0.3-second window plus server target/state/range/60-second cooldown; no rewind guarantee |
+| Counter | Observed-windup timing defaults to 160 ms and a 20-second cooldown, configurable through Sandbox Options; server checks target/state/range and cooldown; no rewind guarantee |
 | Guard | Valid block clip/nearby attacker and scoped cancellation |
 | Heat activation | Bounded protection lease restores previous flags; other kinds do not inherit it |
 | Grabs/throws/strikes | Unique renewable server leases; canonical source contact timing and damage; stale packet rejection; original flag restoration |
@@ -39,8 +39,8 @@ Conditions describe the owner node, not observer conditions. Groups: melee/stomp
 The shipped tools/build_style_observers.py requires only Python 3's standard library. Activate your owner's .xml files first. Point --mod-root at your addon, not the framework:
 
 ```text
-python ProjectYakuza/tools/build_style_observers.py --mod-root MyStyleAddon --style-id my_mod.my_style --prefix MyStyle_ --dry-run
-python ProjectYakuza/tools/build_style_observers.py --mod-root MyStyleAddon --style-id my_mod.my_style --prefix MyStyle_
+python combat/ProjectYakuza/tools/build_style_observers.py --mod-root MyStyleAddon --style-id my_mod.my_style --prefix MyStyle_ --dry-run
+python combat/ProjectYakuza/tools/build_style_observers.py --mod-root MyStyleAddon --style-id my_mod.my_style --prefix MyStyle_
 ```
 
 Use an exclusive prefix ending in underscore for owner XML names and shared MyStyle_Style.lua. The tool writes MyStyle_Network.lua and observers. It preserves clip/speed/blends/masks, strips every event and replaces conditions with ProjectYakuzaRemoteObserver=true, ProjectYakuzaRemoteClip=owner ID and ProjectYakuzaRemoteCycle=0/1. Melee/stomp owners get both native-group and actions copies; timed owners get actions copies.

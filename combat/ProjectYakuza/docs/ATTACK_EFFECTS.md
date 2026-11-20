@@ -1,6 +1,6 @@
 # Attack limb coating and trails
 
-Dragon of Dojima uses the supplied Y6 flame, glint and spark textures as overlapping world sprites on the attacking arm or leg. Its numeric catalogue covers 95 current clips and 121 contact windows: lights, normal/linked/reverse/double/charged finishers, directional/running/quickstep/ground attacks, Tiger Drop, grab strikes and paired Heat Actions/endings, including weapon profiles. Other styles opt in with their own configuration. No visual, audio, motion, model or texture asset is generated or modified.
+Dragon of Dojima uses the supplied Y6 flame, glint and spark textures as overlapping world sprites on the attacking arm or leg. The full development catalogue covers 95 clips and 121 contact windows; the v1 player profile retains 76 clips and 93 windows after removing custom-object attacks. The catalogue includes lights, normal/linked/reverse/double/charged finishers, directional/running/quickstep/ground attacks, Tiger Drop, grab strikes and paired Heat Actions/endings, including weapon profiles. Other styles opt in with their own configuration. No visual, audio, motion, model or texture asset is generated or modified.
 
 ## Current animation and limb selection
 

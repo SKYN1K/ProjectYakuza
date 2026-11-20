@@ -4,7 +4,7 @@ A style is a shared definition plus native animation nodes and optional client/s
 
 ## 1. Activate the starter
 
-Copy `templates/StyleSubmod` to your own mod folder; keep common/. Rename mod.info.example and its two Lua/two XML examples to their runtime extensions. Leave the music script inactive until recordings exist. Change example IDs consistently before publishing.
+Copy `combat/ProjectYakuza/templates/StyleSubmod` from the repository to a separate add-on folder; keep an empty common/ directory. Rename mod.info.example and its two Lua/two XML examples to their runtime extensions. Leave the music script inactive until recordings exist. Exclude README files, the common-directory placeholder and unused .example files from your published runtime. Change example IDs consistently before publishing.
 
 The starter has a damaging light using an existing PZ punch and a separate **non-damaging flourish** using the same existing clip. The custom flourish starts unbound: assign it in Mods settings. It demonstrates lifecycle/input/observer integration, not another damaging strike. No new media is supplied or generated.
 
@@ -15,7 +15,7 @@ Shared registration is `ExampleStyle_Style.lua`; the client explicitly requires 
 ```lua
 require "ProjectYakuza/Registry"
 local PY=ProjectYakuza
-assert(PY.API_VERSION>=2,"My addon requires API 2")
+assert(PY.API_VERSION>=3,"My addon requires API 3")
 PY.registerStyle({
     id="my_mod.my_style", name="My Style",
     attackSpeed=1, comboResetMs=500, lightBufferLimit=1,
@@ -29,7 +29,7 @@ PY.registerStyle({
 
 Copy the starter melee XML and match its style ID, move nodeValue, markers and clip. Duration must match actual playback speed. GMT files must be retargeted/imported first; the framework cannot play raw GMT.
 
-Registered styles appear automatically in the inventory menu and assignment list; they do not inherit DoD assets or automatically occupy a slot. `selectStyle` selects; client `equipStyle` also provisions the recognized token and requests an opted-in entry.
+Registered styles appear automatically in the style assignment list, opened through the wheel's bottom slot; they do not inherit DoD assets or automatically occupy a slot. `selectStyle` selects; client `equipStyle` also provisions the recognized token and requests an opted-in entry.
 
 ## 3. Opt into features
 
@@ -58,9 +58,11 @@ Register its kind in shared code before the style, then register its scoped hand
 
 ## 5. Build MP presentation and distribute
 
+Run the observer builder from the repository root. It is a source tool and is not included in the player ZIP.
+
 ```text
-python ProjectYakuza/tools/build_style_observers.py --mod-root MyStyleAddon --style-id my_mod.my_style --prefix MyStyle_ --dry-run
-python ProjectYakuza/tools/build_style_observers.py --mod-root MyStyleAddon --style-id my_mod.my_style --prefix MyStyle_
+python combat/ProjectYakuza/tools/build_style_observers.py --mod-root MyStyleAddon --style-id my_mod.my_style --prefix MyStyle_ --dry-run
+python combat/ProjectYakuza/tools/build_style_observers.py --mod-root MyStyleAddon --style-id my_mod.my_style --prefix MyStyle_
 ```
 
 The prefix must match owner XML names and the shared `MyStyle_Style.lua` module. The builder writes XML/Lua code only. It registers presentation, not custom damage/physics. Follow [Multiplayer](MULTIPLAYER.md) and [Testing](TESTING.md). Package only your addon with `require=ProjectYakuza`; do not bundle a second framework or the separate voice pack.
@@ -71,15 +73,15 @@ Declare `ui={heat="my_mod.heat",selectorSlot="my_mod.slot"}` in the shared defin
 
 For a native charged heavy, opt into both `actions.heavyCharge` and `actions.chargedHeavy`, supply native action/melee nodes and register observer entries. See [charged heavy contracts](CHARGED_HEAVY.md). These are built-in action kinds with dedicated controllers; custom move types still use the normal action-kind extension API.
 
-## Move-specific hit responses (0.40.0)
+## Move-specific hit responses
 
 Optional style.hitResponses defines named flinch/stagger/knockdown profiles with finite force 0..1.5 and optional full-charge threshold/response. Moves may select a profile with hitResponse="name" or opt out with false. Defaults distinguish lights, first/double finishers and charged heavies. Ground attacks are excluded. Styles without profiles keep their existing behavior. See [Hit responses](HIT_RESPONSES.md) for fields, native timing, MP ownership and limits.
 
-## Future-style juggling (0.41.0)
+## Optional juggling hooks
 
 Optional style.juggling and move.juggle={kind="launch"/"followup"/"ender"} enable bounded launcher/followup windows, hit/relaunch caps, landing cooldown, victim animation variables and start/hit/end events. No airborne assets or physical lift are supplied by the core. SP/server confirmed hits drive the state; optional result metadata and ordered end packets mirror it in MP. DoD remains unconfigured. See [Juggling](JUGGLING.md) for limits, presentation ownership, cancellation and examples.
 
-## Light quickstep cancels (0.44.0)
+## Light quickstep cancels
 
 While aiming, the bound quickstep input can cancel DoD lights after their native post-hit cancel marker. It has a 150ms input buffer and a 400ms native handoff timeout; quota/cooldown/wall checks are preserved. Other move types are unchanged. Future styles opt in with quickstepCancelLights=true and eligible light.quickstepCancelAt plus the matching native marker. See [Light quickstep cancels](LIGHT_QUICKSTEP_CANCELS.md).
 

@@ -1,15 +1,7 @@
-# Beer crate weapon
+# Beer crate development source
 
-Version 0.114.0 replaces the mismatched H3270 crushing action with Yakuza 5 h3000_beercase. See crate-heat-assets.json for all 635 source frames, the beercase object track, original mash/branch timing, bounded camera-cut travel and head seating. The older alignment/build records below describe superseded releases. Current head checks use validate_beercase_assets.py. Ordinary Yakuza 5 attacks, model size and texture remain.
+This content is retained in the development source and is **excluded from the v1 player and Workshop packages**. Its custom items, ordinary moves, Heat Actions and exclusive assets are not part of the released framework reference style.
 
-Version 0.99.0 aligns the reduced crate with the native victim head in the Heat Action. Its transformed lowest vertex meets the head crown, and its footprint is centred on the skinned head bounds. The original placement smoothly reaches the head at source frame 13, then stays aligned through all punches and the original main/failure recovery. Original object rotations, actor/victim body channels, model/texture bytes, size, QTEs and damage are retained. The old crate-head-alignment.json report is superseded by the current crate-heat-assets.json contract.
+Use the retained vanilla weapon profiles as the released [weapon-profile reference](WEAPONS.md). Custom styles should register their own item mappings, native nodes, assets and action controllers; see [Style authoring](STYLE_AUTHORING.md).
 
-Version 0.97.0 halves the model's previous linear size (native model scale 0.5) and uses its registered held/world model for dropping it. Original crate mesh, UVs and textures remain unchanged. Ordinary attacks now use Yakuza 5 P_WPC_CMB_01/02/03 and P_WPC_ATK_heavy. All 46/51/66/53 source samples remain; the floor strike reuses the overhead heavy. Native contacts are calibrated at frames 15/20/21/19, with one canonical collision per ordinary attack. Existing 1.4x combat playback, original guard and Yakuza 5 H3270 Heat Action remain. The earlier Yakuza 6 ordinary-attack records in weapon-motion-assets.json are superseded by y5-object-attacks.json.
-
-Spawn ID: `ProjectYakuza.BeerCrate`. Display name: Beer Crate (Yakuza 6).
-
-This is a separately spawnable one-handed Short Blunt weapon: 2.5 weight, 0.8..1.3 native damage, eight condition points and two native hit targets. Find it in the debug/admin item spawner. Outside a combat style it uses native weapon combat. With Dragon of Dojima selected it uses its separate crate weapon profile, native durability, guard and weapon feedback. The bottle Heat Action whitelist remains specific to bottles.
-
-The intact LOD0 mesh is the original `stg0010_beercase_a_na.gmd` from Yakuza 6's asset.par, with its original diffuse texture decoded at native resolution. Its 1004 source vertices and 1052 triangles retain normals and UVs; geometry is rebased to the source right-hand grip. Broken fragments and lower-detail duplicates are excluded. Held/world model attachments use PZ's normal model system. The inventory icon reuses PZ's supplied crate icon. No loot distribution is added.
-
-[Provenance](beer-crate-assets.json) records archive entries, source/output hashes, topology, grip and exact texture pixels. Conversion uses [Yakuza GMD IO](https://github.com/theturboturnip/yk_gmd_io) by Samuel Stark (TheTurboTurnip). The native importer, static mesh processor, item/model script parser and texture decoder are checked offline. Live grip, floor placement and multiplayer presentation need in-game assessment; PZ is not launched during validation.
+Source identities, conversions and hashes remain in [crate-heat-assets.json](crate-heat-assets.json). Historical gameplay instructions are available in Git history.

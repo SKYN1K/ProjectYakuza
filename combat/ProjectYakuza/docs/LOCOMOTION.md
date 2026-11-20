@@ -1,10 +1,14 @@
-# Dragon of Dojima locomotion (0.78.0)
+# Dragon of Dojima locomotion
 
-Weapon idle, aimed hold and ordinary movement now use vanilla Zomboid animation selection. Ordinary unarmed walking also uses vanilla selection, and the unarmed run blend references Bob_Walk. Unarmed running/sprinting and combat actions retain their existing motion. This fallback follows the user's report that the katana still clipped through the neck and walking looked too fast. No movement-speed multiplier or network loop is added.
+Ordinary vanilla weapon idle/aim/movement uses native PZ selection. Unarmed relaxed idle and ordinary walking retain native behavior; the reference style supplies its combat idle and eligible run motion. Native movement state controls travel and fallback selection, including exhausted running.
 
 As of 0.101.0, the permanently disabled custom weapon-pose/ordinary-walk selectors and unused converted clips are removed. Vanilla weapon poses and ordinary unarmed walking remain selected exactly as before. The sections below and their provenance describe historical conversions. Active unarmed run/sprint and the restored unarmed RMB combat idle remain. See ASSET_CLEANUP.md and VALIDATION_0.101.0.md; the source archive references are retained for reproducibility.
 
-## Walking and sprinting
+## Historical conversion reference
+
+The source-motion sections below record earlier conversions and disabled experiments; they are not instructions to enable additional locomotion in the player release. Current behavior is described above.
+
+### Walking and sprinting
 
 Unarmed ordinary walking and slow walking use the first complete 65-frame gait cycle from P_KRU_MOV_wlk_ftl. All 66 boundary-inclusive samples are preserved and retimed to the corresponding native Bob_Walk/Bob_WalkSlow cycle. Sprint uses P_KRU_MOV_run_ftl_ex, a supplied run variant, retimed to Bob_Sprint. Native Translation_Data, distance per second, movement scalars and ordinary safety fallbacks remain. This is a supplied sprint candidate, not a claim to import the original game's locomotion controller.
 
@@ -32,4 +36,4 @@ Selectors require the selected DoD style, matching profile and Aim=false for rel
 
 Locomotion uses ordinary AnimSets XML. Addon authors can supply their own named clips/nodes, style/profile conditions, upper-body masks, native deferred travel and safety fallbacks. Keep source motion, model attachments and grips compatible. Do not add per-frame actor displacement to normal locomotion.
 
-See [weapon motion provenance](weapon-motion-assets.json), [walk/sprint provenance](style-travel-assets.json), [selector inventory](locomotion-nodes.json) and [validation](VALIDATION_0.76.0.md). Offline checks compare source/native samples, hand-prop FK, movement tracks, mesh clearance, native import and selector isolation. Live foot planting, clothing clearance and MP latency still need assessment after restarting PZ. The game was kept closed.
+See [weapon motion provenance](weapon-motion-assets.json), [walk/sprint provenance](style-travel-assets.json), [selector inventory](locomotion-nodes.json) and [Validation](VALIDATION.md). Offline checks compare source/native samples, hand-prop FK, movement tracks, mesh clearance, native import and selector isolation. Live foot planting, clothing clearance and MP latency still need assessment after restarting PZ. The game was kept closed.
