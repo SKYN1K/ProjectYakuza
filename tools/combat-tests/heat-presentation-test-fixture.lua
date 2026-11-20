@@ -8,6 +8,9 @@ PY.AttackEffects.paired=function(actor,source,move,clip,time,weight,mask)
 end
 PY.AttackEffects.endPaired=function(actor,source,complete)check(actor==p and source~=nil,'paired cleanup owns exact heat source');limbStopped=limbStopped+1 end
 local builtin=PY.getStyle('dragon_of_dojima')
+local rush=builtin.actions.heatAction
+check(math.abs(rush.contacts[1].atMs-41/30*1000)<.00001 and math.abs(rush.contacts[13].atMs-175/30*1000)<.00001,'CMN override retains the shortened lead-in contact clock')
+for i,contact in ipairs(rush.contacts)do check(math.abs(D.moves[rush.animation].contacts[i].atMs-contact.atMs)<.00001,'Rush damage and visual contacts share the remapped native phase')end
 local sourceMoves={builtin.actions.heatAction,builtin.actions.grabHeat.variants.default,builtin.actions.grabHeat.variants.open,builtin.actions.groundHeat}
 for _,profile in ipairs({'bottle','crate','blade','bat','bicycle','knife'})do sourceMoves[#sourceMoves+1]=PY.Weapons.views.dragon_of_dojima[profile].actions.heatAction end
 Events.OnPostRender=event()

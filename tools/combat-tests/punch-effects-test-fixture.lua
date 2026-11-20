@@ -355,7 +355,7 @@ check(ProjectYakuza.AttackTracks[catalog.ProjectYakuza_DD_Finisher03.track].limb
 check(ProjectYakuza.AttackTracks[catalog.ProjectYakuza_DD_Finisher02.track].limb=='rightLeg','high-kick finisher retains the striking leg when recovering arms move faster')
 check(#catalog.ProjectYakuza_DD_HeatRush.windows==13 and ProjectYakuza.AttackTracks[catalog.ProjectYakuza_DD_HeatRush.windows[13].track].limb=='rightLeg','current Rush has twelve original punch contacts followed by its actual kick')
 do
- local name='ProjectYakuza_DD_KatanaHeat';local config=catalog[name];local limbs={'rightArm','rightArm','rightArm'}
+ local name='ProjectYakuza_DD_KatanaHeat';local config=catalog[name];local limbs={'rightArm','leftArm','rightArm'}
  check(#config.windows==3,'katana has exactly three source strike windows')
  for i,window in ipairs(config.windows)do
   F.clearAll();p.clip=name;p.time=(window.from+window.to)/2;F.start(p,style,0,{animation=name},1000+i);F.tick();draws={};sparkDraws={};sparkRenders={};F.render()
@@ -364,6 +364,24 @@ do
  F.clearAll();p.time=97/30;F.start(p,style,0,{animation=name},1004);clock=clock+351;F.tick()
  check(not F.states[p],'katana recovery cannot emit the removed fourth hit trail')
 end
+for _,remoteOwner in ipairs({false,true})do
+ for name,limbs in pairs({KnifeHeat={'rightArm','rightLeg'},KatanaHeat={'rightArm','leftArm','rightArm'},CrateHeat={'rightArm','rightLeg','leftLeg','rightLeg','leftLeg','rightArm'}})do
+  F.clearAll();local clip='ProjectYakuza_DD_'..name;local config=catalog[clip];local owner={};local mask={true,true,true,true,true,true};local state
+  p.localPlayer=not remoteOwner;p.clip=clip
+  for i,window in ipairs(config.windows)do
+   p.time=window.contact;clock=clock+300;F.paired(p,owner,{duration=config.duration},clip,0,1,mask)
+   local active=F.states[p];check(not state or active==state,'mixed Heat Action keeps its paired state between limbs');state=active
+   for facing=0,7 do
+    p.angle=facing*math.pi/4;draws={};sparkDraws={};sparkRenders={};F.render()
+    check(active.track.limb==limbs[i]and #draws>=14,'owner and observer use the actual striking limb for '..name..' contact '..i)
+    local x,y,z=F.armPoint(active.joints,1);check(math.abs(draws[11].x-x)<.025 and math.abs(draws[11].y-y)<.025 and math.abs(draws[11].z-z)<.025,'mixed contact core follows its native hand or foot in every facing')
+   end
+   check(active.historyCount<=1,'limb switches cannot connect smoke history across limbs')
+  end
+  F.endPaired(p,owner,false);check(not F.states[p],'mixed paired action cleanup releases its effect state')
+ end
+end
+p.localPlayer=true;F.clearAll()
 p.clip=linked;p.time=(cfg.windows[1].from+cfg.windows[1].to)/2;p.localPlayer=false
 F.remote(p,style,{clip=linked,action=77,swing=12});F.tick();F.render();local remote=F.states[p];F.remote(p,style,{clip=linked,action=77,swing=12});check(F.states[p]==remote,'repeated MP snapshots cannot reset current limb phase/history')
 F.clear(p);p.localPlayer=true

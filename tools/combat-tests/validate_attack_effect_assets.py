@@ -31,8 +31,8 @@ for row in smoke['frames']:
 subprocess.run([sys.executable,str(WORK/'build_gaiden_effect_assets.py'),'--validate'],check=True)
 gaiden=json.loads((MOD/'docs/gaiden-effect-assets.json').read_text())
 for row in gaiden['textures']:outputs.append(str((MOD/row['output']).resolve()))
-subprocess.run([str(GAME/'jre64/bin/java.exe'),'-Xms16m','-Xmx256m','-XX:ActiveProcessorCount=2','--enable-native-access=ALL-UNNAMED','-cp','.;'+str(GAME/'*'),'AttackEffectProbe',*outputs],cwd=WORK,check=True)
-subprocess.run([str(GAME/'jre64/bin/java.exe'),'-Xms16m','-Xmx256m','-XX:ActiveProcessorCount=2','--enable-native-access=ALL-UNNAMED','-cp','.;'+str(GAME/'*'),'ParticleScaleProbe'],cwd=WORK,check=True)
+subprocess.run([str(GAME/'jre64/bin/java.exe'),'-Xms16m','-Xmx128m','-XX:+UseSerialGC','-XX:ReservedCodeCacheSize=32m','-XX:ActiveProcessorCount=2','--enable-native-access=ALL-UNNAMED','-cp','.;'+str(GAME/'*'),'AttackEffectProbe',*outputs],cwd=WORK,check=True)
+subprocess.run([str(GAME/'jre64/bin/java.exe'),'-Xms16m','-Xmx128m','-XX:+UseSerialGC','-XX:ReservedCodeCacheSize=32m','-XX:ActiveProcessorCount=2','--enable-native-access=ALL-UNNAMED','-cp','.;'+str(GAME/'*'),'ParticleScaleProbe'],cwd=WORK,check=True)
 catalog=json.loads((MOD/'docs/attack-trail-catalog.json').read_text())
 code=(MOD/catalog['catalog']).read_bytes();assert hashlib.sha256(code).hexdigest()==catalog['sha256']
 rows=catalog['clips'];assert len(rows)==95 and sum(len(r['windows'])for r in rows)==121
@@ -41,7 +41,7 @@ for row in rows:
     assert row['samples']==round(row['duration']*120)+1
     for window in row['windows']:
         assert window['from']<=window['contact']<=window['to']and window['to']-window['from']<=.18000001
-        if row['profile']!='unarmed':assert window['limb']=='rightArm'
+        if row['profile']!='unarmed'and row['kind']!='heatAction':assert window['limb']=='rightArm'
 clips={r['animation'].removeprefix('ProjectYakuza_DD_'):r for r in rows}
 assert [r['limb']for r in clips['WallHeat']['windows']]==['rightArm','rightLeg']
 assert clips['GroundHeat']['windows'][0]['limb']=='rightLeg'
@@ -49,6 +49,11 @@ assert clips['OpenGrabHeat']['windows'][0]['limb']=='rightLeg'
 assert 1.4<clips['OpenGrabHeat']['windows'][0]['contact']<2.2
 assert clips['Throw']['windows'][0]['limb']=='leftArm'and clips['Throw']['windows'][0]['contact']<.8
 assert clips['HeatRushFail']['windows'][0]['index']==13 and clips['CrateHeatFail']['windows'][0]['index']==6
+for name,expected in {'KnifeHeat':['rightArm','rightLeg'],'KatanaHeat':['rightArm','leftArm','rightArm'],'CrateHeat':['rightArm','rightLeg','leftLeg','rightLeg','leftLeg','rightArm']}.items():assert [w['limb']for w in clips[name]['windows']]==expected
+for name,frame,leg,other in [('KnifeHeat',90,10,7),('CrateHeat',134,10,7),('CrateHeat',231,7,10),('CrateHeat',307,10,7),('CrateHeat',404,7,10)]:
+    native=json.loads((WORK/'all-trail-native120'/('ProjectYakuza_DD_'+name+'.json')).read_text());assert native['sourceSha256']==clips[name]['clipSha256']
+    pose=native['frames'][frame*4];assert pose[leg][1]>pose[other][1]+.2,(name,frame,'original raised striking foot')
+native=json.loads((WORK/'all-trail-native120/ProjectYakuza_DD_KatanaHeat.json').read_text());pose=native['frames'][44*4];assert pose[4][1]>pose[1][1]+.25,'katana stays in the raised right hand during the low left punch'
 lua=(MOD/'42/media/lua/client/ProjectYakuza/HitEffects.lua').read_text()
 assert re.search(r'if not guard and ProjectYakuza.AttackEffects.*\.hit\(player,victim,strong,charged,anchor\)',lua)
-print('PASS unchanged original source pixels, 95 native clip hashes, 121 short contact windows, all weapon arms, paired/failure body parts and confirmed non-guard spark integration')
+print('PASS unchanged original source pixels, 95 native clip hashes, 121 short contact windows, ordinary weapon arms, per-contact paired/failure body parts and confirmed non-guard spark integration')

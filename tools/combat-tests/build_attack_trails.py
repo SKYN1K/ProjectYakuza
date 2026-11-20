@@ -30,7 +30,7 @@ for profile,s in pairs(ProjectYakuza.Weapons.views.dragon_of_dojima)do scan(prof
 return table.concat(rows,"\\n")"""
 def digest(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def run(args):
- if args[0]==JAVA:args=[args[0],'-Xms16m','-Xmx256m','-XX:ActiveProcessorCount=2',*args[1:]]
+ if args[0]==JAVA:args=[args[0],'-Xms16m','-Xmx128m','-XX:+UseSerialGC','-XX:ReservedCodeCacheSize=32m','-XX:ActiveProcessorCount=2',*args[1:]]
  r=subprocess.run(args,cwd=WORK,capture_output=True,text=True,encoding='utf-8',errors='replace')
  if r.returncode:raise RuntimeError(r.stdout+r.stderr)
  return r.stdout
@@ -55,7 +55,7 @@ for p in (MOD/'42/media/AnimSets/player').rglob('*.xml'):
  for event in n.findall('m_Events'):
   if event.findtext('m_EventName')=='AttackCollisionCheck':contacts.setdefault(animation,set()).add(float(event.findtext('m_TimePc')))
 folder=WORK/'all-trail-native120';folder.mkdir(exist_ok=True)
-args=[JAVA,'-Xms16m','-Xmx256m','-XX:ActiveProcessorCount=2','--enable-native-access=ALL-UNNAMED','-cp','.;'+str(GAME/'*'),'LimbImpactProbe']
+args=[JAVA,'-Xms16m','-Xmx128m','-XX:+UseSerialGC','-XX:ReservedCodeCacheSize=32m','-XX:ActiveProcessorCount=2','--enable-native-access=ALL-UNNAMED','-cp','.;'+str(GAME/'*'),'LimbImpactProbe']
 for animation in sorted(moves):args.extend([str(MOD/f'42/media/anims_X/Bob/{animation}.x'),str(folder/(animation+'.json'))])
 cache=folder/'cache-index.json'
 if '--reuse-native'in sys.argv:
@@ -67,6 +67,20 @@ else:
 if '--export-only'in sys.argv:print('PASS',len(moves),'native 120 Hz source clips exported');raise SystemExit
 names=['leftArm','rightArm','leftLeg','rightLeg','head'];triplets=[(0,1,2,12),(3,4,5,13),(6,7,8,14),(9,10,11,15),(17,16,16,18)]
 verified={'ProjectYakuza_DD_Light01':0,'ProjectYakuza_DD_Finisher02':3,**{'ProjectYakuza_DD_'+name:3 for name in ('DoubleFinisher01','DoubleFinisher04','LinkedDoubleFinisher01','LinkedDoubleFinisher04','QuickstepAttack02','QuickstepAttack04')}}
+pairedLimbs={
+ 'KnifeHeat':[1,3],
+ 'KatanaHeat':[1,0,1],
+ 'CrateHeat':[1,3,2,3,2,1],
+ 'CrateHeatFail':[1],
+ 'BottleHeat':[1,1,1,1],
+ 'BatHeat':[1,1],
+ 'BicycleHeat':[1,1],
+ 'WallHeat':[1,3],
+ 'GroundHeat':[3],
+ 'OpenGrabHeat':[3],
+ 'HeatRush':[1,0]*6+[3],
+ 'HeatRushFail':[3],
+}
 output=['require "ProjectYakuza/AttackTracks"','local T=ProjectYakuza.AttackTracks','local C={};ProjectYakuza.AttackEffectCatalog={dragon_of_dojima=C}'];records=[]
 for animation,move in sorted(moves.items()):
  native=json.loads((folder/(animation+'.json')).read_text());frames=native['frames'];rate=native['fps'];duration=(len(frames)-1)/rate
@@ -75,6 +89,8 @@ for animation,move in sorted(moves.items()):
  windows=[];tracks={}
  if animation=='ProjectYakuza_DD_OpenGrabHeat':times=[max(range(round(1.4*rate),round(2.2*rate)),key=lambda i:frames[i][10][1])/rate]
  if move['kind']=='throw':times=[max(range(round(.15*rate),round(.8*rate)),key=lambda i:sum((frames[i+4][1][j]-frames[i-4][1][j])**2 for j in range(3)))/rate]
+ policy=pairedLimbs.get(animation.removeprefix('ProjectYakuza_DD_'))
+ if move['kind']in ('heatAction','grabHeat','groundHeat'):assert policy is not None and len(policy)==len(times),(animation,times,policy)
  for hit,time in enumerate(times):
   frame=max(1,min(len(frames)-2,round(time*rate)));scores=[]
   for limb,(a,b,c,upper)in enumerate(triplets):
@@ -88,12 +104,8 @@ for animation,move in sorted(moves.items()):
   allowed=[1]if move['profile']!='unarmed'else [2,3]if move['kick']or move['kind']in ('ground','runningAttack','groundHeat')else list(range(5))if 'GrabStrike'in animation else list(range(4))
   limb=verified.get(animation,max(allowed,key=lambda i:scores[i]))
   selection='wielding right arm'if move['profile']!='unarmed'else'verified native contact pose'if animation in verified else'contact-local relative motion'
-  if animation=='ProjectYakuza_DD_WallHeat':limb=[1,3][hit];selection='original right punch then right kick'
-  if animation=='ProjectYakuza_DD_GroundHeat':limb=3;selection='original right-foot stomp'
-  if animation=='ProjectYakuza_DD_OpenGrabHeat':limb=3;selection='original right-foot push at maximum raised-foot height before victim landing'
   if move['kind']=='throw':limb=0;selection='left gripping arm lift and release before victim landing'
-  if animation=='ProjectYakuza_DD_HeatRush':limb=1 if hit%2==0 else 0;selection='alternating right-left source punches and final right kick'
-  if animation in ('ProjectYakuza_DD_HeatRush','ProjectYakuza_DD_HeatRushFail')and hit==len(times)-1:limb=3;selection='original final right kick'
+  if policy is not None:limb=policy[hit];selection='per-contact original paired scene limb: '+names[limb]
   a,b,c,upper=triplets[limb];key='dd_trail_'+animation.removeprefix('ProjectYakuza_DD_').lower()+'_'+str(hit+1)
   if limb in tracks:key=tracks[limb]
   else:
@@ -111,7 +123,7 @@ for animation,move in sorted(moves.items()):
  output.append('C["'+animation+'"]={animation="'+animation+'",actionAnimation="'+move['family']+'",track="'+windows[0]['track']+'",duration='+str(duration)+',from='+str(windows[0]['from'])+',to='+str(windows[-1]['to'])+',windows={'+','.join('{index='+str(r['index'])+',track="'+r['track']+'",from='+str(r['from'])+',to='+str(r['to'])+',contact='+str(r['contact'])+'}'for r in windows)+'}}')
  records.append({**move,'clip':f'42/media/anims_X/Bob/{animation}.x','clipSha256':digest(MOD/f'42/media/anims_X/Bob/{animation}.x'),'samples':len(frames),'duration':duration,'windows':windows})
 code=('\n'.join(output)+'\n').encode();target=LUA/'client/ProjectYakuza/AttackTrailCatalog.lua'
-report={'operation':'Native AnimationTrack.get sampled at 120 Hz with world-space forward kinematics, independent of character facing. All weapon profiles use the wielding right arm; wall punch/kick, ground stomp, open-grab foot push, throw release and Rush ending use explicit source-pose policies. Paced QTE contact times map to actual clip time and original failure contact indices are retained. Repeated same-limb contacts share a track. Code-side numeric FK only from existing supplied PZ clips, including current paired contacts/endings and linked native finisher variants. Contacts use native collision events, authored Heat Action contacts or the documented parry fallback. Clips use contact-local endpoint/relative motion with verified original left-light and right-high-kick pose overrides, independent of charge-up pose. The high kick has right-foot height 0.721 versus planted left foot 0.093 at source frame 24; recovering arms can be faster than the striking leg. Runtime resolves the actual playing clip within the committed move family. No visual/audio/animation/model assets are generated or modified.','catalog':target.relative_to(MOD).as_posix(),'sha256':hashlib.sha256(code).hexdigest(),'clips':records}
+report={'operation':'Native AnimationTrack.get sampled at 120 Hz with world-space forward kinematics, independent of character facing. Ordinary weapon swings use the wielding right arm. Every paired Heat Action has an explicit per-contact source-limb policy: knife stab/right kick, katana right slash/left punch/right thrust, crate right-arm placement/right-left-right-left kicks/right-arm ending, weapon-arm bottle/bat/bicycle contacts and original unarmed punches/kicks. Throw release uses the gripping arm. Paced QTE contact times map to actual clip time and original failure contact indices are retained. Repeated same-limb contacts share a track. Code-side numeric FK only from existing supplied PZ clips, including current paired contacts/endings and linked native finisher variants. Contacts use native collision events, authored Heat Action contacts or the documented parry fallback. Clips use contact-local endpoint/relative motion with verified original left-light and right-high-kick pose overrides, independent of charge-up pose. The high kick has right-foot height 0.721 versus planted left foot 0.093 at source frame 24; recovering arms can be faster than the striking leg. Runtime resolves the actual playing clip within the committed move family. No visual/audio/animation/model assets are generated or modified.','catalog':target.relative_to(MOD).as_posix(),'sha256':hashlib.sha256(code).hexdigest(),'clips':records}
 manifest=(json.dumps(report,indent=2)+'\n').encode()
 if '--write'in sys.argv:
  target.write_bytes(code);(MOD/'docs/attack-trail-catalog.json').write_bytes(manifest)

@@ -11,6 +11,7 @@ original={'openGrab':[78],'knife':[40,90],'rush':[56,68,78,90,102,114,144],'bott
 sha=lambda b:hashlib.sha256(b).hexdigest()
 banks={};count=0
 expected['bicycle']=[[29,70]];original['bicycle']=[29,70]
+sections=json.loads((mod/'docs/rush-twohit-sections.json').read_text());expected['rush'][0]=sections['contactFrames']
 sheet=data['sheetIndex'];assert sha(Path(sheet['path']).read_bytes())==sheet['sha256'];sheets=sheet_names(Path(sheet['path']).read_bytes())
 def bank_data(bank):
     identity=(bank['archive'],bank['entryOffset'],bank['entrySize'])
@@ -31,7 +32,8 @@ for record in data['scenes']:
     for i,definition in enumerate(record['definitions']):
         contacts=definition['contacts'];frames=definition['sourceFrames'];clip=definition['animation']
         assert [round(c['atMs']*.03,6)for c in contacts]==expected[key][i]
-        assert len(frames)==(271 if key=='rush'and not i else 635 if key=='crate'and not i else len(frames))
+        assert len(frames)==(256 if key=='rush'and not i else 635 if key=='crate'and not i else len(frames))
+        if key=='rush':assert frames==next(r['sourceFrames']for r in sections['clips']if r['ending']==bool(i))
         for contact in contacts:assert 0<contact['atMs']<(len(frames)-1)/30*1000
         if not i:
             if key in ['rush','crate']:

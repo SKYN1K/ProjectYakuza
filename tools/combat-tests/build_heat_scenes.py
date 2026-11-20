@@ -108,7 +108,7 @@ for key,(folder,bankName,animation)in scenes.items():
                 cue={'bodyfall':'heatKatanaBodyFall','katana_swing':'heatKatanaSwing','punch':'heatKatanaPunch','slash':'heatKatanaSlash','tuki':'heatKatanaThrust'}[cueName]
             elif cue not in sounds:
                 rel='42/media/sound/ProjectYakuza/HeatScene_'+key+'_'+suffix+'.wav';output=mod/rel
-                if write:subprocess.run([vgm,'-s',str(index),'-i','-o',str(output),str(audioBank)],check=True,capture_output=True)
+                if write and '--reuse-audio'not in sys.argv:subprocess.run([vgm,'-s',str(index),'-i','-o',str(output),str(audioBank)],check=True,capture_output=True)
                 assert output.exists(),rel
                 with wave.open(str(output))as wav:rate,channels,width,samples=wav.getframerate(),wav.getnchannels(),wav.getsampwidth(),wav.getnframes()
                 assert(rate,channels,width,samples)==(info['sampleRate'],info['channels'],2,info['numberOfSamples'])

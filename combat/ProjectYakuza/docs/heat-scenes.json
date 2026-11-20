@@ -527,21 +527,6 @@
       "animation": "ProjectYakuza_DD_HeatRush",
       "sourceFrames": [
         0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15,
         16,
         17,
         18,
@@ -976,38 +961,38 @@
       "effectsPolicy": "Original blood particle starts and bone-local attachments; existing supplied blood pixels only. Non-blood engine-specific emitters and cinematic cameras are not substituted.",
       "segments": [
         {
-          "first": 51,
-          "last": 69,
+          "first": 36,
+          "last": 54,
           "eventStart": 51,
           "eventEnd": 69
         },
         {
-          "first": 70,
-          "last": 88,
+          "first": 55,
+          "last": 73,
           "eventStart": 74,
           "eventEnd": 92
         },
         {
-          "first": 89,
-          "last": 107,
+          "first": 74,
+          "last": 92,
           "eventStart": 98,
           "eventEnd": 116
         },
         {
-          "first": 108,
-          "last": 126,
+          "first": 93,
+          "last": 111,
           "eventStart": 51,
           "eventEnd": 69
         },
         {
-          "first": 127,
-          "last": 145,
+          "first": 112,
+          "last": 130,
           "eventStart": 74,
           "eventEnd": 92
         },
         {
-          "first": 146,
-          "last": 164,
+          "first": 131,
+          "last": 149,
           "eventStart": 98,
           "eventEnd": 116
         }
@@ -1017,91 +1002,91 @@
           "animation": "ProjectYakuza_DD_HeatRush",
           "contacts": [
             {
-              "atMs": 1866.6666666666667,
+              "atMs": 1366.6666666666667,
               "damageMultiplier": 0,
               "cue": "punchImpact",
               "strong": false,
               "charged": false
             },
             {
-              "atMs": 2266.6666666666665,
+              "atMs": 1766.6666666666665,
               "damageMultiplier": 0,
               "cue": "punchImpact",
               "strong": false,
               "charged": false
             },
             {
-              "atMs": 2466.666666666667,
+              "atMs": 1966.6666666666665,
               "damageMultiplier": 0,
               "cue": "punchImpact",
               "strong": false,
               "charged": false
             },
             {
-              "atMs": 2866.6666666666665,
+              "atMs": 2366.6666666666665,
               "damageMultiplier": 0,
               "cue": "punchImpact",
               "strong": false,
               "charged": false
             },
             {
-              "atMs": 3100.0,
+              "atMs": 2600.0,
               "damageMultiplier": 0,
               "cue": "punchImpact",
               "strong": false,
               "charged": false
             },
             {
-              "atMs": 3500.0,
+              "atMs": 3000.0,
               "damageMultiplier": 0,
               "cue": "punchImpact",
               "strong": false,
               "charged": false
             },
             {
-              "atMs": 3766.6666666666665,
+              "atMs": 3266.6666666666665,
               "damageMultiplier": 0,
               "cue": "punchImpact",
               "strong": false,
               "charged": false
             },
             {
-              "atMs": 4166.666666666667,
+              "atMs": 3666.6666666666665,
               "damageMultiplier": 0,
               "cue": "punchImpact",
               "strong": false,
               "charged": false
             },
             {
-              "atMs": 4366.666666666666,
+              "atMs": 3866.6666666666665,
               "damageMultiplier": 0,
               "cue": "punchImpact",
               "strong": false,
               "charged": false
             },
             {
-              "atMs": 4766.666666666667,
+              "atMs": 4266.666666666667,
               "damageMultiplier": 0,
               "cue": "punchImpact",
               "strong": false,
               "charged": false
             },
             {
-              "atMs": 5000.0,
+              "atMs": 4500.0,
               "damageMultiplier": 0,
               "cue": "punchImpact",
               "strong": false,
               "charged": false
             },
             {
-              "atMs": 5400.0,
+              "atMs": 4900.0,
               "damageMultiplier": 0,
               "cue": "punchImpact",
               "strong": false,
               "charged": false
             },
             {
-              "atMs": 6333.333333333333,
+              "atMs": 5833.333333333333,
               "damageMultiplier": 0,
               "cue": "kickImpact",
               "strong": true,
@@ -1111,79 +1096,79 @@
           ],
           "audioEvents": [
             {
-              "atMs": 1800.0,
+              "atMs": 1300.0,
               "cue": "heatSceneRush4",
               "target": "actor"
             },
             {
-              "atMs": 2400.0,
+              "atMs": 1900.0,
               "cue": "heatSceneRush5",
               "target": "actor"
             },
             {
-              "atMs": 2966.666666666667,
+              "atMs": 2466.666666666667,
               "cue": "heatSceneRush6",
               "target": "actor"
             },
             {
-              "atMs": 3700.0,
+              "atMs": 3200.0,
               "cue": "heatSceneRush4",
               "target": "actor"
             },
             {
-              "atMs": 4300.0,
+              "atMs": 3800.0,
               "cue": "heatSceneRush5",
               "target": "actor"
             },
             {
-              "atMs": 4866.666666666666,
+              "atMs": 4366.666666666666,
               "cue": "heatSceneRush6",
               "target": "actor"
             },
             {
-              "atMs": 5600.0,
+              "atMs": 5100.0,
               "cue": "heatSceneRush1",
               "target": "actor"
             },
             {
-              "atMs": 6733.333333333333,
+              "atMs": 6233.333333333333,
               "cue": "heatSceneRush0",
               "target": "victim"
             }
           ],
           "voiceEvents": [
             {
-              "atMs": 1733.3333333333335,
+              "atMs": 1233.3333333333335,
               "entry": "CombatLightAttack"
             },
             {
-              "atMs": 2366.6666666666665,
+              "atMs": 1866.6666666666667,
               "entry": "CombatLightAttack"
             },
             {
-              "atMs": 3233.3333333333335,
+              "atMs": 2733.3333333333335,
               "entry": "CombatHeavyAttack"
             },
             {
-              "atMs": 3633.3333333333335,
+              "atMs": 3133.3333333333335,
               "entry": "CombatLightAttack"
             },
             {
-              "atMs": 4266.666666666667,
+              "atMs": 3766.6666666666665,
               "entry": "CombatLightAttack"
             },
             {
-              "atMs": 5133.333333333334,
+              "atMs": 4633.333333333334,
               "entry": "CombatHeavyAttack"
             },
             {
-              "atMs": 5866.666666666666,
+              "atMs": 5366.666666666666,
               "entry": "CombatHeavyAttack"
             }
           ],
           "particles": [
             {
-              "frame": 56.0,
+              "frame": 41.0,
               "sourceFrame": 56.0,
               "sourceOffset": 25220,
               "name": "YNb0004 : \u8840\u3057\u3076\u304d(\u30e1\u30bf\u30dc\u542b\u3080\u8ffd",
@@ -1197,7 +1182,7 @@
               "contact": 1
             },
             {
-              "frame": 56.0,
+              "frame": 41.0,
               "sourceFrame": 56.0,
               "sourceOffset": 25524,
               "name": "YNb0027 : \u8840\u3057\u3076\u304d\u6c4e\u7528(\u30e1\u30bf\u30dc\u542b",
@@ -1211,7 +1196,7 @@
               "contact": 1
             },
             {
-              "frame": 56.0,
+              "frame": 41.0,
               "sourceFrame": 56.0,
               "sourceOffset": 25828,
               "name": "YNb0007 : \u98db\u3073\u6563\u308b\u8089\u7247A(\u30e1\u30bf\u30dc\ufffd",
@@ -1225,7 +1210,7 @@
               "contact": 1
             },
             {
-              "frame": 56.0,
+              "frame": 41.0,
               "sourceFrame": 56.0,
               "sourceOffset": 26132,
               "name": "YNb0029 : \u98db\u3073\u6563\u308b\u8089\u7247\u6c4e\u7528(\u30e1\u30bf",
@@ -1239,7 +1224,7 @@
               "contact": 1
             },
             {
-              "frame": 56.0,
+              "frame": 41.0,
               "sourceFrame": 56.0,
               "sourceOffset": 26436,
               "name": "YNb0003 : \u53e3\u8840C\u30e1\u30bf\u30dc",
@@ -1253,7 +1238,7 @@
               "contact": 1
             },
             {
-              "frame": 64.0,
+              "frame": 49.0,
               "sourceFrame": 64.0,
               "sourceOffset": 27044,
               "name": "YNb0003 : \u53e3\u8840C\u30e1\u30bf\u30dc",
@@ -1267,7 +1252,7 @@
               "contact": 2
             },
             {
-              "frame": 67.0,
+              "frame": 52.0,
               "sourceFrame": 67.0,
               "sourceOffset": 27348,
               "name": "YNb0004 : \u8840\u3057\u3076\u304d(\u30e1\u30bf\u30dc\u542b\u3080\u8ffd",
@@ -1281,7 +1266,7 @@
               "contact": 2
             },
             {
-              "frame": 67.0,
+              "frame": 52.0,
               "sourceFrame": 67.0,
               "sourceOffset": 27652,
               "name": "YNb0027 : \u8840\u3057\u3076\u304d\u6c4e\u7528(\u30e1\u30bf\u30dc\u542b",
@@ -1295,7 +1280,7 @@
               "contact": 2
             },
             {
-              "frame": 67.0,
+              "frame": 52.0,
               "sourceFrame": 67.0,
               "sourceOffset": 27956,
               "name": "YNb0029 : \u98db\u3073\u6563\u308b\u8089\u7247\u6c4e\u7528(\u30e1\u30bf",
@@ -1309,7 +1294,7 @@
               "contact": 2
             },
             {
-              "frame": 67.0,
+              "frame": 52.0,
               "sourceFrame": 67.0,
               "sourceOffset": 28260,
               "name": "YNb0007 : \u98db\u3073\u6563\u308b\u8089\u7247A(\u30e1\u30bf\u30dc\ufffd",
@@ -1323,7 +1308,7 @@
               "contact": 2
             },
             {
-              "frame": 67.0,
+              "frame": 52.0,
               "sourceFrame": 67.0,
               "sourceOffset": 28564,
               "name": "YNb0003 : \u53e3\u8840C\u30e1\u30bf\u30dc",
@@ -1337,7 +1322,7 @@
               "contact": 2
             },
             {
-              "frame": 73.0,
+              "frame": 58.0,
               "sourceFrame": 77.0,
               "sourceOffset": 30084,
               "name": "YNb0004 : \u8840\u3057\u3076\u304d(\u30e1\u30bf\u30dc\u542b\u3080\u8ffd",
@@ -1351,7 +1336,7 @@
               "contact": 3
             },
             {
-              "frame": 73.0,
+              "frame": 58.0,
               "sourceFrame": 77.0,
               "sourceOffset": 30388,
               "name": "YNb0027 : cima \u30d2\u30fc\u30c8027",
@@ -1365,7 +1350,7 @@
               "contact": 3
             },
             {
-              "frame": 73.0,
+              "frame": 58.0,
               "sourceFrame": 77.0,
               "sourceOffset": 30996,
               "name": "YNb0003 : \u53e3\u8840C\u30e1\u30bf\u30dc",
@@ -1379,7 +1364,7 @@
               "contact": 3
             },
             {
-              "frame": 74.0,
+              "frame": 59.0,
               "sourceFrame": 78.0,
               "sourceOffset": 29476,
               "name": "YNb0007 : \u98db\u3073\u6563\u308b\u8089\u7247A(\u30e1\u30bf\u30dc\ufffd",
@@ -1393,7 +1378,7 @@
               "contact": 3
             },
             {
-              "frame": 74.0,
+              "frame": 59.0,
               "sourceFrame": 78.0,
               "sourceOffset": 29780,
               "name": "YNb0029 : \u98db\u3073\u6563\u308b\u8089\u7247\u6c4e\u7528(\u30e1\u30bf",
@@ -1407,7 +1392,7 @@
               "contact": 3
             },
             {
-              "frame": 83.0,
+              "frame": 68.0,
               "sourceFrame": 87.0,
               "sourceOffset": 31300,
               "name": "YNb0003 : \u53e3\u8840C\u30e1\u30bf\u30dc",
@@ -1421,7 +1406,7 @@
               "contact": 4
             },
             {
-              "frame": 84.0,
+              "frame": 69.0,
               "sourceFrame": 88.0,
               "sourceOffset": 31604,
               "name": "YNb0004 : \u8840\u3057\u3076\u304d(\u30e1\u30bf\u30dc\u542b\u3080\u8ffd",
@@ -1435,7 +1420,7 @@
               "contact": 4
             },
             {
-              "frame": 86.0,
+              "frame": 71.0,
               "sourceFrame": 90.0,
               "sourceOffset": 32212,
               "name": "YNb0007 : \u98db\u3073\u6563\u308b\u8089\u7247A(\u30e1\u30bf\u30dc\ufffd",
@@ -1449,7 +1434,7 @@
               "contact": 4
             },
             {
-              "frame": 92.0,
+              "frame": 77.0,
               "sourceFrame": 101.0,
               "sourceOffset": 33732,
               "name": "YNb0007 : \u98db\u3073\u6563\u308b\u8089\u7247A(\u30e1\u30bf\u30dc\ufffd",
@@ -1463,7 +1448,7 @@
               "contact": 5
             },
             {
-              "frame": 93.0,
+              "frame": 78.0,
               "sourceFrame": 102.0,
               "sourceOffset": 32820,
               "name": "YNb0009 : \u8840\u3057\u3076\u304d(\u30e1\u30bf\u30dc\u542b\u3080)",
@@ -1477,7 +1462,7 @@
               "contact": 5
             },
             {
-              "frame": 93.0,
+              "frame": 78.0,
               "sourceFrame": 102.0,
               "sourceOffset": 33124,
               "name": "YNb0003 : \u53e3\u8840C\u30e1\u30bf\u30dc",
@@ -1491,7 +1476,7 @@
               "contact": 5
             },
             {
-              "frame": 93.0,
+              "frame": 78.0,
               "sourceFrame": 102.0,
               "sourceOffset": 33428,
               "name": "YNb0027 : \u8840\u3057\u3076\u304d\u6c4e\u7528(\u30e1\u30bf\u30dc\u542b",
@@ -1505,7 +1490,7 @@
               "contact": 5
             },
             {
-              "frame": 104.0,
+              "frame": 89.0,
               "sourceFrame": 113.0,
               "sourceOffset": 34644,
               "name": "YNb0027 : \u8840\u3057\u3076\u304d\u6c4e\u7528(\u30e1\u30bf\u30dc\u542b",
@@ -1519,7 +1504,7 @@
               "contact": 6
             },
             {
-              "frame": 104.0,
+              "frame": 89.0,
               "sourceFrame": 113.0,
               "sourceOffset": 34948,
               "name": "YNb0007 : \u98db\u3073\u6563\u308b\u8089\u7247A(\u30e1\u30bf\u30dc\ufffd",
@@ -1533,7 +1518,7 @@
               "contact": 6
             },
             {
-              "frame": 104.0,
+              "frame": 89.0,
               "sourceFrame": 113.0,
               "sourceOffset": 35252,
               "name": "YNb0007 : \u98db\u3073\u6563\u308b\u8089\u7247A(\u30e1\u30bf\u30dc\ufffd",
@@ -1547,7 +1532,7 @@
               "contact": 6
             },
             {
-              "frame": 104.0,
+              "frame": 89.0,
               "sourceFrame": 113.0,
               "sourceOffset": 35556,
               "name": "YNb0003 : \u53e3\u8840C\u30e1\u30bf\u30dc",
@@ -1561,7 +1546,7 @@
               "contact": 6
             },
             {
-              "frame": 113.0,
+              "frame": 98.0,
               "sourceFrame": 56.0,
               "sourceOffset": 25220,
               "name": "YNb0004 : \u8840\u3057\u3076\u304d(\u30e1\u30bf\u30dc\u542b\u3080\u8ffd",
@@ -1575,7 +1560,7 @@
               "contact": 7
             },
             {
-              "frame": 113.0,
+              "frame": 98.0,
               "sourceFrame": 56.0,
               "sourceOffset": 25524,
               "name": "YNb0027 : \u8840\u3057\u3076\u304d\u6c4e\u7528(\u30e1\u30bf\u30dc\u542b",
@@ -1589,7 +1574,7 @@
               "contact": 7
             },
             {
-              "frame": 113.0,
+              "frame": 98.0,
               "sourceFrame": 56.0,
               "sourceOffset": 25828,
               "name": "YNb0007 : \u98db\u3073\u6563\u308b\u8089\u7247A(\u30e1\u30bf\u30dc\ufffd",
@@ -1603,7 +1588,7 @@
               "contact": 7
             },
             {
-              "frame": 113.0,
+              "frame": 98.0,
               "sourceFrame": 56.0,
               "sourceOffset": 26132,
               "name": "YNb0029 : \u98db\u3073\u6563\u308b\u8089\u7247\u6c4e\u7528(\u30e1\u30bf",
@@ -1617,7 +1602,7 @@
               "contact": 7
             },
             {
-              "frame": 113.0,
+              "frame": 98.0,
               "sourceFrame": 56.0,
               "sourceOffset": 26436,
               "name": "YNb0003 : \u53e3\u8840C\u30e1\u30bf\u30dc",
@@ -1631,7 +1616,7 @@
               "contact": 7
             },
             {
-              "frame": 121.0,
+              "frame": 106.0,
               "sourceFrame": 64.0,
               "sourceOffset": 27044,
               "name": "YNb0003 : \u53e3\u8840C\u30e1\u30bf\u30dc",
@@ -1645,7 +1630,7 @@
               "contact": 8
             },
             {
-              "frame": 124.0,
+              "frame": 109.0,
               "sourceFrame": 67.0,
               "sourceOffset": 27348,
               "name": "YNb0004 : \u8840\u3057\u3076\u304d(\u30e1\u30bf\u30dc\u542b\u3080\u8ffd",
@@ -1659,7 +1644,7 @@
               "contact": 8
             },
             {
-              "frame": 124.0,
+              "frame": 109.0,
               "sourceFrame": 67.0,
               "sourceOffset": 27652,
               "name": "YNb0027 : \u8840\u3057\u3076\u304d\u6c4e\u7528(\u30e1\u30bf\u30dc\u542b",
@@ -1673,7 +1658,7 @@
               "contact": 8
             },
             {
-              "frame": 124.0,
+              "frame": 109.0,
               "sourceFrame": 67.0,
               "sourceOffset": 27956,
               "name": "YNb0029 : \u98db\u3073\u6563\u308b\u8089\u7247\u6c4e\u7528(\u30e1\u30bf",
@@ -1687,7 +1672,7 @@
               "contact": 8
             },
             {
-              "frame": 124.0,
+              "frame": 109.0,
               "sourceFrame": 67.0,
               "sourceOffset": 28260,
               "name": "YNb0007 : \u98db\u3073\u6563\u308b\u8089\u7247A(\u30e1\u30bf\u30dc\ufffd",
@@ -1701,7 +1686,7 @@
               "contact": 8
             },
             {
-              "frame": 124.0,
+              "frame": 109.0,
               "sourceFrame": 67.0,
               "sourceOffset": 28564,
               "name": "YNb0003 : \u53e3\u8840C\u30e1\u30bf\u30dc",
@@ -1715,7 +1700,7 @@
               "contact": 8
             },
             {
-              "frame": 130.0,
+              "frame": 115.0,
               "sourceFrame": 77.0,
               "sourceOffset": 30084,
               "name": "YNb0004 : \u8840\u3057\u3076\u304d(\u30e1\u30bf\u30dc\u542b\u3080\u8ffd",
@@ -1729,7 +1714,7 @@
               "contact": 9
             },
             {
-              "frame": 130.0,
+              "frame": 115.0,
               "sourceFrame": 77.0,
               "sourceOffset": 30388,
               "name": "YNb0027 : cima \u30d2\u30fc\u30c8027",
@@ -1743,7 +1728,7 @@
               "contact": 9
             },
             {
-              "frame": 130.0,
+              "frame": 115.0,
               "sourceFrame": 77.0,
               "sourceOffset": 30996,
               "name": "YNb0003 : \u53e3\u8840C\u30e1\u30bf\u30dc",
@@ -1757,7 +1742,7 @@
               "contact": 9
             },
             {
-              "frame": 131.0,
+              "frame": 116.0,
               "sourceFrame": 78.0,
               "sourceOffset": 29476,
               "name": "YNb0007 : \u98db\u3073\u6563\u308b\u8089\u7247A(\u30e1\u30bf\u30dc\ufffd",
@@ -1771,7 +1756,7 @@
               "contact": 9
             },
             {
-              "frame": 131.0,
+              "frame": 116.0,
               "sourceFrame": 78.0,
               "sourceOffset": 29780,
               "name": "YNb0029 : \u98db\u3073\u6563\u308b\u8089\u7247\u6c4e\u7528(\u30e1\u30bf",
@@ -1785,7 +1770,7 @@
               "contact": 9
             },
             {
-              "frame": 140.0,
+              "frame": 125.0,
               "sourceFrame": 87.0,
               "sourceOffset": 31300,
               "name": "YNb0003 : \u53e3\u8840C\u30e1\u30bf\u30dc",
@@ -1799,7 +1784,7 @@
               "contact": 10
             },
             {
-              "frame": 141.0,
+              "frame": 126.0,
               "sourceFrame": 88.0,
               "sourceOffset": 31604,
               "name": "YNb0004 : \u8840\u3057\u3076\u304d(\u30e1\u30bf\u30dc\u542b\u3080\u8ffd",
@@ -1813,7 +1798,7 @@
               "contact": 10
             },
             {
-              "frame": 143.0,
+              "frame": 128.0,
               "sourceFrame": 90.0,
               "sourceOffset": 32212,
               "name": "YNb0007 : \u98db\u3073\u6563\u308b\u8089\u7247A(\u30e1\u30bf\u30dc\ufffd",
@@ -1827,7 +1812,7 @@
               "contact": 10
             },
             {
-              "frame": 149.0,
+              "frame": 134.0,
               "sourceFrame": 101.0,
               "sourceOffset": 33732,
               "name": "YNb0007 : \u98db\u3073\u6563\u308b\u8089\u7247A(\u30e1\u30bf\u30dc\ufffd",
@@ -1841,7 +1826,7 @@
               "contact": 11
             },
             {
-              "frame": 150.0,
+              "frame": 135.0,
               "sourceFrame": 102.0,
               "sourceOffset": 32820,
               "name": "YNb0009 : \u8840\u3057\u3076\u304d(\u30e1\u30bf\u30dc\u542b\u3080)",
@@ -1855,7 +1840,7 @@
               "contact": 11
             },
             {
-              "frame": 150.0,
+              "frame": 135.0,
               "sourceFrame": 102.0,
               "sourceOffset": 33124,
               "name": "YNb0003 : \u53e3\u8840C\u30e1\u30bf\u30dc",
@@ -1869,7 +1854,7 @@
               "contact": 11
             },
             {
-              "frame": 150.0,
+              "frame": 135.0,
               "sourceFrame": 102.0,
               "sourceOffset": 33428,
               "name": "YNb0027 : \u8840\u3057\u3076\u304d\u6c4e\u7528(\u30e1\u30bf\u30dc\u542b",
@@ -1883,7 +1868,7 @@
               "contact": 11
             },
             {
-              "frame": 161.0,
+              "frame": 146.0,
               "sourceFrame": 113.0,
               "sourceOffset": 34644,
               "name": "YNb0027 : \u8840\u3057\u3076\u304d\u6c4e\u7528(\u30e1\u30bf\u30dc\u542b",
@@ -1897,7 +1882,7 @@
               "contact": 12
             },
             {
-              "frame": 161.0,
+              "frame": 146.0,
               "sourceFrame": 113.0,
               "sourceOffset": 34948,
               "name": "YNb0007 : \u98db\u3073\u6563\u308b\u8089\u7247A(\u30e1\u30bf\u30dc\ufffd",
@@ -1911,7 +1896,7 @@
               "contact": 12
             },
             {
-              "frame": 161.0,
+              "frame": 146.0,
               "sourceFrame": 113.0,
               "sourceOffset": 35252,
               "name": "YNb0007 : \u98db\u3073\u6563\u308b\u8089\u7247A(\u30e1\u30bf\u30dc\ufffd",
@@ -1925,7 +1910,7 @@
               "contact": 12
             },
             {
-              "frame": 161.0,
+              "frame": 146.0,
               "sourceFrame": 113.0,
               "sourceOffset": 35556,
               "name": "YNb0003 : \u53e3\u8840C\u30e1\u30bf\u30dc",
@@ -1939,7 +1924,7 @@
               "contact": 12
             },
             {
-              "frame": 188.0,
+              "frame": 173.0,
               "sourceFrame": 142.0,
               "sourceOffset": 35860,
               "name": "YNb0027 : \u8840\u3057\u3076\u304d\u6c4e\u7528(\u30e1\u30bf\u30dc\u542b",
@@ -1953,7 +1938,7 @@
               "contact": 13
             },
             {
-              "frame": 188.0,
+              "frame": 173.0,
               "sourceFrame": 142.0,
               "sourceOffset": 36164,
               "name": "YNb0007 : \u98db\u3073\u6563\u308b\u8089\u7247A(\u30e1\u30bf\u30dc\ufffd",
@@ -1967,7 +1952,7 @@
               "contact": 13
             },
             {
-              "frame": 188.0,
+              "frame": 173.0,
               "sourceFrame": 142.0,
               "sourceOffset": 36468,
               "name": "YNb0029 : \u98db\u3073\u6563\u308b\u8089\u7247A(\u30e1\u30bf\u30dc\ufffd",
@@ -1983,21 +1968,6 @@
           ],
           "sourceFrames": [
             0,
-            1,
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
             16,
             17,
             18,

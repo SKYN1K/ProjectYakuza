@@ -125,7 +125,7 @@
     ],
     "ProjectYakuza_DD_HeatRush": [
       {
-        "atMs": 1866.6666666666667,
+        "atMs": 1366.6666666666667,
         "index": 1,
         "bone": "Bip01_Head",
         "point": [
@@ -137,7 +137,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 1866.6666666666667,
+        "atMs": 1366.6666666666667,
         "index": 1,
         "bone": "Bip01_Head",
         "point": [
@@ -149,7 +149,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 1866.6666666666667,
+        "atMs": 1366.6666666666667,
         "index": 1,
         "bone": "Bip01_Head",
         "point": [
@@ -161,7 +161,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 1866.6666666666667,
+        "atMs": 1366.6666666666667,
         "index": 1,
         "bone": "Bip01_Head",
         "point": [
@@ -173,7 +173,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 1866.6666666666667,
+        "atMs": 1366.6666666666667,
         "index": 1,
         "bone": "Bip01_Head",
         "point": [
@@ -185,7 +185,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 2133.3333333333335,
+        "atMs": 1633.3333333333333,
         "index": 2,
         "bone": "Bip01_Head",
         "point": [
@@ -197,7 +197,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 2233.3333333333335,
+        "atMs": 1733.3333333333335,
         "index": 2,
         "bone": "Bip01_Head",
         "point": [
@@ -209,7 +209,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 2233.3333333333335,
+        "atMs": 1733.3333333333335,
         "index": 2,
         "bone": "Bip01_Head",
         "point": [
@@ -221,7 +221,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 2233.3333333333335,
+        "atMs": 1733.3333333333335,
         "index": 2,
         "bone": "Bip01_Head",
         "point": [
@@ -233,7 +233,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 2233.3333333333335,
+        "atMs": 1733.3333333333335,
         "index": 2,
         "bone": "Bip01_Head",
         "point": [
@@ -245,7 +245,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 2233.3333333333335,
+        "atMs": 1733.3333333333335,
         "index": 2,
         "bone": "Bip01_Head",
         "point": [
@@ -257,7 +257,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 2433.333333333333,
+        "atMs": 1933.3333333333333,
         "index": 3,
         "bone": "Bip01_Head",
         "point": [
@@ -269,7 +269,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 2433.333333333333,
+        "atMs": 1933.3333333333333,
         "index": 3,
         "bone": "Bip01_Head",
         "point": [
@@ -281,7 +281,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 2433.333333333333,
+        "atMs": 1933.3333333333333,
         "index": 3,
         "bone": "Bip01_Head",
         "point": [
@@ -293,7 +293,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 2466.666666666667,
+        "atMs": 1966.6666666666665,
         "index": 3,
         "bone": "Bip01_Head",
         "point": [
@@ -305,7 +305,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 2466.666666666667,
+        "atMs": 1966.6666666666665,
         "index": 3,
         "bone": "Bip01_Head",
         "point": [
@@ -317,7 +317,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 2766.6666666666665,
+        "atMs": 2266.6666666666665,
         "index": 4,
         "bone": "Bip01_Head",
         "point": [
@@ -329,7 +329,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 2800.0,
+        "atMs": 2300.0,
         "index": 4,
         "bone": "Bip01_Head",
         "point": [
@@ -341,7 +341,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 2866.6666666666665,
+        "atMs": 2366.6666666666665,
         "index": 4,
         "bone": "Bip01_Head",
         "point": [
@@ -353,7 +353,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 3066.666666666667,
+        "atMs": 2566.666666666667,
         "index": 5,
         "bone": "Bip01_Head",
         "point": [
@@ -365,7 +365,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 3100.0,
+        "atMs": 2600.0,
         "index": 5,
         "bone": "Bip01_Head",
         "point": [
@@ -377,7 +377,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 3100.0,
+        "atMs": 2600.0,
         "index": 5,
         "bone": "Bip01_Head",
         "point": [
@@ -389,7 +389,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 3100.0,
+        "atMs": 2600.0,
         "index": 5,
         "bone": "Bip01_Head",
         "point": [
@@ -401,7 +401,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 3466.666666666667,
+        "atMs": 2966.666666666667,
         "index": 6,
         "bone": "Bip01_Head",
         "point": [
@@ -413,7 +413,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 3466.666666666667,
+        "atMs": 2966.666666666667,
         "index": 6,
         "bone": "Bip01_Head",
         "point": [
@@ -425,7 +425,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 3466.666666666667,
+        "atMs": 2966.666666666667,
         "index": 6,
         "bone": "Bip01_Head",
         "point": [
@@ -437,7 +437,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 3466.666666666667,
+        "atMs": 2966.666666666667,
         "index": 6,
         "bone": "Bip01_Head",
         "point": [
@@ -449,7 +449,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 3766.6666666666665,
+        "atMs": 3266.6666666666665,
         "index": 7,
         "bone": "Bip01_Head",
         "point": [
@@ -461,7 +461,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 3766.6666666666665,
+        "atMs": 3266.6666666666665,
         "index": 7,
         "bone": "Bip01_Head",
         "point": [
@@ -473,7 +473,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 3766.6666666666665,
+        "atMs": 3266.6666666666665,
         "index": 7,
         "bone": "Bip01_Head",
         "point": [
@@ -485,7 +485,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 3766.6666666666665,
+        "atMs": 3266.6666666666665,
         "index": 7,
         "bone": "Bip01_Head",
         "point": [
@@ -497,7 +497,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 3766.6666666666665,
+        "atMs": 3266.6666666666665,
         "index": 7,
         "bone": "Bip01_Head",
         "point": [
@@ -509,7 +509,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 4033.333333333333,
+        "atMs": 3533.333333333333,
         "index": 8,
         "bone": "Bip01_Head",
         "point": [
@@ -521,7 +521,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 4133.333333333334,
+        "atMs": 3633.3333333333335,
         "index": 8,
         "bone": "Bip01_Head",
         "point": [
@@ -533,7 +533,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 4133.333333333334,
+        "atMs": 3633.3333333333335,
         "index": 8,
         "bone": "Bip01_Head",
         "point": [
@@ -545,7 +545,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 4133.333333333334,
+        "atMs": 3633.3333333333335,
         "index": 8,
         "bone": "Bip01_Head",
         "point": [
@@ -557,7 +557,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 4133.333333333334,
+        "atMs": 3633.3333333333335,
         "index": 8,
         "bone": "Bip01_Head",
         "point": [
@@ -569,7 +569,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 4133.333333333334,
+        "atMs": 3633.3333333333335,
         "index": 8,
         "bone": "Bip01_Head",
         "point": [
@@ -581,7 +581,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 4333.333333333333,
+        "atMs": 3833.3333333333335,
         "index": 9,
         "bone": "Bip01_Head",
         "point": [
@@ -593,7 +593,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 4333.333333333333,
+        "atMs": 3833.3333333333335,
         "index": 9,
         "bone": "Bip01_Head",
         "point": [
@@ -605,7 +605,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 4333.333333333333,
+        "atMs": 3833.3333333333335,
         "index": 9,
         "bone": "Bip01_Head",
         "point": [
@@ -617,7 +617,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 4366.666666666666,
+        "atMs": 3866.6666666666665,
         "index": 9,
         "bone": "Bip01_Head",
         "point": [
@@ -629,7 +629,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 4366.666666666666,
+        "atMs": 3866.6666666666665,
         "index": 9,
         "bone": "Bip01_Head",
         "point": [
@@ -641,7 +641,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 4666.666666666667,
+        "atMs": 4166.666666666667,
         "index": 10,
         "bone": "Bip01_Head",
         "point": [
@@ -653,7 +653,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 4700.0,
+        "atMs": 4200.0,
         "index": 10,
         "bone": "Bip01_Head",
         "point": [
@@ -665,7 +665,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 4766.666666666667,
+        "atMs": 4266.666666666667,
         "index": 10,
         "bone": "Bip01_Head",
         "point": [
@@ -677,7 +677,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 4966.666666666667,
+        "atMs": 4466.666666666667,
         "index": 11,
         "bone": "Bip01_Head",
         "point": [
@@ -689,7 +689,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 5000.0,
+        "atMs": 4500.0,
         "index": 11,
         "bone": "Bip01_Head",
         "point": [
@@ -701,7 +701,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 5000.0,
+        "atMs": 4500.0,
         "index": 11,
         "bone": "Bip01_Head",
         "point": [
@@ -713,7 +713,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 5000.0,
+        "atMs": 4500.0,
         "index": 11,
         "bone": "Bip01_Head",
         "point": [
@@ -725,7 +725,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 5366.666666666666,
+        "atMs": 4866.666666666666,
         "index": 12,
         "bone": "Bip01_Head",
         "point": [
@@ -737,7 +737,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 5366.666666666666,
+        "atMs": 4866.666666666666,
         "index": 12,
         "bone": "Bip01_Head",
         "point": [
@@ -749,7 +749,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 5366.666666666666,
+        "atMs": 4866.666666666666,
         "index": 12,
         "bone": "Bip01_Head",
         "point": [
@@ -761,7 +761,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 5366.666666666666,
+        "atMs": 4866.666666666666,
         "index": 12,
         "bone": "Bip01_Head",
         "point": [
@@ -773,7 +773,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 6266.666666666667,
+        "atMs": 5766.666666666667,
         "index": 13,
         "bone": "Bip01_Head",
         "point": [
@@ -785,7 +785,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 6266.666666666667,
+        "atMs": 5766.666666666667,
         "index": 13,
         "bone": "Bip01_Head",
         "point": [
@@ -797,7 +797,7 @@
         "feedback": "unarmed"
       },
       {
-        "atMs": 6266.666666666667,
+        "atMs": 5766.666666666667,
         "index": 13,
         "bone": "Bip01_Head",
         "point": [
@@ -1703,11 +1703,11 @@
     },
     {
       "animation": "ProjectYakuza_DD_HeatRush",
-      "actorSha256": "0049ab9a56119b95f2f3f8c381f0adfa40985434a3dafcf3ff6f1f95ef6120a0",
-      "victimSha256": "f4a169ce2bc6c7c8846b4abc88e3ba6a92f58c5bb8d0034b3282b95b41b36f60",
+      "actorSha256": "744345e83bbd08346835fcffcb298b6e28441036b2f871ba125089778489f616",
+      "victimSha256": "e9032328c28eada13e4fcdda1ec5842dda0e10fdf78265c30ece4d594bc6ea04",
       "events": [
         {
-          "atMs": 1866.6666666666667,
+          "atMs": 1366.6666666666667,
           "index": 1,
           "bone": "Bip01_Head",
           "point": [
@@ -1719,7 +1719,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 1866.6666666666667,
+          "atMs": 1366.6666666666667,
           "index": 1,
           "bone": "Bip01_Head",
           "point": [
@@ -1731,7 +1731,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 1866.6666666666667,
+          "atMs": 1366.6666666666667,
           "index": 1,
           "bone": "Bip01_Head",
           "point": [
@@ -1743,7 +1743,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 1866.6666666666667,
+          "atMs": 1366.6666666666667,
           "index": 1,
           "bone": "Bip01_Head",
           "point": [
@@ -1755,7 +1755,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 1866.6666666666667,
+          "atMs": 1366.6666666666667,
           "index": 1,
           "bone": "Bip01_Head",
           "point": [
@@ -1767,7 +1767,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 2133.3333333333335,
+          "atMs": 1633.3333333333333,
           "index": 2,
           "bone": "Bip01_Head",
           "point": [
@@ -1779,7 +1779,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 2233.3333333333335,
+          "atMs": 1733.3333333333335,
           "index": 2,
           "bone": "Bip01_Head",
           "point": [
@@ -1791,7 +1791,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 2233.3333333333335,
+          "atMs": 1733.3333333333335,
           "index": 2,
           "bone": "Bip01_Head",
           "point": [
@@ -1803,7 +1803,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 2233.3333333333335,
+          "atMs": 1733.3333333333335,
           "index": 2,
           "bone": "Bip01_Head",
           "point": [
@@ -1815,7 +1815,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 2233.3333333333335,
+          "atMs": 1733.3333333333335,
           "index": 2,
           "bone": "Bip01_Head",
           "point": [
@@ -1827,7 +1827,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 2233.3333333333335,
+          "atMs": 1733.3333333333335,
           "index": 2,
           "bone": "Bip01_Head",
           "point": [
@@ -1839,7 +1839,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 2433.333333333333,
+          "atMs": 1933.3333333333333,
           "index": 3,
           "bone": "Bip01_Head",
           "point": [
@@ -1851,7 +1851,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 2433.333333333333,
+          "atMs": 1933.3333333333333,
           "index": 3,
           "bone": "Bip01_Head",
           "point": [
@@ -1863,7 +1863,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 2433.333333333333,
+          "atMs": 1933.3333333333333,
           "index": 3,
           "bone": "Bip01_Head",
           "point": [
@@ -1875,7 +1875,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 2466.666666666667,
+          "atMs": 1966.6666666666665,
           "index": 3,
           "bone": "Bip01_Head",
           "point": [
@@ -1887,7 +1887,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 2466.666666666667,
+          "atMs": 1966.6666666666665,
           "index": 3,
           "bone": "Bip01_Head",
           "point": [
@@ -1899,7 +1899,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 2766.6666666666665,
+          "atMs": 2266.6666666666665,
           "index": 4,
           "bone": "Bip01_Head",
           "point": [
@@ -1911,7 +1911,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 2800.0,
+          "atMs": 2300.0,
           "index": 4,
           "bone": "Bip01_Head",
           "point": [
@@ -1923,7 +1923,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 2866.6666666666665,
+          "atMs": 2366.6666666666665,
           "index": 4,
           "bone": "Bip01_Head",
           "point": [
@@ -1935,7 +1935,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 3066.666666666667,
+          "atMs": 2566.666666666667,
           "index": 5,
           "bone": "Bip01_Head",
           "point": [
@@ -1947,7 +1947,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 3100.0,
+          "atMs": 2600.0,
           "index": 5,
           "bone": "Bip01_Head",
           "point": [
@@ -1959,7 +1959,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 3100.0,
+          "atMs": 2600.0,
           "index": 5,
           "bone": "Bip01_Head",
           "point": [
@@ -1971,7 +1971,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 3100.0,
+          "atMs": 2600.0,
           "index": 5,
           "bone": "Bip01_Head",
           "point": [
@@ -1983,7 +1983,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 3466.666666666667,
+          "atMs": 2966.666666666667,
           "index": 6,
           "bone": "Bip01_Head",
           "point": [
@@ -1995,7 +1995,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 3466.666666666667,
+          "atMs": 2966.666666666667,
           "index": 6,
           "bone": "Bip01_Head",
           "point": [
@@ -2007,7 +2007,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 3466.666666666667,
+          "atMs": 2966.666666666667,
           "index": 6,
           "bone": "Bip01_Head",
           "point": [
@@ -2019,7 +2019,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 3466.666666666667,
+          "atMs": 2966.666666666667,
           "index": 6,
           "bone": "Bip01_Head",
           "point": [
@@ -2031,7 +2031,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 3766.6666666666665,
+          "atMs": 3266.6666666666665,
           "index": 7,
           "bone": "Bip01_Head",
           "point": [
@@ -2043,7 +2043,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 3766.6666666666665,
+          "atMs": 3266.6666666666665,
           "index": 7,
           "bone": "Bip01_Head",
           "point": [
@@ -2055,7 +2055,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 3766.6666666666665,
+          "atMs": 3266.6666666666665,
           "index": 7,
           "bone": "Bip01_Head",
           "point": [
@@ -2067,7 +2067,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 3766.6666666666665,
+          "atMs": 3266.6666666666665,
           "index": 7,
           "bone": "Bip01_Head",
           "point": [
@@ -2079,7 +2079,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 3766.6666666666665,
+          "atMs": 3266.6666666666665,
           "index": 7,
           "bone": "Bip01_Head",
           "point": [
@@ -2091,7 +2091,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 4033.333333333333,
+          "atMs": 3533.333333333333,
           "index": 8,
           "bone": "Bip01_Head",
           "point": [
@@ -2103,7 +2103,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 4133.333333333334,
+          "atMs": 3633.3333333333335,
           "index": 8,
           "bone": "Bip01_Head",
           "point": [
@@ -2115,7 +2115,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 4133.333333333334,
+          "atMs": 3633.3333333333335,
           "index": 8,
           "bone": "Bip01_Head",
           "point": [
@@ -2127,7 +2127,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 4133.333333333334,
+          "atMs": 3633.3333333333335,
           "index": 8,
           "bone": "Bip01_Head",
           "point": [
@@ -2139,7 +2139,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 4133.333333333334,
+          "atMs": 3633.3333333333335,
           "index": 8,
           "bone": "Bip01_Head",
           "point": [
@@ -2151,7 +2151,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 4133.333333333334,
+          "atMs": 3633.3333333333335,
           "index": 8,
           "bone": "Bip01_Head",
           "point": [
@@ -2163,7 +2163,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 4333.333333333333,
+          "atMs": 3833.3333333333335,
           "index": 9,
           "bone": "Bip01_Head",
           "point": [
@@ -2175,7 +2175,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 4333.333333333333,
+          "atMs": 3833.3333333333335,
           "index": 9,
           "bone": "Bip01_Head",
           "point": [
@@ -2187,7 +2187,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 4333.333333333333,
+          "atMs": 3833.3333333333335,
           "index": 9,
           "bone": "Bip01_Head",
           "point": [
@@ -2199,7 +2199,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 4366.666666666666,
+          "atMs": 3866.6666666666665,
           "index": 9,
           "bone": "Bip01_Head",
           "point": [
@@ -2211,7 +2211,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 4366.666666666666,
+          "atMs": 3866.6666666666665,
           "index": 9,
           "bone": "Bip01_Head",
           "point": [
@@ -2223,7 +2223,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 4666.666666666667,
+          "atMs": 4166.666666666667,
           "index": 10,
           "bone": "Bip01_Head",
           "point": [
@@ -2235,7 +2235,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 4700.0,
+          "atMs": 4200.0,
           "index": 10,
           "bone": "Bip01_Head",
           "point": [
@@ -2247,7 +2247,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 4766.666666666667,
+          "atMs": 4266.666666666667,
           "index": 10,
           "bone": "Bip01_Head",
           "point": [
@@ -2259,7 +2259,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 4966.666666666667,
+          "atMs": 4466.666666666667,
           "index": 11,
           "bone": "Bip01_Head",
           "point": [
@@ -2271,7 +2271,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 5000.0,
+          "atMs": 4500.0,
           "index": 11,
           "bone": "Bip01_Head",
           "point": [
@@ -2283,7 +2283,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 5000.0,
+          "atMs": 4500.0,
           "index": 11,
           "bone": "Bip01_Head",
           "point": [
@@ -2295,7 +2295,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 5000.0,
+          "atMs": 4500.0,
           "index": 11,
           "bone": "Bip01_Head",
           "point": [
@@ -2307,7 +2307,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 5366.666666666666,
+          "atMs": 4866.666666666666,
           "index": 12,
           "bone": "Bip01_Head",
           "point": [
@@ -2319,7 +2319,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 5366.666666666666,
+          "atMs": 4866.666666666666,
           "index": 12,
           "bone": "Bip01_Head",
           "point": [
@@ -2331,7 +2331,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 5366.666666666666,
+          "atMs": 4866.666666666666,
           "index": 12,
           "bone": "Bip01_Head",
           "point": [
@@ -2343,7 +2343,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 5366.666666666666,
+          "atMs": 4866.666666666666,
           "index": 12,
           "bone": "Bip01_Head",
           "point": [
@@ -2355,7 +2355,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 6266.666666666667,
+          "atMs": 5766.666666666667,
           "index": 13,
           "bone": "Bip01_Head",
           "point": [
@@ -2367,7 +2367,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 6266.666666666667,
+          "atMs": 5766.666666666667,
           "index": 13,
           "bone": "Bip01_Head",
           "point": [
@@ -2379,7 +2379,7 @@
           "feedback": "unarmed"
         },
         {
-          "atMs": 6266.666666666667,
+          "atMs": 5766.666666666667,
           "index": 13,
           "bone": "Bip01_Head",
           "point": [

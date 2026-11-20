@@ -1,0 +1,115 @@
+{
+  "version": "0.135.0",
+  "offlineOnly": true,
+  "operation": "Per-contact numeric source limb selection and scene timing remap; no visual/audio/model/animation assets generated or changed. Runtime and source archives remain separate.",
+  "clips": 95,
+  "contactWindows": 121,
+  "productionLuaCompiled": 95,
+  "kahluaAssertions": {
+    "punchAndTrails": 47744,
+    "heatRush": 1485,
+    "heatPresentation": 7159,
+    "multiplayer": 1926,
+    "weaponMultiplayer": 76
+  },
+  "nativeLimbProjectionCases": 23232,
+  "sourcePixelChecks": {
+    "textures": 70,
+    "pixels": 309248
+  },
+  "cmnChecks": {
+    "scenes": 10,
+    "timelines": 12,
+    "contacts": 38,
+    "bloodAnchors": 129,
+    "originalPcmDecodes": 54
+  },
+  "sourcePoseProof": [
+    {
+      "animation": "ProjectYakuza_DD_KnifeHeat",
+      "sourceFrame30fps": 40,
+      "limb": "rightArm",
+      "sourceSha256": "0326d78d0c919d38b84142ebfe3805e6f985b320ac84f1d10ee7d18a277d1ad7",
+      "nativeHandFootHeights": {
+        "leftArm": 0.70634806,
+        "rightArm": 0.52134997,
+        "leftLeg": 0.07972781,
+        "rightLeg": 0.15859754
+      }
+    },
+    {
+      "animation": "ProjectYakuza_DD_KnifeHeat",
+      "sourceFrame30fps": 90,
+      "limb": "rightLeg",
+      "sourceSha256": "0326d78d0c919d38b84142ebfe3805e6f985b320ac84f1d10ee7d18a277d1ad7",
+      "nativeHandFootHeights": {
+        "leftArm": 0.7423154,
+        "rightArm": 0.42399538,
+        "leftLeg": 0.09363505,
+        "rightLeg": 0.39064717
+      }
+    },
+    {
+      "animation": "ProjectYakuza_DD_KatanaHeat",
+      "sourceFrame30fps": 44,
+      "limb": "leftArm",
+      "sourceSha256": "7f024e2a87f6ee63bf6da3f58d90a467c29e491f25357f33e4b92e1ccfc71bc1",
+      "nativeHandFootHeights": {
+        "leftArm": 0.46895897,
+        "rightArm": 0.8259091,
+        "leftLeg": 0.13915023,
+        "rightLeg": 0.08658174
+      }
+    },
+    {
+      "animation": "ProjectYakuza_DD_CrateHeat",
+      "sourceFrame30fps": 134,
+      "limb": "rightLeg",
+      "sourceSha256": "509a145563091ddddd9da4e73700aa961bfc2ab37615ebbaec018714fca5944a",
+      "nativeHandFootHeights": {
+        "leftArm": 0.6883124,
+        "rightArm": 0.5332714,
+        "leftLeg": 0.069626465,
+        "rightLeg": 0.59653246
+      }
+    },
+    {
+      "animation": "ProjectYakuza_DD_CrateHeat",
+      "sourceFrame30fps": 231,
+      "limb": "leftLeg",
+      "sourceSha256": "509a145563091ddddd9da4e73700aa961bfc2ab37615ebbaec018714fca5944a",
+      "nativeHandFootHeights": {
+        "leftArm": 0.77161103,
+        "rightArm": 0.7202247,
+        "leftLeg": 0.5540705,
+        "rightLeg": 0.08929725
+      }
+    },
+    {
+      "animation": "ProjectYakuza_DD_CrateHeat",
+      "sourceFrame30fps": 307,
+      "limb": "rightLeg",
+      "sourceSha256": "509a145563091ddddd9da4e73700aa961bfc2ab37615ebbaec018714fca5944a",
+      "nativeHandFootHeights": {
+        "leftArm": 0.6883124,
+        "rightArm": 0.5332714,
+        "leftLeg": 0.069626465,
+        "rightLeg": 0.59653246
+      }
+    },
+    {
+      "animation": "ProjectYakuza_DD_CrateHeat",
+      "sourceFrame30fps": 404,
+      "limb": "leftLeg",
+      "sourceSha256": "509a145563091ddddd9da4e73700aa961bfc2ab37615ebbaec018714fca5944a",
+      "nativeHandFootHeights": {
+        "leftArm": 0.77161103,
+        "rightArm": 0.7202247,
+        "leftLeg": 0.5540705,
+        "rightLeg": 0.08929725
+      }
+    }
+  ],
+  "runtimePackaging": "Allowlisted game files only; documentation, framework instructions, AGENTS.md, tools, templates, backups, previews, source-control files and private metadata excluded.",
+  "limitations": "No PZ/GPU launch; live visual and MP appearance remain untested."
+}
