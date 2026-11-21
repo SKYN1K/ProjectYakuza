@@ -41,3 +41,19 @@ The [v1.0.1 release](https://github.com/SKYN1K/ProjectYakuza/releases/tag/v1.0.1
 The core's player release includes vanilla bat/club, knife and blade profiles and their supported Heat Actions. Custom-object development profiles are excluded. The source package builder applies this filter; copying the full source mod folder includes development content.
 
 For core maintenance, configure the local tool/dependency paths before using Build-GamePackage.py and the publication tools. Those tools build the framework, not arbitrary third-party add-ons. Their package allowlist/privacy checks and native Workshop validation complement gameplay testing; they do not upload to Steam.
+
+## Update content without replacing the Workshop page
+
+PZ's in-game uploader submits its local title, description, preview, tags and visibility again. The repository includes a content-only uploader for an existing Build 42 Workshop item. It calls Steam's StartItemUpdate, SetItemContent and SubmitItemUpdate APIs without submitting page-metadata setters. Only the content, update timestamp and an optional change note are updated. See [Steam's update API](https://partner.steamgames.com/doc/api/ISteamUGC#StartItemUpdate).
+
+Keep Steam running and signed in as the item owner. The game can remain closed. Use 64-bit Python and the installed game's steam_api64.dll; no password or token file is required.
+
+Run the PowerShell helper from the repository root, first without Upload to validate the prepared payload:
+
+```powershell
+.\tools\Upload-WorkshopContent.ps1 -WorkshopFolder 'D:\Workshop\MyStyleAddon' -GameFolder 'D:\SteamLibrary\steamapps\common\ProjectZomboid' -PythonPath 'python'
+```
+
+After reviewing the selected item ID, mod IDs and content size, repeat the command with -Upload. An optional -ChangeNote supplies a changelog entry. The helper reads the published ID from workshop.txt and never creates a new item. It uploads only Contents, verifies the runtime allowlist/privacy rules, and rejects an explicit ID that differs from workshop.txt. It does not rebuild the mod; prepare the player package before uploading.
+
+For local defaults, create tools/WorkshopUpload.local.json with WorkshopFolder, GameFolder and PythonPath string fields. This file is ignored by Git. Do not include local configuration or uploader tools in your player mod. The helper then needs only -Upload; omitting that flag remains validation-only.
