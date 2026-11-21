@@ -40,7 +40,14 @@ check(options:getOption('input_finisher').name=='Heavy Attack / Finisher keybind
 for _,id in ipairs({'runningLight','dropkick','quickstepAttack','counter'})do
  check(options:getOption('input_'..id)==nil and options:getOption('key_'..id)==nil,'context action has no dedicated setting '..id)
 end
+local intro=options:getOption('encounterIntro')
+check(intro.type=='tickbox' and intro.name=='Zombie Encounter Intro' and intro:getValue() and ProjectYakuza.isEncounterIntroEnabled(),'readable encounter toggle defaults to enabled')
+inputLines[#inputLines+1]='tickbox|ProjectYakuza|encounterIntro|false'
 for _,fn in ipairs(startup)do fn()end
+check(not intro:getValue() and not ProjectYakuza.isEncounterIntroEnabled(),'native Mods settings restore disabled intro preference')
+intro:setValue(true);options:apply();check(ProjectYakuza.isEncounterIntroEnabled(),'checkbox re-enables the intro')
+local introCleared=false;ProjectYakuza.EncounterIntro={clear=function(_,reason)introCleared=reason=='disabled'end}
+intro:setValue(false);options:apply();check(introCleared,'applying the disabled preference closes an active intro immediately')
 check(options:getOption('musicVolume'):getValue()==65 and options:getOption('hitVolume'):getValue()==120,'native ini restores grouped sliders')
 for _,track in ipairs(ProjectYakuza.styles.dragon_of_dojima.music)do check(levels[track.sound]==1,'music group applies to supplied style tracks')end
 for _,cue in ipairs({'PunchImpact','KickImpact','HeatImpact','Finisher','ThrowImpact','GuardBreak'})do check(levels['ProjectYakuza_Y6_'..cue]==1.2,'hit group applies to impacts')end
@@ -52,6 +59,7 @@ options:getOption('musicVolume'):setValue(500);options:apply();check(ProjectYaku
 ProjectYakuza.registerStyle({id='addon.volume',name='Volume Addon',lightAttacks={{animation='Native',nodeValue='volume',duration=1}},music={{sound='AddonMusic'}},sounds={punchImpact='AddonImpact'}})
 check(levels.AddonMusic==1 and ProjectYakuza.SoundSettings.musicLevel()==2 and levels.AddonImpact==0,'late registered styles join grouped controls')
 api:save();local text=table.concat(writes,'')
+check(string.find(text,'tickbox|ProjectYakuza|encounterIntro|false',1,true)~=nil,'disabled intro preference is persisted')
 check(string.find(text,'hitVolume|0',1,true)~=nil and saved>0,'native ModOptions persistence and GameSounds persistence used')
 local conflict={key=34,keybind2Name='UI_ProjectYakuza_Key_grab'};ISDuplicateKeybindDialog.createChildren(conflict);check(conflict.label.name=='G is already assigned to Grab / Throw keyboard bind','native mod-binding conflicts use readable translated labels');conflict.keybind2Name='Grab / Throw keyboard bind';ISDuplicateKeybindDialog.nextDuplicate(conflict);check(conflict.label.name=='G is already assigned to Grab / Throw keyboard bind','subsequent native conflicts resolve translated captions too');conflict.keybind2Name='Foreign action';ISDuplicateKeybindDialog.nextDuplicate(conflict);check(conflict.label.name=='native next','foreign binding conflicts remain delegated')
 return 'PASS '..count..' native Mods slider, persistence, grouping and late-style checks'

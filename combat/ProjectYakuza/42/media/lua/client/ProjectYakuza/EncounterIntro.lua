@@ -14,6 +14,7 @@ function Panel:onRightMouseUp()return false end
 
 local function now()return getTimestampMs()end
 local function eligible(p)
+    if PY.isEncounterIntroEnabled and not PY.isEncounterIntroEnabled()then return end
     if not p or not p:isLocalPlayer() or p:isDead() or p:getVehicle() or not PY.isEquipped(p) then return end
     local style=PY.getPlayerStyle(p);local config=style and style.encounterIntro
     if type(config)~="table" or config.enabled~=true or not style.ui or type(style.ui.encounter)~="string"

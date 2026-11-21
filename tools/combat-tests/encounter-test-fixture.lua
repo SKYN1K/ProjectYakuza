@@ -36,6 +36,8 @@ getTexture=function(path)return {path=path,width=path:find('EdoSZ') and 2048 or 
 do local _="ProjectYakuzaFixture:REGISTRY" end
 do local _="ProjectYakuzaFixture:STYLE" end
 local PY=ProjectYakuza
+local introEnabled=true
+PY.isEncounterIntroEnabled=function()return introEnabled end
 PY.isEquipped=function(p)return p.active end
 PY.getPlayerStyle=function(p)return PY.getStyle(p.styleId)end
 instanceof=function(x,name)return x.kind==name end
@@ -202,5 +204,15 @@ invalid({textScale=2,titles={{text='All'}}})
 invalid({triggers={unknown=true},titles={{text='All'}}})
 invalid({triggers={visiblePlayer='yes'},titles={{text='All'}}})
 getOnlinePlayers=nil
+E.clear();crowd(3);local readsBefore=zombieReads;introEnabled=false
+check(not E.request(p)and not E.states[p],'disabled intro rejects manual requests before allocating state')
+E.update(p);E.onHit(p,zombie(11,12),nil,1)
+check(not E.states[p]and zombieReads==readsBefore and not E.hooked,'disabled intro skips threat/hit requests, counting and hooks')
+introEnabled=true;check(E.request(p),'re-enabled intro accepts the next encounter');local pending=E.states[p]
+check(pending.job,'enabled intro can queue a count');introEnabled=false;E.tick()
+check(not E.states[p]and not E.hooked,'turning off the intro cancels queued counting')
+introEnabled=true;E.request(p);finishCount();local visible=E.states[p].panel
+introEnabled=false;E.tick();check(not E.states[p]and not visible.inUI and not E.hooked,'turning off the intro removes its visible panel')
+introEnabled=true;E.request(p);finishCount();check(E.states[p].panel,'turning back on restores normal encounter display')
 E.clear();check(removed==created,'all created panels removed')
 return true,'PASS '..checks..' encounter thresholds, bounded radius counts, native-font UI, style providers, lifecycle and mouse isolation checks'

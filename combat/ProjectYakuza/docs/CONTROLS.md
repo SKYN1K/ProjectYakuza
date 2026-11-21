@@ -8,6 +8,8 @@ These defaults apply to Dragon of Dojima in v1.0.1. Other styles can register th
 
 **Sandbox Options > Project Yakuza** contains the world/server switches for Heat Actions, grabs and Extreme Heat, plus Dragon Tiger Drop's toggle, timing window and cooldown. Defaults are enabled, 160 ms and 20 seconds respectively. Disabling a feature prevents its requests; it does not remove a style definition.
 
+**Options > Mods > Project Yakuza > Presentation > Zombie Encounter Intro** enables or disables the local animated encounter title and its intro sound. It defaults to enabled, saves per client, and can be changed during play. Disabling it closes the active intro and cancels queued counting.
+
 ## Heavy input and Heat Action priority
 
 While aiming, a valid frontal Tiger Drop is checked on the initial heavy press. Otherwise, tap-release submits the neutral heavy or a combo finisher. Holding charges the neutral heavy or the first-finisher branch after one to four lights. Charged attacks release automatically at the 1,200 ms limit; a lower-power early release is possible after the minimum source wind-up. Second finishers do not charge.

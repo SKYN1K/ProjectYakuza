@@ -175,6 +175,8 @@ Unarmed finisher routing recognizes enabled `extreme_default`, `extreme_after_N`
 
 ## Style-owned encounter intros (0.50.0)
 
+The local Mods preference gates all opted-in encounter intros. `ProjectYakuza.isEncounterIntroEnabled()` reports the current preference; styles still need their own enabled config and UI provider.
+
 `style.encounterIntro` configures enabled/radius/durationMs/quietMs/pollMs/titles and optional soundKey/soundVolume. `style.ui.encounter` names a `registerStyleUI` provider; no provider or style is inherited automatically. The client `ProjectYakuza.EncounterIntro` API exposes request, clear, title, layoutText and drawText; lifecycle events are encounterIntroStarted, encounterIntroEnded and encounterEnded. Counts are local, batched and capped by the configured highest tier. [Complete contract and examples](ENCOUNTER_INTROS.md).
 
 ## Encounter detector extensions (0.54.0)

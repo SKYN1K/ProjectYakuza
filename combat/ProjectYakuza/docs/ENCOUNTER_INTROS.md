@@ -1,5 +1,7 @@
 # Style-owned encounter intros (0.54.0)
 
+Players can toggle the encounter presentation under Options > Mods > Project Yakuza > Presentation > Zombie Encounter Intro. It defaults to enabled and is saved locally through native ModOptions. Disabling it closes any visible intro, cancels pending counts, and prevents new title/sound triggers. Re-enabling it allows the next eligible encounter. Style opt-in remains required.
+
 Dragon of Dojima now shows a brief Yakuza 6-inspired on-screen encounter title. This is a HUD animation, not a character animation: it does not move/lock the player, disable attacks, pause the world, change cameras or grant protection. Its full-viewport panel explicitly disables mouse events and is removed when finished.
 
 The supplied Edo SZ HQ font is directly rasterized into a glyph atlas at 128 pixels, then drawn at or below its raster resolution. Source outlines, advances and kerning are preserved. No AI or invented glyphs. The original Yakuza 6 btl_flush texture provides the moving flare; its RGBA pixels and dimensions are unchanged. Entrance, settle, sweep and fade timing are recreated in Lua, rather than imported as a Dragon Engine UI animation. No global PZ font is replaced. See encounter-intro-assets.json for user authorization, glyph metrics and provenance.
