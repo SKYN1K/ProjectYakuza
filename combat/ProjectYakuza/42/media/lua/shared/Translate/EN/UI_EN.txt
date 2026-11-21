@@ -12,57 +12,41 @@ UI_EN = {
 
     UI_ProjectYakuza_AudioDescription = "Music, combat sound effects, and combat voice lines have separate volume controls. Zero mutes that group. Voices affects only combat lines requested by this mod.",
 
-    UI_ProjectYakuza_Bind_light = "Light attack button",
+    UI_ProjectYakuza_Bind_light = "Light Attack keybind type",
 
-    UI_ProjectYakuza_Key_light = "Light attack key",
+    UI_ProjectYakuza_Key_light = "Light Attack keyboard bind",
 
-    UI_ProjectYakuza_Bind_heatAction = "Heat Action button",
+    UI_ProjectYakuza_Bind_heatAction = "Heat Action keybind type",
 
-    UI_ProjectYakuza_Key_heatAction = "Heat Action key",
+    UI_ProjectYakuza_Key_heatAction = "Heat Action keyboard bind",
 
-    UI_ProjectYakuza_Bind_finisher = "Heavy attack / finisher button",
+    UI_ProjectYakuza_Bind_finisher = "Heavy Attack / Finisher keybind type",
 
-    UI_ProjectYakuza_Key_finisher = "Heavy attack / finisher key",
+    UI_ProjectYakuza_Key_finisher = "Heavy Attack / Finisher keyboard bind",
 
-    UI_ProjectYakuza_Bind_runningLight = "Running attack button",
+    UI_ProjectYakuza_Bind_quickstep = "Quickstep keybind type",
 
-    UI_ProjectYakuza_Key_runningLight = "Running attack key",
+    UI_ProjectYakuza_Key_quickstep = "Quickstep keyboard bind",
 
-    UI_ProjectYakuza_Bind_dropkick = "Running dropkick button",
+    UI_ProjectYakuza_Bind_block = "Block keybind type",
 
-    UI_ProjectYakuza_Key_dropkick = "Running dropkick key",
+    UI_ProjectYakuza_Key_block = "Block keyboard bind",
 
-    UI_ProjectYakuza_Bind_quickstepAttack = "Quickstep attack button",
+    UI_ProjectYakuza_Bind_grab = "Grab / Throw keybind type",
 
-    UI_ProjectYakuza_Key_quickstepAttack = "Quickstep attack key",
+    UI_ProjectYakuza_Key_grab = "Grab / Throw keyboard bind",
 
-    UI_ProjectYakuza_Bind_counter = "Tiger Drop button",
+    UI_ProjectYakuza_Bind_taunt = "Taunt keybind type",
 
-    UI_ProjectYakuza_Key_counter = "Tiger Drop key",
+    UI_ProjectYakuza_Key_taunt = "Taunt keyboard bind",
 
-UI_ProjectYakuza_Bind_quickstep = "Quickstep button",
+    UI_ProjectYakuza_Bind_extremeHeat = "Extreme Heat keybind type",
 
-    UI_ProjectYakuza_Key_quickstep = "Quickstep key",
+    UI_ProjectYakuza_Key_extremeHeat = "Extreme Heat keyboard bind",
 
-    UI_ProjectYakuza_Bind_block = "Block button",
+    UI_ProjectYakuza_Bind_styles = "Style Selector keybind type",
 
-    UI_ProjectYakuza_Key_block = "Block key",
-
-    UI_ProjectYakuza_Bind_grab = "Grab / throw button",
-
-    UI_ProjectYakuza_Key_grab = "Grab / throw key",
-
-    UI_ProjectYakuza_Bind_taunt = "Taunt button",
-
-    UI_ProjectYakuza_Key_taunt = "Taunt key",
-
-    UI_ProjectYakuza_Bind_extremeHeat = "Extreme Heat button",
-
-    UI_ProjectYakuza_Key_extremeHeat = "Extreme Heat key",
-
-    UI_ProjectYakuza_Bind_styles = "Style selector button",
-
-    UI_ProjectYakuza_Key_styles = "Style selector key",
+    UI_ProjectYakuza_Key_styles = "Style Selector keyboard bind",
 
     UI_ProjectYakuza_TauntThreatRequired = "A pursuing zombie must be within 5 tiles.",
 }

@@ -4,19 +4,15 @@ local ProjectYakuza=ProjectYakuza
 local B={edges=setmetatable({}, {__mode="k"}),attackGates=setmetatable({}, {__mode="k"})}
 ProjectYakuza.Bindings=B
 B.definitions={
- {id="light",name="Light attack",mode=1},
- {id="heatAction",name="Heat Action (hold RMB, outside combos)",mode=3},
- {id="finisher",name="Heavy attack / finisher (hold to charge)",mode=3},
- {id="runningLight",name="Running attack",mode=1},
- {id="dropkick",name="Running dropkick",mode=3},
- {id="quickstepAttack",name="Quickstep attack",mode=1},
- {id="counter",name="Tiger Drop",mode=3},
+ {id="light",name="Light Attack",mode=1},
+ {id="heatAction",name="Heat Action",mode=3},
+ {id="finisher",name="Heavy Attack / Finisher",mode=3},
  {id="quickstep",name="Quickstep",mode=4,key="KEY_SPACE",code=57},
  {id="block",name="Block",mode=4,key="KEY_X",code=45},
- {id="grab",name="Grab / throw",mode=4,key="KEY_G",code=34},
+ {id="grab",name="Grab / Throw",mode=4,key="KEY_G",code=34},
  {id="taunt",name="Taunt",mode=4,key="KEY_Q",code=16},
- {id="extremeHeat",name="Extreme Heat activation",mode=4,key="KEY_N",code=49},
- {id="styles",name="Style selector",mode=4,key="KEY_Z",code=44},
+ {id="extremeHeat",name="Extreme Heat",mode=4,key="KEY_N",code=49},
+ {id="styles",name="Style Selector",mode=4,key="KEY_Z",code=44},
 }
 B.byId={};for _,d in ipairs(B.definitions) do B.byId[d.id]=d end
 function B.mode(id)
@@ -41,12 +37,18 @@ function B.label(id)
  local mode=B.mode(id);if mode<=3 then return ({"LMB","RMB","MMB"})[mode] end
  return B.key(id)>0 and getKeyName(B.key(id)) or "Unbound"
 end
+local function caption(d,keyboard)
+ local key="UI_ProjectYakuza_"..(keyboard and "Key_" or "Bind_")..d.id
+ local text=not d.custom and getText(key)
+ if text and text~=key then return text end
+ return d.name..(keyboard and " keyboard bind" or " keybind type")
+end
 function B.configureDefinition(d)
  local options=B.options
  if not options then return end
- local mode=options:addComboBox("input_"..d.id,d.custom and d.name or "UI_ProjectYakuza_Bind_"..d.id)
+ local mode=options:addComboBox("input_"..d.id,caption(d,false))
  for i,label in ipairs({"Left mouse button","Right mouse button","Middle mouse button","Keyboard"}) do mode:addItem(label,i==d.mode) end
- options:addKeyBind("key_"..d.id,d.custom and (d.name.." key") or "UI_ProjectYakuza_Key_"..d.id,(d.key and Keyboard and Keyboard[d.key]) or d.code or 0)
+ options:addKeyBind("key_"..d.id,caption(d,true),(d.key and Keyboard and Keyboard[d.key]) or d.code or 0)
 end
 function B.register(definition)
  assert(type(definition)=="table","binding definition required")
@@ -73,7 +75,7 @@ function B.configure(options)
    ISDuplicateKeybindDialog[method]=function(dialog,...)
     local result=original(dialog,...)
     for _,d in ipairs(B.definitions)do
-     local key=d.custom and(d.name.." key")or"UI_ProjectYakuza_Key_"..d.id;local label=getText(key)
+     local key="UI_ProjectYakuza_Key_"..d.id;local label=caption(d,true)
      if dialog.label and(dialog.keybind2Name==key or dialog.keybind2Name==label)then
       dialog.label.name=getText("UI_optionscreen_keyAlreadyBinded",getKeyName(dialog.key),label,label):gsub("\\n","\n"):gsub('\\"','"');break
      end
@@ -89,7 +91,7 @@ end
 function B.update(p)
  if not p or not p:isLocalPlayer() then return end
  if p:GetVariable("ProjectYakuzaHeatRushVictim")=="true"then B.restore(p);p:setAuthorizeMeleeAction(false);return end
- local custom=B.mode("light")~=1 or B.mode("runningLight")~=1 or B.mode("quickstepAttack")~=1
+ local custom=B.mode("light")~=1
  local wheel=ProjectYakuza.StyleSelector and (ProjectYakuza.StyleSelector.wheel or ProjectYakuza.StyleSelector.setup)
  local action=ProjectYakuza.activeActions and ProjectYakuza.activeActions[p]
  local entry=(ProjectYakuza.blocksNativeAttacks and ProjectYakuza.blocksNativeAttacks(p)) or (action and action.kind=="styleEntry")

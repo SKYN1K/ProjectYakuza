@@ -13,7 +13,7 @@ end
 local function resetRun(s)s.runMs=0;s.x=nil;s.y=nil;s.z=nil;s.time=nil end
 function R.pause(p)
     local s=R.players[p]
-    if s then resetRun(s);s.light=ProjectYakuza.Bindings.down("runningLight");s.heavy=ProjectYakuza.Bindings.down("dropkick") end
+    if s then resetRun(s);s.light=ProjectYakuza.Bindings.down("light");s.heavy=ProjectYakuza.Bindings.down("finisher") end
 end
 function R.ready(p)
     return ProjectYakuza.isEquipped(p) and not isMouseButtonDown(1) and not p:isAiming()
@@ -94,7 +94,7 @@ end
 function R.update(p)
     local s=R.players[p]
     if not s then s={runMs=0};R.players[p]=s end
-    local light,heavy=ProjectYakuza.Bindings.down("runningLight"),ProjectYakuza.Bindings.down("dropkick")
+    local light,heavy=ProjectYakuza.Bindings.down("light"),ProjectYakuza.Bindings.down("finisher")
     local lightPress,heavyPress=light and not s.light,heavy and not s.heavy
     s.light,s.heavy=light,heavy
     if R.active[p] then R.advance(p);resetRun(s);return end

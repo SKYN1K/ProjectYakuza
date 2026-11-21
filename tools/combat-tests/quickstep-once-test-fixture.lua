@@ -250,4 +250,38 @@ do
  PY.activeActions[p]=nil;p:setVariable('PerformingAction','');p:setVariable('IsPerformingAnAction',false);p.hasTimedActions=priorBusy
 end
 PY.AttackEffects=previousEffects;p.isAiming=previousAim;p.dbgGetAnimTrackName=nil;mouse[1]=false
+do local _="ProjectYakuzaFixture:RUNNING" end
+local B=PY.Bindings
+local values={input_light=4,key_light=33,input_finisher=4,key_finisher=35,input_runningLight=1,input_dropkick=1,input_quickstepAttack=1,input_counter=1}
+B.options={getOption=function(_,name)if values[name]then return {getValue=function()return values[name]end}end end}
+mouse[0]=true;mouse[2]=true;keyState[33]=false;keyState[35]=false
+local context={timedAction={},lastAttackDown=false}
+Q.pollAttack(p,context);check(not context.timedAction.attackRequested,'old mouse quickstep assignment is ignored after remapping Light')
+keyState[33]=true;Q.pollAttack(p,context);check(context.timedAction.attackRequested,'remapped Light requests the quickstep strike')
+context.timedAction.attackRequested=false;Q.pollAttack(p,context);check(not context.timedAction.attackRequested,'held Light cannot repeat quickstep strikes')
+keyState[33]=false;Q.pollAttack(p,context);keyState[33]=true;Q.pollAttack(p,context);check(context.timedAction.attackRequested,'fresh Light remains available after release')
+keyState[33]=false;mouse[0]=false;mouse[2]=false;mouse[1]=false
+local oldBusy,oldEquipped,oldStyle,oldRequest=PY.isBusy,PY.isEquipped,PY.getPlayerStyle,PY.requestAction
+PY.isBusy=function()return false end;PY.isEquipped=function()return true end;PY.getPlayerStyle=function()return style end
+local requested
+PY.requestAction=function(_,kind,variant)requested={kind=kind,variant=variant};return true end
+ZombRand=function()return 0 end
+local runner={x=0}
+for _,name in ipairs({'isAiming','isDead','isOnFloor','isKnockedDown','isClimbing','isDraggingCorpse','isAsleep','hasTimedActions','isBlockMovement','getIgnoreMovement'})do runner[name]=function()return false end end
+runner.isRunning=function()return true end;runner.isSprinting=function()return false end;runner.getVehicle=function()return nil end;runner.getHitReaction=function()return ''end
+runner.getX=function(self)return self.x end;runner.getY=function()return 0 end;runner.getZ=function()return 0 end
+local R=PY.RunningAttacks
+local function runup()
+ R.players[runner]=nil;requested=nil;R.update(runner)
+ for i=1,5 do clock=clock+100;runner.x=runner.x+.1;R.update(runner)end
+end
+runup();mouse[0]=true;clock=clock+100;runner.x=runner.x+.1;R.update(runner)
+check(not requested,'stale mouse Running Light setting cannot override Light binding')
+keyState[33]=true;clock=clock+100;runner.x=runner.x+.1;R.update(runner)
+check(requested and requested.kind=='runningAttack' and requested.variant=='left','remapped Light dispatches a running strike after runup')
+keyState[33]=false;mouse[0]=false;runup();keyState[35]=true;clock=clock+100;runner.x=runner.x+.1;R.update(runner)
+check(requested and requested.variant=='dropkick','remapped Heavy dispatches the running dropkick')
+R.pause(runner);check(R.players[runner].heavy and not R.players[runner].light,'pause snapshots the shared physical inputs')
+PY.isBusy,PY.isEquipped,PY.getPlayerStyle,PY.requestAction=oldBusy,oldEquipped,oldStyle,oldRequest
+B.options=nil;keyState[35]=false
 return 'PASS '..checks..' one-strike quickstep ownership, native gate, rapid taps, retries and asynchronous handoff checks'

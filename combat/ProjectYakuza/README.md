@@ -1,10 +1,10 @@
 # Dragon of Dojima reference style
 
-Project Yakuza v1 packages version **1.0.0**, Lua API **3** and multiplayer protocol **2**. For independent style development, start with [Style authoring](docs/STYLE_AUTHORING.md) and the [API reference](docs/API_REFERENCE.md).
+Project Yakuza v1.0.1 packages version **1.0.1**, Lua API **3** and multiplayer protocol **2**. For independent style development, start with [Style authoring](docs/STYLE_AUTHORING.md) and the [API reference](docs/API_REFERENCE.md).
 
 ## Install and select
 
-Download the named B42 install ZIP from [v1](https://github.com/SKYN1K/ProjectYakuza/releases/tag/v1). Extract it so `Zomboid/mods/ProjectYakuza/42/mod.info` exists, enable Project Yakuza for the save and restart PZ. Servers and clients need matching framework and add-on versions.
+Download the named B42 install ZIP from [v1.0.1](https://github.com/SKYN1K/ProjectYakuza/releases/tag/v1.0.1). Extract it so `Zomboid/mods/ProjectYakuza/42/mod.info` exists, enable Project Yakuza for the save and restart PZ. Servers and clients need matching framework and add-on versions.
 
 Hold Z, point at a slot and release Z to equip it. Left defaults to Dragon of Dojima; right starts empty. The bottom slot opens assignments and settings. The top slot unequips the style. The wheel does not pause gameplay. Other registered styles appear in the assignment list automatically.
 
@@ -28,7 +28,7 @@ The v1 player packages contain vanilla bat/club, knife and blade support and the
 | RMB + N | Activate Extreme Heat |
 | Hold Z | Style wheel |
 
-Configure controls and Music/Sounds/Voices under **Options > Mods > Project Yakuza**. Heavy attack and finisher share one setting. Heat Action and Tiger Drop controls are independently configurable even though their defaults also use MMB. Heat Actions still require physical RMB. [Controls](docs/CONTROLS.md) covers priority and timing.
+Configure controls and Music/Sounds/Voices under **Options > Mods > Project Yakuza**. Light Attack controls the light chain, running strikes and quickstep attacks. Heavy Attack / Finisher controls heavy attacks, finishers, the running dropkick and correctly timed Tiger Drops. Heat Action remains independently configurable and also defaults to MMB. Heat Actions still require physical RMB. [Controls](docs/CONTROLS.md) covers priority and timing.
 
 World/server **Sandbox Options > Project Yakuza** controls Dragon Tiger Drop, its timing/cooldown, Heat Actions, grabs and Extreme Heat. Tiger Drop defaults to a 160 ms observed-windup window and a 20-second cooldown.
 

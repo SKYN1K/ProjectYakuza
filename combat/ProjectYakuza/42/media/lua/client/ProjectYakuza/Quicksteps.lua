@@ -98,7 +98,7 @@ function A:cleanup(completed, reason)
     end
 end
 function Q.pollAttack(player,context)
-    local down=ProjectYakuza.Bindings.down("quickstepAttack")
+    local down=ProjectYakuza.Bindings.down("light")
     if not context.timedAction.cleaned and not context.attackIssued and player:isAiming() and down and not context.lastAttackDown then context.timedAction.attackRequested=true end
     context.lastAttackDown=down
 end
@@ -205,7 +205,7 @@ ProjectYakuza.registerActionHandler("quickstep",{
             dx,dy=context.target.dx/length,context.target.dy/length
         end
         context.dx,context.dy=dx,dy
-        context.lastAttackDown=ProjectYakuza.Bindings.down("quickstepAttack")
+        context.lastAttackDown=ProjectYakuza.Bindings.down("light")
         if not Q.canMove(p,dx*0.08,dy*0.08) then return false,"blocked" end
         ProjectYakuza.resetPlayer(p,"quickstep_started")
         local action=A:new(context);context.timedAction=action;context.requestedAt=now()

@@ -105,10 +105,22 @@ clock=clock+601;H.input(p,false,false,state(),style);check(not H.pending[p],'exp
 queueFail=true;H.input(p,true,true,state(),style);clock=clock+351;H.input(p,true,false,state(),style)
 check(not PY.activeActions[p] and not p.blocked,'queue rejection restores the player');queueFail=false;H.clearPlayer(p)
 
-local counters=0;PY.TigerDrop={track=function()end,tryCounter=function()counters=counters+1;return true end}
+local counters=0;local counterWindow=true;local heavyHeld=false;local oldKeyDown=isKeyDown
+PY.Bindings.options={getOption=function(_,id)
+ local values={input_finisher=4,key_finisher=35,input_counter=1,key_counter=47}
+ if values[id]then return {getValue=function()return values[id]end}end
+end}
+isKeyDown=function(key)return heavyHeld and key==35 end
+PY.TigerDrop={track=function()end,tryCounter=function()counters=counters+1;return counterWindow end}
 mouse[2]=false;fire('OnPlayerUpdate',p);mouse[2]=true;fire('OnPlayerUpdate',p)
-check(counters==1 and not H.gestures[p] and not PY.activeActions[p],'Tiger Drop on initial press takes priority over charge')
-PY.TigerDrop=nil;mouse[2]=false;fire('OnPlayerUpdate',p)
+check(counters==0,'old mouse counter input cannot trigger after Heavy is remapped')
+mouse[2]=false;heavyHeld=true;fire('OnPlayerUpdate',p)
+check(counters==1 and not H.gestures[p] and not PY.activeActions[p],'remapped Heavy inside the counter window takes priority over charge')
+fire('OnPlayerUpdate',p);check(counters==1,'holding Heavy cannot retry Tiger Drop without a new press')
+heavyHeld=false;fire('OnPlayerUpdate',p);counterWindow=false;heavyHeld=true;fire('OnPlayerUpdate',p)
+check(counters==2 and H.gestures[p]~=nil,'Heavy outside the counter window follows the normal heavy gesture path')
+H.clearPlayer(p);heavyHeld=false;fire('OnPlayerUpdate',p)
+PY.TigerDrop=nil;PY.Bindings.options=nil;isKeyDown=oldKeyDown;mouse[2]=false;fire('OnPlayerUpdate',p)
 
 for branch=1,4 do
  local a,c=charge(branch)

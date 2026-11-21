@@ -8,7 +8,7 @@ getText=function(s,...)
 end
 getKeyName=function()return 'G'end
 ISDuplicateKeybindDialog={createChildren=function(self)self.label={name='native label'}end,nextDuplicate=function(self)self.label.name='native next'end}
-translations.UI_ProjectYakuza_Key_grab='Grab / throw key';translations.UI_optionscreen_keyAlreadyBinded='%s is already assigned to %s'
+translations.UI_ProjectYakuza_Key_grab='Grab / Throw keyboard bind';translations.UI_optionscreen_keyAlreadyBinded='%s is already assigned to %s'
 local startup={};Events={OnGameStart={Add=function(fn)startup[#startup+1]=fn end}}
 SystemDisabler={setEnableAdvancedSoundOptions=function(v)SystemDisabler.enabled=v end}
 local levels={};local saved=0
@@ -27,6 +27,19 @@ do local _="ProjectYakuzaFixture:PRODUCTION_MODULES" end
 local api=PZAPI.ModOptions;local options=api:getOptions('ProjectYakuza')
 check(SystemDisabler.enabled and options.name=='Project Yakuza','registered native Mods entry and Advanced compatibility')
 for _,opt in ipairs(options.data)do if opt.type=='slider' then check(translations[opt.name]~=nil,'slider name is a registered translation key');getText(opt.name) end end
+local controlCount=0
+for _,opt in ipairs(options.data)do
+ if opt.type=='combobox' or opt.type=='keybind' then
+  controlCount=controlCount+1
+  check(not string.find(opt.name,'UI_ProjectYakuza_',1,true),'native settings receive readable captions without unresolved translation keys')
+ end
+end
+check(controlCount==18,'nine actions have one binding type and one keyboard row each')
+check(options:getOption('input_light').name=='Light Attack keybind type' and options:getOption('key_light').name=='Light Attack keyboard bind','exact requested naming style works without a loaded translation')
+check(options:getOption('input_finisher').name=='Heavy Attack / Finisher keybind type','combined heavy control has a readable caption')
+for _,id in ipairs({'runningLight','dropkick','quickstepAttack','counter'})do
+ check(options:getOption('input_'..id)==nil and options:getOption('key_'..id)==nil,'context action has no dedicated setting '..id)
+end
 for _,fn in ipairs(startup)do fn()end
 check(options:getOption('musicVolume'):getValue()==65 and options:getOption('hitVolume'):getValue()==120,'native ini restores grouped sliders')
 for _,track in ipairs(ProjectYakuza.styles.dragon_of_dojima.music)do check(levels[track.sound]==1,'music group applies to supplied style tracks')end
@@ -40,5 +53,5 @@ ProjectYakuza.registerStyle({id='addon.volume',name='Volume Addon',lightAttacks=
 check(levels.AddonMusic==1 and ProjectYakuza.SoundSettings.musicLevel()==2 and levels.AddonImpact==0,'late registered styles join grouped controls')
 api:save();local text=table.concat(writes,'')
 check(string.find(text,'hitVolume|0',1,true)~=nil and saved>0,'native ModOptions persistence and GameSounds persistence used')
-local conflict={key=34,keybind2Name='UI_ProjectYakuza_Key_grab'};ISDuplicateKeybindDialog.createChildren(conflict);check(conflict.label.name=='G is already assigned to Grab / throw key','native mod-binding conflicts use readable translated labels');conflict.keybind2Name='Grab / throw key';ISDuplicateKeybindDialog.nextDuplicate(conflict);check(conflict.label.name=='G is already assigned to Grab / throw key','subsequent native conflicts resolve translated captions too');conflict.keybind2Name='Foreign action';ISDuplicateKeybindDialog.nextDuplicate(conflict);check(conflict.label.name=='native next','foreign binding conflicts remain delegated')
+local conflict={key=34,keybind2Name='UI_ProjectYakuza_Key_grab'};ISDuplicateKeybindDialog.createChildren(conflict);check(conflict.label.name=='G is already assigned to Grab / Throw keyboard bind','native mod-binding conflicts use readable translated labels');conflict.keybind2Name='Grab / Throw keyboard bind';ISDuplicateKeybindDialog.nextDuplicate(conflict);check(conflict.label.name=='G is already assigned to Grab / Throw keyboard bind','subsequent native conflicts resolve translated captions too');conflict.keybind2Name='Foreign action';ISDuplicateKeybindDialog.nextDuplicate(conflict);check(conflict.label.name=='native next','foreign binding conflicts remain delegated')
 return 'PASS '..count..' native Mods slider, persistence, grouping and late-style checks'

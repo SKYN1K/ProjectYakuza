@@ -1,10 +1,10 @@
 # Controls and settings
 
-These defaults apply to Dragon of Dojima in v1 (build 1.0.0). Other styles can register their own bindings and input callbacks. See the [reference-style control table](../README.md#default-controls).
+These defaults apply to Dragon of Dojima in v1.0.1. Other styles can register their own bindings and input callbacks. See the [reference-style control table](../README.md#default-controls).
 
 ## Settings
 
-**Options > Mods > Project Yakuza** contains the local mouse/keyboard bindings and separate Music, Sounds and Voices sliders. A keyboard code of zero is unbound. Heavy attack and finisher use one combined setting; Heat Action and Tiger Drop remain separate bindings. Native aim, movement, run and sprint keep their PZ bindings.
+**Options > Mods > Project Yakuza** contains the local mouse/keyboard bindings and separate Music, Sounds and Voices sliders. A keyboard code of zero is unbound. Light Attack also controls running strikes and quickstep attacks. Heavy Attack / Finisher also controls the running dropkick. Tiger Drop also uses Heavy Attack / Finisher, taking priority only when its timing and target checks succeed. These contextual attacks have no separate bindings. Each action has a readable keybind type selector and keyboard bind. Heavy attack and finisher use one combined setting; Heat Action remains a separate binding. Native aim, movement, run and sprint keep their PZ bindings.
 
 **Sandbox Options > Project Yakuza** contains the world/server switches for Heat Actions, grabs and Extreme Heat, plus Dragon Tiger Drop's toggle, timing window and cooldown. Defaults are enabled, 160 ms and 20 seconds respectively. Disabling a feature prevents its requests; it does not remove a style definition.
 
@@ -24,7 +24,7 @@ RMB + G grabs a standing zombie. A fresh G press throws; Light attacks during th
 
 Hold Z and release over an assigned slot to equip it. Top unequips; bottom opens assignments/settings. Assignment alone does not equip the style. Empty slots preserve the current selection. The wheel does not pause the world and targets the first local keyboard/mouse player.
 
-Music, Sounds and Voices each have a 0–200% slider. Music controls the style playlist independently of vanilla Music volume. Sounds controls framework effects and UI sounds; menu playback is local. Voices applies to optional combat voice integration. A missing voice pack remains silent. Add-on bindings appear in the same settings page through `Bindings.register`.
+Music, Sounds and Voices each have a 0Ã¢â‚¬â€œ200% slider. Music controls the style playlist independently of vanilla Music volume. Sounds controls framework effects and UI sounds; menu playback is local. Voices applies to optional combat voice integration. A missing voice pack remains silent. Add-on bindings appear in the same settings page through `Bindings.register`.
 
 ## Extreme Heat prompts
 

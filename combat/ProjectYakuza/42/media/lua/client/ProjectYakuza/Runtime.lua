@@ -363,7 +363,6 @@ local function onUpdate(player)
     if ProjectYakuza.TigerDrop then ProjectYakuza.TigerDrop.track(player) end
     local s = ProjectYakuza.stateFor(player)
     local heatActionPressed=B.pressed(player,"heatAction")
-    local counterPressed=B.pressed(player,"counter")
     local finisherDown = B.down("finisher")
     local finisherPressed = finisherDown and not ProjectYakuza.finisherDown[player:getPlayerNum()]
     ProjectYakuza.finisherDown[player:getPlayerNum()] = finisherDown
@@ -433,7 +432,7 @@ local function onUpdate(player)
     if ProjectYakuza.Quicksteps and ProjectYakuza.Quicksteps.isCancelling and ProjectYakuza.Quicksteps.isCancelling(player) then s.lastDown=B.down("light");return end
     if ProjectYakuza.RunningAttacks then ProjectYakuza.RunningAttacks.update(player) end
     ProjectYakuza.syncGroundAttack(player,style,s)
-    if (counterPressed or finisherPressed) and ProjectYakuza.TigerDrop and ProjectYakuza.TigerDrop.tryCounter(player) then if ProjectYakuza.ChargedHeavy then ProjectYakuza.ChargedHeavy.clearPlayer(player) end;s.lastDown=B.down("light");return end
+    if finisherPressed and ProjectYakuza.TigerDrop and ProjectYakuza.TigerDrop.tryCounter(player) then if ProjectYakuza.ChargedHeavy then ProjectYakuza.ChargedHeavy.clearPlayer(player) end;s.lastDown=B.down("light");return end
     if s.directionalLight then finisherPressed=false;finisherDown=false end
     if ProjectYakuza.HeatRush and (ProjectYakuza.HeatRush.weaponInput(player,s,style,heatActionPressed)or ProjectYakuza.HeatRush.input(player,s,style))then s.lastDown=B.down("light");return end
     local heavyInput=ProjectYakuza.ChargedHeavy and ProjectYakuza.ChargedHeavy.input(player,finisherDown,finisherPressed,s,style)
