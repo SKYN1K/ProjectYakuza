@@ -45,6 +45,9 @@ for row in rows:
 clips={r['animation'].removeprefix('ProjectYakuza_DD_'):r for r in rows}
 assert [r['limb']for r in clips['WallHeat']['windows']]==['rightArm','rightLeg']
 assert clips['GroundHeat']['windows'][0]['limb']=='rightLeg'
+window=clips['RunningAttack04']['windows'][0]
+assert {window['limb'],window['secondaryLimb']}=={'leftLeg','rightLeg'} and window['secondaryTrack']!=window['track']
+assert 'secondaryTrack="'+window['secondaryTrack']+'"'in (MOD/'42/media/lua/client/ProjectYakuza/AttackTrailCatalog.lua').read_text()
 assert clips['OpenGrabHeat']['windows'][0]['limb']=='rightLeg'
 assert 1.4<clips['OpenGrabHeat']['windows'][0]['contact']<2.2
 assert clips['Throw']['windows'][0]['limb']=='leftArm'and clips['Throw']['windows'][0]['contact']<.8

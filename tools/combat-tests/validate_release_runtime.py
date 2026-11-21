@@ -50,7 +50,12 @@ for _,node in ipairs({'dd_bat_heat','dd_katana_heat','dd_knife_heat'})do check(P
 for _,node in ipairs({'dd_crate_heat','dd_bicycle_heat','dd_bottle_heat'})do check(PY.NetworkProtocol.move(base.id,node)==nil,'removed MP action cannot resolve')end
 for _,clip in ipairs({'BottleHeat','CrateHeat','BicycleHeat'})do check(PY.NetworkProtocol.clip(base.id,'ProjectYakuza_DD_'..clip)==nil,'removed observer clip cannot resolve')end
 
-for clip,entry in pairs(PY.AttackEffectCatalog.dragon_of_dojima)do for _,window in ipairs(entry.windows)do check(PY.AttackTracks[window.track].animation==clip,'released limb track resolves')end end
+for clip,entry in pairs(PY.AttackEffectCatalog.dragon_of_dojima)do for _,window in ipairs(entry.windows)do
+ check(PY.AttackTracks[window.track].animation==clip,'released limb track resolves')
+ if window.secondaryTrack then check(PY.AttackTracks[window.secondaryTrack].animation==clip,'released second limb track resolves')end
+end end
+local dropkick=PY.AttackEffectCatalog.dragon_of_dojima.ProjectYakuza_DD_RunningAttack04.windows[1]
+check(PY.AttackTracks[dropkick.track].limb=='leftLeg'and PY.AttackTracks[dropkick.secondaryTrack].limb=='rightLeg','player release includes both dropkick legs')
 for _,name in ipairs({'bottle','crate','bicycle'})do check(PY.HeatSceneData.moves[name]==nil,'removed scene cannot register')end
 return 'PASS '..checks..' player release compilation, vanilla weapon/profile/Heat Action preservation, removed custom actions, limb tracks and require closure'
 '''

@@ -82,6 +82,14 @@ pairedLimbs={
  'HeatRushFail':[3],
 }
 output=['require "ProjectYakuza/AttackTracks"','local T=ProjectYakuza.AttackTracks','local C={};ProjectYakuza.AttackEffectCatalog={dragon_of_dojima=C}'];records=[]
+def emit_track(key,animation,limb,duration,frames):
+ a,b,c,upper=triplets[limb]
+ output.append('T["'+key+'"]=(function()return {animation="'+animation+'",fps=120,limb="'+names[limb]+'",duration='+str(duration)+',frames={')
+ output.extend('    {'+','.join(f'{v:.9f}'for bone in (a,b,c)for v in frame[bone])+'},'for frame in frames)
+ output.append('},upperFrames={')
+ output.extend('    {'+','.join(f'{v:.9f}'for v in frame[upper])+'},'for frame in frames)
+ output.append('}}end)()')
+
 for animation,move in sorted(moves.items()):
  native=json.loads((folder/(animation+'.json')).read_text());frames=native['frames'];rate=native['fps'];duration=(len(frames)-1)/rate
  times=move['qte']or sorted({round(t*duration*30)/30 for t in contacts.get(animation,[])})
@@ -110,20 +118,23 @@ for animation,move in sorted(moves.items()):
   if limb in tracks:key=tracks[limb]
   else:
    tracks[limb]=key
-   output.append('T["'+key+'"]=(function()return {animation="'+animation+'",fps=120,limb="'+names[limb]+'",duration='+str(duration)+',frames={')
-   output.extend('    {'+','.join(f'{v:.9f}'for bone in (a,b,c)for v in frame[bone])+'},'for frame in frames)
-   output.append('},upperFrames={')
-   output.extend('    {'+','.join(f'{v:.9f}'for v in frame[upper])+'},'for frame in frames)
-   output.append('}}end)()')
+   emit_track(key,animation,limb,duration,frames)
+  secondary=None
+  if animation=='ProjectYakuza_DD_RunningAttack04':
+   other=3 if limb==2 else 2
+   secondary='dd_trail_runningattack04_'+names[other].lower()
+   if other in tracks:secondary=tracks[other]
+   else:tracks[other]=secondary;emit_track(secondary,animation,other,duration,frames)
   start=max(0,time-.06);end=min(duration,time+.12)
   if hit:start=max(start,(times[hit-1]+time)/2)
   if hit+1<len(times):end=min(end,(time+times[hit+1])/2)
   index=13 if animation=='ProjectYakuza_DD_HeatRushFail'else 6 if animation=='ProjectYakuza_DD_CrateHeatFail'else hit+1
   windows.append({'index':index,'track':key,'from':start,'to':end,'contact':time,'limb':names[limb],'scores':scores,'selection':selection})
- output.append('C["'+animation+'"]={animation="'+animation+'",actionAnimation="'+move['family']+'",track="'+windows[0]['track']+'",duration='+str(duration)+',from='+str(windows[0]['from'])+',to='+str(windows[-1]['to'])+',windows={'+','.join('{index='+str(r['index'])+',track="'+r['track']+'",from='+str(r['from'])+',to='+str(r['to'])+',contact='+str(r['contact'])+'}'for r in windows)+'}}')
+  if secondary:windows[-1].update(secondaryTrack=secondary,secondaryLimb=names[other])
+ output.append('C["'+animation+'"]={animation="'+animation+'",actionAnimation="'+move['family']+'",track="'+windows[0]['track']+'",duration='+str(duration)+',from='+str(windows[0]['from'])+',to='+str(windows[-1]['to'])+',windows={'+','.join('{index='+str(r['index'])+',track="'+r['track']+'",from='+str(r['from'])+',to='+str(r['to'])+',contact='+str(r['contact'])+(',secondaryTrack="'+r['secondaryTrack']+'"'if 'secondaryTrack'in r else '')+'}'for r in windows)+'}}')
  records.append({**move,'clip':f'42/media/anims_X/Bob/{animation}.x','clipSha256':digest(MOD/f'42/media/anims_X/Bob/{animation}.x'),'samples':len(frames),'duration':duration,'windows':windows})
 code=('\n'.join(output)+'\n').encode();target=LUA/'client/ProjectYakuza/AttackTrailCatalog.lua'
-report={'operation':'Native AnimationTrack.get sampled at 120 Hz with world-space forward kinematics, independent of character facing. Ordinary weapon swings use the wielding right arm. Every paired Heat Action has an explicit per-contact source-limb policy: knife stab/right kick, katana right slash/left punch/right thrust, crate right-arm placement/right-left-right-left kicks/right-arm ending, weapon-arm bottle/bat/bicycle contacts and original unarmed punches/kicks. Throw release uses the gripping arm. Paced QTE contact times map to actual clip time and original failure contact indices are retained. Repeated same-limb contacts share a track. Code-side numeric FK only from existing supplied PZ clips, including current paired contacts/endings and linked native finisher variants. Contacts use native collision events, authored Heat Action contacts or the documented parry fallback. Clips use contact-local endpoint/relative motion with verified original left-light and right-high-kick pose overrides, independent of charge-up pose. The high kick has right-foot height 0.721 versus planted left foot 0.093 at source frame 24; recovering arms can be faster than the striking leg. Runtime resolves the actual playing clip within the committed move family. No visual/audio/animation/model assets are generated or modified.','catalog':target.relative_to(MOD).as_posix(),'sha256':hashlib.sha256(code).hexdigest(),'clips':records}
+report={'operation':'Native AnimationTrack.get sampled at 120 Hz with world-space forward kinematics, independent of character facing. Ordinary weapon swings use the wielding right arm. Every paired Heat Action has an explicit per-contact source-limb policy: knife stab/right kick, katana right slash/left punch/right thrust, crate right-arm placement/right-left-right-left kicks/right-arm ending, weapon-arm bottle/bat/bicycle contacts and original unarmed punches/kicks. The two-foot running dropkick has independent left-leg and right-leg tracks in the same contact window. Throw release uses the gripping arm. Paced QTE contact times map to actual clip time and original failure contact indices are retained. Repeated same-limb contacts share a track. Code-side numeric FK only from existing supplied PZ clips, including current paired contacts/endings and linked native finisher variants. Contacts use native collision events, authored Heat Action contacts or the documented parry fallback. Clips use contact-local endpoint/relative motion with verified original left-light and right-high-kick pose overrides, independent of charge-up pose. The high kick has right-foot height 0.721 versus planted left foot 0.093 at source frame 24; recovering arms can be faster than the striking leg. Runtime resolves the actual playing clip within the committed move family. No visual/audio/animation/model assets are generated or modified.','catalog':target.relative_to(MOD).as_posix(),'sha256':hashlib.sha256(code).hexdigest(),'clips':records}
 manifest=(json.dumps(report,indent=2)+'\n').encode()
 if '--write'in sys.argv:
  target.write_bytes(code);(MOD/'docs/attack-trail-catalog.json').write_bytes(manifest)

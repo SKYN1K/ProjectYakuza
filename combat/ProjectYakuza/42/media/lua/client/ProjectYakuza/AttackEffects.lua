@@ -94,6 +94,7 @@ function F.facing(p)
     return p:getAnimAngleRadians()
 end
 function F.dispose(s,tailOnly)
+    if s.secondary then F.dispose(s.secondary,tailOnly)end
     for i,point in ipairs(s.points or {})do
         if point.instance and(not tailOnly or i<15 or i>38)then point.instance:Dispose();IsoSpriteInstance.add(point.instance);point.instance=nil end
     end
@@ -109,14 +110,21 @@ function F.clear(p)
     for i=#F.bursts,1,-1 do if F.bursts[i].owner==p then F.dispose(F.bursts[i]);table.remove(F.bursts,i)end end
     F.syncHook()
 end
-function F.finish(p)
-    local s=F.states[p];if not s then return end;F.states[p]=nil
+function F.retire(p,s)
     local now=getTimestampMs();if not isGamePaused()then s.clock=s.clock+math.max(0,now-s.last)end;s.last=now
     if s.lastEmission and s.clock-s.lastEmission<F.trailMs and valid(p,s)then
         if #F.tails>=F.maxTails then F.dispose(F.tails[1]);table.remove(F.tails,1)end
         F.dispose(s,true);s.owner=p;s.last=getTimestampMs();F.tails[#F.tails+1]=s
     else F.dispose(s)end
-    F.syncHook()
+end
+function F.finish(p)
+    local s=F.states[p];if not s then return end;F.states[p]=nil
+    local secondary=s.secondary;s.secondary=nil
+    if secondary then F.retire(p,secondary)end
+    F.retire(p,s);F.syncHook()
+end
+function F.clearSecondary(s)
+    if s.secondary then F.dispose(s.secondary);s.secondary=nil end
 end
 function F.clearAll()
     for _,s in pairs(F.states)do F.dispose(s)end
@@ -194,6 +202,7 @@ function F.playing(p,s)
         end
     end end
     if bestConfig and bestConfig~=s.config then
+        F.clearSecondary(s)
         s.config=bestConfig;s.track=PY.AttackTracks[bestConfig.track];s.windowRef=nil;s.historyCount=0;s.recordedAt=nil;s.lastEmission=nil;s.time=nil;s.seen=false
     end
     return bestTime,bestWeight,bestLocation
@@ -215,7 +224,7 @@ function F.tick()
             local time,weight,location=F.playing(p,s)
             s.location=location
             if time and weight>=.05 then
-                if s.seen and time+0.02<(s.time or 0) then s.historyCount=0;s.recordedAt=nil;s.lastEmission=nil;s.time=time
+                if s.seen and time+0.02<(s.time or 0) then F.clearSecondary(s);s.historyCount=0;s.recordedAt=nil;s.lastEmission=nil;s.time=time
                 elseif time>s.config.to+.12 then
                     if s.seen then F.finish(p)elseif s.clock>350 then F.clear(p) else s.location=nil end
                 else s.time=time;s.weight=weight;s.seen=true end
@@ -460,6 +469,45 @@ function F.drawBursts(now,paused,hidden)
         end
     end
 end
+function F.drawLimb(p,s,time,window,paused,hidden,trackName)
+    if (s.poseWeight or 0)<=0 then s.historyCount=0;s.recordedAt=nil;s.lastEmission=nil end
+    local animate=not paused and s.lastFlameClock~=s.clock
+    local anchored=false
+    if not hidden and (s.poseWeight or 0)>0 and time and window then
+        if s.windowRef~=window then s.windowRef=window;s.track=PY.AttackTracks[trackName or window.track];s.historyCount=0;s.recordedAt=nil end
+        if not s.points then allocate(s)end
+        local pose=F.pose(p,s,time);local joints=F.worldJoints(p,s,time,pose);anchored=true
+        if not paused then F.record(s)end
+        local extreme=PY.Heat.isExtreme(p);local color=extreme and F.extreme or F.normal
+        local fade=math.max(0,math.min(1,(time-window.from)/.04,(window.to+.03-time)/.04))*s.poseWeight
+        s.lastEmission=s.clock;s.lastColor=extreme and F.smokeExtreme or F.smokeNormal;s.lastWeight=fade
+        for i=1,11 do
+            local t=(i-1)/10;local x,y,z=F.armPoint(joints,t)
+            local ox,oy,oz,pulse=F.swirl(s,i,t,s.clock,.35)
+            local point=s.points[i];F.resize(point,.92+.12*pulse)
+            if animate and point.animated then point.sprite:update(point.instance)end
+            drawPoint(p,s,i,x+ox,y+oy,z+oz,fade*(extreme and .23 or .18)*pulse,color)
+        end
+        for i=12,14 do
+            local t=corePositions[i-11];local x,y,z=F.armPoint(joints,t)
+            local ox,oy,oz,pulse=F.swirl(s,i,t,s.clock,.7)
+            local point=s.points[i];F.resize(point,.91+.14*pulse)
+            if animate and point.animated then point.sprite:update(point.instance)end
+            drawPoint(p,s,i,x+ox,y+oy,z+oz,fade*.28*pulse,extreme and F.midExtreme or F.midNormal)
+        end
+        for i=39,48 do
+            local x,y,z=F.coatPoint(joints,.40+(i-39)*.065)
+            local point=s.points[i]
+            if not point.randomSeed then point.randomSeed=s.seed*7919+i*97 end
+            PY.SparkEffects.fly(point,p,s.clock,x,y,z,point.baseScale,fade*.48,color,F.coatOffset())
+        end
+    end
+    if s.points and not hidden and (s.poseWeight or 0)>0 then
+        if not anchored and time and s.lastEmission then F.worldJoints(p,s,time,F.pose(p,s,time))end
+        F.drawHistory(p,s,animate)
+    end
+    if animate then s.lastFlameClock=s.clock end
+end
 function F.draw()
     F.colors()
     local now=getTimestampMs();local paused=isGamePaused()
@@ -475,45 +523,22 @@ function F.draw()
             end
             if s.poseWeight<=0 then s.historyCount=0;s.recordedAt=nil;s.lastEmission=nil end
         end
-        local animate=not paused and s.lastFlameClock~=s.clock
-        local anchored=false
-        if not hidden and (s.poseWeight or 0)>0 and time and time>=s.config.from and time<=s.config.to+.12 then
-            local window=F.window(s,time)
-            if window then
-                if s.windowRef~=window then s.windowRef=window;s.track=PY.AttackTracks[window.track];s.historyCount=0;s.recordedAt=nil end
-                if not s.points then allocate(s)end
-                local pose=F.pose(p,s,time);local joints=F.worldJoints(p,s,time,pose);anchored=true
-                if not paused then F.record(s)end
-                local extreme=PY.Heat.isExtreme(p);local color=extreme and F.extreme or F.normal
-                local fade=math.max(0,math.min(1,(time-window.from)/.04,(window.to+.03-time)/.04))*s.poseWeight
-                s.lastEmission=s.clock;s.lastColor=extreme and F.smokeExtreme or F.smokeNormal;s.lastWeight=fade
-                for i=1,11 do
-                    local t=(i-1)/10;local x,y,z=F.armPoint(joints,t)
-                    local ox,oy,oz,pulse=F.swirl(s,i,t,s.clock,.35)
-                    local point=s.points[i];F.resize(point,.92+.12*pulse)
-                    if animate and point.animated then point.sprite:update(point.instance)end
-                    drawPoint(p,s,i,x+ox,y+oy,z+oz,fade*(extreme and .23 or .18)*pulse,color)
-                end
-                for i=12,14 do
-                    local t=corePositions[i-11];local x,y,z=F.armPoint(joints,t)
-                    local ox,oy,oz,pulse=F.swirl(s,i,t,s.clock,.7)
-                    local point=s.points[i];F.resize(point,.91+.14*pulse)
-                    if animate and point.animated then point.sprite:update(point.instance)end
-                    drawPoint(p,s,i,x+ox,y+oy,z+oz,fade*.28*pulse,extreme and F.midExtreme or F.midNormal)
-                end
-                for i=39,48 do
-                    local x,y,z=F.coatPoint(joints,.40+(i-39)*.065)
-                    local point=s.points[i]
-                    if not point.randomSeed then point.randomSeed=s.seed*7919+i*97 end
-                    PY.SparkEffects.fly(point,p,s.clock,x,y,z,point.baseScale,fade*.48,color,F.coatOffset())
-                end
+        local window=time and time>=s.config.from and time<=s.config.to+.12 and F.window(s,time)or nil
+        F.drawLimb(p,s,time,window,paused,hidden)
+        local secondaryTrack=window and window.secondaryTrack and PY.AttackTracks[window.secondaryTrack]
+        if secondaryTrack and secondaryTrack.animation==s.track.animation and secondaryTrack~=s.track then
+            if s.secondary and s.secondary.track~=secondaryTrack then F.clearSecondary(s)end
+            if not s.secondary then
+                local limb={style=s.style,track=secondaryTrack,config=s.config,seed=(s.seed+337)%997,chaos=s.chaos,clock=s.clock,last=now,history={},historyHead=0,historyCount=0,joints={},scratch={}}
+                for i=1,F.historySize do limb.history[i]={}end
+                s.secondary=limb
             end
         end
-        if s.points and not hidden and (s.poseWeight or 0)>0 then
-            if not anchored and time and s.lastEmission then F.worldJoints(p,s,time,F.pose(p,s,time))end
-            F.drawHistory(p,s,animate)
+        if s.secondary then
+            local limb=s.secondary
+            limb.clock=s.clock;limb.last=s.last;limb.time=time;limb.weight=s.weight;limb.poseWeight=s.poseWeight;limb.location=s.location
+            F.drawLimb(p,limb,time,secondaryTrack==limb.track and window or nil,paused,hidden,window and window.secondaryTrack)
         end
-        if animate then s.lastFlameClock=s.clock end
     end
     for i=#F.tails,1,-1 do
         local s=F.tails[i];local p=s.owner;local dt=math.max(0,now-s.last);s.last=now;if not paused then s.clock=s.clock+dt end

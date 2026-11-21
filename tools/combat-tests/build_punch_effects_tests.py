@@ -14,7 +14,8 @@ for row in catalog['clips']:
  for window in row['windows']:
   for offset in (-.04,0,.04):
    frame=frames[max(0,min(len(frames)-1,round((window['contact']+offset)*120)))]
-   for bone in limbs[window['limb']]:render_rows.append('\t'.join(str(v)for v in frame[bone])+'\t'+row['animation'])
+   for limb in [window['limb']]+([window['secondaryLimb']]if 'secondaryLimb'in window else []):
+    for bone in limbs[limb]:render_rows.append('\t'.join(str(v)for v in frame[bone])+'\t'+row['animation'])
 render_tsv=w/'limb-render-projection.tsv';render_tsv.write_text('\n'.join(render_rows)+'\n')
 render_json=w/'limb-render-projection-native.json'
 subprocess.run([str(game/'jre64/bin/java.exe'),'-Xms16m','-Xmx128m','-XX:+UseSerialGC','-XX:ReservedCodeCacheSize=32m','-XX:ActiveProcessorCount=2','-cp',str(w)+';'+str(game/'*'),'LimbRenderProjectionProbe',str(render_tsv),str(render_json)],check=True)

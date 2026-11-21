@@ -30,8 +30,8 @@ def main():
  backup=ROOT/'tools/release-update-backups'/(args.tag+'-'+args.commit+'.json');backup.parent.mkdir(parents=True,exist_ok=True)
  if not backup.exists():backup.write_text(json.dumps({'release':release,'tag':tag},indent=2),encoding='utf-8')
  for asset in release['assets']:
-  old=ROOT/'dist'/asset['name']
-  assert old.is_file()and 'sha256:'+hashlib.sha256(old.read_bytes()).hexdigest()==asset['digest'],'Previous archive is not backed up locally: '+asset['name']
+  candidates=[ROOT/'dist'/asset['name'],ROOT/'tools/release-update-backups'/args.tag/asset['digest'].removeprefix('sha256:')/asset['name']]
+  assert any(old.is_file()and 'sha256:'+hashlib.sha256(old.read_bytes()).hexdigest()==asset['digest']for old in candidates),'Previous archive is not backed up locally: '+asset['name']
  checked_run([gh,'release','upload',args.tag,*map(str,archives),'--repo',args.repo,'--clobber'])
  uploaded=api(gh,args.repo,'GET','/releases/tags/'+args.tag);verify_assets(uploaded['assets'],archives)
  tag=api(gh,args.repo,'GET','/git/ref/tags/'+args.tag);assert tag['object']['sha']==args.expected_tag_sha,'Selected tag changed during upload'

@@ -1,7 +1,7 @@
 {
-  "operation": "Native AnimationTrack.get sampled at 120 Hz with world-space forward kinematics, independent of character facing. Ordinary weapon swings use the wielding right arm. Every paired Heat Action has an explicit per-contact source-limb policy: knife stab/right kick, katana right slash/left punch/right thrust, crate right-arm placement/right-left-right-left kicks/right-arm ending, weapon-arm bottle/bat/bicycle contacts and original unarmed punches/kicks. Throw release uses the gripping arm. Paced QTE contact times map to actual clip time and original failure contact indices are retained. Repeated same-limb contacts share a track. Code-side numeric FK only from existing supplied PZ clips, including current paired contacts/endings and linked native finisher variants. Contacts use native collision events, authored Heat Action contacts or the documented parry fallback. Clips use contact-local endpoint/relative motion with verified original left-light and right-high-kick pose overrides, independent of charge-up pose. The high kick has right-foot height 0.721 versus planted left foot 0.093 at source frame 24; recovering arms can be faster than the striking leg. Runtime resolves the actual playing clip within the committed move family. No visual/audio/animation/model assets are generated or modified.",
+  "operation": "Native AnimationTrack.get sampled at 120 Hz with world-space forward kinematics, independent of character facing. Ordinary weapon swings use the wielding right arm. Every paired Heat Action has an explicit per-contact source-limb policy: knife stab/right kick, katana right slash/left punch/right thrust, crate right-arm placement/right-left-right-left kicks/right-arm ending, weapon-arm bottle/bat/bicycle contacts and original unarmed punches/kicks. The two-foot running dropkick has independent left-leg and right-leg tracks in the same contact window. Throw release uses the gripping arm. Paced QTE contact times map to actual clip time and original failure contact indices are retained. Repeated same-limb contacts share a track. Code-side numeric FK only from existing supplied PZ clips, including current paired contacts/endings and linked native finisher variants. Contacts use native collision events, authored Heat Action contacts or the documented parry fallback. Clips use contact-local endpoint/relative motion with verified original left-light and right-high-kick pose overrides, independent of charge-up pose. The high kick has right-foot height 0.721 versus planted left foot 0.093 at source frame 24; recovering arms can be faster than the striking leg. Runtime resolves the actual playing clip within the committed move family. No visual/audio/animation/model assets are generated or modified.",
   "catalog": "42/media/lua/client/ProjectYakuza/AttackTrailCatalog.lua",
-  "sha256": "82694bf85334197c163a2c35a280f8bdd94f96fdd2e284449b9ced2750a419f4",
+  "sha256": "e4437e14d5730cc125fff4803e337a01f934a2706482fca0ce3556d54123910b",
   "clips": [
     {
       "profile": "bat",
@@ -3490,7 +3490,9 @@
             0.42080367166106214,
             0.1706553741292494
           ],
-          "selection": "contact-local relative motion"
+          "selection": "contact-local relative motion",
+          "secondaryTrack": "dd_trail_runningattack04_rightleg",
+          "secondaryLimb": "rightLeg"
         }
       ]
     },

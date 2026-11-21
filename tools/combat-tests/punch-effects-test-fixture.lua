@@ -516,5 +516,36 @@ end
 F.clearAll();local originalTile=Core.getTileScale;Core.getTileScale=function()return 1 end
 check(near(F.coatOffset(),1.088),'ten-percent placement follows native tile scale')
 Core.getTileScale=originalTile
+F.clearAll();p.weight=1;p.localPlayer=true
+local dropkick=catalog.ProjectYakuza_DD_RunningAttack04;local dropWindow=dropkick.windows[1]
+check(dropWindow.secondaryTrack and ProjectYakuza.AttackTracks[dropWindow.secondaryTrack].limb=='rightLeg','dropkick catalogue supplies the other foot from its own native track')
+for _,angle in ipairs({0,math.pi/2,math.pi,math.pi*1.5})do
+ F.clearAll();p.clip=dropkick.animation;p.time=dropWindow.contact;p.angle=angle
+ F.start(p,style,0,{animation=dropkick.animation});F.tick();draws={};sparkDraws={};sparkRenders={};F.render()
+ local left=F.states[p];local right=left and left.secondary
+ check(left and right and left.track.limb=='leftLeg' and right.track.limb=='rightLeg','both actual legs are selected at every facing')
+ check(left.points~=right.points and left.history~=right.history and left.seed~=right.seed,'each leg owns independent particles, history and cosmetic phase')
+ local leftDraw,rightDraw=false,false
+ for _,draw in ipairs(draws)do
+  if draw.instance==left.points[1].instance then leftDraw=true end
+  if draw.instance==right.points[1].instance then rightDraw=true end
+ end
+ check(leftDraw and rightDraw and #draws>=28,'both leg coatings render simultaneously')
+ local lx,ly,lz=F.sample(left.track,p.time,2);local rx,ry,rz=F.sample(right.track,p.time,2)
+ check(math.abs(lx-rx)+math.abs(ly-ry)+math.abs(lz-rz)>.02,'second trail uses a distinct foot path')
+ paused=true;local leftCount,rightCount=left.historyCount,right.historyCount;clock=clock+80;F.tick();F.render()
+ check(left.historyCount==leftCount and right.historyCount==rightCount,'pause freezes both independent histories')
+ paused=false;local oldMap=ISWorldMap_instance;ISWorldMap_instance={isVisible=function()return true end};draws={};F.render()
+ check(#draws==0,'map hides both leg trails');ISWorldMap_instance=oldMap
+ F.finish(p);check(#F.tails==2,'both legs retire into bounded independent wakes')
+ p.weight=.1;F.render();check(#F.tails==0,'both wakes disappear during the return to idle');p.weight=1
+ F.clearAll();check(allocated==disposed,'both leg instances are released after each facing')
+end
+p.localPlayer=false;p.angle=.7;p.clip=dropkick.animation;p.time=dropWindow.contact
+F.remote(p,style,{clip=dropkick.animation,action=123,swing=456});F.tick();F.render()
+local remoteLeg=F.states[p]and F.states[p].secondary
+check(remoteLeg and remoteLeg.track.limb=='rightLeg','multiplayer observer derives both legs from the same clip')
+F.remote(p,style,{clip=dropkick.animation,action=123,swing=456});check(F.states[p].secondary==remoteLeg,'repeated MP snapshot preserves the second leg history')
+p.reaction='hit';F.tick();check(not F.states[p]and allocated==disposed,'interruption releases both leg effects');p.reaction='';p.localPlayer=true;p.angle=0
 p.clip=nil;F.clearAll();check(allocated==disposed and not F.hooked,'expanded effects release all sprites and hooks')
 return 'PASS '..count..' original-punch tracking, world projection, lifecycle, bounded MP and source-clock audio checks'
