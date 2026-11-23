@@ -10,7 +10,7 @@ function F.restoreCamera()
 end
 function F.stop()
     F.restoreCamera();F.state=nil
-    if F.hooked then Events.OnPreRender.Remove(F.pre);Events.OnPreUIDraw.Remove(F.draw);Events.OnPostUIDraw.Remove(F.restoreCamera);F.hooked=false end
+    if F.hooked then Events.OnRenderTick.Remove(F.pre);Events.OnPreUIDraw.Remove(F.draw);Events.OnPostUIDraw.Remove(F.restoreCamera);F.hooked=false end
 end
 function F.allowed(p)
     local style=p and PY.getPlayerStyle(p)
@@ -24,7 +24,7 @@ function F.hit(p,z,index,contact,anchor)
     local strength=contact.sumQTE and 1 or contact.strong~=false and .85 or contact.charged and .65 or .3
     local previous=F.state
     F.state={p=p,x=anchor and anchor.x or z:getX(),y=anchor and anchor.y or z:getY(),z=anchor and anchor.z or z:getZ()+.5,at=getTimestampMs(),life=100+strength*100,strength=math.min(1,math.max(strength,previous and previous.strength*.55 or 0)),seed=index*1.73+getTimestampMs()*.01}
-    if not F.hooked then Events.OnPreRender.Add(F.pre);Events.OnPreUIDraw.Add(F.draw);Events.OnPostUIDraw.Add(F.restoreCamera);F.hooked=true end
+    if not F.hooked then Events.OnRenderTick.Add(F.pre);Events.OnPreUIDraw.Add(F.draw);Events.OnPostUIDraw.Add(F.restoreCamera);F.hooked=true end
 end
 function F.sample()
     local state=F.state

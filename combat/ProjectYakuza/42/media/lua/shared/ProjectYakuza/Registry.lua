@@ -1,6 +1,6 @@
 ProjectYakuza = ProjectYakuza or {}
 do
-local C={defaults={maxStocks=6,gainPerDamage=1.25,secondaryTargetGain=1,lossPerDamage=.5,idleGraceMs=3000,idleLossPerSecond=4,knockdownLoss=8,secondsPerStock=3.75,attackFuelCost=1.5,extremeDamage=1.5,extremeSpeed=1.2,retainStocks=true}}
+local C={defaults={maxStocks=6,gainPerDamage=1.25,secondaryTargetGain=1,lossPerDamage=.5,idleGraceMs=3000,idleLossPerSecond=4,knockdownLoss=8,secondsPerStock=4.125,attackFuelCost=1.5,extremeDamage=1.5,extremeSpeed=1.2,retainStocks=true}}
 ProjectYakuza.HeatRules=C
 local limits={maxStocks={1,32},gainPerDamage={0,100},secondaryTargetGain={0,1},lossPerDamage={0,100},idleGraceMs={0,600000},idleLossPerSecond={0,100},knockdownLoss={0,100},secondsPerStock={.1,600},attackFuelCost={0,100}}
 local cache=setmetatable({}, {__mode="k"})
@@ -342,7 +342,7 @@ ProjectYakuza.actionKinds = { finisher=true, grab=true, grabHeat=true, groundHea
 ProjectYakuza.actionDefinitions = ProjectYakuza.actionDefinitions or {}
 ProjectYakuza.activeActions = ProjectYakuza.activeActions or setmetatable({}, {__mode="k"})
 ProjectYakuza.MAX_HIT_COUNT = 3
-ProjectYakuza.TOKEN = "ProjectYakuza.StyleToken"
+ProjectYakuza.TOKEN = "ProjectYakuza.Dragon_DE_ProjectYakuza_Style"
 function ProjectYakuza.on(event, fn)
     assert(type(fn) == "function", "listener must be a function")
     ProjectYakuza.listeners[event] = ProjectYakuza.listeners[event] or {}

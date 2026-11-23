@@ -14,7 +14,7 @@ HUD/selector are UI; aura/impacts use the world renderer. MP observers render re
 
 ## Music
 
-music is false/omitted for silence, or a unique list such as `{{sound="MyMod_ThemeA",title="A"},{sound="MyMod_ThemeB",title="B"}}`. Each name references a real PZ definition: category=Music, master=Music, is3D=false, **loop=false**. Use at least two distinct recordings for continuous shuffle without immediate repeat. Natural completion in continuing combat selects a different name; the encounter has a 12-second quiet grace. Native music ducking/restoration and pause/cleanup are retained. DoD's 19 tracks belong only to DoD. Playback is whole-track/local, not segmented/MP-synchronized music.
+music is false/omitted for silence, or a unique list such as `{{sound="MyMod_ThemeA",title="A"},{sound="MyMod_ThemeB",title="B"}}`. Each name references a real PZ definition: category=Music, master=Music, is3D=false, **loop=false**. Use at least two distinct recordings for continuous shuffle without immediate repeat. Natural completion in continuing combat selects a different name; the encounter has a 22-second quiet grace. Native music ducking/restoration and pause/cleanup are retained. DoD's 19 tracks belong only to DoD. Playback is whole-track/local, not segmented/MP-synchronized music.
 
 ## Sounds and volume
 

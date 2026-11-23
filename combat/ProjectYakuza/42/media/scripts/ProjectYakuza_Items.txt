@@ -1,8 +1,8 @@
 module ProjectYakuza
 {
-    item StyleToken
+    item Dragon_DE_ProjectYakuza_Style
     {
-        DisplayName = Project Yakuza - Fighting Style,
+        DisplayName = Dragon (DE) - Project Yakuza,
         DisplayCategory = Weapon,
         ItemType = base:weapon,
         Weight = 0.1,

@@ -9,7 +9,7 @@ heat=true opts into a shared player meter, modData.ProjectYakuzaHeat, 0-100, div
 | Acute damage loss/new knockdown | damage * 0.5 / 8 points |
 | Completed stocks | Banked; ordinary losses remove unfinished charge only |
 | Completed taunt | +1 stock, capped; requires a pursuing threat within 5 tiles at request, start and completion; interrupted/mode-active gives none |
-| Extreme duration | 3.75 seconds per stock before attack/damage costs |
+| Extreme duration | 4.125 seconds per stock before attack/damage costs |
 | Swing fuel cost | 1.5 raw points |
 | Extreme damage/speed | x1.5 / additional x1.2 |
 
@@ -19,7 +19,7 @@ This is PZ-tuned Yakuza-style behavior, not an exact Dragon Engine simulation. H
 
 For the default Dragon of Dojima rules, one stock is 100/6, about 16.67 points. After three seconds without a swing, eligible hit or taunt activity, ordinary Heat loses four points per second, stopping at the last completed stock. For example, 40 points decay to 33.33 and stay there. Eligible incoming damage removes half its damage value in Heat, and a new knockdown removes eight points, with the same completed-stock floor. Bleeding, hunger, thirst, sickness and poison do not cause damage-based Heat loss. Ordinary idle decay requires the style to remain equipped.
 
-Extreme Heat moves all stored points into a separate fuel meter. Its continuous drain is about 4.44 points per second, so a full meter lasts 22.5 seconds before other costs. Every committed swing costs another 1.5 points; eligible damage and new knockdowns also consume fuel, without a retained-stock floor. Normal hits and taunts cannot refill active fuel. The activation animation defers drain until activation completes; paired Heat Actions still consume time while the mode is active. Accepted stock-priced Heat Actions spend their configured stock cost separately from passive loss, including completed stocks. Actions authored with useExtremeFuel can pay from active fuel. These rules were documented in 0.93.0 without changing their tuning.
+Extreme Heat moves all stored points into a separate fuel meter. Its continuous drain is about 4.04 points per second, so a full meter lasts 24.75 seconds before other costs. Every committed swing costs another 1.5 points; eligible damage and new knockdowns also consume fuel, without a retained-stock floor. Normal hits and taunts cannot refill active fuel. The activation animation defers drain until activation completes; paired Heat Actions still consume time while the mode is active. Accepted stock-priced Heat Actions spend their configured stock cost separately from passive loss, including completed stocks. Actions authored with useExtremeFuel can pay from active fuel. Version 1.0.2 increases passive fuel lifetime by 10 percent; attack, incoming-damage and Heat Action costs are unchanged.
 
 Activation chooses enabled clips without immediate repetition when alternatives exist. It locks position and temporarily protects; real End playback starts fuel. Missing/interrupted clips restore flags without starting mode. Input cannot manually end mode. Hits/taunts/positive setHeat do not gain heat during mode. Fuel depletes naturally or ends through lifecycle cleanup. Style entry/taunt remain vulnerable. The taunt reward/brief aura flash is at completion.
 

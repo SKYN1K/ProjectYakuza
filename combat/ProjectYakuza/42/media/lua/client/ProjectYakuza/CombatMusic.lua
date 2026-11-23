@@ -1,7 +1,7 @@
 require "ProjectYakuza/Runtime"
 require "ProjectYakuza/TextureWarmup"
 local ProjectYakuza=ProjectYakuza
-local M={themes={},quietMs=12000,fadeIn=0.8,fadeOut=1.25}
+local M={themes={},quietMs=22000,fadeIn=0.8,fadeOut=1.25}
 ProjectYakuza.CombatMusic=M
 function M.registerStyle(style)
     local playlist=style.music

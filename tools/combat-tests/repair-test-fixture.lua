@@ -63,6 +63,7 @@ PY.TextureWarmup={add=function(key,fn)musicWarmups[#musicWarmups+1]=fn end}
 ZombRand=function()return 0 end
 do local _="ProjectYakuzaFixture:MUSIC" end
 local M=PY.CombatMusic
+check(M.quietMs==22000 and M.fadeOut==1.25,'music waits ten additional seconds before its unchanged fade')
 check(#musicWarmups==1,'combat music registers one bounded setup job')
 musicWarmups[1]();M.prepare();check(emitterAllocations==1 and M.emitter==emitter and not M.sound,'emitter warm-up is silent, idempotent and ready before the first hit')
 local theme=PY.getStyle('dragon_of_dojima').music[1]
@@ -77,4 +78,10 @@ ownLevel=2;musicOption=0;nativeMusic=0;M.start(p,theme,clock)
 for i=1,4 do clock=clock+250;M.tick()end
 check(emitter.volume==2,'own 200-percent slider is not multiplied by vanilla music volume')
 M.stop()
+ownLevel=1;M.start(p,theme,clock);local musicStarted=clock
+for i=1,4 do clock=clock+250;M.tick()end
+clock=musicStarted+21999;M.tick();check(M.sound and M.mix==1,'combat music remains fully audible until the new quiet deadline')
+clock=musicStarted+22000;M.tick();check(M.sound and M.mix<1,'combat music begins fading at twenty-two quiet seconds')
+for i=1,6 do clock=clock+250;M.tick()end
+check(not M.sound,'music still releases its emitter after the fade');M.stop()
 return true,'PASS '..checks..' heavy-button Tiger Drop window/cooldown/MP age and independent combat music gain checks'

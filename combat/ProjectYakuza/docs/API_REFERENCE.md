@@ -63,7 +63,7 @@ Built-in kinds: finisher, heavyCharge, chargedHeavy, grab, grabHeat, groundHeat,
 | isEquipped/isBusy(player) | Recognized token/style (MP acknowledged) / combo or action ownership |
 | StyleSlots.get/id/assign | Persisted left/right assignments; see selector guide |
 
-Token: ProjectYakuza.StyleToken. Do not mint client-only tokens in MP. Use namespaced modData for your persistence; combo/action contexts are transient.
+Token: ProjectYakuza.Dragon_DE_ProjectYakuza_Style. Do not mint client-only tokens in MP. Use namespaced modData for your persistence; combo/action contexts are transient.
 
 ## Custom kinds and lifecycle
 

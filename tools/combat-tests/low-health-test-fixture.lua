@@ -14,6 +14,7 @@ check(rules.valid(false)and rules.valid(nil)and rules.valid({enabled=false})and 
 local owner={playerType=true,health=100,localPlayer=true,equipped=true,style=style,reads=0,chasing=0,near=0,visible=0}
 instanceof=function(p,name)return type(p)=='table'and p.playerType==true and name=='IsoPlayer'end
 function owner:isLocalPlayer()return self.localPlayer end;function owner:isDead()return self.dead==true end
+function owner:getPlayerNum()return 0 end
 function owner:getVehicle()return self.vehicle end;function owner:isAsleep()return self.asleep==true end
 function owner:getBodyDamage()local p=self;return {getOverallBodyHealth=function()p.reads=p.reads+1;return p.health end}end
 function owner:getStats()local p=self;return {get=function()return p.panic or 0 end,getNumChasingZombies=function()return p.chasing end,getNumVeryCloseZombies=function()return p.near end,getNumVisibleZombies=function()return p.visible end}end
@@ -79,12 +80,17 @@ local failedCount=played;for i=1,20 do step(250)end;check(played==failedCount,'m
 L.clearAll();owner.style=style;owner.health=10;owner.chasing=1;L.update(owner,true);step(250)
 local uiDraws={};local fillAlphas={};local warningTexts={};ISPanel={}
 function ISPanel:derive()local c={};c.__index=c;return setmetatable(c,{__index=self})end
-function ISPanel:new(x,y,w,h)return setmetatable({width=w,height=h},self)end
+function ISPanel:new(x,y,w,h)return setmetatable({x=x,y=y,width=w,height=h},self)end
+function ISPanel:setX(v)self.x=v end;function ISPanel:setY(v)self.y=v end
+function ISPanel:setWidth(v)self.width=v end;function ISPanel:setHeight(v)self.height=v end
 function ISPanel:initialise()end;function ISPanel:setWantMouseEvents(v)self.mouse=v end;function ISPanel:addToUIManager()end
 function ISPanel:drawTextureScaled(texture,x,y,w,h,alpha,r,g,b)uiDraws[#uiDraws+1]={texture=texture,alpha=alpha,r=r,g=g,b=b}end
 function ISPanel:drawSubTexture()end;function ISPanel:drawRect(x,y,w,h,a)fillAlphas[#fillAlphas+1]=a end;function ISPanel:drawText(text)self.lastText=text;if text=="CRITICAL"or text=="LOW HEALTH"then warningTexts[#warningTexts+1]=text end end
 function ISPanel:drawTextRight()end
-getSpecificPlayer=function()return owner end;getPlayerScreenWidth=function()return 1280 end
+local viewportWidth,viewportHeight,viewportX,viewportY,fontHeight=1280,720,0,0,16
+getSpecificPlayer=function()return owner end;getPlayerScreenWidth=function()return viewportWidth end;getPlayerScreenHeight=function()return viewportHeight end
+getPlayerScreenLeft=function()return viewportX end;getPlayerScreenTop=function()return viewportY end
+getTextManager=function()return {getFontHeight=function()return fontHeight end,MeasureStringX=function(_,font,text)return #text*fontHeight*.55 end}end
 getTexture=function(name)return name end;UIFont={Small=1}
 SpriteRenderer={instance={getDoAdditive=function()return false end,setDoAdditive=function()end}}
 PY.StyleUI={renderOnly=function()end,releaseAll=function()end,render=function()return false end}
@@ -102,15 +108,15 @@ owner.health=100;step(250);step(250);uiDraws={};HUD.instance:prerender();local w
 for _,draw in ipairs(uiDraws)do if draw.g==.12 then warned=true end end
 check(not warned,'healed character does not retain a pulsing health-frame overlay')
 local rows={};local actualRow=HUD.drawCooldownRow
-HUD.drawCooldownRow=function(self,title,value,y,fractions,ready)rows[#rows+1]={title=title,value=value,y=y,fractions=fractions,ready=ready};return actualRow(self,title,value,y,fractions,ready)end
+HUD.drawCooldownRow=function(self,title,value,y,fractions,ready,count)rows[#rows+1]={title=title,value=value,y=y,fractions=fractions,ready=ready,count=count};return actualRow(self,title,value,y,fractions,ready,count)end
 local charges,recovery,gap=3,0,0
 PY.Quicksteps={limit=3,windowMs=15000,recovery=function()return charges,recovery,gap end}
 local tigerRemaining=0;PY.TigerDrop={remaining=function()return tigerRemaining end}
 HUD.instance:drawCooldowns(owner)
-check(#rows==2 and rows[1].title=='QUICKSTEP'and rows[2].title=='TIGER DROP'and rows[1].y>157 and rows[2].y>rows[1].y+29,'quickstep sits below the HUD and Tiger Drop is stacked underneath without overlap')
-check(rows[1].value=='3 / 3  READY'and rows[1].ready and rows[2].ready,'ready counters show full charges and ready Tiger Drop')
+check(#rows==2 and rows[1].title=='QUICKSTEP'and rows[2].title=='TIGER DROP'and rows[1].y>=HUD.originY+98*HUD.scale+12 and rows[2].y>rows[1].y+29,'cooldown rows clear the entire enlarged HUD including its glow')
+check(rows[1].count=='3 / 3'and rows[1].value=='READY'and rows[1].ready and rows[2].ready,'quickstep charges are separate from the right-aligned ready indicator')
 charges=0;recovery=7300;tigerRemaining=12500;rows={};HUD.instance:drawCooldowns(owner)
-check(rows[1].value=='0 / 3  7.3s'and not rows[1].ready and rows[1].fractions[1]>0 and rows[1].fractions[1]<1,'exhausted quickstep shows a fractional countdown and recovering first charge')
+check(rows[1].count=='0 / 3'and rows[1].value=='7.3s'and not rows[1].ready and rows[1].fractions[1]>0 and rows[1].fractions[1]<1,'exhausted quickstep shows separate charges, countdown and recovering first segment')
 check(rows[2].value=='12.5s'and not rows[2].ready and rows[2].fractions[1]==.375,'Tiger Drop progress reflects its actual twenty-second cooldown')
 charges=2;recovery=2000;rows={};HUD.instance:drawCooldowns(owner)
 check(rows[1].ready and rows[1].fractions[1]==1 and rows[1].fractions[2]==1 and rows[1].fractions[3]<1,'available quicksteps remain usable while the missing charge refills')
@@ -118,5 +124,15 @@ SandboxVars={ProjectYakuza={DragonTigerDrop=false}};rows={};HUD.instance:drawCoo
 check(#rows==1 and rows[1].title=='QUICKSTEP','sandbox-disabled Tiger Drop has no cooldown row');SandboxVars=nil
 PY.Quicksteps=nil;rows={};HUD.instance:drawCooldowns(owner)
 check(#rows==1 and rows[1].title=='TIGER DROP','Tiger Drop occupies the first row when the style has no quickstep module')
+check(HUD.scale==.9 and HUD.instance.healthBarWidth==270*1.25,'default HUD is twenty percent larger and the health bar is twenty-five percent longer')
+for _,size in ipairs({{640,480},{800,600},{1024,768},{1280,720},{1920,1080},{2560,1440},{3840,2160},{640,360},{320,480}})do
+ for _,font in ipairs({16,24,32})do
+  viewportWidth,viewportHeight,fontHeight=size[1],size[2],font;viewportX,viewportY=37,23
+  HUD.instance:prerender();local panel=HUD.instance
+  check(panel.x>=viewportX and panel.x+panel.width<=viewportX+viewportWidth+.001,'HUD stays inside viewport width '..size[1]..' font '..font)
+  check(panel.y>=viewportY and panel.y+panel.height<=viewportY+viewportHeight+.001,'HUD and cooldowns stay inside viewport height '..size[2]..' font '..font)
+  check(panel.cooldownY>=HUD.originY+98*HUD.scale+12 and panel.cooldownWidth>0,'cooldown anchor clears enlarged glow at every viewport and font size')
+ end
+end
 L.clearAll();local remaining=0;for _ in pairs(L.states)do remaining=remaining+1 end;check(not L.hooked and remaining==0,'save/world cleanup drops all local state')
 return 'PASS '..checks..' style-specific low-health thresholds, private audio, pause, recovery, HUD and bounded polling checks'

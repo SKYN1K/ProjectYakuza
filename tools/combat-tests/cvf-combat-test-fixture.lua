@@ -12,7 +12,7 @@ local p={data={ProjectYakuzaStyle='dragon_of_dojima',CVF_voice='TestVoice'},pref
 function p:isLocalPlayer()return self.localPlayer end;function p:isDead()return self.dead==true end
 function p:isAsleep()return self.asleep==true end;function p:getVehicle()return self.vehicle end
 function p:getModData()return self.data end
-function p:getPrimaryHandItem()return self.equipped~=false and(self.held or {getFullType=function()return 'ProjectYakuza.StyleToken' end})or nil end
+function p:getPrimaryHandItem()return self.equipped~=false and(self.held or {getFullType=function()return 'ProjectYakuza.Dragon_DE_ProjectYakuza_Style' end})or nil end
 function p:getDescriptor()return {getVoicePrefix=function()return self.prefix end}end
 function p:getEmitter()return {setVolume=function(self,handle,volume)p.voiceMix=volume end,isPlaying=function()return self.voiceBusy==true end}end
 function p:transmitPlayerVoiceSound(suffix)self.calls[#self.calls+1]={prefix=self.prefix,suffix=suffix};return self.refuse and 0 or #self.calls end

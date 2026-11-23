@@ -3,7 +3,7 @@ local checks=0;local function check(v,m)checks=checks+1;assert(v,m)end
 local clock=1000;getTimestampMs=function()return clock end
 local paused=false;isGamePaused=function()return paused end
 local function event()local e={hooks={}};e.Add=function(fn)e.hooks[fn]=true end;e.Remove=function(fn)e.hooks[fn]=nil end;return e end
-Events={OnPreRender=event(),OnPreUIDraw=event(),OnPostUIDraw=event(),OnSave=event(),OnMainMenuEnter=event()}
+Events={OnRenderTick=event(),OnPreUIDraw=event(),OnPostUIDraw=event(),OnSave=event(),OnMainMenuEnter=event()}
 ProjectYakuza={listeners={},on=function(name,fn)ProjectYakuza.listeners[name]=fn end,isEquipped=function(p)return p.equipped end}
 ProjectYakuza.getPlayerStyle=function()return {hitEffects="yakuza6"}end
 local p={data={},equipped=true,localPlayer=true}
@@ -22,6 +22,7 @@ getTexture=function()return {isReady=function()return true end}end
 do local _="ProjectYakuzaFixture:SCREENFX" end
 local F=ProjectYakuza.HeatScreenEffects;local hit=ProjectYakuza.listeners.heatRushHit
 hit(p,z,13,{sumQTE=true});check(F.state and F.hooked,'confirmed impactful Heat Action contact owns a short local effect')
+check(Events.OnPreRender==nil and Events.OnRenderTick.hooks[F.pre]and Events.OnPreUIDraw.hooks[F.draw],'Heat Action uses the registered render-tick hook when OnPreRender is absent')
 hit(p,z,13,{sumQTE=true},{x=6,y=7,z=.2});check(F.state.x==6 and F.state.y==7 and F.state.z==.2,'RGB fringing uses the confirmed victim contact anchor, including floor contacts')
 local baseX,baseY=IsoCamera.getOffX(),IsoCamera.getOffY();F.pre()
 check(math.abs(IsoCamera.getOffX()-baseX)<=5 and math.abs(IsoCamera.getOffY()-baseY)<=4,'shake remains bounded with existing aim-pan offsets')
@@ -31,6 +32,7 @@ for i=1,50 do F.pre();F.restoreCamera()end
 check(IsoCamera.getOffX()==baseX and IsoCamera.getOffY()==baseY,'repeated frames cannot accumulate camera drift')
 F.pre();rawX=999;F.restoreCamera();check(rawX==999,'a foreign camera update is never overwritten')
 paused=true;F.pre();check(not F.state and not F.camera and not F.hooked,'pause clears camera ownership and render hooks');paused=false
+check(not Events.OnRenderTick.hooks[F.pre]and not Events.OnPreUIDraw.hooks[F.draw]and not Events.OnPostUIDraw.hooks[F.restoreCamera],'all supported event hooks release together')
 hit(p,z,2,{charged=true,strong=false});clock=clock+201;F.pre();check(not F.hooked,'short impacts remove idle hooks after expiry')
 p.localPlayer=false;hit(p,z,1,{strong=true});check(not F.state,'remote players cannot shake the local camera');p.localPlayer=true
 p.data.ProjectYakuzaHitEffectsDisabled=true;hit(p,z,1,{strong=true});check(not F.state,'existing effect toggle disables screen impacts');p.data.ProjectYakuzaHitEffectsDisabled=nil

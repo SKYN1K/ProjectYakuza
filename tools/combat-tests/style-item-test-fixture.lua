@@ -26,6 +26,7 @@ end
 function inventory:AddItem(id)return item(id)end
 function p:getInventory()return inventory end
 function p:getPrimaryHandItem()return self.hand end
+function p:getSecondaryHandItem()return self.secondary end
 function p:setPrimaryHandItem(v)self.hand=v end
 function p:setSecondaryHandItem(v)self.secondary=v end
 function p:resetModelNextFrame()end
@@ -36,8 +37,26 @@ PY.StyleEntry={count=0,request=function(_,_,hadStyle)PY.StyleEntry.lastHadStyle=
 local dropped,favorites,transfers=0,0,0
 ISInventoryPaneContextMenu={dropItem=function()dropped=dropped+1;return true end,onFavorite=function(items,_,value)favorites=favorites+#items;for _,v in ipairs(items)do v:setFavorite(value)end end}
 ISInventoryTransferAction={isValid=function()transfers=transfers+1;return true end}
+local iconDraws={}
+ISEquippedItem={drawTextureScaledAspect=function(self,texture,x,y,w,h,alpha,r,g,b)iconDraws[#iconDraws+1]={texture=texture,x=x,y=y,width=w,height=h,alpha=alpha,r=r,g=g,b=b}end}
 do local _="ProjectYakuzaFixture:CLIENT_ITEM" end
 local regular=item('Base.BaseballBat');local first=item(PY.TOKEN);p.hand=first
+check(PY.TOKEN=='ProjectYakuza.Dragon_DE_ProjectYakuza_Style','framework uses the requested exact Dragon item identifier')
+function first:getTex()return 'dragon-icon'end
+function regular:getTex()return 'bat-icon'end
+local equippedPanel={chr=p,mainHand={x=0,y=0,width=64,height=64},offHand={x=0,y=70,width=48,height=48}}
+ISEquippedItem.drawTextureScaledAspect(equippedPanel,first:getTex(),8,8,48,48,.8,1,.9,.7)
+local draw=iconDraws[#iconDraws]
+check(math.abs(draw.width*112/128-64*.94)<.001 and math.abs(draw.x+draw.width/2-32)<.001 and draw.alpha==.8,'Dragon visible artwork fills ninety-four percent of the hand circle and preserves its center and tint')
+p.hand=regular;ISEquippedItem.drawTextureScaledAspect(equippedPanel,regular:getTex(),8,8,48,48,1,1,1,1)
+check(iconDraws[#iconDraws].width==48 and iconDraws[#iconDraws].x==8,'ordinary equipped weapons retain native icon dimensions')
+p.hand=first;ISEquippedItem.drawTextureScaledAspect(equippedPanel,first:getTex(),0,0,20,20,1,1,1,1)
+check(iconDraws[#iconDraws].width==20,'other draws using the same texture remain unchanged')
+p.hand=regular;p.secondary=first;ISEquippedItem.drawTextureScaledAspect(equippedPanel,first:getTex(),6,76,36,36,1,1,1,1)
+check(math.abs(iconDraws[#iconDraws].width*112/128-48*.94)<.001,'off-hand style icon scales to its own circle')
+p.hand=first;p.secondary=nil;equippedPanel.mainHand.width=96;equippedPanel.mainHand.height=96
+ISEquippedItem.drawTextureScaledAspect(equippedPanel,first:getTex(),12,12,72,72,1,1,1,1)
+check(math.abs(iconDraws[#iconDraws].width*112/128-96*.94)<.001,'larger native UI slots retain the same visible-artwork fit')
 T.clean(first)
 check(first.favorite and first.blood==0 and first.visual.blood==0 and first.visual.dirt==0,'style item is clean and protected')
 check(not T.clean(regular) and regular.blood==3,'real equipment is not cleaned')
@@ -94,4 +113,6 @@ check(PY.stateFor(p).finisherMove.neutralHeavy and p.vars.ProjectYakuzaMove=='dd
 check(not PY.queueFinisher(p),'neutral heavy cannot queue a double finisher')
 p.attacking=false;fire('OnPlayerAttackFinished',p,p.hand)
 check(not PY.stateFor(p).firstFinisher and not PY.stateFor(p).finisherMove,'neutral heavy leaves no follow-up branch')
+p.hand=nil;p.secondary=nil;T.owners[p]=nil;p.data.ProjectYakuzaStyle='dragon_of_dojima';clock=clock+1000;T.update(p)
+check(p.hand and p.hand:getFullType()==PY.TOKEN and p.hand.favorite,'loading an equipped style without its former item recreates the newly named item')
 return true,'PASS '..checks..' actual style-item lifecycle, protection, MP request and neutral-heavy checks'

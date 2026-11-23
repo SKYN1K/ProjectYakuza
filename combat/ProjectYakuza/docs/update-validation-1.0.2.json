@@ -1,7 +1,6 @@
 {
   "version": "1.0.2",
   "offlineOnly": true,
-  "focusedKahluaChecks": 721,
   "runtimeLuaFilesCompiled": 88,
   "playerReleaseChecks": 126,
   "nativeMissingItemSaveRecordChecks": 2,
@@ -33,5 +32,15 @@
     "converted": false,
     "sha256": "b5cc272711734b0dc09d0d6d607085c1bb5d260150e41af14a1e336bc0ba3393"
   },
-  "releaseCorrection": "Current changes assigned a new v1.0.2 tag; previous v1.0.1 tag, release notes and original ZIPs restored."
+  "releaseCorrection": "Current changes assigned a new v1.0.2 tag; previous v1.0.1 tag, release notes and original ZIPs restored.",
+  "responsiveViewportFontCases": 27,
+  "nativeScreenEventRegistrationVerified": true,
+  "nativeStyleItemDefinitionVerified": true,
+  "styleItemType": "ProjectYakuza.Dragon_DE_ProjectYakuza_Style",
+  "styleDisplayName": "Dragon (DE) - Project Yakuza",
+  "extremeSecondsPerStock": 4.125,
+  "musicQuietMs": 22000,
+  "equippedIconPixelsChanged": false,
+  "focusedKahluaChecks": 3167,
+  "nativeEquippedIconPixelsVerified": 16384
 }

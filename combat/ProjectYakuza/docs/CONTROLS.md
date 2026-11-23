@@ -37,3 +37,5 @@ Music volume defaults to 45 percent for new or reset preferences. Existing saved
 Vanilla shove/stomp input is disabled while a fighting style is equipped, including after quickstep is rebound. Unequipping restores its prior permission. The custom ground attacks remain part of the fighting style.
 
 The default heat HUD shows quickstep charges and the next recovery countdown below the gauge, followed by Tiger Drop cooldown when supported and enabled. Filled segments are available quicksteps; the partial segment shows the next returning charge.
+
+The HUD scales down to fit its viewport and reserves space below the full glow for its cooldown rows. Quickstep charges appear beside QUICKSTEP; the recharge time or READY stays at the right edge. The extra numeric Heat label is removed.

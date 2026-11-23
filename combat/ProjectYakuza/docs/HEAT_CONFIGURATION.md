@@ -27,7 +27,7 @@ heatConfig={
 | idleGraceMs | 3000 | 0..600000 ms since the last combat/taunt activity before idle drain |
 | idleLossPerSecond | 4 | 0..100 normalized Heat points per second after grace |
 | knockdownLoss | 8 | 0..100 loss on the first update of a knockdown |
-| secondsPerStock | 3.75 | .1..600 seconds of Extreme Heat per stock, before attack/damage fuel costs |
+| secondsPerStock | 4.125 | .1..600 seconds of Extreme Heat per stock, before attack/damage fuel costs |
 | attackFuelCost | 1.5 | 0..100 normalized Extreme fuel spent per committed attack |
 | retainStocks | true | Boolean; protect completed normal stocks from loss, or allow continuous drain through them |
 

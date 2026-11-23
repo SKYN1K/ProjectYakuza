@@ -76,6 +76,10 @@ do
  check(H.config.maxStocks==6 and H.config.gainPerDamage==1.25 and C.forStyle(baseStyle).secondaryTargetGain==.25 and H.config.secondaryTargetGain==1,'custom rules never mutate DoD/global defaults')
  reset(style.id)
 end
+reset(baseStyle.id);PY.setHeat(p,100);check(H.start(p),'longer Extreme Heat mode starts normally')
+check(near(H.rules(p).secondsPerStock,3.75*1.1)and near(H.rules(p).maxStocks*H.rules(p).secondsPerStock,24.75),'each stock lasts exactly ten percent longer and six stocks last 24.75 passive seconds')
+local priorFuel=H.states[p].fuel;H.states[p].lastUpdate=clock;H.states[p].nextUpdate=0;clock=clock+100;H.update(p)
+check(near(H.states[p].fuel,priorFuel-.1*H.stockSize(p)/4.125)and H.rules(p).attackFuelCost==1.5,'runtime passive drain uses the extended stock lifetime without changing attack costs');H.stop(p,'test')
 reset(style.id);style.heatAttackSpeed={max=1.5};PY.setHeat(p,50);H.onSwing(p,style.lightAttacks[1]);p.combo=nil
 local s=PY.stateFor(p);s.active=true;s.multiHitToken={};s.startedAt=clock
 Events.OnGameStart=event();p.playSound=function()return 0 end;p.getEmitter=function()return {}end

@@ -18,7 +18,7 @@ local p={data={},aim=false,vars={},authorize=true,equipped=true}
 function p:getModData()return self.data end;function p:isLocalPlayer()return true end
 function p:isAiming()return self.aim end;function p:isDead()return self.dead==true end
 function p:getVehicle()return self.vehicle end
-function p:getPrimaryHandItem()return self.equipped and {getFullType=function()return 'ProjectYakuza.StyleToken' end} or nil end
+function p:getPrimaryHandItem()return self.equipped and {getFullType=function()return 'ProjectYakuza.Dragon_DE_ProjectYakuza_Style' end} or nil end
 function p:GetVariable(name)return self.vars[name]or ''end
 function p:setVariable(name,value)self.vars[name]=value end
 function p:getForwardDirection()return {getX=function()return 1 end,getY=function()return 0 end}end
@@ -43,7 +43,7 @@ local rateCombo={active=true}
 H.onHit(p,z,.4,rateCombo);check(ProjectYakuza.getHeat(p)==.5,'hit heat is exactly half the previous .4-damage reward')
 H.onHit(p,z,.8,rateCombo);check(ProjectYakuza.getHeat(p)==.5,'same-strike victim deduplication remains intact')
 H.onHit(p,{zombie=true},10,{active=true});check(ProjectYakuza.getHeat(p)==3,'two-damage heat cap uses the halved coefficient')
-check(H.config.gainPerDamage==1.25 and H.config.secondsPerStock==3.75 and H.stockSize()==100/6,'only gain coefficient changed; mode duration and orb size preserved')
+check(H.config.gainPerDamage==1.25 and H.config.secondsPerStock==4.125 and H.stockSize()==100/6,'Extreme stock lifetime is ten percent longer while gain and orb size remain unchanged')
 ProjectYakuza.setHeat(p,30)
 local calls={}
 ProjectYakuza.requestAction=function(player,kind,variant,target)calls[#calls+1]={kind=kind,variant=variant,target=target};return true end
