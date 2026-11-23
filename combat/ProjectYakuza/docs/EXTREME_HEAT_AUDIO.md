@@ -1,17 +1,19 @@
-# Extreme Heat activation SFX - 0.30.3
+# Extreme Heat and charged-attack sounds
 
-Uses the existing supplied Yakuza 6 non-voice recordings: charge_st (ChargeStart), both hactmode_on layers (HeatOnA/HeatOnB) and hactmode_off (HeatOff). Audio bytes, native sound definitions, Sounds user-volume settings and the separate character-voice integration are unchanged. No recording was generated, edited or added.
+Activation plays supplied Yakuza 6 charge and flare cues, plus the existing Kiwami 2 wind-up, ignition and surge. No audio is generated or re-encoded. Direct character-emitter playback keeps the cues on their owning player. Actual mode entry supplies an idempotent fallback when an activation callback is missing.
 
-| Stage | Timing | Runtime level |
+| Cue | Per-handle level | Timing |
 | --- | --- | --- |
-| Charge | Actual native action start | 0.28 (previously 0.40) |
-| Main flare | Native flare marker; successful End fallback if a slow frame skips it | 0.50 (previously 0.65) |
-| Charge fade | 140 ms after flare | Linear fade to zero, then stop only that handle |
-| Secondary flare | Original 300 ms after main flare | 0.32 (previously 0.50) |
-| Mode ending | Actual natural depletion | 0.42 (previously 0.65) |
+| Yakuza 6 charge | 0.45 | Activation starts; fades over 140 ms at flare |
+| Windy whoosh | 0.80 | Activation starts; full original 3.22-second swell and tail |
+| Main flare | 0.80 | Native flare marker or successful completion fallback |
+| Ignition | 0.45 | Flare |
+| Secondary flare | 0.50 | 300 ms after flare |
+| Surge | 0.35 | 650 ms after flare |
+| Natural mode ending | 0.65 | Heat depletes |
 
-These are per-handle mix levels, separate from the player's Sounds slider and each original clip's gain. The original flare recordings last about 2.31/2.27 seconds; a bounded 2.8-second post-completion ownership window covers their tails and source delay. When native handles stop naturally, the callback releases sooner. No idle tick callback remains.
+Hit volume and each supplied clip's sound definition still control the final mix. Completed activation retains owned tails; interruption, death, unequip, style change and save/menu cleanup stop owned sounds. Duplicate events cannot stack the sequence. Remote observers do not request another owner sequence.
 
-Activation sequencing now has its own session instead of sharing the swing-sound queue. A completed animation retains its delayed layer and tails; starting an ordinary strike cannot overwrite them. Duplicate start/flare/success notifications do not stack new cues. Pause preserves the remaining delay and fade. Interrupted/failed actions, style changes, death, unequip and save/menu exit clear owned sounds/jobs. Cleanup reasons do not play a misleading natural mode-ending cue. No other emitter handles (music/voices) are stopped. Remote observers do not request duplicate owner SFX.
+Dragon of Dojima also maps chargeStart, chargeReady and chargeRelease to existing supplied cues. Heavy-charge start plays at 0.55, full charge at 0.45 and successful release at 0.50. Releasing or cancelling stops owned charging handles. Cancellation has no release flourish. Styles can provide their own sound mappings or omit them. This does not alter the separate voice pack.
 
-Validation: 35 focused checks embed production Feedback.lua; 2,629 broader combat/aura/music checks also pass. All 33 production Lua files compile. Source hashes confirm all 376 visual/audio files match v0.30.2. No game was launched and final loudness has not been auditioned in the live PZ mix.
+Validation embeds production Feedback.lua in native Kahlua checks for timing, duplicates, interruption, ownership and cleanup. Native PCM/script checks verify supplied files without launching the game. Final loudness still needs listening in the live game mix.

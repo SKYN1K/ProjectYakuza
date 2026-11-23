@@ -1,14 +1,14 @@
 UI_EN = {
 
-    UI_ProjectYakuza_OptionsTitle = "Project Yakuza",
+    UI_ProjectYakuza_OptionsTitle = "Project Yakuza options",
 
-    UI_ProjectYakuza_AudioTitle = "Audio",
+    UI_ProjectYakuza_AudioTitle = "Volume sliders",
 
     UI_ProjectYakuza_MusicVolume = "Music volume",
 
-    UI_ProjectYakuza_HitVolume = "Sound effects volume",
+    UI_ProjectYakuza_HitVolume = "Hit volume",
 
-    UI_ProjectYakuza_VoiceVolume = "Combat voice volume",
+    UI_ProjectYakuza_VoiceVolume = "Voice volume",
 
     UI_ProjectYakuza_AudioDescription = "Music, combat sound effects, and combat voice lines have separate volume controls. Zero mutes that group. Voices affects only combat lines requested by this mod.",
 

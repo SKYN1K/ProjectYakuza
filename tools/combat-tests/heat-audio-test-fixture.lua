@@ -28,17 +28,17 @@ local function start(extra)
  ProjectYakuza.HeatActivation.active[p]={};clock=clock+10000
  emit('heatActivationStarted',p);return #calls
 end
-local charge=start();check(calls[charge]=='Charge' and near(volumes[charge],.28),'actual start uses original charge at softer level')
+local charge=start();check(calls[charge]=='Charge' and near(volumes[charge],.45),'actual start uses original charge at softer level')
 check(tickHook==F.tick,'only an active sound sequence installs tick callback')
 local n=#calls;emit('heatActivationStarted',p);check(#calls==n,'duplicate same-action start does not layer charge sounds')
 clock=clock+500;emit('heatActivationFlare',p);local flare=#calls
-check(calls[flare]=='Flare' and near(volumes[flare],.50),'native flare plays original burst at restrained level')
+check(calls[flare]=='Flare' and near(volumes[flare],.80),'native flare plays original burst at restrained level')
 emit('heatActivationFlare',p);check(#calls==flare,'duplicate flare is ignored')
-clock=clock+70;F.tick();check(near(volumes[charge],.14) and not stopped[charge],'charge fades into flare instead of overlapping at full level')
+clock=clock+70;F.tick();check(near(volumes[charge],.225) and not stopped[charge],'charge fades into flare instead of overlapping at full level')
 clock=clock+70;F.tick();check(stopped[charge]==1 and volumes[charge]==0,'charge stops once after 140ms fade')
 clock=clock+159;F.tick();check(#calls==flare,'second layer waits for original 300ms source delay')
 clock=clock+1;F.tick();local layer=#calls
-check(calls[layer]=='Layer' and near(volumes[layer],.32),'second original layer is quieter and timed once')
+check(calls[layer]=='Layer' and near(volumes[layer],.50),'second original layer is quieter and timed once')
 F.tick();check(#calls==layer,'repeated ticks do not replay delayed layer')
 emit('heatActivationStopped',p,true)
 playing[flare]=false;playing[layer]=false;F.tick()
@@ -53,7 +53,7 @@ check(F.activationSounds[p] and F.activationSounds[p].completed,'native SFX tail
 
 charge=start();clock=clock+300;emit('heatActivationFlare',p);flare=#calls
 paused=true;clock=clock+5000;F.tick();paused=false
-check(#calls==flare and volumes[charge]==.28,'pause does not advance delay/fade')
+check(#calls==flare and volumes[charge]==.45,'pause does not advance delay/fade')
 clock=clock+299;F.tick();check(#calls==flare,'unpaused remainder of source delay is retained')
 clock=clock+1;F.tick();check(calls[#calls]=='Layer','layer resumes after its unpaused delay')
 
@@ -72,7 +72,7 @@ charge=start();p.equipped=false;F.tick();check(stopped[charge] and not tickHook,
 charge=start();F.clear();check(stopped[charge] and not F.activationSounds[p] and not tickHook,'save/menu cleanup silences tracked tails')
 charge=start();emit('heatActivationStopped',p,true);clock=clock+2800;F.tick();check(not F.activationSounds[p] and not tickHook,'tail watchdog bounds tracking even if native handle remains playing')
 
-n=#calls;emit('extremeHeatEnded',p,'depleted');check(#calls==n+1 and calls[#calls]=='End' and near(volumes[#calls],.42),'real mode depletion uses original softer ending')
+n=#calls;emit('extremeHeatEnded',p,'depleted');check(#calls==n+1 and calls[#calls]=='End' and near(volumes[#calls],.65),'real mode depletion uses original softer ending')
 n=#calls;emit('extremeHeatEnded',p,'death');emit('extremeHeatEnded',p,'style_changed');emit('extremeHeatEnded',p,'unequipped')
 check(#calls==n,'lifecycle cleanup does not play misleading mode-ending flourish')
 p.localPlayer=false;n=#calls;emit('heatActivationStarted',p);emit('heatActivationFlare',p);emit('heatActivationStopped',p,true)
@@ -94,19 +94,21 @@ check(onlyEffects,'activation routes contain only supplied SFX, never character 
 check(#calls>0,'fixture exercised supplied cue routes without voice playback')
 
 local windup=start(true);charge=windup-1
-check(calls[charge]=='Charge'and calls[windup]=='Windup'and near(volumes[windup],.20),'Kiwami windup layers with existing Y6 charge')
+check(calls[charge]=='Charge'and calls[windup]=='Windup'and near(volumes[windup],.80),'supplied windy whoosh layers clearly with existing Y6 charge')
 n=#calls;emit('heatActivationStarted',p);check(#calls==n,'layered activation still starts only once')
 clock=clock+500;emit('heatActivationFlare',p);local ignition=#calls;flare=ignition-1
-check(calls[flare]=='Flare'and calls[ignition]=='Ignition'and near(volumes[ignition],.24),'native flare adds the supplied Kiwami ignition once')
+check(calls[flare]=='Flare'and calls[ignition]=='Ignition'and near(volumes[ignition],.45),'native flare adds the supplied Kiwami ignition once')
 emit('heatActivationFlare',p);check(#calls==ignition,'duplicate flare cannot stack ignition')
-clock=clock+70;F.tick();check(near(volumes[charge],.14)and near(volumes[windup],.10),'both charge layers fade together')
-clock=clock+70;F.tick();check(stopped[charge]==1 and stopped[windup]==1,'both windups stop once after fade')
+clock=clock+70;F.tick();check(near(volumes[charge],.225)and near(volumes[windup],.80),'charge fades while the windy whoosh retains its audible swell')
+clock=clock+70;F.tick();check(stopped[charge]==1 and not stopped[windup]and playing[windup],'flare leaves the full original whoosh playing')
 emit('heatActivationStopped',p,true)
 clock=clock+160;F.tick();check(calls[#calls]=='Layer','existing Y6 flare layer keeps its 300ms delay')
 clock=clock+349;F.tick();check(calls[#calls]=='Layer','surge waits through the end of the activation')
-clock=clock+1;F.tick();local surge=#calls;check(calls[surge]=='Surge'and near(volumes[surge],.18),'successful activation retains restrained 650ms Kiwami surge')
+clock=clock+1;F.tick();local surge=#calls;check(calls[surge]=='Surge'and near(volumes[surge],.35),'successful activation retains restrained 650ms Kiwami surge')
 F.tick();check(#calls==surge,'surge plays once')
 playing[flare]=false;playing[ignition]=false;playing[surge-1]=false;playing[surge]=false;F.tick()
+check(F.activationSounds[p]and playing[windup],'completed activation retains ownership of the original whoosh tail')
+playing[windup]=false;F.tick()
 check(not F.activationSounds[p]and not tickHook,'layered activation releases all completed handles')
 windup=start(true);clock=clock+300;emit('heatActivationFlare',p);n=#calls
 paused=true;clock=clock+5000;F.tick();paused=false;clock=clock+300;F.tick()
@@ -139,4 +141,33 @@ combo.multiHitToken={};combo.active=false;F.hit(p,{}, {},1);check(#calls==n,'ina
 combo.active=true;combo.multiHitToken={};style.sounds=false;F.hit(p,{}, {},1);check(#calls==n,'custom profile can omit all extra accents')
 
 
+F.clear();style.weaponProfile=nil;style.impactFeedback=nil;style.sounds={heatStart='Charge',heatOnA='Flare',heatOnB='Layer',heatOff='End'}
+local oldNative=p.playSound;local direct=0
+p.playSound=function()return 0 end
+emitter.playSoundImpl=function(_,name,owner)check(owner==p,'direct activation emitter keeps its owner');direct=direct+1;return oldNative(p,name)end
+emit('extremeHeatStarted',p)
+check(direct==2 and F.activationSounds[p]and F.activationSounds[p].completed,'actual mode entry restores missing activation audio even when character playback returns zero')
+local before=#calls;emit('extremeHeatStarted',p);check(#calls==before,'duplicate mode event cannot stack activation cues')
+emit('extremeHeatEnded',p,'depleted');check(calls[#calls]=='End'and direct==3,'mode ending uses the same reliable native emitter path')
+emitter.playSoundImpl=nil;p.playSound=oldNative;F.clear()
+style.sounds={chargeStart='Charge',chargeReady='Ready',chargeRelease='Release'}
+ProjectYakuza.activeActions={};local context={kind='heavyCharge'};ProjectYakuza.activeActions[p]=context
+emit('heavyChargeStarted',p,style,{},context);local hold=#calls
+check(calls[hold]=='Charge'and near(volumes[hold],.55)and F.chargeSounds[p]and tickHook,'actual charged windup starts its supplied cue and tracks ownership')
+n=#calls;emit('heavyChargeStarted',p,style,{},context);check(#calls==n,'duplicate charge start cannot stack windups')
+emit('heavyChargeReady',p);local ready=#calls;emit('heavyChargeReady',p)
+check(calls[ready]=='Ready'and #calls==ready and near(volumes[ready],.45),'full-charge cue plays once at the actual ready event')
+emit('heavyChargeStopped',p,true)
+check(stopped[hold]and stopped[ready]and calls[#calls]=='Release'and not F.chargeSounds[p]and not tickHook,'successful release stops owned charge tails and plays a release accent')
+n=#calls;emit('heavyChargeStopped',p,true);check(#calls==n,'duplicate completion cannot replay release')
+emit('heavyChargeStarted',p,style,{},context);hold=#calls;n=#calls;emit('heavyChargeStopped',p,false)
+check(stopped[hold]and #calls==n and not F.chargeSounds[p],'interrupted charge stops silently without a release accent')
+emit('heavyChargeStarted',p,style,{},context);hold=#calls;ProjectYakuza.activeActions[p]=nil;F.tick()
+check(stopped[hold]and not F.chargeSounds[p]and not tickHook,'lost action ownership cleans up charging sounds')
+ProjectYakuza.activeActions[p]=context;emit('heavyChargeStarted',p,style,{},context);hold=#calls;emit('styleChanged',p)
+check(stopped[hold]and not F.chargeSounds[p],'style switch silences the previous charge')
+p.localPlayer=false;n=#calls;emit('heavyChargeStarted',p,style,{},context);emit('heavyChargeReady',p);emit('heavyChargeStopped',p,true)
+check(#calls==n and not F.chargeSounds[p],'observer events do not duplicate charge audio');p.localPlayer=true
+emit('heavyChargeStarted',p,style,{},context);hold=#calls;F.clear()
+check(stopped[hold]and not F.chargeSounds[p]and not tickHook,'save/menu cleanup restores silent charging state')
 return 'PASS '..count..' activation SFX timing, fade, tails, pause, cleanup and owner-only checks'

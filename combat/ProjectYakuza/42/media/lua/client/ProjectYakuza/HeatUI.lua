@@ -44,6 +44,40 @@ function H:drawFill(region,x,y,size,fraction,alpha)
     self:drawSubTexture(H.assets.atlas,region[1],region[2]+region[4]*skip,region[3],region[4]*f,
         H.originX+x*H.scale,H.originY+(y+size*skip)*H.scale,size*H.scale,size*f*H.scale,alpha,1,1,1)
 end
+function H:drawCooldownRow(title,value,y,fractions,ready)
+    local x=55;local width=math.max(200,math.min(270,getPlayerScreenWidth(0)-x-32))
+    local color=ready and {.45,.82,1}or {.52,.60,.72}
+    self:drawRect(x,y,width,29,.78,.025,.035,.055)
+    self:drawRect(x,y,2,29,.95,color[1],color[2],color[3])
+    self:drawText(title,x+9,y+2,color[1],color[2],color[3],1,UIFont.Small)
+    self:drawTextRight(value,x+width-8,y+2,.9,.95,1,1,UIFont.Small)
+    local gap=4;local count=#fractions;local segment=(width-18-gap*(count-1))/count
+    for i,fraction in ipairs(fractions)do
+        local left=x+9+(i-1)*(segment+gap)
+        self:drawRect(left,y+23,segment,3,.8,.13,.19,.26)
+        if fraction>0 then self:drawRect(left,y+23,segment*math.min(1,fraction),3,.95,color[1],color[2],color[3])end
+    end
+    return y+34
+end
+function H:drawCooldowns(p)
+    local style=ProjectYakuza.getPlayerStyle(p);local y=181
+    local q=ProjectYakuza.Quicksteps;local action=style.actions and style.actions.quickstep
+    if q and action and action.enabled then
+        local available,remaining,gap=q.recovery(p);local fractions={}
+        for i=1,q.limit do fractions[i]=i<=available and 1 or (i==available+1 and 1-remaining/q.windowMs or 0)end
+        local value=available.." / "..q.limit
+        if remaining>0 then value=value.."  "..string.format("%.1fs",remaining/1000)
+        elseif gap>0 then value=value.."  "..string.format("%.1fs",gap/1000)
+        else value=value.."  READY"end
+        y=self:drawCooldownRow("QUICKSTEP",value,y,fractions,available>0 and gap==0)
+    end
+    if ProjectYakuza.TigerDrop and style.tigerDrop and ProjectYakuza.Sandbox.tigerDrop(style)then
+        local remaining=ProjectYakuza.TigerDrop.remaining(p);local total=ProjectYakuza.Sandbox.tigerCooldownMs(style)
+        local fraction=total>0 and math.max(0,math.min(1,1-remaining/total))or 1
+        y=self:drawCooldownRow("TIGER DROP",remaining>0 and string.format("%.1fs",remaining/1000)or "READY",y,{fraction},remaining==0)
+    end
+    if self.setHeight then self:setHeight(y+4)end
+end
 function H:prerender()
     local p=getSpecificPlayer(0)
     if not p or p:isDead() or not ProjectYakuza.isEquipped(p) then ProjectYakuza.StyleUI.releaseAll(self);return end
@@ -84,14 +118,17 @@ function H:drawGauge(p)
     local healthWidth=math.max(80,math.min(360*H.scale,getPlayerScreenWidth(0)-H.originX-80))
     local healthX,healthY=H.originX+40*H.scale,H.originY-32*H.scale
     if a.healthEmpty then self:drawTextureScaled(a.healthEmpty,healthX,healthY,healthWidth,18*H.scale,1,1,1,1)end
-    local warning=ProjectYakuza.LowHealthFeedback and ProjectYakuza.LowHealthFeedback.sample(p)or 0
-    local healthAlpha=1-warning*.48
+    local warning=math.sqrt(ProjectYakuza.LowHealthFeedback and ProjectYakuza.LowHealthFeedback.sample(p)or 0)
+    local healthAlpha=1-warning*.72
     local fill=(healthWidth-4)*self.health/100
     if fill>0 then
         for row=0,7 do local shine=1-math.abs(row-3.5)/4;self:drawRect(healthX+2,healthY+2+row*(14*H.scale/8),fill,14*H.scale/8+1,healthAlpha,.48+.4*shine,.025+.045*shine,.035+.045*shine)end
     end
     if a.healthFrame then self:drawTextureScaled(a.healthFrame,healthX,healthY,healthWidth,18*H.scale,1,1,1,1)end
-    if warning>0 and a.healthFrame then self:drawTextureScaled(a.healthFrame,healthX-1,healthY-1,healthWidth+2,18*H.scale+2,warning*.28,1,.12,.1)end
+    if warning>0 and a.healthFrame then
+        self:drawTextureScaled(a.healthFrame,healthX-3,healthY-3,healthWidth+6,18*H.scale+6,warning*.22,1,.08,.06)
+        self:drawTextureScaled(a.healthFrame,healthX-1,healthY-1,healthWidth+2,18*H.scale+2,warning*.62,1,.12,.1)
+    end
     local capacity=(ProjectYakuza.Heat.rules and ProjectYakuza.Heat.rules(p)or ProjectYakuza.Heat.config).maxStocks
     local pairs=math.ceil(capacity/2)
     if self.setWidth then self:setWidth(math.max(348,healthX+healthWidth+12,H.originX+(56+38*capacity)*H.scale))end
@@ -141,13 +178,8 @@ function H:drawGauge(p)
     self:drawOriginal(a.kanji,-34,-34,68,68,1,a.combat)
 
     self:drawOriginal(self.extreme and a.extremeHead or a.head,-27.6,-79.4,103.2,96.8)
-    if ProjectYakuza.TigerDrop and ProjectYakuza.Sandbox.tigerDrop(ProjectYakuza.getPlayerStyle(p))then
-        local seconds=math.ceil(ProjectYakuza.TigerDrop.remaining(p)/1000)
-        self:drawOriginal(a.stockGlass,-58,63,22,22,.8)
-        if seconds==0 then self:drawOriginal(a.core,-55,66,16,16,.8) end
-        self:drawText(seconds>0 and ("Tiger Drop: "..seconds.."s") or "Tiger Drop ready",55,139,.8,.9,1,1,UIFont.Small)
-    end
     self:drawText(self.label or "",55,157,.8,.9,1,1,UIFont.Small)
+    self:drawCooldowns(p)
 end
 function H:onRightMouseDown()return false end
 function H:onRightMouseUp()return false end

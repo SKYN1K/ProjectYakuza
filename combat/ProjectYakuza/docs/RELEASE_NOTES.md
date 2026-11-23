@@ -1,5 +1,13 @@
 # v1.0.1
 
+Default music volume is now 45 percent. Saved volume choices remain unchanged. Mods settings show Project Yakuza options, Volume sliders, Music volume, Hit volume and Voice volume even before translations are available.
+
+Extreme Heat activation uses reliable native emitter playback and lets the original windy whoosh play through its swell instead of fading it out at the flare. Charging heavy attacks now have supplied start, full-charge and release sounds. Existing source waveforms are unchanged.
+
+Vanilla shoves are disabled while any style is equipped, independently of the quickstep binding. Unequipping restores the previous native permission. The HUD now stacks styled Quickstep and Tiger Drop recovery counters below the heat display, with quickstep charges, countdowns and progress bars. Low-health flashing has stronger fill contrast and a clearer red frame glow.
+
+All four normal Dragon rush links now use each original Yakuza 6 BEP follow-up opening instead of a uniform 58 percent recovery marker. The latest authored opening is selected conservatively; collision checks, animation speed and source clips are unchanged.
+
 Added a local Zombie Encounter Intro toggle under Options > Mods > Project Yakuza > Presentation. It defaults to enabled; disabling it closes the current title, cancels pending counting and suppresses future intro titles and cues. The preference persists between sessions.
 
 The running dropkick now coats and trails both legs using separate native foot paths, including multiplayer observers. Both effects share the animation clock and retain independent history and cleanup.
@@ -8,7 +16,7 @@ Running light attacks and quickstep attacks now use the Light Attack binding. Th
 
 Control settings now display readable names such as Light Attack keybind type and Light Attack keyboard bind, including a fallback when translations are unavailable. Existing Light Attack and Heavy Attack / Finisher assignments are preserved.
 
-Validation: native ModOptions persistence and 1,068 encounter-toggle/lifecycle checks; input checks; fresh native 257-pose dropkick import; 23,424 native projection cases; 48,804 effect tracking/lifecycle/observer checks; player-package compilation and privacy checks. Existing texture hashes are unchanged. The full Gaiden archive pixel recheck is unavailable because its source archive is no longer installed. No game launch.
+Validation: 721 focused Kahlua audio, input, charge, HUD and settings checks; four native rush-node timing checks; native shove API inspection; native ModOptions persistence and 1,068 encounter-toggle/lifecycle checks; input checks; fresh native 257-pose dropkick import; 23,424 native projection cases; 48,804 effect tracking/lifecycle/observer checks; player-package compilation and privacy checks. Existing texture hashes are unchanged. The full Gaiden archive pixel recheck is unavailable because its source archive is no longer installed. No game launch.
 
 # v1
 

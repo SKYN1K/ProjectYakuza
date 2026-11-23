@@ -33,9 +33,15 @@ runtime=luaText+'\n'+scriptText+'\n'+'\n'.join(p.read_text(encoding='utf-8')for 
 sequences={f'HeatWisp_{kind}_{i}.png'for kind in ['a','b','c']for i in range(32)}|{f'ExtremeHeat_{kind}_{i}.png'for kind in ['flame','smoke']for i in range(64)}|{f'Blood_splash_{i}.png'for i in range(16)}
 for name in sequences:assert (media/'textures/ProjectYakuza'/name).is_file(),name
 textures=list((media/'textures').rglob('*.png'))
+metadataTextures=set()
+for info in mod.rglob('mod.info'):
+    for name in re.findall(r'^(?:icon|poster)\s*=\s*(.+?)\s*$',info.read_text(encoding='utf-8'),re.M):
+        target=(info.parent/name).resolve()
+        assert target.is_relative_to(mod.resolve())and target.is_file(),'missing or external mod metadata texture: '+name
+        metadataTextures.add(target)
 for p in textures:
     icon=p.stem.removeprefix('Item_')
-    assert p.name in runtime or p.name in sequences or p.stem in scriptText or re.search(r'\bIcon\s*=\s*'+re.escape(icon)+r'\s*,',scriptText),'unreferenced texture: '+str(p)
+    assert p.resolve()in metadataTextures or p.name in runtime or p.name in sequences or p.stem in scriptText or re.search(r'\bIcon\s*=\s*'+re.escape(icon)+r'\s*,',scriptText),'unreferenced texture: '+str(p)
 for name in re.findall(r'["\'](media/[^"\'\n]+\.(?:png|wav|ogg))["\']',luaText):assert (mod/'42'/name).is_file(),name
 soundFiles=set(re.findall(r'\bfile\s*=\s*(media/sound/[^,\r\n]+)',scriptText))
 sounds=[p for p in (media/'sound').rglob('*')if p.is_file()]

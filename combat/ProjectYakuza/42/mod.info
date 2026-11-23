@@ -1,5 +1,20 @@
 name=Project Yakuza
+icon=media/textures/ProjectYakuza_ModIcon.png
 id=ProjectYakuza
-author=Local mod project
-description=Project Yakuza combat framework for Build 42. Includes Dragon of Dojima, configurable combat controls, heat, grabs, paired Heat Actions, effects and multiplayer support.
+author=SKYN1K
+description=Hello! This is a mod that makes you fight LIKE A DRAGON ( It's also a framework. https://github.com/SKYN1K/ProjectYakuza )
+
+This mod was CODED by an AI. Every other asset was NOT made by an AI.
+
+I recommend using the voice mod so your character has an actual voice when fighting. It's in the required items list.
+
+Hold Z to open the Styles menu. There's only one style for now, I'll add more later.
+
+Keybinds are changeable in the Zomboid's settings in Mods section. Same goes for sound.
+
+This mod comes with a few sandbox options.
+
+If you would like to suggest anything or report a bug please consider making a discussion or leave a comment if you're lazy like me
+
+Kiryu's clothes, hair and face on the thumbnail are from this mod: https://steamcommunity.com/sharedfiles/filedetails/?id=3778724196
 version=1.0.1

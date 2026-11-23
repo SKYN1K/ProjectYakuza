@@ -4,11 +4,11 @@ These defaults apply to Dragon of Dojima in v1.0.1. Other styles can register th
 
 ## Settings
 
-**Options > Mods > Project Yakuza** contains the local mouse/keyboard bindings and separate Music, Sounds and Voices sliders. A keyboard code of zero is unbound. Light Attack also controls running strikes and quickstep attacks. Heavy Attack / Finisher also controls the running dropkick. Tiger Drop also uses Heavy Attack / Finisher, taking priority only when its timing and target checks succeed. These contextual attacks have no separate bindings. Each action has a readable keybind type selector and keyboard bind. Heavy attack and finisher use one combined setting; Heat Action remains a separate binding. Native aim, movement, run and sprint keep their PZ bindings.
+**Options > Mods > Project Yakuza options** contains the local mouse/keyboard bindings and separate Music volume, Hit volume and Voice volume sliders. A keyboard code of zero is unbound. Light Attack also controls running strikes and quickstep attacks. Heavy Attack / Finisher also controls the running dropkick. Tiger Drop also uses Heavy Attack / Finisher, taking priority only when its timing and target checks succeed. These contextual attacks have no separate bindings. Each action has a readable keybind type selector and keyboard bind. Heavy attack and finisher use one combined setting; Heat Action remains a separate binding. Native aim, movement, run and sprint keep their PZ bindings.
 
 **Sandbox Options > Project Yakuza** contains the world/server switches for Heat Actions, grabs and Extreme Heat, plus Dragon Tiger Drop's toggle, timing window and cooldown. Defaults are enabled, 160 ms and 20 seconds respectively. Disabling a feature prevents its requests; it does not remove a style definition.
 
-**Options > Mods > Project Yakuza > Presentation > Zombie Encounter Intro** enables or disables the local animated encounter title and its intro sound. It defaults to enabled, saves per client, and can be changed during play. Disabling it closes the active intro and cancels queued counting.
+**Options > Mods > Project Yakuza options > Presentation > Zombie Encounter Intro** enables or disables the local animated encounter title and its intro sound. It defaults to enabled, saves per client, and can be changed during play. Disabling it closes the active intro and cancels queued counting.
 
 ## Heavy input and Heat Action priority
 
@@ -31,3 +31,9 @@ Music, Sounds and Voices each have a 0Ã¢â‚¬â€œ200% slider. Music contr
 ## Extreme Heat prompts
 
 The paired rush follows the eighth confirmed unarmed light-chain contact against a surviving eligible target with enough space. Follow Light, Heavy, Grab, Light, Heavy, Grab using the current bindings. Each prompt needs a fresh press; holding a button does not satisfy the next prompt. The six authored nineteen-frame sections retain 633 ms windows at 1x animation speed. Failure enters the original ending kick. Weapon Heat Actions remain available during Extreme Heat when their own requirements are met.
+
+Music volume defaults to 45 percent for new or reset preferences. Existing saved values are preserved. Volume sliders has separate Music volume, Hit volume and Voice volume controls.
+
+Vanilla shove/stomp input is disabled while a fighting style is equipped, including after quickstep is rebound. Unequipping restores its prior permission. The custom ground attacks remain part of the fighting style.
+
+The default heat HUD shows quickstep charges and the next recovery countdown below the gauge, followed by Tiger Drop cooldown when supported and enabled. Filled segments are available quicksteps; the partial segment shows the next returning charge.

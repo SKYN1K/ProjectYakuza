@@ -107,6 +107,14 @@ local c={player=p,style=style,action=style.actions.quickstep.variants.forward}
 a=Q.Action:new(c);c.timedAction=a;a.attackHandover=true;a:cleanup(false,'cancelled');a:perform()
 check(not Q.pending[p],'cancelled quickstep cannot dispatch a stale attack from late completion')
 check(Q.limit==3 and Q.windowMs==15000,'existing quickstep quota is unchanged')
+clock=clock+16000;p.data.ProjectYakuzaQuickstepTimes={};Q.nextAllowed[0]=nil
+local available,recovery,gap=Q.recovery(p)
+check(available==3 and recovery==0 and gap==0,'unused quicksteps have no recharge or action gap')
+Q.spend(p);clock=clock+5000;Q.nextAllowed[0]=clock+180
+available,recovery,gap=Q.recovery(p)
+check(available==2 and recovery==10000 and gap==180,'HUD recharge exposes the real rolling charge timer and short action gap')
+clock=clock+10000;available,recovery,gap=Q.recovery(p)
+check(available==3 and recovery==0 and gap==0,'HUD returns to ready at the exact quota expiry')
 
 local wall,paused,typing=false,false,false
 local keyState={};isKeyDown=function(k)return keyState[k]==true end
@@ -284,4 +292,33 @@ check(requested and requested.variant=='dropkick','remapped Heavy dispatches the
 R.pause(runner);check(R.players[runner].heavy and not R.players[runner].light,'pause snapshots the shared physical inputs')
 PY.isBusy,PY.isEquipped,PY.getPlayerStyle,PY.requestAction=oldBusy,oldEquipped,oldStyle,oldRequest
 B.options=nil;keyState[35]=false
+function p:isAuthorizeShoveStomp()return self.nativeShove~=false end
+function p:setAuthorizeShoveStomp(value)self.nativeShove=value end
+local equippedForShove=true;local wasEquipped=PY.isEquipped
+PY.isEquipped=function()return equippedForShove end
+B.options={getOption=function(_,id)return {getValue=function()return id=='input_quickstep'and 4 or id=='key_quickstep'and 33 or id=='input_light'and 1 or 0 end}end}
+p.nativeShove=true;p.allowed=true;B.update(p)
+check(not p.nativeShove and p.allowed,'equipped style blocks native shove independently of ordinary melee permission')
+keyState[57]=true;B.update(p)
+check(not p.nativeShove and not B.down('quickstep'),'Space cannot shove after quickstep is rebound to another key')
+keyState[57]=false;keyState[33]=true;B.update(p)
+check(not p.nativeShove and B.down('quickstep'),'rebound quickstep remains available with native shove disabled')
+equippedForShove=false;B.update(p)
+check(p.nativeShove and not B.shoveGates[p],'unequipping restores the original native shove permission')
+p.nativeShove=false;equippedForShove=true;B.update(p);B.clear()
+check(not p.nativeShove,'cleanup preserves a pre-existing shove restriction')
+p.nativeShove=true;B.update(p);B.clear()
+check(p.nativeShove and not B.shoveGates[p],'save/menu cleanup restores a previously allowed shove')
+PY.isEquipped=wasEquipped;B.options=nil;keyState[33]=false
+for i=1,4 do
+ local state,move=light(i);local before=p.exitReports or 0
+ p:setVariable('ProjectYakuzaHitMarker',move.nodeValue);p:setVariable('ProjectYakuzaChainReady',move.nodeValue)
+ check(not PY.tryRecoveryCancel(p,style,state)and p.exitReports==before,'unbuffered light retains its full recovery '..i)
+ state.queued=1;p:setVariable('ProjectYakuzaHitMarker','')
+ check(not PY.tryRecoveryCancel(p,style,state),'earlier rush chain cannot bypass its collision '..i)
+ p:setVariable('ProjectYakuzaHitMarker',move.nodeValue)
+ check(PY.tryRecoveryCancel(p,style,state)and p.exitReports==before+1,'buffered light exits on the earlier native marker '..i)
+ check(not PY.tryRecoveryCancel(p,style,state)and p.exitReports==before+1,'earlier rush recovery exits exactly once '..i)
+ check(move.chainAt>move.impact and move.chainAt<.58 and move.speed==1.6,'each rush link is earlier without changing animation playback '..i)
+end
 return 'PASS '..checks..' one-strike quickstep ownership, native gate, rapid taps, retries and asynchronous handoff checks'

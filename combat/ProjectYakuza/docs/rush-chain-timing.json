@@ -1,0 +1,159 @@
+{
+  "version": "1.0.1",
+  "scope": "Normal unarmed Yakuza 6 follow-up windows instead of uniform 58 percent recovery",
+  "formatReference": "https://github.com/Fronkln/HActLib/blob/main/Types/DE/Enum/Y6NodeIDs.cs",
+  "clips": [
+    {
+      "animation": "ProjectYakuza_DD_Light01",
+      "sourceProperty": "P_KRU_BTL_SUD_ath_01_md.bep",
+      "sourcePropertySha256": "e7136a22127d584af8c211d1f34e77e3d8323b216d23aadadc17b299e0179540",
+      "followupElementKind": 74,
+      "followupWindows": [
+        {
+          "start": 6.0,
+          "end": 14.0,
+          "parameter": 3
+        },
+        {
+          "start": 7.0,
+          "end": 14.0,
+          "parameter": 2
+        },
+        {
+          "start": 8.0,
+          "end": 14.0,
+          "parameter": 1
+        },
+        {
+          "start": 9.0,
+          "end": 14.0,
+          "parameter": 0
+        }
+      ],
+      "selection": "Latest authored follow-up opening; no assumptions about unknown parameter semantics",
+      "sourceFps": 30,
+      "sourceLastFrame": 30,
+      "previousChainFraction": 0.58,
+      "chainFrame": 9,
+      "chainFraction": 0.3,
+      "playbackSpeed": 1.6,
+      "linkSeconds": 0.18749999999999997,
+      "clipSha256": "79294a1ff6a2589950696a3a8938337b8bc60d4e56537222945f1a34d1466d30",
+      "clipBytesUnchanged": true
+    },
+    {
+      "animation": "ProjectYakuza_DD_Light02",
+      "sourceProperty": "P_KRU_BTL_SUD_ath_02_md.bep",
+      "sourcePropertySha256": "74124a03c3ac8965c32d1083203e112ba52fa72b116d90823eeac158308cbc55",
+      "followupElementKind": 74,
+      "followupWindows": [
+        {
+          "start": 10.0,
+          "end": 19.0,
+          "parameter": 3
+        },
+        {
+          "start": 11.0,
+          "end": 19.0,
+          "parameter": 2
+        },
+        {
+          "start": 12.0,
+          "end": 19.0,
+          "parameter": 1
+        },
+        {
+          "start": 13.0,
+          "end": 19.0,
+          "parameter": 0
+        }
+      ],
+      "selection": "Latest authored follow-up opening; no assumptions about unknown parameter semantics",
+      "sourceFps": 30,
+      "sourceLastFrame": 47,
+      "previousChainFraction": 0.58,
+      "chainFrame": 13,
+      "chainFraction": 0.2765957446808511,
+      "playbackSpeed": 1.6,
+      "linkSeconds": 0.2708333333333333,
+      "clipSha256": "4a37db6fe32599db765bdf0c4386b65917745dac31b5a059c2df8386443e5702",
+      "clipBytesUnchanged": true
+    },
+    {
+      "animation": "ProjectYakuza_DD_Light03",
+      "sourceProperty": "P_KRU_BTL_SUD_ath_03_md.bep",
+      "sourcePropertySha256": "79a566a678030ab4d8e96be480daf8089cf6daf7ee39fb677a3fcdaa027c9d09",
+      "followupElementKind": 74,
+      "followupWindows": [
+        {
+          "start": 11.0,
+          "end": 20.0,
+          "parameter": 3
+        },
+        {
+          "start": 14.0,
+          "end": 20.0,
+          "parameter": 2
+        },
+        {
+          "start": 15.0,
+          "end": 20.0,
+          "parameter": 1
+        },
+        {
+          "start": 16.0,
+          "end": 20.0,
+          "parameter": 0
+        }
+      ],
+      "selection": "Latest authored follow-up opening; no assumptions about unknown parameter semantics",
+      "sourceFps": 30,
+      "sourceLastFrame": 42,
+      "previousChainFraction": 0.58,
+      "chainFrame": 16,
+      "chainFraction": 0.38095238095238093,
+      "playbackSpeed": 1.6,
+      "linkSeconds": 0.3333333333333333,
+      "clipSha256": "3d3d04bd21ffc0204e62e79ec78936f58922d3724741ce576d8be0937f46ee55",
+      "clipBytesUnchanged": true
+    },
+    {
+      "animation": "ProjectYakuza_DD_Light04",
+      "sourceProperty": "P_KRU_BTL_SUD_ath_04_md.bep",
+      "sourcePropertySha256": "94b166fd144e96e6afdab2dcb298e5f45da478eb25bb7aa6201e8ab662a8b0a2",
+      "followupElementKind": 74,
+      "followupWindows": [
+        {
+          "start": 12.0,
+          "end": 20.0,
+          "parameter": 3
+        },
+        {
+          "start": 13.0,
+          "end": 20.0,
+          "parameter": 2
+        },
+        {
+          "start": 14.0,
+          "end": 20.0,
+          "parameter": 1
+        },
+        {
+          "start": 15.0,
+          "end": 20.0,
+          "parameter": 0
+        }
+      ],
+      "selection": "Latest authored follow-up opening; no assumptions about unknown parameter semantics",
+      "sourceFps": 30,
+      "sourceLastFrame": 47,
+      "previousChainFraction": 0.58,
+      "chainFrame": 15,
+      "chainFraction": 0.3191489361702128,
+      "playbackSpeed": 1.6,
+      "linkSeconds": 0.3125,
+      "clipSha256": "9ceb5a5ef5713803da69ba6dc69cc0f64380a33da4a855a9ca8b0e6135710e54",
+      "clipBytesUnchanged": true
+    }
+  ]
+}

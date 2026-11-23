@@ -1,8 +1,8 @@
 {
   "version": "1.0.1",
   "releaseProfile": "vanilla-weapons",
-  "sourceFiles": 1457,
-  "runtimeFiles": 1195,
+  "sourceFiles": 1458,
+  "runtimeFiles": 1196,
   "excludedCustomFiles": [
     "42/media/AnimSets/player/actions/ProjectYakuza_DD_BicycleHeat.xml",
     "42/media/AnimSets/player/actions/ProjectYakuza_DD_BottleGuardEnter.xml",

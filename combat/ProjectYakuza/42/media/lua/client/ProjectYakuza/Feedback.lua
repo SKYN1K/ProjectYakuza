@@ -1,9 +1,9 @@
 require "ProjectYakuza/Runtime"
 require "ProjectYakuza/SoundVariety"
 local ProjectYakuza=ProjectYakuza
-local F={states=setmetatable({}, {__mode="k"}),pending=setmetatable({}, {__mode="k"}),stocks=setmetatable({}, {__mode="k"}),activationSounds=setmetatable({}, {__mode="k"})}
+local F={states=setmetatable({}, {__mode="k"}),pending=setmetatable({}, {__mode="k"}),stocks=setmetatable({}, {__mode="k"}),activationSounds=setmetatable({}, {__mode="k"}),chargeSounds=setmetatable({}, {__mode="k"})}
 ProjectYakuza.Feedback=F
-F.heatMix={charge=.28,windup=.20,flare=.50,ignition=.24,layer=.32,surge=.18,finish=.42,fadeMs=140,layerDelayMs=300,surgeDelayMs=650,lateMs=200,tailMs=2800}
+F.heatMix={charge=.45,windup=.80,flare=.80,ignition=.45,layer=.50,surge=.35,finish=.65,fadeMs=140,layerDelayMs=300,surgeDelayMs=650,lateMs=200,tailMs=2800}
 function F.sound(p,key)
     local style=p and ProjectYakuza.getPlayerStyle(p)
     return style and type(style.sounds)=="table" and style.sounds[key] or nil
@@ -29,6 +29,7 @@ end
 local function unhook()
     local any=false;for _ in pairs(F.pending) do any=true;break end
     if not any then for _ in pairs(F.activationSounds) do any=true;break end end
+    if not any then for _ in pairs(F.chargeSounds)do any=true;break end end
     if not any and F.ticking then Events.OnTick.Remove(F.tick);F.ticking=false end
 end
 function F.cancel(p)F.pending[p]=nil;unhook()end
@@ -40,13 +41,45 @@ function F.stopActivation(p)
     if session then for id in pairs(session.handles) do p:getEmitter():stopSound(id) end end
     F.activationSounds[p]=nil;unhook()
 end
+function F.nativeSound(p,name,volume)
+    if type(name)~="string"or name==""or not p or not p:isLocalPlayer()then return end
+    local emitter=p:getEmitter()
+    local id
+    if emitter.playSoundImpl then
+        id=emitter:playSoundImpl(name,p)
+        if type(id)=="number"and id~=0 then emitter:setVolume(id,volume or 1)end
+    else id=F.play(p,name,volume)end
+    return type(id)=="number"and id~=0 and id or nil
+end
 function F.activationSound(p,name,volume)
-    local id=F.play(p,name,volume)
+    local id=F.nativeSound(p,name,volume)
     local session=F.activationSounds[p]
     if type(id)=="number" and id~=0 then
         if session then session.handles[id]=true end
         return id
     end
+end
+function F.stopCharge(p,complete)
+    local session=F.chargeSounds[p];if not session then return end
+    for id in pairs(session.handles)do p:getEmitter():stopSound(id)end
+    F.chargeSounds[p]=nil
+    if complete and not p:isDead()and ProjectYakuza.isEquipped(p)then F.nativeSound(p,F.sound(p,"chargeRelease"),.50)end
+    unhook()
+end
+function F.startCharge(p,style,move,context)
+    if not p or not p:isLocalPlayer()or not ProjectYakuza.isEquipped(p)then return end
+    local old=F.chargeSounds[p];if old and old.context==context then return end
+    F.stopCharge(p,false)
+    local id=F.nativeSound(p,F.sound(p,"chargeStart"),.55)
+    local session={context=context,style=style.id,handles={},deadline=getTimestampMs()+5000}
+    if id then session.handles[id]=true end
+    F.chargeSounds[p]=session;hook()
+end
+function F.readyCharge(p)
+    local session=F.chargeSounds[p];if not session or session.ready then return end
+    session.ready=true
+    local id=F.nativeSound(p,F.sound(p,"chargeReady"),.45)
+    if id then session.handles[id]=true end
 end
 function F.startActivation(p)
     if not p or not p:isLocalPlayer() or not ProjectYakuza.isEquipped(p) then return end
@@ -59,8 +92,7 @@ function F.startActivation(p)
     F.activationSounds[p]=session
     session.charge=F.activationSound(p,F.sound(p,"heatStart"),F.heatMix.charge)
     if session.charge then session.windups[session.charge]=F.heatMix.charge end
-    local windup=F.activationSound(p,F.sound(p,"heatStartLayer"),F.heatMix.windup)
-    if windup then session.windups[windup]=F.heatMix.windup end
+    F.activationSound(p,F.sound(p,"heatStartLayer"),F.heatMix.windup)
     F.notice(p,"EXTREME HEAT");hook()
 end
 function F.flareActivation(p)
@@ -169,6 +201,12 @@ function F.tick()
         elseif time>=job.due then F.play(p,job.sound,.65);F.pending[p]=nil end
     end
     for p,session in pairs(F.activationSounds) do F.updateActivation(p,session,time,paused) end
+    for p,session in pairs(F.chargeSounds)do
+        local context=ProjectYakuza.activeActions and ProjectYakuza.activeActions[p]
+        if p:isDead()or not ProjectYakuza.isEquipped(p)or ProjectYakuza.getPlayerStyle(p).id~=session.style or context~=session.context or not context or context.kind~="heavyCharge"then F.stopCharge(p,false)
+        elseif not paused and time>=session.deadline then F.stopCharge(p,false)
+        elseif paused then session.deadline=time+5000 end
+    end
     unhook()
 end
 function F.hit(p,z,weapon,damage)
@@ -203,6 +241,7 @@ end
 function F.clear()
     F.pending=setmetatable({}, {__mode="k"});unhook()
     for p in pairs(F.activationSounds) do F.stopActivation(p) end
+    for p in pairs(F.chargeSounds)do F.stopCharge(p,false)end
 end
 ProjectYakuza.on("lightAttackStarted",F.swing)
 ProjectYakuza.on("finisherStarted",F.swing)
@@ -227,13 +266,23 @@ end)
 ProjectYakuza.on("heatActivationStarted",F.startActivation)
 ProjectYakuza.on("heatActivationFlare",F.flareActivation)
 ProjectYakuza.on("heatActivationStopped",F.finishActivation)
+ProjectYakuza.on("heavyChargeStarted",F.startCharge)
+ProjectYakuza.on("heavyChargeReady",F.readyCharge)
+ProjectYakuza.on("heavyChargeStopped",F.stopCharge)
+ProjectYakuza.on("extremeHeatStarted",function(p)
+    if not F.activationSounds[p]then F.startActivation(p)end
+    F.finishActivation(p,true)
+end)
 ProjectYakuza.on("extremeHeatEnded",function(p,reason)
     F.stopActivation(p)
     if (not reason or reason=="depleted") and not p:isDead() and ProjectYakuza.isEquipped(p) then
-        F.play(p,F.sound(p,"heatOff"),F.heatMix.finish)
+        local emitter=p:getEmitter();local name=F.sound(p,"heatOff")
+        if name and emitter.playSoundImpl then local id=emitter:playSoundImpl(name,p);if type(id)=="number"and id~=0 then emitter:setVolume(id,F.heatMix.finish)end
+        else F.play(p,name,F.heatMix.finish)end
     end
 end)
 ProjectYakuza.on("styleChanged",F.stopActivation)
+ProjectYakuza.on("styleChanged",function(p)F.stopCharge(p,false)end)
 Events.OnGameStart.Add(F.initialise)
 Events.OnSave.Add(F.clear)
 Events.OnMainMenuEnter.Add(F.clear)

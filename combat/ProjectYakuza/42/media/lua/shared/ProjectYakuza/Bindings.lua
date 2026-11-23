@@ -1,7 +1,7 @@
 
 ProjectYakuza=ProjectYakuza or {}
 local ProjectYakuza=ProjectYakuza
-local B={edges=setmetatable({}, {__mode="k"}),attackGates=setmetatable({}, {__mode="k"})}
+local B={edges=setmetatable({}, {__mode="k"}),attackGates=setmetatable({}, {__mode="k"}),shoveGates=setmetatable({}, {__mode="k"})}
 ProjectYakuza.Bindings=B
 B.definitions={
  {id="light",name="Light Attack",mode=1},
@@ -88,8 +88,20 @@ end
 function B.restore(p)
  local old=B.attackGates[p];if old then p:setAuthorizeMeleeAction(old.allowed);B.attackGates[p]=nil end
 end
+function B.restoreShove(p)
+ local old=B.shoveGates[p]
+ if old then p:setAuthorizeShoveStomp(old.allowed);B.shoveGates[p]=nil end
+end
+function B.updateShove(p)
+ if not p.setAuthorizeShoveStomp or not p.isAuthorizeShoveStomp then return end
+ if ProjectYakuza.isEquipped and ProjectYakuza.isEquipped(p)and not p:isDead()then
+  if not B.shoveGates[p]then B.shoveGates[p]={allowed=p:isAuthorizeShoveStomp()}end
+  p:setAuthorizeShoveStomp(false)
+ else B.restoreShove(p)end
+end
 function B.update(p)
  if not p or not p:isLocalPlayer() then return end
+ B.updateShove(p)
  if p:GetVariable("ProjectYakuzaHeatRushVictim")=="true"then B.restore(p);p:setAuthorizeMeleeAction(false);return end
  local custom=B.mode("light")~=1
  local wheel=ProjectYakuza.StyleSelector and (ProjectYakuza.StyleSelector.wheel or ProjectYakuza.StyleSelector.setup)
@@ -105,6 +117,7 @@ function B.update(p)
 end
 function B.clear()
  for p in pairs(B.attackGates) do B.restore(p) end
+ for p in pairs(B.shoveGates) do B.restoreShove(p)end
  B.edges=setmetatable({}, {__mode="k"})
 end
 if Events and Events.OnPlayerUpdate then Events.OnPlayerUpdate.Add(B.update) end

@@ -39,6 +39,7 @@ ProjectYakuza.registerStyle({
         grab="ProjectYakuza_Y6_Grab",throwImpact="ProjectYakuza_Y6_ThrowImpact",guardHit="ProjectYakuza_Y6_GuardImpact",doubleFinisher="ProjectYakuza_Y6_HeavyFinisher",guardBreak="ProjectYakuza_Y6_GuardBreak",
         heatGain="ProjectYakuza_Y6_HeatGain",heatFull="ProjectYakuza_Y6_HeatFull",heatStart="ProjectYakuza_Y6_ChargeStart",
         heatStartLayer="ProjectYakuza_ExtremeHeatWindup",heatIgnition="ProjectYakuza_ExtremeHeatIgnition",heatSurge="ProjectYakuza_ExtremeHeatSurge",
+        chargeStart="ProjectYakuza_Y6_ChargeStart",chargeReady="ProjectYakuza_Y6_HeatFull",chargeRelease="ProjectYakuza_ExtremeHeatIgnition",
         heatOnA="ProjectYakuza_Y6_HeatOnA",heatOnB="ProjectYakuza_Y6_HeatOnB",heatOff="ProjectYakuza_Y6_HeatOff",
     }),
     music={
@@ -78,10 +79,10 @@ ProjectYakuza.registerStyle({
         chargedHeavy={kind="stagger",force=.75,fullChargeAt=.999,fullChargeKind="knockdown",fullChargeForce=1.0},
     },
     lightAttacks = {
-        { animation="ProjectYakuza_DD_Light01", nodeValue="dd_light_01", quickstepCancelAt=0.233333333333, damageMultiplier=0.75, duration=1.0/1.6, speed=1.6, impact=0.20, chainAt=0.58, reaction="enemy_01", attackEffects={track="dd_trail_light01_1",from=.14,to=.32,swingFrame=3} },
-        { animation="ProjectYakuza_DD_Light02", nodeValue="dd_light_02", quickstepCancelAt=0.191489361702, damageMultiplier=0.75, duration=(47/30)/1.6, speed=1.6, impact=8/47, chainAt=0.58, reaction="enemy_02" },
-        { animation="ProjectYakuza_DD_Light03", nodeValue="dd_light_03", quickstepCancelAt=0.285714285714, damageMultiplier=0.75, duration=1.4/1.6, speed=1.6, impact=11/42, chainAt=0.58, reaction="enemy_03" },
-        { animation="ProjectYakuza_DD_Light04", nodeValue="dd_light_04", quickstepCancelAt=0.255319148936, damageMultiplier=0.75, duration=(47/30)/1.6, speed=1.6, impact=11/47, chainAt=0.58, reaction="enemy_04" },
+        { animation="ProjectYakuza_DD_Light01", nodeValue="dd_light_01", quickstepCancelAt=0.233333333333, damageMultiplier=0.75, duration=1.0/1.6, speed=1.6, impact=0.20, chainAt=9/30, reaction="enemy_01", attackEffects={track="dd_trail_light01_1",from=.14,to=.32,swingFrame=3} },
+        { animation="ProjectYakuza_DD_Light02", nodeValue="dd_light_02", quickstepCancelAt=0.191489361702, damageMultiplier=0.75, duration=(47/30)/1.6, speed=1.6, impact=8/47, chainAt=13/47, reaction="enemy_02" },
+        { animation="ProjectYakuza_DD_Light03", nodeValue="dd_light_03", quickstepCancelAt=0.285714285714, damageMultiplier=0.75, duration=1.4/1.6, speed=1.6, impact=11/42, chainAt=16/42, reaction="enemy_03" },
+        { animation="ProjectYakuza_DD_Light04", nodeValue="dd_light_04", quickstepCancelAt=0.255319148936, damageMultiplier=0.75, duration=(47/30)/1.6, speed=1.6, impact=11/47, chainAt=15/47, reaction="enemy_04" },
     },
     extremeLightAttacks = {{["animation"]="ProjectYakuza_DD_BoostLight01",["nodeValue"]="dd_boost_light_01",["duration"]=0.6875,["speed"]=1.6,["impact"]=0.21212121212121213,["chainAt"]=0.5454545454545454,["quickstepCancelAt"]=0.24242424242424243,["damageMultiplier"]=0.1,["extremeHeat"]=true,["hitResponse"]="boostStun",["noKnockback"]=true},{["animation"]="ProjectYakuza_DD_BoostLight02",["nodeValue"]="dd_boost_light_02",["duration"]=0.625,["speed"]=1.6,["impact"]=0.16666666666666666,["chainAt"]=0.5666666666666667,["quickstepCancelAt"]=0.2,["damageMultiplier"]=0.1,["extremeHeat"]=true,["hitResponse"]="boostStun",["noKnockback"]=true},{["animation"]="ProjectYakuza_DD_BoostLight03",["nodeValue"]="dd_boost_light_03",["duration"]=0.6458333333333334,["speed"]=1.6,["impact"]=0.16129032258064516,["chainAt"]=0.5161290322580645,["quickstepCancelAt"]=0.1935483870967742,["damageMultiplier"]=0.1,["extremeHeat"]=true,["hitResponse"]="boostStun",["noKnockback"]=true},{["animation"]="ProjectYakuza_DD_BoostLight04",["nodeValue"]="dd_boost_light_04",["duration"]=0.625,["speed"]=1.6,["impact"]=0.16666666666666666,["chainAt"]=0.5666666666666667,["quickstepCancelAt"]=0.2,["damageMultiplier"]=0.1,["extremeHeat"]=true,["hitResponse"]="boostStun",["noKnockback"]=true}},
     groundAttacks = {

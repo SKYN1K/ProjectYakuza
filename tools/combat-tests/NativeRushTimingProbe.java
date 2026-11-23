@@ -3,6 +3,16 @@ import javax.xml.parsers.*;
 public class NativeRushTimingProbe {
  public static void main(String[]args)throws Exception{
   var node=Class.forName("zombie.core.skinnedmodel.advancedanimation.AnimNode");int count=0;
+  int[] rushFrames={9,13,16,15},rushEnds={30,47,42,47};
+  for(int branch=1;branch<=4;branch++){
+   var path=Path.of(args[0],"player/melee/ProjectYakuza_DD_Light0"+branch+".xml");
+   var parsed=node.getMethod("Parse",String.class).invoke(null,path.toAbsolutePath().toString());if(parsed==null)throw new AssertionError("rush node parse "+branch);
+   var doc=DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(path.toFile());var events=doc.getElementsByTagName("m_Events");double collision=-1,chain=-1;int hits=0;
+   for(int i=0;i<events.getLength();i++){var e=(org.w3c.dom.Element)events.item(i);var name=e.getElementsByTagName("m_EventName").item(0).getTextContent();var parameter=e.getElementsByTagName("m_ParameterValue").item(0).getTextContent();if(name.equals("AttackCollisionCheck")){collision=Double.parseDouble(e.getElementsByTagName("m_TimePc").item(0).getTextContent());hits++;}if(parameter.equals("ProjectYakuzaChainReady=dd_light_0"+branch))chain=Double.parseDouble(e.getElementsByTagName("m_TimePc").item(0).getTextContent());}
+   if(hits!=1||chain<=collision||Math.abs(chain-(double)rushFrames[branch-1]/rushEnds[branch-1])>1e-12||!"ProjectYakuzaCombatSpeed".equals(node.getField("speedScale").get(parsed)))throw new AssertionError("rush recovery contract "+branch);
+  }
+  var player=Class.forName("zombie.characters.IsoPlayer");player.getMethod("setAuthorizeShoveStomp",boolean.class);player.getMethod("isAuthorizeShoveStomp");
+  System.out.println("PASS four native normal rush nodes use per-clip post-collision recovery frames, original playback and one collision; separate native shove permission available");
   try(var files=Files.walk(Path.of(args[0]))){for(var path:files.filter(p->p.toString().endsWith(".xml")).toList()){
    var doc=DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(path.toFile());var names=doc.getElementsByTagName("m_AnimName");if(names.getLength()==0)continue;var name=names.item(0).getTextContent();if(!name.equals("ProjectYakuza_DD_HeatRush")&&!name.equals("ProjectYakuza_DD_HeatRushVictim"))continue;
    Object parsed=node.getMethod("Parse",String.class).invoke(null,path.toString());if(!"1".equals(node.getField("speedScale").get(parsed)))throw new AssertionError(path);count++;

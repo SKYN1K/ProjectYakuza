@@ -39,6 +39,6 @@
 		<boneName>Bip01_Spine</boneName>
 		<includeDescendants>false</includeDescendants>
 	</m_SubStateBoneWeights>
-<m_Events><m_EventName>SetVariable</m_EventName><m_TimePc>0.58</m_TimePc><m_ParameterValue>ProjectYakuzaChainReady=dd_light_01</m_ParameterValue></m_Events>
+<m_Events><m_EventName>SetVariable</m_EventName><m_TimePc>0.3</m_TimePc><m_ParameterValue>ProjectYakuzaChainReady=dd_light_01</m_ParameterValue></m_Events>
 <m_Events><m_EventName>SetVariable</m_EventName><m_TimePc>0.233333333333</m_TimePc><m_ParameterValue>ProjectYakuzaQuickstepCancelReady=dd_light_01</m_ParameterValue></m_Events>
 </animNode>

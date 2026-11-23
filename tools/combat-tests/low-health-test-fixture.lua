@@ -83,6 +83,7 @@ function ISPanel:new(x,y,w,h)return setmetatable({width=w,height=h},self)end
 function ISPanel:initialise()end;function ISPanel:setWantMouseEvents(v)self.mouse=v end;function ISPanel:addToUIManager()end
 function ISPanel:drawTextureScaled(texture,x,y,w,h,alpha,r,g,b)uiDraws[#uiDraws+1]={texture=texture,alpha=alpha,r=r,g=g,b=b}end
 function ISPanel:drawSubTexture()end;function ISPanel:drawRect(x,y,w,h,a)fillAlphas[#fillAlphas+1]=a end;function ISPanel:drawText(text)self.lastText=text;if text=="CRITICAL"or text=="LOW HEALTH"then warningTexts[#warningTexts+1]=text end end
+function ISPanel:drawTextRight()end
 getSpecificPlayer=function()return owner end;getPlayerScreenWidth=function()return 1280 end
 getTexture=function(name)return name end;UIFont={Small=1}
 SpriteRenderer={instance={getDoAdditive=function()return false end,setDoAdditive=function()end}}
@@ -91,14 +92,31 @@ PY.Heat={display=function()return 50 end,isExtreme=function()return false end,st
 PY.Bindings={label=function()return 'N'end};PY.TigerDrop=nil
 do local _="ProjectYakuzaFixture:HUD" end
 local HUD=PY.HeatUI;HUD.create();HUD.instance:prerender()
-local red=false;for _,draw in ipairs(uiDraws)do if draw.texture:find('BarFrame.png',1,true)and draw.g==.12 then red=true;check(draw.alpha>0 and draw.alpha<=.28,'health warning overlays the original frame at restrained alpha')end end
+local red=false;for _,draw in ipairs(uiDraws)do if draw.texture:find('BarFrame.png',1,true)and draw.g==.12 then red=true;check(draw.alpha>.28 and draw.alpha<=.62,'health warning has a clearer red frame pulse without becoming opaque')end end
 check(red and HUD.instance.mouse==false,'stock HUD uses original health frame without intercepting mouse input')
 check(#warningTexts==0,'low-health status words are removed from the HUD')
 state=L.states[owner];state.last=clock;state.clock=state.period/4;fillAlphas={};HUD.instance:prerender();local peak=fillAlphas[1]
 state.clock=state.period*.75;fillAlphas={};HUD.instance:prerender();local trough=fillAlphas[1]
-check(peak>=.52 and peak<trough and trough<=1,'the health fill itself pulses while remaining visible')
+check(peak>=.28 and peak<.52 and peak<trough and trough<=1,'the health fill pulses with stronger contrast while remaining visible')
 owner.health=100;step(250);step(250);uiDraws={};HUD.instance:prerender();local warned=false
 for _,draw in ipairs(uiDraws)do if draw.g==.12 then warned=true end end
 check(not warned,'healed character does not retain a pulsing health-frame overlay')
+local rows={};local actualRow=HUD.drawCooldownRow
+HUD.drawCooldownRow=function(self,title,value,y,fractions,ready)rows[#rows+1]={title=title,value=value,y=y,fractions=fractions,ready=ready};return actualRow(self,title,value,y,fractions,ready)end
+local charges,recovery,gap=3,0,0
+PY.Quicksteps={limit=3,windowMs=15000,recovery=function()return charges,recovery,gap end}
+local tigerRemaining=0;PY.TigerDrop={remaining=function()return tigerRemaining end}
+HUD.instance:drawCooldowns(owner)
+check(#rows==2 and rows[1].title=='QUICKSTEP'and rows[2].title=='TIGER DROP'and rows[1].y>157 and rows[2].y>rows[1].y+29,'quickstep sits below the HUD and Tiger Drop is stacked underneath without overlap')
+check(rows[1].value=='3 / 3  READY'and rows[1].ready and rows[2].ready,'ready counters show full charges and ready Tiger Drop')
+charges=0;recovery=7300;tigerRemaining=12500;rows={};HUD.instance:drawCooldowns(owner)
+check(rows[1].value=='0 / 3  7.3s'and not rows[1].ready and rows[1].fractions[1]>0 and rows[1].fractions[1]<1,'exhausted quickstep shows a fractional countdown and recovering first charge')
+check(rows[2].value=='12.5s'and not rows[2].ready and rows[2].fractions[1]==.375,'Tiger Drop progress reflects its actual twenty-second cooldown')
+charges=2;recovery=2000;rows={};HUD.instance:drawCooldowns(owner)
+check(rows[1].ready and rows[1].fractions[1]==1 and rows[1].fractions[2]==1 and rows[1].fractions[3]<1,'available quicksteps remain usable while the missing charge refills')
+SandboxVars={ProjectYakuza={DragonTigerDrop=false}};rows={};HUD.instance:drawCooldowns(owner)
+check(#rows==1 and rows[1].title=='QUICKSTEP','sandbox-disabled Tiger Drop has no cooldown row');SandboxVars=nil
+PY.Quicksteps=nil;rows={};HUD.instance:drawCooldowns(owner)
+check(#rows==1 and rows[1].title=='TIGER DROP','Tiger Drop occupies the first row when the style has no quickstep module')
 L.clearAll();local remaining=0;for _ in pairs(L.states)do remaining=remaining+1 end;check(not L.hooked and remaining==0,'save/world cleanup drops all local state')
 return 'PASS '..checks..' style-specific low-health thresholds, private audio, pause, recovery, HUD and bounded polling checks'

@@ -1,0 +1,36 @@
+{
+  "version": "1.0.1",
+  "offlineOnly": true,
+  "focusedKahluaChecks": 721,
+  "runtimeLuaFilesCompiled": 88,
+  "playerReleaseChecks": 126,
+  "nativeMissingItemSaveRecordChecks": 2,
+  "runtimePackageTests": 6,
+  "nativeNormalRushNodesChecked": 4,
+  "nativeOriginalHeatRushNodesChecked": 13,
+  "nativeVictimEndSelectorsChecked": 8,
+  "sourceAudioChanged": false,
+  "sourceMotionClipsChanged": false,
+  "nativeActivationAudioDefinitions": 3,
+  "nativeCombatSoundDefinitions": 17,
+  "nativeCombatClipReferences": 50,
+  "sourceComments": 0,
+  "indoorHitReview": {
+    "indoorOrLightingBan": false,
+    "primaryHitOwner": "Native PZ combat",
+    "extraHitRestrictions": [
+      "range",
+      "facing",
+      "same floor",
+      "line of sight",
+      "solid collision path"
+    ],
+    "nativeCanSeeUses": "LosUtil.lineClear; no light-level test",
+    "reproduced": false
+  },
+  "suppliedModIcon": {
+    "nativeDecode": "Existing 16-bit PNG unsupported by PZ",
+    "converted": false,
+    "sha256": "b5cc272711734b0dc09d0d6d607085c1bb5d260150e41af14a1e336bc0ba3393"
+  }
+}

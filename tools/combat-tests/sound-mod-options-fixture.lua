@@ -1,7 +1,8 @@
 local count=0
 local function check(ok,msg)count=count+1;if not ok then error(msg)end end
 require=function()end
-local translations={UI_ProjectYakuza_OptionsTitle='Project Yakuza',UI_ProjectYakuza_AudioTitle='Audio',UI_ProjectYakuza_MusicVolume='Music',UI_ProjectYakuza_HitVolume='Sounds',UI_ProjectYakuza_VoiceVolume='Voices',UI_ProjectYakuza_AudioDescription='Zero mutes a group.'}
+local translations={UI_ProjectYakuza_OptionsTitle='Project Yakuza options',UI_ProjectYakuza_AudioTitle='Volume sliders',UI_ProjectYakuza_MusicVolume='Music volume',UI_ProjectYakuza_HitVolume='Hit volume',UI_ProjectYakuza_VoiceVolume='Voice volume',UI_ProjectYakuza_AudioDescription='Zero mutes a group.'}
+for _,name in ipairs({'OptionsTitle','AudioTitle','MusicVolume','HitVolume','VoiceVolume'})do translations['UI_ProjectYakuza_'..name]=nil end
 getText=function(s,...)
  check(not string.find(s,'%%'),'literal format strings must never be passed as translation keys')
  local text=translations[s]or s;if select('#',...)>0 then return string.format(text,...)end;return text
@@ -25,8 +26,10 @@ luautils={split=function(s,delimiter)
 end}
 do local _="ProjectYakuzaFixture:PRODUCTION_MODULES" end
 local api=PZAPI.ModOptions;local options=api:getOptions('ProjectYakuza')
-check(SystemDisabler.enabled and options.name=='Project Yakuza','registered native Mods entry and Advanced compatibility')
-for _,opt in ipairs(options.data)do if opt.type=='slider' then check(translations[opt.name]~=nil,'slider name is a registered translation key');getText(opt.name) end end
+check(SystemDisabler.enabled and options.name=='Project Yakuza options','registered native Mods entry and Advanced compatibility')
+check(options:getOption('musicVolume').name=='Music volume' and options:getOption('hitVolume').name=='Hit volume' and options:getOption('voiceVolume').name=='Voice volume','native sliders receive exact readable captions')
+check(options:getOption('musicVolume'):getValue()==45 and ProjectYakuza.SoundSettings.musicLevel()==.45,'new and reset music settings default to 45 percent')
+options:getOption('musicVolume'):setValue('invalid');check(ProjectYakuza.SoundSettings.musicLevel()==.45,'invalid music values use the same quiet default');options:getOption('musicVolume'):setValue(45)
 local controlCount=0
 for _,opt in ipairs(options.data)do
  if opt.type=='combobox' or opt.type=='keybind' then

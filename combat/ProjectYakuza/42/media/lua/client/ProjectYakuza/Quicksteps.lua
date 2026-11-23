@@ -21,6 +21,13 @@ function Q.spend(p)
     local available=Q.quota(p);if available<=0 then return false end
     local times=p:getModData().ProjectYakuzaQuickstepTimes;times[#times+1]=now();return true
 end
+function Q.recovery(p)
+    local available=Q.quota(p)
+    local history=p:getModData().ProjectYakuzaQuickstepTimes
+    local remaining=history[1]and math.max(0,history[1]+Q.windowMs-now())or 0
+    local gap=math.max(0,(Q.nextAllowed[p:getPlayerNum()]or 0)-now())
+    return available,remaining,gap
+end
 local function var(player, name) return player:GetVariable(name) or "" end
 function Q.facing(player)
     local vector=player:getForwardDirection()

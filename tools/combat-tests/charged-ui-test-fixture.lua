@@ -335,8 +335,9 @@ function ISPanel:drawSubTexture(texture,sx,sy,sw,sh,x,y,w,h,alpha,r,g,b)
 end
 local healthRects={}
 function ISPanel:drawTextureScaled()end
-function ISPanel:drawRect(x,y,w,h,alpha,r,g,b)healthRects[#healthRects+1]={width=w,r=r}end
+function ISPanel:drawRect(x,y,w,h,alpha,r,g,b)if y<100 then healthRects[#healthRects+1]={width=w,r=r}end end
 function ISPanel:drawText()end
+function ISPanel:drawTextRight()end
 getSpecificPlayer=function()return p end;UIFont={Small=1}
 getKeyName=function(key)return tostring(key)end
 local extremeHud=false;PY.Heat.enabled=function()return true end

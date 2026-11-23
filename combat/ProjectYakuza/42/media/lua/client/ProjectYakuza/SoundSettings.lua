@@ -5,21 +5,24 @@ require "PZAPI/ModOptions"
 require "ISUI/ISDuplicateKeybindDialog"
 require "ProjectYakuza/Registry"
 require "ProjectYakuza/Bindings"
-local options=PZAPI.ModOptions:create("ProjectYakuza",getText("UI_ProjectYakuza_OptionsTitle"))
-options:addTitle(getText("UI_ProjectYakuza_AudioTitle"))
-local music=options:addSlider("musicVolume","UI_ProjectYakuza_MusicVolume",0,200,5,100)
-local hits=options:addSlider("hitVolume","UI_ProjectYakuza_HitVolume",0,200,5,100)
-local voices=options:addSlider("voiceVolume","UI_ProjectYakuza_VoiceVolume",0,200,5,100)
-options:addDescription("UI_ProjectYakuza_AudioDescription")
+local function label(key,fallback)
+    local text=getText(key)
+    return type(text)=="string"and text~=key and text or fallback
+end
+local options=PZAPI.ModOptions:create("ProjectYakuza",label("UI_ProjectYakuza_OptionsTitle","Project Yakuza options"))
+options:addTitle(label("UI_ProjectYakuza_AudioTitle","Volume sliders"))
+local music=options:addSlider("musicVolume",label("UI_ProjectYakuza_MusicVolume","Music volume"),0,200,5,45)
+local hits=options:addSlider("hitVolume",label("UI_ProjectYakuza_HitVolume","Hit volume"),0,200,5,100)
+local voices=options:addSlider("voiceVolume",label("UI_ProjectYakuza_VoiceVolume","Voice volume"),0,200,5,100)
+options:addDescription(label("UI_ProjectYakuza_AudioDescription","Set separate volumes for music, hits and voices. Zero mutes that group."))
 ProjectYakuza.SoundSettings={
     voiceLevel=function()return math.max(0,math.min(2,(tonumber(voices:getValue()) or 100)/100))end,
-    musicLevel=function()return math.max(0,math.min(2,(tonumber(music:getValue()) or 100)/100))end,
+    musicLevel=function()return math.max(0,math.min(2,(tonumber(music:getValue()) or 45)/100))end,
 }
 options:addTitle("Presentation")
 local encounterIntro=options:addTickBox("encounterIntro","Zombie Encounter Intro",true,"Show the animated encounter title and its sound when a fight starts.")
 function ProjectYakuza.isEncounterIntroEnabled()return encounterIntro:getValue()~=false end
 ProjectYakuza.Bindings.configure(options)
-local impacts={punchImpact=true,kickImpact=true,heatImpact=true,finisher=true,doubleFinisher=true,throwImpact=true,guardHit=true,guardBreak=true}
 function options:apply()
     if not ProjectYakuza.isEncounterIntroEnabled()and ProjectYakuza.EncounterIntro then ProjectYakuza.EncounterIntro.clear(nil,"disabled")end
     local musicNames,hitNames={},{ProjectYakuza_QTEAppear=true,ProjectYakuza_QTEPress=true,ProjectYakuza_QTEFail=true}
