@@ -74,3 +74,8 @@ Dragon plays its existing half-second GrabEnter clip when Grab is pressed, inclu
 Multiplayer requests server ownership at reach contact. An accepted grant attaches to the existing attempt; a denied or expired attempt becomes a miss. A grant arriving after cancellation is released. Existing held walking, strikes, throws and Heat Action handoffs continue after attachment.
 
 Style authors can opt into this flow with grab.attemptAnimation, grab.attemptContactMs and grab.attemptDurationMs, and requiresTarget=false. Timing is sampled from the animation track. The configured contact must precede the end of the clip, and the attempt must last no more than two seconds. Dragon uses ProjectYakuza_DD_GrabEnter, 200 ms and 500 ms. Existing animation bytes, speeds and nodes are unchanged.
+
+
+## Entry polish (1.0.5)
+
+Client and server share a time-based blend from the victim's actual position to the complete grip offset, including lateral placement. The default is 180 ms. Styles can set grab.entryBlendMs between 80 and 400. Both readiness markers and completed alignment are required before hold begins. A late MP grant must still pass range, facing, visibility and path checks. Obstructed entry releases the actors. Pause adjusts entry and approval clocks; a finished missed animation cannot retain its movement lock simply because the track disappeared.

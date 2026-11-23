@@ -64,12 +64,19 @@ end
 
 function P.reaction(style,id)
     if type(id)~="string" or id=="" then return false end
-    local s=ProjectYakuza.getStyle(style);if not s or not s.enemyReactions then return false end
-    for _,move in ipairs(s.lightAttacks) do if move.reaction==id then return true end end
-    for _,slot in pairs(s.actions) do
-        if slot.reaction==id then return true end
-        for _,move in pairs(slot.variants or {}) do if move.reaction==id then return true end end
+    local s=ProjectYakuza.getStyle(style);if not s then return false end
+    local function allowed(view)
+        if not view.enemyReactions then return false end
+        for _,pool in pairs(view.reactionPools or {})do for _,clip in ipairs(pool)do if clip==id then return true end end end
+        for _,move in ipairs(view.lightAttacks)do if move.reaction==id then return true end end
+        for _,slot in pairs(view.actions)do
+            if slot.reaction==id then return true end
+            for _,move in pairs(slot.variants or {})do if move.reaction==id then return true end end
+        end
     end
+    if allowed(s)then return true end
+    local weapons=ProjectYakuza.Weapons
+    for _,view in pairs(weapons and weapons.views[style]or {})do if allowed(view)then return true end end
     return false
 end
 function P.kind(style,id)

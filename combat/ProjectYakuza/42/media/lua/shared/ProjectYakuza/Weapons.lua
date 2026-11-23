@@ -7,7 +7,7 @@ function W.register(styleId,profile)
     assert(base and type(profile)=="table","register the base style before its weapon profile")
     assert(type(profile.id)=="string" and profile.id:match("^[%w_.-]+$"),"weapon profile ID required")
     local profiles=W.profiles[styleId] or {};assert(not profiles[profile.id],"duplicate weapon profile")
-    for _,key in ipairs({"standaloneHeavy","quickstepCancelLights"}) do
+    for _,key in ipairs({"standaloneHeavy","quickstepCancelLights","enemyReactions"}) do
         assert(profile[key]==nil or type(profile[key])=="boolean",key.." must be boolean")
     end
     assert(type(profile.items)=="table" and #profile.items>0,"explicit weapon item IDs required")
@@ -24,7 +24,7 @@ function W.register(styleId,profile)
     if view.actions.styleEntry==nil and base.actions then view.actions.styleEntry=base.actions.styleEntry end
     view.attackSpeed=profile.attackSpeed or 1
     view.quickstepCancelLights=profile.quickstepCancelLights==true
-    view.tigerDrop=false;view.enemyReactions=false;view.extremeLightAttacks=nil;view.directionalAttacks=nil;view.directionalFinishers=nil;view.heatRush=nil;view.finisherBranches=nil
+    view.tigerDrop=false;view.enemyReactions=profile.enemyReactions==true;view.reactionPools=view.enemyReactions and(profile.reactionPools or base.reactionPools)or nil;view.extremeLightAttacks=nil;view.directionalAttacks=nil;view.directionalFinishers=nil;view.heatRush=nil;view.finisherBranches=nil
     view.hitResponses=profile.hitResponses;view.juggling=profile.juggling
     view.sounds=profile.sounds or false
     if profile.impactFeedback~=nil then view.impactFeedback=profile.impactFeedback end

@@ -35,3 +35,10 @@ The owner sends the chosen cue/index/gain. The server validates the equipped act
 Personal volume settings apply separately on each listener. A zero playback handle still permits the selected clip relay, preserving remote playback when the owner's local audio is muted. Shuffle history is per player/style/pool and clears on style change, save and menu entry. No new tick/render loop is installed.
 
 The standalone sound-variety Kahlua fixture exercises actual production Feedback/SoundVariety code. SoundVarietyProbe parses the original definitions, verifies original parent identity/files and executes the public clip methods through Zomboid's Java-to-Lua exposer without launching PZ or playing audio.
+
+
+## Contact feedback (1.0.5)
+
+The optional sounds.grabSwing cue plays at the reach contact for both hits and misses, falling back to punchSwing. sounds.fullChargeImpact differentiates a confirmed chargePower of at least .999; partial charges retain chargedImpact. sounds.parryImpact supplies the counter transient and optional sounds.counterImpact supplies its confirmation layer. Dragon uses the existing source whoosh, HeatImpact, GuardBreak and HeavyFinisher assets. No sound files are created or edited.
+
+Heavy feedback remains limited to one accent per swing even when multiple zombies are hit. Guard feedback allows one varied cue per 90 ms, avoiding stacked transients from simultaneous attackers. These cues retain existing per-listener volumes and the validated SoundVariety MP path where a shuffle pool exists.

@@ -1,4 +1,5 @@
 function p:StopTimedActionAnim()end
+function p:CanSee()return self.visible~=false end
 ZombRand=function(max)return max-1 end
 Events.OnZombieUpdate=event();Events.OnGameStart=event();Events.OnServerCommand=event()
 CharacterStat={ENDURANCE=1}
@@ -65,7 +66,7 @@ function z:getMovementLastFrame()return {set=function(_,x,y)self.moveX=x;self.mo
 function z:Hit(_,_,damage)self.hits=self.hits+1;self.health=self.health-damage;self.floor=true;self.knock=true;self.stagger=true end
 instanceof=function(o,name)return o==z and name=='IsoZombie'or o==p and name=='IsoPlayer'end
 PY.TigerDrop={tracked={}}
-PY.MultiHit={origin=function()return {}end,targets=function()return {{victim=z}}end,clearPath=function()return true end}
+PY.MultiHit={origin=function(player,range)return {x=player:getX(),y=player:getY(),z=0,fx=0,fy=1,range=range}end,targets=function()return {{victim=z}}end,clearPath=function()return true end}
 PY.Quicksteps={shoveAuth={},canMove=function()return true end}
 local track=0;PY.AttackEffects={findTrack=function()return track,1 end}
 PY.NetworkProtocol={path=function()return true end,integer=function(v,a,b)return type(v)=='number'and v==math.floor(v)and v>=a and v<=b end,number=function(v,a,b)return type(v)=='number'and v==v and v>=a and v<=b end}
@@ -388,5 +389,39 @@ do
  PY.Network=network;isClient=client;track=0;D.input[p]=nil
  local slot=style.actions.grab;local duration=slot.attemptDurationMs;slot.attemptDurationMs=slot.attemptContactMs
  check(not PY.validateStyle(style),'grab attempt configuration rejects contact after the end of its animation');slot.attemptDurationMs=duration
+end
+do
+ D.clear();local slot=style.actions.grab;local ox,oy=z.x,z.y
+ z.x=p:getX()+.6;z.y=p:getY()+.9
+ for _,direction in ipairs({{0,1},{1,0},{0,-1},{-1,0}})do
+  local fx,fy=direction[1],direction[2];local state={entryAt=0,entryX=z.x,entryY=z.y}
+  local x,y=R.entryPosition(p,z,slot,state,0,fx,fy);check(x==z.x and y==z.y,'grab entry begins at the actual victim position')
+  local tx,ty=p:getX()+fx*slot.distance+fy*slot.lateral,p:getY()+fy*slot.distance-fx*slot.lateral
+  x,y=R.entryPosition(p,z,slot,state,90,fx,fy);check(math.abs(x-(z.x+tx)/2)<.000001 and math.abs(y-(z.y+ty)/2)<.000001,'entry blends both forward and lateral placement without a hold-phase snap')
+  for _,step in ipairs({10,30,45})do
+   for t=0,180,step do x,y=R.entryPosition(p,z,slot,state,t,fx,fy)end
+   check(math.abs(x-tx)<.000001 and math.abs(y-ty)<.000001,'entry settles identically at different update cadences')
+  end
+ end
+ z.x,z.y=ox,oy
+ local held=startGrab();held:cancel()
+ local function reaching()
+  p.blocked=false;p.ignore=false;p.deferred=true;z.reaction='';z.useless=false;z.ignore=false;z.locked=false;z.state='idle';z.floor=false;z.health=10;z.x=p:getX();z.y=p:getY()+.7;stamina=.9
+  check(PY.requestAction(p,'grab'),'polished grab attempt starts');local a=PY.activeActions[p].timedAction;a:start();track=.2;clock=clock+200;a:update();return a
+ end
+ local a=reaching();paused=true;clock=clock+5000;a:update();paused=false
+ p.vars.ProjectYakuzaDefenseMarker='enter_ready';z.vars.ProjectYakuzaGrabMarker='enter_ready';clock=clock+180;a:update()
+ check(not a.cleaned and a.phaseName=='hold','pausing during entry preserves its alignment and timeout clocks');a:cancel()
+ local path=PY.MultiHit.clearPath
+ check(D.reachable(p,z),'visible nearby victim remains reachable at confirmation')
+ p.visible=false;check(not D.reachable(p,z),'a grant cannot grab through newly blocked visibility');p.visible=true
+ PY.MultiHit.clearPath=function()return false end;check(not D.reachable(p,z),'a grant rechecks walls between the player and victim');PY.MultiHit.clearPath=path
+ z.y=p:getY()-.7;check(not D.reachable(p,z),'a delayed grant cannot catch a zombie behind the player')
+ a=reaching();PY.MultiHit.clearPath=function()return false end;clock=clock+50;a:update();PY.MultiHit.clearPath=path
+ check(a.cleaned and not z.useless and not z.ignore and not p.blocked,'a newly obstructed entry releases both actors safely')
+ local targets=PY.MultiHit.targets;PY.MultiHit.targets=function()return {}end
+ a=reaching();track=nil;clock=clock+300;a:update()
+ check(a.cleaned and not p.blocked and not p.ignore,'a disappearing animation track cannot leave a missed grab blocked for an extra second')
+ PY.MultiHit.targets=targets;track=0
 end
 return 'PASS '..checks..' reliable grab lifecycle, four source-timed strikes, following, cleanup, wall geometry, handoff and action protection checks'

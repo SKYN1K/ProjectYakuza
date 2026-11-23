@@ -1,3 +1,13 @@
+# v1.0.5
+
+Grab entry blends the victim from its actual position into the full forward/lateral grip offset over 180 ms, shared by the client and server. This removes the fixed distance-per-tick approach and final side snap. Delayed grants recheck range, facing, visibility and walls. Pausing preserves entry/approval clocks, and a finished miss releases controls promptly even if its animation track disappears.
+
+Grab reaches use a soft supplied arm whoosh at contact, including misses. Fully charged strikes use a distinct supplied Heat impact; partial charges retain the heavy impact. Tiger Drop layers the existing guard-break transient with a heavy confirmation. Simultaneous guard contacts share a short audio gate to avoid crowd clipping. Existing volume controls and source audio remain unchanged.
+
+Standing hit reactions now choose among existing source clips by contact family: punches, kicks, blades and blunt weapons. Selection varies by swing and victim; the server sends the selected registered clip to owners and observers. Native knockback, knockdowns, Extreme Heat stuns, grabs and paired cinematics retain priority. Blocked/no-damage SP hits cannot force a flinch. Damage and hit-force tuning are unchanged.
+
+Validation includes grab cadence/placement, pause and obstruction recovery, MP grants and reaction replication, reaction-family/clip whitelists, confirmed-hit gating, feedback selection and duplicate suppression. Native importers verify all reused reaction/grab clips and original sound definitions. No animation, texture or audio bytes were generated or changed. PZ was not launched; live feel still needs gameplay testing.
+
 # v1.0.4
 
 Heat Action impacts now briefly tint the full viewport and shake the local camera. Camera offsets apply on the simulation tick before world rendering and restore before UI drawing, with an after-render fallback. Strength and decay scale with the contact. Map/menu screens, pause, death, disabled hit effects, remote actors and split-screen suppress the treatment. Chromatic aberration is omitted. The unwanted Extreme Heat contact spark stays removed; existing blood and limb trails remain.

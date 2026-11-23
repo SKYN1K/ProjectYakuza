@@ -1,7 +1,7 @@
 require "ProjectYakuza/Runtime"
 require "ProjectYakuza/SoundVariety"
 local ProjectYakuza=ProjectYakuza
-local F={states=setmetatable({}, {__mode="k"}),pending=setmetatable({}, {__mode="k"}),stocks=setmetatable({}, {__mode="k"}),activationSounds=setmetatable({}, {__mode="k"}),chargeSounds=setmetatable({}, {__mode="k"})}
+local F={states=setmetatable({}, {__mode="k"}),pending=setmetatable({}, {__mode="k"}),stocks=setmetatable({}, {__mode="k"}),activationSounds=setmetatable({}, {__mode="k"}),chargeSounds=setmetatable({}, {__mode="k"}),guardAt=setmetatable({}, {__mode="k"})}
 ProjectYakuza.Feedback=F
 F.heatMix={charge=.45,windup=.80,flare=.80,ignition=.45,layer=.50,surge=.35,finish=.65,fadeMs=140,layerDelayMs=300,surgeDelayMs=650,lateMs=200,tailMs=2800}
 function F.sound(p,key)
@@ -209,6 +209,13 @@ function F.tick()
     end
     unhook()
 end
+function F.impactCue(p,move)
+    if move.chargedHeavy then
+        if type(move.chargePower)=="number"and move.chargePower>=.999 then return F.sound(p,"fullChargeImpact")or F.sound(p,"chargedImpact")end
+        return F.sound(p,"chargedImpact")
+    end
+    return move.groundAttack and F.sound(p,"kickImpact")or move.double and F.sound(p,"doubleFinisher")or move.neutralHeavy and F.sound(p,"heavyImpact")or F.sound(p,"finisher")
+end
 function F.hit(p,z,weapon,damage)
     if not p or not ProjectYakuza.isEquipped(p) or type(damage)~="number" or damage<=0 then return end
     local s=ProjectYakuza.stateFor(p);local move=s.groundMove or s.finisherMove
@@ -226,8 +233,8 @@ function F.hit(p,z,weapon,damage)
     local stamp=s.multiHitToken or s.startedAt
     if s.feedbackStamp==stamp then return end
     s.feedbackStamp=stamp
-    local cue=move.groundAttack and F.sound(p,"kickImpact")or move.double and F.sound(p,"doubleFinisher")or move.chargedHeavy and F.sound(p,"chargedImpact")or move.neutralHeavy and F.sound(p,"heavyImpact")or F.sound(p,"finisher")
-    F.play(p,cue,move.double and .55 or .45)
+    local full=move.chargedHeavy and type(move.chargePower)=="number"and move.chargePower>=.999
+    F.play(p,F.impactCue(p,move),full and .60 or move.double and .55 or .45)
 end
 function F.heatChanged(p)
     if not p or not p:isLocalPlayer() then return end
@@ -240,6 +247,7 @@ function F.initialise()
 end
 function F.clear()
     F.pending=setmetatable({}, {__mode="k"});unhook()
+    F.guardAt=setmetatable({}, {__mode="k"})
     for p in pairs(F.activationSounds) do F.stopActivation(p) end
     for p in pairs(F.chargeSounds)do F.stopCharge(p,false)end
 end
@@ -254,14 +262,19 @@ ProjectYakuza.on("comboCancelled",F.cancel)
 ProjectYakuza.on("combatHit",F.hit)
 ProjectYakuza.on("heatChanged",F.heatChanged)
 ProjectYakuza.on("grabHeld",function(p)F.play(p,F.sound(p,"grab"),.65);F.notice(p,"GRAB - "..ProjectYakuza.Bindings.label("grab")..": throw")end)
+ProjectYakuza.on("grabReach",function(p)F.play(p,F.sound(p,"grabSwing")or F.sound(p,"punchSwing"),.30)end)
 ProjectYakuza.on("grabBroken",function(p)F.play(p,F.sound(p,"guardBreak"),.45);F.notice(p,"GRAB BROKEN")end)
 ProjectYakuza.on("throwHit",function(p)F.play(p,F.sound(p,"throwImpact"),.8);F.notice(p,"THROW")end)
-ProjectYakuza.on("guardHit",function(p)F.play(p,F.sound(p,"guardHit"),.4)end)
+ProjectYakuza.on("guardHit",function(p)
+    local time=getTimestampMs();if F.guardAt[p]and time-F.guardAt[p]<90 then return end
+    F.guardAt[p]=time;F.play(p,F.sound(p,"guardHit"),.45)
+end)
 ProjectYakuza.on("guardBroken",function(p)F.play(p,F.sound(p,"guardBreak"),.75);F.notice(p,"GUARD BROKEN")end)
 ProjectYakuza.on("tigerDrop",function(p)
     local s=F.states[p];local time=getTimestampMs()
     if s and s.text=="TIGER DROP" and time<s.untilAt then return end
-    F.play(p,F.sound(p,"parryImpact")or F.sound(p,"finisher"),.9);F.notice(p,"TIGER DROP")
+    F.play(p,F.sound(p,"parryImpact")or F.sound(p,"finisher"),.75)
+    F.play(p,F.sound(p,"counterImpact"),.50);F.notice(p,"TIGER DROP")
 end)
 ProjectYakuza.on("heatActivationStarted",F.startActivation)
 ProjectYakuza.on("heatActivationFlare",F.flareActivation)

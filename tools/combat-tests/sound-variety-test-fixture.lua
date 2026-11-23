@@ -54,4 +54,19 @@ for _,move in ipairs({{neutralHeavy=true},{chargedHeavy=true}})do
 end
 combo.finisherMove={afterLight=true};combo.multiHitToken={};F.hit(p,nil,nil,1);check(calls[#calls]=='SignatureFinisher','first finisher preserves its signature sound')
 V.clear(p);check(not V.states[p],'style/world cleanup releases shuffle history')
+do
+ style.sounds.fullChargeImpact='ProjectYakuza_Y6_HeatImpact';style.sounds.parryImpact='DistinctCounter';style.sounds.counterImpact='ProjectYakuza_Y6_HeavyFinisher';style.sounds.guardHit='ProjectYakuza_Y6_GuardImpact';style.sounds.grabSwing='ReachWhoosh'
+ combo.finisherMove={chargedHeavy=true,chargePower=1};combo.multiHitToken={};local n=#direct;F.hit(p,nil,nil,1)
+ check(#direct==n+1 and direct[#direct].clip.parent==nativeSounds.ProjectYakuza_Y6_HeatImpact and direct[#direct].gain==.60,'full charge has a distinct existing heat-impact accent at confirmed contact')
+ F.hit(p,nil,nil,1);check(#direct==n+1,'full-charge crowd contacts do not multiply the accent')
+ combo.finisherMove={chargedHeavy=true,chargePower=.5};combo.multiHitToken={};F.hit(p,nil,nil,1)
+ check(direct[#direct].clip.parent==nativeSounds.ProjectYakuza_Y6_HeavyFinisher,'partial charges retain the regular heavy sound')
+ n=#direct;emit('guardHit',p);emit('guardHit',p);check(#direct==n+1,'simultaneous crowd blocks share one clear guard cue instead of clipping together')
+ clock=clock+90;emit('guardHit',p);check(#direct==n+2,'a later actual block can play another varied guard cue')
+ local native=#calls;n=#direct;emit('tigerDrop',p)
+ check(#calls==native+1 and calls[#calls]=='DistinctCounter'and #direct==n+1,'Tiger Drop has a distinct counter transient plus the supplied heavy confirmation')
+ emit('tigerDrop',p);check(#calls==native+1 and #direct==n+1,'duplicate counter events cannot double the feedback')
+ native=#calls;emit('grabReach',p,nil);check(#calls==native+1 and calls[#calls]=='ReachWhoosh','a missed reach plays the same source-timed arm whoosh as a successful attempt')
+ F.clear();check(not F.guardAt[p],'world cleanup clears guard cue throttling')
+end
 return true,'PASS '..count..' shuffle bags, source clip identity, native volumes, world playback, MP selection, mute/fallback and style isolation checks'

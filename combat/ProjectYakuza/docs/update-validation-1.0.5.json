@@ -1,0 +1,57 @@
+{
+  "version": "1.0.5",
+  "offlineOnly": true,
+  "kahlua": {
+    "grabLifecycle": 1405,
+    "multiplayerAndReactions": 2034,
+    "soundVarietyAndFeedback": 1283,
+    "weaponProfiles": 179,
+    "weaponMultiplayer": 76,
+    "activationAudio": 78
+  },
+  "focusedAssertions": 5055,
+  "nativeImports": {
+    "clips": 5,
+    "channelsEach": 35,
+    "unchangedClipSha256": {
+      "ProjectYakuza_DD_GrabEnter": "d6bc4d7b64f152603a69d79acbdc1cce37b25e714645cce4e416d5ba816896a9",
+      "ProjectYakuza_EnemyHit01": "256437bf6fea941dd678d68ea89ed41fc4c0523c01a069260aab6c355b75d6e3",
+      "ProjectYakuza_EnemyHit02": "fb22afd52344d69072ac258d5deddd6a935435663c219f3a9ae71d028415d050",
+      "ProjectYakuza_EnemyHit03": "5ee85a0d8ae8d72460c139c14bdeeb3a6f696aeece85368f5f9d59e520702241",
+      "ProjectYakuza_EnemyHit04": "cb0aa331625b0009909982d2399660d73dafd7d2109d8a94df4541aa63efa181"
+    }
+  },
+  "nativeSoundDefinitions": 17,
+  "nativeSoundClipReferences": 50,
+  "grabEntryBlendMs": 180,
+  "grabConfirmationChecks": [
+    "range",
+    "facing",
+    "visibility",
+    "path"
+  ],
+  "reactionFamilies": {
+    "punch": [
+      "enemy_01",
+      "enemy_02"
+    ],
+    "kick": [
+      "enemy_03",
+      "enemy_04"
+    ],
+    "blade": [
+      "enemy_02",
+      "enemy_03"
+    ],
+    "blunt": [
+      "enemy_04",
+      "enemy_01"
+    ]
+  },
+  "authoritativeReactionSelection": true,
+  "noAdditionalDamageOrNativeHitCalls": true,
+  "existingKnockdownStunAndPairedOwnershipPreserved": true,
+  "guardAudioGateMs": 90,
+  "visualAudioAssetBytesChanged": false,
+  "sourceComments": 0
+}

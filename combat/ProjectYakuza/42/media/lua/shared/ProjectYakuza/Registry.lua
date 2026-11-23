@@ -223,6 +223,24 @@ function H.releaseStun(victim)
     local any=false;for _ in pairs(H.stuns)do any=true;break end
     if not any and H.stunHooked then Events.OnTick.Remove(H.tickStuns);H.stunHooked=false end
 end
+function H.reactionFamily(style,move)
+    if style.weaponProfile then return style.impactFeedback=="blade"and "blade"or "blunt"end
+    if move.kick or move.neutralHeavy or move.runningAttack and(move.variant=="knee"or move.variant=="dropkick")then return "kick"end
+    return "punch"
+end
+function H.reactionSeed(victim,swing)
+    local id=victim.getOnlineID and victim:getOnlineID()or -1
+    if id<0 then id=math.floor(victim:getX()*17)+math.floor(victim:getY()*29)end
+    return id*31+(type(swing)=="number"and swing or 0)
+end
+function H.reaction(style,move,seed)
+    if not style or not style.enemyReactions or not move or move.groundAttack or move.heatRush or move.noKnockback then return end
+    local response=H.resolve(style,move);if response and response.kind~="flinch"then return end
+    local pool=style.reactionPools and style.reactionPools[H.reactionFamily(style,move)]
+    if not pool or #pool==0 then return move.reaction end
+    if type(seed)~="number"or seed~=seed or seed==math.huge or seed==-math.huge then seed=0 end
+    return pool[math.floor(seed)%#pool+1]
+end
 function H.clearStuns()
     for victim in pairs(H.stuns)do H.releaseStun(victim)end
 end
@@ -330,7 +348,7 @@ function S.actionAllowed(style,kind,move)
     return true
 end
 end
-ProjectYakuza.VERSION = "1.0.4"
+ProjectYakuza.VERSION = "1.0.5"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -541,6 +559,13 @@ function ProjectYakuza.validateStyle(style)
     for _,key in ipairs({"attackSpeed","runningKneeSpeed"}) do
         if style[key]~=nil and (not number(style[key]) or style[key]<=0) then problem(key.." must be positive") end
     end
+    if style.reactionPools~=nil then
+        if type(style.reactionPools)~="table"then problem("reactionPools must be a table")
+        else for family,pool in pairs(style.reactionPools)do
+            if not({punch=true,kick=true,blade=true,blunt=true})[family]or type(pool)~="table"or #pool<1 or #pool>8 then problem("invalid reaction pool")
+            else local seen={};for _,clip in ipairs(pool)do if not text(clip)or not clip:match("^[%w_.-]+$")or seen[clip]then problem("reaction pool needs unique animation IDs")else seen[clip]=true end end end
+        end end
+    end
     for _,key in ipairs({"heat","combatVoices","quickstepVoices","tigerDrop","enemyReactions","quickstepCancelLights"}) do
         if style[key]~=nil and type(style[key])~="boolean" then problem(key.." must be true or false") end
     end
@@ -610,6 +635,7 @@ function ProjectYakuza.validateStyle(style)
                     if type(b)~="table"or not number(b.chance)or b.chance<0 or b.chance>1 or not number(b.intervalMs)or b.intervalMs<250 or b.intervalMs>10000 or b.firstCheckMs~=nil and(not number(b.firstCheckMs)or b.firstCheckMs<0 or b.firstCheckMs>10000)or not text(b.animation)or not text(b.targetAnimation)or not number(b.duration)or b.duration<=0 or b.duration>10 then problem("invalid grab breakout settings")end
                 end
                 if slot.releaseOnAimLoss~=nil and type(slot.releaseOnAimLoss)~="boolean"then problem("grab.releaseOnAimLoss must be boolean")end
+                if slot.entryBlendMs~=nil and(not number(slot.entryBlendMs)or slot.entryBlendMs<80 or slot.entryBlendMs>400)then problem("grab.entryBlendMs must be between 80 and 400")end
                 if slot.attemptContactMs~=nil and(not text(slot.attemptAnimation)or not number(slot.attemptContactMs)or slot.attemptContactMs<0 or not number(slot.attemptDurationMs)or slot.attemptDurationMs<=slot.attemptContactMs or slot.attemptDurationMs>2000 or slot.requiresTarget~=false)then problem("invalid grab attempt timing")end
                 if slot.throwContactMs~=nil and(not number(slot.throwContactMs)or slot.throwContactMs<0 or not number(slot.throwDuration)or slot.throwDuration<=0 or slot.throwDuration>10 or slot.throwContactMs>=slot.throwDuration*1000)then problem("invalid grab throw contact timing")end
                 if slot.throwCrowd~=nil and slot.throwCrowd~=false then

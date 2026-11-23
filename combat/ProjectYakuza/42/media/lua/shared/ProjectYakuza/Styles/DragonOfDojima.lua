@@ -35,8 +35,8 @@ ProjectYakuza.registerStyle({
         lowHealth="ProjectYakuza_LowHealthHeartbeat",
         punchImpact="ProjectYakuza_Y6_PunchImpact",kickImpact="ProjectYakuza_Y6_KickImpact",heatImpact="ProjectYakuza_Y6_HeatImpact",
         punchSwing="ProjectYakuza_Y6_PunchSwing",kickSwing="ProjectYakuza_Y6_KickSwing",finisher="ProjectYakuza_Y6_Finisher",
-        heavyImpact="ProjectYakuza_Y6_HeavyFinisher",chargedImpact="ProjectYakuza_Y6_HeavyFinisher",parryImpact="ProjectYakuza_Y6_HeavyFinisher",
-        grab="ProjectYakuza_Y6_Grab",throwImpact="ProjectYakuza_Y6_ThrowImpact",guardHit="ProjectYakuza_Y6_GuardImpact",doubleFinisher="ProjectYakuza_Y6_HeavyFinisher",guardBreak="ProjectYakuza_Y6_GuardBreak",
+        heavyImpact="ProjectYakuza_Y6_HeavyFinisher",chargedImpact="ProjectYakuza_Y6_HeavyFinisher",fullChargeImpact="ProjectYakuza_Y6_HeatImpact",parryImpact="ProjectYakuza_Y6_GuardBreak",counterImpact="ProjectYakuza_Y6_HeavyFinisher",
+        grabSwing="ProjectYakuza_Y6_PunchSwing",grab="ProjectYakuza_Y6_Grab",throwImpact="ProjectYakuza_Y6_ThrowImpact",guardHit="ProjectYakuza_Y6_GuardImpact",doubleFinisher="ProjectYakuza_Y6_HeavyFinisher",guardBreak="ProjectYakuza_Y6_GuardBreak",
         heatGain="ProjectYakuza_Y6_HeatGain",heatFull="ProjectYakuza_Y6_HeatFull",heatStart="ProjectYakuza_Y6_ChargeStart",
         heatStartLayer="ProjectYakuza_ExtremeHeatWindup",heatIgnition="ProjectYakuza_ExtremeHeatIgnition",heatSurge="ProjectYakuza_ExtremeHeatSurge",
         chargeStart="ProjectYakuza_Y6_ChargeStart",chargeReady="ProjectYakuza_Y6_HeatFull",chargeRelease="ProjectYakuza_ExtremeHeatIgnition",
@@ -71,6 +71,7 @@ ProjectYakuza.registerStyle({
     lightBufferLimit = 1,
     quickstepCancelLights=true,
     enemyReactions = true,
+    reactionPools={punch={"enemy_01","enemy_02"},kick={"enemy_03","enemy_04"},blade={"enemy_02","enemy_03"},blunt={"enemy_04","enemy_01"}},
     hitResponses={
         boostStun={kind="stun",force=0},
         light={kind="flinch",force=.25},
@@ -169,7 +170,7 @@ if ProjectYakuza.Weapons then
     sounds.punchImpact=base.sounds.punchImpact;sounds.kickImpact=base.sounds.kickImpact
     sounds.heavyImpact=base.sounds.heavyImpact;sounds.groundImpact=base.sounds.heavyImpact
     ProjectYakuza.Weapons.register(base.id,{
-        id="bat",impactFeedback="blunt",attackSpeed=1.4,quickstepCancelLights=true,standaloneHeavy=true,
+        id="bat",enemyReactions=true,impactFeedback="blunt",attackSpeed=1.4,quickstepCancelLights=true,standaloneHeavy=true,
         items={"Base.BaseballBat","Base.BaseballBat_Crafted","Base.BaseballBat_Metal","Base.BaseballBat_Nails",
             "Base.ShortBat","Base.ShortBat_Nails","Base.Nightstick","Base.MetalBar","Base.MetalPipe",
             "Base.BoneClub","Base.LargeBoneClub","Base.LongSpikedClub"},
@@ -198,7 +199,7 @@ if ProjectYakuza.Weapons then
     sounds.heavyImpact=base.sounds.finisher;sounds.groundImpact=base.sounds.finisher
     local knifeItems={"Base.HuntingKnife","Base.HuntingKnifeForged","Base.KitchenKnife","Base.KitchenKnifeForged","Base.SteakKnife","Base.BreadKnife","Base.FightingKnife","Base.KnifeButterfly","Base.KnifeFillet","Base.KnifeParing","Base.KnifePocket","Base.KnifeShiv","Base.KnifeSushi","Base.LargeKnife","Base.LargeKnife_Scrap","Base.SmallKnife","Base.SwitchKnife","Base.CrudeKnife","Base.LongCrudeKnife","Base.MacheteKnife","Base.StoneKnifeLong","Base.FlintKnife","Base.RailroadSpikeKnife"}
     ProjectYakuza.Weapons.register(base.id,{
-        id="knife",impactFeedback="blade",attackSpeed=1.5,standaloneHeavy=true,quickstepCancelLights=true,
+        id="knife",enemyReactions=true,impactFeedback="blade",attackSpeed=1.5,standaloneHeavy=true,quickstepCancelLights=true,
         items=knifeItems,
         sounds=sounds,
         lightAttacks={{animation="ProjectYakuza_DD_KnifeLight01",nodeValue="dd_knife_light_01",duration=40/30/1.5,speed=1.5,impact=9/40,hitResponse=false,chainAt=23/40,quickstepCancelAt=10/40,damageMultiplier=1},{animation="ProjectYakuza_DD_KnifeLight02",nodeValue="dd_knife_light_02",duration=40/30/1.5,speed=1.5,impact=12/40,hitResponse=false,chainAt=26/40,quickstepCancelAt=13/40,damageMultiplier=1},{animation="ProjectYakuza_DD_KnifeLight03",nodeValue="dd_knife_light_03",duration=45/30/1.5,speed=1.5,impact=13/45,hitResponse=false,chainAt=23/45,quickstepCancelAt=14/45,damageMultiplier=1}},
@@ -211,7 +212,7 @@ if ProjectYakuza.Weapons then
         },
     })
     ProjectYakuza.Weapons.register(base.id,{
-        id="blade",impactFeedback="blade",attackSpeed=1.4,standaloneHeavy=true,quickstepCancelLights=true,
+        id="blade",enemyReactions=true,impactFeedback="blade",attackSpeed=1.4,standaloneHeavy=true,quickstepCancelLights=true,
         items={"Base.Katana","Base.Machete","Base.Machete_Crude","Base.MacheteForged","Base.ShortSword","Base.ShortSword_Scrap","Base.Sword","Base.Sword_Scrap","Base.CrudeShortSword","Base.CrudeSword","Base.MeatCleaver","Base.MeatCleaverForged","Base.MeatCleaver_Scrap"},
         sounds=sounds,
         lightAttacks={{animation="ProjectYakuza_DD_BladeLight01",nodeValue="dd_blade_light_01",duration=58/30/1.4,speed=1.4,impact=15/58,hitResponse=false,chainAt=31/58,quickstepCancelAt=16/58,damageMultiplier=1},{animation="ProjectYakuza_DD_BladeLight02",nodeValue="dd_blade_light_02",duration=48/30/1.4,speed=1.4,impact=22/48,hitResponse=false,chainAt=37/48,quickstepCancelAt=23/48,damageMultiplier=1},{animation="ProjectYakuza_DD_BladeLight03",nodeValue="dd_blade_light_03",duration=61/30/1.4,speed=1.4,impact=16/61,hitResponse=false,chainAt=32/61,quickstepCancelAt=17/61,damageMultiplier=1}},

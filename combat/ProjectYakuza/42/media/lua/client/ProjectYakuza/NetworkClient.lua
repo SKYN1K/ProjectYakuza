@@ -447,9 +447,9 @@ function N.command(module,command,a)
         ProjectYakuza.Juggling.receive(p,z,a.juggle)
         local clip=P.reaction(a.style,a.reaction) and a.reaction or nil
         local response=ProjectYakuza.Reactions and ProjectYakuza.Reactions.confirmed(p,z,a.responseKind,a.responseForce,clip)
+        if not response and ProjectYakuza.Reactions and clip then ProjectYakuza.Reactions.remote(z,clip)end
         if p:isLocalPlayer() then return end
         if ProjectYakuza.HitEffects then ProjectYakuza.HitEffects.spawn(p,z,a.strong,a.charged,false,a.impactFeedback) end
-        if not response and ProjectYakuza.Reactions and clip then ProjectYakuza.Reactions.remote(z,clip) end
     elseif command=="damage" then
         local key="damage:"..a.player..":"..tostring(a.event)
         if N.seen[key] then return end;N.seen[key]=now()

@@ -92,6 +92,13 @@ function G.heatSelection(p,z,slot)
 end
 
 function G.spacing(slot)return math.max(.25,math.min(1,slot and slot.distance or .7))end
+function G.entryPosition(p,z,slot,state,t,fx,fy)
+    if not state.entryAt then state.entryAt=t;state.entryX=z:getX();state.entryY=z:getY()end
+    local fraction=math.max(0,math.min(1,(t-state.entryAt)/(slot.entryBlendMs or 180)))
+    local blend=fraction*fraction*(3-2*fraction);local offset=G.offset(slot,"enter")
+    local x=p:getX()+fx*offset.forward+fy*offset.right;local y=p:getY()+fy*offset.forward-fx*offset.right
+    return state.entryX+(x-state.entryX)*blend,state.entryY+(y-state.entryY)*blend,fraction
+end
 
 function G.offset(slot,phase)
     local strike=slot and slot.strikes and slot.strikes[tonumber(string.match(phase or "","^strike(%d)$"))]

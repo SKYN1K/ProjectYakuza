@@ -444,7 +444,7 @@ check(blocked.force==nil and blocked.stagger==nil,'no health loss after a blocke
 combo.multiHitToken={};R.onHit(p,blocked,p.token,0);R.onHit(p,blocked,p.token,0/0)
 check(not R.pending[blocked],'zero/NaN damage cannot schedule a response')
 combo.multiHitToken={};combo.finisherMove=nil;R.onHit(p,blocked,p.token,.2);blocked.health=.8;R.tick()
-check(blocked.vars.ProjectYakuzaEnemyHitClip=='enemy_01' and blocked.force==.25 and not blocked.stagger,'lights preserve supplied Y6 flinches instead of native heavy stagger')
+check((blocked.vars.ProjectYakuzaEnemyHitClip=='enemy_01'or blocked.vars.ProjectYakuzaEnemyHitClip=='enemy_02')and blocked.force==.25 and not blocked.stagger,'lights preserve supplied Y6 flinches instead of native heavy stagger')
 local frozen=responseVictim(204);combo.multiHitToken={};combo.finisherMove=first;R.onHit(p,frozen,p.token,.2);frozen.health=.8
 isGamePaused=function()return true end;R.tick();check(R.pending[frozen] and not frozen.stagger,'pause does not apply a pending response')
 isGamePaused=function()return false end;R.tick();check(frozen.stagger,'pending response applies after resume')
@@ -483,7 +483,7 @@ local observer=responseVictim(212);observer.x=remote.x+1;local oldHits=observer.
 client.command(P.module,'damage',{player=2,event=9003,zombie=212,health=.7,amount=.3,style='dragon_of_dojima',reaction='enemy_02',responseKind='knockdown',responseForce=.85})
 R.tick();check(observer.knock and observer.health==.7 and observer.hits==oldHits,'observer applies native knockdown with absolute health only')
 local lightVictim=responseVictim(213);combo.finisherMove=nil;combo.multiHitToken={}
-R.onHit(p,lightVictim,p.token,.1);R.clearAll();check(lightVictim.vars.ProjectYakuzaEnemyReaction==false and not R.hooked,'world-exit cleanup releases all custom reaction flags and hooks')
+R.onHit(p,lightVictim,p.token,.1);R.clearAll();check(lightVictim.vars.ProjectYakuzaEnemyReaction~=true and not R.hooked,'world-exit cleanup releases all custom reaction flags and hooks')
 
 local J=ProjectYakuza.Juggling
 check(not style.juggling and not J.plan(style,style.lightAttacks[1]),'DoD has no juggling opt-in')
@@ -1333,5 +1333,49 @@ do
  client.command(P.module,'grabStart',{player=p.id,session=session,zombie=z1.id,grabId=999992,useless=false,ignore=false,deferred=true,locked=false})
  check(not client.leases[p]and not ProjectYakuza.activeActions[p],'a late grant after the reach ends is released without restarting the animation')
  ProjectYakuza.activeActions[p]=oldAction;ProjectYakuza.getPlayerStyle=oldStyle;isClient=oldClient;client.send=oldSend
+end
+do
+ local originalClient=isClient;isClient=function()return false end
+ local base=ProjectYakuza.getStyle('dragon_of_dojima');local light=base.lightAttacks[1]
+ for _,entry in ipairs({{style=base,move=light,family='punch'},{style=base,move=base.actions.runningAttack.variants.knee,family='kick'},{style=ProjectYakuza.Weapons.view(base,'knife'),family='blade'},{style=ProjectYakuza.Weapons.view(base,'bat'),family='blunt'}})do
+  local move=entry.move or entry.style.lightAttacks[1];local previous;local seen={}
+  check(H.reactionFamily(entry.style,move)==entry.family,'attack family matches its contact type')
+  for swing=1,20 do
+   local clip=H.reaction(entry.style,move,H.reactionSeed(z1,swing))
+   check(clip and clip~=previous and P.reaction(base.id,clip),'repeated hits rotate approved supplied flinches and remain valid for MP')
+   seen[clip]=true;previous=clip
+  end
+  local size=0;for _ in pairs(seen)do size=size+1 end;check(size==2,'each contact family uses two existing reaction clips')
+ end
+ check(not H.reaction(base,base.extremeLightAttacks[1],1)and not H.reaction(base,second,1)and not H.reaction(base,base.groundAttacks[1],1),'Extreme Heat stuns, knockdowns and ground moves retain their authored responses')
+ check(not P.reaction(base.id,'unregistered_reaction'),'arbitrary network reaction IDs remain rejected')
+ local invalid=copy(base);invalid.reactionPools={punch={'enemy_01','enemy_01'}};check(not ProjectYakuza.validateStyle(invalid),'duplicate pool IDs are rejected')
+ invalid.reactionPools={teleport={'enemy_01'}};check(not ProjectYakuza.validateStyle(invalid),'unsupported reaction families are rejected')
+ p.hand=p.token;p.equipped=true;p.data.ProjectYakuzaStyle=base.id
+ local combo=ProjectYakuza.stateFor(p);combo.active=true;combo.step=1;combo.finisherMove=nil;combo.activeLightMove=nil;combo.groundMove=nil
+ R.clearAll();local victim=responseVictim(27001);local originalHealth=victim.health
+ combo.multiHitToken={};local events=victim.events or 0;R.onHit(p,victim,p.token,.1);R.tick()
+ check((victim.events or 0)==events and not R.states[victim],'a blocked hit cannot force a visual flinch before confirmed damage')
+ local previous
+ for attack=1,4 do
+  combo.multiHitToken={};R.onHit(p,victim,p.token,.1);victim.health=victim.health-.1;R.tick()
+  local clip=victim.vars.ProjectYakuzaEnemyHitClip
+  check(clip and clip~=previous and victim.reaction=='HeadLeft','actual SP hits alternate source flinches after damage confirmation');previous=clip
+ end
+ check(math.abs(victim.health-(originalHealth-.4))<.00001 and victim.hits==0,'cosmetic variation adds no damage or extra Hit calls')
+ victim:setVariable('ProjectYakuzaHeatRushVictim',true);events=victim.events or 0
+ check(not R.remote(victim,'enemy_01')and not R.confirmed(p,victim,'flinch',.25,'enemy_01')and(victim.events or 0)==events,'paired cinematics cannot be overwritten by cosmetic or queued hit reactions')
+ victim:setVariable('ProjectYakuzaHeatRushVictim',false);H.stuns[victim]={}
+ check(not R.remote(victim,'enemy_01'),'Extreme Heat stun ownership has priority over cosmetic reactions');H.stuns[victim]=nil
+ victim.stagger=true;victim.isStaggerBack=function(self)return self.stagger==true end
+ check(not R.remote(victim,'enemy_01'),'existing native knockback has priority over visual flinches');victim.stagger=false
+ R.clearAll();local owner=responseVictim(27002);client.acceptSession(p.id,1000000);local effectCount=effects
+ client.command(P.module,'impact',{player=p.id,session=1000000,event=999994,zombie=owner.id,style=base.id,reaction='enemy_03'})
+ check(owner.reaction=='HeadLeft'and owner.vars.ProjectYakuzaEnemyHitClip=='enemy_03'and effects==effectCount,'the owner receives server-selected weapon flinches even without a forced-physics response')
+ local pause=isGamePaused;isGamePaused=function()return true end;clock=clock+5000;R.tick();isGamePaused=function()return false end;clock=clock+20;R.tick()
+ check(R.states[owner]~=nil,'pausing does not expire an active flinch while its animation is stopped')
+ owner:setVariable('ProjectYakuzaGrabbed',true);clock=clock+60;R.tick()
+ check(not R.states[owner]and owner.vars.ProjectYakuzaEnemyReaction==false and owner.vars.ProjectYakuzaGrabbed==true,'acquiring a grab clears the previous flinch without changing grab ownership')
+ isGamePaused=pause;R.clearAll();isClient=originalClient
 end
 return 'PASS '..count..' MP authority, duplicate, range, lease, cooldown, observer and throttle checks'

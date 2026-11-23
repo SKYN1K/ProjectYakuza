@@ -52,6 +52,13 @@ function D.target(p)
         if not D.held[z] and not ProjectYakuza.GrabRules.unavailable(z) and not z:isAttacking() and not z:isUseless() and (z:getHitReaction() or "")=="" then return z end
     end
 end
+function D.reachable(p,z)
+    if not z or z:isDead()or z:isOnFloor()or z:isKnockedDown()or math.abs(z:getZ()-p:getZ())>=.5 then return false end
+    local origin=ProjectYakuza.MultiHit.origin(p,1.3);if not origin then return false end
+    local dx,dy=z:getX()-p:getX(),z:getY()-p:getY();local distance=math.sqrt(dx*dx+dy*dy)
+    return distance>=.25 and distance<=origin.range and(dx*origin.fx+dy*origin.fy)/distance>=.5
+        and p:CanSee(z)and ProjectYakuza.MultiHit.clearPath(p,origin,dx,dy)
+end
 function D.restoreTargets()
     for i=#D.recovering,1,-1 do
         local r=D.recovering[i]
@@ -127,6 +134,7 @@ end
 function A:attach(z)
     local p=self.character
     self.context.target=z;self.boundAt=now();self.awaitingGrab=false
+    self.entryAt=self.boundAt;self.entryX=z:getX();self.entryY=z:getY()
     self.victimState=ProjectYakuza.GrabRules.capture(z)
     local saved=isClient()and ProjectYakuza.Network and ProjectYakuza.Network.grabStates and ProjectYakuza.Network.grabStates[p]
     if saved then self.grabId=saved.grabId;self.victimState.useless=saved.useless;self.victimState.ignore=saved.ignore;self.victimState.deferred=saved.deferred;self.victimState.locked=saved.locked end
@@ -142,8 +150,7 @@ function A:attach(z)
     z:setVariable("ProjectYakuzaGrabPhase","enter");z:setVariable("ProjectYakuzaGrabMarker","")
 end
 function A:acceptGrab(z)
-    if self.cleaned or not self.started or not self.context.attempt or not self.awaitingGrab or self.candidate~=z or not self:isValid()or z:isDead()or z:isOnFloor()or z:isKnockedDown()
-        or math.abs(z:getZ()-self.character:getZ())>=.5 or(z:getX()-self.character:getX())^2+(z:getY()-self.character:getY())^2>=2.25 then return false end
+    if self.cleaned or not self.started or not self.context.attempt or not self.awaitingGrab or self.candidate~=z or not self:isValid()or not D.reachable(self.character,z)then return false end
     self:attach(z);return true
 end
 function A:isValid()
@@ -243,6 +250,7 @@ function A:grab(dt)
             self.attemptSeen=true
             if not self.reachResolved and time*1000>=slot.attemptContactMs then
                 self.reachResolved=true;self.candidate=D.target(p)
+                ProjectYakuza.emit("grabReach",p,self.candidate)
                 if self.candidate then
                     local dx,dy=self.candidate:getX()-p:getX(),self.candidate:getY()-p:getY();local length=math.sqrt(dx*dx+dy*dy)
                     if length>=.25 then
@@ -261,7 +269,7 @@ function A:grab(dt)
             local network=ProjectYakuza.Network
             if now()-self.gripRequestedAt>1500 or not(network and network.pending and network.pending[p])then self.awaitingGrab=false else return end
         end
-        if self.attemptSeen and time and time*1000>=slot.attemptDurationMs-20 then self:forceComplete()
+        if self.attemptSeen and(time and time*1000>=slot.attemptDurationMs-20 or not time and now()-self.startedAt>=slot.attemptDurationMs)then self:forceComplete()
         elseif now()-self.startedAt>1000 then self:forceStop()end
         return
     end
@@ -269,19 +277,12 @@ function A:grab(dt)
     local age=now()-(self.boundAt or self.startedAt)
     if self.phaseName=="enter" then
 
-        local spacing=ProjectYakuza.GrabRules.spacing(self.context.action)
-        local x=p:getX()+self.context.fx*spacing-z:getX()
-        local y=p:getY()+self.context.fy*spacing-z:getY()
-        local distance=math.sqrt(x*x+y*y)
-        if distance>.02 then
-            local amount=math.min(distance,.06)
-            local dx,dy=x/distance*amount,y/distance*amount
-            if not ProjectYakuza.Quicksteps or not ProjectYakuza.Quicksteps.canMove(z,dx,dy) then self:forceStop();return end
-            z:moveUnmodded(dx,dy)
-        end
+        local x,y,progress=ProjectYakuza.GrabRules.entryPosition(p,z,self.context.action,self,now(),self.context.fx,self.context.fy)
+        if not ProjectYakuza.MultiHit.clearPath(z,{x=z:getX(),y=z:getY(),z=z:getZ()},x-z:getX(),y-z:getY())then self:forceStop();return end
+        D.snapActor(z,x,y)
         local playerReady=var(p,"ProjectYakuzaDefenseMarker")=="enter_ready"
         local victimReady=var(z,"ProjectYakuzaGrabMarker")=="enter_ready"
-        if playerReady and victimReady then self.paired=true;self:phase("hold");ProjectYakuza.emit("grabHeld",p,z)
+        if playerReady and victimReady and progress>=1 then self.paired=true;self:phase("hold");ProjectYakuza.emit("grabHeld",p,z)
         elseif age>1000 then self:forceStop() end
     elseif self.phaseName=="hold" then
         if not isClient()and ProjectYakuza.GrabRules.escapeDue(self,self.context.action,now())then self:escape();return end
@@ -336,7 +337,9 @@ function A:update()
     local t=now();local elapsed=math.max(0,t-self.lastAt)
     local dt=math.min(.1,elapsed/1000);self.lastAt=t
     if isGamePaused() then
-        self.startedAt=self.startedAt+elapsed;self.phaseAt=self.phaseAt+elapsed;if self.escapeNext then self.escapeNext=self.escapeNext+elapsed end;return
+        self.startedAt=self.startedAt+elapsed;self.phaseAt=self.phaseAt+elapsed
+        for _,key in ipairs({"boundAt","entryAt","gripRequestedAt","escapeNext"})do if self[key]then self[key]=self[key]+elapsed end end
+        return
     end
     if not self:isValid() then self:forceStop();return end
     if self.context.kind=="block" then self:guard(dt) else self:grab(dt) end
