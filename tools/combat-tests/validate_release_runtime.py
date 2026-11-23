@@ -4,6 +4,8 @@ sys.stdout.reconfigure(errors="replace")
 ROOT=Path(__file__).resolve().parents[2];MOD=ROOT/'combat/ProjectYakuza';WORK=Path(__file__).parent
 spec=importlib.util.spec_from_file_location('package',ROOT/'tools/Build-GamePackage.py');package=importlib.util.module_from_spec(spec);spec.loader.exec_module(package)
 files=package.runtime_files(MOD,release=True);raw=package.runtime_files(MOD)
+assert not any(name.endswith('/HeatScreenEffects.lua')for name in files),'retired screen-effects module restored'
+assert all('HeatScreenEffects'not in path.read_text(encoding='utf-8')for name,path in files.items()if name.endswith('.lua')),'runtime still loads retired screen effects'
 subprocess.run(['E:/Java/bin/javac.exe',str(WORK/'RemovedItemLoadProbe.java')],check=True)
 for name,path in files.items():
  if path.suffix.lower()in {'.lua','.txt','.xml'}:

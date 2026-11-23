@@ -384,7 +384,6 @@
 !tools/combat-tests/WallVictimSelectionProbe.java
 !tools/combat-tests/build_spark_screen_tests.py
 !tools/combat-tests/spark-effects-test-fixture.lua
-!tools/combat-tests/heat-screen-test-fixture.lua
 
 !tools/Build-ReleaseRuntime.py
 !tools/combat-tests/validate_release_runtime.py

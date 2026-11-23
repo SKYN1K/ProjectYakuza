@@ -1,3 +1,9 @@
+# v1.0.3
+
+Removed the cinematic screen tint, camera shake and contact-local RGB spark together. Genuine full-screen chromatic aberration requires graphics controls not exposed to this Lua mod. Extreme Heat and its QTE sequence now use the existing blood impact effect without an added energy/contact spark, including multiplayer observers and contacts after fuel depletion. Ordinary non-Extreme hit effects and limb trails retain their existing behavior.
+
+Validation: production blood and impact tests cover owner/observer blood-only routing, original victim anchors, no replacement spark allocation, normal-hit preservation and cleanup. The player package excludes the retired screen-effects module. No assets were generated or modified, and no game was launched.
+
 # v1.0.2
 
 Default music volume is now 45 percent. Saved volume choices remain unchanged. Mods settings show Project Yakuza options, Volume sliders, Music volume, Hit volume and Voice volume even before translations are available.

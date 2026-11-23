@@ -1,0 +1,18 @@
+{
+  "version": "1.0.3",
+  "offlineOnly": true,
+  "screenTreatment": "All three cinematic screen effects removed together",
+  "removedModule": "ProjectYakuza/HeatScreenEffects",
+  "extremeContactTreatment": "Existing source-frame blood animation; no added impact energy spark",
+  "nativeLuaGraphicsExposure": {
+    "ShaderProgram": false,
+    "Shader": false,
+    "TextureFBO": false,
+    "MultiTextureFBO2": false
+  },
+  "assetBytesChanged": false,
+  "ordinaryNonExtremeImpactsPreserved": true,
+  "focusedKahluaChecks": 52909,
+  "nativeProjectionCases": 23424,
+  "sourceComments": 0
+}

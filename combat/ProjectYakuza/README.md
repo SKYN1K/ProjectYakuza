@@ -1,10 +1,10 @@
 # Dragon of Dojima reference style
 
-Project Yakuza v1.0.2 packages version **1.0.2**, Lua API **3** and multiplayer protocol **2**. For independent style development, start with [Style authoring](docs/STYLE_AUTHORING.md) and the [API reference](docs/API_REFERENCE.md).
+Project Yakuza v1.0.3 packages version **1.0.3**, Lua API **3** and multiplayer protocol **2**. For independent style development, start with [Style authoring](docs/STYLE_AUTHORING.md) and the [API reference](docs/API_REFERENCE.md).
 
 ## Install and select
 
-Download the named B42 install ZIP from [v1.0.2](https://github.com/SKYN1K/ProjectYakuza/releases/tag/v1.0.2). Extract it so `Zomboid/mods/ProjectYakuza/42/mod.info` exists, enable Project Yakuza for the save and restart PZ. Servers and clients need matching framework and add-on versions.
+Download the named B42 install ZIP from [v1.0.3](https://github.com/SKYN1K/ProjectYakuza/releases/tag/v1.0.3). Extract it so `Zomboid/mods/ProjectYakuza/42/mod.info` exists, enable Project Yakuza for the save and restart PZ. Servers and clients need matching framework and add-on versions.
 
 Hold Z, point at a slot and release Z to equip it. Left defaults to Dragon of Dojima; right starts empty. The bottom slot opens assignments and settings. The top slot unequips the style. The wheel does not pause gameplay. Other registered styles appear in the assignment list automatically.
 
@@ -48,4 +48,4 @@ Heat gain is reduced for additional targets in a swing. Completed stocks remain 
 
 The [documentation index](docs/INDEX.md) covers custom actions, animation contracts, weapon profiles, paired motion, presentation and multiplayer. The [starter add-on](templates/StyleSubmod/README.md) is inactive until its examples are renamed and assigned unique IDs.
 
-The release uses ordinary Lua/native PZ APIs. Heat Action shake, tint and local red/cyan fringing approximate Yakuza's screen treatment; they are not a full-frame chromatic-aberration shader. Offline checks verify configuration, native imports/APIs and file contents. Live animation appearance, performance and multiplayer sessions still require in-game testing. [Validation](docs/VALIDATION.md) describes the current coverage.
+The release uses ordinary Lua/native PZ APIs. Extreme Heat impacts use the existing blood effect. Screen tint, camera shake and imitation chromatic sparks are disabled. Offline checks verify configuration, native imports/APIs and file contents. Live animation appearance, performance and multiplayer sessions still require in-game testing. [Validation](docs/VALIDATION.md) describes the current coverage.

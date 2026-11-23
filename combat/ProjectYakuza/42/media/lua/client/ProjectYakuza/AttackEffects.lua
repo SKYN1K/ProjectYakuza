@@ -389,9 +389,14 @@ function F.loadContacts()
     if not F.flash then F.flash=sprite("media/textures/ProjectYakuza/HitGlint.png")end
     F.colors()
 end
+function F.bloodOnly(p)
+    local presentation=PY.HeatActionPresentation;local paired=presentation and presentation.states and presentation.states[p]
+    return PY.Heat.isExtreme(p)or paired and paired.move and paired.move.heatRush==true
+end
 function F.hit(p,victim,strong,charged,anchor)
     local style=PY.getPlayerStyle(p)
     if not style or style.hitEffects~="yakuza6" or p:getModData().ProjectYakuzaHitEffectsDisabled or p:isDead()then return end
+    if F.bloodOnly(p)then return true end
     local s=F.states[p];local x,y,z;local drop=0
     if s then
         local time,weight,location=F.findTrack(p,s.track.animation,s.location)

@@ -218,4 +218,19 @@ PY.AttackEffects.hit=function()return {}end
 F.spawn(p,z,true,false,false,'unarmed',sourceAnchor)
 check(#F.bursts==0 and #B.bursts==1,'new source burst replaces the repeated legacy flash while preserving blood')
 F.clear();check(allocated==disposed,'shared impact path still releases blood without duplicate flash instances')
+local energyHits=0
+PY.AttackEffects.bloodOnly=function(player)return player.extreme==true end
+PY.AttackEffects.hit=function()energyHits=energyHits+1;return {}end
+for _,localPlayer in ipairs({true,false})do
+ p.localPlayer=localPlayer;p.extreme=true
+ F.spawn(p,z,true,false,false,'unarmed',sourceAnchor)
+ check(#F.bursts==0 and #B.bursts==1 and energyHits==0,'Extreme Heat preserves blood and bypasses both energy and legacy spark paths for owner/observer')
+ renders={};F.render();B.render()
+ for _,draw in ipairs(renders)do check(draw.path:find('Blood_splash_',1,true)~=nil,'Extreme impact renders the original blood frames only')end
+ check(B.bursts[1].anchor.x==sourceAnchor.x and B.bursts[1].anchor.y==sourceAnchor.y,'blood-only impact preserves the supplied victim anchor')
+ F.clear()
+end
+p.localPlayer=true;p.extreme=false;F.spawn(p,z,true,false,false,'unarmed',sourceAnchor)
+check(energyHits==1 and #B.bursts==1,'ordinary hits retain their established impact path and blood')
+F.clear();check(allocated==disposed,'blood-only effects retain complete sprite cleanup')
 return true,'PASS '..checks..' source-frame blood animation, confirmed hit, world anchor, MP budgets and cleanup checks'

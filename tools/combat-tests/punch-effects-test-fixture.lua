@@ -431,7 +431,13 @@ local frozen
 for _,d in ipairs(sparkRenders)do if d.point==burst.points[1]then frozen=d end end
 check(frozen and near(frozen.x,emittedPoint.x)and near(frozen.y,emittedPoint.y),'moving or turning after impact does not rotate emitted sparks')
 paused=false;ISWorldMap_instance={isVisible=function()return true end};draws={};sparkDraws={};sparkRenders={};F.render();check(#draws==0 and #sparkDraws==0,'map suppresses limb, tail and free-spark layers');ISWorldMap_instance=nil
-p.extreme=true;F.hit(p,nil,false,false,{x=0,y=0,z=.5});check(F.bursts[#F.bursts].color==F.extreme,'Extreme sparks match Extreme limb colour')
+local previousBursts,previousAllocations=#F.bursts,allocated
+p.extreme=true;check(F.hit(p,nil,false,false,{x=0,y=0,z=.5})==true and #F.bursts==previousBursts and allocated==previousAllocations,'Extreme Heat suppresses the contact spark without allocating a substitute flash')
+for i=1,10 do F.hit(p,nil,false,false,{x=0,y=0,z=.5})end
+check(#F.bursts==previousBursts and allocated==previousAllocations,'repeated Extreme hits cannot emit energy bursts')
+p.extreme=false;ProjectYakuza.HeatActionPresentation={states={[p]={move={heatRush=true}}}}
+check(F.hit(p,nil,true,false,{x=0,y=0,z=.5})==true and #F.bursts==previousBursts,'Extreme Heat QTE contact remains blood-only after its fuel expires')
+ProjectYakuza.HeatActionPresentation=nil
 for i=1,10 do F.hit(p,nil,false,false,{x=0,y=0,z=.5})end
 check(#F.bursts==F.maxActorBursts,'dense confirmed hits cap burst instances per actor')
 F.clearAll()
