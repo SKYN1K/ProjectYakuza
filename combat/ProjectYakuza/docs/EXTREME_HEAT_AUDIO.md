@@ -14,6 +14,6 @@ Activation plays supplied Yakuza 6 charge and flare cues, plus the existing Kiwa
 
 Hit volume and each supplied clip's sound definition still control the final mix. Completed activation retains owned tails; interruption, death, unequip, style change and save/menu cleanup stop owned sounds. Duplicate events cannot stack the sequence. Remote observers do not request another owner sequence.
 
-Dragon of Dojima also maps chargeStart, chargeReady and chargeRelease to existing supplied cues. Heavy-charge start plays at 0.55, full charge at 0.45 and successful release at 0.50. Releasing or cancelling stops owned charging handles. Cancellation has no release flourish. Styles can provide their own sound mappings or omit them. This does not alter the separate voice pack.
+Dragon of Dojima also maps chargeStart, chargeReady and chargeRelease to existing supplied cues. Heavy-charge start plays at 0.55, full charge at 0.45 and successful release at 0.50. Releasing stops the windup while allowing the full-charge cue to ring out, including when automatic release occurs in the same frame. Cancellation stops all owned handles and has no release flourish. Styles can provide their own sound mappings or omit them. This does not alter the separate voice pack.
 
 Validation embeds production Feedback.lua in native Kahlua checks for timing, duplicates, interruption, ownership and cleanup. Native PCM/script checks verify supplied files without launching the game. Final loudness still needs listening in the live game mix.

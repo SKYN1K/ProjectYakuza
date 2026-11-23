@@ -61,7 +61,7 @@ function F.activationSound(p,name,volume)
 end
 function F.stopCharge(p,complete)
     local session=F.chargeSounds[p];if not session then return end
-    for id in pairs(session.handles)do p:getEmitter():stopSound(id)end
+    for id in pairs(session.handles)do if not complete or id~=session.readyHandle then p:getEmitter():stopSound(id)end end
     F.chargeSounds[p]=nil
     if complete and not p:isDead()and ProjectYakuza.isEquipped(p)then F.nativeSound(p,F.sound(p,"chargeRelease"),.50)end
     unhook()
@@ -79,7 +79,7 @@ function F.readyCharge(p)
     local session=F.chargeSounds[p];if not session or session.ready then return end
     session.ready=true
     local id=F.nativeSound(p,F.sound(p,"chargeReady"),.45)
-    if id then session.handles[id]=true end
+    if id then session.handles[id]=true;session.readyHandle=id end
 end
 function F.startActivation(p)
     if not p or not p:isLocalPlayer() or not ProjectYakuza.isEquipped(p) then return end

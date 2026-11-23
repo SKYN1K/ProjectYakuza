@@ -158,7 +158,7 @@ n=#calls;emit('heavyChargeStarted',p,style,{},context);check(#calls==n,'duplicat
 emit('heavyChargeReady',p);local ready=#calls;emit('heavyChargeReady',p)
 check(calls[ready]=='Ready'and #calls==ready and near(volumes[ready],.45),'full-charge cue plays once at the actual ready event')
 emit('heavyChargeStopped',p,true)
-check(stopped[hold]and stopped[ready]and calls[#calls]=='Release'and not F.chargeSounds[p]and not tickHook,'successful release stops owned charge tails and plays a release accent')
+check(stopped[hold]and not stopped[ready]and playing[ready]and calls[#calls]=='Release'and not F.chargeSounds[p]and not tickHook,'automatic release stops the windup but lets the full-charge cue ring out with its release accent')
 n=#calls;emit('heavyChargeStopped',p,true);check(#calls==n,'duplicate completion cannot replay release')
 emit('heavyChargeStarted',p,style,{},context);hold=#calls;n=#calls;emit('heavyChargeStopped',p,false)
 check(stopped[hold]and #calls==n and not F.chargeSounds[p],'interrupted charge stops silently without a release accent')
