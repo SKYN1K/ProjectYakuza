@@ -1,5 +1,5 @@
 {
-  "version": "1.0.1",
+  "version": "1.0.2",
   "offlineOnly": true,
   "focusedKahluaChecks": 721,
   "runtimeLuaFilesCompiled": 88,
@@ -32,5 +32,6 @@
     "nativeDecode": "Existing 16-bit PNG unsupported by PZ",
     "converted": false,
     "sha256": "b5cc272711734b0dc09d0d6d607085c1bb5d260150e41af14a1e336bc0ba3393"
-  }
+  },
+  "releaseCorrection": "Current changes assigned a new v1.0.2 tag; previous v1.0.1 tag, release notes and original ZIPs restored."
 }
