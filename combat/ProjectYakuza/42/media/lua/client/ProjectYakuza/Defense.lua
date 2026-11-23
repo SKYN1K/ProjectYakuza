@@ -26,8 +26,16 @@ function D.followZombie(z)
 end
 function D.followHook()
     local active=false;for _ in pairs(D.held) do active=true;break end
-    if active and not D.following then Events.OnZombieUpdate.Add(D.followZombie);D.following=true
-    elseif not active and D.following then Events.OnZombieUpdate.Remove(D.followZombie);D.following=false end
+    if active and not D.following then Events.OnZombieUpdate.Add(D.followZombie);Events.OnTick.Add(D.holdStance);D.following=true
+    elseif not active and D.following then Events.OnZombieUpdate.Remove(D.followZombie);Events.OnTick.Remove(D.holdStance);D.following=false end
+end
+function D.holdStance()
+    for _,action in pairs(D.held)do
+        if not action.cleaned then
+            if not action:isValid()then action:cancel()
+            else action.character:setIsAiming(true)end
+        end
+    end
 end
 function D.safe(p,keepGrab)
     return ProjectYakuza.isEquipped(p) and (keepGrab or p:isAiming()) and not p:isDead() and not p:isOnFloor()
@@ -129,12 +137,13 @@ function A:start()
     self:setActionAnim(self.context.action.animation)
     self.action:setOverrideHandModelsObject(p:getPrimaryHandItem(),nil,false)
     if self.context.kind=="grab"and not self.context.attempt then self:attach(self.context.target)end
-    self:phase("enter")
+    self:phase(self.context.attempt and "attempt"or "enter")
 end
 function A:attach(z)
     local p=self.character
     self.context.target=z;self.boundAt=now();self.awaitingGrab=false
     self.entryAt=self.boundAt;self.entryX=z:getX();self.entryY=z:getY()
+    p:setIsAiming(true);self.ownsAim=true
     self.victimState=ProjectYakuza.GrabRules.capture(z)
     local saved=isClient()and ProjectYakuza.Network and ProjectYakuza.Network.grabStates and ProjectYakuza.Network.grabStates[p]
     if saved then self.grabId=saved.grabId;self.victimState.useless=saved.useless;self.victimState.ignore=saved.ignore;self.victimState.deferred=saved.deferred;self.victimState.locked=saved.locked end
@@ -151,7 +160,7 @@ function A:attach(z)
 end
 function A:acceptGrab(z)
     if self.cleaned or not self.started or not self.context.attempt or not self.awaitingGrab or self.candidate~=z or not self:isValid()or not D.reachable(self.character,z)then return false end
-    self:attach(z);return true
+    self:attach(z);self:phase("enter");return true
 end
 function A:isValid()
     if not ProjectYakuza.Sandbox.actionAllowed(self.context.style,self.context.kind)then return false end
@@ -173,6 +182,7 @@ function A:cleanup(completed)
     local p=self.character
     if self.context.kind=="grab" and isClient() and ProjectYakuza.Network then ProjectYakuza.Network.releaseGrab(p) end
     if self.started then
+        if self.ownsAim then p:setIsAiming(p:isAimControlActive());self.ownsAim=nil end
         p:setBlockMovement(self.oldBlock==true);p:setIgnoreMovement(self.oldIgnore==true);p:setDeferredMovementEnabled(self.oldDeferred~=false)
         p:setVariable("ProjectYakuzaDefensePhase","");p:setVariable("ProjectYakuzaDefenseMarker","")
         p:setVariable("ProjectYakuzaGrabMoving",false)
@@ -249,7 +259,8 @@ function A:grab(dt)
         if time and weight>=.35 then
             self.attemptSeen=true
             if not self.reachResolved and time*1000>=slot.attemptContactMs then
-                self.reachResolved=true;self.candidate=D.target(p)
+                self.reachResolved=true
+                if time*1000<=(slot.attemptContactEndMs or slot.attemptDurationMs)then self.candidate=D.target(p)end
                 ProjectYakuza.emit("grabReach",p,self.candidate)
                 if self.candidate then
                     local dx,dy=self.candidate:getX()-p:getX(),self.candidate:getY()-p:getY();local length=math.sqrt(dx*dx+dy*dy)
@@ -259,7 +270,7 @@ function A:grab(dt)
                             self.awaitingGrab=true;self.gripRequestedAt=now()
                             if not ProjectYakuza.Network then self.awaitingGrab=false
                             elseif ProjectYakuza.Network.requestGrab(p,self.candidate)then self:acceptGrab(self.candidate)end
-                        else self:attach(self.candidate)end
+                        else self:attach(self.candidate);self:phase("enter")end
                     end
                 end
             end
@@ -269,8 +280,8 @@ function A:grab(dt)
             local network=ProjectYakuza.Network
             if now()-self.gripRequestedAt>1500 or not(network and network.pending and network.pending[p])then self.awaitingGrab=false else return end
         end
-        if self.attemptSeen and(time and time*1000>=slot.attemptDurationMs-20 or not time and now()-self.startedAt>=slot.attemptDurationMs)then self:forceComplete()
-        elseif now()-self.startedAt>1000 then self:forceStop()end
+        if self.attemptSeen and(var(p,"ProjectYakuzaDefenseMarker")=="attempt_done"or time and time*1000>=slot.attemptDurationMs-20 or not time and now()-self.startedAt>=slot.attemptDurationMs)then self:forceComplete()
+        elseif now()-self.startedAt>slot.attemptDurationMs+500 then self:forceStop()end
         return
     end
     ProjectYakuza.GrabRules.keep(z)

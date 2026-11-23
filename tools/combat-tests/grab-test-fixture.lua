@@ -1,5 +1,13 @@
 function p:StopTimedActionAnim()end
 function p:CanSee()return self.visible~=false end
+function p:setIsAiming(value)self.aiming=value end
+function p:isAiming()return self.aiming==true or mouse[1]==true end
+function p:isAimControlActive()return mouse[1]==true end
+do
+ local add,remove=Events.OnTick.Add,Events.OnTick.Remove;Events.OnTick.hooks={}
+ Events.OnTick.Add=function(fn)Events.OnTick.hooks[fn]=true;add(fn)end
+ Events.OnTick.Remove=function(fn)Events.OnTick.hooks[fn]=nil;remove(fn)end
+end
 ZombRand=function(max)return max-1 end
 Events.OnZombieUpdate=event();Events.OnGameStart=event();Events.OnServerCommand=event()
 CharacterStat={ENDURANCE=1}
@@ -102,7 +110,7 @@ local function startGrab()
  local ok,reason=PY.requestAction(p,'grab',nil,z);check(ok,'grab handler starts '..tostring(reason))
  local a=PY.activeActions[p].timedAction;a:start()
  check(not z.useless and not z.ignore and z.reaction=='' and not a.context.target,'grab starts as an unpaired attempt without immobilizing a victim')
- track=.2;clock=clock+200;a:update();track=0
+ track=style.actions.grab.attemptContactMs/1000;clock=clock+200;a:update();track=0
  check(a.context.target==z and z.useless and z.ignore,'source reach contact acquires the nearby target after the wind-up')
  p.vars.ProjectYakuzaDefenseMarker='enter_ready';z.vars.ProjectYakuzaGrabMarker='enter_ready';clock=clock+500;a:update()
  check(a.phaseName=='hold'and a.paired,'paired source markers reach hold')
@@ -368,22 +376,22 @@ do
  PY.MultiHit.targets=function()return {}end
  PY.Bindings.down=function(id)return id=='grab'end;D.input[p]=nil
  check(D.update(p),'pressing Grab on empty space starts the reach animation')
- local miss=PY.activeActions[p].timedAction;miss:start();track=.19;clock=clock+190;miss:update()
+ local miss=PY.activeActions[p].timedAction;miss:start();track=(style.actions.grab.attemptContactMs-10)/1000;clock=clock+190;miss:update()
  check(not miss.cleaned and not miss.context.target and not z.useless,'an empty early reach keeps playing without acquiring or freezing a zombie')
- track=.49;clock=clock+300;miss:update();check(miss.cleaned and not PY.activeActions[p]and not p.blocked and not p.ignore and p.deferred,'a missed reach completes and restores movement')
+ track=(style.actions.grab.attemptDurationMs-10)/1000;clock=clock+300;miss:update();check(miss.cleaned and not PY.activeActions[p]and not p.blocked and not p.ignore and p.deferred,'a missed reach completes and restores movement')
  PY.MultiHit.targets=targets;PY.Bindings.down=bindings
- local hit=attempt();track=.19;clock=clock+190;hit:update();check(not hit.context.target and not z.useless,'nearby zombies remain free before the authored contact')
- track=.2;clock=clock+10;hit:update();check(hit.context.target==z and hit.victimState,'a hit attaches once at the reach contact');hit:cancel()
+ local hit=attempt();track=(style.actions.grab.attemptContactMs-10)/1000;clock=clock+190;hit:update();check(not hit.context.target and not z.useless,'nearby zombies remain free before the authored contact')
+ track=style.actions.grab.attemptContactMs/1000;clock=clock+10;hit:update();check(hit.context.target==z and hit.victimState,'a hit attaches once at the reach contact');hit:cancel()
  local interrupted=attempt();interrupted:cancel();check(not z.useless and not z.ignore and not PY.activeActions[p],'interruption before contact never changes victim state')
  isClient=function()return true end
  PY.Network={pending={},leases={},grabStates={},requestGrab=function(player,target)requests=requests+1;PY.Network.pending[player]={z=target};return false end,releaseGrab=function(player)releases=releases+1;PY.Network.pending[player]=nil;PY.Network.leases[player]=nil end}
- local waiting=attempt();track=.2;clock=clock+200;waiting:update()
+ local waiting=attempt();track=style.actions.grab.attemptContactMs/1000;clock=clock+200;waiting:update()
  check(requests==1 and waiting.awaitingGrab and not waiting.context.target and not z.useless,'MP requests authority at contact while the victim remains unpaired')
  clock=clock+100;waiting:update();check(requests==1,'waiting for authority does not send repeated grab requests')
  PY.Network.grabStates[p]={grabId=901,useless=false,ignore=false,deferred=true,locked=false};PY.Network.leases[p]=z:getOnlineID();PY.Network.pending[p]=nil
  check(waiting:acceptGrab(z)and waiting.grabId==901 and waiting.context.target==z,'a server grant continues the existing animation and saves its lease')
  waiting:cancel();check(releases==1 and not z.useless and not z.ignore,'cancellation restores the victim and releases server ownership')
- local denied=attempt();track=.2;clock=clock+200;denied:update();PY.Network.pending[p]=nil;track=.49;clock=clock+300;denied:update()
+ local denied=attempt();track=style.actions.grab.attemptContactMs/1000;clock=clock+200;denied:update();PY.Network.pending[p]=nil;track=(style.actions.grab.attemptDurationMs-10)/1000;clock=clock+300;denied:update()
  check(denied.cleaned and not denied.victimState and not z.useless,'a denied MP reach completes as a miss')
  check(not denied:acceptGrab(z),'a late grant cannot attach to an already completed attempt')
  PY.Network=network;isClient=client;track=0;D.input[p]=nil
@@ -407,7 +415,7 @@ do
  local held=startGrab();held:cancel()
  local function reaching()
   p.blocked=false;p.ignore=false;p.deferred=true;z.reaction='';z.useless=false;z.ignore=false;z.locked=false;z.state='idle';z.floor=false;z.health=10;z.x=p:getX();z.y=p:getY()+.7;stamina=.9
-  check(PY.requestAction(p,'grab'),'polished grab attempt starts');local a=PY.activeActions[p].timedAction;a:start();track=.2;clock=clock+200;a:update();return a
+  check(PY.requestAction(p,'grab'),'polished grab attempt starts');local a=PY.activeActions[p].timedAction;a:start();track=style.actions.grab.attemptContactMs/1000;clock=clock+200;a:update();return a
  end
  local a=reaching();paused=true;clock=clock+5000;a:update();paused=false
  p.vars.ProjectYakuzaDefenseMarker='enter_ready';z.vars.ProjectYakuzaGrabMarker='enter_ready';clock=clock+180;a:update()
@@ -420,8 +428,23 @@ do
  a=reaching();PY.MultiHit.clearPath=function()return false end;clock=clock+50;a:update();PY.MultiHit.clearPath=path
  check(a.cleaned and not z.useless and not z.ignore and not p.blocked,'a newly obstructed entry releases both actors safely')
  local targets=PY.MultiHit.targets;PY.MultiHit.targets=function()return {}end
- a=reaching();track=nil;clock=clock+300;a:update()
+ a=reaching();track=nil;clock=clock+style.actions.grab.attemptDurationMs;a:update()
  check(a.cleaned and not p.blocked and not p.ignore,'a disappearing animation track cannot leave a missed grab blocked for an extra second')
  PY.MultiHit.targets=targets;track=0
+end
+do
+ mouse[1]=true;p.aiming=false;local held=startGrab();mouse[1]=false;p:setIsAiming(false)
+ check(Events.OnTick.hooks[D.holdStance],'a held victim owns the combat stance tick hook')
+ D.holdStance();check(p:isAiming()and held:isValid(),'holding preserves combat aim after native RMB input clears it')
+ held:cancel();check(not p:isAiming()and not Events.OnTick.hooks[D.holdStance],'release restores native aim input and removes the stance hook')
+ mouse[1]=true;held=startGrab();held:cancel();check(p:isAiming(),'release preserves a currently held native aim button')
+ local targets=PY.MultiHit.targets;PY.MultiHit.targets=function()return {}end
+ p.blocked=false;p.ignore=false;p.deferred=true;stamina=.9
+ check(PY.requestAction(p,'grab'),'source recovery regression starts a missed reach')
+ local miss=PY.activeActions[p].timedAction;miss:start();check(miss.phaseName=='attempt','miss begins in the dedicated source attempt phase')
+ track=(style.actions.grab.attemptContactEndMs+20)/1000;clock=clock+500;miss:update()
+ PY.MultiHit.targets=targets;track=1.2;clock=clock+700;miss:update()
+ check(not miss.cleaned and not miss.context.target,'a target entering after the source contact window cannot attach during recovery')
+ track=1.6;clock=clock+400;miss:update();check(miss.cleaned,'the original missed-grab recovery completes at its original 1.6-second duration');track=0
 end
 return 'PASS '..checks..' reliable grab lifecycle, four source-timed strikes, following, cleanup, wall geometry, handoff and action protection checks'

@@ -525,6 +525,23 @@
     "group": "actions"
   },
   {
+    "id": "ProjectYakuza_DD_GrabAttempt",
+    "animation": "ProjectYakuza_DD_GrabAttempt",
+    "loop": false,
+    "conditions": [
+      {
+        "name": "PerformingAction",
+        "value": "ProjectYakuza_DD_Grab"
+      },
+      {
+        "name": "ProjectYakuzaDefensePhase",
+        "value": "attempt"
+      }
+    ],
+    "priority": 180,
+    "group": "actions"
+  },
+  {
     "id": "ProjectYakuza_DD_GrabEnter",
     "animation": "ProjectYakuza_DD_GrabEnter",
     "loop": false,
@@ -946,10 +963,6 @@
         "value": "false"
       },
       {
-        "name": "ProjectYakuzaLinkedDouble",
-        "value": "false"
-      },
-      {
         "name": "ProjectYakuzaStyle",
         "value": "dragon_of_dojima"
       },
@@ -976,10 +989,6 @@
       },
       {
         "name": "AimFloorAnim",
-        "value": "false"
-      },
-      {
-        "name": "ProjectYakuzaLinkedDouble",
         "value": "false"
       },
       {
@@ -1012,10 +1021,6 @@
         "value": "false"
       },
       {
-        "name": "ProjectYakuzaLinkedDouble",
-        "value": "false"
-      },
-      {
         "name": "ProjectYakuzaStyle",
         "value": "dragon_of_dojima"
       },
@@ -1042,10 +1047,6 @@
       },
       {
         "name": "AimFloorAnim",
-        "value": "false"
-      },
-      {
-        "name": "ProjectYakuzaLinkedDouble",
         "value": "false"
       },
       {

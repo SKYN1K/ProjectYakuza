@@ -48,47 +48,57 @@ end
 function H:layout(p)
     local index=p:getPlayerNum();local width=getPlayerScreenWidth(index);local height=getPlayerScreenHeight and getPlayerScreenHeight(index)or 720
     local text=getTextManager and getTextManager();local font=text and text.getFontHeight and text:getFontHeight(UIFont.Small)or 16
-    local rowHeight=math.max(29,font+12);local margin=12
+    local margin=12;local rowHeight=math.max(29,font+12)
     local capacity=(ProjectYakuza.Heat.rules and ProjectYakuza.Heat.rules(p)or ProjectYakuza.Heat.config).maxStocks
     local tail=330+77*(math.ceil(capacity/2)-3)
     local desiredWidth=math.max(110+40*.9+H.healthLength,110+tail*.9)+12
-    local factor=math.min(1,math.max(1,width-2*margin)/desiredWidth)
-    local function geometry()
-        H.scale=.9*factor;H.originX=110*factor;H.originY=100*factor
-        self.healthBarWidth=H.healthLength*factor
-        self.cooldownX=H.originX-64*H.scale
-        self.cooldownY=H.originY+98*H.scale+12
-        self.cooldownWidth=math.max(H.originX+40*H.scale+self.healthBarWidth,H.originX+tail*H.scale)-self.cooldownX
-    end
-    geometry()
+    local cooldownWidth=math.max(110+40*.9+H.healthLength,110+tail*.9)-(110-64*.9)
     local requiredText=text and text.MeasureStringX and text:MeasureStringX(UIFont.Small,"QUICKSTEP  3 / 3")+text:MeasureStringX(UIFont.Small,"15.0s")or font*15
-    self.stackedCooldownText=requiredText>self.cooldownWidth-24
+    self.stackedCooldownText=requiredText>cooldownWidth-24
     if self.stackedCooldownText then rowHeight=math.max(rowHeight,font*2+12)end
-    local availableHeight=math.max(1,height-2*margin-2*(rowHeight+5)-16)
-    factor=math.min(factor,availableHeight/(100+98*.9));geometry()
-    self.cooldownRowHeight=rowHeight;self.cooldownFontHeight=font
-    self.layoutWidth=math.min(width-2*margin,desiredWidth*factor)
+    local desiredHeight=100+98*.9+12+2*(rowHeight+5)+4
+    local requested=ProjectYakuza.HUDSettings and ProjectYakuza.HUDSettings.scale()or 1
+    local factor=math.min(requested,math.max(1,width-2*margin)/desiredWidth,math.max(1,height-2*margin)/desiredHeight)
+    self.factor=factor;H.scale=.9*factor;H.originX=110*factor;H.originY=100*factor
+    self.healthBarWidth=H.healthLength*factor
+    self.cooldownX=H.originX-64*H.scale;self.cooldownY=H.originY+98*H.scale+12*factor
+    self.cooldownWidth=cooldownWidth*factor;self.cooldownRowHeight=rowHeight*factor;self.cooldownFontHeight=font*factor
+    self.layoutWidth=desiredWidth*factor
     if self.setX then self:setX((getPlayerScreenLeft and getPlayerScreenLeft(index)or 0)+margin)end
     if self.setY then self:setY((getPlayerScreenTop and getPlayerScreenTop(index)or 0)+margin)end
 end
+function H:cooldownText(text,x,y,r,g,b,align)
+    local manager=getTextManager and getTextManager()
+    if manager and manager.DrawString and self.getAbsoluteX then
+        local width=manager:MeasureStringX(UIFont.Small,text)*self.factor
+        manager:DrawString(UIFont.Small,self:getAbsoluteX()+x-(align=="right"and width or 0),self:getAbsoluteY()+y,self.factor,text,r,g,b,1)
+    elseif align=="right"then self:drawTextRight(text,x,y,r,g,b,1,UIFont.Small)
+    else self:drawText(text,x,y,r,g,b,1,UIFont.Small)end
+end
 function H:drawCooldownRow(title,value,y,fractions,ready,count)
-    local x=self.cooldownX;local width=self.cooldownWidth;local height=self.cooldownRowHeight
+    local x=self.cooldownX;local width=self.cooldownWidth;local height=self.cooldownRowHeight;local f=self.factor
     local color=ready and {.45,.82,1}or {.52,.60,.72}
     self:drawRect(x,y,width,height,.78,.025,.035,.055)
-    self:drawRect(x,y,2,height,.95,color[1],color[2],color[3])
-    self:drawText(title,x+9,y+2,color[1],color[2],color[3],1,UIFont.Small)
+    self:drawRect(x,y,2*f,height,.95,color[1],color[2],color[3])
+    self:cooldownText(title,x+9*f,y+2*f,color[1],color[2],color[3])
     if count then
-        local text=getTextManager and getTextManager();local titleWidth=text and text.MeasureStringX and text:MeasureStringX(UIFont.Small,title)or #title*self.cooldownFontHeight*.55
-        self:drawText(count,x+19+titleWidth,y+2,.9,.95,1,1,UIFont.Small)
+        local text=getTextManager and getTextManager();local titleWidth=text and text.MeasureStringX and text:MeasureStringX(UIFont.Small,title)*f or #title*self.cooldownFontHeight*.55
+        self:cooldownText(count,x+19*f+titleWidth,y+2*f,.9,.95,1)
     end
-    self:drawTextRight(value,x+width-8,y+2+(self.stackedCooldownText and self.cooldownFontHeight or 0),.9,.95,1,1,UIFont.Small)
-    local gap=4;local count=#fractions;local segment=(width-18-gap*(count-1))/count
+    self:cooldownText(value,x+width-8*f,y+2*f+(self.stackedCooldownText and self.cooldownFontHeight or 0),.9,.95,1,"right")
+    local gap=4*f;local count=#fractions;local segment=(width-18*f-gap*(count-1))/count
     for i,fraction in ipairs(fractions)do
-        local left=x+9+(i-1)*(segment+gap)
-        self:drawRect(left,y+height-6,segment,3,.8,.13,.19,.26)
-        if fraction>0 then self:drawRect(left,y+height-6,segment*math.min(1,fraction),3,.95,color[1],color[2],color[3])end
+        local left=x+9*f+(i-1)*(segment+gap)
+        self:drawRect(left,y+height-6*f,segment,3*f,.8,.13,.19,.26)
+        if fraction>0 then self:drawRect(left,y+height-6*f,segment*math.min(1,fraction),3*f,.95,color[1],color[2],color[3])end
     end
-    return y+height+5
+    return y+height+5*f
+end
+function H:drawHealthFrame(texture,x,y,width,alpha,r,g,b)
+    local cap=10*H.scale;local height=18*H.scale
+    self:drawSubTexture(texture,0,0,10,18,x,y,cap,height,alpha,r,g,b)
+    self:drawSubTexture(texture,10,0,236,18,x+cap,y,width-2*cap,height,alpha,r,g,b)
+    self:drawSubTexture(texture,246,0,10,18,x+width-cap,y,cap,height,alpha,r,g,b)
 end
 function H:drawCooldowns(p)
     local style=ProjectYakuza.getPlayerStyle(p);local y=self.cooldownY
@@ -107,7 +117,7 @@ function H:drawCooldowns(p)
         local fraction=total>0 and math.max(0,math.min(1,1-remaining/total))or 1
         y=self:drawCooldownRow("TIGER DROP",remaining>0 and string.format("%.1fs",remaining/1000)or "READY",y,{fraction},remaining==0)
     end
-    if self.setHeight then self:setHeight(y+4)end
+    if self.setHeight then self:setHeight(y+4*self.factor)end
 end
 function H:prerender()
     local p=getSpecificPlayer(0)
@@ -151,14 +161,17 @@ function H:drawGauge(p)
     if a.healthEmpty then self:drawTextureScaled(a.healthEmpty,healthX,healthY,healthWidth,18*H.scale,1,1,1,1)end
     local warning=math.sqrt(ProjectYakuza.LowHealthFeedback and ProjectYakuza.LowHealthFeedback.sample(p)or 0)
     local healthAlpha=1-warning*.72
-    local fill=(healthWidth-4)*self.health/100
+    local fill=(healthWidth-4*H.scale)*self.health/100
     if fill>0 then
-        for row=0,7 do local shine=1-math.abs(row-3.5)/4;self:drawRect(healthX+2,healthY+2+row*(14*H.scale/8),fill,14*H.scale/8+1,healthAlpha,.48+.4*shine,.025+.045*shine,.035+.045*shine)end
+        for row=0,7 do local shine=1-math.abs(row-3.5)/4;self:drawRect(healthX+2*H.scale,healthY+2*H.scale+row*(14*H.scale/8),fill,14*H.scale/8+1,healthAlpha,.48+.4*shine,.025+.045*shine,.035+.045*shine)end
     end
-    if a.healthFrame then self:drawTextureScaled(a.healthFrame,healthX,healthY,healthWidth,18*H.scale,1,1,1,1)end
+    if a.healthFrame then
+        self:drawSubTexture(a.healthFrame,0,0,12,18,healthX-12*H.scale,healthY-2*H.scale,16*H.scale,22*H.scale,1,.85,.86,.88)
+        self:drawHealthFrame(a.healthFrame,healthX,healthY,healthWidth,1,1,1,1)
+    end
     if warning>0 and a.healthFrame then
-        self:drawTextureScaled(a.healthFrame,healthX-3,healthY-3,healthWidth+6,18*H.scale+6,warning*.22,1,.08,.06)
-        self:drawTextureScaled(a.healthFrame,healthX-1,healthY-1,healthWidth+2,18*H.scale+2,warning*.62,1,.12,.1)
+        self:drawHealthFrame(a.healthFrame,healthX-3*H.scale,healthY-3*H.scale,healthWidth+6*H.scale,warning*.22,1,.08,.06)
+        self:drawHealthFrame(a.healthFrame,healthX-H.scale,healthY-H.scale,healthWidth+2*H.scale,warning*.62,1,.12,.1)
     end
     local capacity=(ProjectYakuza.Heat.rules and ProjectYakuza.Heat.rules(p)or ProjectYakuza.Heat.config).maxStocks
     local pairs=math.ceil(capacity/2)

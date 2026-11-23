@@ -1,5 +1,5 @@
 {
-  "operation": "Code-only root staging from existing converted PZ skeleton left-hand and victim neck transforms; source clips unchanged. Forward=-modelZ*1.5; right=modelX*1.5; victim faces actor, so horizontal coordinates sum. No motion, visual or audio files created.",
+  "operation": "Root staging from converted native hand and victim neck transforms. Upper-body blend owns its root/pelvis/spine parent chain while native lower limbs remain available. No extra hold clearance. Original clip bytes unchanged.",
   "pairs": [
     {
       "actor": "GrabHold",
@@ -18,14 +18,14 @@
         0.0682811513543129
       ],
       "expected": [
-        0.5000004457886219,
+        0.2912384457886219,
         0.019354211166501045
       ],
       "configured": [
-        0.5,
-        0.019355
+        0.291238,
+        0.019354
       ],
-      "additionalHoldClearance": 0.208762
+      "additionalHoldClearance": 0
     },
     {
       "actor": "Throw",
@@ -157,5 +157,6 @@
       ],
       "additionalHoldClearance": 0
     }
-  ]
+  ],
+  "maskedHandSamples": 20
 }

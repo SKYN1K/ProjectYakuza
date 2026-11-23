@@ -35,7 +35,7 @@ function G.restore(z,old)
     if not z:isDead()and z:getTarget()==nil then z:setTarget(old.target)end
 end
 function G.phase(value)
-    return value=="enter"or value=="hold"or value=="escape"or value=="throw"or value=="strike1"or value=="strike2"or value=="strike3"or value=="strike4"
+    return value=="attempt"or value=="enter"or value=="hold"or value=="escape"or value=="throw"or value=="strike1"or value=="strike2"or value=="strike3"or value=="strike4"
 end
 function G.damage(p,move)
     local held=p:getPrimaryHandItem();if not held then return end

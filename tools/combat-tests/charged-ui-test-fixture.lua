@@ -393,6 +393,6 @@ do
 end
 print('PASS '..checks..' charged heavy, style UI and outline checks')
 p.fixtureHealth=25;clock=clock+101;healthRects={};HUD.instance:prerender()
-check(HUD.instance.health==25 and #healthRects==8 and math.abs(healthRects[1].width-(HUD.instance.healthBarWidth-4)*.25)<.001,'health HUD maps overall body health to the longer responsive life bar')
+check(HUD.instance.health==25 and #healthRects==8 and math.abs(healthRects[1].width-(HUD.instance.healthBarWidth-4*HUD.scale)*.25)<.001,'health HUD maps overall body health to the longer responsive life bar')
 p.fixtureHealth=0;clock=clock+101;healthRects={};HUD.instance:prerender();check(HUD.instance.health==0 and #healthRects==0,'empty overall health draws no life fill')
 return checks

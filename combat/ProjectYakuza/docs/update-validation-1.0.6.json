@@ -1,0 +1,61 @@
+{
+  "version": "1.0.6",
+  "offlineOnly": true,
+  "kahlua": {
+    "grabLifecycle": 1421,
+    "multiplayer": 2035,
+    "impactEnvelopes": 18859,
+    "lowHealthAndHud": 163,
+    "chargedUi": 203,
+    "heatPresentation": 7173,
+    "modOptions": 160
+  },
+  "focusedAssertions": 30014,
+  "runtimeFiles": 1200,
+  "compiledLuaModules": 88,
+  "releaseRuntimeAssertions": 126,
+  "nativeGrabSelectors": 74,
+  "grabAttempt": {
+    "frames": 49,
+    "fps": 30,
+    "durationSeconds": 1.6,
+    "bepContactFrames": [
+      10,
+      12
+    ],
+    "preservedRetargetBodyTransforms": 1666,
+    "nativeImporterChannels": 35
+  },
+  "grabAlignment": {
+    "holdForward": 0.291238,
+    "holdRight": 0.019354,
+    "addedClearance": 0,
+    "maskedHandTransformChecks": 20,
+    "nativeLegLocalsRetained": true
+  },
+  "impactTiming": {
+    "leadMs": 120,
+    "tailMsRange": [
+      403,
+      520
+    ],
+    "nearestUpcomingContactOnly": true,
+    "sourceAnimationDamageAndAudioTimingUnchanged": true
+  },
+  "hudScale": {
+    "minimumPercent": 50,
+    "maximumPercent": 200,
+    "defaultPercent": 100,
+    "smallestTestViewport": [
+      320,
+      240
+    ],
+    "largestTestViewport": [
+      3840,
+      2160
+    ],
+    "originalSilverTextureReused": true
+  },
+  "textureAndAudioBytesChanged": false,
+  "sourceComments": 0
+}

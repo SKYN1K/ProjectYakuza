@@ -404,3 +404,6 @@
 
 !tools/combat-tests/heat-screen-test-fixture.lua
 !tools/combat-tests/HeatScreenProbe.java
+
+!tools/combat-tests/build_grab_attempt_assets.py
+!tools/combat-tests/validate_grab_attempt.py

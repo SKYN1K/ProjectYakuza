@@ -85,7 +85,7 @@ function ISPanel:setX(v)self.x=v end;function ISPanel:setY(v)self.y=v end
 function ISPanel:setWidth(v)self.width=v end;function ISPanel:setHeight(v)self.height=v end
 function ISPanel:initialise()end;function ISPanel:setWantMouseEvents(v)self.mouse=v end;function ISPanel:addToUIManager()end
 function ISPanel:drawTextureScaled(texture,x,y,w,h,alpha,r,g,b)uiDraws[#uiDraws+1]={texture=texture,alpha=alpha,r=r,g=g,b=b}end
-function ISPanel:drawSubTexture()end;function ISPanel:drawRect(x,y,w,h,a)fillAlphas[#fillAlphas+1]=a end;function ISPanel:drawText(text)self.lastText=text;if text=="CRITICAL"or text=="LOW HEALTH"then warningTexts[#warningTexts+1]=text end end
+function ISPanel:drawSubTexture(texture,sx,sy,sw,sh,x,y,w,h,alpha,r,g,b)uiDraws[#uiDraws+1]={texture=texture,alpha=alpha,r=r,g=g,b=b}end;function ISPanel:drawRect(x,y,w,h,a)fillAlphas[#fillAlphas+1]=a end;function ISPanel:drawText(text)self.lastText=text;if text=="CRITICAL"or text=="LOW HEALTH"then warningTexts[#warningTexts+1]=text end end
 function ISPanel:drawTextRight()end
 local viewportWidth,viewportHeight,viewportX,viewportY,fontHeight=1280,720,0,0,16
 getSpecificPlayer=function()return owner end;getPlayerScreenWidth=function()return viewportWidth end;getPlayerScreenHeight=function()return viewportHeight end
@@ -131,7 +131,15 @@ for _,size in ipairs({{640,480},{800,600},{1024,768},{1280,720},{1920,1080},{256
   HUD.instance:prerender();local panel=HUD.instance
   check(panel.x>=viewportX and panel.x+panel.width<=viewportX+viewportWidth+.001,'HUD stays inside viewport width '..size[1]..' font '..font)
   check(panel.y>=viewportY and panel.y+panel.height<=viewportY+viewportHeight+.001,'HUD and cooldowns stay inside viewport height '..size[2]..' font '..font)
-  check(panel.cooldownY>=HUD.originY+98*HUD.scale+12 and panel.cooldownWidth>0,'cooldown anchor clears enlarged glow at every viewport and font size')
+  check(panel.cooldownY>=HUD.originY+98*HUD.scale+12*panel.factor-.001 and panel.cooldownWidth>0,'cooldown anchor clears enlarged glow at every viewport and font size')
+ end
+end
+for _,scale in ipairs({.5,1,2})do
+ PY.HUDSettings={scale=function()return scale end}
+ for _,size in ipairs({{320,240},{640,360},{1280,720},{3840,2160}})do
+  viewportWidth,viewportHeight=size[1],size[2];fontHeight=32;HUD.instance:prerender();local panel=HUD.instance
+  check(panel.factor<=scale and panel.x+panel.width<=viewportX+viewportWidth+.001 and panel.y+panel.height<=viewportY+viewportHeight+.001,'requested HUD scale fits both viewport dimensions')
+  check(panel.cooldownY>=HUD.originY+98*HUD.scale+12*panel.factor-.001,'scaled cooldowns clear the dragon and heat row')
  end
 end
 L.clearAll();local remaining=0;for _ in pairs(L.states)do remaining=remaining+1 end;check(not L.hooked and remaining==0,'save/world cleanup drops all local state')

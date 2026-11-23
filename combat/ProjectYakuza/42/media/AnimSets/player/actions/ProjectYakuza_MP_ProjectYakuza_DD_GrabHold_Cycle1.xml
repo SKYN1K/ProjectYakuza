@@ -10,9 +10,19 @@
   <m_BlendOutTime>0.1</m_BlendOutTime>
   <m_SyncTrackingEnabled>false</m_SyncTrackingEnabled>
   <m_SubStateBoneWeights>
-    <boneName>Bip01_Spine1</boneName>
+    <boneName>Bip01</boneName>
     <weight>1</weight>
-    <includeDescendants>true</includeDescendants>
+    <includeDescendants>false</includeDescendants>
+  </m_SubStateBoneWeights>
+  <m_SubStateBoneWeights>
+    <boneName>Bip01_Pelvis</boneName>
+    <weight>1</weight>
+    <includeDescendants>false</includeDescendants>
+  </m_SubStateBoneWeights>
+  <m_SubStateBoneWeights>
+    <boneName>Bip01_Spine</boneName>
+    <weight>1</weight>
+    <includeDescendants>false</includeDescendants>
   </m_SubStateBoneWeights>
   <m_SubStateBoneWeights>
     <boneName>Bip01_Prop1</boneName>
@@ -21,6 +31,12 @@
   </m_SubStateBoneWeights>
   <m_SubStateBoneWeights>
     <boneName>Bip01_Prop2</boneName>
+    <weight>1</weight>
+    <includeDescendants>true</includeDescendants>
+  </m_SubStateBoneWeights>
+  <m_maxTorsoTwist>0</m_maxTorsoTwist>
+  <m_SubStateBoneWeights>
+    <boneName>Bip01_Spine1</boneName>
     <weight>1</weight>
     <includeDescendants>true</includeDescendants>
   </m_SubStateBoneWeights>

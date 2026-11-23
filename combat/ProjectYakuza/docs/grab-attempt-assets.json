@@ -1,0 +1,27 @@
+{
+  "authorization": "User approved conversion of the supplied original Yakuza 6 grab-attempt motion for missed grabs.",
+  "source": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\gmt\\P_KRU_BTL_SUD_atm_sze_l_md.gmt",
+  "sourceSha256": "5464403abe0928122d3a62486a4055540ba5fddb1eb148b7bcee9154fd0ccd3a",
+  "bep": "E:\\Blender\\Yakuza Rips\\yakuza6\\motion.par.unpack\\bep\\P_KRU_BTL_SUD_atm_sze_l_md.bep",
+  "bepSha256": "0403cf6de78f40c521b3d441e09c536638b0cd2404c3d9d7be6b430463fc3ecb",
+  "windows": [
+    {
+      "kind": 77,
+      "fromFrame": 10.0,
+      "toFrame": 12.0
+    },
+    {
+      "kind": 75,
+      "fromFrame": 25.0,
+      "toFrame": 48.0
+    }
+  ],
+  "retarget": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\tools\\grab-attempt-build\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_GrabAttempt.x",
+  "retargetSha256": "09341dce53c35bc44dc25ccd420c0315c1153c098a07d61313436a6de1fab4df",
+  "output": "42/media/anims_X/Bob/ProjectYakuza_DD_GrabAttempt.x",
+  "sha256": "c7084cd388f0217baa5cf76dcaff1bae9d8ff4cbb0fe5cd8046eea759f67bc27",
+  "frames": 49,
+  "fps": 30,
+  "duration": 1.6,
+  "operation": "Complete original attack-attempt and failed-reach recovery, original frame order and timing. Existing PZ skeleton retargeting and native prop offsets; existing grab finger pose. No invented body motion, artwork or audio."
+}

@@ -13,6 +13,7 @@ function C.sync()
 end
 function C.stop(p,source,complete)
     local s=C.states[p];if not s or source and s.source~=source then return end
+    if PY.HeatScreenEffects then PY.HeatScreenEffects.cancel(p,s.source)end
     if not complete then for _,h in ipairs(s.handles)do if h.emitter:isPlaying(h.id)then h.emitter:stopSound(h.id)end end end
     if PY.AttackEffects.endPaired then PY.AttackEffects.endPaired(p,s.source,complete)end
     C.states[p]=nil;C.sync()
@@ -113,10 +114,12 @@ function C.tick()
                     if PY.AttackEffects.paired then PY.AttackEffects.paired(p,s.source,s.move,clip,phase,weight,s.limbContacts)end
                     local definition=ending and s.move.qteFailure or s.move
                     C.authoredEvents(p,s,time,definition)
+                    local screenPrepared=false
                     for i,meta in ipairs(contacts)do
                         local index=meta.index or i;local contact=PY.HeatRushRules.contacts(s.move)[index]
                         local allowed=C.allowed(s,contact,index)
                         if allowed then
+                            if not screenPrepared and PY.HeatScreenEffects and time>=meta.atMs-PY.HeatScreenEffects.leadMs and time<meta.atMs then screenPrepared=PY.HeatScreenEffects.prepare(p,s.victim,index,contact,meta.atMs-time)==true end
                             if definition.audioEvents==nil and s.audio[i]==nil and time>=meta.atMs-C.prepareMs then s.audio[i]=C.prepare(p,s,contact,meta)end
                             local audio=s.audio[i]
                             if audio and not audio.done and time>=meta.atMs-audio.lead then

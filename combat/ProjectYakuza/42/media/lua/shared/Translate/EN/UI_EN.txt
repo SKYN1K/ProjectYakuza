@@ -9,6 +9,7 @@ UI_EN = {
     UI_ProjectYakuza_HitVolume = "Hit volume",
 
     UI_ProjectYakuza_VoiceVolume = "Voice volume",
+    UI_ProjectYakuza_HUDScale = "HUD scale",
 
     UI_ProjectYakuza_AudioDescription = "Music, combat sound effects, and combat voice lines have separate volume controls. Zero mutes that group. Voices affects only combat lines requested by this mod.",
 

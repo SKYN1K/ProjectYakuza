@@ -178,5 +178,14 @@ for _,remote in ipairs({false,true})do
  C.stop(p,source);advance(1000);check(#plays==0 and #fx==0,'interruption cancels stomp sound and impact')
 end
 C.clearAll()
+do
+ local prepared,cancelled={},0
+ PY.HeatScreenEffects={leadMs=120,prepare=function(actor,victim,index,contact,remaining)prepared[#prepared+1]={index=index,remaining=remaining};return true end,cancel=function()cancelled=cancelled+1 end}
+ move={animation='Custom',contacts={{atMs=500},{atMs=550}}};source={};phase=0;C.start(p,z,move,source)
+ step(390);check(#prepared==1 and prepared[1].index==1 and math.abs(prepared[1].remaining-110)<.001,'presentation prepares the upcoming impact on its source clock')
+ prepared={};step(450);check(#prepared==1 and prepared[1].index==1,'overlapping anticipation windows choose the nearest upcoming contact once per frame')
+ prepared={};step(510);check(#prepared==1 and prepared[1].index==2,'after contact the next authored impact may anticipate')
+ C.stop(p,source);check(cancelled==1,'ending a presentation cancels its own unfinished anticipation');PY.HeatScreenEffects=nil
+end
 check(limbDriven>100 and limbStopped>10,'all paired scene lifecycle paths drive and stop limbs')
 return true,'PASS '..checks..' paired Heat Action timing, 38 native contacts, 129 source blood emitters and one stomp contact effect, independent cues and voices, replay suppression and lifecycle checks'

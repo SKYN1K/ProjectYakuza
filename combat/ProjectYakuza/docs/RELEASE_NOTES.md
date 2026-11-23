@@ -1,3 +1,13 @@
+# v1.0.6
+
+Grab attempts use the complete original Yakuza 6 failed-reach and recovery motion. The original BEP frames 10–12 determine when a target can connect; success branches to the paired entry, while misses play the full 1.6-second recovery. The holding mask now owns the complete arm parent chain without replacing native walking legs. Hand/neck spacing removes the extra gap. Holding maintains the combat stance after RMB release and restores native aim input on cleanup, including MP grant/cancel paths.
+
+Heat Action tint and shake begin up to 120 ms before contact and last roughly 0.4–0.52 seconds afterward. Repeated hits preserve the preceding tail during anticipation. Cancelling an unconfirmed contact clears its effect. Damage, source animation speeds, audio contacts and the existing Extreme Heat blood effect are unchanged.
+
+The health bar uses the existing silver frame with fixed end caps and a gray left backing. HUD scale is configurable from 50 to 200 percent under Presentation. Health, heat, cooldowns and their text scale together, fitting both viewport dimensions; quickstep charges stay beside the label and its READY/countdown remains right-aligned.
+
+Validation: Kahlua lifecycle, MP authority, HUD/option/layout and impact-envelope checks; native animation/XML selection and camera APIs; 49 original grab-attempt frames and 1,666 retarget body transforms; twenty mixed hold/walk hand transforms. Original texture/audio bytes remain unchanged. PZ was not launched; live appearance and performance still need gameplay testing.
+
 # v1.0.5
 
 Grab entry blends the victim from its actual position into the full forward/lateral grip offset over 180 ms, shared by the client and server. This removes the fixed distance-per-tick approach and final side snap. Delayed grants recheck range, facing, visibility and walls. Pausing preserves entry/approval clocks, and a finished miss releases controls promptly even if its animation track disappears.

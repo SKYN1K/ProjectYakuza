@@ -44,6 +44,8 @@ for _,id in ipairs({'runningLight','dropkick','quickstepAttack','counter'})do
  check(options:getOption('input_'..id)==nil and options:getOption('key_'..id)==nil,'context action has no dedicated setting '..id)
 end
 local intro=options:getOption('encounterIntro')
+local hud=options:getOption('hudScale');check(hud.name=='HUD scale'and hud:getValue()==100 and ProjectYakuza.HUDSettings.scale()==1,'HUD scale has a readable default setting')
+hud:setValue(200);check(ProjectYakuza.HUDSettings.scale()==2,'HUD scale supports two hundred percent');hud:setValue('invalid');check(ProjectYakuza.HUDSettings.scale()==1,'invalid HUD scale uses a safe default');hud:setValue(100)
 check(intro.type=='tickbox' and intro.name=='Zombie Encounter Intro' and intro:getValue() and ProjectYakuza.isEncounterIntroEnabled(),'readable encounter toggle defaults to enabled')
 inputLines[#inputLines+1]='tickbox|ProjectYakuza|encounterIntro|false'
 for _,fn in ipairs(startup)do fn()end

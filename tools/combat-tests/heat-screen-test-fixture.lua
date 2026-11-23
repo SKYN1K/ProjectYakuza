@@ -30,7 +30,7 @@ for _,size in ipairs({{1024,768},{1280,720},{1920,1080},{3440,1440}})do
    F.stop();clock=clock+1000;callback(p,victim,2,contact)
    check(F.state and Events.OnTick.hooks[F.update]and Events.OnPreUIDraw.hooks[F.draw]and Events.OnRenderTick.hooks[F.restoreCamera],'registered callbacks apply before the world and restore after it')
    local peak=F.state.strength
-   for age=0,250,10 do
+   for age=0,650,10 do
     local baseX,baseY=x,y;local count=#draws;clock=F.state and F.state.at+age or clock+10
     F.update()
     check(math.abs(x-baseX)<=peak*5*zoom+.51 and math.abs(y-baseY)<=peak*3.5*zoom+.51,'shake is bounded by zoom and contact strength')
@@ -54,4 +54,16 @@ callback(p,victim,1,{bloodOnly=true});check(not F.state,'blood-only secondary ev
 PY.HeatActionPresentation.states[p]=nil;callback(p,victim,1,{strong=true});check(not F.state,'ordinary grab strikes cannot trigger cinematic screen effects');PY.HeatActionPresentation.states[p]={}
 callback(p,victim,1,{sumQTE=true});F.update();F.stop();check(not F.state and near(x,originalX)and near(y,originalY),'saving clears state and restores the camera')
 callback(p,victim,1,{sumQTE=true});F.update();failed=true;local ok=pcall(F.draw);failed=false;check(not ok and additive and not F.state and not F.camera,'draw failure restores blending, camera and hooks')
+do
+ PY.HeatActionPresentation.states[p]={source={}};clock=clock+1000
+ check(F.prepare(p,victim,1,{strong=true},120),'contact anticipation starts within its 120ms lead')
+ local state=F.state;clock=clock+60;local _,envelope=F.sample();check(envelope>0 and envelope<.55,'tint and shake ramp before the impact')
+ F.prepare(p,victim,1,{strong=true},60);check(state.hitAt==clock+60,'anticipation follows the current source track without restarting its state')
+ F.hit(p,victim,1,{bloodOnly=true});check(not state.confirmed,'blood-only events cannot confirm an anticipating contact')
+ clock=clock+60;F.hit(p,victim,1,{strong=true});check(F.state==state and state.confirmed and state.hitAt==clock,'actual contact confirms the existing lead-in without restarting it')
+ clock=clock+300;check(F.sample()~=nil,'impact remains visible longer than the previous 250ms maximum')
+ local _,old=F.sample();F.prepare(p,victim,2,{strong=true},80);local _,continuity=F.sample();check(continuity>=old-.001,'closely spaced contacts preserve the previous tail while the next lead-in starts')
+ F.cancel(p,PY.HeatActionPresentation.states[p].source);check(not F.state,'cancelled unconfirmed contacts clear anticipation')
+ F.hit(p,victim,2,{strong=true});F.cancel(p,PY.HeatActionPresentation.states[p].source);check(F.state and F.state.confirmed,'completed presentation keeps an already confirmed contact tail');F.stop()
+end
 return 'PASS '..checks..' tint coverage, bounded pre-world shake, aiming offsets, hook cleanup, local ownership and no-spark assertions'

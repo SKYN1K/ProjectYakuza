@@ -405,6 +405,7 @@ function S.tick()
                     S.fanout(p,"grabEscape",{player=id,zombie=z:getOnlineID(),grabId=lease.id,useless=lease.useless,ignore=lease.ignore,deferred=lease.deferred,locked=lease.locked})
                 end
                 local phase=lease.breaking and "escape"or s.packet.phase
+                if phase=="attempt"then phase="enter"end
                 if ProjectYakuza.GrabRules.phase(phase)then lease.expires=t+1500 end
                 z:setVariable("ProjectYakuzaGrabPhase",phase)
                 ProjectYakuza.GrabRules.keep(z)

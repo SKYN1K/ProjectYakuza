@@ -20,6 +20,8 @@ ProjectYakuza.SoundSettings={
     musicLevel=function()return math.max(0,math.min(2,(tonumber(music:getValue()) or 45)/100))end,
 }
 options:addTitle("Presentation")
+local hudScale=options:addSlider("hudScale",label("UI_ProjectYakuza_HUDScale","HUD scale"),50,200,5,100)
+ProjectYakuza.HUDSettings={scale=function()local value=tonumber(hudScale:getValue());if not value or value~=value then return 1 end;return math.max(.5,math.min(2,value/100))end}
 local encounterIntro=options:addTickBox("encounterIntro","Zombie Encounter Intro",true,"Show the animated encounter title and its sound when a fight starts.")
 function ProjectYakuza.isEncounterIntroEnabled()return encounterIntro:getValue()~=false end
 ProjectYakuza.Bindings.configure(options)
