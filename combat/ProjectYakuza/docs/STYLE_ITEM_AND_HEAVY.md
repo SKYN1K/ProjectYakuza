@@ -10,4 +10,4 @@ While aiming with the unarmed style item, tap-release MMB with no active combo p
 
 Only approved source-motion conversions/prop corrections are included. No image, audio, model or invented body-motion asset was generated. See the provenance JSON files and VALIDATION_0.74.0.md. No game was launched; assess live grip/blend and MP presentation after restarting matching installations.
 
-The Dragon item displays Dragon (DE) - Project Yakuza and uses the full type ProjectYakuza.Dragon_DE_ProjectYakuza_Style. The former item definition is absent. An equipped style with an empty hand recreates its current item through the normal equip lifecycle. Equipped-hand drawing fits the existing visible logo to 94 percent of the slot width; inventory textures and source pixels remain unchanged.
+The Dragon item displays Dragon (DE) - Project Yakuza and uses the full type ProjectYakuza.Dragon_DE_Style. The former item definition is absent. An equipped style with an empty hand recreates its current item through the normal equip lifecycle. Equipped-hand drawing fits the existing visible logo to 94 percent of the slot width; inventory textures and source pixels remain unchanged.

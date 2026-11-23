@@ -41,7 +41,7 @@ local iconDraws={}
 ISEquippedItem={drawTextureScaledAspect=function(self,texture,x,y,w,h,alpha,r,g,b)iconDraws[#iconDraws+1]={texture=texture,x=x,y=y,width=w,height=h,alpha=alpha,r=r,g=g,b=b}end}
 do local _="ProjectYakuzaFixture:CLIENT_ITEM" end
 local regular=item('Base.BaseballBat');local first=item(PY.TOKEN);p.hand=first
-check(PY.TOKEN=='ProjectYakuza.Dragon_DE_ProjectYakuza_Style','framework uses the requested exact Dragon item identifier')
+check(PY.TOKEN=='ProjectYakuza.Dragon_DE_Style','framework uses the requested exact Dragon item identifier')
 function first:getTex()return 'dragon-icon'end
 function regular:getTex()return 'bat-icon'end
 local equippedPanel={chr=p,mainHand={x=0,y=0,width=64,height=64},offHand={x=0,y=70,width=48,height=48}}

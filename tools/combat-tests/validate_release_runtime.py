@@ -16,7 +16,7 @@ for name,path in files.items():
 for token in ['IntactBeerBottle','IntactWineBottle','IntactWhiskeyBottle','BeerCrate','Bicycle','LauSpear']:
  assert all(not re.search(r'\bitem\s+'+token+r'\s*\{',p.read_text(encoding='utf-8'))for n,p in files.items()if '/scripts/'in n),token
 items=[item for name,path in files.items()if '/scripts/'in name for item in re.findall(r'\bitem\s+(\w+)\s*\{',path.read_text(encoding='utf-8'))]
-assert items==['Dragon_DE_ProjectYakuza_Style'],items
+assert items==['Dragon_DE_Style'],items
 sources={}
 for name,path in files.items():
  if name.endswith('.lua'):

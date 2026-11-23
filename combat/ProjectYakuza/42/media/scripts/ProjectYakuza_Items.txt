@@ -1,6 +1,6 @@
 module ProjectYakuza
 {
-    item Dragon_DE_ProjectYakuza_Style
+    item Dragon_DE_Style
     {
         DisplayName = Dragon (DE) - Project Yakuza,
         DisplayCategory = Weapon,

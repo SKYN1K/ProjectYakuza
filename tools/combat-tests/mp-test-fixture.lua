@@ -14,7 +14,7 @@ local actors={}
 local function list(t)return {size=function()return #t end,get=function(_,i)return t[i+1]end}end
 local nextItem=1000
 local function tokenItem(id)
- return {getID=function()return id end,getFullType=function()return 'ProjectYakuza.Dragon_DE_ProjectYakuza_Style' end,
+ return {getID=function()return id end,getFullType=function()return 'ProjectYakuza.Dragon_DE_Style' end,
  getMinDamage=function()return .3 end,getMaxDamage=function()return .5 end,
  setMaxHitCount=function(self,v)self.maxHit=v end,setWeaponSprite=function(self,v)self.sprite=v end,
  setOriginalWeaponSprite=function(self,v)self.originalSprite=v end}

@@ -8,7 +8,7 @@ Vanilla shoves are disabled while any style is equipped, independently of the qu
 
 All four normal Dragon rush links now use each original Yakuza 6 BEP follow-up opening instead of a uniform 58 percent recovery marker. The latest authored opening is selected conservatively; collision checks, animation speed and source clips are unchanged.
 
-The style item is now Dragon (DE) - Project Yakuza, with internal ID ProjectYakuza.Dragon_DE_ProjectYakuza_Style. Its existing icon fills more of the equipped-hand circle without changing inventory icons or image bytes. The redundant text Heat counter is removed. The HUD is 20 percent larger, the health bar is 25 percent longer, and cooldown rows adapt to viewport size and font height. Quickstep charges sit beside the ability name; countdown/READY remains right-aligned.
+The style item is now Dragon (DE) - Project Yakuza, with internal ID ProjectYakuza.Dragon_DE_Style. Its existing icon fills more of the equipped-hand circle without changing inventory icons or image bytes. The redundant text Heat counter is removed. The HUD is 20 percent larger, the health bar is 25 percent longer, and cooldown rows adapt to viewport size and font height. Quickstep charges sit beside the ability name; countdown/READY remains right-aligned.
 
 Extreme Heat passive stock lifetime is 10 percent longer: 4.125 seconds per orb, or 24.75 seconds for six full orbs before attack and damage costs. Combat music now waits 22 quiet seconds before fading. The Heat Action screen-effect hook uses the registered OnRenderTick event instead of nonexistent OnPreRender.
 

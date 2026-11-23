@@ -8,7 +8,7 @@ public class StyleItemProbe {
   if(a.length>0){
    var parser=Class.forName("zombie.scripting.ScriptParser");var root=parser.getMethod("parse",String.class).invoke(null,java.nio.file.Files.readString(java.nio.file.Path.of(a[0])));var modules=(java.util.List<?>)root.getClass().getField("children").get(root);var module=modules.get(0);var items=(java.util.List<?>)module.getClass().getField("children").get(module);
    if(modules.size()!=1||!module.getClass().getField("id").get(module).equals("ProjectYakuza")||items.size()!=1)throw new AssertionError("single style item namespace");var definition=items.get(0);
-   if(!definition.getClass().getField("id").get(definition).equals("Dragon_DE_ProjectYakuza_Style"))throw new AssertionError("new internal style item ID");var value=definition.getClass().getMethod("getValue",String.class).invoke(definition,"DisplayName");if(!value.getClass().getMethod("getValue").invoke(value).toString().trim().equals("Dragon (DE) - Project Yakuza"))throw new AssertionError("style display name");
+   if(!definition.getClass().getField("id").get(definition).equals("Dragon_DE_Style"))throw new AssertionError("new internal style item ID");var value=definition.getClass().getMethod("getValue",String.class).invoke(definition,"DisplayName");if(!value.getClass().getMethod("getValue").invoke(value).toString().trim().equals("Dragon (DE) - Project Yakuza"))throw new AssertionError("style display name");
    System.out.println("PASS native item script parser: exact Dragon display name and internal ID, with no legacy item definition");
   }
   System.out.println("PASS native token blood/dirt/favourite, owner-container/removal methods and B42 global instanceItem(String)");

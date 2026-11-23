@@ -18,7 +18,7 @@ local p={data={},aim=false,vars={},authorize=true,equipped=true}
 function p:getModData()return self.data end;function p:isLocalPlayer()return true end
 function p:isAiming()return self.aim end;function p:isDead()return self.dead==true end
 function p:getVehicle()return self.vehicle end
-function p:getPrimaryHandItem()return self.equipped and {getFullType=function()return 'ProjectYakuza.Dragon_DE_ProjectYakuza_Style' end} or nil end
+function p:getPrimaryHandItem()return self.equipped and {getFullType=function()return 'ProjectYakuza.Dragon_DE_Style' end} or nil end
 function p:GetVariable(name)return self.vars[name]or ''end
 function p:setVariable(name,value)self.vars[name]=value end
 function p:getForwardDirection()return {getX=function()return 1 end,getY=function()return 0 end}end

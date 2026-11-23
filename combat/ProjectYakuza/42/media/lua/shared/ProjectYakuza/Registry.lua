@@ -342,7 +342,7 @@ ProjectYakuza.actionKinds = { finisher=true, grab=true, grabHeat=true, groundHea
 ProjectYakuza.actionDefinitions = ProjectYakuza.actionDefinitions or {}
 ProjectYakuza.activeActions = ProjectYakuza.activeActions or setmetatable({}, {__mode="k"})
 ProjectYakuza.MAX_HIT_COUNT = 3
-ProjectYakuza.TOKEN = "ProjectYakuza.Dragon_DE_ProjectYakuza_Style"
+ProjectYakuza.TOKEN = "ProjectYakuza.Dragon_DE_Style"
 function ProjectYakuza.on(event, fn)
     assert(type(fn) == "function", "listener must be a function")
     ProjectYakuza.listeners[event] = ProjectYakuza.listeners[event] or {}
