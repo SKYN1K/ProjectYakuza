@@ -73,7 +73,7 @@ function A:phase(name)
     self.character:setVariable("ProjectYakuzaDefenseMarker","")
     if self.context.kind=="grab" then
         local z=self.context.target
-        z:setVariable("ProjectYakuzaGrabPhase",name);z:setVariable("ProjectYakuzaGrabMarker","")
+        if z then z:setVariable("ProjectYakuzaGrabPhase",name);z:setVariable("ProjectYakuzaGrabMarker","")end
         self:setGrabMoving(false)
         local walking=name=="hold"
         self.character:setBlockMovement(not walking)
@@ -86,7 +86,7 @@ end
 function A:setGrabMoving(moving,direction)
     if self.grabMoving~=moving then
         self.character:setVariable("ProjectYakuzaGrabMoving",moving)
-        self.context.target:setVariable("ProjectYakuzaGrabMoving",moving)
+        if self.context.target then self.context.target:setVariable("ProjectYakuzaGrabMoving",moving)end
         self.grabMoving=moving
     end
     if direction and self.walkDirection~=direction then
@@ -121,22 +121,30 @@ function A:start()
     p:setBlockMovement(self.context.kind~="block");p:setIgnoreMovement(self.context.kind~="block")
     self:setActionAnim(self.context.action.animation)
     self.action:setOverrideHandModelsObject(p:getPrimaryHandItem(),nil,false)
-    if self.context.kind=="grab" then
-        local z=self.context.target
-        self.victimState=ProjectYakuza.GrabRules.capture(z)
-        local saved=isClient()and ProjectYakuza.Network and ProjectYakuza.Network.grabStates and ProjectYakuza.Network.grabStates[p]
-        if saved then self.grabId=saved.grabId;self.victimState.useless=saved.useless;self.victimState.ignore=saved.ignore;self.victimState.deferred=saved.deferred;self.victimState.locked=saved.locked end
-        D.held[z]=self
-        D.followHook()
-        z:setAttackOutcome("fail");z:setTarget(nil);z:setUseless(true);z:setIgnoreMovement(true)
-        z:setDeferredMovementEnabled(false)
-        if ProjectYakuza.Reactions then ProjectYakuza.Reactions.clear(z) end
-        z:setVariable("ProjectYakuzaGrabbed",true)
-        z:setHitReaction("ProjectYakuzaGrabbed")
-        z:setForwardDirection(-self.context.fx,-self.context.fy)
-        z:reportEvent("wasHit")
-    end
+    if self.context.kind=="grab"and not self.context.attempt then self:attach(self.context.target)end
     self:phase("enter")
+end
+function A:attach(z)
+    local p=self.character
+    self.context.target=z;self.boundAt=now();self.awaitingGrab=false
+    self.victimState=ProjectYakuza.GrabRules.capture(z)
+    local saved=isClient()and ProjectYakuza.Network and ProjectYakuza.Network.grabStates and ProjectYakuza.Network.grabStates[p]
+    if saved then self.grabId=saved.grabId;self.victimState.useless=saved.useless;self.victimState.ignore=saved.ignore;self.victimState.deferred=saved.deferred;self.victimState.locked=saved.locked end
+    D.held[z]=self
+    D.followHook()
+    z:setAttackOutcome("fail");z:setTarget(nil);z:setUseless(true);z:setIgnoreMovement(true)
+    z:setDeferredMovementEnabled(false)
+    if ProjectYakuza.Reactions then ProjectYakuza.Reactions.clear(z) end
+    z:setVariable("ProjectYakuzaGrabbed",true)
+    z:setHitReaction("ProjectYakuzaGrabbed")
+    z:setForwardDirection(-self.context.fx,-self.context.fy)
+    z:reportEvent("wasHit")
+    z:setVariable("ProjectYakuzaGrabPhase","enter");z:setVariable("ProjectYakuzaGrabMarker","")
+end
+function A:acceptGrab(z)
+    if self.cleaned or not self.started or not self.context.attempt or not self.awaitingGrab or self.candidate~=z or not self:isValid()or z:isDead()or z:isOnFloor()or z:isKnockedDown()
+        or math.abs(z:getZ()-self.character:getZ())>=.5 or(z:getX()-self.character:getX())^2+(z:getY()-self.character:getY())^2>=2.25 then return false end
+    self:attach(z);return true
 end
 function A:isValid()
     if not ProjectYakuza.Sandbox.actionAllowed(self.context.style,self.context.kind)then return false end
@@ -144,6 +152,7 @@ function A:isValid()
     if self.context.kind=="grab" then
         local z=self.context.target;local style=ProjectYakuza.getPlayerStyle(self.character)
         if not style or style.id~=self.context.style.id or self.started and self.character:getPrimaryHandItem()~=self.held then return false end
+        if self.context.attempt and not self.victimState then return true end
         return z and not z:isDead() and not z:isKnockedDown() and not z:isOnFloor()
             and math.abs(z:getZ()-self.character:getZ())<.5
             and (z:getX()-self.character:getX())^2+(z:getY()-self.character:getY())^2<2.25
@@ -227,8 +236,37 @@ function A:grab(dt)
     local p,z=self.character,self.context.target
     spend(p,dt*.012)
     if endurance(p)<.05 then self:forceStop();return end
+    if self.context.attempt and not self.victimState then
+        local slot=self.context.action
+        local time,weight=ProjectYakuza.AttackEffects.findTrack(p,slot.attemptAnimation)
+        if time and weight>=.35 then
+            self.attemptSeen=true
+            if not self.reachResolved and time*1000>=slot.attemptContactMs then
+                self.reachResolved=true;self.candidate=D.target(p)
+                if self.candidate then
+                    local dx,dy=self.candidate:getX()-p:getX(),self.candidate:getY()-p:getY();local length=math.sqrt(dx*dx+dy*dy)
+                    if length>=.25 then
+                        self.context.fx,self.context.fy=dx/length,dy/length
+                        if isClient()then
+                            self.awaitingGrab=true;self.gripRequestedAt=now()
+                            if not ProjectYakuza.Network then self.awaitingGrab=false
+                            elseif ProjectYakuza.Network.requestGrab(p,self.candidate)then self:acceptGrab(self.candidate)end
+                        else self:attach(self.candidate)end
+                    end
+                end
+            end
+        end
+        if self.victimState then return end
+        if self.awaitingGrab then
+            local network=ProjectYakuza.Network
+            if now()-self.gripRequestedAt>1500 or not(network and network.pending and network.pending[p])then self.awaitingGrab=false else return end
+        end
+        if self.attemptSeen and time and time*1000>=slot.attemptDurationMs-20 then self:forceComplete()
+        elseif now()-self.startedAt>1000 then self:forceStop()end
+        return
+    end
     ProjectYakuza.GrabRules.keep(z)
-    local age=now()-self.startedAt
+    local age=now()-(self.boundAt or self.startedAt)
     if self.phaseName=="enter" then
 
         local spacing=ProjectYakuza.GrabRules.spacing(self.context.action)
@@ -302,7 +340,7 @@ function A:update()
     end
     if not self:isValid() then self:forceStop();return end
     if self.context.kind=="block" then self:guard(dt) else self:grab(dt) end
-    if not self.cleaned and ((self.phaseName=="enter" and t-self.phaseAt>1000)
+    if not self.cleaned and ((self.phaseName=="enter" and not self.awaitingGrab and t-(self.boundAt or self.phaseAt)>1000)
         or (self.context.kind=="block" and self.phaseName~="hold" and t-self.phaseAt>1200)) then self:forceStop() end
 end
 function A:new(c)
@@ -314,6 +352,9 @@ local handler={
     canStart=function(c)
         if not D.ready(c.player) or endurance(c.player)<.12 then return false,"not_ready" end
         if c.kind=="grab" then
+            if c.action.attemptContactMs then
+                local f=c.player:getForwardDirection();c.fx,c.fy=f:getX(),f:getY();c.attempt=true;c.target=nil;return true
+            end
             if isClient() and (not ProjectYakuza.Network or not ProjectYakuza.Network.requestGrab(c.player,c.target)) then return false,"grab_server_pending" end
             local leased=isClient() and ProjectYakuza.Network and ProjectYakuza.Network.leases[c.player]==c.target:getOnlineID()
             if not leased and c.target~=D.target(c.player) then return false,"invalid_target" end
@@ -362,6 +403,7 @@ function D.update(p)
     if (not canBlock and not canGrab) or not D.ready(p) then return false end
     if canBlock and x and not input.mustRelease and now()>=(input.brokenUntil or 0) then return ProjectYakuza.requestAction(p,"block") end
     if canGrab and grabPressed then
+        if grab.attemptContactMs then return ProjectYakuza.requestAction(p,"grab")end
         local z=D.target(p)
         if z then return ProjectYakuza.requestAction(p,"grab",nil,z) end
     end

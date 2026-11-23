@@ -1,3 +1,11 @@
+# v1.0.4
+
+Heat Action impacts now briefly tint the full viewport and shake the local camera. Camera offsets apply on the simulation tick before world rendering and restore before UI drawing, with an after-render fallback. Strength and decay scale with the contact. Map/menu screens, pause, death, disabled hit effects, remote actors and split-screen suppress the treatment. Chromatic aberration is omitted. The unwanted Extreme Heat contact spark stays removed; existing blood and limb trails remain.
+
+Dragon grab attempts play the existing half-second reach animation on hits and misses. A victim is searched and acquired at 200 ms of source animation instead of being immobilized on keypress. Misses and interruptions restore movement without touching victims. Multiplayer grants continue the same reach; denials, timeouts and late grants cannot start a surprise grab. Existing held movement, strikes, throws and Heat Actions are preserved.
+
+Validation covers native camera access, rectangle rendering, blend restoration, viewport sizes, cleanup, grab contact timing, misses, interruptions, server grants, duplicate/late replies and existing grab/MP behavior. No visual/audio assets were generated or changed, and PZ was not launched. Live appearance remains to be tested in game.
+
 # v1.0.3
 
 Removed the cinematic screen tint, camera shake and contact-local RGB spark together. Genuine full-screen chromatic aberration requires graphics controls not exposed to this Lua mod. Extreme Heat and its QTE sequence now use the existing blood impact effect without an added energy/contact spark, including multiplayer observers and contacts after fuel depletion. Ordinary non-Extreme hit effects and limb trails retain their existing behavior.

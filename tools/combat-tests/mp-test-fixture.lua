@@ -1319,4 +1319,19 @@ do
  local style=ProjectYakuza.getStyle('dragon_of_dojima');check(not P.supports(style,P.clip(style.id,'ProjectYakuza_DD_HeatRush')),'disabled cinematic clip cannot bypass snapshot support policy')
  SandboxVars=saved
 end
+do
+ local oldAction,oldStyle,oldClient,oldSend=ProjectYakuza.activeActions[p],ProjectYakuza.getPlayerStyle,isClient,client.send
+ local accepted=0;client.send=function()end;local context={kind='grab',attempt=true};context.timedAction={acceptGrab=function(_,victim)accepted=accepted+1;check(victim==z1,'authority returns the attempted victim');return true end}
+ ProjectYakuza.activeActions[p]=context;ProjectYakuza.getPlayerStyle=function()return {actions={grab={attemptContactMs=200}}}end;isClient=function()return true end
+ local session=999999;client.acceptSession(p.id,session);z1.health=10;z1.x=p.x+.5;z1.y=p.y;z1.vars.ProjectYakuzaHeatRushVictim=false
+ client.leases[p]=nil;client.grabStates[p]=nil
+ client.command(P.module,'grabStart',{player=p.id,session=session,zombie=z1.id,grabId=999991,useless=false,ignore=false,deferred=true,locked=false})
+ check(accepted==1 and ProjectYakuza.activeActions[p]==context and client.leases[p]==z1.id,'server grant continues the existing reach instead of requesting another grab action')
+ client.command(P.module,'grabStart',{player=p.id,session=session,zombie=z1.id,grabId=999991,useless=false,ignore=false,deferred=true,locked=false})
+ check(accepted==1,'duplicate authority grants do not attach twice')
+ ProjectYakuza.activeActions[p]=nil;client.leases[p]=nil;client.grabStates[p]=nil
+ client.command(P.module,'grabStart',{player=p.id,session=session,zombie=z1.id,grabId=999992,useless=false,ignore=false,deferred=true,locked=false})
+ check(not client.leases[p]and not ProjectYakuza.activeActions[p],'a late grant after the reach ends is released without restarting the animation')
+ ProjectYakuza.activeActions[p]=oldAction;ProjectYakuza.getPlayerStyle=oldStyle;isClient=oldClient;client.send=oldSend
+end
 return 'PASS '..count..' MP authority, duplicate, range, lease, cooldown, observer and throttle checks'

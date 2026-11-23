@@ -330,7 +330,7 @@ function S.actionAllowed(style,kind,move)
     return true
 end
 end
-ProjectYakuza.VERSION = "1.0.3"
+ProjectYakuza.VERSION = "1.0.4"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -610,6 +610,7 @@ function ProjectYakuza.validateStyle(style)
                     if type(b)~="table"or not number(b.chance)or b.chance<0 or b.chance>1 or not number(b.intervalMs)or b.intervalMs<250 or b.intervalMs>10000 or b.firstCheckMs~=nil and(not number(b.firstCheckMs)or b.firstCheckMs<0 or b.firstCheckMs>10000)or not text(b.animation)or not text(b.targetAnimation)or not number(b.duration)or b.duration<=0 or b.duration>10 then problem("invalid grab breakout settings")end
                 end
                 if slot.releaseOnAimLoss~=nil and type(slot.releaseOnAimLoss)~="boolean"then problem("grab.releaseOnAimLoss must be boolean")end
+                if slot.attemptContactMs~=nil and(not text(slot.attemptAnimation)or not number(slot.attemptContactMs)or slot.attemptContactMs<0 or not number(slot.attemptDurationMs)or slot.attemptDurationMs<=slot.attemptContactMs or slot.attemptDurationMs>2000 or slot.requiresTarget~=false)then problem("invalid grab attempt timing")end
                 if slot.throwContactMs~=nil and(not number(slot.throwContactMs)or slot.throwContactMs<0 or not number(slot.throwDuration)or slot.throwDuration<=0 or slot.throwDuration>10 or slot.throwContactMs>=slot.throwDuration*1000)then problem("invalid grab throw contact timing")end
                 if slot.throwCrowd~=nil and slot.throwCrowd~=false then
                     local cfg=slot.throwCrowd

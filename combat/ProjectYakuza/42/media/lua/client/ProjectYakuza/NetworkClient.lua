@@ -118,7 +118,7 @@ function N.capture(p,force,onlyChanged)
         rightAim=equipped and p:isAiming()and isMouseButtonDown(1),comboBusy=equipped and ProjectYakuza.HeatRushRules and not ProjectYakuza.HeatRushRules.noCombo(combo,style,t)or false,
         chargePower=action and action.kind=="heavyCharge" and action.timedAction and (action.timedAction.power or 0) or move and move.chargePower or 0,
         swing=s.swing,action=s.action or 0,taunt=s.taunt or 0,linked=p:GetVariable("ProjectYakuzaLinkedDouble")=="true",ground=combo.groundMove~=nil,phase=p:GetVariable("ProjectYakuzaDefensePhase") or "",
-        grabMoving=p:GetVariable("ProjectYakuzaGrabMoving")=="true",grabDirection=action and action.kind=="grab" and action.target:GetVariable("ProjectYakuzaGrabWalkDirection") or "forward"}
+        grabMoving=p:GetVariable("ProjectYakuzaGrabMoving")=="true",grabDirection=action and action.kind=="grab"and action.target and action.target:GetVariable("ProjectYakuzaGrabWalkDirection") or "forward"}
     if equipped and type(style.heatAttackSpeed)=="table"and (combo.active or action and action.timedAction and action.timedAction.started)then packet.attackHeatSpeed=ProjectYakuza.Heat.attackHeatMultiplier and ProjectYakuza.Heat.attackHeatMultiplier(p)or 1 end
     local stocks=ProjectYakuza.Heat.stocks(p)
     local fuelStocks=math.floor((packet.fuel+0.000001)/ProjectYakuza.HeatRules.stockSize(style))
@@ -395,7 +395,11 @@ function N.command(module,command,a)
         if p:isLocalPlayer()and N.grabStates[p]and N.grabStates[p].grabId==a.grabId and N.leases[p]==a.zombie then return end
         if p:isLocalPlayer() then
             N.leases[p]=a.zombie;N.grabStates[p]=a;N.pending[p]=nil
-            local ok=ProjectYakuza.requestAction(p,"grab",nil,z)
+            local c=ProjectYakuza.activeActions[p];local action=c and c.kind=="grab"and c.timedAction
+            local style=ProjectYakuza.getPlayerStyle(p);local slot=style and style.actions.grab
+            local ok
+            if action and c.attempt and action.acceptGrab then ok=action:acceptGrab(z)
+            elseif not(slot and slot.attemptContactMs)then ok=ProjectYakuza.requestAction(p,"grab",nil,z)end
             if not ok then N.releaseGrab(p) end
         else
             local s=N.remote[a.player];if s and s.grab==z and s.grabRestore and s.grabRestore.grabId==a.grabId then return end

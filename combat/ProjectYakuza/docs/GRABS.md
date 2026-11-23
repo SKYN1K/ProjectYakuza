@@ -65,3 +65,12 @@ Configure `actions.grab.breakout` with `chance` (0–1), `intervalMs` (250–100
 The original Yakuza 6 h23600_seoi_oi scene has one player and one victim, with no wall, weapon, prop or second enemy required. It retains all 225 samples at 30 fps over 224/30 seconds. Original damage frames 117 and 167 drive the throw and follow-up, retaining the existing total five-times canonical unarmed multiplier and deferring lethal damage until completion. Nine original non-voice bank streams and the original voice-label timing use the shared presentation system. Native limb proportions, actor sole grounding and victim floor clearance adapt the supplied poses; no new textures or models are added. See OPEN_GRAB_HEAT_ACTION.md.
 
 DoD declares actions.grabHeat as an enabled slot with variants.default for the original wall move and variants.open for the open-space move. Each variant supplies grabHeat=true, its original animation/targetAnimation/motionId, duration, contacts, one-stock price and enabled flag. requiresWall=false identifies the open variant; wall variants retain requiresWall=true. Existing non-variant grabHeat definitions keep their wall selection behavior. The input and server use the current style definitions rather than a global action override.
+
+
+## Reach attempts (1.0.4)
+
+Dragon plays its existing half-second GrabEnter clip when Grab is pressed, including empty attempts. The target is searched when the source track reaches 200 ms. Before this contact, zombies retain their movement, targeting and reactions. A miss completes the reach and restores movement. Interruptions before contact leave victims untouched.
+
+Multiplayer requests server ownership at reach contact. An accepted grant attaches to the existing attempt; a denied or expired attempt becomes a miss. A grant arriving after cancellation is released. Existing held walking, strikes, throws and Heat Action handoffs continue after attachment.
+
+Style authors can opt into this flow with grab.attemptAnimation, grab.attemptContactMs and grab.attemptDurationMs, and requiresTarget=false. Timing is sampled from the animation track. The configured contact must precede the end of the clip, and the attempt must last no more than two seconds. Dragon uses ProjectYakuza_DD_GrabEnter, 200 ms and 500 ms. Existing animation bytes, speeds and nodes are unchanged.

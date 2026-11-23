@@ -100,6 +100,9 @@ local function startGrab()
  z.x=p:getX();z.y=p:getY()+.7
  local ok,reason=PY.requestAction(p,'grab',nil,z);check(ok,'grab handler starts '..tostring(reason))
  local a=PY.activeActions[p].timedAction;a:start()
+ check(not z.useless and not z.ignore and z.reaction=='' and not a.context.target,'grab starts as an unpaired attempt without immobilizing a victim')
+ track=.2;clock=clock+200;a:update();track=0
+ check(a.context.target==z and z.useless and z.ignore,'source reach contact acquires the nearby target after the wind-up')
  p.vars.ProjectYakuzaDefenseMarker='enter_ready';z.vars.ProjectYakuzaGrabMarker='enter_ready';clock=clock+500;a:update()
  check(a.phaseName=='hold'and a.paired,'paired source markers reach hold')
  return a
@@ -351,5 +354,39 @@ do
  ISEquippedItem={onKeyPressed=function()nativeCalls=nativeCalls+1 end};getPlayer=function()return p end;Events.OnKeyPressed={Remove=function()end,Add=function(fn)keyHook=fn end};D.safetyWrapped=false;D.bindSafetyInput()
  local saved=SandboxVars;SandboxVars={ProjectYakuza={Grabs=false}};keyHook(PY.Bindings.key('grab'));check(nativeCalls==1,'disabled grabs restore the original native key handler');SandboxVars=saved
  ISEquippedItem=oldEquipped;getPlayer=oldGetPlayer;Events.OnKeyPressed=oldEvent
+end
+do
+ D.clear();local targets=PY.MultiHit.targets;local bindings=PY.Bindings.down;local client=isClient;local network=PY.Network
+ local requests,releases=0,0
+ local function attempt()
+  p.ignore=false;p.blocked=false;p.deferred=true;p.attacking=false;p.data.ProjectYakuzaEquipped=true;stamina=.9
+  z.reaction='';z.useless=false;z.ignore=false;z.deferred=true;z.locked=false;z.state='idle';z.health=10;z.floor=false;z.x=p:getX();z.y=p:getY()+.7
+  check(PY.requestAction(p,'grab'),'grab attempts do not require a preselected target')
+  local action=PY.activeActions[p].timedAction;action:start();return action
+ end
+ PY.MultiHit.targets=function()return {}end
+ PY.Bindings.down=function(id)return id=='grab'end;D.input[p]=nil
+ check(D.update(p),'pressing Grab on empty space starts the reach animation')
+ local miss=PY.activeActions[p].timedAction;miss:start();track=.19;clock=clock+190;miss:update()
+ check(not miss.cleaned and not miss.context.target and not z.useless,'an empty early reach keeps playing without acquiring or freezing a zombie')
+ track=.49;clock=clock+300;miss:update();check(miss.cleaned and not PY.activeActions[p]and not p.blocked and not p.ignore and p.deferred,'a missed reach completes and restores movement')
+ PY.MultiHit.targets=targets;PY.Bindings.down=bindings
+ local hit=attempt();track=.19;clock=clock+190;hit:update();check(not hit.context.target and not z.useless,'nearby zombies remain free before the authored contact')
+ track=.2;clock=clock+10;hit:update();check(hit.context.target==z and hit.victimState,'a hit attaches once at the reach contact');hit:cancel()
+ local interrupted=attempt();interrupted:cancel();check(not z.useless and not z.ignore and not PY.activeActions[p],'interruption before contact never changes victim state')
+ isClient=function()return true end
+ PY.Network={pending={},leases={},grabStates={},requestGrab=function(player,target)requests=requests+1;PY.Network.pending[player]={z=target};return false end,releaseGrab=function(player)releases=releases+1;PY.Network.pending[player]=nil;PY.Network.leases[player]=nil end}
+ local waiting=attempt();track=.2;clock=clock+200;waiting:update()
+ check(requests==1 and waiting.awaitingGrab and not waiting.context.target and not z.useless,'MP requests authority at contact while the victim remains unpaired')
+ clock=clock+100;waiting:update();check(requests==1,'waiting for authority does not send repeated grab requests')
+ PY.Network.grabStates[p]={grabId=901,useless=false,ignore=false,deferred=true,locked=false};PY.Network.leases[p]=z:getOnlineID();PY.Network.pending[p]=nil
+ check(waiting:acceptGrab(z)and waiting.grabId==901 and waiting.context.target==z,'a server grant continues the existing animation and saves its lease')
+ waiting:cancel();check(releases==1 and not z.useless and not z.ignore,'cancellation restores the victim and releases server ownership')
+ local denied=attempt();track=.2;clock=clock+200;denied:update();PY.Network.pending[p]=nil;track=.49;clock=clock+300;denied:update()
+ check(denied.cleaned and not denied.victimState and not z.useless,'a denied MP reach completes as a miss')
+ check(not denied:acceptGrab(z),'a late grant cannot attach to an already completed attempt')
+ PY.Network=network;isClient=client;track=0;D.input[p]=nil
+ local slot=style.actions.grab;local duration=slot.attemptDurationMs;slot.attemptDurationMs=slot.attemptContactMs
+ check(not PY.validateStyle(style),'grab attempt configuration rejects contact after the end of its animation');slot.attemptDurationMs=duration
 end
 return 'PASS '..checks..' reliable grab lifecycle, four source-timed strikes, following, cleanup, wall geometry, handoff and action protection checks'

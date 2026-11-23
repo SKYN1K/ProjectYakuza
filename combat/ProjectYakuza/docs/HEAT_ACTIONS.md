@@ -18,7 +18,7 @@ The built-in controllers own native playback through their action lifecycle rath
 
 [Scene contracts](HEAT_SCENES.md) map source damage, sound, voice and blood events independently. [Presentation](HEAT_ACTION_PRESENTATION.md) handles sound starts and victim anchors. [Damage](HEAT_ACTION_DAMAGE.md) applies nonlethal contacts immediately and holds lethal settlement through paired recovery. Per-contact limb trails follow the striking arm or leg, including the katana's left punch and the knife's right kick.
 
-The ground scene aligns its original sound's attack with the frame-30 contact: playback starts at 875 ms and the visual contact occurs at 1000 ms. Its single existing impact uses the victim-head anchor. Screen tint, camera shake and the imitation chromatic spark are disabled. Extreme Heat impacts retain the existing blood effect.
+The ground scene aligns its original sound's attack with the frame-30 contact: playback starts at 875 ms and the visual contact occurs at 1000 ms. Its single existing impact uses the victim-head anchor. Confirmed Heat Action contacts apply a short cool full-viewport tint and bounded local camera shake. The UI remains outside the camera motion. Chromatic aberration and imitation chromatic sparks are not included. Extreme Heat impacts retain the existing blood effect.
 
 ## Protection and placement
 

@@ -1,5 +1,6 @@
 require "ProjectYakuza/Registry"
 require "ProjectYakuza/AttackEffects"
+require "ProjectYakuza/HeatScreenEffects"
 require "ProjectYakuza/HeatPresentationData"
 require "ProjectYakuza/OpenGrabHeatPresentation"
 local PY=ProjectYakuza

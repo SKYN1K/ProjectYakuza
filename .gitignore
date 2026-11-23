@@ -401,3 +401,6 @@
 !tools/Upload-WorkshopContent.py
 !tools/Upload-WorkshopContent.ps1
 !tools/combat-tests/test_workshop_content_upload.py
+
+!tools/combat-tests/heat-screen-test-fixture.lua
+!tools/combat-tests/HeatScreenProbe.java

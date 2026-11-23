@@ -1,0 +1,35 @@
+{
+  "version": "1.0.4",
+  "offlineOnly": true,
+  "kahlua": {
+    "screenTintShake": 7874,
+    "grabLifecycle": 1371,
+    "multiplayer": 1930,
+    "bloodPreservation": 831,
+    "existingSparkRenderer": 1160
+  },
+  "focusedAssertions": 13166,
+  "nativeScreenProbe": "Production Lua through exposed IsoCamera and SpriteRenderer; actual camera writes/restoration, one full viewport rectangle and blend restoration",
+  "screenCallbacks": {
+    "beforeWorld": "OnTick",
+    "beforeUI": "OnPreUIDraw",
+    "afterWorldFallback": "OnRenderTick"
+  },
+  "screenTreatment": "Full-viewport cool tint and bounded camera shake; no chromatic aberration or replacement contact spark",
+  "localOnly": true,
+  "grabAttempt": {
+    "clip": "ProjectYakuza_DD_GrabEnter",
+    "sha256": "d6bc4d7b64f152603a69d79acbdc1cce37b25e714645cce4e416d5ba816896a9",
+    "nativeImportedSeconds": 0.5,
+    "nativeChannels": 35,
+    "contactMs": 200,
+    "endMs": 500,
+    "nativeAnimationBytesUnchanged": true,
+    "targetAcquiredAtContact": true,
+    "missesAnimate": true,
+    "serverAuthorityRetained": true
+  },
+  "visualAudioAssetBytesChanged": false,
+  "runtimePackageTests": 4,
+  "sourceComments": 0
+}
