@@ -1,3 +1,7 @@
+# v1.0.11
+
+Grab-strike hand trails now use the same native parent frame as their corrected animation masks. Existing numeric source curves remain unchanged. Native layered-pose checks now include all four grab strikes alongside standing/walking and mixed-pose light attacks. This release includes the early reach, stable grip/strike staging and open-space placement fixes described below.
+
 # v1.0.10
 
 Grab reach movement starts on the first visible source frames and eases forward over 240 ms, before contact at frames 10-12. It no longer waits until the miss is known. The 0.28-tile cap, small collision-checked increments, pause handling and no late-frame catch-up remain. A nearby target limits approach clearance without being acquired or frozen before source contact.

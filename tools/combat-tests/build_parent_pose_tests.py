@@ -2,12 +2,12 @@ from pathlib import Path
 import json,subprocess
 W=Path(__file__).parent;ROOT=W.parents[1];MOD=ROOT/'combat/ProjectYakuza';GAME=Path('F:/SteamLibrary/steamapps/common/ProjectZomboid');cache=W/'parent-poses-native'
 report=json.loads((MOD/'docs/parent-pose-prediction.json').read_text());sources={r['animation']:r['source']for r in report['clips']}
-attacks=['Light01','BladeLight01','KnifeLight01','BatLight01','BottleLight01','BoostLight01'];bases=['Bob_Idle','Bob_Walk','ProjectYakuza_DD_CrateWalk'];jobs=[]
+attacks=['Light01','BladeLight01','KnifeLight01','BatLight01','BottleLight01','BoostLight01','GrabStrike01','GrabStrike02','GrabStrike03','GrabStrike04'];bases=['Bob_Idle','Bob_Walk','ProjectYakuza_DD_CrateWalk'];jobs=[]
 for a in attacks:
- name='ProjectYakuza_DD_'+a;xml=next((MOD/'42/media/AnimSets/player/melee').glob(name+'.xml'))
+ name='ProjectYakuza_DD_'+a;xml=next((MOD/'42/media/AnimSets/player').rglob(name+'.xml'))
  for b in bases:jobs.append('\t'.join([sources[b],sources[name],str(xml.resolve())]))
 for a in attacks:
- name='ProjectYakuza_DD_'+a;xml=MOD/'42/media/AnimSets/player/melee'/(name+'.xml');jobs.append('\t'.join([sources['Bob_Idle'],sources[name],str(xml.resolve()),sources['Bob_Walk']]))
+ name='ProjectYakuza_DD_'+a;xml=next((MOD/'42/media/AnimSets/player').rglob(name+'.xml'));jobs.append('\t'.join([sources['Bob_Idle'],sources[name],str(xml.resolve()),sources['Bob_Walk']]))
 listing=cache/'masked-jobs.tsv';listing.write_text('\n'.join(jobs)+'\n');masked=cache/'masked-reference.json'
 subprocess.run([str(GAME/'jre64/bin/java.exe'),'-Xms16m','-Xmx384m','-XX:ActiveProcessorCount=2','--enable-native-access=ALL-UNNAMED','-cp','.;'+str(GAME/'*'),'MaskedLimbPoseProbe',str(listing.resolve()),str(masked.resolve())],cwd=W,check=True)
 ref=[]

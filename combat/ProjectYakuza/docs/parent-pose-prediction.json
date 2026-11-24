@@ -1,5 +1,5 @@
 {
-  "version": "0.126.0",
+  "version": "1.0.11",
   "operation": "Numeric parent-bone PRS samples from original installed Human animations; no model, motion, texture, audio or preview generated. Parent masks follow actual mod XML. Runtime replaces the raw attack pelvis/spine parent with the current layer-zero standing/walking pose.",
   "fps": 30,
   "native": {
@@ -2779,13 +2779,13 @@
     },
     {
       "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\actions\\ProjectYakuza_DD_GrabHold.xml",
-      "sha256": "833bd2ed47c9ffd790dbfd56ce3e40f9d5c345ad016249b777d48d1321cdda68",
+      "sha256": "5906b27caea5b82427524135230b6189b80ec8b12231d8a571126ae153842a0d",
       "animation": "ProjectYakuza_DD_GrabHold",
       "parent": 4
     },
     {
       "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\actions\\ProjectYakuza_DD_GrabWalk.xml",
-      "sha256": "323b7de84d7b0dae72fccd1f31d65ad422130685b3a646491e69f134737838f6",
+      "sha256": "62bb9f487366f84dbe0b62065c7b69376d54f76b489cb8070864c13deeae2eb1",
       "animation": "ProjectYakuza_DD_GrabWalk",
       "parent": 4
     },
@@ -3085,25 +3085,25 @@
     },
     {
       "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\melee\\ProjectYakuza_DD_Light01.xml",
-      "sha256": "d08c9a7212ebfc433d13e9c27f24a72f8f1aa93cd2a9a048e679545f31f35163",
+      "sha256": "5a947d60ab1a3909b3ac38bc5bbe68139e7a3b88916022f2c98e937d241f5048",
       "animation": "ProjectYakuza_DD_Light01",
       "parent": 3
     },
     {
       "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\melee\\ProjectYakuza_DD_Light02.xml",
-      "sha256": "16dadc3e4900280628ba6cb647053e2c9c36ee68718b2c94ad455a47f16b0e11",
+      "sha256": "77efba3dc5525c4adfc06db617897d3500e7414b73f538c12fef345019142996",
       "animation": "ProjectYakuza_DD_Light02",
       "parent": 3
     },
     {
       "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\melee\\ProjectYakuza_DD_Light03.xml",
-      "sha256": "09c239676a4cad4db0ecca8876e3db6b07087227610b5c1c23462f401678b0f0",
+      "sha256": "7920130fb02bdb4a9e9cdbf760d9f5552aea523dbbef8aae298e1bd33c001639",
       "animation": "ProjectYakuza_DD_Light03",
       "parent": 3
     },
     {
       "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\melee\\ProjectYakuza_DD_Light04.xml",
-      "sha256": "b718fa030fd17847abbebf56c765ab2ed0127b8253a4007810369b1a114b0963",
+      "sha256": "e414f0b0446230e6d7e6a504dc961ed0d99c18d3b6c49269ac2ac9058bb815c6",
       "animation": "ProjectYakuza_DD_Light04",
       "parent": 3
     },
@@ -3124,8 +3124,33 @@
       "sha256": "e3e4fffba5df059ed763a5bd4979281521ba28815f9738a185f7cd8d73da62d5",
       "animation": "ProjectYakuza_DD_KnifeGround",
       "parent": 3
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\actions\\ProjectYakuza_DD_GrabStrike01.xml",
+      "sha256": "13a667f266ac3f008820a86724a0d1d8ad4e148aa0563fd00abbb6e61bc95759",
+      "animation": "ProjectYakuza_DD_GrabStrike01",
+      "parent": 4
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\actions\\ProjectYakuza_DD_GrabStrike02.xml",
+      "sha256": "e0df7bc87dd9c78913cf1ae458dde1cfde83c0df38fbeacbc5354b1261f890e9",
+      "animation": "ProjectYakuza_DD_GrabStrike02",
+      "parent": 4
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\actions\\ProjectYakuza_DD_GrabStrike03.xml",
+      "sha256": "97cfbc235b033ce4cb569de05f377bf4bc88e61d01698379b92fcfa7ea8a2812",
+      "animation": "ProjectYakuza_DD_GrabStrike03",
+      "parent": 4
+    },
+    {
+      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\actions\\ProjectYakuza_DD_GrabStrike04.xml",
+      "sha256": "bf905d319515a05a746034c8a00ffe2e8560e1da6b1b57777f70da6bbb0d8503",
+      "animation": "ProjectYakuza_DD_GrabStrike04",
+      "parent": 4
     }
   ],
   "output": "42\\media\\lua\\client\\ProjectYakuza\\ParentPoseTracks.lua",
-  "sha256": "0c02a2e76b1f4ec459b73ad201edd1957ccd8a1108a4edd68ada3b072d45b7f1"
+  "sha256": "8c68871d90f162dcc62df504c8e766a63b7a8028b04136f83223556db40bbbc2",
+  "incrementalMaskUpdate": "Four grab-strike parent boundaries now match their source/observer XML. Existing native source-parent curves are byte-for-byte unchanged; no animation, model, texture or audio generated."
 }

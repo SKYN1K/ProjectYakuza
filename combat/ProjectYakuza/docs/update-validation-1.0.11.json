@@ -1,0 +1,15 @@
+{
+  "version": "1.0.11",
+  "offlineOnly": true,
+  "includesGrabStagingValidation": "update-validation-1.0.10.json",
+  "nativeParentPoseReferences": 2213,
+  "nativeLayeredAnimationPlayerCases": 280,
+  "kahluaParentAndLimbAssertions": 108747,
+  "maxCorrectedModelError": 9.701561692486794e-06,
+  "previousUncorrectedMaxModelOffset": 0.575387431381462,
+  "newGrabStrikeMasks": 4,
+  "allGrabStrikeTrailLimbs": "rightArm",
+  "sourcePoseCurvesUnchanged": true,
+  "modelAnimationTextureAudioBytesChanged": false,
+  "sourceComments": 0
+}
