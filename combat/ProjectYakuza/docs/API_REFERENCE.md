@@ -243,3 +243,14 @@ Heat Action sound/visual presentation follows the native playing clip independen
 The shared [paired damage policy](HEAT_ACTION_DAMAGE.md) applies nonlethal damage on contact and holds lethal damage through full recovery. Presentation and three-contact katana trails remain tied to the playing source clip.
 
 Native sandbox settings are read dynamically from SandboxVars.ProjectYakuza. DragonTigerDrop defaults to true; DragonTigerDropWindowMs defaults to 160 and clamps to 10..1000; DragonTigerDropCooldownSeconds defaults to 20 and clamps to 0..600. HeatActions, Grabs and ExtremeHeat default to true. The shared Sandbox policy controls framework action kinds on both clients and servers without rewriting style definitions. Disabling Heat Actions includes weapon, ground, grab and Extreme Heat QTE scenes. Disabling Extreme Heat retains ordinary Heat gain and other Heat Actions. Weapon Heat Actions remain available while Extreme Heat is active. requestAction returns sandbox_disabled before resource or action ownership changes when a switch rejects it.
+
+
+## Music playback controls
+
+Music entries may supply title, artist, album, duration in seconds and a relative PNG cover path under media/textures. Optional metadata is validated at style registration; unknown duration can be omitted. The included twenty-track playlist uses original supplied ID3/FLAC metadata and previously verified recording durations. See music-metadata.json for provenance.
+
+ProjectYakuza.CombatMusic.playlist(player) returns the eligible equipped-style playlist. current(player) returns playing, track, position in seconds, duration, manual, automatic and estimated. The position is an elapsed-time estimate, not an FMOD timestamp query. Treat the returned style track as read-only. A stopped selection is retained while it still belongs to the equipped style.
+
+play(player,index) starts a one-based playlist entry in manual mode. skip(player,-1) and skip(player,1) select previous/next with wrapping. A playing automatic session keeps its combat lifecycle when skipped; skipping from stopped playback starts manual listening. userStop(player) stops the owned session and suppresses combat restart. automatic(player) clears that suppression and returns a playing manual session to the normal combat quiet/fade rules. Controls return success and an optional failure message. They cannot control another local player's owned session.
+
+Manual playback advances in list order; normal combat retains its shuffled selection. Style changes, invalid owners and world lifecycle cleanup release the owned channel and restore the prior native music mix. No reflection, extra Java component, raw FMOD handle control or seeking is used by these APIs.

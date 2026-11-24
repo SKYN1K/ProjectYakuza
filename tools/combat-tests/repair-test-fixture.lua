@@ -52,7 +52,7 @@ getSoundManager=function()return {getMusicVolume=function()return nativeMusic en
 PY.SoundSettings={musicLevel=function()return ownLevel end}
 local emitter={playing=true}
 function emitter:playSoundImpl()self.playing=true;self.id=(self.id or 0)+1;return self.id end
-function emitter:stopSoundLocal()self.playing=false end
+function emitter:stopSoundLocal(id)if id==self.id then self.playing=false end end
 function emitter:setPlayRemoteEvents()end;function emitter:set3D()end;function emitter:tick()end
 function emitter:setVolume(_,v)self.volume=v end
 function emitter:isPlaying()return self.playing end
@@ -84,4 +84,25 @@ clock=musicStarted+21999;M.tick();check(M.sound and M.mix==1,'combat music remai
 clock=musicStarted+22000;M.tick();check(M.sound and M.mix<1,'combat music begins fading at twenty-two quiet seconds')
 for i=1,6 do clock=clock+250;M.tick()end
 check(not M.sound,'music still releases its emitter after the fade');M.stop()
+do
+ local paused=false;isGamePaused=function()return paused end
+ M.clear();local playlist=M.playlist(p);check(#playlist==20,'music control exposes the equipped style playlist')
+ check(not M.play(p,0)and not M.play(p,1.5)and not M.play(p,999),'invalid selections cannot start audio')
+ check(M.play(p,1)and M.manual and M.current(p).track==playlist[1],'manual playback starts the selected original sound')
+ local first=M.sound;clock=clock+1000;M.tick();check(M.current(p).position==1,'elapsed position advances in real seconds')
+ paused=true;clock=clock+5000;M.tick();check(M.current(p).position==1,'paused game time is excluded from elapsed progress');paused=false
+ paused=true;clock=clock+5000;M.pauseTick();paused=false;clock=clock+20;M.tick();check(math.abs(M.current(p).position-1.02)<.00001,'paused-event polling excludes pauses even when normal ticks are suspended')
+ check(M.skip(p,1)and M.theme==playlist[2]and M.sound~=first and emitter.playing and M.current(p).position==0,'next replaces the old sound without stopping the new channel')
+ check(M.skip(p,-1)and M.theme==playlist[1],'previous follows the style playlist order')
+ check(M.skip(p,-1)and M.theme==playlist[#playlist],'previous wraps to the final track')
+ clock=clock+60000;M.tick();check(M.sound and M.manual,'manual music continues outside the combat quiet deadline')
+ emitter.playing=false;clock=clock+50;M.tick();check(M.sound and M.manual and emitter.playing,'manual playlist advances naturally after a track ends')
+ M.play(p,3);emitter.playing=false;clock=clock+50;M.tick();check(M.theme==playlist[4],'manual playback advances in playlist order while combat retains shuffled selection')
+ local last=M.theme;M.userStop(p);check(not M.sound and not M.current(p).automatic and M.current(p).track==last,'stop retains selected metadata and suppresses automatic restart')
+ M.automatic(p);check(M.current(p).automatic and not M.manual,'automatic mode restores combat ownership')
+ M.play(p,1);M.automatic(p);clock=clock+23000;for i=1,7 do clock=clock+250;M.tick()end;check(not M.sound,'automatic mode returns to the existing combat fade lifecycle')
+ local other={};check(not M.current(other).playing and M.current(other).track==nil,'another local player cannot read ownership as their own stream')
+ M.clear();check(not M.lastSelection and not M.blockedOwner and not M.sound,'world cleanup clears manual playback and UI selection ownership')
+ local duration=playlist[1].duration;playlist[1].duration=-1;check(not PY.validateStyle(PY.getStyle('dragon_of_dojima')),'negative duration metadata is rejected');playlist[1].duration=duration
+end
 return true,'PASS '..checks..' heavy-button Tiger Drop window/cooldown/MP age and independent combat music gain checks'

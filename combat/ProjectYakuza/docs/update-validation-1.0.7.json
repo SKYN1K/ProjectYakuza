@@ -1,0 +1,24 @@
+{
+  "version": "1.0.7",
+  "offlineOnly": true,
+  "kahlua": {
+    "musicControlsAndExistingRepairs": 48,
+    "grabLifecycle": 1421,
+    "multiplayer": 2035,
+    "nativeModOptions": 160
+  },
+  "focusedAssertions": 3664,
+  "nativeRootAndLegTransformChecks": 70,
+  "nativeObserverSelectors": 454,
+  "musicMetadataTracks": 20,
+  "audioBytesChanged": false,
+  "sourceAnimationBytesChanged": false,
+  "holdDistance": 0.48,
+  "holdLateral": 0.019354,
+  "nativeBodyParentTransformsPreserved": true,
+  "manualPlaylistOrdering": "sequential",
+  "combatPlaylistOrdering": "existing shuffled selection",
+  "progress": "elapsed estimate; no seeking or reflection",
+  "nativePauseEventVerified": "OnTickEvenPaused",
+  "sourceComments": 0
+}

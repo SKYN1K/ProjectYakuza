@@ -1,5 +1,5 @@
 {
-  "operation": "Root staging from converted native hand and victim neck transforms. Upper-body blend owns its root/pelvis/spine parent chain while native lower limbs remain available. No extra hold clearance. Original clip bytes unchanged.",
+  "operation": "Code-only hold staging includes 0.188762 tiles of body clearance after live overlap feedback. Source upper-body animation locals remain unchanged. Native root, pelvis, lower spine, thighs and feet retain their complete native transforms, removing the full-body tilt. Raw source hand/neck offsets remain reference measurements, not a guarantee of live blended grip placement.",
   "pairs": [
     {
       "actor": "GrabHold",
@@ -18,14 +18,14 @@
         0.0682811513543129
       ],
       "expected": [
-        0.2912384457886219,
+        0.4800004457886219,
         0.019354211166501045
       ],
       "configured": [
-        0.291238,
+        0.48,
         0.019354
       ],
-      "additionalHoldClearance": 0
+      "additionalHoldClearance": 0.188762
     },
     {
       "actor": "Throw",
@@ -158,5 +158,5 @@
       "additionalHoldClearance": 0
     }
   ],
-  "maskedHandSamples": 20
+  "nativeRootAndLegTransformSamples": 70
 }

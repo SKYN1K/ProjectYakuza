@@ -1,3 +1,13 @@
+# v1.0.7
+
+Music exposes local playback controls and a read-only current-track snapshot for interfaces and style add-ons. The included playlist now carries the original artist, album and complete recording duration for all twenty supplied songs. The corrupted Kiwami title is replaced with a readable title. Audio bytes, gains and normal combat fade timing remain unchanged.
+
+Manual playback runs the equipped style playlist outside combat, advances in playlist order and supports previous/next selection. Stop suspends automatic restart until Play, Auto or a style change. Auto returns to the existing combat lifecycle. Replacement playback stops the previous owned channel only after the new channel starts successfully. Elapsed progress is estimated from the playback clock and excludes observed game pauses; arbitrary timestamp seeking is not exposed by the Lua interface.
+
+Grab holding and walking now mask only the upper spine and props. The native root, pelvis, lower spine and legs retain their native transforms, addressing the reported whole-body sideways tilt. Hold distance increases from 0.291238 to 0.48 tiles to reduce body overlap. Existing source animation bytes, grab contact windows, strikes and throw timing are unchanged. Final visual grip placement still requires live verification.
+
+Validation covers playback selection, wrapping, channel replacement, manual/automatic ownership, pause, natural completion and cleanup; original source music metadata; native holding-root and leg preservation; grab and multiplayer regressions. PZ was not launched.
+
 # v1.0.6
 
 Grab attempts use the complete original Yakuza 6 failed-reach and recovery motion. The original BEP frames 10–12 determine when a target can connect; success branches to the paired entry, while misses play the full 1.6-second recovery. The holding mask now owns the complete arm parent chain without replacing native walking legs. Hand/neck spacing removes the extra gap. Holding maintains the combat stance after RMB release and restores native aim input on cleanup, including MP grant/cancel paths.

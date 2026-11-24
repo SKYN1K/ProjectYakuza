@@ -1,0 +1,225 @@
+{
+  "operation": "Read original supplied ID3/FLAC metadata and previously verified complete recording durations. No audio bytes modified.",
+  "tracks": [
+    {
+      "sound": "ProjectYakuza_FunkGoesOn",
+      "sourceFile": "1-06. Funk Goes On.mp3",
+      "sourceSha256": "f5c78691fa033d51ab6bff50838d8a4a2f790c7a8e3afb217555e2fcdc9c6af6",
+      "metadata": {
+        "title": "Funk Goes On",
+        "artist": "Hidenori Shoji",
+        "album": "Ryu ga Gotoku & Ryu ga Gotoku 2 Original Soundtrack",
+        "duration": 173.21
+      }
+    },
+    {
+      "sound": "ProjectYakuza_BringItOn",
+      "sourceFile": "1-10. Bring It On.mp3",
+      "sourceSha256": "1689446891634fe727bf688a15f520f26e1a0a987684a10f8ce1bacbe096bea9",
+      "metadata": {
+        "title": "Bring It On",
+        "artist": "SEGA/Keitarou Hanada",
+        "album": "LIKE A DRAGON GAIDEN The Man Who Erased His Name",
+        "duration": 154.724331
+      }
+    },
+    {
+      "sound": "ProjectYakuza_ReceiveYouVer7",
+      "sourceFile": "Receive You Ver. 7.mp3",
+      "sourceSha256": "1f910c7359db34fc40bdb28c6c6dac39ed03d3dc69af34091bde361d61d11771",
+      "metadata": {
+        "title": "Receive You Ver. 7",
+        "artist": "SEGA",
+        "album": "Ryu ga Gotoku 7 Hikari to Yami no Yukue Unofficial Original Soundtrack (Disc 1)",
+        "duration": 313.652245
+      }
+    },
+    {
+      "sound": "ProjectYakuza_FlirtWithBomb",
+      "sourceFile": "06. Flirt With Bomb.mp3",
+      "sourceSha256": "2040b9f05b0b7a145d5c030bc03fda618eb677c590953d3e6f88a90d1855c0e2",
+      "metadata": {
+        "title": "Flirt With Bomb",
+        "artist": "Hidenori Shoji",
+        "album": "Yakuza Kiwami Original Soundtrack",
+        "duration": 227.160979
+      }
+    },
+    {
+      "sound": "ProjectYakuza_SonOfAGun",
+      "sourceFile": "1-07. son of a gun.mp3",
+      "sourceSha256": "d074394f397ae8d3bf96afc0e6f6139ecf08b397dcadbe24ce890da9c457abb8",
+      "metadata": {
+        "title": "Son of a Gun",
+        "artist": "Keitaro Hanada",
+        "album": "Ryu ga Gotoku & Ryu ga Gotoku 2 Original Soundtrack",
+        "duration": 164.441882
+      }
+    },
+    {
+      "sound": "ProjectYakuza_PushMeUnderWater",
+      "sourceFile": "2-05. Push Me Under Water.mp3",
+      "sourceSha256": "611d8971643b148c32bb208e3bab8892421cf425b4289e10d1e502c9a4a07a9e",
+      "metadata": {
+        "title": "Push Me Under Water",
+        "artist": "Hidenori Shoji",
+        "album": "Ryu ga Gotoku & Ryu ga Gotoku 2 Original Soundtrack",
+        "duration": 191.452494
+      }
+    },
+    {
+      "sound": "ProjectYakuza_OutlawsLullaby",
+      "sourceFile": "2-07. Outlaw's Lullaby.mp3",
+      "sourceSha256": "bc17a858be2b8e422a284d4d4f8c00e9468136f7b89bafb5bab6c49d9579dd53",
+      "metadata": {
+        "title": "Outlaw's Lullaby",
+        "artist": "Hidenori Shoji",
+        "album": "Ryu ga Gotoku & Ryu ga Gotoku 2 Original Soundtrack",
+        "duration": 200.229637
+      }
+    },
+    {
+      "sound": "ProjectYakuza_FunkGoesOnKiwami",
+      "sourceFile": "05. Funk Goes On 極.mp3",
+      "sourceSha256": "45234d6102f46073aa0b1a4c9f3ec0b63e98c8b06a11dd234597e8d8a3c1ca95",
+      "metadata": {
+        "title": "Funk Goes On (Kiwami)",
+        "artist": "Yuri Fukuda",
+        "album": "Yakuza Kiwami Original Soundtrack",
+        "duration": 181.152979
+      }
+    },
+    {
+      "sound": "ProjectYakuza_PushMeDeepUnderwater",
+      "sourceFile": "1-09. Push Me Deep Underwater.mp3",
+      "sourceSha256": "611284dbb8c6db8caa71ddc9aa34ac8557324bf65ca125508146dd00c27a9145",
+      "metadata": {
+        "title": "Push Me Deep Underwater",
+        "artist": "Hidenori Shoji",
+        "album": "Yakuza Kiwami 2 Unofficial Soundtrack",
+        "duration": 205.32
+      }
+    },
+    {
+      "sound": "ProjectYakuza_LullabyOfOutlaws",
+      "sourceFile": "1-13. Lullaby of Outlaws.mp3",
+      "sourceSha256": "a2fc42a046da923ec2ae91428916a331fa80682133fc569daabd92937006ff8c",
+      "metadata": {
+        "title": "Lullaby of Outlaws",
+        "artist": "Hidenori Shoji, Chihiro Aoki",
+        "album": "Yakuza Kiwami 2 Unofficial Soundtrack",
+        "duration": 140.69551
+      }
+    },
+    {
+      "sound": "ProjectYakuza_ReceiveAndBelieveYou",
+      "sourceFile": "3-10. Receive and Believe You.mp3",
+      "sourceSha256": "4dac29bc58b6cebcfeb3aa711f35a04a95cd6c6a14e3ba20fc21fff431ea7bab",
+      "metadata": {
+        "title": "Receive and Believe You",
+        "artist": "SEGA/Ryo Fukuda & Hidenori Shoji",
+        "album": "Like a Dragon 8: Infinite Wealth Original Soundtrack",
+        "duration": 194.293333
+      }
+    },
+    {
+      "sound": "ProjectYakuza_Bruise",
+      "sourceFile": "06 Bruise.mp3",
+      "sourceSha256": "38cc08bb3fd60f16fb281bf9271c60be1e89400433ffae3170ae4f451d80e7ca",
+      "metadata": {
+        "title": "Bruise",
+        "artist": "Hidenori Shoji",
+        "album": "Ryu ga Gotoku 3 Original Soundtrack",
+        "duration": 101.748005
+      }
+    },
+    {
+      "sound": "ProjectYakuza_CrushAndStrike",
+      "sourceFile": "08 Crush & Strike.mp3",
+      "sourceSha256": "641c0b63a7851d3b0cba66164c69c7994d89f83dcbb521fff8c332ade34386e4",
+      "metadata": {
+        "title": "Crush & Strike",
+        "artist": "Hidenori Shoji",
+        "album": "Ryu ga Gotoku 3 Original Soundtrack",
+        "duration": 138.450045
+      }
+    },
+    {
+      "sound": "ProjectYakuza_D2A",
+      "sourceFile": "09 D 2 A.mp3",
+      "sourceSha256": "64caa71b4c6ebf5701055dfc5c8e07a9d0a6571c56173e2b8943aa8231800dcf",
+      "metadata": {
+        "title": "D 2 A",
+        "artist": "Chihiro Aoki",
+        "album": "Ryu ga Gotoku 3 Original Soundtrack",
+        "duration": 179.279433
+      }
+    },
+    {
+      "sound": "ProjectYakuza_RyuKyuHumming",
+      "sourceFile": "07 Ryu-Kyu Humming.mp3",
+      "sourceSha256": "0471d426a8e89f2129603fbe1af758995ba5ff7c8fdfb20c8f951ba2223914f9",
+      "metadata": {
+        "title": "Ryu-Kyu Humming",
+        "artist": "Hidenori Shoji",
+        "album": "Ryu ga Gotoku 3 Original Soundtrack",
+        "duration": 112.980658
+      }
+    },
+    {
+      "sound": "ProjectYakuza_TheMyth",
+      "sourceFile": "26 - The Myth.mp3",
+      "sourceSha256": "f90d970a7543eb6777bc6800e394b4f19903e28e724067d67d5e085a8c1c24ad",
+      "metadata": {
+        "title": "The Myth",
+        "artist": "Hidenori Shoji",
+        "album": "Yakuza 4 Original Soundtrack Vol.1",
+        "duration": 170.981655
+      }
+    },
+    {
+      "sound": "ProjectYakuza_IsolatedFight",
+      "sourceFile": "04. Isolated Fight.mp3",
+      "sourceSha256": "e41b51cbd4b7d67547d4702a9b4fb020be02aad97a3efc7522e9703bf7e8b5ec",
+      "metadata": {
+        "title": "Isolated Fight",
+        "artist": "Mitsuharu Fukuyama",
+        "album": "Ryu ga Gotoku 5 Yume, Kanaeshi Mono Original Soundtrack",
+        "duration": 146.653923
+      }
+    },
+    {
+      "sound": "ProjectYakuza_TownBully",
+      "sourceFile": "1-14 Town Bully.mp3",
+      "sourceSha256": "ef679a461869deb3ecd141961b64fee67ac0f208f0b44a30cd859e404eca7501",
+      "metadata": {
+        "title": "Town Bully",
+        "artist": "ZENTA",
+        "album": "Yakuza 6 The Song of Life Original Soundtrack",
+        "duration": 103.890045
+      }
+    },
+    {
+      "sound": "ProjectYakuza_KamuroAgain",
+      "sourceFile": "1-06 KAMURO again.mp3",
+      "sourceSha256": "d04907921fdf4fb4b6245d02ceb8f9ea96e8d57a1d307d71b36664544a5f2053",
+      "metadata": {
+        "title": "KAMURO again",
+        "artist": "Yuri Fukuda",
+        "album": "Yakuza 6 The Song of Life Original Soundtrack",
+        "duration": 177.241882
+      }
+    },
+    {
+      "sound": "ProjectYakuza_TechnicalDifficulties",
+      "sourceFile": "(06) [NYO] technical difficulties.flac",
+      "sourceSha256": "c5328a2d1c0b037b2376bfb1c467ec0cf4e030bfe12ac99cd24c2fb240048d27",
+      "metadata": {
+        "title": "Technical Difficulties",
+        "artist": "NYO",
+        "album": "東方萃奏楽",
+        "duration": 168.124082
+      }
+    }
+  ]
+}

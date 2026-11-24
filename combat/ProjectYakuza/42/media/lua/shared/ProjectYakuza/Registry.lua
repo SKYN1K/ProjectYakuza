@@ -348,7 +348,7 @@ function S.actionAllowed(style,kind,move)
     return true
 end
 end
-ProjectYakuza.VERSION = "1.0.6"
+ProjectYakuza.VERSION = "1.0.7"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -669,6 +669,10 @@ function ProjectYakuza.validateStyle(style)
             for i,track in ipairs(style.music) do
                 if type(track)~="table" or not text(track.sound) then problem("music["..i.."].sound is required")
                 elseif seen[track.sound] then problem("duplicate music sound: "..track.sound)
+                elseif track.duration~=nil and(not number(track.duration)or track.duration<=0)then problem("music duration must be positive seconds")
+                elseif track.artist~=nil and not text(track.artist)then problem("music artist must be text")
+                elseif track.album~=nil and not text(track.album)then problem("music album must be text")
+                elseif track.cover~=nil and(not text(track.cover)or not track.cover:match("^media/textures/[%w_./ -]+%.png$")or track.cover:find("..",1,true))then problem("music cover must be a relative PNG texture path")
                 else seen[track.sound]=true end
             end
         end
