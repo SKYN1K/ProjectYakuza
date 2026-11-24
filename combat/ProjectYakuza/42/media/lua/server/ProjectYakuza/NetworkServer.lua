@@ -289,7 +289,7 @@ function S.command(module,command,p,a)
     if command=="throw" then
         if ProjectYakuza.FEATURES.grab==false or not ProjectYakuza.Sandbox.enabled("Grabs")then S.release(p);return end
         local lease=s.grab
-        if not lease or lease.breaking or a.grabId~=lease.id or lease.z:getOnlineID()~=a.zombie or lease.thrown or not S.validVictim(p,a.zombie,1.5) or s.packet.phase~="throw" then return end
+        if not lease or lease.breaking or a.grabId~=lease.id or lease.z:getOnlineID()~=a.zombie or lease.thrown or not S.validVictim(p,a.zombie,1.5,-1) or s.packet.phase~="throw" then return end
         if lease.slot.throwContactMs and(not lease.throwStarted or t-lease.throwStarted<lease.slot.throwContactMs-250 or t-lease.throwStarted>lease.slot.throwDuration*1000+1000)then return end
         lease.thrown=true;S.damage(p,lease.z,.7,true,false,s,{noKnockback=true,hitResponse=false,grabThrow=true},nil,nil,nil,true)
         for _,victim in ipairs(ProjectYakuza.GrabRules.crowd(p,lease.z,lease.slot,lease.fx,lease.fy))do
@@ -411,6 +411,7 @@ function S.tick()
                 ProjectYakuza.GrabRules.keep(z)
                 local f=p:getForwardDirection();local fx,fy=f:getX(),f:getY()
                 if phase=="hold"or not lease.fx then lease.fx,lease.fy=fx,fy else fx,fy=lease.fx,lease.fy end
+                lease.grabMoving=s.packet.grabMoving==true
                 local offset=ProjectYakuza.GrabRules.alignment(lease.slot,phase,lease,t)
                 local x,y=p:getX()+fx*offset.forward+fy*offset.right,p:getY()+fy*offset.forward-fx*offset.right
                 if phase=="enter"then x,y=ProjectYakuza.GrabRules.entryPosition(p,z,lease.slot,lease,t,fx,fy)end

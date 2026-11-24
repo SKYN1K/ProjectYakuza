@@ -1,0 +1,34 @@
+{
+  "version": "1.0.10",
+  "operation": "Original source pose under the actual native parent mask, with bounded stationary collar clearance and a separately calibrated walking grip. Strike masks retain native root, pelvis and lower spine while retaining original upper-body and leg joints. Dragon strikes retain the held victim root offset instead of interpolating between unrelated source-root positions.",
+  "nativeParentTransformChecks": 804,
+  "referenceGripOffsets": [
+    {
+      "clip": "GrabHold",
+      "measuredHandNeckOffset": [
+        0.1944093368947506,
+        0.3573595443740487
+      ],
+      "configured": [
+        0.21,
+        0.357359544
+      ],
+      "planarErrorTiles": 0.0155906631052494
+    },
+    {
+      "clip": "GrabWalk",
+      "measuredHandNeckOffset": [
+        0.3150239624083042,
+        0.320104175247252
+      ],
+      "configured": [
+        0.315023962,
+        0.320104175
+      ],
+      "planarErrorTiles": 4.773320531806554e-10
+    }
+  ],
+  "originalClipBytesUnchanged": true,
+  "originalContactFramesUnchanged": true,
+  "offlineOnly": true
+}

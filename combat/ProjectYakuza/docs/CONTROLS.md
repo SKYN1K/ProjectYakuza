@@ -42,4 +42,4 @@ The HUD scales down to fit its viewport and reserves space below the full glow f
 
 HUD scale is available under Options > Mods > Project Yakuza, from 50 to 200 percent. The complete health/heat display, text and cooldown geometry scale together and fit within the current viewport. The health frame retains fixed-size original silver end caps and a gray left backing.
 
-Running Light and Heavy accept a press up to 180 ms before the 160 ms moving run-up finishes. Fresh presses are required; holding does not repeat. Aim or movement can exit a light running strike at its existing recovery marker. The dropkick keeps its landing recovery. A held grab forces native combat aim and cannot run or sprint after RMB release.
+Running Light and Heavy accept a press up to 180 ms before the 160 ms moving run-up finishes. Fresh presses are required; holding does not repeat. Aim or movement can exit a light running strike at its existing recovery marker. The dropkick keeps its landing recovery. Grab reaches begin advancing during the opening animation frames. A held grab forces native combat aim and cannot run or sprint after RMB release.

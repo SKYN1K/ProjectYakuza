@@ -1,0 +1,40 @@
+{
+  "version": "1.0.10",
+  "offlineOnly": true,
+  "kahlua": {
+    "grabLifecycle": 1485,
+    "multiplayer": 2049,
+    "heatPresentation": 7173,
+    "pairedDamage": 185
+  },
+  "focusedAssertions": 10892,
+  "nativeObserverSelectors": 454,
+  "nativeGrabSelectors": 74,
+  "nativeParentTransforms": 804,
+  "originalClipBytesUnchanged": true,
+  "sourceAnimationSpeedsChanged": false,
+  "damageAndHeatCostsChanged": false,
+  "earlyReach": {
+    "distance": 0.28,
+    "movementMs": 240,
+    "maxIncrement": 0.06,
+    "minimumApproachClearance": 0.35,
+    "nativeContactWindowMs": [
+      333.333333,
+      400
+    ],
+    "lateCatchup": false
+  },
+  "holdOffset": {
+    "forward": 0.21,
+    "right": 0.357359544
+  },
+  "walkOffset": {
+    "forward": 0.315023962,
+    "right": 0.320104175
+  },
+  "strikeOwnerObserverMasksChanged": 12,
+  "openGrabScenePlacementHeadingsTested": 8,
+  "temporaryNativeStaggerSuppression": true,
+  "sourceComments": 0
+}

@@ -1,10 +1,10 @@
 # Dragon of Dojima reference style
 
-Project Yakuza v1.0.9 packages version **1.0.9**, Lua API **3** and multiplayer protocol **2**. For independent style development, start with [Style authoring](docs/STYLE_AUTHORING.md) and the [API reference](docs/API_REFERENCE.md).
+Project Yakuza v1.0.10 packages version **1.0.10**, Lua API **3** and multiplayer protocol **2**. For independent style development, start with [Style authoring](docs/STYLE_AUTHORING.md) and the [API reference](docs/API_REFERENCE.md).
 
 ## Install and select
 
-Download the named B42 install ZIP from [v1.0.9](https://github.com/SKYN1K/ProjectYakuza/releases/tag/v1.0.9). Extract it so `Zomboid/mods/ProjectYakuza/42/mod.info` exists, enable Project Yakuza for the save and restart PZ. Servers and clients need matching framework and add-on versions.
+Download the named B42 install ZIP from [v1.0.10](https://github.com/SKYN1K/ProjectYakuza/releases/tag/v1.0.10). Extract it so `Zomboid/mods/ProjectYakuza/42/mod.info` exists, enable Project Yakuza for the save and restart PZ. Servers and clients need matching framework and add-on versions.
 
 Hold Z, point at a slot and release Z to equip it. Left defaults to Dragon of Dojima; right starts empty. The bottom slot opens assignments and settings. The top slot unequips the style. The wheel does not pause gameplay. Other registered styles appear in the assignment list automatically.
 
@@ -36,11 +36,11 @@ World/server **Sandbox Options > Project Yakuza** controls Dragon Tiger Drop, it
 
 Weapon Heat Actions are available for the configured vanilla bats, Base.Katana and the supported knives. Hold physical RMB and press Heat Action outside combos near a valid target. One complete stock is enough. Supported weapon Heat Actions can spend equivalent fuel during Extreme Heat.
 
-Grab holding retains native body orientation and uses added body clearance. Entry blends into the grip in both directions, with late-grant visibility/path checks and pause-safe recovery. Counters, fully charged impacts and grab reaches have distinct supplied feedback. Grabs confirm a connection or missed reach briefly. Standing source flinches vary by punch, kick, blade or blunt contact; rapid hits preserve animation continuity while native knockback, stuns and paired scenes keep priority.
+Grab holding uses separately calibrated stationary/walking grips. Strikes retain the same native body parents and a stable victim offset. Entry blends into the grip in both directions, with late-grant visibility/path checks and pause-safe recovery. Counters, fully charged impacts and grab reaches have distinct supplied feedback. Grabs confirm a connection or missed reach briefly. Standing source flinches vary by punch, kick, blade or blunt contact; rapid hits preserve animation continuity while native knockback, stuns and paired scenes keep priority.
 
 Running strikes gain an early-input buffer, stronger stagger and 25 percent more native damage; the dropkick gains knockdown and 75 percent more damage. Source animation speeds stay unchanged.
 
-Unarmed grabs retain native combat aim and walking speed after RMB is released. A failed reach can step forward up to 0.28 tiles while respecting obstacles. Grab throws; Light strikes. With RMB held, Heat Action chooses the wall action beside a suitable wall or the open-space action when there is clearance. A downed zombie can qualify for the separate unarmed ground Heat Action. See [Heat Actions](docs/HEAT_ACTIONS.md) and [Grabs](docs/GRABS.md).
+Unarmed grabs retain native combat aim and walking speed after RMB is released. The reach eases forward from its opening frames, up to 0.28 tiles while respecting obstacles and nearby targets. Grab throws; Light strikes. With RMB held, Heat Action chooses the wall action beside a suitable wall or the open-space action when there is clearance. A downed zombie can qualify for the separate unarmed ground Heat Action. See [Heat Actions](docs/HEAT_ACTIONS.md) and [Grabs](docs/GRABS.md).
 
 Extreme Heat's paired punch rush follows the eighth confirmed unarmed light-chain strike against a surviving eligible target. Follow the displayed Light / Heavy / Grab prompts with fresh presses; a held button does not count. A failed prompt transitions to the original ending kick. Playback keeps its authored speed.
 

@@ -100,14 +100,15 @@ function G.entryPosition(p,z,slot,state,t,fx,fy)
     return state.entryX+(x-state.entryX)*blend,state.entryY+(y-state.entryY)*blend,fraction
 end
 
-function G.offset(slot,phase)
+function G.offset(slot,phase,moving)
     local strike=slot and slot.strikes and slot.strikes[tonumber(string.match(phase or "","^strike(%d)$"))]
-    local offset=phase=="throw"and slot and slot.throwOffset or strike and strike.pairOffset
+    local offset=phase=="throw"and slot and slot.throwOffset or strike and strike.pairOffset or slot and(moving and slot.walkOffset or slot.holdOffset)
     return {forward=offset and offset.forward or G.spacing(slot),right=offset and offset.right or slot and slot.lateral or 0}
 end
 function G.alignment(slot,phase,state,t)
-    local target=G.offset(slot,phase)
-    if state.pairPhase~=phase then state.pairFrom=state.pairOffset or G.offset(slot,"hold");state.pairAt=t;state.pairPhase=phase end
+    local moving=phase=="hold"and state.grabMoving==true
+    local target=G.offset(slot,phase,moving)
+    if state.pairPhase~=phase or state.pairMoving~=moving then state.pairFrom=state.pairOffset or G.offset(slot,"hold");state.pairAt=t;state.pairPhase=phase;state.pairMoving=moving end
     local f=math.max(0,math.min(1,(t-state.pairAt)/120));f=f*f*(3-2*f)
     local source=state.pairFrom
     state.pairOffset={forward=source.forward+(target.forward-source.forward)*f,right=source.right+(target.right-source.right)*f}

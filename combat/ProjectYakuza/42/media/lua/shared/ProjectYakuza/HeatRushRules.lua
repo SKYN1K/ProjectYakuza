@@ -84,6 +84,11 @@ function R.validTarget(p,z,range)
     return n>.01 and n<=(range or R.targetRange)and (dx*f:getX()+dy*f:getY())/n>=.5
 end
 function R.validFor(p,z,action)
+    if action and action.grabHeat then
+        if not p or R.targetKind(z)~="zombie"or z:isDead()or z:isOnFloor()or z:isKnockedDown()or math.abs(z:getZ()-p:getZ())>.25 then return false end
+        local dx,dy=z:getX()-p:getX(),z:getY()-p:getY()
+        return dx*dx+dy*dy<=2.25 and ProjectYakuza.NetworkProtocol.path(p,z:getX(),z:getY())
+    end
     if not action or not action.groundHeat then return R.validTarget(p,z)end
     if not p or R.targetKind(z)~="zombie"or z:isDead()or not(z:isOnFloor()or z:isKnockedDown())or z:isUseless()or math.abs(z:getZ()-p:getZ())>.25 then return false end
     if action.requiresFloor and not z:isOnFloor()then return false end
@@ -206,8 +211,16 @@ function R.placement(p,z,action)
     local facing=p:getForwardDirection();local fx,fy=facing:getX(),facing:getY();local length=math.sqrt(fx*fx+fy*fy)
     if length<.001 then return end;fx,fy=fx/length,fy/length
     local motion=R.motion(action);local duration=R.durationFor(action)
+    local originX,originY=p:getX(),p:getY()
+    if action and action.grabHeat and action.requiresWall==false then
+        local af,ar=R.sample(motion.actor,0);local vf,vr=R.sample(motion.victim,0)
+        local gapF,gapR=vf-af,vr-ar;local dx,dy=z:getX()-originX,z:getY()-originY
+        local scale=math.sqrt((gapF*gapF+gapR*gapR)*(dx*dx+dy*dy));if scale<.00001 then return end
+        fx,fy=(gapF*dx-gapR*dy)/scale,(gapR*dx+gapF*dy)/scale
+        originX,originY=originX-fx*af-fy*ar,originY-fy*af+fx*ar
+    end
     for _,offset in ipairs({{0,0},{-.7,0},{0,.7},{0,-.7},{.7,0},{-.7,.7},{-.7,-.7},{.7,.7},{.7,-.7}})do
-        local job={x=p:getX()+fx*offset[1]+fy*offset[2],y=p:getY()+fy*offset[1]-fx*offset[2],fx=fx,fy=fy,motion=motion,duration=duration}
+        local job={x=originX+fx*offset[1]+fy*offset[2],y=originY+fy*offset[1]-fx*offset[2],fx=fx,fy=fy,motion=motion,duration=duration}
         local x,y=R.point(job,motion.victim,0)
         if (x-z:getX())^2+(y-z:getY())^2<=2.25 and R.clearance(p,job)and R.space(p,job)and ProjectYakuza.NetworkProtocol.path(z,x,y)then return job end
     end

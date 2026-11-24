@@ -88,8 +88,14 @@ The controller emits grabConnected(player,victim,action) once after attachment a
 
 Default local feedback moves the existing grip cue to successful attachment and shows a 650 ms connection or miss notice. Reaching keeps its supplied whoosh; misses do not play a false impact. The held prompt lists the current Light and Grab bindings. A matching action context prevents stale cleanup from removing a later grab's feedback state.
 
-## Miss travel and native aim ownership (1.0.9)
+## Native aim ownership
 
-Optional grab.attemptMissDistance is bounded to 0..0.75 tiles and requires a configured attempt. attemptMissEndMs must follow the contact window and not exceed the full attempt duration. Dragon uses 0.28 tiles through 800 ms. Failed-reach travel follows the original attempt facing, samples its native animation time, caps each movement increment at 0.06 tiles and checks the existing solid-floor/collision policy before advancing. A blocked path ends the travel instead of saving a later catch-up. Successful attachment, pending server approval, late denial and pause cannot receive a delayed lunge.
+When releaseOnAimLoss=false, grab ownership sets native forced aim and suppresses run/sprint permissions. This persists across native input polling after RMB release, keeping combat walking speed and stance. Completion, cancellation and handoff restore the previous forced-aim and permission values. Current reach movement is defined below.
 
-When releaseOnAimLoss=false, grab ownership sets native forced aim and suppresses run/sprint permissions. This persists across native input polling after RMB release, keeping combat walking speed and stance. Completion, cancellation and handoff restore the previous forced-aim and permission values. Existing body masks, source animation bytes and paired alignment remain unchanged.
+## Consistent parent frames and early reach (1.0.10)
+
+Optional attemptDistance is bounded to 0..0.75 tiles. attemptMoveMs must be positive and no later than attemptContactMs. Dragon advances up to 0.28 tiles over 240 ms from the original attempt track, with an ease-out curve and 0.06-tile maximum increment. A target within the approach path limits movement to preserve 0.35 tiles of clearance. This scan does not reserve the target; attachment remains in the source contact window. Movement stops after obstruction and never catches up after a late first sample.
+
+holdOffset and walkOffset override the default paired offset, with the same bounds as other phase offsets. Dragon's stationary forward/right offset is 0.21/0.357359544; walking uses 0.315023962/0.320104175. These use the actual source upper-body pose under native root, pelvis and lower-spine parents. The stationary planar hand/collar reference has less than 0.016 tiles of clearance. This is a source-pose check rather than proof of the final live blended skeleton.
+
+Dragon's four strikes keep those native parents and retain original upper-body and leg joints. Their pairOffset overrides are removed so the victim root stays at the held offset through strike transitions. Ordinary native damage is applied once; no-knockback contacts suppress native staggering during that call and restore its old value afterward. Client and server use the same walking-offset blend. The open-space scene uses its authored initial separation to orient the pair without placing the victim behind the held direction.

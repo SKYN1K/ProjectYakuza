@@ -1,8 +1,8 @@
 # Validation coverage
 
-GitHub release **v1.0.9** packages version **1.0.9**. The player profile contains 1,200 runtime files and 88 Lua modules; the full development source contains additional custom-object work excluded from this profile.
+GitHub release **v1.0.10** packages version **1.0.10**. The player profile contains 1,200 runtime files and 88 Lua modules; the full development source contains additional custom-object work excluded from this profile.
 
-The [release-profile report](release-profile-1.0.9.json) records the retained profiles, transformed source files and 262 excluded custom files. Validation covers compilation of the filtered Lua modules, require/animation closure, retained bat/katana/knife profiles and actions, rejection of removed multiplayer moves/observer clips, and resolution of limb tracks. Native inventory checks confirm that a missing item record is skipped without consuming the next saved record.
+The [release-profile report](release-profile-1.0.10.json) records the retained profiles, transformed source files and 262 excluded custom files. Validation covers compilation of the filtered Lua modules, require/animation closure, retained bat/katana/knife profiles and actions, rejection of removed multiplayer moves/observer clips, and resolution of limb tracks. Native inventory checks confirm that a missing item record is skipped without consuming the next saved record.
 
 Package checks enforce the runtime allowlist, inspect private paths/credential formats and compare archive bytes. The native B42 Workshop validator checks content layout, file types and preview. Installation verifies both the normal mod copy and the loadable Workshop payload against the player ZIP. Development source and retained media are recorded separately; retained animation, model, texture and audio bytes are unchanged by release filtering.
 
@@ -17,3 +17,5 @@ The 1.0.7 update tests manual/automatic playback ownership, playlist order/wrapp
 The [1.0.8 validation report](update-validation-1.0.8.json) covers saved shuffle/repeat/favorites, complete shuffle cycles, actual history, failed playback preservation, one-time grab outcomes, visible local feedback and reaction continuity. Near-simultaneous alternate flinches coalesce without replacing native knockback or stun. No audio, model, animation or texture bytes change in this update.
 
 The [1.0.9 validation report](update-validation-1.0.9.json) records running buffers/retries, native swing submission, damage restoration, per-style hit responses, one-shot impact cues, missed-grab travel in four headings, obstruction/late-approval behavior, forced native aim ownership and stronger bounded cinematic effects. Native probes confirm the control setters and original grab selectors; all 49 source frames and 1,666 body transforms remain unchanged. GPU appearance and actual input feel still require live testing.
+
+The [1.0.10 grab staging report](grab-staging-1.0.10.json) measures masked-pose grip placement and verifies 804 native root/pelvis/lower-spine transforms across holding, walking and all four strikes. [Update validation](update-validation-1.0.10.json) covers early collision-checked reach motion and open-space placement in all headings. Source clips remain byte-identical; only source/observer masks and controller staging change.

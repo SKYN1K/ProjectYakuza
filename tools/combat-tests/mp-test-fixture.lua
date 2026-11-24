@@ -151,7 +151,7 @@ snapshot(remote);command('grabRequest',{zombie=z1.id},remote)
 check(server.players[2].grab==nil,'second player cannot grab leased zombie')
 for _,v in ipairs({z2,z3,z4})do v.health=1;v.hits=0;v.state='idle';v.reaction='';v.useless=false;v.knock=false;v.nativeFloor=false end
 snapshot(p,{phase='hold',clip='ProjectYakuza_DD_GrabHold',rightAim=false});server.tick();check(s.grab~=nil,'server keeps the held grab when RMB is released')
-check(math.abs(z1.x-ProjectYakuza.getStyle("dragon_of_dojima").actions.grab.distance)<.000001 and z1.nextX==z1.x and math.abs(z1.y+ProjectYakuza.getStyle("dragon_of_dojima").actions.grab.lateral)<.000001,'server aligns paired roots with native collar spacing')
+check(math.abs(z1.x-ProjectYakuza.getStyle("dragon_of_dojima").actions.grab.holdOffset.forward)<.000001 and z1.nextX==z1.x and math.abs(z1.y+ProjectYakuza.getStyle("dragon_of_dojima").actions.grab.holdOffset.right)<.000001,'server aligns paired roots with native collar spacing')
 snapshot(p,{phase='throw',clip='ProjectYakuza_DD_Throw'});local throwId=s.grab.id
 command('throw',{zombie=z1.id,grabId=throwId});check(s.grab and z1.hits==0,'server rejects throw damage before the original impact frame')
 clock=clock+2334;snapshot(p,{phase='throw',clip='ProjectYakuza_DD_Throw'})
@@ -160,7 +160,7 @@ command('throw',{zombie=z1.id,grabId=throwId})
 check(z1.hits==1 and z1.nativeFloor and not z1.stagger and z1.force==0 and s.grab==nil and not z1.useless and not z1.ignore,'throw lands prone without a fresh stumble and releases AI lease')
 command('throw',{zombie=z1.id,grabId=throwId});check(z1.hits==1,'repeated throw does not damage twice')
 check(z2.knock and z3.knock and z4.knock and z2.hits==0 and z3.hits==0 and z4.hits==0,'server chooses nearby collateral knockdowns without applying extra damage')
-z1.health=1;clock=clock+1100;snapshot(p);command('grabRequest',{zombie=z1.id})
+z1.health=1;z1.x=.8;z1.y=0;clock=clock+1100;snapshot(p);command('grabRequest',{zombie=z1.id})
 check(s.grab~=nil,'can acquire another grab after release')
 clock=clock+9000;server.tick();check(s.grab==nil and not z1.useless,'lease timeout restores zombie AI')
 clock=clock+1100;snapshot(p);z1.attacking=true;z1.target=p

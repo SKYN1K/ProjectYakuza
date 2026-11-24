@@ -1,3 +1,13 @@
+# v1.0.10
+
+Grab reach movement starts on the first visible source frames and eases forward over 240 ms, before contact at frames 10-12. It no longer waits until the miss is known. The 0.28-tile cap, small collision-checked increments, pause handling and no late-frame catch-up remain. A nearby target limits approach clearance without being acquired or frozen before source contact.
+
+Stationary and walking grip offsets now use the actual masked native pose. Their transition is shared by client and server. Grab strikes retain the native root, pelvis and lower spine while playing the original upper-body and leg joints, keeping their original speed and contacts. Twelve owner/observer nodes share these masks. Dragon strike phases retain the held victim root instead of moving it between unrelated source offsets. Native no-knockback damage temporarily suppresses default staggering and restores its previous permission even on failure.
+
+The open-space Yakuza 5 sacrifice throw now derives its scene axis from the original initial actor/victim separation and the held pair. This keeps the actor in position and the victim on the held side instead of reversing their placement. Wall placement remains unchanged. Held-target validation retains ownership, range and path checks without applying the ordinary unheld frontal cone to an already acquired victim.
+
+Offline validation covers early reach motion, four-heading movement, obstacles, pause, eight-heading open-scene placement, stable strike roots, transient hit-reaction suppression, MP leases, 804 native parent-transform checks and original clip hashes. Source animation frames, speeds, damage/contact timings and Heat costs are unchanged. PZ was not launched; live animation blending and networking still require gameplay verification.
+
 # v1.0.9
 
 Running attacks use a 160 ms moving run-up and a 180 ms early-input buffer. An 80 ms sampling grace tolerates a duplicate update with no displacement without granting idle run-up. Accepted actions can submit their native swing in the same update; transient native readiness can retry only inside the original input deadline. Releasing aim, losing eligibility, changing floor or teleporting discards the buffer. Holding an attack cannot repeat it. Light running recovery accepts aim input at the existing source recovery marker; the dropkick retains its committed landing recovery.

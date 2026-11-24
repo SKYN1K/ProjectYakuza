@@ -173,18 +173,23 @@ function A:miss(time)
     if self.missEmitted or self.victimState or not self.context.attempt then return end
     self.missEmitted=true;self.missFrom=time;ProjectYakuza.emit("grabMissed",self.character,self.candidate,self)
 end
-function A:advanceMiss(time)
-    local slot=self.context.action;local distance=slot.attemptMissDistance
-    if not distance or distance<=0 or not time or not self.missFrom or self.missBlocked or self.victimState or self.awaitingGrab then return end
-    local first=math.max(self.missFrom,(slot.attemptContactEndMs or slot.attemptContactMs)/1000)
-    local last=(slot.attemptMissEndMs or slot.attemptDurationMs)/1000
-    if first>=last or time>last+.1 then return end
-    local progress=math.max(0,math.min(1,(time-first)/(last-first)))
-    local amount=math.min(.06,math.max(0,distance*(1-(1-progress)^2)-(self.missMoved or 0)))
+function A:advanceReach(time)
+    local slot=self.context.action;local distance=slot.attemptDistance
+    if not distance or distance<=0 or not time or time<0 or time*1000>slot.attemptContactMs or self.reachBlocked or self.victimState or self.awaitingGrab then return end
+    local progress=math.max(0,math.min(1,time*1000/(slot.attemptMoveMs or slot.attemptContactMs)))
+    local amount=math.min(.06,math.max(0,distance*progress*(2-progress)-(self.reachMoved or 0)))
+    if amount<=0 then return end
+    if not self.advanceCheckAt or now()>=self.advanceCheckAt then self.advanceCandidate=D.target(self.character);self.advanceCheckAt=now()+60 end
+    local target=self.advanceCandidate
+    if target and not target:isDead()then
+        local x,y=target:getX()-self.character:getX(),target:getY()-self.character:getY()
+        local forward=x*self.context.fx+y*self.context.fy;local side=x*self.context.fy-y*self.context.fx
+        if forward>=0 and math.abs(side)<.45 then amount=math.min(amount,math.max(0,forward-.35))end
+    end
     if amount<=0 then return end
     local dx,dy=self.context.fx*amount,self.context.fy*amount
-    if ProjectYakuza.Quicksteps.canMove(self.character,dx,dy)then self.character:moveUnmodded(dx,dy);self.missMoved=(self.missMoved or 0)+amount
-    else self.missBlocked=true end
+    if ProjectYakuza.Quicksteps.canMove(self.character,dx,dy)then self.character:moveUnmodded(dx,dy);self.reachMoved=(self.reachMoved or 0)+amount
+    else self.reachBlocked=true end
 end
 function A:acceptGrab(z)
     if self.cleaned or not self.started or not self.context.attempt or not self.awaitingGrab or self.candidate~=z or not self:isValid()or not D.reachable(self.character,z)then return false end
@@ -287,6 +292,7 @@ function A:grab(dt)
     if self.context.attempt and not self.victimState then
         local slot=self.context.action
         local time,weight=ProjectYakuza.AttackEffects.findTrack(p,slot.attemptAnimation)
+        if time and weight>=.1 then self:advanceReach(time)end
         if time and weight>=.35 then
             self.attemptSeen=true
             if not self.reachResolved and time*1000>=slot.attemptContactMs then
@@ -311,7 +317,7 @@ function A:grab(dt)
             local network=ProjectYakuza.Network
             if now()-self.gripRequestedAt>1500 or not(network and network.pending and network.pending[p])then self.awaitingGrab=false else return end
         end
-        if self.reachResolved and not self.awaitingGrab then self:miss(time);self:advanceMiss(time)end
+        if self.reachResolved and not self.awaitingGrab then self:miss(time)end
         if self.attemptSeen and(var(p,"ProjectYakuzaDefenseMarker")=="attempt_done"or time and time*1000>=slot.attemptDurationMs-20 or not time and now()-self.startedAt>=slot.attemptDurationMs)then self:forceComplete()
         elseif now()-self.startedAt>slot.attemptDurationMs+500 then self:forceStop()end
         return

@@ -287,7 +287,10 @@ function H.nativeHit(attacker,victim,item,amount,move)
         saved={item:getPushBackMod(),item:getKnockdownMod(),item:isKnockBackOnNoDeath(),item:isAlwaysKnockdown()}
         item:setPushBackMod(0);item:setKnockdownMod(0);item:setKnockBackOnNoDeath(false);item:setAlwaysKnockdown(false)
     end
+    local stagger=move and move.noKnockback and victim.isIgnoreStaggerBack and victim:isIgnoreStaggerBack()
+    if stagger~=nil and move and move.noKnockback and victim.setIgnoreStaggerBack then victim:setIgnoreStaggerBack(true)end
     local ok,result=pcall(victim.Hit,victim,item,attacker,amount,false,1)
+    if stagger~=nil and move and move.noKnockback and victim.setIgnoreStaggerBack then victim:setIgnoreStaggerBack(stagger)end
     if saved then item:setPushBackMod(saved[1]);item:setKnockdownMod(saved[2]);item:setKnockBackOnNoDeath(saved[3]);item:setAlwaysKnockdown(saved[4])end
     return ok,result
 end
@@ -348,7 +351,7 @@ function S.actionAllowed(style,kind,move)
     return true
 end
 end
-ProjectYakuza.VERSION = "1.0.9"
+ProjectYakuza.VERSION = "1.0.10"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -642,8 +645,8 @@ function ProjectYakuza.validateStyle(style)
                 if slot.entryBlendMs~=nil and(not number(slot.entryBlendMs)or slot.entryBlendMs<80 or slot.entryBlendMs>400)then problem("grab.entryBlendMs must be between 80 and 400")end
                 if slot.attemptContactMs~=nil and(not text(slot.attemptAnimation)or not number(slot.attemptContactMs)or slot.attemptContactMs<0 or not number(slot.attemptDurationMs)or slot.attemptDurationMs<=slot.attemptContactMs or slot.attemptDurationMs>2000 or slot.requiresTarget~=false)then problem("invalid grab attempt timing")end
                 if slot.attemptContactEndMs~=nil and(not number(slot.attemptContactEndMs)or not number(slot.attemptContactMs)or not number(slot.attemptDurationMs)or slot.attemptContactEndMs<slot.attemptContactMs or slot.attemptContactEndMs>=slot.attemptDurationMs)then problem("invalid grab contact window")end
-                if slot.attemptMissDistance~=nil and(not number(slot.attemptMissDistance)or slot.attemptMissDistance<0 or slot.attemptMissDistance>.75 or not number(slot.attemptContactMs)or not number(slot.attemptDurationMs))then problem("invalid missed-grab distance")end
-                if slot.attemptMissEndMs~=nil and(not number(slot.attemptMissEndMs)or not number(slot.attemptContactMs)or not number(slot.attemptDurationMs)or slot.attemptMissEndMs<=(slot.attemptContactEndMs or slot.attemptContactMs)or slot.attemptMissEndMs>slot.attemptDurationMs)then problem("invalid missed-grab movement window")end
+                if slot.attemptDistance~=nil and(not number(slot.attemptDistance)or slot.attemptDistance<0 or slot.attemptDistance>.75 or not number(slot.attemptContactMs))then problem("invalid grab attempt distance")end
+                if slot.attemptMoveMs~=nil and(not number(slot.attemptMoveMs)or slot.attemptMoveMs<=0 or not number(slot.attemptContactMs)or slot.attemptMoveMs>slot.attemptContactMs)then problem("invalid grab attempt movement timing")end
                 if slot.throwContactMs~=nil and(not number(slot.throwContactMs)or slot.throwContactMs<0 or not number(slot.throwDuration)or slot.throwDuration<=0 or slot.throwDuration>10 or slot.throwContactMs>=slot.throwDuration*1000)then problem("invalid grab throw contact timing")end
                 if slot.throwCrowd~=nil and slot.throwCrowd~=false then
                     local cfg=slot.throwCrowd
@@ -651,6 +654,8 @@ function ProjectYakuza.validateStyle(style)
                 end
                 if slot.distance~=nil and(not number(slot.distance)or slot.distance<.25 or slot.distance>1)then problem("grab.distance must be between .25 and 1")end
                 if slot.lateral~=nil and(not number(slot.lateral)or math.abs(slot.lateral)>.75)then problem("invalid grab lateral offset")end
+                if slot.holdOffset~=nil and not offset(slot.holdOffset)then problem("invalid grab holdOffset")end
+                if slot.walkOffset~=nil and not offset(slot.walkOffset)then problem("invalid grab walkOffset")end
                 if slot.throwOffset~=nil and not offset(slot.throwOffset)then problem("invalid grab throw offset")end
                 for _,strike in ipairs(type(slot.strikes)=="table"and slot.strikes or {})do if type(strike)=="table"and strike.pairOffset~=nil and not offset(strike.pairOffset)then problem("invalid grab strike pair offset")end end
             end
