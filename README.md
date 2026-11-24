@@ -2,7 +2,7 @@
 
 A Lua combat framework for **Project Zomboid Build 42**, designed for independent fighting-style add-ons. Styles register their own moves, actions, controls, weapon profiles, effects and multiplayer presentation. Dragon of Dojima is the included reference implementation.
 
-**[Download v1.0.12](https://github.com/SKYN1K/ProjectYakuza/releases/tag/v1.0.12)** Â· Lua API **3** Â· Multiplayer protocol **2** Â· Version **1.0.12**
+**[Download v1.0.13](https://github.com/SKYN1K/ProjectYakuza/releases/tag/v1.0.13)** Â· Lua API **3** Â· Multiplayer protocol **2** Â· Version **1.0.13**
 
 ## Create a style
 
@@ -65,4 +65,4 @@ Shared style definitions and observer catalogs must agree across peers. Observer
 
 Distribute your add-on with a dependency on ProjectYakuza, rather than bundling another framework copy. Include only runtime code and the assets your add-on needs. Keep source-game archives, authoring tools, templates, test logs and local configuration outside the upload. Asset references and provenance are retained in the source documentation.
 
-GitHub's automatic **Source code** archives are for development. Use the named runtime or Workshop ZIP for installation and uploading. The mod version is 1.0.12 (v1.0.12); Lua API and multiplayer protocol versions are independent compatibility identifiers.
+GitHub's automatic **Source code** archives are for development. Use the named runtime or Workshop ZIP for installation and uploading. The mod version is 1.0.13 (v1.0.13); Lua API and multiplayer protocol versions are independent compatibility identifiers.

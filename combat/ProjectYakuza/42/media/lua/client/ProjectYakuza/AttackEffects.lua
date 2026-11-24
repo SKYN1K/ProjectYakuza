@@ -14,7 +14,7 @@ local function valid(p,s)
         and not p:isOnFloor() and p:getHitReaction()==""
 end
 
-function F.findTrack(p,animation,cached)
+function F.findTrack(p,animation,cached,dominant)
     if cached and p:dbgGetAnimTrackName(cached.layer,cached.slot)==animation then
         local time,weight=p:dbgGetAnimTrackTime(cached.layer,cached.slot),p:dbgGetAnimTrackWeight(cached.layer,cached.slot)
         if weight>=.98 then return time,weight,cached end
@@ -26,7 +26,8 @@ function F.findTrack(p,animation,cached)
             if not name or name=="" then break end
             if name==animation then
                 local time=p:dbgGetAnimTrackTime(layer,slot);local weight=p:dbgGetAnimTrackWeight(layer,slot)
-                if weight>=.05 and (not bestTime or time<bestTime) then
+                local preferred=not bestTime or dominant and(weight>bestWeight or weight==bestWeight and time<bestTime)or not dominant and time<bestTime
+                if weight>=.05 and preferred then
                     bestTime=time;bestWeight=weight;bestLocation={layer=layer,slot=slot}
                 end
             end

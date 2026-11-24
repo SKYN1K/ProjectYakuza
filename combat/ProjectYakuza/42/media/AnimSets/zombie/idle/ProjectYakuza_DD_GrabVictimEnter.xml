@@ -33,4 +33,5 @@
     <boneName>Bip01</boneName>
     <weight>1</weight>
   </m_SubStateBoneWeights>
+  <m_maxTorsoTwist>0</m_maxTorsoTwist>
 </animNode>

@@ -38,4 +38,5 @@
     <m_Type>STRING</m_Type>
     <m_Value>left</m_Value>
   </m_Conditions>
+  <m_maxTorsoTwist>0</m_maxTorsoTwist>
 </animNode>

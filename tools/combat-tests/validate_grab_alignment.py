@@ -9,7 +9,9 @@ with zipfile.ZipFile(ROOT/'dist/ProjectYakuza-B42-v1.0.9.zip')as old:
  for path in (MOD/'42/media/AnimSets/player').rglob('*.xml'):
   node=E.parse(path).getroot()
   if re.fullmatch(r'ProjectYakuza_DD_GrabStrike0[1-4]',node.findtext('m_AnimName','')):
-   assert path.read_text(encoding='utf-8')==old.read('ProjectYakuza/'+path.relative_to(MOD).as_posix()).decode('utf-8').replace('\r\n','\n');checks+=1
+   previous=E.fromstring(old.read('ProjectYakuza/'+path.relative_to(MOD).as_posix()))
+   assert [(m.findtext('boneName'),m.findtext('weight'),m.findtext('includeDescendants','true'))for m in node.findall('m_SubStateBoneWeights')]==[(m.findtext('boneName'),m.findtext('weight'),m.findtext('includeDescendants','true'))for m in previous.findall('m_SubStateBoneWeights')]
+   assert node.findtext('m_maxTorsoTwist')=='0';checks+=1
  for row in report['strikes']:
   for key in ['actor','victim']:
    path=ANIMS/row[key];assert path.read_bytes()==old.read('ProjectYakuza/'+path.relative_to(MOD).as_posix());checks+=1

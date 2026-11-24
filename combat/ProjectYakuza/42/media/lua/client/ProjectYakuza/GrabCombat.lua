@@ -37,6 +37,7 @@ function G.hit(a)
         if ok then PY.Heat.onHit(p,z,amount,{active=true});G.present(p,z)end
     end
     R.retainAfterHit(z)
+    if not z:isDead()then a:alignPair(true)end
 end
 function G.input(p,a,lightPressed,heatPressed)
     if a.phaseName~="hold"or not a.paired then return false end
@@ -56,7 +57,7 @@ function G.input(p,a,lightPressed,heatPressed)
     local moves=a.context.action.strikes;if not moves or #moves==0 then return false end
     if p:getStats():get(CharacterStat.ENDURANCE)<.08 then return true end
     local serial=(a.grabStrikeCount or 0)+1;local index=(serial-1)%#moves+1
-    a.grabStrikeCount=serial;a.strikeMove=moves[index];a.strikeImpacted=false;a.strikeSeen=false
+    a.grabStrikeCount=serial;a.strikeMove=moves[index];a.strikeImpacted=false;a.strikeSeen=false;a.strikeLastTime=nil
     p:getStats():remove(CharacterStat.ENDURANCE,.012);a:phase("strike"..index)
     PY.emit("attackCommitted",p,a.context.style,a.strikeMove,a.context,"light")
     if isClient()then PY.Network.capture(p,true);PY.Network.send(p,"grabStrike",{zombie=a.context.target:getOnlineID(),serial=serial,index=index,grabId=a.grabId})end

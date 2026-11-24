@@ -112,11 +112,9 @@ function A:setGrabMoving(moving,direction)
 end
 function A:alignPair(snap)
     local p,z=self.character,self.context.target
-    if self.strikeMove then self.strikeTime=ProjectYakuza.AttackEffects.findTrack(p,self.strikeMove.animation)end
-    D.followVector=D.followVector or Vector2.new()
-    local f=snap=="throw" and p:getForwardDirection() or p:getAnimForwardDirection(D.followVector)
-    local fx,fy=f:getX(),f:getY()
-    if self.phaseName~="hold"and self.phaseName~="enter"then fx,fy=self.context.fx,self.context.fy end
+    if self.strikeMove then self.strikeTime=math.max(self.strikeLastTime or 0,ProjectYakuza.AttackEffects.findTrack(p,self.strikeMove.animation,nil,true)or 0)end
+    local fx,fy=self.context.fx,self.context.fy
+    if self.phaseName=="hold"then local facing=p:getForwardDirection();fx,fy=facing:getX(),facing:getY()end
     local n=math.sqrt(fx*fx+fy*fy)
     if n<.001 then return false end
     fx,fy=fx/n,fy/n
@@ -128,7 +126,7 @@ function A:alignPair(snap)
 
     D.snapActor(z,x,y)
     self.context.fx,self.context.fy=fx,fy
-    if self.phaseName~="hold"and self.phaseName~="enter"then p:setTargetAndCurrentDirection(fx,fy)end
+    p:setTargetAndCurrentDirection(fx,fy)
     z:setTargetAndCurrentDirection(-fx,-fy)
     return true
 end
@@ -136,6 +134,10 @@ function A:holdControls()
     local p=self.character
     if self.ownsGrabControls then p:setForceAim(true);p:setAllowRun(false);p:setAllowSprint(false);p:setRunning(false);p:setSprinting(false)end
     if self.ownsAim then p:setIsAiming(true)end
+    if self.victimState then
+        if self.phaseName=="hold"then self:alignPair(true)
+        else p:setTargetAndCurrentDirection(self.context.fx,self.context.fy)end
+    end
 end
 function A:start()
     self.started=true;self.startedAt=now();self.lastAt=self.startedAt
@@ -360,13 +362,17 @@ function A:grab(dt)
         if self.escapeSeen and var(p,"ProjectYakuzaDefenseMarker")=="escape_done"and var(z,"ProjectYakuzaGrabMarker")=="escape_done"then self:forceComplete();return end
         if now()-self.phaseAt>(move.duration+1)*1000 then self:forceStop()end
     elseif self.strikeMove then
+        local phase,weight=ProjectYakuza.AttackEffects.findTrack(p,self.strikeMove.animation,nil,true)
+        if var(p,"ProjectYakuzaDefenseMarker")==self.phaseName.."_done"or self.strikeLastTime and self.strikeLastTime>=self.strikeMove.duration-.18 and phase and phase+.06<self.strikeLastTime then
+            self.strikeMove=nil;self.strikeLastTime=nil;self:phase("hold");self:alignPair(true);return
+        end
         if not self:alignPair(true)then self:forceStop();return end
-        local phase,weight=ProjectYakuza.AttackEffects.findTrack(p,self.strikeMove.animation)
         if phase and weight>=.35 then
             self.strikeSeen=true
+            self.strikeLastTime=math.max(self.strikeLastTime or 0,phase)
             if not self.strikeImpacted and phase*1000>=self.strikeMove.contactMs then self.strikeImpacted=true;if ProjectYakuza.GrabCombat then ProjectYakuza.GrabCombat.hit(self)end end
-            if phase>=self.strikeMove.duration-.03 then self.strikeMove=nil;self:phase("hold")end
-        elseif self.strikeSeen and var(p,"ProjectYakuzaDefenseMarker")=="strike_done"then self.strikeMove=nil;self:phase("hold")end
+            if phase>=self.strikeMove.duration-.001 then self.strikeMove=nil;self.strikeLastTime=nil;self:phase("hold")end
+        end
         if self.strikeMove and now()-self.phaseAt>(self.strikeMove.duration+1)*1000 then self:forceStop()end
     elseif self.phaseName=="throw" then
         if not self:alignPair(true)then self:forceStop();return end

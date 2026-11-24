@@ -351,7 +351,7 @@ function S.actionAllowed(style,kind,move)
     return true
 end
 end
-ProjectYakuza.VERSION = "1.0.12"
+ProjectYakuza.VERSION = "1.0.13"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}

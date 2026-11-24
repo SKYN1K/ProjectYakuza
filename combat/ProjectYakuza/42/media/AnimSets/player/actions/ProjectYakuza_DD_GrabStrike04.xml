@@ -37,11 +37,12 @@
   <m_Events>
     <m_EventName>SetVariable</m_EventName>
     <m_Time>Start</m_Time>
-    <m_ParameterValue>ProjectYakuzaDefenseMarker=strike_started</m_ParameterValue>
+    <m_ParameterValue>ProjectYakuzaDefenseMarker=strike4_started</m_ParameterValue>
   </m_Events>
   <m_Events>
     <m_EventName>SetVariable</m_EventName>
     <m_Time>End</m_Time>
-    <m_ParameterValue>ProjectYakuzaDefenseMarker=strike_done</m_ParameterValue>
+    <m_ParameterValue>ProjectYakuzaDefenseMarker=strike4_done</m_ParameterValue>
   </m_Events>
+  <m_maxTorsoTwist>0</m_maxTorsoTwist>
 </animNode>

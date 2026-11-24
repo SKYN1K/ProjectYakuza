@@ -430,7 +430,7 @@ function N.command(module,command,a)
         if not P.number(a.x,p:getX()-2,p:getX()+2) or not P.number(a.y,p:getY()-2,p:getY()+2) then return end
         if not p:isLocalPlayer() then
             local s=N.remote[a.player];if s then s.grab=z;s.grabRestore=a end
-            ProjectYakuza.Defense.snapActor(z,a.x,a.y);z:setTargetAndCurrentDirection(-a.fx,-a.fy)
+            ProjectYakuza.Defense.snapActor(z,a.x,a.y);p:setTargetAndCurrentDirection(a.fx,a.fy);z:setTargetAndCurrentDirection(-a.fx,-a.fy)
             ProjectYakuza.GrabRules.keep(z)
             z:setVariable("ProjectYakuzaGrabbed",true);z:setVariable("ProjectYakuzaGrabPhase",a.phase)
             z:setVariable("ProjectYakuzaGrabMoving",a.moving==true);z:setVariable("ProjectYakuzaGrabWalkDirection",a.direction or "forward")

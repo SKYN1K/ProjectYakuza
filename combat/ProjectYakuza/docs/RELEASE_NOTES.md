@@ -1,3 +1,11 @@
+# v1.0.13
+
+Grab strikes follow the dominant visible animation track, preventing a faint restarted or fading track from moving their clock backward. Ordinary attack effects retain their existing track policy. Grab strikes use separate strike1..strike4 completion markers. The controller handles a matching end marker before reading an animation track, so a restarted or fading non-looping track cannot keep the completed strike active. A near-end track rollback also returns to hold, while strike placement never rewinds. Delayed markers from a different strike are ignored. Damage remains limited to one original source contact per accepted strike; frames and animation speed are unchanged.
+
+Holding now uses the character's normal world aim direction instead of the animation-facing direction. Both characters share that axis, and each strike retains the axis captured at its start. Control polling and authoritative grab poses reassert the paired facing; native damage immediately restores victim placement. Paired actor/victim nodes disable additional native torso twisting, preserving the original full-body strike masks and source clips.
+
+Offline regressions cover repeated/fading tracks, stale completion markers, all four strikes, distinct aim/animation directions in eight headings, authoritative timing, native selector isolation, source placement and original media hashes. PZ was not launched; visible blending and cursor alignment require gameplay verification.
+
 # v1.0.12
 
 The four grab strikes restore their established full-body animation nodes for the owner and multiplayer observers. Source clip frames, speed and collision timing remain unchanged. Instead of changing the actor skeleton, the held zombie follows a per-frame hand/collar placement curve derived from each original paired clip. The 120 ms handoff blend remains. The incompatible grab-strike hand-trail parent overrides are removed with the masks they belonged to.

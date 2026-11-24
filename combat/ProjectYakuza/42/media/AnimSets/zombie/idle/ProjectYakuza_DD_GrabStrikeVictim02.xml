@@ -26,11 +26,12 @@
   <m_Events>
     <m_EventName>SetVariable</m_EventName>
     <m_Time>Start</m_Time>
-    <m_ParameterValue>ProjectYakuzaGrabMarker=strike_started</m_ParameterValue>
+    <m_ParameterValue>ProjectYakuzaGrabMarker=strike2_started</m_ParameterValue>
   </m_Events>
   <m_Events>
     <m_EventName>SetVariable</m_EventName>
     <m_Time>End</m_Time>
-    <m_ParameterValue>ProjectYakuzaGrabMarker=strike_done</m_ParameterValue>
+    <m_ParameterValue>ProjectYakuzaGrabMarker=strike2_done</m_ParameterValue>
   </m_Events>
+  <m_maxTorsoTwist>0</m_maxTorsoTwist>
 </animNode>

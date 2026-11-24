@@ -532,4 +532,39 @@ do
  check(not PY.validateStyle(style),'invalid backwards reach curves are rejected');motion.frames[2]=original
  check(PY.validateStyle(style),'restored paired source curves and source-length reach are valid')
 end
+do
+ G.clear();local held=startGrab();local previousMarker
+ for index=1,4 do
+  check(G.input(p,held,true,false),'completion regression starts each source strike')
+  local move=held.strikeMove;local phase=held.phaseName
+  if previousMarker then
+   p:setVariable('ProjectYakuzaDefenseMarker',previousMarker);track=.1;clock=clock+100;held:update()
+   check(held.phaseName==phase,'a fading previous strike cannot finish the current strike')
+  end
+  track=move.contactMs/1000+.01;clock=clock+600;held:update();local hits=z.hits
+  p:setVariable('ProjectYakuzaDefenseMarker',phase..'_done');track=0;clock=clock+500;held:update()
+  check(held.phaseName=='hold'and not held.strikeMove,'matching end marker wins over a restarted or fading animation track')
+  held:update();check(z.hits==hits,'completion cannot replay its source damage')
+  previousMarker=phase..'_done'
+ end
+ held:cancel();held=startGrab();G.input(p,held,true,false);local move=held.strikeMove
+ track=move.duration-.05;clock=clock+1000;held:update();local hits=z.hits
+ track=.01;clock=clock+40;held:update()
+ check(held.phaseName=='hold'and z.hits==hits,'near-end animation rollback returns to hold instead of playing the strike twice')
+ held:cancel()
+ local getAim,getAnimated,setActor,setVictim=p.getForwardDirection,p.getAnimForwardDirection,p.setTargetAndCurrentDirection,z.setTargetAndCurrentDirection
+ local ax,ay,zx,zy,aimX,aimY
+ p.getForwardDirection=function()return {getX=function()return aimX end,getY=function()return aimY end}end
+ p.getAnimForwardDirection=function()return {getX=function()return -aimY end,getY=function()return aimX end}end
+ p.setTargetAndCurrentDirection=function(_,x,y)ax,ay=x,y end;z.setTargetAndCurrentDirection=function(_,x,y)zx,zy=x,y end
+ aimX,aimY=0,1;held=startGrab()
+ for i=0,7 do
+  aimX,aimY=math.cos(i*math.pi/4),math.sin(i*math.pi/4);held:alignPair(true)
+  check(math.abs(ax-aimX)<.000001 and math.abs(ay-aimY)<.000001 and math.abs(zx+aimX)<.000001 and math.abs(zy+aimY)<.000001,'holding follows normal aim rather than a rotated animation facing')
+  check(math.abs(held.context.fx-aimX)<.000001 and math.abs(held.context.fy-aimY)<.000001,'the held pair captures the same aim axis')
+ end
+ G.input(p,held,true,false);local lockedX,lockedY=held.context.fx,held.context.fy;aimX,aimY=-lockedY,lockedX;held:alignPair(true);held:holdControls()
+ check(math.abs(ax-lockedX)<.000001 and math.abs(ay-lockedY)<.000001 and math.abs(zx+lockedX)<.000001 and math.abs(zy+lockedY)<.000001,'a strike keeps one captured axis for both characters')
+ held:cancel();p.getForwardDirection,p.getAnimForwardDirection,p.setTargetAndCurrentDirection,z.setTargetAndCurrentDirection=getAim,getAnimated,setActor,setVictim;track=0
+end
 return 'PASS '..checks..' reliable grab lifecycle, four source-timed strikes, following, cleanup, wall geometry, handoff and action protection checks'
