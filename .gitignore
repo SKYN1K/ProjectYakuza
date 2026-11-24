@@ -195,6 +195,7 @@
 !/tools/combat-tests/extract_grab_wall_assets.py
 
 !/tools/combat-tests/build_grab_tests.py
+!/tools/combat-tests/build_grab_motion_data.py
 
 !/tools/combat-tests/grab-test-fixture.lua
 

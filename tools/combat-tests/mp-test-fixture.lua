@@ -151,7 +151,7 @@ snapshot(remote);command('grabRequest',{zombie=z1.id},remote)
 check(server.players[2].grab==nil,'second player cannot grab leased zombie')
 for _,v in ipairs({z2,z3,z4})do v.health=1;v.hits=0;v.state='idle';v.reaction='';v.useless=false;v.knock=false;v.nativeFloor=false end
 snapshot(p,{phase='hold',clip='ProjectYakuza_DD_GrabHold',rightAim=false});server.tick();check(s.grab~=nil,'server keeps the held grab when RMB is released')
-check(math.abs(z1.x-ProjectYakuza.getStyle("dragon_of_dojima").actions.grab.holdOffset.forward)<.000001 and z1.nextX==z1.x and math.abs(z1.y+ProjectYakuza.getStyle("dragon_of_dojima").actions.grab.holdOffset.right)<.000001,'server aligns paired roots with native collar spacing')
+check(math.abs(z1.x-.48)<.000001 and z1.nextX==z1.x and math.abs(z1.y+.019354)<.000001,'server aligns paired roots with native collar spacing')
 snapshot(p,{phase='throw',clip='ProjectYakuza_DD_Throw'});local throwId=s.grab.id
 command('throw',{zombie=z1.id,grabId=throwId});check(s.grab and z1.hits==0,'server rejects throw damage before the original impact frame')
 clock=clock+2334;snapshot(p,{phase='throw',clip='ProjectYakuza_DD_Throw'})

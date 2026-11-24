@@ -85,6 +85,7 @@ function A:adjustMaxTime(v)return v end
 function A:isUsingTimeout()return false end
 function A:phase(name)
     self.phaseName=name;self.phaseAt=now()
+    self.strikeTime=nil
     self.character:setVariable("ProjectYakuzaDefensePhase",name)
     self.character:setVariable("ProjectYakuzaDefenseMarker","")
     if self.context.kind=="grab" then
@@ -111,6 +112,7 @@ function A:setGrabMoving(moving,direction)
 end
 function A:alignPair(snap)
     local p,z=self.character,self.context.target
+    if self.strikeMove then self.strikeTime=ProjectYakuza.AttackEffects.findTrack(p,self.strikeMove.animation)end
     D.followVector=D.followVector or Vector2.new()
     local f=snap=="throw" and p:getForwardDirection() or p:getAnimForwardDirection(D.followVector)
     local fx,fy=f:getX(),f:getY()
@@ -174,22 +176,27 @@ function A:miss(time)
     self.missEmitted=true;self.missFrom=time;ProjectYakuza.emit("grabMissed",self.character,self.candidate,self)
 end
 function A:advanceReach(time)
-    local slot=self.context.action;local distance=slot.attemptDistance
-    if not distance or distance<=0 or not time or time<0 or time*1000>slot.attemptContactMs or self.reachBlocked or self.victimState or self.awaitingGrab then return end
-    local progress=math.max(0,math.min(1,time*1000/(slot.attemptMoveMs or slot.attemptContactMs)))
-    local amount=math.min(.06,math.max(0,distance*progress*(2-progress)-(self.reachMoved or 0)))
+    local slot=self.context.action;local motion=slot.attemptMotion
+    if not motion or not time or time<0 or self.reachBlocked or self.victimState or self.awaitingGrab then return end
+    local desired=ProjectYakuza.GrabRules.sample(motion,time)
+    local previous=self.reachDesired or 0;local elapsed=time-(self.reachTime or 0)
+    self.reachDesired=desired;self.reachTime=time
+    if elapsed<0 or elapsed>.15 then return end
+    local amount=math.max(0,desired-previous)
     if amount<=0 then return end
     if not self.advanceCheckAt or now()>=self.advanceCheckAt then self.advanceCandidate=D.target(self.character);self.advanceCheckAt=now()+60 end
     local target=self.advanceCandidate
     if target and not target:isDead()then
         local x,y=target:getX()-self.character:getX(),target:getY()-self.character:getY()
         local forward=x*self.context.fx+y*self.context.fy;local side=x*self.context.fy-y*self.context.fx
-        if forward>=0 and math.abs(side)<.45 then amount=math.min(amount,math.max(0,forward-.35))end
+        if forward>=0 and math.abs(side)<.45 then amount=math.min(amount,math.max(0,forward-.45))end
     end
     if amount<=0 then return end
-    local dx,dy=self.context.fx*amount,self.context.fy*amount
-    if ProjectYakuza.Quicksteps.canMove(self.character,dx,dy)then self.character:moveUnmodded(dx,dy);self.reachMoved=(self.reachMoved or 0)+amount
-    else self.reachBlocked=true end
+    while amount>.000001 do
+        local step=math.min(.04,amount);local dx,dy=self.context.fx*step,self.context.fy*step
+        if not ProjectYakuza.Quicksteps.canMove(self.character,dx,dy)then self.reachBlocked=true;return end
+        self.character:moveUnmodded(dx,dy);self.reachMoved=(self.reachMoved or 0)+step;amount=amount-step
+    end
 end
 function A:acceptGrab(z)
     if self.cleaned or not self.started or not self.context.attempt or not self.awaitingGrab or self.candidate~=z or not self:isValid()or not D.reachable(self.character,z)then return false end

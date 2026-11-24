@@ -1,8 +1,8 @@
 # Validation coverage
 
-GitHub release **v1.0.11** packages version **1.0.11**. The player profile contains 1,200 runtime files and 88 Lua modules; the full development source contains additional custom-object work excluded from this profile.
+GitHub release **v1.0.12** packages version **1.0.12**. The player profile contains 1,201 runtime files and 89 Lua modules; the full development source contains additional custom-object work excluded from this profile.
 
-The [release-profile report](release-profile-1.0.11.json) records the retained profiles, transformed source files and 262 excluded custom files. Validation covers compilation of the filtered Lua modules, require/animation closure, retained bat/katana/knife profiles and actions, rejection of removed multiplayer moves/observer clips, and resolution of limb tracks. Native inventory checks confirm that a missing item record is skipped without consuming the next saved record.
+The [release-profile report](release-profile-1.0.12.json) records the retained profiles, transformed source files and 262 excluded custom files. Validation covers compilation of the filtered Lua modules, require/animation closure, retained bat/katana/knife profiles and actions, rejection of removed multiplayer moves/observer clips, and resolution of limb tracks. Native inventory checks confirm that a missing item record is skipped without consuming the next saved record.
 
 Package checks enforce the runtime allowlist, inspect private paths/credential formats and compare archive bytes. The native B42 Workshop validator checks content layout, file types and preview. Installation verifies both the normal mod copy and the loadable Workshop payload against the player ZIP. Development source and retained media are recorded separately; retained animation, model, texture and audio bytes are unchanged by release filtering.
 
@@ -21,3 +21,5 @@ The [1.0.9 validation report](update-validation-1.0.9.json) records running buff
 The [1.0.10 grab staging report](grab-staging-1.0.10.json) measures masked-pose grip placement and verifies 804 native root/pelvis/lower-spine transforms across holding, walking and all four strikes. [Update validation](update-validation-1.0.10.json) covers early collision-checked reach motion and open-space placement in all headings. Source clips remain byte-identical; only source/observer masks and controller staging change.
 
 The [1.0.11 trail validation](update-validation-1.0.11.json) adds all four grab strikes to native masked-hand checks. Numeric curve samples are unchanged; their parent boundary now follows the updated owner/observer mask. The maximum corrected native model-space discrepancy is below 0.00001 across 280 layered cases.
+
+The [1.0.12 validation report](update-validation-1.0.12.json) covers restored full-body strike masks, 151 original hand/collar placement frames, centered holding, the complete original reach footsteps and stronger screen tint/shake with both camera position samples. The current full-body strikes do not use masked-parent correction. Original source media is unchanged; live animation blending and visible shake remain unverified offline.

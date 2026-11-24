@@ -1,3 +1,15 @@
+# v1.0.12
+
+The four grab strikes restore their established full-body animation nodes for the owner and multiplayer observers. Source clip frames, speed and collision timing remain unchanged. Instead of changing the actor skeleton, the held zombie follows a per-frame hand/collar placement curve derived from each original paired clip. The 120 ms handoff blend remains. The incompatible grab-strike hand-trail parent overrides are removed with the masks they belonged to.
+
+Stationary and walking holds restore the centered 0.48-tile forward / 0.019354-tile lateral placement. The large side offsets from 1.0.10 are removed. The open-space Heat Action placement fix and native forced-aim ownership remain.
+
+Grab reach uses the original in-place clip's planted-foot timing rather than a fixed 0.28-tile ease-out. A clear miss travels about 1.1424 tiles across the original 1.6-second attempt/recovery. Movement uses collision-checked steps of at most 0.04 tiles, preserves nearby-target clearance, stops at attachment or obstruction and skips late samples instead of catching up. Contact still resolves only in original source frames 10-12.
+
+Heat Action tint increases from 20 to 36 percent maximum opacity and shake from 7 to 12 zoom-scaled pixels. Shake now updates both current and previous camera position samples and remains applied through the tint draw until render completion, with guarded restoration and existing map/pause/ownership cleanup. These changes address weak or smoothed-out camera motion; live appearance still needs gameplay verification.
+
+Offline validation covers all source placement frames in eight headings, authoritative/client timing, source footsteps and collision/pause handling, restored native owner/observer selectors, original animation hashes, native camera APIs, screen-effect cleanup and hand-trail parent selection. No model, motion, image or audio assets changed. PZ was not launched.
+
 # v1.0.11
 
 Grab-strike hand trails now use the same native parent frame as their corrected animation masks. Existing numeric source curves remain unchanged. Native layered-pose checks now include all four grab strikes alongside standing/walking and mixed-pose light attacks. This release includes the early reach, stable grip/strike staging and open-space placement fixes described below.

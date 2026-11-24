@@ -1,0 +1,30 @@
+{
+  "version": "1.0.12",
+  "offlineOnly": true,
+  "grabLifecycleAndPlacementAssertions": 2981,
+  "multiplayerAssertions": 2049,
+  "heatScreenAssertions": 22986,
+  "heatPresentationAssertions": 7173,
+  "nativeParentAssertions": 107739,
+  "nativeParentReferences": 2213,
+  "nativeLayeredPoses": 168,
+  "nativeGrabSelectorChecks": 74,
+  "nativeObserverSelectorChecks": 454,
+  "restoredStrikeNodes": 12,
+  "originalStrikeMediaBytesUnchanged": true,
+  "sourcePlacementFrames": 151,
+  "restorationAndSourcePlacementChecks": 171,
+  "reachTiles": 1.1424235850572586,
+  "sourceReachFrames": 49,
+  "reachContactFrames": [
+    10,
+    12
+  ],
+  "maxCollisionStepTiles": 0.04,
+  "tintMaximum": 0.36,
+  "shakePixels": 12,
+  "nativeScreenProbePassed": true,
+  "cameraCurrentAndPreviousSamples": true,
+  "sourceMediaGenerated": false,
+  "newPackets": false
+}

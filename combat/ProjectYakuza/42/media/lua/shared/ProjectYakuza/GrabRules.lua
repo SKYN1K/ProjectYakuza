@@ -100,15 +100,23 @@ function G.entryPosition(p,z,slot,state,t,fx,fy)
     return state.entryX+(x-state.entryX)*blend,state.entryY+(y-state.entryY)*blend,fraction
 end
 
-function G.offset(slot,phase,moving)
+function G.sample(motion,time)
+    local frame=math.max(0,math.min(#motion.frames-1,(time or 0)*motion.fps));local index=math.floor(frame)+1
+    local a,b=motion.frames[index],motion.frames[math.min(index+1,#motion.frames)];local blend=frame-math.floor(frame)
+    if type(a)=="number"then return a+(b-a)*blend end
+    return {forward=a[1]+(b[1]-a[1])*blend,right=a[2]+(b[2]-a[2])*blend}
+end
+function G.offset(slot,phase,moving,time)
     local strike=slot and slot.strikes and slot.strikes[tonumber(string.match(phase or "","^strike(%d)$"))]
+    if strike and strike.pairMotion then return G.sample(strike.pairMotion,time)end
     local offset=phase=="throw"and slot and slot.throwOffset or strike and strike.pairOffset or slot and(moving and slot.walkOffset or slot.holdOffset)
     return {forward=offset and offset.forward or G.spacing(slot),right=offset and offset.right or slot and slot.lateral or 0}
 end
 function G.alignment(slot,phase,state,t)
     local moving=phase=="hold"and state.grabMoving==true
-    local target=G.offset(slot,phase,moving)
     if state.pairPhase~=phase or state.pairMoving~=moving then state.pairFrom=state.pairOffset or G.offset(slot,"hold");state.pairAt=t;state.pairPhase=phase;state.pairMoving=moving end
+    local time=state.strikeTime or state.strike and(t-state.strike.at)/1000 or(t-(state.phaseAt or state.pairAt))/1000
+    local target=G.offset(slot,phase,moving,time)
     local f=math.max(0,math.min(1,(t-state.pairAt)/120));f=f*f*(3-2*f)
     local source=state.pairFrom
     state.pairOffset={forward=source.forward+(target.forward-source.forward)*f,right=source.right+(target.right-source.right)*f}

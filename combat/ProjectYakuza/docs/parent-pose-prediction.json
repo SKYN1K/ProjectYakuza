@@ -1,5 +1,5 @@
 {
-  "version": "1.0.11",
+  "version": "1.0.12",
   "operation": "Numeric parent-bone PRS samples from original installed Human animations; no model, motion, texture, audio or preview generated. Parent masks follow actual mod XML. Runtime replaces the raw attack pelvis/spine parent with the current layer-zero standing/walking pose.",
   "fps": 30,
   "native": {
@@ -3124,33 +3124,9 @@
       "sha256": "e3e4fffba5df059ed763a5bd4979281521ba28815f9738a185f7cd8d73da62d5",
       "animation": "ProjectYakuza_DD_KnifeGround",
       "parent": 3
-    },
-    {
-      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\actions\\ProjectYakuza_DD_GrabStrike01.xml",
-      "sha256": "13a667f266ac3f008820a86724a0d1d8ad4e148aa0563fd00abbb6e61bc95759",
-      "animation": "ProjectYakuza_DD_GrabStrike01",
-      "parent": 4
-    },
-    {
-      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\actions\\ProjectYakuza_DD_GrabStrike02.xml",
-      "sha256": "e0df7bc87dd9c78913cf1ae458dde1cfde83c0df38fbeacbc5354b1261f890e9",
-      "animation": "ProjectYakuza_DD_GrabStrike02",
-      "parent": 4
-    },
-    {
-      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\actions\\ProjectYakuza_DD_GrabStrike03.xml",
-      "sha256": "97cfbc235b033ce4cb569de05f377bf4bc88e61d01698379b92fcfa7ea8a2812",
-      "animation": "ProjectYakuza_DD_GrabStrike03",
-      "parent": 4
-    },
-    {
-      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\actions\\ProjectYakuza_DD_GrabStrike04.xml",
-      "sha256": "bf905d319515a05a746034c8a00ffe2e8560e1da6b1b57777f70da6bbb0d8503",
-      "animation": "ProjectYakuza_DD_GrabStrike04",
-      "parent": 4
     }
   ],
   "output": "42\\media\\lua\\client\\ProjectYakuza\\ParentPoseTracks.lua",
-  "sha256": "8c68871d90f162dcc62df504c8e766a63b7a8028b04136f83223556db40bbbc2",
+  "sha256": "0c02a2e76b1f4ec459b73ad201edd1957ccd8a1108a4edd68ada3b072d45b7f1",
   "incrementalMaskUpdate": "Four grab-strike parent boundaries now match their source/observer XML. Existing native source-parent curves are byte-for-byte unchanged; no animation, model, texture or audio generated."
 }

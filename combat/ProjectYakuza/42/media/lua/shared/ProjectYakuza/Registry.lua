@@ -351,7 +351,7 @@ function S.actionAllowed(style,kind,move)
     return true
 end
 end
-ProjectYakuza.VERSION = "1.0.11"
+ProjectYakuza.VERSION = "1.0.12"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -645,8 +645,21 @@ function ProjectYakuza.validateStyle(style)
                 if slot.entryBlendMs~=nil and(not number(slot.entryBlendMs)or slot.entryBlendMs<80 or slot.entryBlendMs>400)then problem("grab.entryBlendMs must be between 80 and 400")end
                 if slot.attemptContactMs~=nil and(not text(slot.attemptAnimation)or not number(slot.attemptContactMs)or slot.attemptContactMs<0 or not number(slot.attemptDurationMs)or slot.attemptDurationMs<=slot.attemptContactMs or slot.attemptDurationMs>2000 or slot.requiresTarget~=false)then problem("invalid grab attempt timing")end
                 if slot.attemptContactEndMs~=nil and(not number(slot.attemptContactEndMs)or not number(slot.attemptContactMs)or not number(slot.attemptDurationMs)or slot.attemptContactEndMs<slot.attemptContactMs or slot.attemptContactEndMs>=slot.attemptDurationMs)then problem("invalid grab contact window")end
-                if slot.attemptDistance~=nil and(not number(slot.attemptDistance)or slot.attemptDistance<0 or slot.attemptDistance>.75 or not number(slot.attemptContactMs))then problem("invalid grab attempt distance")end
-                if slot.attemptMoveMs~=nil and(not number(slot.attemptMoveMs)or slot.attemptMoveMs<=0 or not number(slot.attemptContactMs)or slot.attemptMoveMs>slot.attemptContactMs)then problem("invalid grab attempt movement timing")end
+                local function motion(value,duration,paired)
+                    if type(value)~="table"or not number(value.fps)or value.fps<1 or value.fps>120 or type(value.frames)~="table"or #value.frames<2 or #value.frames>1201 or not number(duration)or math.abs((#value.frames-1)/value.fps-duration)>.001 then return false end
+                    local previous=0
+                    for _,sample in ipairs(value.frames)do
+                        if paired then
+                            if type(sample)~="table"or not number(sample[1])or sample[1]<=0 or sample[1]>1.5 or not number(sample[2])or math.abs(sample[2])>.75 then return false end
+                        else
+                            if not number(sample)or sample<previous or sample>2 then return false end
+                            previous=sample
+                        end
+                    end
+                    return paired or value.frames[1]==0
+                end
+                if slot.attemptMotion~=nil and not motion(slot.attemptMotion,(slot.attemptDurationMs or 0)/1000,false)then problem("invalid grab attempt motion")end
+                for _,strike in ipairs(type(slot.strikes)=="table"and slot.strikes or {})do if type(strike)=="table"and strike.pairMotion~=nil and not motion(strike.pairMotion,strike.duration,true)then problem("invalid grab strike motion")end end
                 if slot.throwContactMs~=nil and(not number(slot.throwContactMs)or slot.throwContactMs<0 or not number(slot.throwDuration)or slot.throwDuration<=0 or slot.throwDuration>10 or slot.throwContactMs>=slot.throwDuration*1000)then problem("invalid grab throw contact timing")end
                 if slot.throwCrowd~=nil and slot.throwCrowd~=false then
                     local cfg=slot.throwCrowd

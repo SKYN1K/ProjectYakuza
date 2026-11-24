@@ -15,6 +15,7 @@ function p:isLocalPlayer()return self.localPlayer end;function p:getPlayerNum()r
 PY.HeatActionPresentation={states={[p]={}}}
 local x,y,rightX,rightY=125,-270,13.5,-7.25
 IsoCamera={getOffX=function()return x+rightX end,getOffY=function()return y+rightY end,getRightClickOffX=function()return rightX end,getRightClickOffY=function()return rightY end,setOffX=function(v)x=v end,setOffY=function(v)y=v end}
+local lastX,lastY=125,-270;IsoCamera.getLastOffX=function()return lastX+rightX end;IsoCamera.getLastOffY=function()return lastY+rightY end;IsoCamera.setLastOffX=function(v)lastX=v end;IsoCamera.setLastOffY=function(v)lastY=v end
 local draws={};local additive=true;local failed=false
 SpriteRenderer={instance={getDoAdditive=function()return additive end,setDoAdditive=function(_,v)additive=v end,renderRect=function(_,sx,sy,w,h,r,g,b,a)if failed then error('injected renderer failure')end;draws[#draws+1]={x=sx,y=sy,w=w,h=h,r=r,g=g,b=b,a=a,additive=additive}end}}
 local width,height=1920,1080
@@ -33,11 +34,13 @@ for _,size in ipairs({{1024,768},{1280,720},{1920,1080},{3440,1440}})do
    for age=0,650,10 do
     local baseX,baseY=x,y;local count=#draws;clock=F.state and F.state.at+age or clock+10
     F.update()
-    check(math.abs(x-baseX)<=peak*7*zoom+.51 and math.abs(y-baseY)<=peak*4.9*zoom+.51,'shake is bounded by zoom and contact strength')
+    check(math.abs(x-baseX)<=peak*12*zoom+.51 and math.abs(y-baseY)<=peak*8.4*zoom+.51,'shake is bounded by zoom and contact strength')
     F.draw()
+    if F.camera then check(near(lastX-F.camera.baseLastX,x-baseX)and near(lastY-F.camera.baseLastY,y-baseY),'interpolated and current camera offsets shake together until the render completes')end
+    F.restoreCamera()
     check(near(x,baseX)and near(y,baseY),'pre-UI drawing restores the original camera including aiming offset')
     check(additive,'renderer blend mode is restored after tint')
-    if #draws>count then local draw=draws[#draws];check(#draws==count+1 and draw.w==width and draw.h==height and draw.x==0 and draw.y==0 and not draw.additive,'one non-additive rectangle covers the current viewport');check(draw.a>0 and draw.a<=.20 and draw.b>draw.r,'tint is cool, translucent and bounded')end
+    if #draws>count then local draw=draws[#draws];check(#draws==count+1 and draw.w==width and draw.h==height and draw.x==0 and draw.y==0 and not draw.additive,'one non-additive rectangle covers the current viewport');check(draw.a>0 and draw.a<=.36 and draw.b>draw.r,'tint is cool, translucent and bounded')end
    end
    check(not F.state and not F.hooked and not Events.OnTick.hooks[F.update],'completed contact removes its per-frame hooks')
   end

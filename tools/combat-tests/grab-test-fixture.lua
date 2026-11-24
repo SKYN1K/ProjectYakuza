@@ -121,7 +121,7 @@ local a=startGrab()
 check(z.locked and z.useless and z.ignore and not z.deferred,'native reaction is latched while held')
 check(not p.blocked and not p.ignore and p.deferred,'walking remains available with native movement during hold')
 clock=clock+12000;a:update();check(not a.cleaned and a.phaseName=='hold','hold survives the obsolete 3.5-second timeout')
-p.x=.6;p.y=.3;clock=clock+50;a:update();check(math.abs(z.x-(.6+style.actions.grab.holdOffset.right))<.001 and math.abs(z.y-(.3+style.actions.grab.holdOffset.forward))<.001,'held victim follows actor translation')
+p.x=.6;p.y=.3;clock=clock+50;a:update();check(math.abs(z.x-(.6+R.offset(style.actions.grab,'hold').right))<.001 and math.abs(z.y-(.3+R.offset(style.actions.grab,'hold').forward))<.001,'held victim follows actor translation')
 p.x=.5;p.y=.2;z.y=.9
 for i=1,4 do
  check(G.input(p,a,true,false),'LMB starts grab strike '..i)
@@ -256,7 +256,7 @@ do
  local state={};local hold=R.alignment(slot,'hold',state,0)
  local first=R.alignment(slot,'strike1',state,100);check(first.forward==hold.forward and first.right==hold.right,'strike handoff preserves previous root position')
  local final=R.alignment(slot,'strike1',state,220);local target=R.offset(slot,'strike1')
- check(math.abs(final.forward-target.forward)<.000001 and math.abs(final.right-target.right)<.000001,'strike reaches calibrated contact offset after its short blend')
+ check(math.abs(final.forward-R.offset(slot,'strike1',false,.12).forward)<.000001 and math.abs(final.right-R.offset(slot,'strike1',false,.12).right)<.000001,'strike reaches calibrated contact offset after its short blend')
  local returning=R.alignment(slot,'hold',state,230);check(returning.forward==final.forward and returning.right==final.right,'return to hold begins at previous paired offset')
  local restore=R.alignment(slot,'hold',state,350);check(math.abs(restore.forward-R.offset(slot,'hold').forward)<.000001,'returning hold restores walking grab spacing')
  local original=slot.throwOffset;slot.throwOffset={forward=0/0,right=0};check(not PY.validateStyle(style),'invalid paired offsets cannot enter registered styles');slot.throwOffset=original
@@ -472,12 +472,12 @@ do
  end
  for _,direction in ipairs({{1,0},{0,1},{-1,0},{0,-1}})do
   local a=reach();a.context.fx,a.context.fy=direction[1],direction[2];local x,y=p:getX(),p:getY()
-  for frame=1,15 do track=frame/60;clock=clock+17;a:update();if frame==1 then check((a.reachMoved or 0)>0 and a.reachMoved<=.06 and not a.missEmitted,'first visible reach frame starts bounded movement before a miss is resolved')end end
-  check(math.abs(p:getX()-x-.28*direction[1])<.00001 and math.abs(p:getY()-y-.28*direction[2])<.00001,'failed reach moves exactly its bounded distance along the original facing')
-  track=.9;clock=clock+100;a:update();check(math.abs((a.reachMoved or 0)-.28)<.00001,'completed miss movement cannot accumulate extra distance');a:cancel()
+  for frame=1,95 do track=frame/60;clock=clock+17;a:update();if frame==4 then check((a.reachMoved or 0)>0 and a.reachMoved<=.06 and not a.missEmitted,'first source footstep starts bounded movement before contact resolves')end end
+  check(math.abs(p:getX()-x-PY.GrabMotion.reach.frames[48]*direction[1])<.003 and math.abs(p:getY()-y-PY.GrabMotion.reach.frames[48]*direction[2])<.003,'failed reach follows the complete step curve along its initial facing')
+  track=1.6;clock=clock+17;a:update();check(math.abs((a.reachMoved or 0)-PY.GrabMotion.reach.frames[49])<.00001,'full recovery follows all source footsteps without extra movement');a:cancel()
  end
- local blocked=reach();local x,y=p:getX(),p:getY();PY.Quicksteps.canMove=function()return false end;track=.016;clock=clock+16;blocked:update()
- PY.Quicksteps.canMove=function()return true end;track=.08;clock=clock+64;blocked:update();check(p:getX()==x and p:getY()==y and blocked.reachBlocked,'obstruction cancels further miss motion without a delayed catch-up');blocked:cancel()
+ local blocked=reach();local x,y=p:getX(),p:getY();PY.Quicksteps.canMove=function()return false end;track=.08;clock=clock+80;blocked:update()
+ PY.Quicksteps.canMove=function()return true end;track=.12;clock=clock+40;blocked:update();check(p:getX()==x and p:getY()==y and blocked.reachBlocked,'obstruction cancels further miss motion without a delayed catch-up');blocked:cancel()
  local late=reach();track=1.2;clock=clock+1200;late:update();check(not late.reachMoved,'late ownership rejection cannot teleport the player after the movement window');late:cancel()
  local pause=reach();track=.016;clock=clock+16;pause:update();x,y=p:getX(),p:getY();paused=true;track=.1;clock=clock+84;pause:update();paused=false;check(p:getX()==x and p:getY()==y,'paused reach does not advance movement');pause:cancel()
  PY.MultiHit.targets=targets;PY.Quicksteps.canMove=canMove;p.x,p.y=oldX,oldY;track=0
@@ -499,9 +499,9 @@ do
  end
  p.x,p.y,z.x,z.y=x,y,zx,zy;rules.clearance,rules.space,PY.NetworkProtocol.path=clear,space,path
  local state={};local first=R.alignment(style.actions.grab,'hold',state,100);local next=R.alignment(style.actions.grab,'strike3',state,120)
- check(first.forward==next.forward and first.right==next.right,'grab strikes do not reposition the victim root away from its held grip')
+ check(first.forward==next.forward and first.right==next.right,'restored strike placement begins at the held position before its blend')
  state.grabMoving=true;R.alignment(style.actions.grab,'hold',state,300);local walk=R.alignment(style.actions.grab,'hold',state,420)
- check(math.abs(walk.forward-style.actions.grab.walkOffset.forward)<.000001,'server/client shared alignment blends to the calibrated walking grip')
+ check(math.abs(walk.forward-.48)<.000001 and math.abs(walk.right-.019354)<.000001,'holding and walking keep the victim in front instead of far to the side')
 end
 do
  local hit=z.Hit;local oldGet,oldSet=z.isIgnoreStaggerBack,z.setIgnoreStaggerBack;local ignore=false
@@ -509,5 +509,27 @@ do
  z.Hit=function()check(ignore,'native paired hit suppresses the default stagger during damage');error('injected paired hit failure')end
  local ok=PY.HitResponses.nativeHit(p,z,token,.2,{noKnockback=true});check(not ok and not ignore,'failed native damage restores original stagger policy')
  z.Hit,z.isIgnoreStaggerBack,z.setIgnoreStaggerBack=hit,oldGet,oldSet
+end
+do
+ for index,move in ipairs(style.actions.grab.strikes)do
+  for frame,sample in ipairs(move.pairMotion.frames)do
+   local time=(frame-1)/30;local offset=R.offset(style.actions.grab,'strike'..index,false,time)
+   check(math.abs(offset.forward-sample[1])<.000001 and math.abs(offset.right-sample[2])<.000001,'strike placement samples the complete authored hand/collar curve')
+   for heading=0,7 do
+    local angle=heading*math.pi/4;local fx,fy=math.cos(angle),math.sin(angle)
+    local x,y=fx*offset.forward+fy*offset.right,fy*offset.forward-fx*offset.right
+    check(math.abs(x*fx+y*fy-sample[1])<.000001 and math.abs(x*fy-y*fx-sample[2])<.000001,'dynamic victim placement keeps the source contact in every heading')
+   end
+   if time>=.12 then
+    local client={pairPhase='strike'..index,pairMoving=false,pairAt=0,pairFrom=R.offset(style.actions.grab,'hold'),strikeTime=time}
+    local server={pairPhase='strike'..index,pairMoving=false,pairAt=0,pairFrom=client.pairFrom,strike={at=0}}
+    local a=R.alignment(style.actions.grab,'strike'..index,client,time*1000);local b=R.alignment(style.actions.grab,'strike'..index,server,time*1000)
+    check(math.abs(a.forward-b.forward)<.000001 and math.abs(a.right-b.right)<.000001,'client animation time and authoritative strike time select the same position')
+   end
+  end
+ end
+ local motion=style.actions.grab.attemptMotion;local original=motion.frames[2];motion.frames[2]=-1
+ check(not PY.validateStyle(style),'invalid backwards reach curves are rejected');motion.frames[2]=original
+ check(PY.validateStyle(style),'restored paired source curves and source-length reach are valid')
 end
 return 'PASS '..checks..' reliable grab lifecycle, four source-timed strikes, following, cleanup, wall geometry, handoff and action protection checks'

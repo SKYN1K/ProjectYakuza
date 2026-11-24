@@ -1,11 +1,13 @@
 require "ProjectYakuza/Registry"
 local PY=ProjectYakuza
-local F={leadMs=120,tintAlpha=.20,shakePixels=7,tailMs=420,tailStrengthMs=200}
+local F={leadMs=120,tintAlpha=.36,shakePixels=12,tailMs=420,tailStrengthMs=200}
 PY.HeatScreenEffects=F
 function F.restoreCamera()
     local camera=F.camera;if not camera then return end
     if math.abs(IsoCamera.getOffX()-camera.x)<.01 then IsoCamera.setOffX(camera.baseX-camera.rightX)end
     if math.abs(IsoCamera.getOffY()-camera.y)<.01 then IsoCamera.setOffY(camera.baseY-camera.rightY)end
+    if math.abs(IsoCamera.getLastOffX()-camera.lastX)<.01 then IsoCamera.setLastOffX(camera.baseLastX)end
+    if math.abs(IsoCamera.getLastOffY()-camera.lastY)<.01 then IsoCamera.setLastOffY(camera.baseLastY)end
     F.camera=nil
 end
 function F.stop()
@@ -72,11 +74,12 @@ function F.update()
     if x==0 and y==0 then return end
     local baseX,baseY=IsoCamera.getOffX(),IsoCamera.getOffY()
     local rightX,rightY=IsoCamera.getRightClickOffX(),IsoCamera.getRightClickOffY()
+    local lastX,lastY=IsoCamera.getLastOffX(),IsoCamera.getLastOffY()
     IsoCamera.setOffX(baseX-rightX+x);IsoCamera.setOffY(baseY-rightY+y)
-    F.camera={baseX=baseX,baseY=baseY,rightX=rightX,rightY=rightY,x=IsoCamera.getOffX(),y=IsoCamera.getOffY()}
+    IsoCamera.setLastOffX(lastX-rightX+x);IsoCamera.setLastOffY(lastY-rightY+y)
+    F.camera={baseX=baseX,baseY=baseY,rightX=rightX,rightY=rightY,x=IsoCamera.getOffX(),y=IsoCamera.getOffY(),baseLastX=lastX-rightX,baseLastY=lastY-rightY,lastX=IsoCamera.getLastOffX(),lastY=IsoCamera.getLastOffY()}
 end
 function F.draw()
-    F.restoreCamera()
     local state,envelope=F.sample();if not state then F.stop();return end
     local renderer=SpriteRenderer.instance;local previous=renderer:getDoAdditive();renderer:setDoAdditive(false)
     local ok,message=pcall(function()
