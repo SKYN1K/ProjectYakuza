@@ -290,6 +290,58 @@ check(requested and requested.kind=='runningAttack' and requested.variant=='left
 keyState[33]=false;mouse[0]=false;runup();keyState[35]=true;clock=clock+100;runner.x=runner.x+.1;R.update(runner)
 check(requested and requested.variant=='dropkick','remapped Heavy dispatches the running dropkick')
 R.pause(runner);check(R.players[runner].heavy and not R.players[runner].light,'pause snapshots the shared physical inputs')
+local attempts=0
+local function freshRun()
+ keyState[33]=false;keyState[35]=false;mouse[0]=false;mouse[1]=false;R.players[runner]=nil;requested=nil;runner.x=0;R.update(runner)
+end
+local function stepRun(ms,distance,light,heavy)
+ clock=clock+ms;runner.x=runner.x+distance;keyState[33]=light==true;keyState[35]=heavy==true;R.update(runner)
+end
+freshRun();stepRun(80,.08,true);check(not requested,'early running press waits for actual runup');stepRun(80,.08,false)
+check(requested and requested.variant=='left','early released Light press survives until runup completes')
+requested=nil;for i=1,5 do stepRun(50,.05,false)end;stepRun(20,.02,true)
+check(requested~=nil,'a new fresh press can arm another running strike');requested=nil
+for i=1,8 do stepRun(50,.05,true)end;check(not requested,'holding Light cannot repeat running strikes')
+freshRun();stepRun(80,.08,false,true);stepRun(80,.08,false,false)
+check(requested and requested.variant=='dropkick','buffered Heavy uses shared heavy binding even after release')
+freshRun();stepRun(80,.08,true,true);stepRun(80,.08,false,false)
+check(requested and requested.variant=='dropkick','simultaneous Light and Heavy resolve to one dropkick')
+local runup=style.actions.runningAttack.runupMs;style.actions.runningAttack.runupMs=400
+freshRun();stepRun(80,.08,true);for i=1,4 do stepRun(100,.1,false)end
+check(not requested,'expired early input cannot launch a delayed attack');stepRun(20,.02,true)
+check(requested,'fresh input still works after the expired buffer');style.actions.runningAttack.runupMs=runup
+freshRun();stepRun(80,.08);stepRun(80,.08);stepRun(20,0,true)
+check(requested,'duplicate zero-displacement update retains recent running direction')
+freshRun();stepRun(80,.08);stepRun(80,.08);local earned=R.players[runner].runMs;stepRun(20,0)
+check(R.players[runner].runMs==earned,'stationary duplicate samples do not manufacture runup');stepRun(100,0,true)
+check(not requested and R.players[runner].runMs==0,'standing still clears momentum after its short sampling grace')
+freshRun();stepRun(80,.08,true);mouse[1]=true;stepRun(80,.08,false);mouse[1]=false;stepRun(100,.1,false)
+check(not requested and not R.players[runner].pending,'aiming cancels an early running input')
+freshRun();stepRun(80,.08,true);stepRun(80,2,false)
+check(not requested and not R.players[runner].pending,'teleport movement cannot satisfy a running buffer')
+freshRun();stepRun(80,.08,true);runner.getZ=function()return 1 end;stepRun(80,.08,false);runner.getZ=function()return 0 end
+check(not requested and not R.players[runner].pending,'floor changes discard buffered attacks')
+local failures=0;PY.requestAction=function(_,kind,variant)failures=failures+1;if failures==1 then return false,'native_attack_busy'end;requested={kind=kind,variant=variant};return true end
+freshRun();stepRun(80,.08,true);stepRun(80,.08,false);check(failures==1 and R.players[runner].pending and not R.active[runner],'transient native readiness retains input without locking movement');stepRun(20,0,false)
+check(failures==2 and requested,'buffer retries transient native readiness only inside its deadline')
+PY.requestAction=oldRequest;runner.vars={};runner.data={ProjectYakuzaStyle=style.id};runner.attacking=false;runner.submissions=0;setmetatable(runner,{__index=p})
+function runner:setRunning(value)self.running=value end;function runner:setSprinting(value)self.sprinting=value end;function runner:setMoving(value)self.moving=value end
+function runner:setIgnoreMovement(value)self.ignore=value end;function runner:getIgnoreMovement()return self.ignore==true end
+function runner:setForwardDirection(x,y)self.facing={getX=function()return x end,getY=function()return y end}end
+function runner:getForwardDirection()return self.facing end;function runner:DirectionFromVector()end
+function runner:getCurrentActionContextStateName()return 'movement'end
+function runner:reportEvent(name)self.lastReport=name end
+freshRun();stepRun(80,.08,true);stepRun(80,.08,false)
+check(runner.submissions==1 and PY.stateFor(runner).finisherMove==style.actions.runningAttack.variants.left and R.active[runner],'accepted running attack submits its native swing in the same update')
+local move=PY.stateFor(runner).finisherMove;runner.vars.ProjectYakuzaRunRecover=move.nodeValue;runner.vars.ProjectYakuzaHitMarker=move.nodeValue;mouse[1]=true;R.advance(runner);mouse[1]=false
+check(not R.active[runner]and not runner.ignore and runner.lastReport=='ActiveAnimFinishing','aim input exits light running recovery only at source recovery and hit markers')
+runner.attacking=false;fire('OnPlayerAttackFinished',runner,token);PY.resetPlayer(runner,'running_test')
+local drop=style.actions.runningAttack.variants.dropkick;R.active[runner]={move=drop,moved=0,dx=1,dy=0,oldIgnore=false,oldBlock=false};runner.ignore=true
+runner.vars.ProjectYakuzaRunRecover=drop.nodeValue;runner.vars.ProjectYakuzaHitMarker=drop.nodeValue;mouse[1]=true;R.advance(runner);mouse[1]=false
+check(R.active[runner]and runner.ignore,'dropkick keeps its committed landing recovery instead of gaining an aim cancel');R.finish(runner)
+local invalid={id='tests.bad_running',name='Invalid',lightAttacks=style.lightAttacks,actions={runningAttack={enabled=true,runupMs=-1,variants={}}}}
+check(not PY.validateStyle(invalid),'negative running runup is rejected');invalid.actions.runningAttack.runupMs=160;invalid.actions.runningAttack.inputBufferMs=501
+check(not PY.validateStyle(invalid),'unbounded running input buffer is rejected')
 PY.isBusy,PY.isEquipped,PY.getPlayerStyle,PY.requestAction=oldBusy,oldEquipped,oldStyle,oldRequest
 B.options=nil;keyState[35]=false
 function p:isAuthorizeShoveStomp()return self.nativeShove~=false end

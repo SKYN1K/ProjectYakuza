@@ -3,6 +3,7 @@ require "ProjectYakuza/MultiHit"
 require "ProjectYakuza/TigerDrop"
 require "ProjectYakuza/GrabRules"
 require "ProjectYakuza/AttackEffects"
+require "ProjectYakuza/Quicksteps"
 require "TimedActions/ISBaseTimedAction"
 require "TimedActions/ISTimedActionQueue"
 local ProjectYakuza=ProjectYakuza
@@ -33,7 +34,7 @@ function D.holdStance()
     for _,action in pairs(D.held)do
         if not action.cleaned then
             if not action:isValid()then action:cancel()
-            else action.character:setIsAiming(true)end
+            else action:holdControls()end
         end
     end
 end
@@ -129,10 +130,18 @@ function A:alignPair(snap)
     z:setTargetAndCurrentDirection(-fx,-fy)
     return true
 end
+function A:holdControls()
+    local p=self.character
+    if self.ownsGrabControls then p:setForceAim(true);p:setAllowRun(false);p:setAllowSprint(false);p:setRunning(false);p:setSprinting(false)end
+    if self.ownsAim then p:setIsAiming(true)end
+end
 function A:start()
     self.started=true;self.startedAt=now();self.lastAt=self.startedAt
     local p=self.character;self.held=p:getPrimaryHandItem()
     self.oldBlock=p:isBlockMovement();self.oldIgnore=p:getIgnoreMovement();self.oldDeferred=p:isDeferredMovementEnabled()
+    if self.context.kind=="grab"and self.context.action.releaseOnAimLoss==false then
+        self.oldForceAim=p:isForceAim();self.oldAllowRun=p:isAllowRun();self.oldAllowSprint=p:isAllowSprint();self.ownsGrabControls=true;self.ownsAim=true;self:holdControls()
+    end
     p:setBlockMovement(self.context.kind~="block");p:setIgnoreMovement(self.context.kind~="block")
     self:setActionAnim(self.context.action.animation)
     self.action:setOverrideHandModelsObject(p:getPrimaryHandItem(),nil,false)
@@ -160,9 +169,22 @@ function A:attach(z)
     z:setVariable("ProjectYakuzaGrabPhase","enter");z:setVariable("ProjectYakuzaGrabMarker","")
     ProjectYakuza.emit("grabConnected",p,z,self)
 end
-function A:miss()
+function A:miss(time)
     if self.missEmitted or self.victimState or not self.context.attempt then return end
-    self.missEmitted=true;ProjectYakuza.emit("grabMissed",self.character,self.candidate,self)
+    self.missEmitted=true;self.missFrom=time;ProjectYakuza.emit("grabMissed",self.character,self.candidate,self)
+end
+function A:advanceMiss(time)
+    local slot=self.context.action;local distance=slot.attemptMissDistance
+    if not distance or distance<=0 or not time or not self.missFrom or self.missBlocked or self.victimState or self.awaitingGrab then return end
+    local first=math.max(self.missFrom,(slot.attemptContactEndMs or slot.attemptContactMs)/1000)
+    local last=(slot.attemptMissEndMs or slot.attemptDurationMs)/1000
+    if first>=last or time>last+.1 then return end
+    local progress=math.max(0,math.min(1,(time-first)/(last-first)))
+    local amount=math.min(.06,math.max(0,distance*(1-(1-progress)^2)-(self.missMoved or 0)))
+    if amount<=0 then return end
+    local dx,dy=self.context.fx*amount,self.context.fy*amount
+    if ProjectYakuza.Quicksteps.canMove(self.character,dx,dy)then self.character:moveUnmodded(dx,dy);self.missMoved=(self.missMoved or 0)+amount
+    else self.missBlocked=true end
 end
 function A:acceptGrab(z)
     if self.cleaned or not self.started or not self.context.attempt or not self.awaitingGrab or self.candidate~=z or not self:isValid()or not D.reachable(self.character,z)then return false end
@@ -189,6 +211,7 @@ function A:cleanup(completed)
     if completed and self.attemptSeen and not self.victimState then self:miss()end
     if self.context.kind=="grab" and isClient() and ProjectYakuza.Network then ProjectYakuza.Network.releaseGrab(p) end
     if self.started then
+        if self.ownsGrabControls then p:setForceAim(self.oldForceAim==true);p:setAllowRun(self.oldAllowRun~=false);p:setAllowSprint(self.oldAllowSprint~=false);self.ownsGrabControls=nil end
         if self.ownsAim then p:setIsAiming(p:isAimControlActive());self.ownsAim=nil end
         p:setBlockMovement(self.oldBlock==true);p:setIgnoreMovement(self.oldIgnore==true);p:setDeferredMovementEnabled(self.oldDeferred~=false)
         p:setVariable("ProjectYakuzaDefensePhase","");p:setVariable("ProjectYakuzaDefenseMarker","")
@@ -288,7 +311,7 @@ function A:grab(dt)
             local network=ProjectYakuza.Network
             if now()-self.gripRequestedAt>1500 or not(network and network.pending and network.pending[p])then self.awaitingGrab=false else return end
         end
-        if self.reachResolved and not self.awaitingGrab then self:miss()end
+        if self.reachResolved and not self.awaitingGrab then self:miss(time);self:advanceMiss(time)end
         if self.attemptSeen and(var(p,"ProjectYakuzaDefenseMarker")=="attempt_done"or time and time*1000>=slot.attemptDurationMs-20 or not time and now()-self.startedAt>=slot.attemptDurationMs)then self:forceComplete()
         elseif now()-self.startedAt>slot.attemptDurationMs+500 then self:forceStop()end
         return
@@ -362,6 +385,7 @@ function A:update()
         return
     end
     if not self:isValid() then self:forceStop();return end
+    self:holdControls()
     if self.context.kind=="block" then self:guard(dt) else self:grab(dt) end
     if not self.cleaned and ((self.phaseName=="enter" and not self.awaitingGrab and t-(self.boundAt or self.phaseAt)>1000)
         or (self.context.kind=="block" and self.phaseName~="hold" and t-self.phaseAt>1200)) then self:forceStop() end

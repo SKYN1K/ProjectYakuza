@@ -1,5 +1,5 @@
 {
-  "operation": "Read original supplied ID3/FLAC metadata and previously verified complete recording durations. No audio bytes modified.",
+  "operation": "Read original supplied ID3/FLAC metadata and previously verified complete recording durations. User-requested display title override for Rolling Eyes Fall Down the Dragon Wall; original source filename and audio bytes retained.",
   "tracks": [
     {
       "sound": "ProjectYakuza_FunkGoesOn",
@@ -28,11 +28,12 @@
       "sourceFile": "Receive You Ver. 7.mp3",
       "sourceSha256": "1f910c7359db34fc40bdb28c6c6dac39ed03d3dc69af34091bde361d61d11771",
       "metadata": {
-        "title": "Receive You Ver. 7",
+        "title": "Rolling Eyes Fall Down the Dragon Wall",
         "artist": "SEGA",
         "album": "Ryu ga Gotoku 7 Hikari to Yami no Yukue Unofficial Original Soundtrack (Disc 1)",
         "duration": 313.652245
-      }
+      },
+      "originalTitle": "Receive You Ver. 7"
     },
     {
       "sound": "ProjectYakuza_FlirtWithBomb",

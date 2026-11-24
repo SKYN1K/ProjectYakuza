@@ -4,7 +4,7 @@ import javax.xml.parsers.*;
 import org.w3c.dom.*;
 public class GrabAssetProbe {
  public static void main(String[]args)throws Exception{
-  var actor=Class.forName("zombie.characters.IsoGameCharacter");actor.getMethod("setStateMachineLocked",boolean.class);actor.getMethod("getCurrentStateName");actor.getMethod("setIsAiming",boolean.class);Class.forName("zombie.characters.IsoPlayer").getMethod("isAimControlActive");
+  var actor=Class.forName("zombie.characters.IsoGameCharacter");actor.getMethod("setStateMachineLocked",boolean.class);actor.getMethod("getCurrentStateName");actor.getMethod("setIsAiming",boolean.class);Class.forName("zombie.characters.IsoPlayer").getMethod("isAimControlActive");var player=Class.forName("zombie.characters.IsoPlayer");for(String name:new String[]{"isForceAim","isAllowRun","isAllowSprint"})player.getMethod(name);for(String name:new String[]{"setForceAim","setAllowRun","setAllowSprint"})player.getMethod(name,boolean.class);
   try(var source=Files.walk(Path.of(args[0]).toAbsolutePath().getParent().resolve("lua"))){for(var file:source.filter(p->p.toString().endsWith(".lua")).toList())if(Files.readString(file).contains(":getStateMachine("))throw new AssertionError("unexposed native state-machine getter "+file);}
   var uv=new Class<?>[21];uv[0]=Class.forName("zombie.core.textures.Texture");Arrays.fill(uv,1,21,float.class);Class.forName("zombie.core.SpriteRenderer").getMethod("renderPoly",uv);Class.forName("zombie.characters.BodyDamage.BodyDamage").getMethod("getOverallBodyHealth");
   var square=Class.forName("zombie.iso.IsoGridSquare");for(String name:new String[]{"isWallTo","isWindowTo","isDoorTo"})square.getMethod(name,square);

@@ -1,0 +1,55 @@
+{
+  "version": "1.0.9",
+  "offlineOnly": true,
+  "kahlua": {
+    "runningAndQuickstep": 224,
+    "multiplayer": 2049,
+    "feedbackAndSoundVariety": 1314,
+    "nativeDamageAndDirection": 430,
+    "exertion": 72,
+    "grabLifecycle": 1465,
+    "heatScreen": 20011
+  },
+  "focusedAssertions": 25565,
+  "nativeGrabSelectors": 74,
+  "nativeControlApis": [
+    "setForceAim",
+    "isForceAim",
+    "setAllowRun",
+    "setAllowSprint",
+    "isAllowRun",
+    "isAllowSprint"
+  ],
+  "sourceGrabFrames": 49,
+  "sourceBodyTransformChecks": 1666,
+  "running": {
+    "runupMs": 160,
+    "inputBufferMs": 180,
+    "zeroSampleGraceMs": 80,
+    "lightDamageMultiplier": 1.25,
+    "dropkickDamageMultiplier": 1.75,
+    "lightStaggerForce": 0.55,
+    "dropkickKnockdownForce": 0.85
+  },
+  "missedGrab": {
+    "maxDistance": 0.28,
+    "endMs": 800,
+    "maxIncrement": 0.06,
+    "wallChecked": true,
+    "noPendingApprovalTravel": true
+  },
+  "screen": {
+    "maxTintAlpha": 0.2,
+    "maxShakePixelsBeforeZoom": 7,
+    "leadMs": 120,
+    "tailRangeMs": [
+      490,
+      620
+    ],
+    "contactSparks": false
+  },
+  "animationTextureAudioBytesChanged": false,
+  "animationSpeedsChanged": false,
+  "staminaCostsChanged": false,
+  "sourceComments": 0
+}

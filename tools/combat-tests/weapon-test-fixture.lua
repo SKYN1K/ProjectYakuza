@@ -46,6 +46,8 @@ function p:setAllowRun(v)self.allowRun=v end
 function p:setAllowSprint(v)self.allowSprint=v end
 function p:setForceRun(v)self.forceRun=v end
 function p:setForceSprint(v)self.forceSprint=v end
+function p:isForceAim()return self.forceAim==true end
+function p:setForceAim(v)self.forceAim=v end
 function p:setRunning(v)self.running=v end
 function p:setSprinting(v)self.sprinting=v end
 function p:isHideWeaponModel()return self.hideWeapon==true end

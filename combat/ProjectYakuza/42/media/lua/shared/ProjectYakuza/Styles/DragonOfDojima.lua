@@ -45,7 +45,7 @@ ProjectYakuza.registerStyle({
     music={
         {sound="ProjectYakuza_FunkGoesOn",title="Funk Goes On",artist="Hidenori Shoji",album="Ryu ga Gotoku & Ryu ga Gotoku 2 Original Soundtrack",duration=173.21},
         {sound="ProjectYakuza_BringItOn",title="Bring It On",artist="SEGA/Keitarou Hanada",album="LIKE A DRAGON GAIDEN The Man Who Erased His Name",duration=154.724331},
-        {sound="ProjectYakuza_ReceiveYouVer7",title="Receive You Ver. 7",artist="SEGA",album="Ryu ga Gotoku 7 Hikari to Yami no Yukue Unofficial Original Soundtrack (Disc 1)",duration=313.652245},
+        {sound="ProjectYakuza_ReceiveYouVer7",title="Rolling Eyes Fall Down the Dragon Wall",artist="SEGA",album="Ryu ga Gotoku 7 Hikari to Yami no Yukue Unofficial Original Soundtrack (Disc 1)",duration=313.652245},
         {sound="ProjectYakuza_FlirtWithBomb",title="Flirt With Bomb",artist="Hidenori Shoji",album="Yakuza Kiwami Original Soundtrack",duration=227.160979},
         {sound="ProjectYakuza_SonOfAGun",title="Son of a Gun",artist="Keitaro Hanada",album="Ryu ga Gotoku & Ryu ga Gotoku 2 Original Soundtrack",duration=164.441882},
         {sound="ProjectYakuza_PushMeUnderWater",title="Push Me Under Water",artist="Hidenori Shoji",album="Ryu ga Gotoku & Ryu ga Gotoku 2 Original Soundtrack",duration=191.452494},
@@ -75,6 +75,8 @@ ProjectYakuza.registerStyle({
     hitResponses={
         boostStun={kind="stun",force=0},
         light={kind="flinch",force=.25},
+        running={kind="stagger",force=.55},
+        dropkick={kind="knockdown",force=.85},
         finisher={kind="stagger",force=.65},
         doubleFinisher={kind="knockdown",force=.85},
         chargedHeavy={kind="stagger",force=.75,fullChargeAt=.999,fullChargeKind="knockdown",fullChargeForce=1.0},
@@ -129,7 +131,7 @@ ProjectYakuza.registerStyle({
         } },
         grabHeat={enabled=true,variants={default=ProjectYakuza.HeatScenes.action("wall",ProjectYakuza.WallHeatMove),open=ProjectYakuza.HeatScenes.action("openGrab",ProjectYakuza.OpenGrabHeatMove)}},
         groundHeat=ProjectYakuza.HeatScenes.action("ground",ProjectYakuza.GroundHeatMove),
-        grab = {enabled=true,releaseOnAimLoss=false,breakout={chance=.05,intervalMs=1000,firstCheckMs=1000,animation="ProjectYakuza_DD_GrabEscape",targetAnimation="ProjectYakuza_DD_GrabEscapeVictim",duration=70/30},throwContactMs=70/30*1000,throwDuration=77/30,throwCrowd={radius=1.1,forward=.45,maxTargets=4,force=.65},distance=.48,lateral=.019354,throwOffset={forward=.253831,right=.019526},strikes=ProjectYakuza.GrabMoves,requiresTarget=false,attemptAnimation="ProjectYakuza_DD_GrabAttempt",attemptContactMs=10/30*1000,attemptContactEndMs=12/30*1000,attemptDurationMs=1600,animation="ProjectYakuza_DD_Grab",targetAnimation="ProjectYakuza_DD_GrabVictimEnter"},
+        grab = {enabled=true,releaseOnAimLoss=false,breakout={chance=.05,intervalMs=1000,firstCheckMs=1000,animation="ProjectYakuza_DD_GrabEscape",targetAnimation="ProjectYakuza_DD_GrabEscapeVictim",duration=70/30},throwContactMs=70/30*1000,throwDuration=77/30,throwCrowd={radius=1.1,forward=.45,maxTargets=4,force=.65},distance=.48,lateral=.019354,throwOffset={forward=.253831,right=.019526},strikes=ProjectYakuza.GrabMoves,requiresTarget=false,attemptAnimation="ProjectYakuza_DD_GrabAttempt",attemptContactMs=10/30*1000,attemptContactEndMs=12/30*1000,attemptDurationMs=1600,attemptMissDistance=.28,attemptMissEndMs=800,animation="ProjectYakuza_DD_Grab",targetAnimation="ProjectYakuza_DD_GrabVictimEnter"},
         parry = {enabled=true,animation="ProjectYakuza_DD_TigerDrop",nodeValue="dd_tiger_drop",duration=1.1,speed=1,requiresTarget=true,targetAnimation="Zombie_ShotBelly",cooldownMs=60000,windowMs=300},
         block = {enabled=true,animation="ProjectYakuza_DD_Guard",staminaPerHit=.08},
         heatActivation = {enabled=true,variants={
@@ -150,11 +152,11 @@ ProjectYakuza.registerStyle({
             left={enabled=true,direction="left",animation="ProjectYakuza_DD_QuickstepAttack03",nodeValue="dd_quickattack_03",duration=1.5666666666666667/1.6,speed=1.6,impact=0.23404255319148937,reaction="enemy_03",fullBody=true,quickstepAttack=true},
             right={enabled=true,direction="right",animation="ProjectYakuza_DD_QuickstepAttack04",nodeValue="dd_quickattack_04",duration=1.9/1.6,speed=1.6,impact=0.24561403508771928,reaction="enemy_04",fullBody=true,quickstepAttack=true},
         }},
-        runningAttack = {enabled=true,runupMs=250,variants={
-            left={enabled=true,variant="left",animation="ProjectYakuza_DD_RunningAttack01",nodeValue="dd_run_01",duration=1.8333333333333333/1.6,speed=1.6,impact=0.18181818181818182,distance=0.9,reaction="enemy_01",fullBody=true,runningAttack=true},
-            right={enabled=true,variant="right",animation="ProjectYakuza_DD_RunningAttack02",nodeValue="dd_run_02",duration=2.6666666666666665/1.6,speed=1.6,impact=0.225,distance=0.9,reaction="enemy_02",fullBody=true,runningAttack=true},
-            knee={enabled=true,variant="knee",animation="ProjectYakuza_DD_RunningAttack03",nodeValue="dd_run_03",duration=1.6666666666666667/1.2,speed=1.2,impact=0.24,distance=1,reaction="enemy_03",fullBody=true,runningAttack=true},
-            dropkick={enabled=true,variant="dropkick",animation="ProjectYakuza_DD_RunningAttack04",nodeValue="dd_run_04",duration=2.1333333333333333/1.6,speed=1.6,impact=0.21875,distance=1.2,reaction="enemy_04",fullBody=true,runningAttack=true},
+        runningAttack = {enabled=true,runupMs=160,inputBufferMs=180,variants={
+            left={enabled=true,variant="left",animation="ProjectYakuza_DD_RunningAttack01",nodeValue="dd_run_01",duration=1.8333333333333333/1.6,speed=1.6,impact=0.18181818181818182,distance=0.9,reaction="enemy_01",fullBody=true,runningAttack=true,damageMultiplier=1.25,hitResponse="running"},
+            right={enabled=true,variant="right",animation="ProjectYakuza_DD_RunningAttack02",nodeValue="dd_run_02",duration=2.6666666666666665/1.6,speed=1.6,impact=0.225,distance=0.9,reaction="enemy_02",fullBody=true,runningAttack=true,damageMultiplier=1.25,hitResponse="running"},
+            knee={enabled=true,variant="knee",animation="ProjectYakuza_DD_RunningAttack03",nodeValue="dd_run_03",duration=1.6666666666666667/1.2,speed=1.2,impact=0.24,distance=1,reaction="enemy_03",fullBody=true,runningAttack=true,damageMultiplier=1.25,hitResponse="running"},
+            dropkick={enabled=true,variant="dropkick",animation="ProjectYakuza_DD_RunningAttack04",nodeValue="dd_run_04",duration=2.1333333333333333/1.6,speed=1.6,impact=0.21875,distance=1.2,reaction="enemy_04",fullBody=true,runningAttack=true,damageMultiplier=1.75,hitResponse="dropkick"},
         }},
         heatAction=ProjectYakuza.HeatScenes.action("rush",ProjectYakuza.RushMove),
     },

@@ -26,7 +26,7 @@ RMB + G grabs a standing zombie. A fresh G press throws; Light attacks during th
 
 Hold Z and release over an assigned slot to equip it. Top unequips; bottom opens assignments/settings. Assignment alone does not equip the style. Empty slots preserve the current selection. The wheel does not pause the world and targets the first local keyboard/mouse player.
 
-Music, Sounds and Voices each have a 0Ã¢â‚¬â€œ200% slider. Music controls the style playlist independently of vanilla Music volume. Sounds controls framework effects and UI sounds; menu playback is local. Voices applies to optional combat voice integration. A missing voice pack remains silent. Add-on bindings appear in the same settings page through `Bindings.register`.
+Music, Sounds and Voices each have a 0–200% slider. Music controls the style playlist independently of vanilla Music volume. Sounds controls framework effects and UI sounds; menu playback is local. Voices applies to optional combat voice integration. A missing voice pack remains silent. Add-on bindings appear in the same settings page through `Bindings.register`.
 
 ## Extreme Heat prompts
 
@@ -41,3 +41,5 @@ The default heat HUD shows quickstep charges and the next recovery countdown bel
 The HUD scales down to fit its viewport and reserves space below the full glow for its cooldown rows. Quickstep charges appear beside QUICKSTEP; the recharge time or READY stays at the right edge. The extra numeric Heat label is removed.
 
 HUD scale is available under Options > Mods > Project Yakuza, from 50 to 200 percent. The complete health/heat display, text and cooldown geometry scale together and fit within the current viewport. The health frame retains fixed-size original silver end caps and a gray left backing.
+
+Running Light and Heavy accept a press up to 180 ms before the 160 ms moving run-up finishes. Fresh presses are required; holding does not repeat. Aim or movement can exit a light running strike at its existing recovery marker. The dropkick keeps its landing recovery. A held grab forces native combat aim and cannot run or sprint after RMB release.

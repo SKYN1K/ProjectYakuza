@@ -33,11 +33,11 @@ for _,size in ipairs({{1024,768},{1280,720},{1920,1080},{3440,1440}})do
    for age=0,650,10 do
     local baseX,baseY=x,y;local count=#draws;clock=F.state and F.state.at+age or clock+10
     F.update()
-    check(math.abs(x-baseX)<=peak*5*zoom+.51 and math.abs(y-baseY)<=peak*3.5*zoom+.51,'shake is bounded by zoom and contact strength')
+    check(math.abs(x-baseX)<=peak*7*zoom+.51 and math.abs(y-baseY)<=peak*4.9*zoom+.51,'shake is bounded by zoom and contact strength')
     F.draw()
     check(near(x,baseX)and near(y,baseY),'pre-UI drawing restores the original camera including aiming offset')
     check(additive,'renderer blend mode is restored after tint')
-    if #draws>count then local draw=draws[#draws];check(#draws==count+1 and draw.w==width and draw.h==height and draw.x==0 and draw.y==0 and not draw.additive,'one non-additive rectangle covers the current viewport');check(draw.a>0 and draw.a<=.12 and draw.b>draw.r,'tint is cool, translucent and bounded')end
+    if #draws>count then local draw=draws[#draws];check(#draws==count+1 and draw.w==width and draw.h==height and draw.x==0 and draw.y==0 and not draw.additive,'one non-additive rectangle covers the current viewport');check(draw.a>0 and draw.a<=.20 and draw.b>draw.r,'tint is cool, translucent and bounded')end
    end
    check(not F.state and not F.hooked and not Events.OnTick.hooks[F.update],'completed contact removes its per-frame hooks')
   end

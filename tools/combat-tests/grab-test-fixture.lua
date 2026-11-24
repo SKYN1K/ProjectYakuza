@@ -2,7 +2,7 @@ function p:StopTimedActionAnim()end
 function p:CanSee()return self.visible~=false end
 function p:setIsAiming(value)self.aiming=value end
 function p:isAiming()return self.aiming==true or mouse[1]==true end
-function p:isAimControlActive()return mouse[1]==true end
+function p:isAimControlActive()return mouse[1]==true or self.forceAim==true end
 do
  local add,remove=Events.OnTick.Add,Events.OnTick.Remove;Events.OnTick.hooks={}
  Events.OnTick.Add=function(fn)Events.OnTick.hooks[fn]=true;add(fn)end
@@ -15,6 +15,7 @@ mouse[1]=true
 local paused=false;isGamePaused=function()return paused end
 local stamina=.9;function p:getStats()return {get=function()return stamina end,remove=function(_,_,v)stamina=stamina-v end}end
 function p:getX()return self.x or .5 end;function p:getY()return self.y or .2 end
+function p:moveUnmodded(dx,dy)self.x=self:getX()+dx;self.y=self:getY()+dy end
 function p:setX(v)self.x=v end;function p:setY(v)self.y=v end
 function p:setNextX(v)self.nextX=v end;function p:setNextY(v)self.nextY=v end
 function p:setLastX(v)self.lastX=v end;function p:setLastY(v)self.lastY=v end
@@ -461,5 +462,31 @@ do
  p.blocked=false;p.ignore=false;p.deferred=true;check(PY.requestAction(p,'grab'),'interrupted reach regression starts');attempt=PY.activeActions[p].timedAction;attempt:start();attempt:cancel()
  check(signals[attempt].ended==1 and not signals[attempt].missed,'interruption before contact is not mislabeled a miss')
  PY.MultiHit.targets=targets;track=0
+end
+do
+ D.clear();local targets=PY.MultiHit.targets;local canMove=PY.Quicksteps.canMove;local oldX,oldY=p.x,p.y
+ PY.MultiHit.targets=function()return {}end;PY.Quicksteps.canMove=function()return true end
+ local function reach()
+  p.blocked=false;p.ignore=false;p.deferred=true;p.attacking=false;stamina=.9;mouse[1]=true;track=0
+  check(PY.requestAction(p,'grab'),'miss movement regression starts');local a=PY.activeActions[p].timedAction;a:start();return a
+ end
+ for _,direction in ipairs({{1,0},{0,1},{-1,0},{0,-1}})do
+  local a=reach();a.context.fx,a.context.fy=direction[1],direction[2];local x,y=p:getX(),p:getY()
+  track=.34;clock=clock+340;a:update();check(p:getX()==x and p:getY()==y,'miss cannot advance before its authored movement window')
+  for frame=12,24 do track=frame/30;clock=clock+34;a:update()end
+  check(math.abs(p:getX()-x-.28*direction[1])<.00001 and math.abs(p:getY()-y-.28*direction[2])<.00001,'failed reach moves exactly its bounded distance along the original facing')
+  track=.9;clock=clock+100;a:update();check(math.abs((a.missMoved or 0)-.28)<.00001,'completed miss movement cannot accumulate extra distance');a:cancel()
+ end
+ local blocked=reach();track=.34;clock=clock+340;blocked:update();local x,y=p:getX(),p:getY();PY.Quicksteps.canMove=function()return false end;track=.5;clock=clock+160;blocked:update()
+ PY.Quicksteps.canMove=function()return true end;track=.6;clock=clock+100;blocked:update();check(p:getX()==x and p:getY()==y and blocked.missBlocked,'obstruction cancels further miss motion without a delayed catch-up');blocked:cancel()
+ local late=reach();track=1.2;clock=clock+1200;late:update();check(not late.missMoved,'late ownership rejection cannot teleport the player after the movement window');late:cancel()
+ local pause=reach();track=.34;clock=clock+340;pause:update();x,y=p:getX(),p:getY();paused=true;track=.6;clock=clock+260;pause:update();paused=false;check(p:getX()==x and p:getY()==y,'paused reach does not advance movement');pause:cancel()
+ PY.MultiHit.targets=targets;PY.Quicksteps.canMove=canMove;p.x,p.y=oldX,oldY;track=0
+ mouse[1]=true;p.forceAim=false;p.allowRun=true;p.allowSprint=true
+ local held=startGrab();mouse[1]=false;p.aiming=false;D.holdStance()
+ check(p.forceAim and p.aiming and not p.allowRun and not p.allowSprint,'held grab forces native aim and disables run/sprint after RMB release')
+ held:cancel();check(not p.forceAim and not p.aiming and p.allowRun and p.allowSprint,'grab cleanup restores native aim and original movement permissions')
+ mouse[1]=true;p.forceAim=true;p.allowRun=false;p.allowSprint=false;held=startGrab();held:cancel()
+ check(p.forceAim and not p.allowRun and not p.allowSprint,'cleanup preserves restrictions and forced aim owned by another feature');p.forceAim=false;p.allowRun=true;p.allowSprint=true
 end
 return 'PASS '..checks..' reliable grab lifecycle, four source-timed strikes, following, cleanup, wall geometry, handoff and action protection checks'

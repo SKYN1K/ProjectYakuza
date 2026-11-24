@@ -210,6 +210,7 @@ function F.tick()
     unhook()
 end
 function F.impactCue(p,move)
+    if move.runningAttack then return F.sound(p,(move.variant=="knee"or move.variant=="dropkick")and "kickImpact"or "heavyImpact")or F.sound(p,"finisher")end
     if move.chargedHeavy then
         if type(move.chargePower)=="number"and move.chargePower>=.999 then return F.sound(p,"fullChargeImpact")or F.sound(p,"chargedImpact")end
         return F.sound(p,"chargedImpact")
@@ -229,12 +230,12 @@ function F.hit(p,z,weapon,damage)
         F.play(p,move.groundAttack and F.sound(p,"groundImpact")or F.sound(p,"heavyImpact")or F.sound(p,"finisher"),style.impactFeedback=="blade"and .25 or .32)
         return
     end
-    if not s.active or not move or (not move.neutralHeavy and not move.afterLight and not move.groundAttack and not move.chargedHeavy) then return end
+    if not s.active or not move or (not move.neutralHeavy and not move.afterLight and not move.groundAttack and not move.chargedHeavy and not move.runningAttack) then return end
     local stamp=s.multiHitToken or s.startedAt
     if s.feedbackStamp==stamp then return end
     s.feedbackStamp=stamp
     local full=move.chargedHeavy and type(move.chargePower)=="number"and move.chargePower>=.999
-    F.play(p,F.impactCue(p,move),full and .60 or move.double and .55 or .45)
+    F.play(p,F.impactCue(p,move),full and .60 or move.runningAttack and(move.variant=="dropkick"and .55 or .50)or move.double and .55 or .45)
 end
 function F.heatChanged(p)
     if not p or not p:isLocalPlayer() then return end

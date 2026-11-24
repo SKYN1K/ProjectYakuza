@@ -53,6 +53,14 @@ for _,move in ipairs({{neutralHeavy=true},{chargedHeavy=true}})do
  F.hit(p,nil,nil,1);check(#direct==n+1,'multihit does not stack heavy feedback per victim')
 end
 combo.finisherMove={afterLight=true};combo.multiHitToken={};F.hit(p,nil,nil,1);check(calls[#calls]=='SignatureFinisher','first finisher preserves its signature sound')
+style.sounds.kickImpact='ProjectYakuza_Y6_KickImpact'
+for _,id in ipairs({'left','right','knee','dropkick'})do
+ combo.finisherMove={runningAttack=true,variant=id};combo.multiHitToken={};local before=#direct
+ F.hit(p,nil,nil,0);check(#direct==before,'missed running strike cannot play a hit accent')
+ F.hit(p,nil,nil,1);check(#direct==before+1,'confirmed running contact plays one supplied accent '..id)
+ check(direct[#direct].clip.parent==nativeSounds[(id=='knee'or id=='dropkick')and style.sounds.kickImpact or style.sounds.heavyImpact],'running contact chooses the matching existing impact pool '..id)
+ F.hit(p,nil,nil,1);check(#direct==before+1,'running crowd contact cannot stack the accent '..id)
+end
 V.clear(p);check(not V.states[p],'style/world cleanup releases shuffle history')
 do
  style.sounds.fullChargeImpact='ProjectYakuza_Y6_HeatImpact';style.sounds.parryImpact='DistinctCounter';style.sounds.counterImpact='ProjectYakuza_Y6_HeavyFinisher';style.sounds.guardHit='ProjectYakuza_Y6_GuardImpact';style.sounds.grabSwing='ReachWhoosh'

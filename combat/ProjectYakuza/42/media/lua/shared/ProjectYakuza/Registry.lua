@@ -348,7 +348,7 @@ function S.actionAllowed(style,kind,move)
     return true
 end
 end
-ProjectYakuza.VERSION = "1.0.8"
+ProjectYakuza.VERSION = "1.0.9"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -626,6 +626,10 @@ function ProjectYakuza.validateStyle(style)
         if not ProjectYakuza.actionKinds[kind] then problem("unknown action kind: "..tostring(kind).."; register it with registerActionKind first") end
         if type(slot)~="table" then problem("actions."..tostring(kind).." must be a table")
         elseif slot.enabled==true then
+            if kind=="runningAttack"then
+                if slot.runupMs~=nil and(not number(slot.runupMs)or slot.runupMs<0 or slot.runupMs>1000)then problem("runningAttack.runupMs must be between 0 and 1000")end
+                if slot.inputBufferMs~=nil and(not number(slot.inputBufferMs)or slot.inputBufferMs<0 or slot.inputBufferMs>500)then problem("runningAttack.inputBufferMs must be between 0 and 500")end
+            end
             if kind=="grab"then
                 local function offset(value)
                     return type(value)=="table"and number(value.forward)and value.forward>=.05 and value.forward<=1.5 and number(value.right)and math.abs(value.right)<=.75
@@ -638,6 +642,8 @@ function ProjectYakuza.validateStyle(style)
                 if slot.entryBlendMs~=nil and(not number(slot.entryBlendMs)or slot.entryBlendMs<80 or slot.entryBlendMs>400)then problem("grab.entryBlendMs must be between 80 and 400")end
                 if slot.attemptContactMs~=nil and(not text(slot.attemptAnimation)or not number(slot.attemptContactMs)or slot.attemptContactMs<0 or not number(slot.attemptDurationMs)or slot.attemptDurationMs<=slot.attemptContactMs or slot.attemptDurationMs>2000 or slot.requiresTarget~=false)then problem("invalid grab attempt timing")end
                 if slot.attemptContactEndMs~=nil and(not number(slot.attemptContactEndMs)or not number(slot.attemptContactMs)or not number(slot.attemptDurationMs)or slot.attemptContactEndMs<slot.attemptContactMs or slot.attemptContactEndMs>=slot.attemptDurationMs)then problem("invalid grab contact window")end
+                if slot.attemptMissDistance~=nil and(not number(slot.attemptMissDistance)or slot.attemptMissDistance<0 or slot.attemptMissDistance>.75 or not number(slot.attemptContactMs)or not number(slot.attemptDurationMs))then problem("invalid missed-grab distance")end
+                if slot.attemptMissEndMs~=nil and(not number(slot.attemptMissEndMs)or not number(slot.attemptContactMs)or not number(slot.attemptDurationMs)or slot.attemptMissEndMs<=(slot.attemptContactEndMs or slot.attemptContactMs)or slot.attemptMissEndMs>slot.attemptDurationMs)then problem("invalid missed-grab movement window")end
                 if slot.throwContactMs~=nil and(not number(slot.throwContactMs)or slot.throwContactMs<0 or not number(slot.throwDuration)or slot.throwDuration<=0 or slot.throwDuration>10 or slot.throwContactMs>=slot.throwDuration*1000)then problem("invalid grab throw contact timing")end
                 if slot.throwCrowd~=nil and slot.throwCrowd~=false then
                     local cfg=slot.throwCrowd

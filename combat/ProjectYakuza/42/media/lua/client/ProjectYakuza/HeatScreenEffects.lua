@@ -1,6 +1,6 @@
 require "ProjectYakuza/Registry"
 local PY=ProjectYakuza
-local F={leadMs=120}
+local F={leadMs=120,tintAlpha=.20,shakePixels=7,tailMs=420,tailStrengthMs=200}
 PY.HeatScreenEffects=F
 function F.restoreCamera()
     local camera=F.camera;if not camera then return end
@@ -26,7 +26,7 @@ function F.begin(p,z,index,contact,remaining)
     local presentation=PY.HeatActionPresentation
     if not presentation or not presentation.states[p]then return end
     local strength=contact.sumQTE and 1 or contact.charged and .8 or contact.strong~=false and .65 or .35
-    local time=getTimestampMs();local tail=340+strength*180
+    local time=getTimestampMs();local tail=F.tailMs+strength*F.tailStrengthMs
     local previous,envelope=F.sample();local carry=previous and math.min(1,previous.strength*envelope/strength)or 0
     F.state={p=p,source=presentation.states[p].source,index=index,at=time,hitAt=time+remaining,lead=remaining,tail=tail,life=remaining+tail,strength=strength,carry=carry,confirmed=remaining==0,seed=(index or 1)*1.73+time*.01}
     if not F.hooked then
@@ -66,7 +66,7 @@ end
 function F.update()
     F.restoreCamera()
     local state,envelope,age=F.sample();if not state then F.stop();return end
-    local amplitude=state.strength*5*envelope*getCore():getZoom(0)
+    local amplitude=state.strength*F.shakePixels*envelope*getCore():getZoom(0)
     local x=math.floor(math.sin(age*.13+state.seed)*amplitude+.5)
     local y=math.floor(math.sin(age*.19+state.seed*.73)*amplitude*.7+.5)
     if x==0 and y==0 then return end
@@ -80,7 +80,7 @@ function F.draw()
     local state,envelope=F.sample();if not state then F.stop();return end
     local renderer=SpriteRenderer.instance;local previous=renderer:getDoAdditive();renderer:setDoAdditive(false)
     local ok,message=pcall(function()
-        renderer:renderRect(getPlayerScreenLeft(0),getPlayerScreenTop(0),getPlayerScreenWidth(0),getPlayerScreenHeight(0),.10,.27,.43,state.strength*envelope*.12)
+        renderer:renderRect(getPlayerScreenLeft(0),getPlayerScreenTop(0),getPlayerScreenWidth(0),getPlayerScreenHeight(0),.10,.27,.43,state.strength*envelope*F.tintAlpha)
     end)
     renderer:setDoAdditive(previous)
     if not ok then F.stop();error(message)end

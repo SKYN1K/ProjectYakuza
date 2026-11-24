@@ -61,4 +61,12 @@ for branch=1,4 do
 end
 reset();p:AttemptAttack();finish();fx,fy=0,1;check(PY.queueFinisher(p),'side-facing ordinary finisher input accepted')
 check(state().queuedFinisherVariant=='after_1','unverified side finisher motion is not invented')
+do
+ reset()
+ for _,id in ipairs({'left','right','knee','dropkick'})do
+  local move=style.actions.runningAttack.variants[id];H.onSwing(p,move)
+  check(math.abs(token.min-.3*move.damageMultiplier)<.000001 and math.abs(token.max-.5*move.damageMultiplier)<.000001,'running damage bonus uses native weapon damage once '..id)
+  H.endSwing(p);check(math.abs(token.min-.3)<.000001 and math.abs(token.max-.5)<.000001,'running damage is restored before the next attack '..id)
+ end
+end
 return true,'PASS '..checks..' directional sectors, actual Runtime routing, damage, enders, interruption and style/weapon isolation checks'

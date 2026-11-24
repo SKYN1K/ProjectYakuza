@@ -409,7 +409,11 @@ check(H.resolve(style,second).kind=='knockdown','double finishers select knockdo
 for _,power in ipairs({0,.2,.5,.99})do charged.chargePower=power;check(H.resolve(style,charged).kind=='stagger','partial charges never get full-power knockdown')end
 charged.chargePower=1;check(H.resolve(style,charged).kind=='knockdown' and H.resolve(style,charged).force==1,'full charge selects strongest knockdown')
 charged.chargePower=0/0;check(H.resolve(style,charged).kind=='stagger','nonfinite charge cannot gain full-power response')
-check(not H.resolve(style,style.groundAttacks[1]) and not H.resolve(style,style.actions.runningAttack.variants.knee),'ground/running behavior remains unchanged')
+check(not H.resolve(style,style.groundAttacks[1]),'ground stomp does not inherit running responses')
+do
+for _,id in ipairs({'left','right','knee'})do local move=style.actions.runningAttack.variants[id];check(H.resolve(style,move).kind=='stagger'and H.resolve(style,move).force==.55 and move.damageMultiplier==1.25,'running light gets an explicit style-owned stagger and damage bonus '..id)end
+local drop=style.actions.runningAttack.variants.dropkick;check(H.resolve(style,drop).kind=='knockdown'and H.resolve(style,drop).force==.85 and drop.damageMultiplier==1.75,'dropkick has a stronger authoritative knockdown payoff')
+end
 local custom=copy(first);custom.hitResponse=false;check(not H.resolve(style,custom),'a move can opt out')
 custom.hitResponse='light';check(H.resolve(style,custom).kind=='flinch','a move can select a named custom profile')
 local bad=copy(style);bad.hitResponses={broken={kind='teleport',force=2}}
@@ -1337,7 +1341,7 @@ end
 do
  local originalClient=isClient;isClient=function()return false end
  local base=ProjectYakuza.getStyle('dragon_of_dojima');local light=base.lightAttacks[1]
- for _,entry in ipairs({{style=base,move=light,family='punch'},{style=base,move=base.actions.runningAttack.variants.knee,family='kick'},{style=ProjectYakuza.Weapons.view(base,'knife'),family='blade'},{style=ProjectYakuza.Weapons.view(base,'bat'),family='blunt'}})do
+ for _,entry in ipairs({{style=base,move=light,family='punch'},{style=base,move=base.directionalAttacks.moves.rear,family='kick'},{style=ProjectYakuza.Weapons.view(base,'knife'),family='blade'},{style=ProjectYakuza.Weapons.view(base,'bat'),family='blunt'}})do
   local move=entry.move or entry.style.lightAttacks[1];local previous;local seen={}
   check(H.reactionFamily(entry.style,move)==entry.family,'attack family matches its contact type')
   for swing=1,20 do

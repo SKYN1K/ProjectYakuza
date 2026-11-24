@@ -48,7 +48,7 @@ Require `ProjectYakuza/Registry` for shared definitions, `ProjectYakuza/Runtime`
 | requiresTarget/targetAnimation | Target/paired-clip descriptors; handler validates synchronization |
 | variants | Kind slot's move map; request variant defaults to default |
 
-Parent quickstep.cooldownMs, runningAttack.runupMs, block.staminaPerHit and parry timing fields belong to their specific controller. Put costs on each spending variant; parent costs are not inherited. Custom fields are available to your handler. Validation cannot prove native asset existence or gameplay correctness.
+Parent quickstep.cooldownMs, runningAttack.runupMs/inputBufferMs, block.staminaPerHit and parry timing fields belong to their specific controller. Put costs on each spending variant; parent costs are not inherited. Custom fields are available to your handler. Validation cannot prove native asset existence or gameplay correctness.
 
 Built-in kinds: finisher, heavyCharge, chargedHeavy, grab, grabHeat, groundHeat, parry, block, quickstep, quickstepAttack, runningAttack, heatAction, heatActivation, taunt, styleEntry. DoD supplies paired Heat Actions; grabHeat uses the shared held-target paired handler, including wall/open-space variants. See [Grabs](GRABS.md).
 
@@ -259,3 +259,9 @@ preferences(player) returns per-character settings stored in ProjectYakuzaMusic.
 Until Shuffle is explicitly set, manual playback advances in list order and combat playback shuffles. A shuffle bag visits all remaining songs before refilling and excludes the current song from the next refill. Previous follows the actual playback history and Next can retrace that history. Repeat One restarts the selected recording only on natural completion; explicit skipping still changes tracks. Repeat Off stops at the ordered playlist or shuffle-bag boundary on natural completion; explicit navigation may wrap. Changing shuffle or repeat does not restart the playing channel. Favorites are metadata and do not change the playback queue.
 
 Style changes, invalid owners and world lifecycle cleanup release the owned channel and restore the prior native music mix. No reflection, extra Java component, raw FMOD handle control or seeking is used by these APIs.
+
+## Running input and payoff (1.0.9)
+
+An enabled runningAttack slot can set runupMs from 0 to 1000 and inputBufferMs from 0 to 500. Controller defaults are 250 and 180 ms. Dragon uses 160 and 180 ms. Run-up requires measured displacement; an 80 ms zero-sample grace preserves recent heading without adding idle run-up. A fresh Light or Heavy press queues one attempt; Heavy wins a simultaneous press. Transient native readiness retries do not extend the deadline. Loss of safe running eligibility clears the buffer.
+
+Put damageMultiplier and hitResponse on each running variant. Dragon explicitly selects running for its light variants and dropkick for its heavy variant. These are ordinary per-style hit-response profiles, resolved by the shared owner/server path; other styles do not inherit them. Native weapon damage is multiplied only for the committed swing and then restored. Light running recovery can accept aim or movement at its existing source marker; dropkick recovery remains committed.

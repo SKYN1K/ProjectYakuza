@@ -10,7 +10,7 @@ function R.variant(heavy)
     local roll=ZombRand(3)
     return roll==0 and "left" or roll==1 and "right" or "knee"
 end
-local function resetRun(s)s.runMs=0;s.x=nil;s.y=nil;s.z=nil;s.time=nil end
+local function resetRun(s)s.runMs=0;s.x=nil;s.y=nil;s.z=nil;s.time=nil;s.dx=nil;s.dy=nil;s.lastMovedAt=nil;s.pending=nil end
 function R.pause(p)
     local s=R.players[p]
     if s then resetRun(s);s.light=ProjectYakuza.Bindings.down("light");s.heavy=ProjectYakuza.Bindings.down("finisher") end
@@ -76,7 +76,7 @@ function R.advance(p)
     local combo=ProjectYakuza.stateFor(p)
     if t.move.variant~="dropkick" and not combo.recoveryReleased and p:GetVariable("ProjectYakuzaRunRecover")==t.move.nodeValue
         and p:GetVariable("ProjectYakuzaHitMarker")==t.move.nodeValue
-        and (key(KeybindId.FORWARD) or key(KeybindId.BACKWARD) or key(KeybindId.LEFT) or key(KeybindId.RIGHT)) then
+        and (isMouseButtonDown(1)or key(KeybindId.FORWARD) or key(KeybindId.BACKWARD) or key(KeybindId.LEFT) or key(KeybindId.RIGHT)) then
         combo.recoveryReleased=true
         R.finish(p)
         p:setMeleeDelay(0)
@@ -102,18 +102,27 @@ function R.update(p)
     local style=ProjectYakuza.getPlayerStyle(p);local slot=style.actions.runningAttack
     if not slot or not slot.enabled then resetRun(s);return end
     local t,x,y,z=now(),p:getX(),p:getY(),p:getZ()
+    if lightPress or heavyPress then s.pending={heavy=heavyPress,expiresAt=t+(slot.inputBufferMs or 180),style=style.id}end
+    if s.pending and(t>s.pending.expiresAt or s.pending.style~=style.id)then s.pending=nil end
     if not s.x then s.x,s.y,s.z,s.time=x,y,z,t;return end
     local dx,dy=x-s.x,y-s.y;local elapsed=math.max(0,math.min(100,t-s.time))
     s.x,s.y,s.time=x,y,t
     local length=math.sqrt(dx*dx+dy*dy)
-    if math.abs(z-s.z)>0.05 or length<0.00001 or length>1 then s.runMs=0;s.z=z;return end
-    s.z=z;s.runMs=s.runMs+elapsed
-    if s.runMs<(slot.runupMs or 250) or not (lightPress or heavyPress) then return end
-    local name=R.variant(heavyPress)
-    if not name then return end
-    local ticket={variant=name,dx=dx/length,dy=dy/length,expiresAt=t+500}
+    if math.abs(z-s.z)>0.05 or length>1 then resetRun(s);return end
+    s.z=z
+    if length>=0.00001 then
+        s.runMs=s.runMs+elapsed;s.dx,s.dy=dx/length,dy/length;s.lastMovedAt=t
+    elseif not s.lastMovedAt or t-s.lastMovedAt>80 then s.runMs=0;s.dx=nil;s.dy=nil end
+    if s.runMs<(slot.runupMs or 250)or not s.pending or not s.dx then return end
+    local pending=s.pending;local name=pending.variant or R.variant(pending.heavy);pending.variant=name
+    local ticket={variant=name,dx=s.dx,dy=s.dy,expiresAt=t+500}
     R.tickets[p]=ticket
-    local ok=ProjectYakuza.requestAction(p,"runningAttack",name,ticket)
-    if not ok then R.finish(p) end
-    resetRun(s)
+    local ok,reason=ProjectYakuza.requestAction(p,"runningAttack",name,ticket)
+    if not ok then
+        R.tickets[p]=nil
+        if R.active[p]then R.finish(p)end
+        if reason=="native_attack_busy"and s.pending==pending then return end
+        resetRun(s);return
+    end
+    resetRun(s);R.advance(p)
 end

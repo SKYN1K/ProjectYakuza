@@ -87,3 +87,9 @@ While a victim is held, a tick hook restores native aiming after input polling c
 The controller emits grabConnected(player,victim,action) once after attachment and ownership, grabMissed(player,candidate,action) once after a failed reach resolves, and grabEnded(player,victim,action) after cleanup releases active action ownership. The candidate may be nil. Interrupted attempts before contact do not emit a miss. Multiplayer pending approval emits neither outcome until the grant succeeds or expires.
 
 Default local feedback moves the existing grip cue to successful attachment and shows a 650 ms connection or miss notice. Reaching keeps its supplied whoosh; misses do not play a false impact. The held prompt lists the current Light and Grab bindings. A matching action context prevents stale cleanup from removing a later grab's feedback state.
+
+## Miss travel and native aim ownership (1.0.9)
+
+Optional grab.attemptMissDistance is bounded to 0..0.75 tiles and requires a configured attempt. attemptMissEndMs must follow the contact window and not exceed the full attempt duration. Dragon uses 0.28 tiles through 800 ms. Failed-reach travel follows the original attempt facing, samples its native animation time, caps each movement increment at 0.06 tiles and checks the existing solid-floor/collision policy before advancing. A blocked path ends the travel instead of saving a later catch-up. Successful attachment, pending server approval, late denial and pause cannot receive a delayed lunge.
+
+When releaseOnAimLoss=false, grab ownership sets native forced aim and suppresses run/sprint permissions. This persists across native input polling after RMB release, keeping combat walking speed and stance. Completion, cancellation and handoff restore the previous forced-aim and permission values. Existing body masks, source animation bytes and paired alignment remain unchanged.

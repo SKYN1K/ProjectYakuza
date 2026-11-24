@@ -1,3 +1,15 @@
+# v1.0.9
+
+Running attacks use a 160 ms moving run-up and a 180 ms early-input buffer. An 80 ms sampling grace tolerates a duplicate update with no displacement without granting idle run-up. Accepted actions can submit their native swing in the same update; transient native readiness can retry only inside the original input deadline. Releasing aim, losing eligibility, changing floor or teleporting discards the buffer. Holding an attack cannot repeat it. Light running recovery accepts aim input at the existing source recovery marker; the dropkick retains its committed landing recovery.
+
+Dragon's three light running strikes deal 1.25 times native damage with a 0.55 backward stagger. The dropkick deals 1.75 times damage with a 0.85 knockdown. Original native Strength/exhaustion calculations, stamina costs, animation speeds, travel curves and collision windows remain in use. Confirmed contacts use existing punch/heavy or kick impact pools once per swing, including crowds. No hit awards feedback on a miss.
+
+Failed grabs take a wall-checked forward step of up to 0.28 tiles, from the end of the source contact window through 800 ms. Successful attachments and pending MP approvals do not receive this movement; late denials cannot cause a delayed lunge. Holding a Dragon grab now owns native forced aim and temporarily disables run/sprint, keeping combat movement after RMB release. Cleanup restores the prior forced-aim and movement permissions, including restrictions owned by other features.
+
+Heat Action tint increases from 12 to 20 percent maximum opacity and shake from 5 to 7 zoom-scaled pixels. The impact tail lasts about 0.49 to 0.62 seconds, with the existing 120 ms anticipation. Camera/blend restoration, local ownership, pause/map/menu suppression and the no-spark policy remain intact.
+
+The playlist display title Receive You Ver. 7 is now Rolling Eyes Fall Down the Dragon Wall. Its sound ID and recording are unchanged, preserving saved favorites. Offline checks cover input/lifecycle, damage restoration, authoritative reaction profiles, feedback deduplication, native control APIs, grab source playback and bounded screen effects. PZ was not launched; final feel and multiplayer movement need gameplay verification.
+
 # v1.0.8
 
 Music adds saved shuffle, Repeat Off/All/One and song favorites. Defaults preserve ordered manual listening and shuffled combat playback until Shuffle is explicitly changed. Shuffled playback visits every song before refilling and avoids an immediate repeat; Previous follows the actual playback history. Repeat One affects natural completion, while an explicit Next still changes songs. Repeat Off ends at the playlist or shuffle-bag boundary. Original audio bytes, gains and combat fade timing are unchanged.
