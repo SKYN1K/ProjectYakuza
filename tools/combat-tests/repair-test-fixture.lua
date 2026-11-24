@@ -105,4 +105,26 @@ do
  M.clear();check(not M.lastSelection and not M.blockedOwner and not M.sound,'world cleanup clears manual playback and UI selection ownership')
  local duration=playlist[1].duration;playlist[1].duration=-1;check(not PY.validateStyle(PY.getStyle('dragon_of_dojima')),'negative duration metadata is rejected');playlist[1].duration=duration
 end
+do
+ M.clear();local prefs=M.preferences(p);prefs.shuffle=false;prefs.repeatMode='all';local playlist=M.playlist(p)
+ check(M.setShuffle(p,true)and M.current(p).shuffle,'shuffle preference is exposed without starting a stream')
+ M.play(p,1);local heard={[playlist[1].sound]=true};local sound=M.sound
+ for i=2,#playlist do check(M.skip(p,1),'shuffle selects another supplied track');check(not heard[M.theme.sound],'shuffle plays every song once before refilling');heard[M.theme.sound]=true end
+ local previous=M.theme;M.skip(p,1);check(M.theme~=previous,'refilling a shuffle bag avoids an immediate repeat')
+ local last=M.theme;M.skip(p,-1);check(M.theme==previous,'previous follows actual shuffled playback history');M.skip(p,1);check(M.theme==last,'next returns along existing history')
+ sound=M.sound;M.setShuffle(p,false);M.setRepeat(p,'one');check(M.sound==sound,'changing modes does not restart current audio')
+ local prior=emitter.playSoundImpl
+ emitter.playSoundImpl=function()return 0 end;check(not M.skip(p,1)and M.sound==sound,'failed selection leaves the playing track intact');emitter.playSoundImpl=prior;M.failedUntil=nil
+ M.play(p,3);emitter.playing=false;clock=clock+50;M.tick();check(M.theme==playlist[3]and M.current(p).position==0,'repeat one restarts only after the recording ends')
+ M.skip(p,1);check(M.theme==playlist[4],'explicit next overrides repeat one')
+ M.setRepeat(p,'off');M.play(p,#playlist);emitter.playing=false;clock=clock+50;M.tick();check(not M.sound,'repeat off ends an ordered playlist without wrapping')
+ M.setShuffle(p,true);M.setRepeat(p,'off');M.play(p,1);local count=1
+ while M.sound and count<=#playlist do emitter.playing=false;clock=clock+50;M.tick();if M.sound then count=count+1 end end
+ check(count==#playlist and not M.sound,'repeat off also finishes a complete shuffle bag exactly once')
+ M.toggleFavorite(p,playlist[2].sound);check(M.preferences(p).favorites[playlist[2].sound]==true,'favorites use stable sound IDs')
+ check(not M.toggleFavorite(p,'unregistered')and not M.setShuffle(p,'yes')and not M.setRepeat(p,'infinite')and not M.setShuffle(nil,true),'invalid settings cannot change playback')
+ M.clear();check(M.preferences(p).favorites[playlist[2].sound]and M.preferences(p).shuffle and M.preferences(p).repeatMode=='off','preferences survive playback/world cleanup through character data')
+ M.toggleFavorite(p,playlist[2].sound);check(not M.preferences(p).favorites[playlist[2].sound],'favorite toggle removes its stored entry')
+ prefs.shuffle=nil;prefs.repeatMode='all';check(not M.shuffled(p,true)and M.shuffled(p,false),'unset defaults preserve sequential manual listening and shuffled combat')
+end
 return true,'PASS '..checks..' heavy-button Tiger Drop window/cooldown/MP age and independent combat music gain checks'

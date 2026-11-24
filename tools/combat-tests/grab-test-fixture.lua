@@ -447,4 +447,19 @@ do
  check(not miss.cleaned and not miss.context.target,'a target entering after the source contact window cannot attach during recovery')
  track=1.6;clock=clock+400;miss:update();check(miss.cleaned,'the original missed-grab recovery completes at its original 1.6-second duration');track=0
 end
+do
+ local signals={};local function signal(kind,actor,target,context)signals[context]=signals[context]or {};signals[context][kind]=(signals[context][kind]or 0)+1 end
+ PY.on('grabConnected',function(...)signal('connected',...)end);PY.on('grabMissed',function(...)signal('missed',...)end);PY.on('grabEnded',function(...)signal('ended',...)end)
+ mouse[1]=true;local held=startGrab();check(signals[held].connected==1 and not signals[held].missed,'successful source contact confirms the grab exactly once')
+ held:cancel();held:cancel();check(signals[held].ended==1,'duplicate cancellation cannot repeat grab cleanup feedback')
+ local targets=PY.MultiHit.targets;PY.MultiHit.targets=function()return {}end
+ p.blocked=false;p.ignore=false;p.deferred=true;stamina=.9
+ check(PY.requestAction(p,'grab'),'miss feedback regression starts')
+ local attempt=PY.activeActions[p].timedAction;attempt:start();track=style.actions.grab.attemptContactMs/1000;clock=clock+350;attempt:update();attempt:update()
+ check(signals[attempt].missed==1 and not signals[attempt].connected,'a missed source reach reports once without pretending to connect')
+ track=1.6;clock=clock+1300;attempt:update();check(signals[attempt].ended==1,'failed recovery ends its own feedback session')
+ p.blocked=false;p.ignore=false;p.deferred=true;check(PY.requestAction(p,'grab'),'interrupted reach regression starts');attempt=PY.activeActions[p].timedAction;attempt:start();attempt:cancel()
+ check(signals[attempt].ended==1 and not signals[attempt].missed,'interruption before contact is not mislabeled a miss')
+ PY.MultiHit.targets=targets;track=0
+end
 return 'PASS '..checks..' reliable grab lifecycle, four source-timed strikes, following, cleanup, wall geometry, handoff and action protection checks'

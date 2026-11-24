@@ -1,0 +1,23 @@
+{
+  "version": "1.0.8",
+  "offlineOnly": true,
+  "kahlua": {
+    "musicControlsAndExistingRepairs": 101,
+    "grabLifecycle": 1432,
+    "multiplayer": 2045,
+    "feedbackAndExistingSoundVariety": 1294,
+    "activationAudio": 78
+  },
+  "focusedAssertions": 4950,
+  "sourceComments": 0,
+  "audioBytesChanged": false,
+  "sourceAnimationBytesChanged": false,
+  "textureBytesChanged": false,
+  "grabContactAndSpacingChanged": false,
+  "reactionRestartGateMs": 90,
+  "reactionStableExitMs": 80,
+  "musicHistoryLimit": 128,
+  "musicPreferencePersistence": "character mod data",
+  "progress": "elapsed estimate; no seeking or reflection",
+  "combatFadeTimingChanged": false
+}

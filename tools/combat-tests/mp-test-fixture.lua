@@ -1358,7 +1358,7 @@ do
  check((victim.events or 0)==events and not R.states[victim],'a blocked hit cannot force a visual flinch before confirmed damage')
  local previous
  for attack=1,4 do
-  combo.multiHitToken={};R.onHit(p,victim,p.token,.1);victim.health=victim.health-.1;R.tick()
+  clock=clock+120;combo.multiHitToken={};R.onHit(p,victim,p.token,.1);victim.health=victim.health-.1;R.tick()
   local clip=victim.vars.ProjectYakuzaEnemyHitClip
   check(clip and clip~=previous and victim.reaction=='HeadLeft','actual SP hits alternate source flinches after damage confirmation');previous=clip
  end
@@ -1377,5 +1377,20 @@ do
  owner:setVariable('ProjectYakuzaGrabbed',true);clock=clock+60;R.tick()
  check(not R.states[owner]and owner.vars.ProjectYakuzaEnemyReaction==false and owner.vars.ProjectYakuzaGrabbed==true,'acquiring a grab clears the previous flinch without changing grab ownership')
  isGamePaused=pause;R.clearAll();isClient=originalClient
+end
+do
+ R.clearAll();local target=responseVictim(28001);local oldClient=isClient;isClient=function()return true end;local t=clock
+ check(R.remote(target,'enemy_01'),'smooth-reaction regression starts a supplied flinch');local events=target.events
+ clock=t+20;check(R.remote(target,'enemy_02')and target.events==events and target.vars.ProjectYakuzaEnemyHitClip=='enemy_01','near-simultaneous alternate flinches do not restart the animation')
+ clock=t+100;R.remote(target,'enemy_02');check(target.events==events+1 and target.vars.ProjectYakuzaEnemyHitClip=='enemy_02','a later genuine contact can begin a new flinch')
+ target.state='hitreaction';R.update(target,clock);target.state='idle';clock=clock+10;R.update(target,clock)
+ check(R.states[target]~=nil,'brief native transition does not clear source clip ownership')
+ clock=clock+40;target.state='hitreaction-hit';R.update(target,clock);check(not R.states[target].leftAt,'returning to a native repeat-hit state cancels exit cleanup')
+ target.state='idle';clock=clock+10;R.update(target,clock);clock=clock+80;R.update(target,clock);check(not R.states[target],'settled native exit clears cosmetic state after its short grace')
+ target.state='idle';R.remote(target,'enemy_01');target.isStaggerBack=function()return true end;local force=target.force
+ check(not R.confirmed(p,target,'flinch',.25,'enemy_02')and not R.pending[target],'cosmetic confirmation cannot queue over native knockback')
+ R.tick();check(not R.states[target]and target.force==force,'native knockback immediately releases the cosmetic pose without changing its force')
+ local plain=responseVictim(28002);check(R.confirmed(p,plain,'flinch',.25,nil),'styles without supplied flinch clips retain native feedback');R.tick();check(plain.force==.25 and not R.states[plain],'native-only response does not require a custom animation')
+ R.clearAll();isClient=oldClient
 end
 return 'PASS '..count..' MP authority, duplicate, range, lease, cooldown, observer and throttle checks'

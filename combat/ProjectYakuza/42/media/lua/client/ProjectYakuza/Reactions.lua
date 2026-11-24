@@ -25,7 +25,7 @@ function R.remote(victim,clip)
     if type(clip)~="string"or clip==""or victim:isDead()or victim:isOnFloor()or victim:isKnockedDown()or R.protected(victim)
         or PY.HitResponses.stuns[victim]or victim.isStaggerBack and victim:isStaggerBack()then return false end
     local state=R.states[victim]
-    if state and state.clip==clip and getTimestampMs()-state.startedAt<60 then return true end
+    if state and getTimestampMs()-state.startedAt<90 then return true end
     victim:setVariable("ProjectYakuzaEnemyReaction",true);victim:setVariable("ProjectYakuzaEnemyHitClip",clip)
     R.states[victim]={clip=clip,startedAt=getTimestampMs(),seenReaction=false}
     victim:setHitFromBehind(false);victim:setHitReaction("HeadLeft");victim:reportEvent("wasHit");hook()
@@ -41,7 +41,10 @@ function R.confirmed(attacker,victim,kind,force,clip)
     if R.protected(victim)then R.clear(victim);return false end
     if PY.Juggling.get(victim) then R.clear(victim);return true end
     if not PY.HitResponses.valid(kind,force) then return false end
-    if kind=="flinch" then R.remote(victim,clip) else R.clear(victim) end
+    if kind=="flinch"then
+        if PY.HitResponses.stuns[victim]or victim.isStaggerBack and victim:isStaggerBack()then return false end
+        if clip and not R.remote(victim,clip)then return false end
+    else R.clear(victim)end
     R.queue(attacker,victim,{kind=kind,force=force});return true
 end
 function R.onHit(attacker,victim,weapon,damage)
@@ -76,20 +79,23 @@ function R.update(zombie,time)
     local state=R.states[zombie];if not state then return end
     local elapsed=(time or getTimestampMs())-state.startedAt
     local reacting=string.find(string.lower(tostring(zombie:getCurrentStateName())),"hitreaction",1,true)~=nil
-    if reacting then state.seenReaction=true end
+    if reacting then state.seenReaction=true;state.leftAt=nil
+    elseif state.seenReaction and not state.leftAt then state.leftAt=time or getTimestampMs()end
     if zombie:isDead() or zombie:isOnFloor() or zombie:isKnockedDown()or R.protected(zombie)
-        or (not reacting and (state.seenReaction or elapsed>750)) or elapsed>5000 then R.clear(zombie) end
+        or PY.HitResponses.stuns[zombie]or zombie.isStaggerBack and zombie:isStaggerBack()
+        or (not reacting and(state.leftAt and(time or getTimestampMs())-state.leftAt>=80 or not state.seenReaction and elapsed>750))or elapsed>5000 then R.clear(zombie) end
 end
 function R.tick()
     local time=getTimestampMs();local elapsed=math.max(0,time-(R.lastTick or time));R.lastTick=time
     if isGamePaused()then
-        for _,state in pairs(R.states)do state.startedAt=state.startedAt+elapsed end
+        for _,state in pairs(R.states)do state.startedAt=state.startedAt+elapsed;if state.leftAt then state.leftAt=state.leftAt+elapsed end end
         for _,job in pairs(R.pending)do job.at=job.at+elapsed end
         return
     end
     local pending=R.pending;R.pending=setmetatable({}, {__mode="k"})
     for z,job in pairs(pending) do
-        if not R.protected(z)and time-job.at<=1000 and (not job.before or z:getHealth()<job.before) then
+        local blocked=job.response and job.response.kind=="flinch"and(PY.HitResponses.stuns[z]or z.isStaggerBack and z:isStaggerBack())
+        if not blocked and not R.protected(z)and time-job.at<=1000 and (not job.before or z:getHealth()<job.before) then
             local _,juggling=PY.Juggling.hit(job.attacker,z,job.juggle,job.stamp)
             if juggling then R.clear(z)else
                 if job.clip then R.remote(z,job.clip)end

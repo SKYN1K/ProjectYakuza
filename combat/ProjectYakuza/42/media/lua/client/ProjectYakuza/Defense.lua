@@ -140,6 +140,7 @@ function A:start()
     self:phase(self.context.attempt and "attempt"or "enter")
 end
 function A:attach(z)
+    if self.victimState then return false end
     local p=self.character
     self.context.target=z;self.boundAt=now();self.awaitingGrab=false
     self.entryAt=self.boundAt;self.entryX=z:getX();self.entryY=z:getY()
@@ -157,6 +158,11 @@ function A:attach(z)
     z:setForwardDirection(-self.context.fx,-self.context.fy)
     z:reportEvent("wasHit")
     z:setVariable("ProjectYakuzaGrabPhase","enter");z:setVariable("ProjectYakuzaGrabMarker","")
+    ProjectYakuza.emit("grabConnected",p,z,self)
+end
+function A:miss()
+    if self.missEmitted or self.victimState or not self.context.attempt then return end
+    self.missEmitted=true;ProjectYakuza.emit("grabMissed",self.character,self.candidate,self)
 end
 function A:acceptGrab(z)
     if self.cleaned or not self.started or not self.context.attempt or not self.awaitingGrab or self.candidate~=z or not self:isValid()or not D.reachable(self.character,z)then return false end
@@ -180,6 +186,7 @@ function A:cleanup(completed)
     if self.cleaned then return end
     self.cleaned=true
     local p=self.character
+    if completed and self.attemptSeen and not self.victimState then self:miss()end
     if self.context.kind=="grab" and isClient() and ProjectYakuza.Network then ProjectYakuza.Network.releaseGrab(p) end
     if self.started then
         if self.ownsAim then p:setIsAiming(p:isAimControlActive());self.ownsAim=nil end
@@ -201,6 +208,7 @@ function A:cleanup(completed)
     if ProjectYakuza.activeActions[p]==self.context then
         if completed then ProjectYakuza.completeAction(p) else ProjectYakuza.cancelAction(p,"defense_interrupted") end
     end
+    if self.context.kind=="grab"then ProjectYakuza.emit("grabEnded",p,self.context.target,self)end
 end
 function A:stop()self:cleanup(false);ISBaseTimedAction.stop(self)end
 function A:perform()self:cleanup(true);ISBaseTimedAction.perform(self)end
@@ -280,6 +288,7 @@ function A:grab(dt)
             local network=ProjectYakuza.Network
             if now()-self.gripRequestedAt>1500 or not(network and network.pending and network.pending[p])then self.awaitingGrab=false else return end
         end
+        if self.reachResolved and not self.awaitingGrab then self:miss()end
         if self.attemptSeen and(var(p,"ProjectYakuzaDefenseMarker")=="attempt_done"or time and time*1000>=slot.attemptDurationMs-20 or not time and now()-self.startedAt>=slot.attemptDurationMs)then self:forceComplete()
         elseif now()-self.startedAt>slot.attemptDurationMs+500 then self:forceStop()end
         return

@@ -103,6 +103,7 @@ Failures include unknown_action, style_not_equipped, busy, not_implemented, unkn
 | tauntStarted / tauntStopped | (player)/(player,completed) |
 | heatActivationStarted / heatActivationFlare / heatActivationStopped | (player)/(player)/(player,completed) |
 | guardHit / guardBroken / tigerDrop | (player,zombie)/(player)/(player,zombie) |
+| grabConnected / grabMissed / grabEnded | (player,zombie,action); attachment, resolved failed reach and final grab cleanup; MP waits for ownership approval |
 | grabHeld / throwStarted / throwHit | (player,zombie); emitted by the paired grab/throw controller |
 
 ## Network catalog
@@ -249,8 +250,12 @@ Native sandbox settings are read dynamically from SandboxVars.ProjectYakuza. Dra
 
 Music entries may supply title, artist, album, duration in seconds and a relative PNG cover path under media/textures. Optional metadata is validated at style registration; unknown duration can be omitted. The included twenty-track playlist uses original supplied ID3/FLAC metadata and previously verified recording durations. See music-metadata.json for provenance.
 
-ProjectYakuza.CombatMusic.playlist(player) returns the eligible equipped-style playlist. current(player) returns playing, track, position in seconds, duration, manual, automatic and estimated. The position is an elapsed-time estimate, not an FMOD timestamp query. Treat the returned style track as read-only. A stopped selection is retained while it still belongs to the equipped style.
+ProjectYakuza.CombatMusic.playlist(player) returns the eligible equipped-style playlist. current(player) returns playing, track, position in seconds, duration, manual, automatic, estimated, shuffle, repeatMode and favorite. The position is an elapsed-time estimate, not an FMOD timestamp query. Treat the returned style track as read-only. A stopped selection is retained while it still belongs to the equipped style.
 
 play(player,index) starts a one-based playlist entry in manual mode. skip(player,-1) and skip(player,1) select previous/next with wrapping. A playing automatic session keeps its combat lifecycle when skipped; skipping from stopped playback starts manual listening. userStop(player) stops the owned session and suppresses combat restart. automatic(player) clears that suppression and returns a playing manual session to the normal combat quiet/fade rules. Controls return success and an optional failure message. They cannot control another local player's owned session.
 
-Manual playback advances in list order; normal combat retains its shuffled selection. Style changes, invalid owners and world lifecycle cleanup release the owned channel and restore the prior native music mix. No reflection, extra Java component, raw FMOD handle control or seeking is used by these APIs.
+preferences(player) returns per-character settings stored in ProjectYakuzaMusic. Treat it as read-only; use setShuffle(player,boolean), setRepeat(player,mode) and toggleFavorite(player,soundId) to change settings. Repeat modes are off, all and one. Favorite IDs must belong to the currently equipped playlist. Preference setters return success and an optional failure message. Settings persist across playback/world cleanup; queue history is session-local and bounded to 128 entries.
+
+Until Shuffle is explicitly set, manual playback advances in list order and combat playback shuffles. A shuffle bag visits all remaining songs before refilling and excludes the current song from the next refill. Previous follows the actual playback history and Next can retrace that history. Repeat One restarts the selected recording only on natural completion; explicit skipping still changes tracks. Repeat Off stops at the ordered playlist or shuffle-bag boundary on natural completion; explicit navigation may wrap. Changing shuffle or repeat does not restart the playing channel. Favorites are metadata and do not change the playback queue.
+
+Style changes, invalid owners and world lifecycle cleanup release the owned channel and restore the prior native music mix. No reflection, extra Java component, raw FMOD handle control or seeking is used by these APIs.

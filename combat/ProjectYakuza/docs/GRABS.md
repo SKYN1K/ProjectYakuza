@@ -81,3 +81,9 @@ Style authors can opt into this flow with grab.attemptAnimation, grab.attemptCon
 Client and server share a time-based blend from the victim's actual position to the complete grip offset, including lateral placement. The default is 180 ms. Styles can set grab.entryBlendMs between 80 and 400. Both readiness markers and completed alignment are required before hold begins. A late MP grant must still pass range, facing, visibility and path checks. Obstructed entry releases the actors. Pause adjusts entry and approval clocks; a finished missed animation cannot retain its movement lock simply because the track disappeared.
 
 While a victim is held, a tick hook restores native aiming after input polling clears it. Cleanup restores the current native aim-control state and removes that hook when the final held victim is released. It respects remapped native aim controls.
+
+## Outcome feedback (1.0.8)
+
+The controller emits grabConnected(player,victim,action) once after attachment and ownership, grabMissed(player,candidate,action) once after a failed reach resolves, and grabEnded(player,victim,action) after cleanup releases active action ownership. The candidate may be nil. Interrupted attempts before contact do not emit a miss. Multiplayer pending approval emits neither outcome until the grant succeeds or expires.
+
+Default local feedback moves the existing grip cue to successful attachment and shows a 650 ms connection or miss notice. Reaching keeps its supplied whoosh; misses do not play a false impact. The held prompt lists the current Light and Grab bindings. A matching action context prevents stale cleanup from removing a later grab's feedback state.

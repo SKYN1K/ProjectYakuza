@@ -1,3 +1,13 @@
+# v1.0.8
+
+Music adds saved shuffle, Repeat Off/All/One and song favorites. Defaults preserve ordered manual listening and shuffled combat playback until Shuffle is explicitly changed. Shuffled playback visits every song before refilling and avoids an immediate repeat; Previous follows the actual playback history. Repeat One affects natural completion, while an explicit Next still changes songs. Repeat Off ends at the playlist or shuffle-bag boundary. Original audio bytes, gains and combat fade timing are unchanged.
+
+Grabs confirm attachment once, with the existing supplied grip cue and a brief GRAB CONNECTED notice. Failed reaches show MISSED GRAB without an impact sound; multiplayer waits for ownership approval before reporting an outcome. Held prompts show the current strike and throw bindings. Notices remain visible briefly after releasing aim and hide behind the map or menu.
+
+Near-simultaneous standing flinches share a 90 ms restart gate, including different source clips. A short stable-exit grace preserves reaction continuity across native hit-state handoffs. Stuns, native knockback, floor states, juggling and paired scenes keep priority. Damage, hit force, original motion, contact timing and grab spacing are unchanged.
+
+Offline Kahlua checks cover shuffled exhaustion/refill, actual history, repeat modes, saved preferences, failed-channel replacement, grab outcomes/cleanup, aim-independent notices, reaction continuity and MP authority. Runtime package/privacy and source-comment checks are required before publication. PZ was not launched; live feel and networking still need gameplay verification.
+
 # v1.0.7
 
 Music exposes local playback controls and a read-only current-track snapshot for interfaces and style add-ons. The included playlist now carries the original artist, album and complete recording duration for all twenty supplied songs. The corrupted Kiwami title is replaced with a readable title. Audio bytes, gains and normal combat fade timing remain unchanged.

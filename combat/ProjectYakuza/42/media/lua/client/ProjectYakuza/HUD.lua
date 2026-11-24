@@ -7,8 +7,14 @@ local function draw()
     if not player or not ProjectYakuza.isEquipped(player) then ProjectYakuza.StyleUI.releaseAll(cache);return end
     if ProjectYakuza.StyleUI.render("status",player,cache) then return end
     local diagnostics=player:getModData().ProjectYakuzaDiagnostics
-    if not player:isAiming() and not diagnostics then return end
     local time=getTimestampMs()
+    local feedback=ProjectYakuza.Feedback and ProjectYakuza.Feedback.states[player]
+    local visible=feedback and time<feedback.untilAt and not isGamePaused()
+        and not(ISWorldMap_instance and ISWorldMap_instance:isVisible())and not(ProjectYakuza.StyleSelector and ProjectYakuza.StyleSelector.setup)
+    if not player:isAiming()and not diagnostics then
+        if visible then getTextManager():DrawString(UIFont.Small,20,getCore():getScreenHeight()-130,feedback.text,.8,.9,1,1)end
+        return
+    end
     if time>=(cache.nextText or 0) then
         local style,s=ProjectYakuza.getPlayerStyle(player),ProjectYakuza.stateFor(player)
         local context=ProjectYakuza.activeActions[player]
@@ -20,8 +26,7 @@ local function draw()
     local x,y=20,getCore():getScreenHeight()-110
     local manager=getTextManager()
     manager:DrawString(UIFont.Small,x,y,cache.text,1,0.83,0.3,1)
-    local feedback=ProjectYakuza.Feedback and ProjectYakuza.Feedback.states[player]
-    if feedback and time<feedback.untilAt then manager:DrawString(UIFont.Small,x,y-20,feedback.text,.8,.9,1,1) end
+    if visible then manager:DrawString(UIFont.Small,x,y-20,feedback.text,.8,.9,1,1)end
     if diagnostics then
         if time>=(cache.nextDiagnostic or 0) then cache.diagnostic=ProjectYakuza.diagnosticLine(player);cache.nextDiagnostic=time+250 end
         manager:DrawString(UIFont.Small,x,y+20,cache.diagnostic,1,1,1,1)

@@ -69,4 +69,28 @@ do
  native=#calls;emit('grabReach',p,nil);check(#calls==native+1 and calls[#calls]=='ReachWhoosh','a missed reach plays the same source-timed arm whoosh as a successful attempt')
  F.clear();check(not F.guardAt[p],'world cleanup clears guard cue throttling')
 end
+do
+ ProjectYakuza.Bindings={label=function(id)return id end};style.sounds.grab='GripConfirm'
+ local context={};local before=#calls
+ emit('grabConnected',p,nil,context);emit('grabConnected',p,nil,context)
+ check(#calls==before+1 and calls[#calls]=='GripConfirm'and F.states[p].text=='GRAB CONNECTED','authority connection gets one supplied grip cue and immediate feedback')
+ check(F.states[p].untilAt-clock==650,'grab connection notice is brief')
+ emit('grabHeld',p);check(#calls==before+1 and F.states[p].text:find('strike',1,true),'holding shows usable controls without replaying its connection sound')
+ local missed={};before=#calls;emit('grabMissed',p,nil,missed);emit('grabMissed',p,nil,missed)
+ check(#calls==before and F.states[p].text=='MISSED GRAB','miss has a distinct short notice and no invented impact sound')
+ emit('grabEnded',p,nil,context);check(F.grabs[p].context==missed,'stale cleanup cannot clear a newer feedback session')
+ emit('grabEnded',p,nil,missed);check(not F.grabs[p],'matching cleanup releases the feedback session')
+end
+do
+ local draw;Events.OnPostUIDraw={Add=function(fn)draw=fn end};ProjectYakuza.StyleUI={render=function()return false end,releaseAll=function()end}
+ getSpecificPlayer=function()return p end;function p:getModData()return {}end;function p:isAiming()return false end
+ getCore=function()return {getScreenHeight=function()return 720 end}end;UIFont={Small=1};local text={}
+ getTextManager=function()return {DrawString=function(_,font,x,y,value)text[#text+1]=value end}end
+ do local _="ProjectYakuzaFixture:STATUSHUD" end
+ F.notice(p,'MISSED GRAB',650);draw();check(text[#text]=='MISSED GRAB','feedback remains visible briefly after releasing aim')
+ local n=#text;ISWorldMap_instance={isVisible=function()return true end};draw();check(#text==n,'map suppresses the brief notice');ISWorldMap_instance=nil
+ ProjectYakuza.StyleSelector={setup={}};draw();check(#text==n,'phone and style menus suppress the notice');ProjectYakuza.StyleSelector.setup=nil
+ clock=clock+651;draw();check(#text==n,'expired notice leaves no permanent HUD text')
+ F.clear();check(not F.states[p]and not F.grabs[p],'world cleanup clears notices and grab sessions')
+end
 return true,'PASS '..count..' shuffle bags, source clip identity, native volumes, world playback, MP selection, mute/fallback and style isolation checks'

@@ -1,7 +1,7 @@
 require "ProjectYakuza/Runtime"
 require "ProjectYakuza/SoundVariety"
 local ProjectYakuza=ProjectYakuza
-local F={states=setmetatable({}, {__mode="k"}),pending=setmetatable({}, {__mode="k"}),stocks=setmetatable({}, {__mode="k"}),activationSounds=setmetatable({}, {__mode="k"}),chargeSounds=setmetatable({}, {__mode="k"}),guardAt=setmetatable({}, {__mode="k"})}
+local F={states=setmetatable({}, {__mode="k"}),pending=setmetatable({}, {__mode="k"}),stocks=setmetatable({}, {__mode="k"}),activationSounds=setmetatable({}, {__mode="k"}),chargeSounds=setmetatable({}, {__mode="k"}),guardAt=setmetatable({}, {__mode="k"}),grabs=setmetatable({}, {__mode="k"})}
 ProjectYakuza.Feedback=F
 F.heatMix={charge=.45,windup=.80,flare=.80,ignition=.45,layer=.50,surge=.35,finish=.65,fadeMs=140,layerDelayMs=300,surgeDelayMs=650,lateMs=200,tailMs=2800}
 function F.sound(p,key)
@@ -23,8 +23,8 @@ function F.play(p,name,volume)
     if type(id)=="number" and id~=0 then p:getEmitter():setVolume(id,volume or 1) end
     return id
 end
-function F.notice(p,text)
-    if p and p:isLocalPlayer() then F.states[p]={text=text,untilAt=getTimestampMs()+1100} end
+function F.notice(p,text,life)
+    if p and p:isLocalPlayer() then F.states[p]={text=text,untilAt=getTimestampMs()+(life or 1100)} end
 end
 local function unhook()
     local any=false;for _ in pairs(F.pending) do any=true;break end
@@ -246,8 +246,10 @@ function F.initialise()
     for i=0,3 do local p=getSpecificPlayer(i);if p then F.stocks[p]=ProjectYakuza.Heat.stocks(p) end end
 end
 function F.clear()
+    F.states=setmetatable({}, {__mode="k"})
     F.pending=setmetatable({}, {__mode="k"});unhook()
     F.guardAt=setmetatable({}, {__mode="k"})
+    F.grabs=setmetatable({}, {__mode="k"})
     for p in pairs(F.activationSounds) do F.stopActivation(p) end
     for p in pairs(F.chargeSounds)do F.stopCharge(p,false)end
 end
@@ -261,7 +263,21 @@ ProjectYakuza.on("groundAttackStarted",specialSwing)
 ProjectYakuza.on("comboCancelled",F.cancel)
 ProjectYakuza.on("combatHit",F.hit)
 ProjectYakuza.on("heatChanged",F.heatChanged)
-ProjectYakuza.on("grabHeld",function(p)F.play(p,F.sound(p,"grab"),.65);F.notice(p,"GRAB - "..ProjectYakuza.Bindings.label("grab")..": throw")end)
+ProjectYakuza.on("grabConnected",function(p,z,context)
+    if not p or not p:isLocalPlayer()then return end
+    local old=F.grabs[p];if old and old.context==context then return end
+    F.grabs[p]={context=context,connected=true};F.play(p,F.sound(p,"grab"),.55);F.notice(p,"GRAB CONNECTED",650)
+end)
+ProjectYakuza.on("grabMissed",function(p,z,context)
+    if not p or not p:isLocalPlayer()then return end
+    local old=F.grabs[p];if old and old.context==context then return end
+    F.grabs[p]={context=context,connected=false};F.notice(p,"MISSED GRAB",650)
+end)
+ProjectYakuza.on("grabHeld",function(p)
+    local session=F.grabs[p];if not session or not session.connected then F.play(p,F.sound(p,"grab"),.65)end
+    F.notice(p,"GRAB - "..ProjectYakuza.Bindings.label("light")..": strike / "..ProjectYakuza.Bindings.label("grab")..": throw")
+end)
+ProjectYakuza.on("grabEnded",function(p,z,context)if F.grabs[p]and F.grabs[p].context==context then F.grabs[p]=nil end end)
 ProjectYakuza.on("grabReach",function(p)F.play(p,F.sound(p,"grabSwing")or F.sound(p,"punchSwing"),.30)end)
 ProjectYakuza.on("grabBroken",function(p)F.play(p,F.sound(p,"guardBreak"),.45);F.notice(p,"GRAB BROKEN")end)
 ProjectYakuza.on("throwHit",function(p)F.play(p,F.sound(p,"throwImpact"),.8);F.notice(p,"THROW")end)
