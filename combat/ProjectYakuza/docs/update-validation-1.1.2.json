@@ -1,0 +1,28 @@
+{
+  "version": "1.1.2",
+  "offlineOnly": true,
+  "gameLaunched": false,
+  "grabAssertions": 3168,
+  "multiplayerAssertions": 2071,
+  "nativeFadeUpdates": 192,
+  "nativeReturnSamples": 100,
+  "nativeBasePoseVariants": 2,
+  "nativeMixedMidpointPoses": 4,
+  "nativeHoldingPalmChecks": 210,
+  "sourceFrameAndPlacementChecks": 959,
+  "nativeSelectorChecks": 86,
+  "nativeEarlyHandoffs": 16,
+  "eventFreeObserverNodes": 454,
+  "returnLeadMs": 300,
+  "blendMs": 240,
+  "initiationDurationSeconds": 1.6,
+  "initiationTravel": "steady at the original total distance",
+  "sourceMediaChanged": false,
+  "placementDataChanged": true,
+  "ordinaryHitReactionUsedForGrabStrikes": false,
+  "sourceComments": 0,
+  "notValidated": [
+    "live single-player appearance",
+    "live host/client appearance"
+  ]
+}

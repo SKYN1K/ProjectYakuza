@@ -1,5 +1,14 @@
 # Grabs, grab strikes and Heat Actions
 
+## Current initiation and return behavior (1.1.2)
+
+Initiation travels steadily over attemptDurationMs, using the original final attemptMotion distance. The motion curve no longer imposes planted-foot pauses on world movement. One animation-aligned clock drives travel; each update collision-checks the pending path in short segments and submits one complete native displacement. Target clearance, pause, interruption and authority gates remain.
+
+A paired strike may provide returnAtMs after contactMs. Its returnAtMs plus the grab slot's recoveryMs must be strictly before the original clip duration. Dragon starts return at 700 ms for its one-second first strike and 1000 ms for its 1.3-second later strikes, with a 240 ms fade. Actor/victim percentage events select hold at the same source time. Keep stopAnimOnExit false so the outgoing tail continues during blending, and keep observer nodes free of damage or animation events. returnMotion samples must describe this moving-tail blend with the native eased weights. The native GrabFadeProbe and GrabBlendProbe live-tail mode validate the playback and placement separately.
+
+Grab strike damage uses the paired damage helper without the ordinary native weapon-hit reaction. A nonlethal strike preserves the victim's current animation state. Lethal damage finalizes one death; accepted contacts remain deduplicated on the server. This replaces the ordinary native-hit path described in older sections below.
+
+
 Dragon of Dojima now enables unarmed grabs. Hold RMB and press the configured Grab binding (G by default) to grab a standing zombie in front of you. Press it again to throw. There is no manual let-go input; releasing RMB keeps the grab active. During the hold you can walk using native Zomboid leg movement; the victim follows the paired pose. Losing the style, taking a hit/knockdown or running out of endurance still interrupts the hold safely. Other zombies can still hurt you during ordinary grabs.
 
 LMB, or the configured Light binding, cycles four original Kiryu grab strikes. Each fresh press starts the next strike when the previous motion has returned to hold. Movement locks during the source strike, and damage occurs once at its original BEP collision frame. Own grab strikes suppress knockdown/stagger so a surviving victim stays held. Strikes and the continuous hold use endurance.

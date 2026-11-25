@@ -185,12 +185,11 @@ function A:advanceReach(time)
     local slot=self.context.action;local motion=slot.attemptMotion
     if not motion or not time or time<0 or self.reachBlocked or self.victimState or self.awaitingGrab then return end
     local t=now();local elapsed=time-(self.reachTime or 0)
-    if time~=self.reachTime then self.reachSampleAt=t end
+    if not self.reachStartedAt then self.reachStartedAt=t-time*1000 end
     self.reachTime=time
-    local predicted=math.min(slot.attemptDurationMs/1000,time+math.min(1/motion.fps,math.max(0,(t-(self.reachSampleAt or t))/1000)))
-    local desired=ProjectYakuza.GrabRules.sample(motion,predicted)
-    local previous=self.reachDesired or 0
-    self.reachDesired=math.max(previous,desired)
+    local phase=math.min(slot.attemptDurationMs/1000,math.max(0,(t-self.reachStartedAt)/1000))
+    local desired=motion.frames[#motion.frames]*phase/(slot.attemptDurationMs/1000)
+    local previous=self.reachDesired or 0;self.reachDesired=math.max(previous,desired)
     if elapsed<0 or elapsed>.15 then return end
     local amount=math.max(0,desired-previous)
     if amount<=0 then return end
@@ -202,11 +201,13 @@ function A:advanceReach(time)
         if forward>=0 and math.abs(side)<.45 then amount=math.min(amount,math.max(0,forward-.45))end
     end
     if amount<=0 then return end
+    local moved=0;local x,y=self.character:getX(),self.character:getY()
     while amount>.000001 do
         local step=math.min(.04,amount);local dx,dy=self.context.fx*step,self.context.fy*step
-        if not ProjectYakuza.Quicksteps.canMove(self.character,dx,dy)then self.reachBlocked=true;return end
-        self.character:moveUnmodded(dx,dy);self.reachMoved=(self.reachMoved or 0)+step;amount=amount-step
+        if not ProjectYakuza.Quicksteps.canMove(self.character,dx,dy,x+self.context.fx*moved,y+self.context.fy*moved)then self.reachBlocked=true;break end
+        moved=moved+step;amount=amount-step
     end
+    if moved>0 then self.character:moveUnmodded(self.context.fx*moved,self.context.fy*moved);self.reachMoved=(self.reachMoved or 0)+moved end
 end
 function A:acceptGrab(z)
     if self.cleaned or not self.started or not self.context.attempt or not self.awaitingGrab or self.candidate~=z or not self:isValid()or not D.reachable(self.character,z)then return false end
@@ -335,7 +336,7 @@ function A:grab(dt)
             if now()-self.gripRequestedAt>1500 or not(network and network.pending and network.pending[p])then self.awaitingGrab=false else return end
         end
         if self.reachResolved and not self.awaitingGrab then self:miss(time)end
-        if self.attemptSeen and(var(p,"ProjectYakuzaDefenseMarker")=="attempt_done"or time and time*1000>=slot.attemptDurationMs-20 or not time and now()-self.startedAt>=slot.attemptDurationMs)then self:forceComplete()
+        if self.attemptSeen and(var(p,"ProjectYakuzaDefenseMarker")=="attempt_done"or time and time*1000>=slot.attemptDurationMs-1 or not time and now()-self.startedAt>=slot.attemptDurationMs)then self:forceComplete()
         elseif now()-self.startedAt>slot.attemptDurationMs+500 then self:forceStop()end
         return
     end
@@ -387,7 +388,7 @@ function A:grab(dt)
             self.strikeSeen=true
             self.strikeLastTime=math.max(self.strikeLastTime or 0,phase)
             if not self.strikeImpacted and phase*1000>=self.strikeMove.contactMs then self.strikeImpacted=true;if ProjectYakuza.GrabCombat then ProjectYakuza.GrabCombat.hit(self)end end
-            if phase>=self.strikeMove.duration-.001 then self:finishStrike()end
+            if phase*1000>=(self.strikeMove.returnAtMs or self.strikeMove.duration*1000)-1 then self:finishStrike()end
         end
         if self.strikeMove and now()-self.phaseAt>(self.strikeMove.duration+1)*1000 then self:forceStop()end
     elseif self.phaseName=="throw" then
@@ -416,7 +417,7 @@ function A:update()
     local dt=math.min(.1,elapsed/1000);self.lastAt=t
     if isGamePaused() then
         self.startedAt=self.startedAt+elapsed;self.phaseAt=self.phaseAt+elapsed
-        for _,key in ipairs({"boundAt","entryAt","gripRequestedAt","escapeNext","recoveryUntil","returnAt","reachSampleAt"})do if self[key]then self[key]=self[key]+elapsed end end
+        for _,key in ipairs({"boundAt","entryAt","gripRequestedAt","escapeNext","recoveryUntil","returnAt","reachStartedAt"})do if self[key]then self[key]=self[key]+elapsed end end
         return
     end
     if not self:isValid() then self:forceStop();return end

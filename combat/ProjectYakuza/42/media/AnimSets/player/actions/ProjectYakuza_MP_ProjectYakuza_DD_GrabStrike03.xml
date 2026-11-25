@@ -8,7 +8,7 @@
   <m_SpeedScale>1</m_SpeedScale>
   <m_BlendTime>.12</m_BlendTime>
   <m_BlendOutTime>0.24</m_BlendOutTime>
-  <m_StopAnimOnExit>true</m_StopAnimOnExit>
+  <m_StopAnimOnExit>false</m_StopAnimOnExit>
   <m_EarlyTransitionOut>false</m_EarlyTransitionOut>
   <m_SyncTrackingEnabled>false</m_SyncTrackingEnabled>
   <m_SubStateBoneWeights>

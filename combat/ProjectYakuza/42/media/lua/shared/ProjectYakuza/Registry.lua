@@ -351,7 +351,7 @@ function S.actionAllowed(style,kind,move)
     return true
 end
 end
-ProjectYakuza.VERSION = "1.1.1"
+ProjectYakuza.VERSION = "1.1.2"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -679,6 +679,7 @@ function ProjectYakuza.validateStyle(style)
                 else
                     for index,strike in ipairs(slot.strikes)do
                         if type(strike)~="table"or not text(strike.animation)or not text(strike.targetAnimation)or not number(strike.duration)or strike.duration<=0 or strike.duration>10 or not number(strike.contactMs)or strike.contactMs<0 or strike.contactMs>=strike.duration*1000 or strike.damageMultiplier~=nil and(not number(strike.damageMultiplier)or strike.damageMultiplier<0 or strike.damageMultiplier>3)then problem("invalid paired grab strike "..index)end
+                        if type(strike)=="table"and strike.returnAtMs~=nil and(not number(strike.returnAtMs)or not number(strike.duration)or not number(strike.contactMs)or strike.returnAtMs<=strike.contactMs or strike.returnAtMs+(slot.recoveryMs or 160)>=strike.duration*1000)then problem("grab return must finish before source playback ends")end
                     end
                 end
             end

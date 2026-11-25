@@ -126,8 +126,8 @@ p.x=.5;p.y=.2;z.y=.9
 for i=1,4 do
  check(G.input(p,a,true,false),'LMB starts grab strike '..i)
  local m=a.strikeMove;check(a.phaseName=='strike'..i and p.blocked and p.ignore and not p.deferred,'strike locks movement and selects correct paired phase')
- local before=z.hits;track=math.max(0,m.contactMs/1000-.02);clock=clock+10;a:update();check(z.hits==before,'strike cannot hit before source contact')
- track=m.contactMs/1000+.001;clock=clock+20;a:update();a:update();check(z.hits==before+1,'one source contact causes exactly one hit')
+ local before=z.hits;local beforeHealth=z.health;track=math.max(0,m.contactMs/1000-.02);clock=clock+10;a:update();check(z.hits==before,'strike cannot hit before source contact')
+ track=m.contactMs/1000+.001;clock=clock+20;a:update();a:update();check(z.hits==before and math.abs(z.health-(beforeHealth-R.damage(p,m)))<.000001,'one source contact applies configured damage without a second native flinch')
  check(z.locked and not z.floor and not z.knock and not z.stagger and z:getHitReaction()=='ProjectYakuzaGrabbed'and z.force==0,'strike does not eject or knock back held victim')
  track=m.duration;clock=clock+30;a:update();check(a.phaseName=='hold'and p.blocked and not p.deferred,'full source strike keeps movement locked while blending to its grip');track=0;clock=clock+style.actions.grab.recoveryMs;a:update();check(not p.blocked and p.deferred,'walking resumes after the complete pose blend')
 end
@@ -379,7 +379,7 @@ do
  check(D.update(p),'pressing Grab on empty space starts the reach animation')
  local miss=PY.activeActions[p].timedAction;miss:start();track=(style.actions.grab.attemptContactMs-10)/1000;clock=clock+190;miss:update()
  check(not miss.cleaned and not miss.context.target and not z.useless,'an empty early reach keeps playing without acquiring or freezing a zombie')
- track=(style.actions.grab.attemptDurationMs-10)/1000;clock=clock+300;miss:update();check(miss.cleaned and not PY.activeActions[p]and not p.blocked and not p.ignore and p.deferred,'a missed reach completes and restores movement')
+ track=style.actions.grab.attemptDurationMs/1000;clock=clock+300;miss:update();check(miss.cleaned and not PY.activeActions[p]and not p.blocked and not p.ignore and p.deferred,'a missed reach completes and restores movement')
  PY.MultiHit.targets=targets;PY.Bindings.down=bindings
  local hit=attempt();track=(style.actions.grab.attemptContactMs-10)/1000;clock=clock+190;hit:update();check(not hit.context.target and not z.useless,'nearby zombies remain free before the authored contact')
  track=style.actions.grab.attemptContactMs/1000;clock=clock+10;hit:update();check(hit.context.target==z and hit.victimState,'a hit attaches once at the reach contact');hit:cancel()
@@ -392,7 +392,7 @@ do
  PY.Network.grabStates[p]={grabId=901,useless=false,ignore=false,deferred=true,locked=false};PY.Network.leases[p]=z:getOnlineID();PY.Network.pending[p]=nil
  check(waiting:acceptGrab(z)and waiting.grabId==901 and waiting.context.target==z,'a server grant continues the existing animation and saves its lease')
  waiting:cancel();check(releases==1 and not z.useless and not z.ignore,'cancellation restores the victim and releases server ownership')
- local denied=attempt();track=style.actions.grab.attemptContactMs/1000;clock=clock+200;denied:update();PY.Network.pending[p]=nil;track=(style.actions.grab.attemptDurationMs-10)/1000;clock=clock+300;denied:update()
+ local denied=attempt();track=style.actions.grab.attemptContactMs/1000;clock=clock+200;denied:update();PY.Network.pending[p]=nil;track=style.actions.grab.attemptDurationMs/1000;clock=clock+300;denied:update()
  check(denied.cleaned and not denied.victimState and not z.useless,'a denied MP reach completes as a miss')
  check(not denied:acceptGrab(z),'a late grant cannot attach to an already completed attempt')
  PY.Network=network;isClient=client;track=0;D.input[p]=nil
@@ -472,9 +472,9 @@ do
  end
  for _,direction in ipairs({{1,0},{0,1},{-1,0},{0,-1}})do
   local a=reach();a.context.fx,a.context.fy=direction[1],direction[2];local x,y=p:getX(),p:getY()
-  for frame=1,95 do track=frame/60;clock=clock+17;a:update();if frame==4 then check((a.reachMoved or 0)>0 and a.reachMoved<=.06 and not a.missEmitted,'first source footstep starts bounded movement before contact resolves')end end
-  check(math.abs(p:getX()-x-PY.GrabMotion.reach.frames[48]*direction[1])<.003 and math.abs(p:getY()-y-PY.GrabMotion.reach.frames[48]*direction[2])<.003,'failed reach follows the complete step curve along its initial facing')
-  track=1.6;clock=clock+17;a:update();check(math.abs((a.reachMoved or 0)-PY.GrabMotion.reach.frames[49])<.00001,'full recovery follows all source footsteps without extra movement');a:cancel()
+  for frame=1,95 do track=frame/60;clock=clock+1000/60;a:update();if frame==4 then check((a.reachMoved or 0)>0 and a.reachMoved<=.06 and not a.missEmitted,'first source footstep starts bounded movement before contact resolves')end end
+  check(math.abs(p:getX()-x-PY.GrabMotion.reach.frames[49]*(95/60/1.6)*direction[1])<.003 and math.abs(p:getY()-y-PY.GrabMotion.reach.frames[49]*(95/60/1.6)*direction[2])<.003,'failed reach travels steadily over the original duration and distance along its initial facing')
+  track=1.6;clock=clock+1000/60;a:update();check(math.abs((a.reachMoved or 0)-PY.GrabMotion.reach.frames[49])<.00001,'full recovery follows all source footsteps without extra movement');a:cancel()
  end
  local blocked=reach();local x,y=p:getX(),p:getY();PY.Quicksteps.canMove=function()return false end;track=.08;clock=clock+80;blocked:update()
  PY.Quicksteps.canMove=function()return true end;track=.12;clock=clock+40;blocked:update();check(p:getX()==x and p:getY()==y and blocked.reachBlocked,'obstruction cancels further miss motion without a delayed catch-up');blocked:cancel()
@@ -578,7 +578,7 @@ do
  check(held.strikeMove and held.grabStrikeCount==serial+1 and not held.recoveryInput,'one queued press starts after recovery completes')
  held:cancel()
  for index,move in ipairs(style.actions.grab.strikes)do
-  local last=R.offset(style.actions.grab,'strike'..index,false,move.duration)
+  local last=R.offset(style.actions.grab,'strike'..index,false,move.returnAtMs/1000)
   local state={pairPhase='strike'..index,pairMoving=false,pairOffset=last,pairFrom=last,pairAt=0}
   local first=R.alignment(style.actions.grab,'hold',state,1000)
   check(math.abs(first.forward-last.forward)<.000001 and math.abs(first.right-last.right)<.000001,'return starts at the actual last paired position')
@@ -603,7 +603,33 @@ do
  clock=clock+8;a:update();local second=a.reachMoved or 0
  clock=clock+8;a:update();local third=a.reachMoved or 0
  check(second>first and third>second,'grab reach continues smoothly between repeated native animation timestamps')
- check(third<=R.sample(PY.GrabMotion.reach,.1+1/30)+.001,'inter-frame reach prediction stays within one original animation frame')
+ clock=clock+64;a:update();check((a.reachMoved or 0)>third,'source-clock reach does not stop after one predicted frame when a native timestamp repeats')
  a:cancel();PY.MultiHit.targets=targets;track=0
+end
+do
+ G.clear();local held=startGrab();local hit=z.Hit;local state=z.state;local reaction=z.reaction
+ z.Hit=function()error('ordinary hit reaction must not interrupt a paired grab strike')end
+ G.input(p,held,true,false);local move=held.strikeMove;local health=z.health
+ track=move.contactMs/1000+.001;clock=clock+250;held:update();held:update()
+ check(math.abs(z.health-(health-R.damage(p,move)))<.000001 and z.state==state and z.reaction==reaction,'paired strike damages once while preserving the victim animation state')
+ track=move.returnAtMs/1000;clock=clock+500;held:update();check(held.phaseName=='hold'and held.recoveryUntil,'return blend starts while the source hit track is still playing')
+ z.Hit=hit;held:cancel();track=0
+ local terminal=z.hitConsequences;local deaths=0;z.hitConsequences=function(...)deaths=deaths+1;return terminal(...)end;z.health=.1
+ check(R.strike(p,z,token,.5)and z.health==0 and deaths==1,'lethal paired strike finalizes one death without a native flinch')
+ check(not R.strike(p,z,token,.5)and deaths==1,'dead victim cannot receive another paired strike')
+ z.hitConsequences=terminal;z.health=10
+end
+do
+ G.clear();local targets=PY.MultiHit.targets;PY.MultiHit.targets=function()return {}end
+ p.blocked=false;p.ignore=false;p.deferred=true;mouse[1]=true;stamina=.9;track=0
+ check(PY.requestAction(p,'grab'),'queued native movement regression starts');local a=PY.activeActions[p].timedAction;a:start()
+ local original=p.moveUnmodded;local calls,lastRequest=0,0
+ p.moveUnmodded=function(self,dx,dy)calls=calls+1;lastRequest=math.sqrt(dx*dx+dy*dy)end
+ for i=0,3 do
+  local before=a.reachMoved or 0;local count=calls;track=i/10;clock=clock+100;a:update();local moved=(a.reachMoved or 0)-before
+  check(calls-count<2,'one timed-action update submits at most one native movement request')
+  if moved>0 then check(math.abs(lastRequest-moved)<.000001,'native requested movement contains the whole frame displacement instead of only its last collision substep')end
+ end
+ p.moveUnmodded=original;a:cancel();PY.MultiHit.targets=targets;track=0
 end
 return 'PASS '..checks..' reliable grab lifecycle, four source-timed strikes, following, cleanup, wall geometry, handoff and action protection checks'

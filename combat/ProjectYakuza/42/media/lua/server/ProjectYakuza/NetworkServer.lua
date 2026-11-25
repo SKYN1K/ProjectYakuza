@@ -221,7 +221,8 @@ function S.damage(p,z,amount,knock,kill,s,hitMove,hitStyle,jugglePlan,swing,quie
     if n<.001 then return end
     z:setAttackedBy(p);z:getHitDir():set(dx/n,dy/n)
     if kill then z:setAttackOutcome("fail");z:setTarget(nil);z:setHitForce(12);z:setUsePhysicHitReaction(true);z:setHitReaction("ShotBelly");z:Kill(p)
-    else S.processing=true;local ok,err=ProjectYakuza.HitResponses.nativeHit(p,z,item,amount,move);S.processing=false
+    else S.processing=true;local ok,err
+        if move and move.grabStrike then ok=ProjectYakuza.GrabRules.strike(p,z,item,amount)else ok,err=ProjectYakuza.HitResponses.nativeHit(p,z,item,amount,move)end;S.processing=false
         if not ok then print("[ProjectYakuza] server hit failed: "..tostring(err));return end end
     if knock then z:setKnockedDown(true);z:setFallOnFront(false) end
     s.result=(s.result or 0)+1
@@ -294,7 +295,7 @@ function S.command(module,command,p,a)
         local strike=lease.strike
         if not strike or strike.serial~=a.serial or strike.hit or t-strike.at<strike.move.contactMs-200 or t-strike.at>strike.move.duration*1000+650 then return end
         strike.hit=true;local amount=ProjectYakuza.GrabRules.damage(p,strike.move)
-        if amount and (amount==0 or S.damage(p,lease.z,amount,false,false,s,{noKnockback=true,hitResponse=false},style.id,nil,nil,true))then
+        if amount and (amount==0 or S.damage(p,lease.z,amount,false,false,s,{grabStrike=true,noKnockback=true,hitResponse=false},style.id,nil,nil,true))then
             ProjectYakuza.GrabRules.retainAfterHit(lease.z)
             S.fanout(p,"grabStrikeContact",{player=p:getOnlineID(),zombie=lease.z:getOnlineID(),serial=a.serial,grabId=lease.id,amount=amount})
         end

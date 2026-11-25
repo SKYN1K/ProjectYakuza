@@ -19,11 +19,12 @@ public class GrabAssetProbe {
    String clip=doc.getElementsByTagName("m_AnimName").item(0).getTextContent();
    if(clip.matches("ProjectYakuza_DD_GrabStrike(?:Victim)?0[1-4]")){
     if(!doc.getElementsByTagName("m_maxTorsoTwist").item(0).getTextContent().equals("0"))throw new AssertionError("native aim twist on paired strike "+path);
-    if(!node.getField("stopAnimOnExit").getBoolean(parsed)||node.getField("earlyTransitionOut").getBoolean(parsed))throw new AssertionError("frozen outgoing source pose "+path);
+    if(node.getField("stopAnimOnExit").getBoolean(parsed)||node.getField("earlyTransitionOut").getBoolean(parsed))throw new AssertionError("outgoing track must keep playing during its fade "+path);
     boolean observer=path.getFileName().toString().startsWith("ProjectYakuza_MP_");
     String marker="strike"+Integer.parseInt(clip.substring(clip.length()-2))+"_done";boolean found=observer,returned=observer;var eventRows=doc.getElementsByTagName("m_Events");
     String phase=observer?"ProjectYakuzaRemoteClip":clip.contains("Victim")?"ProjectYakuzaGrabPhase":"ProjectYakuzaDefensePhase",hold=observer?"ProjectYakuza_DD_GrabHold":"hold";
-    for(int i=0;i<eventRows.getLength();i++){var row=(Element)eventRows.item(i);if(row.getElementsByTagName("m_Time").item(0).getTextContent().equals("End")){String value=row.getElementsByTagName("m_ParameterValue").item(0).getTextContent();if(value.endsWith("="+marker))found=true;if(value.equals(phase+"="+hold))returned=true;}}
+    for(int i=0;i<eventRows.getLength();i++){var row=(Element)eventRows.item(i);var times=row.getElementsByTagName("m_TimePc");if(times.getLength()==1){double duration=clip.endsWith("01")?1:1.3,pc=Double.parseDouble(times.item(0).getTextContent());if(Math.abs(duration*(1-pc)-.3)>.00001)throw new AssertionError("return must begin before native playback ends "+path);String value=row.getElementsByTagName("m_ParameterValue").item(0).getTextContent();if(value.endsWith("="+marker))found=true;if(value.equals(phase+"="+hold))returned=true;}}
+
     if(!found||!returned)throw new AssertionError("native source completion and immediate hold handoff "+path);
     if(!observer){Path holdPath=path.resolveSibling(path.getFileName().toString().replaceFirst("GrabStrike(?:Victim)?0[1-4]",clip.contains("Victim")?"GrabVictimHold":"GrabHold"));if(!Files.isRegularFile(holdPath))holdPath=path.getParent().getParent().resolve("hitreaction").resolve(holdPath.getFileName());Object holding=node.getMethod("Parse",String.class).invoke(null,holdPath.toString());state.getMethod("addNode",node).invoke(st,holding);set.invoke(vars,"ProjectYakuzaGrabMoving","false");set.invoke(vars,phase,hold);var selected=(List<?>)select.invoke(st,vars,new ArrayList<>());if(selected.size()!=1||selected.get(0)!=holding)throw new AssertionError("native end selects hold without a replay gap "+path);handoffs++;set.invoke(vars,phase,observer?clip:"strike"+Integer.parseInt(clip.substring(clip.length()-2)));}
 

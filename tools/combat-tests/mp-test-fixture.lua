@@ -1055,12 +1055,12 @@ do
  clock=clock+2000;snapshot(p,{clip='ProjectYakuza_DD_GrabHold',phase='hold',rightAim=true,heat=100})
  command('grabRequest',{zombie=z1.id});local held=server.players[p.id].grab
  check(held and held.id and z1.stateLocked,'server grab owns a unique lease and native state latch')
- local before=z1.hits
+ local before=z1.hits;local health=z1.health
  command('grabStrike',{zombie=z1.id,grabId=held.id,serial=1,index=3});check(not held.strike,'server rejects an invented strike index')
  command('grabStrike',{zombie=z1.id,grabId=held.id,serial=1,index=1});check(held.strike and held.strike.index==1,'server validates first source strike')
  command('grabStrikeHit',{zombie=z1.id,grabId=held.id,serial=1});check(z1.hits==before,'early grab damage rejected')
  clock=clock+250;command('grabStrikeHit',{zombie=z1.id,grabId=held.id,serial=1});command('grabStrikeHit',{zombie=z1.id,grabId=held.id,serial=1})
- check(z1.hits==before+1 and z1.stateLocked and z1:getHitReaction()=='ProjectYakuzaGrabbed','source strike hits once and retains victim pairing')
+ check(z1.hits==before and z1.health<health and z1.stateLocked and z1:getHitReaction()=='ProjectYakuzaGrabbed','source strike damages once without restarting the native victim reaction')
  command('grabStrike',{zombie=z1.id,grabId=held.id,serial=2,index=2});check(held.strike.serial==1,'strike spam cannot overlap source clips')
  for i=1,12 do clock=clock+500;snapshot(p,{clip='ProjectYakuza_DD_GrabHold',phase='hold'});server.tick()end
  check(server.players[p.id].grab==held,'fresh active grab snapshots renew the hold beyond the old timeout')

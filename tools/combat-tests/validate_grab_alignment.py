@@ -27,7 +27,7 @@ for index,row in enumerate(motion['strikes'],1):
  for frame,offset in enumerate(values):
   hand=world(ab,locals_at(ab,ac,frame*160))['Bip01_L_Hand']@palm;contact=world(vb,locals_at(vb,vc,frame*160))['Bip01_Spine1']@collar
   assert abs(offset[0]+1.5*(hand.z+contact.z))<.000002 and abs(offset[1]-1.5*(hand.x+contact.x))<.000002;checks+=1
-reference=ROOT/'tools/combat-tests/grab-return-native.json';assert sha(reference)==motion['nativeReturnReferenceSha256'];ref=json.loads(reference.read_text(encoding='utf-8'));assert ref['maxHoldError']<.0001 and ref['maxBaseError']<.0001
+returns=json.loads((MOD/'docs/grab-return-1.1.2.json').read_text(encoding='utf-8'));reference=ROOT/returns['reference'];assert sha(reference)==returns['referenceSha256'];ref=json.loads(reference.read_text(encoding='utf-8'));assert ref['liveTail']and ref['mixedPoses']==4;assert ref['maxHoldError']<.0001 and ref['maxBaseError']<.0001
 for row in ref['cases']:
  line=next(line for line in runtime.splitlines()if line.startswith('M.returns['+str(row['index'])+']='));values=[[float(v)for v in pair.split(',')]for pair in re.findall(r'\{([^{}]+)\}',line)];value=values[row['frame']]
  assert abs(value[0]-row['forward'])<.00000001 and abs(value[1]-row['right'])<.00000001;checks+=1

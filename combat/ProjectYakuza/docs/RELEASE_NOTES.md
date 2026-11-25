@@ -1,3 +1,13 @@
+# v1.1.2
+
+Grab initiation uses steady forward travel over its original 1.6-second duration and total distance. The animation's planted-foot pauses and the one-frame prediction limit no longer stop movement between updates. Collision checks cover the full pending displacement; each update submits one complete native movement request. Target spacing, interruption, pause handling and late-ownership protection remain.
+
+Grab-hit returns begin 300 ms before source playback ends and blend for 240 ms while the outgoing tail keeps playing. Native percentage events select the holding pose before the source track ends. Paired placement follows samples of the actual eased native mixer with the outgoing tail still moving. The original animation clips and playback speed are unchanged.
+
+Paired grab damage applies the configured amount without calling the ordinary weapon-hit reaction. This prevents a second native flinch from interrupting the victim clip. Single-player and server paths share the same damage helper; lethal hits finalize death once, and repeated MP contacts remain rejected.
+
+Native checks cover live fade weights, four mixed midpoint poses, 100 return samples across two base poses, unchanged holding grips and owner/victim/observer selection. Lifecycle checks cover steady queued movement, contact timing, health changes without native flinch calls and one-time death. Offline checks do not establish the final live appearance or network timing; restart the game and update every MP peer.
+
 # v1.1.1
 
 Grab strikes hand off to the holding node directly from their native end event. Actor, victim and multiplayer observer selectors freeze their outgoing hit pose during the existing 240 ms return fade. The Lua controller recognizes a completed native handoff even if the new hold-start marker has already replaced the strike-end marker. Repeated multiplayer victim-pose packets cannot re-enter the same finished strike phase.

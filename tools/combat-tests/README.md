@@ -40,6 +40,7 @@ Use the JVM shipped with the supported game build for native probes. Several nat
 ## Native validation
 
 - CompileCombatLua checks production Lua compilation against the installed Kahlua compiler.
+- GrabFadeProbe checks actual native return-fade weights and continuing outgoing playback. GrabBlendProbe accepts --live-tail after its existing arguments to sample the moving strike tail with native easing and verify genuinely mixed midpoint poses.
 - WorkshopPackageProbe validates the staged content layout, file types and preview without starting a game or uploading it.
 - MPObserverProbe and validate_mp_nodes.py check observer selectors and event isolation.
 - LimbImpactProbe, LimbRenderProjectionProbe and the attack-effect validators check source-sampled skeleton positions, projections, contact windows and texture data.

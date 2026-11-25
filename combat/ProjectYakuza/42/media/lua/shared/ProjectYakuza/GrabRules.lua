@@ -43,6 +43,13 @@ function G.damage(p,move)
     if base then return base.amount({contacts={{damageMultiplier=move.damageMultiplier or .65}}},1,held)end
     return .4
 end
+function G.strike(p,z,item,amount)
+    if not z or z:isDead()or type(amount)~="number"or amount~=amount or amount<0 or amount>1000000 then return false end
+    if amount==0 or z.isInvulnerable and z:isInvulnerable()then return true end
+    z:setAttackedBy(p);z:setHealth(math.max(0,z:getHealth()-amount))
+    if z:isDead()then z:hitConsequences(item,p,true,0,false)end
+    return true
+end
 function G.wall(p,z,move)
     if not p or not z or not move or p:isDead()or p:isOnFloor()or p:isKnockedDown()or p:isClimbing()or (p:getHitReaction()or "")~=""or z:isDead()or z:isOnFloor()or z:isKnockedDown()or math.abs(p:getZ()-z:getZ())>.25 then return end
     local paths=ProjectYakuza.PairedMotions and ProjectYakuza.PairedMotions[move.motionId];if not paths then return end

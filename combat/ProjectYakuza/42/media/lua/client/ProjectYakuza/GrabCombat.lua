@@ -33,7 +33,7 @@ function G.hit(a)
     if isClient()then PY.Network.send(p,"grabStrikeHit",{zombie=z:getOnlineID(),serial=a.grabStrikeCount,grabId=a.grabId});G.present(p,z)
     else
         local amount=R.damage(p,move);local ok=amount~=nil
-        if amount and amount>0 then ok=PY.HitResponses.nativeHit(p,z,p:getPrimaryHandItem(),amount,{noKnockback=true,hitResponse=false})end
+        if amount and amount>0 then ok=R.strike(p,z,p:getPrimaryHandItem(),amount)end
         if ok then PY.Heat.onHit(p,z,amount,{active=true});G.present(p,z)end
     end
     R.retainAfterHit(z)
