@@ -1,5 +1,5 @@
 from pathlib import Path
-import re
+import re,json
 ROOT=Path(__file__).resolve().parents[1]
 CUSTOM=re.compile(r'bottle|crate|bicycle|lau_?spear',re.I)
 MODULES={'Y5ObjectMoves','BottleMoves','BottleHeatPaths','BicycleMoves','BicycleHeatPaths','CrateHeatMove','BicycleBreak'}
@@ -55,6 +55,9 @@ def tracks(text):
     return '\n'.join(line for line in text.splitlines()if not(line.startswith('C[')and CUSTOM.search(line)))+'\n'
 
 def transform(name,text):
+    if '/Translate/'in name and name.endswith('.json'):
+        values=json.loads(text);values={key:value for key,value in values.items()if not(CUSTOM.search(key)and'ProjectYakuza'in key)}
+        return json.dumps(values,ensure_ascii=False,indent=4)+'\n'
     original=text
     stem=Path(name).stem
     if stem=='DragonOfDojima':
@@ -91,7 +94,7 @@ def release_files(mod,files):
         path=Path(name)
         if path.name in SCRIPTS or path.stem in MODULES:continue
         if path.suffix.lower()in {'.xml','.x','.png','.wav','.ogg','.mp3'}and CUSTOM.search(path.name):continue
-        if path.suffix.lower()in {'.lua','.txt'}:
+        if path.suffix.lower()in {'.lua','.txt','.json'}:
             original=source.read_text(encoding='utf-8');updated=transform(name,original)
             if updated!=original:
                 target=cache/name;target.parent.mkdir(parents=True,exist_ok=True);target.write_text(updated,encoding='utf-8',newline='\n');result[name]=target;continue

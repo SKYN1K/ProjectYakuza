@@ -1,0 +1,37 @@
+{
+  "version": "1.1",
+  "offlineOnly": true,
+  "gameLaunched": false,
+  "nativeTranslationStrings": 163,
+  "exactSandboxPageLabelsTooltips": 13,
+  "nativeSandboxControls": 6,
+  "sandboxAssertions": 152,
+  "multiplayerAssertions": 2068,
+  "heatActionAssertions": 1485,
+  "packagingUnitTests": 7,
+  "installerUnitTests": 5,
+  "productionLuaModules": 89,
+  "runtimeFiles": 1200,
+  "sourceComments": 0,
+  "assetBytesChanged": false,
+  "multiplayerRegressionBeforeFix": "grab request discarded without a preceding state packet",
+  "multiplayerChecks": [
+    "atomic current-state request from production client",
+    "active grab-attempt selector",
+    "bat, katana and knife Heat Action grants",
+    "current unit aim when separate direction update lags",
+    "stale state, invalid aim, distance and heat rejection",
+    "existing duplicate, lease, sandbox, collision and rate checks"
+  ],
+  "notValidated": [
+    "live host/client triggering",
+    "network transport under real latency"
+  ],
+  "releaseFilterUnitTests": 5,
+  "nativeInstalledTranslationStrings": 123,
+  "nativeWorkshopValidationPassed": true,
+  "installedRuntimeBytesVerified": true,
+  "workshopRuntimeBytesVerified": true,
+  "workshopMetadataAndPreviewPreserved": true,
+  "changedFilesBackedUp": 8
+}

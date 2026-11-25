@@ -48,7 +48,9 @@ sounds=[p for p in (media/'sound').rglob('*')if p.is_file()]
 for name in soundFiles:assert (mod/'42'/name.strip()).is_file(),name
 for p in sounds:assert p.relative_to(mod/'42').as_posix()in soundFiles,'unreferenced sound: '+str(p)
 assert 'ProjectYakuza_Y6_ChargeEnd'not in scriptText
-for name in re.findall(r'\bGameSound_(ProjectYakuza_\w+)\s*=',(media/'lua/shared/Translate/EN/GameSound_EN.txt').read_text(encoding='utf-8')):
+for key in json.loads((media/'lua/shared/Translate/EN/GameSound.json').read_text(encoding='utf-8')):
+    if not key.startswith('GameSound_ProjectYakuza_'):continue
+    name=key.removeprefix('GameSound_')
     assert re.search(r'\bsound\s+'+re.escape(name)+r'\s*\{',scriptText),'unused sound label: '+name
 assert 'dd_light_01'not in (media/'lua/client/ProjectYakuza/AttackTracks.lua').read_text()
 trackText=(media/'lua/client/ProjectYakuza/AttackTrailCatalog.lua').read_text(encoding='utf-8')

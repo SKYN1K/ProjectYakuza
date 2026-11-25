@@ -14,7 +14,7 @@ $mod = Join-Path $root 'combat/ProjectYakuza'
 $versionLine = Get-Content -LiteralPath (Join-Path $mod '42/mod.info') | Where-Object { $_ -match '^version=' }
 $installedVersion = $versionLine.Substring(8).Trim()
 if (-not $Version) { $Version = $installedVersion }
-if ($Version -ne $installedVersion -or $Version -notmatch '^\d+\.\d+\.\d+$') { throw 'Release version must match mod.info.' }
+if ($Version -ne $installedVersion -or $Version -notmatch '^\d+\.\d+(?:\.\d+)?$') { throw 'Release version must match mod.info.' }
 $notes = Join-Path $mod 'docs/RELEASE_NOTES.md'
 if (-not (Test-Path -LiteralPath $notes)) { throw 'Release notes are required.' }
 $tag = if ($ReleaseTag) { $ReleaseTag } else { 'v' + $Version }

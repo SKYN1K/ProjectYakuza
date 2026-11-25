@@ -1,10 +1,10 @@
 # Dragon of Dojima reference style
 
-Project Yakuza v1.0.14 packages version **1.0.14**, Lua API **3** and multiplayer protocol **2**. For independent style development, start with [Style authoring](docs/STYLE_AUTHORING.md) and the [API reference](docs/API_REFERENCE.md).
+Project Yakuza v1.1 packages version **1.1**, Lua API **3** and multiplayer protocol **2**. For independent style development, start with [Style authoring](docs/STYLE_AUTHORING.md) and the [API reference](docs/API_REFERENCE.md).
 
 ## Install and select
 
-Download the named B42 install ZIP from [v1.0.14](https://github.com/SKYN1K/ProjectYakuza/releases/tag/v1.0.14). Extract it so `Zomboid/mods/ProjectYakuza/42/mod.info` exists, enable Project Yakuza for the save and restart PZ. Servers and clients need matching framework and add-on versions.
+Download the named B42 install ZIP from [v1.1](https://github.com/SKYN1K/ProjectYakuza/releases/tag/v1.1). Extract it so `Zomboid/mods/ProjectYakuza/42/mod.info` exists, enable Project Yakuza for the save and restart PZ. Servers and clients need matching framework and add-on versions.
 
 Hold Z, point at a slot and release Z to equip it. Left defaults to Dragon of Dojima; right starts empty. The bottom slot opens assignments and settings. The top slot unequips the style. The wheel does not pause gameplay. Other registered styles appear in the assignment list automatically.
 

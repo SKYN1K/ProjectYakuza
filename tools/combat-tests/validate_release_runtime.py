@@ -9,7 +9,7 @@ assert 'renderRect'in screen and 'Events.OnTick.Add(F.update)'in screen and 'Eve
 assert all(token not in screen for token in ['getTexture','renderPoly','OnPreRender','OnRenderTick.Add(F.update)'])
 subprocess.run(['E:/Java/bin/javac.exe',str(WORK/'RemovedItemLoadProbe.java')],check=True)
 for name,path in files.items():
- if path.suffix.lower()in {'.lua','.txt','.xml'}:
+ if path.suffix.lower()in {'.lua','.txt','.xml','.json'}:
   text=path.read_text(encoding='utf-8')
   assert not re.search(r'ProjectYakuza[._/][\w_]*(?:Bottle|Crate|Bicycle|LauSpear)[\w_]*',text),name
   for module in re.findall(r'\brequire\s*[\( ]*"(ProjectYakuza/[^"\n]+)"',text):assert any('42/media/lua/'+side+'/'+module+'.lua'in files for side in ['shared','client','server']),(name,module)

@@ -1,8 +1,10 @@
 # Validation coverage
 
-GitHub release **v1.0.14** packages version **1.0.14**. The player profile contains 1,201 runtime files and 89 Lua modules; the full development source contains additional custom-object work excluded from this profile.
+The [1.1 validation report](update-validation-1.1.json) covers 163 native JSON translations in source and 123 in the installed player profile, the exact sandbox labels/tooltips, six unchanged native option definitions and 152 sandbox rule checks. Multiplayer tests cover 2,068 assertions, including production grab-attempt and bat/katana/knife intents delivered without their separate state updates, current aim, stale contexts, invalid directions, heat costs and range. Heat Action lifecycle tests cover 1,485 assertions. These are offline tests; network transport timing and gameplay still need a real host/client session.
 
-The [release-profile report](release-profile-1.0.14.json) records the retained profiles, transformed source files and 262 excluded custom files. Validation covers compilation of the filtered Lua modules, require/animation closure, retained bat/katana/knife profiles and actions, rejection of removed multiplayer moves/observer clips, and resolution of limb tracks. Native inventory checks confirm that a missing item record is skipped without consuming the next saved record.
+GitHub release **v1.1** packages version **1.1**. The player profile contains 1,200 runtime files and 89 Lua modules; the full development source contains additional custom-object work excluded from this profile.
+
+The [release-profile report](release-profile-1.1.json) records the retained profiles, transformed source files and 262 excluded custom files. Validation covers compilation of the filtered Lua modules, require/animation closure, retained bat/katana/knife profiles and actions, rejection of removed multiplayer moves/observer clips, and resolution of limb tracks. Native inventory checks confirm that a missing item record is skipped without consuming the next saved record.
 
 Package checks enforce the runtime allowlist, inspect private paths/credential formats and compare archive bytes. The native B42 Workshop validator checks content layout, file types and preview. Installation verifies both the normal mod copy and the loadable Workshop payload against the player ZIP. Development source and retained media are recorded separately; retained animation, model, texture and audio bytes are unchanged by release filtering.
 

@@ -2,7 +2,7 @@ from pathlib import Path
 import argparse,hashlib,json,re,shutil,zipfile,struct,zlib,importlib.util
 
 ROOT=Path(__file__).resolve().parents[1]
-EXTENSIONS={'.lua','.txt','.xml','.x','.png','.wav','.ogg','.mp3','.info'}
+EXTENSIONS={'.lua','.txt','.xml','.x','.png','.wav','.ogg','.mp3','.info','.json'}
 FORBIDDEN={'.git','.codex','.agents','docs','templates','tools','backups','extracted','previews','__pycache__'}
 PRIVATE_PATTERNS={
     'personal or development path':rb'(?i)[a-z]:[\\/](?:users|steam|steamlibrary|blender|projects|program files)[\\/]',
@@ -65,7 +65,11 @@ def runtime_files(mod,release=False):
             assert path.resolve().is_relative_to(mod),relative
             assert relative=='42/mod.info'or len(parts)>2 and parts[1]=='media',relative
             assert path.suffix.lower()in EXTENSIONS,relative
-            data=path.read_bytes();scan(relative,data);result[relative]=path
+            data=path.read_bytes()
+            if path.suffix.lower()=='.json':
+                assert re.fullmatch(r'42/media/lua/shared/Translate/[A-Z_]+/[A-Za-z][A-Za-z_]*\.json',relative),relative
+                values=json.loads(data);assert isinstance(values,dict)and all(isinstance(k,str)and isinstance(v,str)for k,v in values.items()),relative
+            scan(relative,data);result[relative]=path
     assert '42/mod.info'in result and result
     if release and mod.name=='ProjectYakuza':
         spec=importlib.util.spec_from_file_location('release_runtime',ROOT/'tools/Build-ReleaseRuntime.py');profile=importlib.util.module_from_spec(spec);spec.loader.exec_module(profile);result=profile.release_files(mod,result)
@@ -106,7 +110,7 @@ def workshop(mod_id,version,files,dist):
     return folder,archive
 
 def main():
-    parser=argparse.ArgumentParser();parser.add_argument('--project',choices=['combat'],default='combat');parser.add_argument('--version',required=True);parser.add_argument('--workshop',action='store_true');args=parser.parse_args();assert re.fullmatch(r'\d+\.\d+\.\d+',args.version)
+    parser=argparse.ArgumentParser();parser.add_argument('--project',choices=['combat'],default='combat');parser.add_argument('--version',required=True);parser.add_argument('--workshop',action='store_true');args=parser.parse_args();assert re.fullmatch(r'\d+\.\d+(?:\.\d+)?',args.version)
     mod_id='ProjectYakuza';mod=ROOT/args.project/mod_id;files=runtime_files(mod,release=args.project=="combat");assert('version='+args.version)in(mod/'42/mod.info').read_text();dist=ROOT/'dist';dist.mkdir(exist_ok=True);archive=dist/(mod_id+'-B42-v'+args.version+'.zip');write_zip(archive,mod_id,files)
     report={'project':mod_id,'version':args.version,'files':len(files),'zip':str(archive),'size':archive.stat().st_size,'sha256':hashlib.sha256(archive.read_bytes()).hexdigest(),'runtimeOnly':True,'releaseProfile':'vanilla-weapons','privacyScanPassed':True,'excluded':['development notes','provenance reports','templates','tools','backups','AGENTS.md','local paths','credentials']}
     if args.workshop:

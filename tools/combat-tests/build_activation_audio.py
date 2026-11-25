@@ -22,13 +22,12 @@ with tempfile.TemporaryDirectory(prefix='project-yakuza-activation-')as tmp:
         blocks.append('    sound '+sound+'\n    {\n        category = ProjectYakuza_Effects,\n        is3D = true,\n        loop = false,\n        clip\n        {\n            file = media/sound/ProjectYakuza/'+out.name+',\n            distanceMin = 1,\n            distanceMax = 16,\n            volume = 0.70,\n        }\n    }')
 script='module ProjectYakuza\n{\n'+'\n'.join(blocks)+'\n}\n';target=mod/'42/media/scripts/ProjectYakuza_ExtremeHeat.txt'
 report={'operation':'Three complete original Kiwami 2 act_kiryu non-voice streams decoded directly to PCM without trimming, mixing, resampling or synthesis. Existing Yakuza 6 activation layers remain. Runtime gains and fades are applied by the native emitter.','sounds':records,'script':target.relative_to(mod).as_posix(),'scriptSha256':hashlib.sha256(script.encode()).hexdigest()}
-manifest=mod/'docs/extreme-activation-audio.json';labels=mod/'42/media/lua/shared/Translate/EN/GameSound_EN.txt'
+manifest=mod/'docs/extreme-activation-audio.json';labels=mod/'42/media/lua/shared/Translate/EN/GameSound.json'
 if write:
     target.write_bytes(script.encode());manifest.write_text(json.dumps(report,indent=2)+'\n')
-    text=labels.read_text();lines=['    GameSound_'+r['sound']+' = '+json.dumps(r['label'])+','for r in records if 'GameSound_'+r['sound']+' ='not in text]
-    if lines:labels.write_text(text.rstrip().removesuffix('}')+'\n'.join(lines)+'\n}\n')
+    values=json.loads(labels.read_text(encoding='utf-8'));values.update({'GameSound_'+r['sound']:r['label']for r in records});labels.write_text(json.dumps(values,indent=4)+'\n',encoding='utf-8')
 else:
     assert target.read_bytes()==script.encode()and json.loads(manifest.read_text())==report
-    assert all('GameSound_'+r['sound']+' = '+json.dumps(r['label'])+','in labels.read_text()for r in records)
+    assert all(json.loads(labels.read_text(encoding='utf-8')).get('GameSound_'+r['sound'])==r['label']for r in records)
 assert len({r['sha256']for r in records})==3
 print('PASS three distinct complete original Kiwami 2 PCM decodes, cue IDs, sample counts, readable labels and provenance')

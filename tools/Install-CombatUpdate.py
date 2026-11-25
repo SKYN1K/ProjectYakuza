@@ -27,7 +27,7 @@ def matches(folder,files):
 
 def install(mod,version,zomboid,backup,stage_source,mod_id="ProjectYakuza"):
     assert mod_id=="ProjectYakuza"
-    assert re.fullmatch(r'\d+\.\d+\.\d+',version)
+    assert re.fullmatch(r'\d+\.\d+(?:\.\d+)?',version)
     mod=Path(mod).resolve();zomboid=Path(zomboid).resolve();backup=Path(backup).resolve();stage_source=Path(stage_source).resolve()
     assert not backup.is_relative_to(zomboid),'Backups must be outside the game cache and Workshop search path'
     files=package.runtime_files(mod,release=mod_id=="ProjectYakuza")

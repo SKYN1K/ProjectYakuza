@@ -1397,4 +1397,55 @@ do
  local plain=responseVictim(28002);check(R.confirmed(p,plain,'flinch',.25,nil),'styles without supplied flinch clips retain native feedback');R.tick();check(plain.force==.25 and not R.states[plain],'native-only response does not require a custom animation')
  R.clearAll();isClient=oldClient
 end
+do
+ local peer=player(29001,0);local victim=zombie(29002,.8)
+ function peer:getForwardDirection()return {getX=function()return peer.fx or 1 end,getY=function()return peer.fy or 0 end}end
+ local packet={seq=1,style='dragon_of_dojima',weaponProfile='',equipped=true,heat=100,fuel=100,extreme=false,clip='',move='dd_light_01',swing=0,rightAim=true,comboBusy=false,aimX=1,aimY=0}
+ clock=clock+2000
+ server.command(P.module,'grabRequest',peer,{event=1,zombie=victim.id,state=packet})
+ check(server.players[peer.id].grab~=nil,'grab intent carries its current authoritative snapshot even before the separate state packet arrives')
+ server.release(peer)
+ peer.hand={getFullType=function()return 'Base.BaseballBat'end,getCondition=function()return 10 end}
+ packet.seq=2;packet.weaponProfile='bat';packet.move='dd_bat_light_01'
+ server.command(P.module,'heatRushBegin',peer,{event=2,zombie=victim.id,request=29001,weaponHeat=true,state=packet})
+ check(ProjectYakuza.HeatRushServer.leases[peer]~=nil,'weapon Heat intent validates its attached current equipment, aim, combo and orb snapshot')
+ ProjectYakuza.HeatRushServer.finish(peer,false)
+ peer.hand=peer.token;packet.seq=3;packet.weaponProfile='';packet.move='dd_light_01';packet.aimX=0;packet.aimY=1
+ victim.x=0;victim.y=.8
+ server.command(P.module,'grabRequest',peer,{event=3,zombie=victim.id,state=packet})
+ check(server.players[peer.id].grab~=nil,'grab uses the validated current aim while the separate player-facing update is delayed')
+ server.release(peer)
+ packet.seq=4;packet.aimX=0;packet.aimY=0
+ server.command(P.module,'grabRequest',peer,{event=4,zombie=victim.id,state=packet})
+ check(not server.players[peer.id].grab,'zero-length intent facing cannot authorize a grab')
+ server.players[peer.id]=nil;actors[peer.id]=nil
+end
+do
+ local peer=player(29101,0);local victim=zombie(29102,.8);peer.localPlayer=true;peer.combo={active=false,step=0};peer.data.ProjectYakuzaStyle='dragon_of_dojima';peer.data.ProjectYakuzaHeat=100
+ local input=isMouseButtonDown;isMouseButtonDown=function(button)return button==1 end
+ local localState=client.localState(peer);localState.equipReady=peer.token;localState.equipStyle='dragon_of_dojima'
+ peer.vars.PerformingAction='ProjectYakuza_DD_Grab';peer.vars.ProjectYakuzaDefensePhase='attempt';ProjectYakuza.activeActions[peer]={kind='grab',timedAction={started=true}}
+ clock=clock+2000
+ check(client.send(peer,'grabRequest',{zombie=victim.id}),'client emits a grab intent after equipment approval')
+ local wire=outgoing[#outgoing];check(wire.command=='grabRequest'and wire.args.state and wire.args.state.equipped and wire.args.state.clip=='ProjectYakuza_DD_GrabAttempt','production client attaches its active grab-attempt snapshot to the request')
+ server.command(wire.module,wire.command,peer,wire.args)
+ check(server.players[peer.id].grab~=nil,'production client grab still starts when the standalone state packet is withheld')
+ server.release(peer);ProjectYakuza.activeActions[peer]=nil;peer.vars.PerformingAction='';peer.vars.ProjectYakuzaDefensePhase=''
+ for _,id in ipairs({'Base.BaseballBat','Base.Katana','Base.HuntingKnife'})do
+  clock=clock+2000;victim.x=.8;victim.y=0;victim.health=10
+  peer.hand={getFullType=function()return id end,getCondition=function()return 10 end};localState.equipReady=peer.hand
+  check(client.send(peer,'heatRushBegin',{zombie=victim.id,request=29101,weaponHeat=true}),'retained weapon emits its Heat Action intent')
+  wire=outgoing[#outgoing];check(wire.command=='heatRushBegin'and wire.args.state.rightAim and not wire.args.state.comboBusy,'production intent includes current physical aim and idle combo')
+  server.command(wire.module,wire.command,peer,wire.args)
+  check(ProjectYakuza.HeatRushServer.leases[peer]~=nil,'retained weapon Heat Action starts with only the atomic intent delivered: '..id)
+  ProjectYakuza.HeatRushServer.finish(peer,false)
+ end
+ clock=clock+2000;peer.data.ProjectYakuzaHeat=0;client.send(peer,'heatRushBegin',{zombie=victim.id,request=29102,weaponHeat=true});wire=outgoing[#outgoing];server.command(wire.module,wire.command,peer,wire.args)
+ check(not ProjectYakuza.HeatRushServer.leases[peer],'attached snapshot cannot bypass the Heat Action orb requirement')
+ peer.data.ProjectYakuzaHeat=100;victim.x=5;clock=clock+2000;client.send(peer,'heatRushBegin',{zombie=victim.id,request=29103,weaponHeat=true});wire=outgoing[#outgoing];server.command(wire.module,wire.command,peer,wire.args)
+ check(not ProjectYakuza.HeatRushServer.leases[peer],'attached snapshot cannot bypass target distance')
+ local latest=server.players[peer.id].seq;wire.args.event=wire.args.event+1;wire.args.state.seq=latest-1;victim.x=.8;server.command(wire.module,wire.command,peer,wire.args)
+ check(not ProjectYakuza.HeatRushServer.leases[peer]and server.players[peer.id].seq==latest,'older intent context cannot replace a newer accepted state')
+ isMouseButtonDown=input;server.players[peer.id]=nil;actors[peer.id]=nil;client.locals[peer]=nil
+end
 return 'PASS '..count..' MP authority, duplicate, range, lease, cooldown, observer and throttle checks'

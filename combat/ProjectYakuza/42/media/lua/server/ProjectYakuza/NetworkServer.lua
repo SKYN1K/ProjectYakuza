@@ -63,6 +63,11 @@ function S.snapshot(p,a,s)
     if type(a.style)~="string" or #a.style>100 or (a.style~="none" and not ProjectYakuza.getStyle(a.style)) then return end
     if not P.number(a.heat,0,100) or not P.number(a.fuel,0,100) then return end
     if a.chargePower~=nil and not P.number(a.chargePower,0,1) then return end
+    if a.aimX~=nil or a.aimY~=nil then
+        if not P.number(a.aimX,-1,1)or not P.number(a.aimY,-1,1)then return end
+        local length=a.aimX*a.aimX+a.aimY*a.aimY
+        if length<.99 or length>1.01 then return end
+    end
     local held=p:getPrimaryHandItem()
     local profile=ProjectYakuza.Weapons and ProjectYakuza.Weapons.profile(a.style,held) or nil
     if a.weaponProfile~=nil and (type(a.weaponProfile)~="string" or a.weaponProfile~=(profile or "")) then return end
@@ -94,7 +99,7 @@ function S.snapshot(p,a,s)
     local packet={player=p:getOnlineID(),session=s.session,seq=a.seq,style=a.style,weaponProfile=profile or "",equipped=equipped,
         heat=equipped and a.heat or 0,fuel=equipped and a.fuel or 0,extreme=equipped and a.extreme==true and style.heat==true,
         clip=clip and clip.id or "",move=move and a.move or "",
-        rightAim=equipped and a.rightAim==true,comboBusy=a.comboBusy~=false,
+        rightAim=equipped and a.rightAim==true,comboBusy=a.comboBusy~=false,aimX=a.aimX,aimY=a.aimY,
         chargePower=equipped and (a.chargePower or 0) or 0,
         attackHeatSpeed=equipped and type(style.heatAttackSpeed)=="table"and a.attackHeatSpeed or nil,
         swing=P.integer(a.swing,0,1000000000) and a.swing or 0,
@@ -240,12 +245,19 @@ function S.command(module,command,p,a)
         return
     end
     if command=="state" then S.snapshot(p,a,s);return end
+    local intent=command=="grabRequest"or command=="heatRushBegin"
+    if intent and a.state~=nil then
+        if type(a.state)~="table"or not P.integer(a.state.seq,0,1000000000)then return end
+        if a.state.seq>s.seq then S.snapshot(p,a.state,s)end
+        if not s.packet or a.state.seq~=s.seq or s.packet.aimX~=a.state.aimX or s.packet.aimY~=a.state.aimY then return end
+    end
     if not alive(p) or not token(p) or not s.packet or not s.packet.equipped or t-(s.seen or 0)>4000 then return end
     if not P.integer(a.event,0,1000000000) or a.event<=s.event then return end
     s.event=a.event
     s.bucketAt=s.bucketAt or t;s.bucket=s.bucket or 0
     if t-s.bucketAt>=1000 then s.bucketAt=t;s.bucket=0 end
     s.bucket=s.bucket+1;if s.bucket>60 then return end
+    if intent and s.packet.aimX and s.packet.aimY then p:setTargetAndCurrentDirection(s.packet.aimX,s.packet.aimY)end
     if command:sub(1,8)=="heatRush"and ProjectYakuza.HeatRushServer then ProjectYakuza.HeatRushServer.command(p,command,a,s);return end
     if command=="step" then S.step(p,a,s);return end
     if command=="sfx"then

@@ -1,0 +1,15 @@
+{
+    "Sandbox_ProjectYakuza": "Project Yakuza",
+    "Sandbox_ProjectYakuza_DragonTigerDrop": "Dragon (DE) - Tiger Drop",
+    "Sandbox_ProjectYakuza_DragonTigerDrop_tooltip": "If on, Dragon (DE) style will be able to do Tiger Drops.",
+    "Sandbox_ProjectYakuza_DragonTigerDropWindowMs": "Dragon (DE) - Tiger Drop ms window",
+    "Sandbox_ProjectYakuza_DragonTigerDropWindowMs_tooltip": "Dragon (DE)'s time window to be able to perform a successful Tiger Drop (in milliseconds).",
+    "Sandbox_ProjectYakuza_DragonTigerDropCooldownSeconds": "Dragon (DE) - Tiger Drop cooldown",
+    "Sandbox_ProjectYakuza_DragonTigerDropCooldownSeconds_tooltip": "Dragon (DE)'s Tiger Drop cooldown (in seconds).",
+    "Sandbox_ProjectYakuza_HeatActions": "Heat Actions",
+    "Sandbox_ProjectYakuza_HeatActions_tooltip": "If on, the player will be able to perform Heat Actions.",
+    "Sandbox_ProjectYakuza_Grabs": "Grabs",
+    "Sandbox_ProjectYakuza_Grabs_tooltip": "If on, the player will be able to grab.",
+    "Sandbox_ProjectYakuza_ExtremeHeat": "Extreme Heat",
+    "Sandbox_ProjectYakuza_ExtremeHeat_tooltip": "If on, the player will be able to enter the Extreme Heat mode."
+}

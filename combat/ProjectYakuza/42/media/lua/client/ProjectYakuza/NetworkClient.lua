@@ -113,7 +113,8 @@ function N.capture(p,force,onlyChanged)
         if action then s.action=(s.action or 0)+1 end
     end
     local move=combo.groundMove or combo.finisherMove or combo.activeLightMove or (style and style.lightAttacks[combo.step>0 and combo.step or 1])
-    local packet={style=style and style.id or "none",weaponProfile=style and style.weaponProfile or "",equipped=equipped,heat=ProjectYakuza.getHeat(p),fuel=ProjectYakuza.Heat.display(p),extreme=ProjectYakuza.Heat.isExtreme(p),
+    local facing=p:getForwardDirection()
+    local packet={aimX=facing:getX(),aimY=facing:getY(),style=style and style.id or "none",weaponProfile=style and style.weaponProfile or "",equipped=equipped,heat=ProjectYakuza.getHeat(p),fuel=ProjectYakuza.Heat.display(p),extreme=ProjectYakuza.Heat.isExtreme(p),
         clip=equipped and N.pickClip(p,style,combo) or "",move=equipped and move and move.nodeValue or "",
         rightAim=equipped and p:isAiming()and isMouseButtonDown(1),comboBusy=equipped and ProjectYakuza.HeatRushRules and not ProjectYakuza.HeatRushRules.noCombo(combo,style,t)or false,
         chargePower=action and action.kind=="heavyCharge" and action.timedAction and (action.timedAction.power or 0) or move and move.chargePower or 0,
@@ -127,6 +128,7 @@ function N.capture(p,force,onlyChanged)
         s.lastPacket=packet;s.lastStocks=stocks;s.lastFuelStocks=fuelStocks;s.heartbeat=t+(equipped and 1000 or 3000)
     end
     if not s.hello then sendClientCommand(p,P.module,"hello",{});s.hello=true end
+    return s.lastPacket
 end
 function N.step(p,action,finished)
     if not isClient() or not p:isLocalPlayer() or not action.started then return end
@@ -156,7 +158,12 @@ function N.updateStep(p,s)
 end
 function N.send(p,command,args)
     if not isClient() or not p:isLocalPlayer() then return false end
-    N.capture(p,true,true)
+    local intent=command=="grabRequest"or command=="heatRushBegin"
+    local packet=N.capture(p,true,not intent)
+    if intent then
+        if not packet then return false end
+        args.state=packet
+    end
     local s=N.localState(p);s.event=s.event+1;args.event=s.event
     sendClientCommand(p,P.module,command,args);return true
 end

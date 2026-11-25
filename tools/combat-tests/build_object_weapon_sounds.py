@@ -22,5 +22,5 @@ for family,physical in [('Bicycle','bicycle'),('Bottle','breakbin'),('Crate','py
 text='module Base\n{\n'+'\n'.join(scripts)+'\n}\n';out=mod/'42/media/scripts/ProjectYakuza_ObjectSounds.txt';report={'operation':'Unmixed original Yakuza 6 arm_bicycle, arm_breakbin glass-bottle hits/floor impacts and arm_glass break streams; plastic-object arm_pylon streams for the plastic crate; original act_common blunt swings. No synthesized sounds or voice-pack changes.','sounds':records}
 if validate:assert out.read_text()==text and json.loads((mod/'docs/object-weapon-sounds.json').read_text())==report
 else:
- out.write_text(text);(mod/'docs/object-weapon-sounds.json').write_text(json.dumps(report,indent=2)+'\n');p=mod/'42/media/lua/shared/Translate/EN/GameSound_EN.txt';s=p.read_text();s=s.rstrip().removesuffix('}').rstrip()+'\n'+''.join('    GameSound_'+k+' = "'+v+'",\n'for k,v in labels.items())+'}\n';p.write_text(s)
+ out.write_text(text);(mod/'docs/object-weapon-sounds.json').write_text(json.dumps(report,indent=2)+'\n');p=mod/'42/media/lua/shared/Translate/EN/GameSound.json';values=json.loads(p.read_text(encoding='utf-8'));values.update({'GameSound_'+k:v for k,v in labels.items()});p.write_text(json.dumps(values,indent=4)+'\n',encoding='utf-8')
 print('PASS',len(records),'original object sound streams; twelve readable native sound events')

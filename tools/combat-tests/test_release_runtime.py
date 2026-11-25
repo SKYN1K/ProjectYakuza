@@ -1,5 +1,5 @@
 from pathlib import Path
-import importlib.util,tempfile,unittest
+import importlib.util,tempfile,unittest,json
 ROOT=Path(__file__).resolve().parents[2];spec=importlib.util.spec_from_file_location('release',ROOT/'tools/Build-ReleaseRuntime.py');release=importlib.util.module_from_spec(spec);spec.loader.exec_module(release)
 class ReleaseRuntimeTests(unittest.TestCase):
  def test_script_filter_keeps_adjacent_native_models_and_quoted_braces(self):
@@ -16,6 +16,10 @@ class ReleaseRuntimeTests(unittest.TestCase):
    result=release.release_files(mod,files);self.assertEqual(len(result),3)
    for name,p in result.items():self.assertEqual(p.read_bytes(),names[name]);self.assertEqual(p,files[name])
    self.assertTrue(files['42/media/models_X/Static/ProjectYakuza_BeerCrate.x'].exists())
+ def test_json_sound_labels_keep_vanilla_actions(self):
+  values={'GameSound_ProjectYakuza_KatanaHeat':'Katana','GameSound_ProjectYakuza_BicycleHeat':'Bicycle','GameSound_ProjectYakuza_KnifeHeat':'Knife'}
+  result=json.loads(release.transform('42/media/lua/shared/Translate/EN/GameSound.json',json.dumps(values)))
+  self.assertEqual(result,{'GameSound_ProjectYakuza_KatanaHeat':'Katana','GameSound_ProjectYakuza_KnifeHeat':'Knife'})
  def test_missing_style_boundary_fails_before_distribution(self):
   with self.assertRaises(AssertionError):release.transform('42/media/lua/shared/ProjectYakuza/Styles/DragonOfDojima.lua','return true')
 if __name__=='__main__':unittest.main()

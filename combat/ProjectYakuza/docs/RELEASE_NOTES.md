@@ -1,3 +1,13 @@
+# v1.1
+
+Sandbox options display the Project Yakuza page, readable Dragon (DE) Tiger Drop controls, Heat Actions, Grabs and Extreme Heat, with their full tooltips. Translations now use the installed Build 42 JSON format. This also restores the existing readable mod-option and sound labels. IDs, enabled defaults, timing limits and cooldown defaults remain unchanged.
+
+Multiplayer grab and Heat Action requests carry their current validated combat snapshot. The server can approve an intent when its separate state update has not arrived, and uses the supplied unit aim direction rather than a delayed character-facing update. Equipment ownership, sandbox switches, heat costs, combo state, target range, collision paths, event ordering and victim leases still apply. Update the host/server and every client to 1.1, then restart them.
+
+Version metadata, player ZIP and Workshop upload folder use 1.1. Player packages retain vanilla bat, katana and knife Heat Actions; custom objects and development instructions remain excluded. No animation, model, texture or audio assets change.
+
+Offline validation includes the native translator and sandbox parser, production client-to-server request tests, Kahlua compilation, Heat Action lifecycle checks, runtime filtering and package privacy checks. A live multiplayer session was not launched; verify real host/client triggering after updating all peers.
+
 # v1.0.14
 
 Holding and walking grips fit the original native palm to an upper-collar mesh surface instead of aligning the wrist to the neck bone. The holding torso uses stable native parent transforms; original torso and right-arm motion remain, while a two-bone fit keeps the left palm at the contact. The victim chest retains its original grip pose during standing and native walking. Seven existing clips retain their original identifiers, source frame counts and 30 fps timing. No artwork, textures or audio changed.

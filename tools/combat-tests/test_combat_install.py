@@ -4,9 +4,9 @@ import importlib.util,tempfile,unittest
 root=Path(__file__).resolve().parents[2];spec=importlib.util.spec_from_file_location('combat_install',root/'tools/Install-CombatUpdate.py');installer=importlib.util.module_from_spec(spec);spec.loader.exec_module(installer)
 
 class CombatInstallTests(unittest.TestCase):
- def prepare(self,folder):
+ def prepare(self,folder,version="1.2.3"):
   base=Path(folder);mod=base/'source';game=base/'Zomboid';backup=base/'backup';stage=base/'package'
-  for name,data in {'42/mod.info':b'name=Project Yakuza\nid=ProjectYakuza\nversion=1.2.3\n','42/media/lua/shared/Test.lua':b'return true'}.items():
+  for name,data in {'42/mod.info':('name=Project Yakuza\nid=ProjectYakuza\nversion='+version+'\n').encode(),'42/media/lua/shared/Test.lua':b'return true'}.items():
    for destination in [mod/name,stage/'Contents/mods/ProjectYakuza'/name]:destination.parent.mkdir(parents=True,exist_ok=True);destination.write_bytes(data)
   (stage/'preview.png').write_bytes(b'supplied preview');(stage/'workshop.txt').write_bytes(b'version=1\ntitle=Project Yakuza\nvisibility=private\n')
   return mod,game,backup,stage
@@ -22,6 +22,10 @@ class CombatInstallTests(unittest.TestCase):
    self.assertEqual((backup/'replaced/42/media/lua/shared/Old.lua').read_bytes(),b'return false');self.assertFalse(obsolete.exists());self.assertEqual((other/'keep.txt').read_bytes(),b'unchanged')
    current=game/'Workshop/ProjectYakuza-v1.2.3';self.assertIn(b'id=123456',(current/'workshop.txt').read_bytes())
    again=installer.install(mod,'1.2.3',game,backup,stage);self.assertEqual(again['written'],0);self.assertEqual(again['backedUp'],0);self.assertEqual(again['archivedWorkshopStages'],[])
+ def test_two_part_release_version(self):
+  with tempfile.TemporaryDirectory()as folder:
+   mod,game,backup,stage=self.prepare(folder,'1.1');report=installer.install(mod,'1.1',game,backup,stage)
+   self.assertEqual(report['version'],'1.1');self.assertTrue(report['verified']);self.assertTrue((game/'Workshop/ProjectYakuza-v1.1/Contents/mods/ProjectYakuza/42/mod.info').is_file())
  def test_mixed_mod_stage_rejected_before_install(self):
   with tempfile.TemporaryDirectory()as folder:
    mod,game,backup,stage=self.prepare(folder);old=game/'Workshop/Old/Contents/mods';payload=old/'ProjectYakuza/42';payload.mkdir(parents=True);(payload/'mod.info').write_text('id=ProjectYakuza\n');(old/'AnotherMod').mkdir()
