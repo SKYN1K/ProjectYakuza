@@ -1,3 +1,11 @@
+# v1.1.3
+
+Dragon's grab slide travels 1.05 tiles over 1.25 seconds. Compared with the previous 1.1424-tile slide over 1.6 seconds, forward speed increases by about 18 percent and the push finishes 350 ms earlier. The original 1.6-second animation completes with no extra forward push during its remaining recovery. Contact timing, target clearance, collision checks and animation speed remain unchanged.
+
+Style authors may configure attemptMoveDurationMs separately from attemptDurationMs, and attemptDistance separately from the original motion data. Movement duration must be positive and no longer than the animation; an explicit distance must be finite, positive and at most two tiles. Omitting these fields retains the original motion's distance and animation-length travel.
+
+Offline checks cover all movement updates through slide completion and recovery, invalid movement settings, grab lifecycle and multiplayer authority. No original animation, model, texture or audio files change. Live appearance remains to be checked in-game after a restart.
+
 # v1.1.2
 
 Grab initiation uses steady forward travel over its original 1.6-second duration and total distance. The animation's planted-foot pauses and the one-frame prediction limit no longer stop movement between updates. Collision checks cover the full pending displacement; each update submits one complete native movement request. Target spacing, interruption, pause handling and late-ownership protection remain.

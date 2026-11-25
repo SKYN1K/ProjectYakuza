@@ -473,8 +473,8 @@ do
  for _,direction in ipairs({{1,0},{0,1},{-1,0},{0,-1}})do
   local a=reach();a.context.fx,a.context.fy=direction[1],direction[2];local x,y=p:getX(),p:getY()
   for frame=1,95 do track=frame/60;clock=clock+1000/60;a:update();if frame==4 then check((a.reachMoved or 0)>0 and a.reachMoved<=.06 and not a.missEmitted,'first source footstep starts bounded movement before contact resolves')end end
-  check(math.abs(p:getX()-x-PY.GrabMotion.reach.frames[49]*(95/60/1.6)*direction[1])<.003 and math.abs(p:getY()-y-PY.GrabMotion.reach.frames[49]*(95/60/1.6)*direction[2])<.003,'failed reach travels steadily over the original duration and distance along its initial facing')
-  track=1.6;clock=clock+1000/60;a:update();check(math.abs((a.reachMoved or 0)-PY.GrabMotion.reach.frames[49])<.00001,'full recovery follows all source footsteps without extra movement');a:cancel()
+  check(math.abs(p:getX()-x-style.actions.grab.attemptDistance*direction[1])<.003 and math.abs(p:getY()-y-style.actions.grab.attemptDistance*direction[2])<.003,'failed reach travels the tuned distance along its initial facing')
+  track=1.6;clock=clock+1000/60;a:update();check(math.abs((a.reachMoved or 0)-style.actions.grab.attemptDistance)<.00001,'animation recovery adds no movement after the shorter slide finishes');a:cancel()
  end
  local blocked=reach();local x,y=p:getX(),p:getY();PY.Quicksteps.canMove=function()return false end;track=.08;clock=clock+80;blocked:update()
  PY.Quicksteps.canMove=function()return true end;track=.12;clock=clock+40;blocked:update();check(p:getX()==x and p:getY()==y and blocked.reachBlocked,'obstruction cancels further miss motion without a delayed catch-up');blocked:cancel()
@@ -631,5 +631,24 @@ do
   if moved>0 then check(math.abs(lastRequest-moved)<.000001,'native requested movement contains the whole frame displacement instead of only its last collision substep')end
  end
  p.moveUnmodded=original;a:cancel();PY.MultiHit.targets=targets;track=0
+end
+do
+ G.clear();local targets=PY.MultiHit.targets;PY.MultiHit.targets=function()return {}end
+ p.blocked=false;p.ignore=false;p.deferred=true;mouse[1]=true;stamina=.9;track=0
+ check(PY.requestAction(p,'grab'),'shorter slide regression starts');local a=PY.activeActions[p].timedAction;a:start();a:update()
+ local previous=0
+ for frame=1,75 do
+  track=frame/60;clock=clock+1000/60;a:update();local moved=a.reachMoved or 0
+  check(math.abs(moved-1.05*frame/75)<.00001 and moved>previous,'shortened slide maintains steady speed through its complete 1.25-second travel')
+  previous=moved
+ end
+ check(not a.cleaned and math.abs((a.reachMoved or 0)-1.05)<.00001,'push finishes before the original grab recovery animation')
+ for frame=76,96 do track=frame/60;clock=clock+1000/60;a:update();check(math.abs((a.reachMoved or 0)-1.05)<.00001,'recovery never adds a trailing push')end
+ check(a.cleaned,'original 1.6-second animation still completes normally');a:cancel();PY.MultiHit.targets=targets;track=0
+ local slot=style.actions.grab;local duration,distance=slot.attemptMoveDurationMs,slot.attemptDistance
+ for _,value in ipairs({0,-1,slot.attemptDurationMs+1,math.huge})do slot.attemptMoveDurationMs=value;check(not PY.validateStyle(style),'movement duration must be positive and fit inside the animation')end
+ slot.attemptMoveDurationMs=duration
+ for _,value in ipairs({0,-1,2.01,math.huge})do slot.attemptDistance=value;check(not PY.validateStyle(style),'movement distance stays within finite positive limits')end
+ slot.attemptDistance=distance;check(PY.validateStyle(style),'restored shorter movement configuration validates')
 end
 return 'PASS '..checks..' reliable grab lifecycle, four source-timed strikes, following, cleanup, wall geometry, handoff and action protection checks'

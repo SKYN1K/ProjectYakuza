@@ -183,12 +183,14 @@ function A:miss(time)
 end
 function A:advanceReach(time)
     local slot=self.context.action;local motion=slot.attemptMotion
-    if not motion or not time or time<0 or self.reachBlocked or self.victimState or self.awaitingGrab then return end
+    local distance=slot.attemptDistance or motion and motion.frames[#motion.frames]
+    if not distance or not time or time<0 or self.reachBlocked or self.victimState or self.awaitingGrab then return end
     local t=now();local elapsed=time-(self.reachTime or 0)
     if not self.reachStartedAt then self.reachStartedAt=t-time*1000 end
     self.reachTime=time
-    local phase=math.min(slot.attemptDurationMs/1000,math.max(0,(t-self.reachStartedAt)/1000))
-    local desired=motion.frames[#motion.frames]*phase/(slot.attemptDurationMs/1000)
+    local duration=(slot.attemptMoveDurationMs or slot.attemptDurationMs)/1000
+    local phase=math.min(duration,math.max(0,(t-self.reachStartedAt)/1000))
+    local desired=distance*phase/duration
     local previous=self.reachDesired or 0;self.reachDesired=math.max(previous,desired)
     if elapsed<0 or elapsed>.15 then return end
     local amount=math.max(0,desired-previous)

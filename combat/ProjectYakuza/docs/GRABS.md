@@ -1,5 +1,12 @@
 # Grabs, grab strikes and Heat Actions
 
+## Slide timing and distance (1.1.3)
+
+Dragon sets attemptMoveDurationMs=1250 and attemptDistance=1.05. Movement ends 350 ms before the original 1600 ms attempt animation completes. Its speed is about 18 percent higher than the previous full-animation slide, while total travel is slightly shorter. The remaining animation recovery has no trailing push.
+
+Other styles may set a positive attemptMoveDurationMs no greater than attemptDurationMs, and an attemptDistance greater than zero and no greater than two tiles. These optional fields change travel timing and distance without changing playback speed or the authored grab contact window. Their defaults retain the original motion's final distance and the complete animation duration. Existing collision, spacing, pause and ownership checks still apply.
+
+
 ## Current initiation and return behavior (1.1.2)
 
 Initiation travels steadily over attemptDurationMs, using the original final attemptMotion distance. The motion curve no longer imposes planted-foot pauses on world movement. One animation-aligned clock drives travel; each update collision-checks the pending path in short segments and submits one complete native displacement. Target clearance, pause, interruption and authority gates remain.

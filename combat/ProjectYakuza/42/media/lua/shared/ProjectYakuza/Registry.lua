@@ -351,7 +351,7 @@ function S.actionAllowed(style,kind,move)
     return true
 end
 end
-ProjectYakuza.VERSION = "1.1.2"
+ProjectYakuza.VERSION = "1.1.3"
 ProjectYakuza.API_VERSION = 3
 ProjectYakuza.styles = ProjectYakuza.styles or {}
 ProjectYakuza.styleOrder = ProjectYakuza.styleOrder or {}
@@ -659,6 +659,8 @@ function ProjectYakuza.validateStyle(style)
                     return paired or value.frames[1]==0
                 end
                 if slot.recoveryMs~=nil and(not number(slot.recoveryMs)or slot.recoveryMs<80 or slot.recoveryMs>500)then problem("invalid grab recovery timing")end
+                if slot.attemptMoveDurationMs~=nil and(not number(slot.attemptMoveDurationMs)or slot.attemptMoveDurationMs<=0 or not number(slot.attemptDurationMs)or slot.attemptMoveDurationMs>slot.attemptDurationMs)then problem("invalid grab movement duration")end
+                if slot.attemptDistance~=nil and(not number(slot.attemptDistance)or slot.attemptDistance<=0 or slot.attemptDistance>2 or not number(slot.attemptDurationMs))then problem("invalid grab movement distance")end
                 if slot.attemptMotion~=nil and not motion(slot.attemptMotion,(slot.attemptDurationMs or 0)/1000,false)then problem("invalid grab attempt motion")end
                 for _,strike in ipairs(type(slot.strikes)=="table"and slot.strikes or {})do if type(strike)=="table"and strike.pairMotion~=nil and not motion(strike.pairMotion,strike.duration,true)then problem("invalid grab strike motion")end end
                 for _,strike in ipairs(type(slot.strikes)=="table"and slot.strikes or {})do if type(strike)=="table"and strike.returnMotion~=nil and not motion(strike.returnMotion,(slot.recoveryMs or 160)/1000,true)then problem("invalid grab return motion")end end
