@@ -637,18 +637,27 @@ do
  p.blocked=false;p.ignore=false;p.deferred=true;mouse[1]=true;stamina=.9;track=0
  check(PY.requestAction(p,'grab'),'shorter slide regression starts');local a=PY.activeActions[p].timedAction;a:start();a:update()
  local previous=0
- for frame=1,75 do
+ for frame=1,50 do
   track=frame/60;clock=clock+1000/60;a:update();local moved=a.reachMoved or 0
-  check(math.abs(moved-1.05*frame/75)<.00001 and moved>previous,'shortened slide maintains steady speed through its complete 1.25-second travel')
+  check(math.abs(moved-.7*frame/50)<.00001 and moved>previous,'slide maintains steady speed until the second foot plants at source frame 25')
   previous=moved
  end
- check(not a.cleaned and math.abs((a.reachMoved or 0)-1.05)<.00001,'push finishes before the original grab recovery animation')
- for frame=76,96 do track=frame/60;clock=clock+1000/60;a:update();check(math.abs((a.reachMoved or 0)-1.05)<.00001,'recovery never adds a trailing push')end
+ check(not a.cleaned and math.abs((a.reachMoved or 0)-.7)<.00001,'push finishes before the original grab recovery animation')
+ for frame=51,96 do track=frame/60;clock=clock+1000/60;a:update();check(math.abs((a.reachMoved or 0)-.7)<.00001,'recovery never adds a trailing push')end
  check(a.cleaned,'original 1.6-second animation still completes normally');a:cancel();PY.MultiHit.targets=targets;track=0
  local slot=style.actions.grab;local duration,distance=slot.attemptMoveDurationMs,slot.attemptDistance
  for _,value in ipairs({0,-1,slot.attemptDurationMs+1,math.huge})do slot.attemptMoveDurationMs=value;check(not PY.validateStyle(style),'movement duration must be positive and fit inside the animation')end
  slot.attemptMoveDurationMs=duration
  for _,value in ipairs({0,-1,2.01,math.huge})do slot.attemptDistance=value;check(not PY.validateStyle(style),'movement distance stays within finite positive limits')end
  slot.attemptDistance=distance;check(PY.validateStyle(style),'restored shorter movement configuration validates')
+end
+do
+ G.clear();local targets=PY.MultiHit.targets;PY.MultiHit.targets=function()return {}end
+ p.blocked=false;p.ignore=false;p.deferred=true;mouse[1]=true;stamina=.9;track=0
+ check(PY.requestAction(p,'grab'),'native footstep cutoff regression starts');local a=PY.activeActions[p].timedAction;a:start();a:update()
+ for frame=1,25 do track=frame/30;clock=clock+20;a:update()end
+ local moved=a.reachMoved or 0;check(a.reachEnded and moved>0 and moved<.7,'actual second-foot source phase ends the push even if wall time has not reached its duration')
+ clock=clock+100;track=26/30;a:update();check(math.abs((a.reachMoved or 0)-moved)<.000001,'no push is added after the animated second foot has planted')
+ a:cancel();PY.MultiHit.targets=targets;track=0
 end
 return 'PASS '..checks..' reliable grab lifecycle, four source-timed strikes, following, cleanup, wall geometry, handoff and action protection checks'

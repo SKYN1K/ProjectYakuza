@@ -1,3 +1,13 @@
+# v1.1.4
+
+The movement controller ends travel when the actual animation track reaches the second footstep, so a faster animation clock cannot leave a trailing push.
+
+The grab push ends when the second foot plants: original source frame 25 at 30 fps, about 0.833 seconds into the attempt. Foot and toe height traces identify the first right-foot plant at frame 15 and the second left-foot plant at frame 25. Travel is reduced to 0.7 tiles, preserving the current 0.84-tile-per-second speed while stopping about 417 ms earlier than 1.1.3.
+
+The original 1.6-second animation and contact window remain unchanged. No forward push is added during the remaining recovery. Existing target clearance, collision, pause and multiplayer ownership rules remain. Original animation, model, texture and audio files are unchanged.
+
+Offline checks verify the source footstep traces, all movement updates through the stop point, no trailing recovery movement, grab lifecycle and multiplayer authority. Live appearance still needs confirmation after restarting PZ.
+
 # v1.1.3
 
 Dragon's grab slide travels 1.05 tiles over 1.25 seconds. Compared with the previous 1.1424-tile slide over 1.6 seconds, forward speed increases by about 18 percent and the push finishes 350 ms earlier. The original 1.6-second animation completes with no extra forward push during its remaining recovery. Contact timing, target clearance, collision checks and animation speed remain unchanged.

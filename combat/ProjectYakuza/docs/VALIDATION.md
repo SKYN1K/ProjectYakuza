@@ -1,5 +1,7 @@
 # Validation coverage
 
+The [1.1.4 report](update-validation-1.1.4.json) and [source footstep trace](grab-footstep-1.1.4.json) cover the frame-25 second-foot stop. Foot and toe minima agree on the plant frames. Movement tests cover 50 updates at 60 Hz through the 0.833-second slide, followed by 46 recovery updates with no extra travel. The suite passes 3,279 grab and 2,071 multiplayer assertions. These are offline measurements rather than a live visual confirmation.
+
 The [1.1.3 report](update-validation-1.1.3.json) covers the 1.25-second, 1.05-tile slide, steady movement through completion, no additional travel during animation recovery, movement-setting bounds and existing grab/network rules. Tests cover 3,276 grab assertions and 2,071 multiplayer assertions. Original media files remain unchanged.
 
 The [1.1.2 report](update-validation-1.1.2.json) covers steady initiation movement, one complete native movement request per update, direct paired damage without an ordinary native flinch, one-time death and a return fade that starts while the outgoing clip is still playing. [Return-placement provenance](grab-return-1.1.2.json) records the original clip hashes and native eased mixer samples. The native midpoint checks distinguish an actual mixed pose from either endpoint. These checks supersede the frozen-return behavior described for 1.1.1.
@@ -8,9 +10,9 @@ The [1.1.1 validation report](update-validation-1.1.1.json) covers direct native
 
 The [1.1 validation report](update-validation-1.1.json) covers 163 native JSON translations in source and 123 in the installed player profile, the exact sandbox labels/tooltips, six unchanged native option definitions and 152 sandbox rule checks. Multiplayer tests cover 2,068 assertions, including production grab-attempt and bat/katana/knife intents delivered without their separate state updates, current aim, stale contexts, invalid directions, heat costs and range. Heat Action lifecycle tests cover 1,485 assertions. These are offline tests; network transport timing and gameplay still need a real host/client session.
 
-GitHub release **v1.1.3** packages version **1.1.3**. The player profile contains 1,200 runtime files and 89 Lua modules; the full development source contains additional custom-object work excluded from this profile.
+GitHub release **v1.1.4** packages version **1.1.4**. The player profile contains 1,200 runtime files and 89 Lua modules; the full development source contains additional custom-object work excluded from this profile.
 
-The [release-profile report](release-profile-1.1.3.json) records the retained profiles, transformed source files and 262 excluded custom files. Validation covers compilation of the filtered Lua modules, require/animation closure, retained bat/katana/knife profiles and actions, rejection of removed multiplayer moves/observer clips, and resolution of limb tracks. Native inventory checks confirm that a missing item record is skipped without consuming the next saved record.
+The [release-profile report](release-profile-1.1.4.json) records the retained profiles, transformed source files and 262 excluded custom files. Validation covers compilation of the filtered Lua modules, require/animation closure, retained bat/katana/knife profiles and actions, rejection of removed multiplayer moves/observer clips, and resolution of limb tracks. Native inventory checks confirm that a missing item record is skipped without consuming the next saved record.
 
 Package checks enforce the runtime allowlist, inspect private paths/credential formats and compare archive bytes. The native B42 Workshop validator checks content layout, file types and preview. Installation verifies both the normal mod copy and the loadable Workshop payload against the player ZIP. Development source and retained media are recorded separately; retained animation, model, texture and audio bytes are unchanged by release filtering.
 

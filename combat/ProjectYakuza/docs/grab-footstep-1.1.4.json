@@ -1,0 +1,21 @@
+{
+  "version": "1.1.4",
+  "sourceClip": "42/media/anims_X/Bob/ProjectYakuza_DD_GrabAttempt.x",
+  "sourceSha256": "c7084cd388f0217baa5cf76dcaff1bae9d8ff4cbb0fe5cd8046eea759f67bc27",
+  "sourceFps": 30,
+  "frames": 49,
+  "firstPlant": {
+    "side": "right",
+    "frame": 15
+  },
+  "secondPlant": {
+    "side": "left",
+    "frame": 25
+  },
+  "selection": "Matching local foot and toe height minima after each swing, read from the unchanged original converted clip.",
+  "pushEndsMs": 833.3333333333334,
+  "travelDistanceTiles": 0.7,
+  "travelSpeedTilesPerSecond": 0.84,
+  "sourceMotionChanged": false,
+  "gameLaunched": false
+}

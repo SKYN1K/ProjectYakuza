@@ -1,5 +1,12 @@
 # Grabs, grab strikes and Heat Actions
 
+The movement controller ends travel when the actual animation track reaches the second footstep, so a faster animation clock cannot leave a trailing push.
+
+## Second-foot stop (1.1.4)
+
+Dragon's current attemptMoveDurationMs is 25/30*1000, matching the second left-foot plant in the unchanged original clip. attemptDistance is 0.7 tiles. This keeps the 0.84-tile-per-second speed from 1.1.3 and stops forward travel about 417 ms earlier. The original 1600 ms animation continues without a trailing push. The source foot/toe trace and clip hash are recorded in grab-footstep-1.1.4.json.
+
+
 ## Slide timing and distance (1.1.3)
 
 Dragon sets attemptMoveDurationMs=1250 and attemptDistance=1.05. Movement ends 350 ms before the original 1600 ms attempt animation completes. Its speed is about 18 percent higher than the previous full-animation slide, while total travel is slightly shorter. The remaining animation recovery has no trailing push.

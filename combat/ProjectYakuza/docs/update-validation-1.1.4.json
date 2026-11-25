@@ -1,0 +1,32 @@
+{
+  "version": "1.1.4",
+  "offlineOnly": true,
+  "gameLaunched": false,
+  "grabAssertions": 3279,
+  "multiplayerAssertions": 2071,
+  "stopSourceFrame": 25,
+  "sourceFps": 30,
+  "slideDurationMs": 833.3333333333334,
+  "slideDistanceTiles": 0.7,
+  "slideSpeedTilesPerSecond": 0.84,
+  "previousSlideDurationMs": 1250,
+  "pushEndsEarlierMs": 416.66666666666663,
+  "animationDurationMs": 1600,
+  "animationPlaybackSpeedChanged": false,
+  "contactWindowChanged": false,
+  "sourceMediaChanged": false,
+  "runtimeFiles": 1200,
+  "productionLuaModules": 89,
+  "sourceFootstepProvenance": "grab-footstep-1.1.4.json",
+  "checks": [
+    "matching local foot and toe height minima in original clip",
+    "steady displacement through source frame 25",
+    "no forward travel through the rest of the original animation",
+    "existing collision, spacing, interruption, pause and authority rules",
+    "actual source footstep stops travel when the animation clock runs ahead of wall time"
+  ],
+  "notValidated": [
+    "live visual appearance",
+    "real host/client latency"
+  ]
+}
