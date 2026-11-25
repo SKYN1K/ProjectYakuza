@@ -1448,4 +1448,17 @@ do
  check(not ProjectYakuza.HeatRushServer.leases[peer]and server.players[peer.id].seq==latest,'older intent context cannot replace a newer accepted state')
  isMouseButtonDown=input;server.players[peer.id]=nil;actors[peer.id]=nil;client.locals[peer]=nil
 end
+do
+ local peer=player(29201,0);local victim=zombie(29202,.42);local session=29201
+ client.command(P.module,'state',{player=peer.id,session=session,seq=1,style='dragon_of_dojima',weaponProfile='',equipped=true,heat=50,fuel=50,extreme=false,clip='ProjectYakuza_DD_GrabStrike01',move='dd_light_01',swing=0,action=1})
+ client.command(P.module,'grabStart',{player=peer.id,session=session,zombie=victim.id,grabId=29201,useless=false,ignore=false,deferred=true,locked=false})
+ local pose={player=peer.id,session=session,zombie=victim.id,grabId=29201,x=.42,y=0,fx=1,fy=0,phase='strike1',moving=false}
+ client.command(P.module,'grabPose',pose);check(victim.vars.ProjectYakuzaGrabPhase=='strike1','new observer strike starts its original victim clip')
+ victim:setVariable('ProjectYakuzaGrabPhase','hold');client.command(P.module,'grabPose',pose)
+ check(victim.vars.ProjectYakuzaGrabPhase=='hold','repeated delayed pose cannot restart a victim strike after its native hold handoff')
+ local function nextPose(phase)local fresh={};for k,v in pairs(pose)do fresh[k]=v end;fresh.phase=phase;return fresh end
+ client.command(P.module,'grabPose',nextPose('hold'));client.command(P.module,'grabPose',nextPose('strike2'))
+ check(victim.vars.ProjectYakuzaGrabPhase=='strike2','a genuinely new grab-hit phase still starts after the return')
+ client.clearRemote(peer.id);actors[peer.id]=nil
+end
 return 'PASS '..count..' MP authority, duplicate, range, lease, cooldown, observer and throttle checks'

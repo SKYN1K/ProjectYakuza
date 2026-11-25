@@ -1,0 +1,33 @@
+{
+  "version": "1.1.1",
+  "offlineOnly": true,
+  "gameLaunched": false,
+  "sourceAssetsChanged": false,
+  "grabAssertions": 3151,
+  "dominantTrackAssertions": 4,
+  "multiplayerAssertions": 2071,
+  "nativeSelectors": 86,
+  "nativeReturnHandoffs": 16,
+  "runtimeFiles": 1200,
+  "productionLuaModules": 89,
+  "reachPredictionMaximumSourceFrames": 1,
+  "animationSpeedChanged": false,
+  "contactTimingChanged": false,
+  "damageChanged": false,
+  "originalTravelDistanceChanged": false,
+  "checks": [
+    "native end selects holding node before Lua polling",
+    "frozen outgoing strike during existing return fade",
+    "hold-start marker cannot hide source completion",
+    "duplicate victim pose cannot restart the same finished strike",
+    "inter-frame movement bounded by original motion and collisions",
+    "pause and delayed-ownership movement gates"
+  ],
+  "notValidated": [
+    "live single-player appearance",
+    "live host/client appearance"
+  ],
+  "frozenEventFreeObserverNodes": 8,
+  "sourceFrameAndGripChecks": 959,
+  "sourceComments": 0
+}

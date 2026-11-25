@@ -34,9 +34,9 @@ Check mod.info identifiers, dependency, animation names, collisions and observer
 
 PZ can load mods from local Workshop staging folders as well as Zomboid/mods. Keep one current staged copy of each mod while testing; obsolete copies can hide an update. Fully restart PZ after replacing runtime files.
 
-## Framework v1.1 packages
+## Framework v1.1.1 packages
 
-The [v1.1 release](https://github.com/SKYN1K/ProjectYakuza/releases/tag/v1.1) contains version 1.1. Use ProjectYakuza-B42-v1.1.zip for local installation or ProjectYakuza-Workshop-v1.1.zip for core Workshop preparation. The latter extracts to ProjectYakuza-v1.1; place that folder under your own Zomboid/Workshop directory. GitHub's automatic Source code archives are development snapshots, not upload packages.
+The [v1.1.1 release](https://github.com/SKYN1K/ProjectYakuza/releases/tag/v1.1.1) contains version 1.1. Use ProjectYakuza-B42-v1.1.zip for local installation or ProjectYakuza-Workshop-v1.1.zip for core Workshop preparation. The latter extracts to ProjectYakuza-v1.1.1; place that folder under your own Zomboid/Workshop directory. GitHub's automatic Source code archives are development snapshots, not upload packages.
 
 The core's player release includes vanilla bat/club, knife and blade profiles and their supported Heat Actions. Custom-object development profiles are excluded. The source package builder applies this filter; copying the full source mod folder includes development content.
 

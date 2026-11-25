@@ -590,4 +590,20 @@ do
   check(math.abs(final.forward-.42)<.00002 and math.abs(final.right-.019354)<.00002,'completed return settles into the fitted collar grip')
  end
 end
+do
+ G.clear();local held=startGrab();G.input(p,held,true,false);local move=held.strikeMove
+ track=move.contactMs/1000+.01;clock=clock+600;held:update();local hits=z.hits
+ p:setVariable('ProjectYakuzaDefensePhase','hold');p:setVariable('ProjectYakuzaDefenseMarker','hold_started');track=0;clock=clock+17;held:update()
+ check(held.phaseName=='hold'and not held.strikeMove and held.recoveryUntil,'native strike-to-hold handoff survives the hold start marker replacing the strike end marker')
+ check(z.hits==hits,'native return cannot replay a strike contact')
+ held:cancel();track=0
+ local targets=PY.MultiHit.targets;PY.MultiHit.targets=function()return {}end;p.blocked=false;p.ignore=false;p.deferred=true;mouse[1]=true;stamina=.9
+ check(PY.requestAction(p,'grab'),'smooth reach regression starts');local a=PY.activeActions[p].timedAction;a:start()
+ track=.1;clock=clock+100;a:update();local first=a.reachMoved or 0
+ clock=clock+8;a:update();local second=a.reachMoved or 0
+ clock=clock+8;a:update();local third=a.reachMoved or 0
+ check(second>first and third>second,'grab reach continues smoothly between repeated native animation timestamps')
+ check(third<=R.sample(PY.GrabMotion.reach,.1+1/30)+.001,'inter-frame reach prediction stays within one original animation frame')
+ a:cancel();PY.MultiHit.targets=targets;track=0
+end
 return 'PASS '..checks..' reliable grab lifecycle, four source-timed strikes, following, cleanup, wall geometry, handoff and action protection checks'

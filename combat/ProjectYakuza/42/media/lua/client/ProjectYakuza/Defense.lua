@@ -184,9 +184,13 @@ end
 function A:advanceReach(time)
     local slot=self.context.action;local motion=slot.attemptMotion
     if not motion or not time or time<0 or self.reachBlocked or self.victimState or self.awaitingGrab then return end
-    local desired=ProjectYakuza.GrabRules.sample(motion,time)
-    local previous=self.reachDesired or 0;local elapsed=time-(self.reachTime or 0)
-    self.reachDesired=desired;self.reachTime=time
+    local t=now();local elapsed=time-(self.reachTime or 0)
+    if time~=self.reachTime then self.reachSampleAt=t end
+    self.reachTime=time
+    local predicted=math.min(slot.attemptDurationMs/1000,time+math.min(1/motion.fps,math.max(0,(t-(self.reachSampleAt or t))/1000)))
+    local desired=ProjectYakuza.GrabRules.sample(motion,predicted)
+    local previous=self.reachDesired or 0
+    self.reachDesired=math.max(previous,desired)
     if elapsed<0 or elapsed>.15 then return end
     local amount=math.max(0,desired-previous)
     if amount<=0 then return end
@@ -375,7 +379,7 @@ function A:grab(dt)
         if now()-self.phaseAt>(move.duration+1)*1000 then self:forceStop()end
     elseif self.strikeMove then
         local phase,weight=ProjectYakuza.AttackEffects.findTrack(p,self.strikeMove.animation,nil,true)
-        if var(p,"ProjectYakuzaDefenseMarker")==self.phaseName.."_done"or self.strikeLastTime and self.strikeLastTime>=self.strikeMove.duration-.18 and phase and phase+.06<self.strikeLastTime then
+        if var(p,"ProjectYakuzaDefensePhase")=="hold"or var(p,"ProjectYakuzaDefenseMarker")==self.phaseName.."_done"or self.strikeLastTime and self.strikeLastTime>=self.strikeMove.duration-.18 and phase and phase+.06<self.strikeLastTime then
             self:finishStrike();return
         end
         if not self:alignPair(true)then self:forceStop();return end
@@ -412,7 +416,7 @@ function A:update()
     local dt=math.min(.1,elapsed/1000);self.lastAt=t
     if isGamePaused() then
         self.startedAt=self.startedAt+elapsed;self.phaseAt=self.phaseAt+elapsed
-        for _,key in ipairs({"boundAt","entryAt","gripRequestedAt","escapeNext","recoveryUntil","returnAt"})do if self[key]then self[key]=self[key]+elapsed end end
+        for _,key in ipairs({"boundAt","entryAt","gripRequestedAt","escapeNext","recoveryUntil","returnAt","reachSampleAt"})do if self[key]then self[key]=self[key]+elapsed end end
         return
     end
     if not self:isValid() then self:forceStop();return end

@@ -1,3 +1,11 @@
+# v1.1.1
+
+Grab strikes hand off to the holding node directly from their native end event. Actor, victim and multiplayer observer selectors freeze their outgoing hit pose during the existing 240 ms return fade. The Lua controller recognizes a completed native handoff even if the new hold-start marker has already replaced the strike-end marker. Repeated multiplayer victim-pose packets cannot re-enter the same finished strike phase.
+
+Forward grab reach follows the original footsteps between repeated animation timestamps. Prediction is limited to one source frame and remains bounded by the original travel curve, target spacing and collision checks. Pausing preserves the sampling clock; delayed ownership never adds a catch-up jump. Original clips, animation speed, hit timing, damage and reach distance are unchanged.
+
+Validated offline with grab lifecycle, multiplayer and native selector/handoff checks. No game session or new visual/audio assets were produced. Live single-player and multiplayer appearance still needs confirmation after restarting PZ.
+
 # v1.1
 
 Sandbox options display the Project Yakuza page, readable Dragon (DE) Tiger Drop controls, Heat Actions, Grabs and Extreme Heat, with their full tooltips. Translations now use the installed Build 42 JSON format. This also restores the existing readable mod-option and sound labels. IDs, enabled defaults, timing limits and cooldown defaults remain unchanged.

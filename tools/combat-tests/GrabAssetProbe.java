@@ -8,7 +8,7 @@ public class GrabAssetProbe {
   try(var source=Files.walk(Path.of(args[0]).toAbsolutePath().getParent().resolve("lua"))){for(var file:source.filter(p->p.toString().endsWith(".lua")).toList())if(Files.readString(file).contains(":getStateMachine("))throw new AssertionError("unexposed native state-machine getter "+file);}
   var uv=new Class<?>[21];uv[0]=Class.forName("zombie.core.textures.Texture");Arrays.fill(uv,1,21,float.class);Class.forName("zombie.core.SpriteRenderer").getMethod("renderPoly",uv);Class.forName("zombie.characters.BodyDamage.BodyDamage").getMethod("getOverallBodyHealth");
   var square=Class.forName("zombie.iso.IsoGridSquare");for(String name:new String[]{"isWallTo","isWindowTo","isDoorTo"})square.getMethod(name,square);
-  var node=Class.forName("zombie.core.skinnedmodel.advancedanimation.AnimNode");var state=Class.forName("zombie.core.skinnedmodel.advancedanimation.AnimState");var variables=Class.forName("zombie.core.skinnedmodel.advancedanimation.AnimationVariableSource");var source=Class.forName("zombie.core.skinnedmodel.advancedanimation.IAnimationVariableSource");var set=variables.getMethod("setVariable",String.class,String.class);var select=state.getMethod("getAnimNodes",source,List.class);int count=0;
+  var node=Class.forName("zombie.core.skinnedmodel.advancedanimation.AnimNode");var state=Class.forName("zombie.core.skinnedmodel.advancedanimation.AnimState");var variables=Class.forName("zombie.core.skinnedmodel.advancedanimation.AnimationVariableSource");var source=Class.forName("zombie.core.skinnedmodel.advancedanimation.IAnimationVariableSource");var set=variables.getMethod("setVariable",String.class,String.class);var select=state.getMethod("getAnimNodes",source,List.class);int count=0,handoffs=0;
   try(var files=Files.walk(Path.of(args[0]))){for(var path:files.filter(p->(p.getFileName().toString().contains("GrabAttempt")||p.getFileName().toString().contains("GrabHold")||p.getFileName().toString().contains("GrabVictim")||p.getFileName().toString().contains("GrabWalk")||p.getFileName().toString().contains("GrabEscape")||p.getFileName().toString().contains("CrateHeat")||p.getFileName().toString().contains("GrabStrike")||p.getFileName().toString().contains("WallHeat")||p.getFileName().toString().contains("GroundHeat"))&&p.toString().endsWith(".xml")).toList()){
    var doc=DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(path.toFile());Object parsed=node.getMethod("Parse",String.class).invoke(null,path.toString()),st=state.getConstructor().newInstance(),vars=variables.getConstructor().newInstance();state.getMethod("addNode",node).invoke(st,parsed);
    String reject=null;var conditions=doc.getElementsByTagName("m_Conditions");for(int i=0;i<conditions.getLength();i++){
@@ -19,17 +19,20 @@ public class GrabAssetProbe {
    String clip=doc.getElementsByTagName("m_AnimName").item(0).getTextContent();
    if(clip.matches("ProjectYakuza_DD_GrabStrike(?:Victim)?0[1-4]")){
     if(!doc.getElementsByTagName("m_maxTorsoTwist").item(0).getTextContent().equals("0"))throw new AssertionError("native aim twist on paired strike "+path);
-    if(!path.getFileName().toString().startsWith("ProjectYakuza_MP_")){
-     String marker="strike"+Integer.parseInt(clip.substring(clip.length()-2))+"_done";boolean found=false;var eventRows=doc.getElementsByTagName("m_Events");
-     for(int i=0;i<eventRows.getLength();i++){var row=(Element)eventRows.item(i);if(row.getElementsByTagName("m_Time").item(0).getTextContent().equals("End")){String value=row.getElementsByTagName("m_ParameterValue").item(0).getTextContent();if(!value.endsWith("="+marker))throw new AssertionError("shared strike completion marker "+path);found=true;}}
-     if(!found)throw new AssertionError("missing source completion "+path);
-    }
+    if(!node.getField("stopAnimOnExit").getBoolean(parsed)||node.getField("earlyTransitionOut").getBoolean(parsed))throw new AssertionError("frozen outgoing source pose "+path);
+    boolean observer=path.getFileName().toString().startsWith("ProjectYakuza_MP_");
+    String marker="strike"+Integer.parseInt(clip.substring(clip.length()-2))+"_done";boolean found=observer,returned=observer;var eventRows=doc.getElementsByTagName("m_Events");
+    String phase=observer?"ProjectYakuzaRemoteClip":clip.contains("Victim")?"ProjectYakuzaGrabPhase":"ProjectYakuzaDefensePhase",hold=observer?"ProjectYakuza_DD_GrabHold":"hold";
+    for(int i=0;i<eventRows.getLength();i++){var row=(Element)eventRows.item(i);if(row.getElementsByTagName("m_Time").item(0).getTextContent().equals("End")){String value=row.getElementsByTagName("m_ParameterValue").item(0).getTextContent();if(value.endsWith("="+marker))found=true;if(value.equals(phase+"="+hold))returned=true;}}
+    if(!found||!returned)throw new AssertionError("native source completion and immediate hold handoff "+path);
+    if(!observer){Path holdPath=path.resolveSibling(path.getFileName().toString().replaceFirst("GrabStrike(?:Victim)?0[1-4]",clip.contains("Victim")?"GrabVictimHold":"GrabHold"));if(!Files.isRegularFile(holdPath))holdPath=path.getParent().getParent().resolve("hitreaction").resolve(holdPath.getFileName());Object holding=node.getMethod("Parse",String.class).invoke(null,holdPath.toString());state.getMethod("addNode",node).invoke(st,holding);set.invoke(vars,"ProjectYakuzaGrabMoving","false");set.invoke(vars,phase,hold);var selected=(List<?>)select.invoke(st,vars,new ArrayList<>());if(selected.size()!=1||selected.get(0)!=holding)throw new AssertionError("native end selects hold without a replay gap "+path);handoffs++;set.invoke(vars,phase,observer?clip:"strike"+Integer.parseInt(clip.substring(clip.length()-2)));}
+
    }
    if(reject==null)throw new AssertionError("unscoped pair "+path);set.invoke(vars,reject,"unrelated.clip");if(!((List<?>)select.invoke(st,vars,new ArrayList<>())).isEmpty())throw new AssertionError("pair leakage "+path);
    var events=doc.getElementsByTagName("m_EventName");for(int i=0;i<events.getLength();i++)if(events.item(i).getTextContent().equals("AttackCollisionCheck"))throw new AssertionError("duplicate native collision "+path);count++;
   }}
   if(count<30)throw new AssertionError("missing paired selectors "+count);
-  System.out.println("PASS "+count+" native grab/wall owner, victim and observer selectors; phase isolation; no duplicate collision events; native AI latch and solid-wall APIs; no game launch");
+  System.out.println("PASS "+count+" native grab/wall owner, victim and observer selectors; "+handoffs+" direct native return handoffs; phase isolation; no duplicate collision events; native AI latch and solid-wall APIs; no game launch");
  }
 }
 
