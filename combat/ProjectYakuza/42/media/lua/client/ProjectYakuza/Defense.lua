@@ -92,7 +92,7 @@ function A:phase(name)
         local z=self.context.target
         if z then z:setVariable("ProjectYakuzaGrabPhase",name);z:setVariable("ProjectYakuzaGrabMarker","")end
         self:setGrabMoving(false)
-        local walking=name=="hold"
+        local walking=name=="hold"and not self.recoveryUntil
         self.character:setBlockMovement(not walking)
         self.character:setIgnoreMovement(not walking)
         self.character:setDeferredMovementEnabled(walking and self.oldDeferred~=false)
@@ -114,7 +114,7 @@ function A:alignPair(snap)
     local p,z=self.character,self.context.target
     if self.strikeMove then self.strikeTime=math.max(self.strikeLastTime or 0,ProjectYakuza.AttackEffects.findTrack(p,self.strikeMove.animation,nil,true)or 0)end
     local fx,fy=self.context.fx,self.context.fy
-    if self.phaseName=="hold"then local facing=p:getForwardDirection();fx,fy=facing:getX(),facing:getY()end
+    if self.phaseName=="hold"and not self.recoveryUntil then local facing=p:getForwardDirection();fx,fy=facing:getX(),facing:getY()end
     local n=math.sqrt(fx*fx+fy*fy)
     if n<.001 then return false end
     fx,fy=fx/n,fy/n
@@ -135,7 +135,7 @@ function A:holdControls()
     if self.ownsGrabControls then p:setForceAim(true);p:setAllowRun(false);p:setAllowSprint(false);p:setRunning(false);p:setSprinting(false)end
     if self.ownsAim then p:setIsAiming(true)end
     if self.victimState then
-        if self.phaseName=="hold"then self:alignPair(true)
+        if self.phaseName=="hold"and not self.recoveryUntil then self:alignPair(true)
         else p:setTargetAndCurrentDirection(self.context.fx,self.context.fy)end
     end
 end
@@ -151,6 +151,10 @@ function A:start()
     self.action:setOverrideHandModelsObject(p:getPrimaryHandItem(),nil,false)
     if self.context.kind=="grab"and not self.context.attempt then self:attach(self.context.target)end
     self:phase(self.context.attempt and "attempt"or "enter")
+end
+function A:finishStrike()
+    self.recoveryUntil=now()+(self.context.action.recoveryMs or 160)
+    self.strikeMove=nil;self.strikeLastTime=nil;self:phase("hold");self:alignPair(true)
 end
 function A:attach(z)
     if self.victimState then return false end
@@ -343,6 +347,14 @@ function A:grab(dt)
         if playerReady and victimReady and progress>=1 then self.paired=true;self:phase("hold");ProjectYakuza.emit("grabHeld",p,z)
         elseif age>1000 then self:forceStop() end
     elseif self.phaseName=="hold" then
+        if self.recoveryUntil then
+            if not self:alignPair(true)then self:forceStop();return end
+            if now()<self.recoveryUntil then return end
+            self.recoveryUntil=nil;p:setBlockMovement(false);p:setIgnoreMovement(false);p:setDeferredMovementEnabled(self.oldDeferred~=false)
+            self.lastX,self.lastY=p:getX(),p:getY()
+            local input=self.recoveryInput;self.recoveryInput=nil
+            if input and ProjectYakuza.GrabCombat then ProjectYakuza.GrabCombat.input(p,self,input.light,input.heat);return end
+        end
         if not isClient()and ProjectYakuza.GrabRules.escapeDue(self,self.context.action,now())then self:escape();return end
         if not self:alignPair(true) then self:forceStop();return end
         local dx,dy=p:getX()-self.lastX,p:getY()-self.lastY
@@ -364,14 +376,14 @@ function A:grab(dt)
     elseif self.strikeMove then
         local phase,weight=ProjectYakuza.AttackEffects.findTrack(p,self.strikeMove.animation,nil,true)
         if var(p,"ProjectYakuzaDefenseMarker")==self.phaseName.."_done"or self.strikeLastTime and self.strikeLastTime>=self.strikeMove.duration-.18 and phase and phase+.06<self.strikeLastTime then
-            self.strikeMove=nil;self.strikeLastTime=nil;self:phase("hold");self:alignPair(true);return
+            self:finishStrike();return
         end
         if not self:alignPair(true)then self:forceStop();return end
         if phase and weight>=.35 then
             self.strikeSeen=true
             self.strikeLastTime=math.max(self.strikeLastTime or 0,phase)
             if not self.strikeImpacted and phase*1000>=self.strikeMove.contactMs then self.strikeImpacted=true;if ProjectYakuza.GrabCombat then ProjectYakuza.GrabCombat.hit(self)end end
-            if phase>=self.strikeMove.duration-.001 then self.strikeMove=nil;self.strikeLastTime=nil;self:phase("hold")end
+            if phase>=self.strikeMove.duration-.001 then self:finishStrike()end
         end
         if self.strikeMove and now()-self.phaseAt>(self.strikeMove.duration+1)*1000 then self:forceStop()end
     elseif self.phaseName=="throw" then
@@ -400,7 +412,7 @@ function A:update()
     local dt=math.min(.1,elapsed/1000);self.lastAt=t
     if isGamePaused() then
         self.startedAt=self.startedAt+elapsed;self.phaseAt=self.phaseAt+elapsed
-        for _,key in ipairs({"boundAt","entryAt","gripRequestedAt","escapeNext"})do if self[key]then self[key]=self[key]+elapsed end end
+        for _,key in ipairs({"boundAt","entryAt","gripRequestedAt","escapeNext","recoveryUntil","returnAt"})do if self[key]then self[key]=self[key]+elapsed end end
         return
     end
     if not self:isValid() then self:forceStop();return end

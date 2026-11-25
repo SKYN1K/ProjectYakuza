@@ -1,0 +1,48 @@
+import java.nio.file.*;
+import java.util.*;
+import jassimp.*;
+public class GrabBlendProbe {
+ static Class<?> type(String n)throws Exception{return Class.forName(n);}
+ static void set(Object o,String n,Object v)throws Exception{var f=o.getClass().getDeclaredField(n);f.setAccessible(true);f.set(o,v);}
+ static Object rig;
+ static Map<String,Integer> indices;
+ static Map<String,Object> clips=new HashMap<>();
+ static Map<String,String> hashes=new TreeMap<>();
+ static Object clip(Path p)throws Exception{
+  String key=p.toString();if(clips.containsKey(key))return clips.get(key);Object data=LimbImpactProbe.process(key,rig);Object c=((Map<?,?>)LimbImpactProbe.field(data,"clips")).values().iterator().next();clips.put(key,c);hashes.put(p.getFileName().toString(),HexFormat.of().formatHex(java.security.MessageDigest.getInstance("SHA-256").digest(Files.readAllBytes(p))));return c;
+ }
+ static class Player {
+  Object player;List<Object> live;java.lang.reflect.Method blend,update;Class<?> tt=type("zombie.core.skinnedmodel.animation.AnimationTrack"),ap=type("zombie.core.skinnedmodel.animation.AnimationPlayer");
+  Player(int count)throws Exception{
+   var ctor=ap.getDeclaredConstructor();ctor.setAccessible(true);player=ctor.newInstance();set(player,"skinningData",rig);var bt=type("zombie.core.skinnedmodel.animation.AnimatorsBoneTransform");var m=type("org.lwjgl.util.vector.Matrix4f");Object bones=java.lang.reflect.Array.newInstance(bt,count),matrices=java.lang.reflect.Array.newInstance(m,count);
+   for(int i=0;i<count;i++){java.lang.reflect.Array.set(bones,i,bt.getMethod("alloc").invoke(null));java.lang.reflect.Array.set(matrices,i,m.getConstructor().newInstance());}
+   set(player,"boneTransforms",bones);set(player,"modelTransforms",matrices);blend=ap.getDeclaredMethod("updateMultiTrackBoneTransformsInternal",float.class);blend.setAccessible(true);update=ap.getDeclaredMethod("updateModelTransformsInternal");update.setAccessible(true);Object multi=ap.getMethod("getMultiTrack").invoke(player);live=(List<Object>)multi.getClass().getMethod("getTracks").invoke(multi);
+  }
+  void add(Path path,Path xml,float time,float weight,int priority)throws Exception{
+   Object c=clip(path),track=tt.getMethod("alloc").invoke(null);tt.getMethod("startClip",c.getClass(),boolean.class,float.class).invoke(track,c,false,0f);tt.getMethod("setBlendWeight",float.class).invoke(track,1f);tt.getMethod("setBlendFieldWeight",float.class).invoke(track,weight);tt.getField("priority").setInt(track,priority);
+   if(xml!=null){var node=type("zombie.core.skinnedmodel.advancedanimation.AnimNode");Object parsed=node.getMethod("Parse",String.class).invoke(null,xml.toString());tt.getMethod("setBoneWeights",List.class).invoke(track,node.getField("subStateBoneWeights").get(parsed));tt.getMethod("initBoneWeights",type("zombie.core.skinnedmodel.model.SkinningData")).invoke(track,rig);}
+   if(time<0)time=((Number)tt.getMethod("getDuration").invoke(track)).floatValue();tt.getMethod("setCurrentTimeValue",float.class).invoke(track,time);tt.getMethod("setPreviousTimeValue",float.class).invoke(track,time);tt.getMethod("UpdateKeyframes",float.class).invoke(track,0f);live.add(track);
+  }
+  double[] point(String bone,double[] local)throws Exception{
+   set(player,"boneTransformsNeedFirstFrame",true);blend.invoke(player,0f);update.invoke(player);Object m=ap.getMethod("getModelTransformAt",int.class).invoke(player,indices.get(bone));double[] out=new double[3];
+   for(int row=0;row<3;row++){out[row]=LimbImpactProbe.component(m,"m"+row+"3");for(int col=0;col<3;col++)out[row]+=LimbImpactProbe.component(m,"m"+row+col)*local[col];}return out;
+  }
+  void clear()throws Exception{for(Object t:live)tt.getMethod("reset").invoke(t);live.clear();}
+ }
+ public static void main(String[]args)throws Exception{
+  Jassimp.setLibraryLoader(new JassimpLibraryLoader(){public void loadLibrary(){System.load("F:/SteamLibrary/steamapps/common/ProjectZomboid/jassimp64.dll");}});Object body=LimbImpactProbe.process("F:/SteamLibrary/steamapps/common/ProjectZomboid/media/models_X/Skinned/MaleBody.x",null);var skin=type("zombie.core.skinnedmodel.model.SkinningData");for(var c:skin.getConstructors())if(c.getParameterCount()==6)rig=c.newInstance(LimbImpactProbe.field(body,"clips"),LimbImpactProbe.field(body,"bindPose"),LimbImpactProbe.field(body,"invBindPose"),LimbImpactProbe.field(body,"skinOffsetMatrices"),LimbImpactProbe.field(body,"skeletonHierarchy"),LimbImpactProbe.field(body,"boneIndices"));indices=(Map<String,Integer>)LimbImpactProbe.field(body,"boneIndices");int count=((List<?>)LimbImpactProbe.field(body,"skeletonHierarchy")).size();Player actor=new Player(count),victim=new Player(count);double[] palm={Double.parseDouble(args[2]),Double.parseDouble(args[3]),Double.parseDouble(args[4])},collar={Double.parseDouble(args[5]),Double.parseDouble(args[6]),Double.parseDouble(args[7])};Path mod=Path.of(args[0]),anims=mod.resolve("42/media/anims_X/Bob"),nodes=mod.resolve("42/media/AnimSets"),game=Path.of("F:/SteamLibrary/steamapps/common/ProjectZomboid/media/anims_X/Bob");var out=new StringBuilder("{\"cases\":[");int cases=0;double maxBaseError=0;
+  for(int i=1;i<=4;i++)for(int frame=0;frame<=24;frame++){
+   float weight=frame/24f,time=frame/100f;double[] reference=null;
+   for(String base:new String[]{"Bob_IdleAim1Hand","Bob_Walk"}){
+    actor.add(game.resolve(base+".x"),null,0,1,0);actor.add(anims.resolve(String.format("ProjectYakuza_DD_GrabStrike%02d.x",i)),nodes.resolve(String.format("player/actions/ProjectYakuza_DD_GrabStrike%02d.xml",i)),-1,1-weight,1000);actor.add(anims.resolve("ProjectYakuza_DD_GrabHold.x"),nodes.resolve("player/actions/ProjectYakuza_DD_GrabHold.xml"),time,weight,1000);victim.add(game.resolve(base+".x"),null,0,1,0);victim.add(anims.resolve(String.format("ProjectYakuza_DD_GrabStrikeVictim%02d.x",i)),nodes.resolve(String.format("zombie/hitreaction/ProjectYakuza_DD_GrabStrikeVictim%02d.xml",i)),-1,1-weight,1000);victim.add(anims.resolve("ProjectYakuza_DD_GrabVictimHoldNative.x"),nodes.resolve("zombie/hitreaction/ProjectYakuza_DD_GrabVictimHold.xml"),time,weight,1000);double[] a=actor.point("Bip01_L_Hand",palm),v=victim.point("Bip01_Spine1",collar);double[] result={-1.5*(a[2]+v[2]),1.5*(a[0]+v[0]),a[1]-v[1]};
+    if(reference==null){reference=result;if(cases++>0)out.append(',');out.append("{\"index\":").append(i).append(",\"frame\":").append(frame).append(",\"forward\":").append(result[0]).append(",\"right\":").append(result[1]).append(",\"verticalGap\":").append(result[2]).append(",\"actor\":").append(Arrays.toString(a)).append(",\"victim\":").append(Arrays.toString(v)).append('}');}else for(int k=0;k<3;k++)maxBaseError=Math.max(maxBaseError,Math.abs(reference[k]-result[k]));actor.clear();victim.clear();
+   }
+  }
+  double maxHoldError=0;int holdCases=0;
+  for(String aName:new String[]{"GrabHold","GrabWalk"})for(int frame=0;frame<(aName.equals("GrabHold")?86:31);frame++)for(String vName:aName.equals("GrabHold")?new String[]{"GrabVictimHoldNative"}:new String[]{"GrabVictimWalkForward","GrabVictimWalkBackward","GrabVictimWalkLeft","GrabVictimWalkRight"}){
+   float time=frame/30f;actor.add(game.resolve("Bob_Walk.x"),null,time,1,0);actor.add(anims.resolve("ProjectYakuza_DD_"+aName+".x"),nodes.resolve("player/actions/ProjectYakuza_DD_"+aName+".xml"),time,1,1000);victim.add(game.resolve("Bob_IdleAim1Hand.x"),null,0,1,0);String vNode=vName.equals("GrabVictimHoldNative")?"GrabVictimHold":vName;victim.add(anims.resolve("ProjectYakuza_DD_"+vName+".x"),nodes.resolve("zombie/hitreaction/ProjectYakuza_DD_"+vNode+".xml"),time,1,1000);double[] a=actor.point("Bip01_L_Hand",palm),v=victim.point("Bip01_Spine1",collar);double f=-1.5*(a[2]+v[2])-.42,r=1.5*(a[0]+v[0])-.019354,h=1.5*(a[1]-v[1]);maxHoldError=Math.max(maxHoldError,Math.sqrt(f*f+r*r+h*h));holdCases++;actor.clear();victim.clear();
+  }
+  if(maxHoldError>.0001)throw new AssertionError("native palm/collar drift "+maxHoldError);
+  if(maxBaseError>.0001)throw new AssertionError("native base pose moves pinned grip: "+maxBaseError);out.append("],\"sourceHashes\":{");boolean first=true;for(var e:hashes.entrySet()){if(!first)out.append(',');first=false;out.append('"').append(e.getKey()).append("\":\"").append(e.getValue()).append('"');}out.append("},\"maxBaseError\":").append(maxBaseError).append(",\"maxHoldError\":").append(maxHoldError).append(",\"holdCases\":").append(holdCases).append('}');Files.writeString(Path.of(args[1]),out.toString());System.out.println("PASS "+cases+" native return-blend frames across two base poses and "+holdCases+" native hold/walk palm checks; max grip error "+maxHoldError);
+ }
+}

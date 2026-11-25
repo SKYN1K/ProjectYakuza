@@ -1,0 +1,89 @@
+{
+  "version": "1.0.14",
+  "authorization": "User approved reworking original grab data and rendering an offline grip preview on 2026-11-25.",
+  "operation": "Native PZ reference torso parents stabilize the holding frame. Original torso/right-arm motion remains; a fixed native palm/collar surface contact determines the left two-bone arm fit. Held victim chest remains in its original frame-zero grip pose while original walking legs remain. No AI art/audio or additional source frames.",
+  "distance": 0.42,
+  "lateral": 0.019354,
+  "collarVertex": 6,
+  "collarModelPoint": [
+    0.03992793336510658,
+    0.7346211671829224,
+    -0.00981935765594244
+  ],
+  "collarLocalPoint": [
+    0.07114963978528976,
+    0.04092177748680115,
+    0.049255140125751495
+  ],
+  "palmLocalPoint": [
+    0.0438835509121418,
+    -0.004195960238575935,
+    0.0027962177991867065
+  ],
+  "palmTarget": [
+    -0.027025267481803894,
+    0.7346211671829224,
+    -0.2701806426048279
+  ],
+  "maxPalmErrorModel": 7.920075813483186e-08,
+  "minimumElbowAngleRadians": 1.5697060961550633,
+  "clips": [
+    {
+      "clip": "ProjectYakuza_DD_GrabHold",
+      "inputSha256": "841e369a2e70e091201ae269b697d5bf53a52060d5293490bd70634d9aa211e6",
+      "outputSha256": "255b9c6963f213c8c8f22f58f8c9d4fd45133fa4ca20e7b36f43a83c72437348",
+      "frames": 86,
+      "fps": 30,
+      "output": "combat/ProjectYakuza/42/media/anims_X/Bob/ProjectYakuza_DD_GrabHold.x"
+    },
+    {
+      "clip": "ProjectYakuza_DD_GrabWalk",
+      "inputSha256": "4140dade4dea969954bb315952229864cfda4a709f986b8e438d3fc5cc27a432",
+      "outputSha256": "44ac6c837dfc58b55491625c5fa33e20fa1dadae24393b315ba802ec8c2b7263",
+      "frames": 31,
+      "fps": 30,
+      "output": "combat/ProjectYakuza/42/media/anims_X/Bob/ProjectYakuza_DD_GrabWalk.x"
+    },
+    {
+      "clip": "ProjectYakuza_DD_GrabVictimHoldNative",
+      "inputSha256": "5bc5c66e319c72c9ab8958d8251ad265bafa11d787b319c41500bf6e7f68540d",
+      "outputSha256": "f7d171ff57210b890c3279bcf8f5716109b86ae55db11b02c2b40cc34c945653",
+      "frames": 341,
+      "fps": 30,
+      "output": "combat/ProjectYakuza/42/media/anims_X/Bob/ProjectYakuza_DD_GrabVictimHoldNative.x"
+    },
+    {
+      "clip": "ProjectYakuza_DD_GrabVictimWalkForward",
+      "inputSha256": "f68d598c522d840b4bdcba777388680e8e7ee0e2f68674026506ed97cf002bec",
+      "outputSha256": "4e2c1c99ef7f5604b219ab0fd196d8fe24704d24b7a53038452d6b2fcdb2f811",
+      "frames": 61,
+      "fps": 30,
+      "output": "combat/ProjectYakuza/42/media/anims_X/Bob/ProjectYakuza_DD_GrabVictimWalkForward.x"
+    },
+    {
+      "clip": "ProjectYakuza_DD_GrabVictimWalkBackward",
+      "inputSha256": "13e8305b4bc9c8a3b93ec2ddb614e24f47d81a9c1db3293d457373d69da88995",
+      "outputSha256": "a3fb88116417a43bf5586b3ffc46c963ab91bd52a3f1d7aa105d953e75d29518",
+      "frames": 61,
+      "fps": 30,
+      "output": "combat/ProjectYakuza/42/media/anims_X/Bob/ProjectYakuza_DD_GrabVictimWalkBackward.x"
+    },
+    {
+      "clip": "ProjectYakuza_DD_GrabVictimWalkLeft",
+      "inputSha256": "c1f3cf440d9bf5a72824ac76f53fe1586c11ea52e002fa621d18b5b18b48076c",
+      "outputSha256": "f5b99efc243a382a3d0ed24e623d8a1b254bfdfa45919082140049ef3b5da76a",
+      "frames": 61,
+      "fps": 30,
+      "output": "combat/ProjectYakuza/42/media/anims_X/Bob/ProjectYakuza_DD_GrabVictimWalkLeft.x"
+    },
+    {
+      "clip": "ProjectYakuza_DD_GrabVictimWalkRight",
+      "inputSha256": "2c63fd2d070be438f0e9ab080bc12f9357c8282c57d9e75f0c66df2155d1c261",
+      "outputSha256": "ce1c4b6bd8538f8b7ae7a0ea3d5ff1eed2ca98e53f11774792eb587743f2ff20",
+      "frames": 61,
+      "fps": 30,
+      "output": "combat/ProjectYakuza/42/media/anims_X/Bob/ProjectYakuza_DD_GrabVictimWalkRight.x"
+    }
+  ],
+  "nativeBodySha256": "a0a7cbb3f8fb55827f4039edd04f9af28299d76ae9160484069084faca2aff01"
+}

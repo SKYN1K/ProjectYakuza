@@ -7,7 +7,7 @@
   <m_Looped>false</m_Looped>
   <m_SpeedScale>1</m_SpeedScale>
   <m_BlendTime>.12</m_BlendTime>
-  <m_BlendOutTime>.16</m_BlendOutTime>
+  <m_BlendOutTime>0.24</m_BlendOutTime>
   <m_SyncTrackingEnabled>false</m_SyncTrackingEnabled>
   <m_Conditions>
     <m_Name>PerformingAction</m_Name>

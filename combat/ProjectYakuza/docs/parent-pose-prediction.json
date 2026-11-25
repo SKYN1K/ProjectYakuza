@@ -1,5 +1,5 @@
 {
-  "version": "1.0.12",
+  "version": "1.0.14",
   "operation": "Numeric parent-bone PRS samples from original installed Human animations; no model, motion, texture, audio or preview generated. Parent masks follow actual mod XML. Runtime replaces the raw attack pelvis/spine parent with the current layer-zero standing/walking pose.",
   "fps": 30,
   "native": {
@@ -2280,7 +2280,7 @@
     {
       "animation": "ProjectYakuza_DD_GrabHold",
       "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_GrabHold.x",
-      "sha256": "841e369a2e70e091201ae269b697d5bf53a52060d5293490bd70634d9aa211e6",
+      "sha256": "255b9c6963f213c8c8f22f58f8c9d4fd45133fa4ca20e7b36f43a83c72437348",
       "samples": 86
     },
     {
@@ -2310,7 +2310,7 @@
     {
       "animation": "ProjectYakuza_DD_GrabWalk",
       "source": "C:\\Users\\Nik\\Documents\\ChatGPT\\Zomboid Yakuza Combat\\combat\\ProjectYakuza\\42\\media\\anims_X\\Bob\\ProjectYakuza_DD_GrabWalk.x",
-      "sha256": "4140dade4dea969954bb315952229864cfda4a709f986b8e438d3fc5cc27a432",
+      "sha256": "44ac6c837dfc58b55491625c5fa33e20fa1dadae24393b315ba802ec8c2b7263",
       "samples": 31
     },
     {
@@ -2778,18 +2778,6 @@
       "parent": 4
     },
     {
-      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\actions\\ProjectYakuza_DD_GrabHold.xml",
-      "sha256": "5906b27caea5b82427524135230b6189b80ec8b12231d8a571126ae153842a0d",
-      "animation": "ProjectYakuza_DD_GrabHold",
-      "parent": 4
-    },
-    {
-      "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\actions\\ProjectYakuza_DD_GrabWalk.xml",
-      "sha256": "62bb9f487366f84dbe0b62065c7b69376d54f76b489cb8070864c13deeae2eb1",
-      "animation": "ProjectYakuza_DD_GrabWalk",
-      "parent": 4
-    },
-    {
       "path": "combat\\ProjectYakuza\\42\\media\\AnimSets\\player\\actions\\ProjectYakuza_DD_GuardEnter.xml",
       "sha256": "c1853530ebfb5642620aea209e576e674fdbc05d93052253d5b511b3ea5f7bab",
       "animation": "ProjectYakuza_DD_GuardEnter",
@@ -3127,6 +3115,6 @@
     }
   ],
   "output": "42\\media\\lua\\client\\ProjectYakuza\\ParentPoseTracks.lua",
-  "sha256": "0c02a2e76b1f4ec459b73ad201edd1957ccd8a1108a4edd68ada3b072d45b7f1",
+  "sha256": "3bc2b323c4d1382fb2eb28c41d0f3ae1cadd1dbae78fe96d91728a82bec82ff1",
   "incrementalMaskUpdate": "Four grab-strike parent boundaries now match their source/observer XML. Existing native source-parent curves are byte-for-byte unchanged; no animation, model, texture or audio generated."
 }

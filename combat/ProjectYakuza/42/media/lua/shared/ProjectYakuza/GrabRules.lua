@@ -114,7 +114,19 @@ function G.offset(slot,phase,moving,time)
 end
 function G.alignment(slot,phase,state,t)
     local moving=phase=="hold"and state.grabMoving==true
-    if state.pairPhase~=phase or state.pairMoving~=moving then state.pairFrom=state.pairOffset or G.offset(slot,"hold");state.pairAt=t;state.pairPhase=phase;state.pairMoving=moving end
+    if state.pairPhase~=phase or state.pairMoving~=moving then
+        local index=tonumber(string.match(state.pairPhase or "","^strike(%d)$"));local move=index and slot.strikes and slot.strikes[index]
+        if phase=="hold"and move and move.returnMotion then state.returnMotion=move.returnMotion;state.returnAt=t;state.returnFrom=state.pairOffset or G.offset(slot,state.pairPhase,false,move.duration)
+        elseif phase~="hold"then state.returnMotion=nil end
+        state.pairFrom=state.pairOffset or G.offset(slot,"hold");state.pairAt=t;state.pairPhase=phase;state.pairMoving=moving
+    end
+    if phase=="hold"and state.returnMotion then
+        local motion=state.returnMotion;local duration=(#motion.frames-1)/motion.fps;local age=math.max(0,(t-state.returnAt)/1000)
+        local target=G.sample(motion,age);local first=G.sample(motion,0);local correction=(1-math.min(1,age/duration))^2
+        state.pairOffset={forward=target.forward+(state.returnFrom.forward-first.forward)*correction,right=target.right+(state.returnFrom.right-first.right)*correction}
+        if age>=duration then state.returnMotion=nil;state.pairFrom=state.pairOffset;state.pairAt=t end
+        return state.pairOffset
+    end
     local time=state.strikeTime or state.strike and(t-state.strike.at)/1000 or(t-(state.phaseAt or state.pairAt))/1000
     local target=G.offset(slot,phase,moving,time)
     local f=math.max(0,math.min(1,(t-state.pairAt)/120));f=f*f*(3-2*f)

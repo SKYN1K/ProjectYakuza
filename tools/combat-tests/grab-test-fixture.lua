@@ -129,7 +129,7 @@ for i=1,4 do
  local before=z.hits;track=math.max(0,m.contactMs/1000-.02);clock=clock+10;a:update();check(z.hits==before,'strike cannot hit before source contact')
  track=m.contactMs/1000+.001;clock=clock+20;a:update();a:update();check(z.hits==before+1,'one source contact causes exactly one hit')
  check(z.locked and not z.floor and not z.knock and not z.stagger and z:getHitReaction()=='ProjectYakuzaGrabbed'and z.force==0,'strike does not eject or knock back held victim')
- track=m.duration;clock=clock+30;a:update();check(a.phaseName=='hold'and not p.blocked and p.deferred,'full source strike returns to walking hold')
+ track=m.duration;clock=clock+30;a:update();check(a.phaseName=='hold'and p.blocked and not p.deferred,'full source strike keeps movement locked while blending to its grip');track=0;clock=clock+style.actions.grab.recoveryMs;a:update();check(not p.blocked and p.deferred,'walking resumes after the complete pose blend')
 end
 PY.cancelAction(p,'released');check(not z.locked and not z.useless and not z.ignore and z.deferred and not p.blocked and p.deferred,'release restores every owned native flag')
 local saved=R.capture(z);z.locked=true;R.keep(z);R.restore(z,saved);check(z.locked,'cleanup preserves a pre-existing state-machine lock');z.locked=false
@@ -258,7 +258,7 @@ do
  local final=R.alignment(slot,'strike1',state,220);local target=R.offset(slot,'strike1')
  check(math.abs(final.forward-R.offset(slot,'strike1',false,.12).forward)<.000001 and math.abs(final.right-R.offset(slot,'strike1',false,.12).right)<.000001,'strike reaches calibrated contact offset after its short blend')
  local returning=R.alignment(slot,'hold',state,230);check(returning.forward==final.forward and returning.right==final.right,'return to hold begins at previous paired offset')
- local restore=R.alignment(slot,'hold',state,350);check(math.abs(restore.forward-R.offset(slot,'hold').forward)<.000001,'returning hold restores walking grab spacing')
+ local restore=R.alignment(slot,'hold',state,470);check(math.abs(restore.forward-R.offset(slot,'hold').forward)<.00002,'returning hold restores walking grab spacing')
  local original=slot.throwOffset;slot.throwOffset={forward=0/0,right=0};check(not PY.validateStyle(style),'invalid paired offsets cannot enter registered styles');slot.throwOffset=original
 end
 do
@@ -500,8 +500,8 @@ do
  p.x,p.y,z.x,z.y=x,y,zx,zy;rules.clearance,rules.space,PY.NetworkProtocol.path=clear,space,path
  local state={};local first=R.alignment(style.actions.grab,'hold',state,100);local next=R.alignment(style.actions.grab,'strike3',state,120)
  check(first.forward==next.forward and first.right==next.right,'restored strike placement begins at the held position before its blend')
- state.grabMoving=true;R.alignment(style.actions.grab,'hold',state,300);local walk=R.alignment(style.actions.grab,'hold',state,420)
- check(math.abs(walk.forward-.48)<.000001 and math.abs(walk.right-.019354)<.000001,'holding and walking keep the victim in front instead of far to the side')
+ state.grabMoving=true;R.alignment(style.actions.grab,'hold',state,300);local walk=R.alignment(style.actions.grab,'hold',state,540)
+ check(math.abs(walk.forward-.42)<.00002 and math.abs(walk.right-.019354)<.00002,'holding and walking keep the victim in front instead of far to the side')
 end
 do
  local hit=z.Hit;local oldGet,oldSet=z.isIgnoreStaggerBack,z.setIgnoreStaggerBack;local ignore=false
@@ -545,7 +545,7 @@ do
   p:setVariable('ProjectYakuzaDefenseMarker',phase..'_done');track=0;clock=clock+500;held:update()
   check(held.phaseName=='hold'and not held.strikeMove,'matching end marker wins over a restarted or fading animation track')
   held:update();check(z.hits==hits,'completion cannot replay its source damage')
-  previousMarker=phase..'_done'
+  clock=clock+style.actions.grab.recoveryMs;held:update();previousMarker=phase..'_done'
  end
  held:cancel();held=startGrab();G.input(p,held,true,false);local move=held.strikeMove
  track=move.duration-.05;clock=clock+1000;held:update();local hits=z.hits
@@ -566,5 +566,28 @@ do
  G.input(p,held,true,false);local lockedX,lockedY=held.context.fx,held.context.fy;aimX,aimY=-lockedY,lockedX;held:alignPair(true);held:holdControls()
  check(math.abs(ax-lockedX)<.000001 and math.abs(ay-lockedY)<.000001 and math.abs(zx+lockedX)<.000001 and math.abs(zy+lockedY)<.000001,'a strike keeps one captured axis for both characters')
  held:cancel();p.getForwardDirection,p.getAnimForwardDirection,p.setTargetAndCurrentDirection,z.setTargetAndCurrentDirection=getAim,getAnimated,setActor,setVictim;track=0
+end
+do
+ G.clear();local held=startGrab();G.input(p,held,true,false);local move=held.strikeMove;track=move.duration;clock=clock+1400;held:update()
+ check(held.recoveryUntil and p.blocked and p.ignore and not p.deferred,'return blend keeps native movement locked')
+ local serial=held.grabStrikeCount;G.input(p,held,true,false);G.input(p,held,true,false)
+ check(held.grabStrikeCount==serial and held.recoveryInput.light,'fresh input during recovery queues one strike instead of interrupting the fade')
+ paused=true;local deadline=held.recoveryUntil;clock=clock+700;held:update();paused=false
+ check(held.recoveryUntil==deadline+700,'pause preserves the remaining blend time')
+ track=0;clock=clock+style.actions.grab.recoveryMs;held:update()
+ check(held.strikeMove and held.grabStrikeCount==serial+1 and not held.recoveryInput,'one queued press starts after recovery completes')
+ held:cancel()
+ for index,move in ipairs(style.actions.grab.strikes)do
+  local last=R.offset(style.actions.grab,'strike'..index,false,move.duration)
+  local state={pairPhase='strike'..index,pairMoving=false,pairOffset=last,pairFrom=last,pairAt=0}
+  local first=R.alignment(style.actions.grab,'hold',state,1000)
+  check(math.abs(first.forward-last.forward)<.000001 and math.abs(first.right-last.right)<.000001,'return starts at the actual last paired position')
+  for frame=1,24 do
+   local actual=R.alignment(style.actions.grab,'hold',state,1000+frame*10);local sample=R.sample(move.returnMotion,frame/100)
+   check(math.abs(actual.forward-sample.forward)<.00002 and math.abs(actual.right-sample.right)<.00002,'return follows native quaternion-blended palm/collar placement')
+  end
+  local final=R.alignment(style.actions.grab,'hold',state,1360)
+  check(math.abs(final.forward-.42)<.00002 and math.abs(final.right-.019354)<.00002,'completed return settles into the fitted collar grip')
+ end
 end
 return 'PASS '..checks..' reliable grab lifecycle, four source-timed strikes, following, cleanup, wall geometry, handoff and action protection checks'

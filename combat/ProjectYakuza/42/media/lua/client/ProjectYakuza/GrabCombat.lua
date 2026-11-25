@@ -41,6 +41,10 @@ function G.hit(a)
 end
 function G.input(p,a,lightPressed,heatPressed)
     if a.phaseName~="hold"or not a.paired then return false end
+    if a.recoveryUntil then
+        if lightPressed or heatPressed then a.recoveryInput={light=lightPressed,heat=heatPressed}end
+        return true
+    end
     if G.pending[p]then return true end
     if heatPressed then
         local z,move,pose,variant=G.candidate(p,true)

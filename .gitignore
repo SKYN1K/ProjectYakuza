@@ -408,3 +408,6 @@
 
 !tools/combat-tests/build_grab_attempt_assets.py
 !tools/combat-tests/validate_grab_attempt.py
+
+!/tools/combat-tests/build_grab_grip_assets.py
+!/tools/combat-tests/GrabBlendProbe.java

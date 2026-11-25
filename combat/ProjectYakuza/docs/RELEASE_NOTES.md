@@ -1,3 +1,11 @@
+# v1.0.14
+
+Holding and walking grips fit the original native palm to an upper-collar mesh surface instead of aligning the wrist to the neck bone. The holding torso uses stable native parent transforms; original torso and right-arm motion remain, while a two-bone fit keeps the left palm at the contact. The victim chest retains its original grip pose during standing and native walking. Seven existing clips retain their original identifiers, source frame counts and 30 fps timing. No artwork, textures or audio changed.
+
+Grab strikes keep their original animation clips, speed, damage frames and single-hit policy. Source skin contact points determine their paired placement. The return to hold now uses a matched 240 ms fade for both bodies, with contact curves sampled from the native AnimationPlayer blend. Walking stays locked until the outgoing full-body strike has faded. One fresh strike or Heat Action input during this return is queued and consumed after recovery, preventing a new hit from cutting off the fade. Pause preserves the remaining return time.
+
+Offline checks cover 210 native standing/walking palm placements, 100 native return frames across two base poses, source frame preservation, grip constraints, recovery movement locks, queued input, pause and multiplayer authority. The measured native grip discrepancy is below 0.000004 tiles for these reference bodies and poses. An approved offline preview uses supplied PZ male/female bodies. Live clothing, different character models and network latency still need gameplay verification; PZ was not launched.
+
 # v1.0.13
 
 Grab strikes follow the dominant visible animation track, preventing a faint restarted or fading track from moving their clock backward. Ordinary attack effects retain their existing track policy. Grab strikes use separate strike1..strike4 completion markers. The controller handles a matching end marker before reading an animation track, so a restarted or fading non-looping track cannot keep the completed strike active. A near-end track rollback also returns to hold, while strike placement never rewinds. Delayed markers from a different strike are ignored. Damage remains limited to one original source contact per accepted strike; frames and animation speed are unchanged.
