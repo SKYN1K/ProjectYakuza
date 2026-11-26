@@ -118,7 +118,7 @@ Client `ProjectYakuza/StyleUI`: `registerStyleUI(id,provider)`, `unregisterStyle
 
 Built-in action kinds `heavyCharge` and `chargedHeavy` use the native timed-action hold and single-use native-strike handover. Events: `heavyChargeStarted(player,style,move)`, `heavyChargeStopped(player,completed)`, `chargedHeavyStarted(player,style,move)`, `chargedHeavyFinished(player,move)`. Callbacks are local presentation/lifecycle hooks, not permission to apply damage again. See [charged heavy](CHARGED_HEAVY.md).
 
-Charged first-finisher variants opt into `chargeBranch=<light index>` on both hold/release and `chargedFinisher=true` on release. Slot variants use default/after_1ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¦after_n. Native release tickets bind the variant/branch; second-finisher windows bypass charging. `heavyChargeStarted` receives the selected move; custom HUD code can inspect `context.action.chargeBranch` or `combo.finisherMove.chargedFinisher`. See [charged heavy](CHARGED_HEAVY.md).
+Charged first-finisher variants opt into `chargeBranch=<light index>` on both hold/release and `chargedFinisher=true` on release. Slot variants use default/after_1…after_n. Native release tickets bind the variant/branch; second-finisher windows bypass charging. `heavyChargeStarted` receives the selected move; custom HUD code can inspect `context.action.chargeBranch` or `combo.finisherMove.chargedFinisher`. See [charged heavy](CHARGED_HEAVY.md).
 
 Charge controller additions: optional holdAnimation, windupMs and maxHoldMs; maxHoldMs=0 disables timed auto-release. A looping hold acknowledges ProjectYakuzaChargeClip=holding. heavyChargeReady(player,style,move) fires once at the minimum wind-up endpoint for cosmetic feedback. Missing native holds cancel safely. See [charged heavy](CHARGED_HEAVY.md).
 
@@ -156,7 +156,7 @@ While aiming, the bound quickstep input can cancel DoD lights after their native
 
 See [Weapons](WEAPONS.md) for Weapons.register, explicit per-style item mappings, equipment views, standalone heavies, native weapon preservation, events and MP authoring contracts. getPlayerStyle returns the current view while getStyle/listStyles retain the base style identity. Register profiles after the base style; every distinct move needs a unique nodeValue and supplied animation nodes.
 
-Since 0.45.0, Weapons.hitRange(item) bounds registered weapon supplementary reach to its native maximum (framework .25Ã¢â‚¬â€œ1.65 bounds); Weapons.extraDamage(item,damage) bounds SP supplementary damage to the current native maximum and 20, avoiding propagation of primary-only close kills. Native primary hit calculation is unchanged. See [weapon rules](WEAPONS.md#sharp-weapons).
+Since 0.45.0, Weapons.hitRange(item) bounds registered weapon supplementary reach to its native maximum (framework .25–1.65 bounds); Weapons.extraDamage(item,damage) bounds SP supplementary damage to the current native maximum and 20, avoiding propagation of primary-only close kills. Native primary hit calculation is unchanged. See [weapon rules](WEAPONS.md#sharp-weapons).
 
 Registration-aware internal indexes now accelerate clip and move resolution. Register configuration through the documented APIs and treat published nested tables as immutable. Re-registering a style refreshes its move index; registerNetworkAnimations publishes a fresh catalogue/selector index. See [maintenance notes](PERFORMANCE.md).
 
@@ -168,7 +168,7 @@ Registration-aware internal indexes now accelerate clip and move resolution. Reg
 
 ## Blood presentation (0.48.0)
 
-A style opts into supplied Y6 blood via `bloodEffects="yakuza6"`; the built-in confirmed-hit pipeline also requires `hitEffects="yakuza6"`. `ProjectYakuza.BloodEffects.spawn(player,victim,strong,charged)` creates a bounded client world burst; `clear(player)` releases that playerÃ¢â‚¬â„¢s bursts, or all bursts when omitted. Existing hit-effect preferences apply. Other styles have no default blood opt-in. See [Blood effects](BLOOD_EFFECTS.md) for source provenance, lifecycle and limits.
+A style opts into supplied Y6 blood via `bloodEffects="yakuza6"`; the built-in confirmed-hit pipeline also requires `hitEffects="yakuza6"`. `ProjectYakuza.BloodEffects.spawn(player,victim,strong,charged)` creates a bounded client world burst; `clear(player)` releases that player’s bursts, or all bursts when omitted. Existing hit-effect preferences apply. Other styles have no default blood opt-in. See [Blood effects](BLOOD_EFFECTS.md) for source provenance, lifecycle and limits.
 
 ## Extreme finisher variants (0.49.0)
 
